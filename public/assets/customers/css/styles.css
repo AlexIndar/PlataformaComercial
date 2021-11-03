@@ -1,0 +1,75 @@
+/* COMMON ALL SECTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.section{
+    width: 100%;
+    height: auto;
+    padding: 50px;
+    background-color: #F2F2F2;
+}
+
+.section-body{
+    background-color: white;
+}
+
+.section-title{
+    width: 90%;
+    margin-left: 5%;
+    border-bottom: 5px solid #FFC61E;
+    padding: 20px;
+}
+
+.section-title h3{
+    color: #002868 !important;
+    margin-left: 100px;
+    font-weight: 700;
+}
+
+.section-row{
+    padding-left: 5%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+}
+
+@media (max-width: 700px) {
+    .section-title h3{
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 406px) {
+    .section-title h3{
+        font-size: 20px;
+    }
+}
+
+/* FAQ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.question{
+    font-weight: 700;
+}
+
+.answer{
+    font-weight: 400;
+    color: #555555;
+}
+
+/* CATALOGO --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.catalogo{
+    width: 100%;
+    height: 250px;
+}
+
+.cat-blue{
+    background-color: #002868;
+}
+
+.cat-yellow{
+    background-color: #FFC61E;
+}
+
+
+
+

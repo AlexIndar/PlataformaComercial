@@ -106,7 +106,7 @@
                         </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Catálogo</a>
+                            <a class="nav-link" href="/catalogo">Catálogo</a>
                         </li>
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
