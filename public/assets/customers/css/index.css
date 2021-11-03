@@ -575,6 +575,11 @@ button{
     color: #002868;
 }
 
+.social-media-icons a{
+    text-decoration: none;
+    color: #002868;
+}
+
 .social-media-icons i{
     margin-left: 5px;
 }
@@ -626,7 +631,7 @@ button{
     align-items: center;
     opacity: 0;
     z-index: -10000;
-    transition: opacity .1s ease;
+    transition: opacity .4s ease;
 }
 
 .modal-indar{
