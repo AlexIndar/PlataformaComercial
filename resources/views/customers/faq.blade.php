@@ -4,21 +4,21 @@
 @section('title') Indar - Preguntas Frecuentes @endsection
 
 @section('styles')
-<link rel="stylesheet" href="{{asset('assets/customers/css/faq.css')}}">
+<link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
 @endsection
 
 @section('body')
 
     <!-- FAQ -------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-    <div class="faq">
-        <div class="faq-body">
-            <div class="faq-title">
+    <div class="section">
+        <div class="section-body">
+            <div class="section-title">
                 <h3>Preguntas Frecuentes</h3>
             </div>
             <br><br>
             <div class="container">
-                <div class="row faq-row">
+                <div class="row section-row">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <h5 class="question">¿Cómo hacer un pedido?</h5>
                         <h5 class="answer">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta temporibus sint possimus quas earum totam labore facere laudantium ipsum, omnis hic repellat deserunt eius unde quis tempore repellendus, ea reiciendis!</h5>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="row faq-row">
+                <div class="row section-row">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <h5 class="question">¿Cómo realizar un pago?</h5>
                         <h5 class="answer">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta temporibus sint possimus quas earum totam labore facere laudantium ipsum, omnis hic repellat deserunt eius unde quis tempore repellendus, ea reiciendis!</h5>
@@ -38,28 +38,28 @@
                     </div>
                 </div>
 
-                <div class="faq-row">
+                <div class="section-row">
                     <div class="col-11">
                         <h5 class="question">¿Lorem ipsum dolor sit amet.?</h5>
                         <h5 class="answer">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta temporibus sint possimus quas earum totam labore facere laudantium ipsum, omnis hic repellat deserunt eius unde quis tempore repellendus, ea reiciendis!</h5>
                     </div>
                 </div>
 
-                <div class="faq-row">
+                <div class="section-row">
                     <div class="col-11">
                         <h5 class="question">¿Lorem ipsum dolor sit amet.?</h5>
                         <h5 class="answer">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta temporibus sint possimus quas earum totam labore facere laudantium ipsum, omnis hic repellat deserunt eius unde quis tempore repellendus, ea reiciendis!</h5>
                     </div>
                 </div>
 
-                <div class="faq-row">
+                <div class="section-row">
                     <div class="col-11">
                         <h5 class="question">¿Lorem ipsum dolor sit amet.?</h5>
                         <h5 class="answer">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta temporibus sint possimus quas earum totam labore facere laudantium ipsum, omnis hic repellat deserunt eius unde quis tempore repellendus, ea reiciendis!</h5>
                     </div>
                 </div>
 
-                <div class="faq-row">
+                <div class="section-row">
                     <div class="col-11">
                         <h5 class="question">¿Lorem ipsum dolor sit amet.?</h5>
                         <h5 class="answer">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta temporibus sint possimus quas earum totam labore facere laudantium ipsum, omnis hic repellat deserunt eius unde quis tempore repellendus, ea reiciendis!</h5>

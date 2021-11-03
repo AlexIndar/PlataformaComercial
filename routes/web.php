@@ -32,3 +32,9 @@ Route::get('/faq', function () {
     return view('customers.faq');
 });
 
+Route::get('/catalogo', function () {
+    // VALIDAR LOGIN
+    return view('customers.catalogo');
+});
+
+
