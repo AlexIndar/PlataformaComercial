@@ -1,0 +1,72 @@
+.dashboard-cards{
+    border-radius: 15px !important;
+    background-color: rgb(255, 255, 255) !important;
+    min-height: 50px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 15px;
+    transition: all .3s ease;
+    box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.10);
+    -webkit-box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.10);
+    -moz-box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.10);
+}
+.dashboard-cards:hover{
+    transform: scale(1.03);
+    background-color: #002868 !important;
+    color: white;
+}
+.dashboard-cards h6{
+    text-align: center;
+}
+
+.card-link{
+    text-decoration: none !important; 
+    color: black;
+}
+
+.img-dashboard{
+    border-radius: 15px !important;
+    cursor: pointer;
+    transition: all .3s ease;
+    box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.50);
+    -webkit-box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.50);
+    -moz-box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.50);
+    margin-top: 20px;
+    max-height: 150px;
+    object-fit: cover;
+}
+
+.img-dashboard:hover{
+    transform: scale(1.03);
+}
+
+.img-dashboard-large{
+    border-radius: 15px !important;
+    cursor: pointer;
+    transition: all .3s ease;
+    box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.50);
+    -webkit-box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.50);
+    -moz-box-shadow: -2px 2px 13px -2px rgba(0,0,0,0.50);
+    margin-top: 20px;
+    max-height: 100px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.img-dashboard-large:hover{
+    transform: scale(1.03);
+}
+
+::-webkit-scrollbar{
+    width: 10px;
+    background-color: #002868;
+    border: none;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #ffc61e;
+}
