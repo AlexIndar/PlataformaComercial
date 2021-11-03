@@ -22,19 +22,21 @@ Route::get('/main', function () {
     return view('main');
 });
 
-Route::get('/about', function () {
-    // VALIDAR LOGIN
-    return view('about');
-});
-
 Route::get('/faq', function () {
-    // VALIDAR LOGIN
     return view('customers.faq');
 });
 
 Route::get('/catalogo', function () {
-    // VALIDAR LOGIN
     return view('customers.catalogo');
 });
+
+Route::get('/about', function () {
+    return view('customers.about');
+});
+
+Route::get('/sucursales', function () {
+    return view('customers.sucursales');
+});
+
 
 

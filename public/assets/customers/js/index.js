@@ -2,11 +2,8 @@
 $('document').ready(function(){
 
     AOS.init();
-    ScrollReveal().reveal('.logo', {delay:500});
-    ScrollReveal().reveal('.supplier-logo', {delay:500});
-    ScrollReveal().reveal('.logo-footer', {delay:500});
-    ScrollReveal().reveal('.social-media-icons', {delay:500});
-    ScrollReveal().reveal('.footer-links', {delay:500});
+    ScrollReveal().reveal('.appear-500', {delay:500});
+    ScrollReveal().reveal('.appear-1000', {delay:500});
     
 
       const swiper = new Swiper(".swiper-1", {

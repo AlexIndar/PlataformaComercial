@@ -33,7 +33,7 @@
     <div class="brand-logo">
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12 row-logo">
-                <img onclick="navigate('/')" class="logo" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="250">
+                <img onclick="navigate('/')" class="logo appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="250">
             </div>
             <div class="col-lg-6 col-md-10 col-sm-10 col-xs-8">
                 <div class="input-group mb-3 mt-3">
@@ -113,8 +113,8 @@
                             Empresa
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Nosotros</a></li>
-                            <li><a class="dropdown-item" href="#">Sucursales</a></li>
+                            <li><a class="dropdown-item" href="about">Nosotros</a></li>
+                            <li><a class="dropdown-item" href="sucursales">Sucursales</a></li>
                             <li><a class="dropdown-item" href="#">Servicio postventa</a></li>
                         </ul>
                         </li>
@@ -221,19 +221,22 @@
             <div class="col-lg-4 col-md-12 col-sm-12 contact-footer">
                 <div class="row">
                     <div class="col-12">
-                        <img class="logo-footer" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="350">
+                        <img class="logo-footer appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="350">
                     </div>
                 </div>
-                <div class="social-media-icons">
-                    <i class="fab fa-facebook-square fa-2x"></i> <i class="fab fa-linkedin fa-2x"></i> <i class="fab fa-youtube-square fa-2x"></i> <i class="fab fa-whatsapp-square fa-2x"></i>
+                <div class="social-media-icons appear-500">
+                    <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i class="fab fa-facebook-square fa-2x"></i></a>  
+                    <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i class="fab fa-youtube-square fa-2x"></i> </a> 
+                    <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a> 
+                    <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i class="fab fa-linkedin fa-2x"></i></a> 
                 </div>
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12 footer-links">
                 <h5>Productos</h5>
                 <h5>Especiales</h5>
-                <h5>Sucursales</h5>
-                <h5>Nosotros</h5>
-                <h5>Catálogos</h5>
+                <h5 onclick="navigate('sucursales')">Sucursales</h5>
+                <h5 onclick="navigate('about')">Nosotros</h5>
+                <h5 onclick="navigate('catalogo')">Catálogos</h5>
                 <h5>Servicios Postventa</h5>
                 <h5>Contacto</h5>
                 <h5>Aviso de Privacidad</h5>

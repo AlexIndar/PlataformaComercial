@@ -57,9 +57,23 @@
 
 /* CATALOGO --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+.col-catalogo h5{
+    color: #555555;
+    font-weight: 400;
+    text-align: center;
+}
+
+
 .catalogo{
     width: 100%;
     height: 250px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 1px solid #555555;
+}
+
+.catalogo:hover{
+    background-color: #e9e9e9;
 }
 
 .cat-blue{
@@ -70,6 +84,45 @@
     background-color: #FFC61E;
 }
 
+.cat-gray{
+    background-color: gray;
+}
+.cat-red{
+    background-color: red;
+}
+.cat-green{
+    background-color: green;
+}
+.cat-orange{
+    background-color: orange;
+}
+
+
+/* ABOUT ----------------------------------------------------------------------------------------------------- */
+
+.gray-h5{
+    color: #555555;
+    font-weight: 400;
+}
+
+/* SUCURSALES ------------------------------------------------------------------------------------------------- */
+
+.sucursal-info{
+    padding: 5%;
+    border: 3px solid rgba(0, 0, 0, 0.02);
+    width: 90%;
+}
+
+.sucursal-info h5{
+    font-size: 18px !important;
+    color: #002868 !important;
+}
+
+.sucursal-info h4{
+    font-size: 18px !important;
+    color: #555555 !important;
+    font-weight: 400;
+}
 
 
 
