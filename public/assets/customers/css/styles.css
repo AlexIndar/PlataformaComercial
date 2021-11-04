@@ -108,9 +108,11 @@
 /* SUCURSALES ------------------------------------------------------------------------------------------------- */
 
 .sucursal-info{
-    padding: 5%;
+    padding-left: 5%;
     border: 3px solid rgba(0, 0, 0, 0.02);
-    width: 90%;
+    max-width: 90%;
+    overflow-x: hidden;
+    min-height: 250px;
 }
 
 .sucursal-info h5{
@@ -119,10 +121,26 @@
 }
 
 .sucursal-info h4{
-    font-size: 18px !important;
+    font-size: 15px !important;
     color: #555555 !important;
     font-weight: 400;
 }
+
+.sucursal-info h4 strong{
+    font-size: 13px;
+}
+
+/* SERVICIO POSTVENTA ------------------------------------------------------------------------------------------ */
+
+.blue-h5, .blue-indar{
+    color: #002868;
+}
+
+.dropdown-menu li{
+    cursor: pointer !important;
+}
+
+/* CONTACTO ------------------------------------------------------------------------------------------------------ */
 
 
 

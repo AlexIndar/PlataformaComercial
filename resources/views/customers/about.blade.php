@@ -1,7 +1,7 @@
 
 @extends('layouts.customers.customer')
 
-@section('title') Indar - Catalogo @endsection
+@section('title') Indar - Nosotros @endsection
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
@@ -21,7 +21,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12 d-flex flex-column justify-content-center align-items-center">
-                        <img class="appear-1000" width="90%" height="auto" src="http://www.indar.com.mx/Imagenes/FOTO_GRUPAL.jpg" alt="">
+                        <img class="appear-1000" width="90%" height="auto" src="{{asset('assets/customers/img/jpg/about/FOTO_GRUPAL.jpg')}}" alt="">
                         <br>
                         <div class="appear-1000" style="width:90%;">
                             <h5 class="gray-h5">INDAR, es el principal mayorista ferretero en la región Centro-Occidente de la República Mexicana. Ofrece a sus clientes un negocio fácil y rentable, gracias a su propuesta de valor enfocada en los precios competitivos, entrega rápida y atención personalizada.
@@ -35,7 +35,7 @@
                         </div>
                         
                         <br>
-                        <img class="appear-1000" width="90%" height="auto" src="http://www.indar.com.mx/Imagenes/QuienesSomos3.jpg" alt="">
+                        <img class="appear-1000" width="90%" height="auto" src="{{asset('assets/customers/img/jpg/about/QuienesSomos2.jpg')}}" alt="">
                         <br><br>
                     </div>
                 </div>
