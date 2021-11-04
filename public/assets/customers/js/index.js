@@ -199,3 +199,9 @@ document.addEventListener("DOMContentLoaded", function(){
     function navigate(blade){
         window.location.href = blade;
     }
+
+
+    function changeEstadoPostventa(estado, src){
+      document.getElementById('estado').innerHTML = estado;
+      document.getElementById('estadoPostventa').src = "/assets/customers/img/jpg/postventa/CSA"+src+".jpg";
+    }

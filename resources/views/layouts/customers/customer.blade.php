@@ -42,7 +42,7 @@
                             <button class="btn btn-secondary dropdown-toggle input-indar" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
                                 Filtrar por
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="defaultDropdown">
+                            <ul class="dropdown-menu w-100" aria-labelledby="defaultDropdown">
                                 <li><a class="dropdown-item" href="#">Producto</a></li>
                                 <li><a class="dropdown-item" href="#">Marca</a></li>
                             </ul>
@@ -72,38 +72,49 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Productos
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Abrasivos</a></li>
-                            <li><a class="dropdown-item" href="#">Adhesivos y selladores</a></li>
-                            <li><a class="dropdown-item" href="#">Automotriz</a></li>
-                            <li><a class="dropdown-item" href="#">Cables, cadenas y soga</a></li>
-                            <li><a class="dropdown-item" href="#">Cerraduras y herrajes</a></li>
-                            <li><a class="dropdown-item" href="#">Herramientas</a></li>
-                            <li><a class="dropdown-item" href="#">Herrería y soldadura</a></li>
-                            <li><a class="dropdown-item" href="#">Jardinería</a></li>
-                            <li><a class="dropdown-item" href="#">Material eléctrico</a></li>
-                            <li><a class="dropdown-item" href="#">Mercadeo</a></li>
-                            <li><a class="dropdown-item" href="#">Pintura y accesorios</a></li>
-                            <li><a class="dropdown-item" href="#">Plomería y gas</a></li>
-                            <li><a class="dropdown-item" href="#">Seguridad industrial &raquo;</a>
-                                <ul class="submenu dropdown-menu">
-                                    <li><a class="dropdown-item" href="submenuitem1">Submenu item 1</a></li>
-                                    <li><a class="dropdown-item" href="#">Submenu item 2</a></li>
-                                    <li><a class="dropdown-item" href="#">Submenu item 3 &raquo; </a>
+                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="#">Abrasivos</a>
                                     <ul class="submenu dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Multi level 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Multi level 2</a></li>
+                                        <li><a class="dropdown-item" href="#">Diamantados</a></li>
+                                        <li><a class="dropdown-item" href="#">Fibras</a></li>
+                                        <li><a class="dropdown-item" href="#">Metálicos</a>
+                                        <li><a class="dropdown-item" href="#">Paquete</a>
+                                        <li><a class="dropdown-item" href="#">Revestidos</a>
+                                        <li><a class="dropdown-item" href="#">Sólidos</a>
+                                            <ul class="submenu dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Discos de cubo</a></li>
+                                                <li><a class="dropdown-item" href="#">Discos tipo 41</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Submenu item 4</a></li>
-                                    <li><a class="dropdown-item" href="#">Submenu item 5</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Adhesivos y selladores</a></li>
+                                <li><a class="dropdown-item" href="#">Automotriz</a></li>
+                                <li><a class="dropdown-item" href="#">Cables, cadenas y soga</a></li>
+                                <li><a class="dropdown-item" href="#">Cerraduras y herrajes</a></li>
+                                <li><a class="dropdown-item" href="#">Herramientas</a></li>
+                                <li><a class="dropdown-item" href="#">Herrería y soldadura</a></li>
+                                <li><a class="dropdown-item" href="#">Jardinería</a></li>
+                                <li><a class="dropdown-item" href="#">Material eléctrico</a></li>
+                                <li><a class="dropdown-item" href="#">Mercadeo</a></li>
+                                <li><a class="dropdown-item" href="#">Pintura y accesorios</a></li>
+                                <li><a class="dropdown-item" href="#">Plomería y gas</a></li>
+                                <li><a class="dropdown-item" href="#">Seguridad industrial &raquo;</a>
+                                    <ul class="submenu dropdown-menu">
+                                        <li><a class="dropdown-item" href="submenuitem1">Submenu item 1</a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 2</a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 3 &raquo; </a>
+                                        <ul class="submenu dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Multi level 1</a></li>
+                                            <li><a class="dropdown-item" href="#">Multi level 2</a></li>
+                                        </ul>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 4</a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 5</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/catalogo">Catálogo</a>
@@ -112,14 +123,14 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Empresa
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="about">Nosotros</a></li>
                             <li><a class="dropdown-item" href="sucursales">Sucursales</a></li>
-                            <li><a class="dropdown-item" href="#">Servicio postventa</a></li>
+                            <li><a class="dropdown-item" href="postventa">Servicio postventa</a></li>
                         </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contacto</a>
+                            <a class="nav-link" href="contacto">Contacto</a>
                         </li>
                     </ul>
                 </div>
@@ -237,8 +248,8 @@
                 <h5 onclick="navigate('sucursales')">Sucursales</h5>
                 <h5 onclick="navigate('about')">Nosotros</h5>
                 <h5 onclick="navigate('catalogo')">Catálogos</h5>
-                <h5>Servicios Postventa</h5>
-                <h5>Contacto</h5>
+                <h5 onclick="navigate('postventa')">Servicios Postventa</h5>
+                <h5 onclick="navigate('contacto')">Contacto</h5>
                 <h5>Aviso de Privacidad</h5>
                 <h5>Ayuda</h5>
             </div>

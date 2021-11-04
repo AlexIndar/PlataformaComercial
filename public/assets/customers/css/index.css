@@ -113,7 +113,7 @@ html{
     font-size: 17px !important;
     margin-left: 50px !important;
     font-weight: 700 !important;
-    color: #ffffff !important;
+    color: white !important;
     float: right !important;
     line-height: 30px !important;
 }
@@ -123,19 +123,28 @@ html{
 }
 
 .navbar-nav ul{
-    background-color: #F2F2F2 !important;
+    background-color: white !important;
     padding: 5px !important;
+    min-width: 250px;
 }
 
 .dropdown-item{
-    background-color: #F2F2F2 !important;
-    color: rgb(85, 85, 85) !important;
+    background-color: white !important;
+    color: black !important;
     padding: 5px !important;
     top: 0 !important;
     bottom: 0 !important;
+    height: 100%;
 }
 
+.dropdown-menu{
+    background-color: white !important;
+    height: auto;
+}
 
+.navbar-nav > li:hover > .dropdown-menu {
+    display: block;
+}
 
 
 /* HERO ---------------------------------------------------------------------------------------------------------------------------------------- */
@@ -656,7 +665,7 @@ button{
 }
 
 .modal-inputs{
-    display: flex;
+    display: flex !important;
     align-items: center;
     flex-direction: row;
 }
@@ -708,6 +717,12 @@ button{
     color: white !important;
     font-size: 20px !important;
     font-weight: 500 !important;
+    transition: all .5s ease;
+    cursor: pointer;
+}
+
+.login-btn:hover{
+    background-color: #002868 !important;
 }
 
 .login-buttons a{
@@ -991,18 +1006,22 @@ button{
 	.dropdown-menu li{ position: relative; 	}
 	.nav-item .submenu{ 
 		display: none;
-		position: absolute;
-		left:103%; top:-10px;
+		position: relative;
+        margin-top: -20%;
+        margin-left: 100px;
 	}
-	.nav-item .submenu-left{ 
-		right:100%; left:auto;
-	}
-	.dropdown-menu > li:hover{ background-color: #f1f1f1 }
+    .navbar-nav .dropdown-menu{
+        display: none;
+        position: absolute;
+        top: 43px;
+        left: 50px;
+    }
+
+    .navbar-nav > li:hover > .dropdown-menu {display: block;}
+	.dropdown-menu > li:hover{ background-color: black }
 	.dropdown-menu > li:hover > .submenu{ display: block; }
 }	
-/* ============ desktop view .end// ============ */
 
-/* ============ small devices ============ */
 @media (max-width: 991px) {
   .dropdown-menu .dropdown-menu{
       margin-left:0.7rem; margin-right:0.7rem; margin-bottom: .5rem;

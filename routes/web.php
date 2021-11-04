@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+
+
+// COMMON -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 Route::get('/', function () {
     return view('customers.index');
 });
@@ -37,6 +43,24 @@ Route::get('/about', function () {
 Route::get('/sucursales', function () {
     return view('customers.sucursales');
 });
+
+Route::get('/postventa', function () {
+    return view('customers.postventa');
+});
+
+Route::get('/contacto', function () {
+    return view('customers.contacto');
+});
+
+
+// CUSTOMERS -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+// INTRANET --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Route::get('/Intranet', function(){
     return view('intranet.main');
