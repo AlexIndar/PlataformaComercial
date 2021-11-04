@@ -38,5 +38,12 @@ Route::get('/sucursales', function () {
     return view('customers.sucursales');
 });
 
+Route::get('/Intranet', function(){
+    return view('intranet.main');
+});
+
+Route::get('/MisSolicitudes', function(){
+    return view('intranet.ventas.misSolicitudes');
+});
 
 
