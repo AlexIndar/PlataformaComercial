@@ -274,11 +274,38 @@
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-calculator"></i>
+                <i class="nav-icon fas fa-chart-pie"></i>
                 <p>
-                  CyC
+                  CYC
+                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="/SolicitudesPendientes" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Solicitudes Pendientes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/charts/flot.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Consulta de Solicitudes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/charts/inline.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Estadistica de solicitudes Tiempo</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="pages/charts/uplot.html" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Asignación de Zonas</p>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
