@@ -46,4 +46,7 @@ Route::get('/MisSolicitudes', function(){
     return view('intranet.ventas.misSolicitudes');
 });
 
+Route::get('/SolicitudesPendientes', function(){
+    return view('intranet.cyc.solicitudesPendientes');
+});
 

@@ -56,11 +56,11 @@
                                         <td>Feb 6, 2020, 11:37:38 AM</td>
                                         <td>Rechazada</td>
                                         <td>
-                                            <div class="btn btn-info btn-circle" id="btnInfo" matTooltip="Detalle" onclick="activeModal(1)" *ngIf="element.Status != 1">
+                                            <div class="btn btn-info btn-circle" id="btnInfo" matTooltip="Detalle" data-toggle="modal" data-target="#infoModal" *ngIf="element.Status != 1">
                                                 <i class="fas fa-bars"></i>
                                             </div>
                                             <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
+                                            <div class="btn btn-info btn-circle" data-toggle="modal" data-target="#historialModal">
                                                 <i class="far fa-clock"></i>
                                             </div>
                                             <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
@@ -73,7 +73,7 @@
                                         <td>Mar 10, 2021, 1:55:49 PM</td>
                                         <td>Rechazada Credito (Aceptada Contado)</td>
                                         <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
+                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" data-toggle="modal" data-target="#auxInfoModel" *ngIf="element.Status != 1">
                                                 <i class="fas fa-bars"></i>
                                             </div>
                                             <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
@@ -370,8 +370,8 @@
             <div class="modal-header bg-indarBlue">
                 <h3 class="text-center oswald title ml-auto">Solicitud para Alta de Cliente</h3>
                 <h4 class="ml-auto oswald">ZONA: Z520</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close text-warning" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body text-indarBlue" id="modal">
@@ -1047,18 +1047,588 @@
 
 <!--MODAL INFO -->
 <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLabel">Modal title</h5>
+            <div class="modal-header bg-indarBlue">
+                <h3 class="text-center title ml-auto">Detalle de Solicitud No. 18606</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body text-indarBlue" id="modal">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Datos Generales</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">RFC</div>
+                            <div class="col-md-4">HURA850521718</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Razon Social</div>
+                            <div class="col-md-4">HURTADO ROMO ADAIR JOSUE</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Constancia de Situacion Fiscal</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Fotografia de Solicitud</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <div class="alert alert-danger" role="alert">
+                                    El nombre está escrito incorrectamente
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Dirección Fiscal</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">Calle</div>
+                            <div class="col-md-4">rio juchipila</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">No. Exteriorl</div>
+                            <div class="col-md-4">1173</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Ciudad</div>
+                            <div class="col-md-4">Guadalajara</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Estado</div>
+                            <div class="col-md-4">Jalisco</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Colonia</div>
+                            <div class="col-md-4">Quinta Velarde</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">CP</div>
+                            <div class="col-md-4">44430</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Comprobante Domicilio</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Dirección de entrega</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">Calle</div>
+                            <div class="col-md-4">carr. al castillo</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">No. Exterior</div>
+                            <div class="col-md-4">37a</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Ciudad</div>
+                            <div class="col-md-4">El salto</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Estado</div>
+                            <div class="col-md-4">Jalisco</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                               
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Colonia</div>
+                            <div class="col-md-4">San Jode Del Castillo</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                           
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">C.P.</div>
+                            <div class="col-md-4">45685</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Begin Title -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Negocio</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">Metodo de pago</div>
+                            <div class="col-md-4">Por Definir</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Giro</div>
+                            <div class="col-md-4">Ferreteria y Tlapaleria</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Antiguedad</div>
+                            <div class="col-md-4">31</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Foto Frente</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Foto Izquierda</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                         
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Foto Derecha</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                          
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Datos de Contacto</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-6 text-bold">Tipo Contacto</div>
+                            <div class="col-md-6 text-bold">Principal</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Nombre</div>
+                            <div class="col-md-4">adair josue hurtado romo</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Telefono</div>
+                            <div class="col-md-4">3336881130</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                             
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Celular</div>
+                            <div class="col-md-4">3336881130</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Credito</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">Tipo Local</div>
+                            <div class="col-md-4">Propio</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                              
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Tipo Persona</div>
+                            <div class="col-md-4">Fisica</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">IFE/INE Aval</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">IFE/INE Aval (Reverso)</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">IFE/INE Representante</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">IFE/INE Representante (Reverso)</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">                                
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <div class="alert alert-danger" role="alert">
+                                    La Idenficación del representante es ilegible
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Carta Responsiva</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">Carta Responsiva</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="historialModal" tabindex="-1" aria-labelledby="historialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-indarBlue">
+                <h3 class="text-center title ml-auto">Historial de transacciones de la solicitud 18606</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body text-indarBlue" id="modal">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row mb-3 bg-dark">
+                            <div class="col-md-6">Fecha</div>
+                            <div class="col-md-6">Tipo de Transacción</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 text-bold">19/May/2021 05:24:05 pm</div>
+                            <div class="col-md-6">Solicitud Enviada</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 text-bold">20/May/2021 11:23:20 am</div>
+                            <div class="col-md-6">Validacion Guardada</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 text-bold">20/May/2021 11:23:25 am</div>
+                            <div class="col-md-6">Rechazada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="auxInfoModel" tabindex="-1" aria-labelledby="auxInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-indarBlue">
+                <h3 class="text-center title ml-auto">Detalle de Solicitud No. 18606</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body text-indarBlue" id="modal">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Datos Generales</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">RFC</div>
+                            <div class="col-md-4">HURA850521718</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Razon Social</div>
+                            <div class="col-md-4">HURTADO ROMO ADAIR JOSUE</div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Constancia de Situacion Fiscal</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Fotografia de Solicitud</div>
+                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
+                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Begin Title -->
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <h4 class="text-muted ml-auto oswald text-center">Direccion Fiscal</h4>
+                        <hr class="hr_style">
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <!-- End Title -->
+                <!-- Begin Direccion Fiscal -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Calle</th>
+                                    <td>rio juchipila</td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'Calle'], 1)" *ngIf="validateRequest.Calle == false"><i class="fas fa-pencil-alt"></i></div>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.Calle == null,
+                                                          'btn-success': validateRequest.Calle == true,
+                                                          'btn-danger': validateRequest.Calle == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.Calle == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.Calle == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.Calle == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">No. Exterior</th>
+                                    <td>1173</td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'NoExt'], 1)" *ngIf="validateRequest.NumeroExterior == false"><i class="fas fa-pencil-alt"></i></div>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.NumeroExterior == null,
+                                                          'btn-success': validateRequest.NumeroExterior == true,
+                                                          'btn-danger': validateRequest.NumeroExterior == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.NumeroExterior == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.NumeroExterior == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.NumeroExterior == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="requestDetail.Cliente.DatosF.Domicilio.NoInt != null && requestDetail.Cliente.DatosF.Domicilio.NoInt != ''">
+                                    <th scope="row">No. Interior</th>
+                                    <td>Guadalajara</td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'NoInt'], 1)" *ngIf="validateRequest.Ciudad == false"><i class="fas fa-pencil-alt"></i></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Ciudad</th>
+                                    <td>Jalisco</td>
+                                    <td>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.Ciudad == null,
+                                                          'btn-success': validateRequest.Ciudad == true,
+                                                          'btn-danger': validateRequest.Ciudad == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.Ciudad == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.Ciudad == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.Ciudad == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Estado</th>
+                                    <td>Quinta Velarde</td>
+                                    <td>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.Estado == null,
+                                                          'btn-success': validateRequest.Estado == true,
+                                                          'btn-danger': validateRequest.Estado == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.Estado == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.Estado == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.Estado == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Colonia</th>
+                                    <td>44430</td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'Colonia'], 1)" *ngIf="validateRequest.Colonia == false"><i class="fas fa-pencil-alt"></i></div>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.Colonia == null,
+                                                          'btn-success': validateRequest.Colonia == true,
+                                                          'btn-danger': validateRequest.Colonia == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.Colonia == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.Colonia == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.Colonia == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">CP</th>
+                                    <td>44430</td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'CP'], 2)" *ngIf="validateRequest.CP == false"><i class="fas fa-pencil-alt"></i></div>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.CP == null,
+                                                          'btn-success': validateRequest.CP == true,
+                                                          'btn-danger': validateRequest.CP == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.CP == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.CP == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.CP == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="requestDetail.Tipo != false">
+                                    <th scope="row">Comprobante Domicilio</th>
+                                    <td>
+                                        <button mat-raised-button color="primary" (click)="openPic(2)">
+                                            <i class="fas fa-eye"></i> Ver Archivo
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateFile(2)" *ngIf="validateRequest.ComprobanteDomicilio == false"><i class="fas fa-pencil-alt"></i></div>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.ComprobanteDomicilio == null,
+                                                          'btn-success': validateRequest.ComprobanteDomicilio == true,
+                                                          'btn-danger': validateRequest.ComprobanteDomicilio == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.ComprobanteDomicilio == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.ComprobanteDomicilio == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.ComprobanteDomicilio == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="requestDetail.Tipo != false && existsFileComDomR()">
+                                    <th scope="row">Comprobante Domicilio (Reverso)</th>
+                                    <td>
+                                        <button mat-raised-button color="primary" (click)="openPic(21)">
+                                            <i class="fas fa-eye"></i> Ver Archivo
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateFile(21)" *ngIf="validateRequest.ComprobanteDomicilio == false"><i class="fas fa-pencil-alt"></i></div>
+                                        <div class="btn btn-circle" [ngClass]="{
+                                                          'btn-secondary': validateRequest.ComprobanteDomicilio == null,
+                                                          'btn-success': validateRequest.ComprobanteDomicilio == true,
+                                                          'btn-danger': validateRequest.ComprobanteDomicilio == false
+                                                          }">
+                                            <i class="fas fa-minus" *ngIf="validateRequest.ComprobanteDomicilio == null"></i>
+                                            <i class="fas fa-check" *ngIf="validateRequest.ComprobanteDomicilio == true"></i>
+                                            <i class="fas fa-times" *ngIf="validateRequest.ComprobanteDomicilio == false"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
             </div>
@@ -1106,15 +1676,6 @@
     // BS-Stepper Init
     document.addEventListener('DOMContentLoaded', function() {
         window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-    })
-
-    function activeModal(modal){ //if modal = 1 active login / if modal = 2 active register
-        if(modal == 1){
-            alert("si entra");
-            var infoModal = document.getElementById('btnInfo');
-            infoModal.dataToggle.add("modal");
-            infoModal.dataTarget.add("#solicitudModal");
-        }
-    }
+    });
 </script>
 @endsection
