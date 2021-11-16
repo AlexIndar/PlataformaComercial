@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Customer\ItemsController;
+use App\Http\Middleware\ValidateSession;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,45 +15,65 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-
-
-
-// COMMON -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 Route::get('/', function () {
-    return view('customers.index');
-});
+    $token = Config::get('token');
+    return view('customers.index', ['token' => $token]);
+})->name('/');
+
+Route::post('/login', [LoginController::class, 'authenticate']);
 
 Route::get('/main', function () {
     // VALIDAR LOGIN
-    return view('main');
+    $token = Config::get('token');
+    return view('main', ['token' => $token]);
 });
 
 Route::get('/faq', function () {
-    return view('customers.faq');
+     $token = Config::get('token');
+    return view('customers.faq', ['token' => $token]);
 });
 
 Route::get('/catalogo', function () {
-    return view('customers.catalogo');
+     $token = Config::get('token');
+    return view('customers.catalogo', ['token' => $token]);
 });
 
 Route::get('/about', function () {
-    return view('customers.about');
+     $token = Config::get('token');
+    return view('customers.about', ['token' => $token]);
 });
 
 Route::get('/sucursales', function () {
-    return view('customers.sucursales');
+     $token = Config::get('token');
+    return view('customers.sucursales', ['token' => $token]);
 });
 
 Route::get('/postventa', function () {
-    return view('customers.postventa');
+     $token = Config::get('token');
+    return view('customers.postventa', ['token' => $token]);
 });
 
 Route::get('/contacto', function () {
-    return view('customers.contacto');
+     $token = Config::get('token');
+    return view('customers.contacto', ['token' => $token]);
 });
+
+Route::get('/descontinuados', function () {
+     $token = Config::get('token');
+    return view('customers.descontinuados', ['token' => $token]);
+});
+
+
+Route::get('/logout', [LoginController::class, 'logout']);
+
+Route::get('/detallesProducto/{id}', [ItemsController::class, 'getProduct']);
+
+
+Route::middleware([ValidateSession::class])->group(function(){ // COMMON -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+   
+});
+
 
 
 // CUSTOMERS -------------------------------------------------------------------------------------------------------------------------------------------------------------------------

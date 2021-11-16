@@ -3,7 +3,7 @@
 
 @section('title') Indar - Servicio Postventa @endsection
 
-@section('styles')
+@section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
 @endsection
 

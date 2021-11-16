@@ -1,5 +1,5 @@
-body{
-    background-color: #F2F2F2;
+body {
+    background: #000 url(bg.jpg) top left no-repeat;
     overflow-x: hidden !important;
 }
 
@@ -15,46 +15,53 @@ html{
 
 ::-webkit-scrollbar-thumb {
     background: #313761;
-    border-radius: 10px;
+    border-radius: 10px; 
 }
 
 
 /* FIRST GRAY BAR --------------------------------------------------------------------------------------------------------------------------------------- */
 .login-options{
+    position: fixed;
     width: 100%;
-    height: 35px;
-    background-color: #F2F2F2;
+    height: 27px;
+    background-color: #F5F8F8;
     display: flex;
     flex-direction: row;
-    padding: 5px;
+    padding: 3px;
     justify-content: right;
+    z-index: 1000;
 }
 
+
+
 .login-options h5{
-    font-size: 17px;
+    font-size: 14px;
     margin-left: 10px;
-    font-weight: 700;
+    font-weight: 500;
     color: #002868;
     float: right;
     cursor: pointer;
+    line-height: 20px;
 }
 
 .question{
-    margin-right: 10%;
     margin-left: 10px;
     color: #002868;
     font-size: 17px;
     margin-top: 10px;
     cursor: pointer;
+     margin-right: 20px;
 }
 
 /* LOGO BAR - FILTER - ACCOUNT -------------------------------------------------------------------------------------------------------------------------- */
 
 .brand-logo{
-    padding: 20px;
     background-color: rgb(255, 255, 255);
     width: 100%;
-    height: auto;
+    height: auto; 
+    position: fixed;
+    top: 26px;
+    z-index: 1000;
 }
 
 .row-logo{
@@ -70,13 +77,22 @@ html{
 }
 
 .input-indar{
-    background-color: #F2F2F2 !important;
-    border: 1px solid #d3d3d3 !important;
+    background-color: #F5F8F8 !important;
+    border: 1px solid #F5F8F8 !important;
     color: rgb(85, 85, 85) !important;
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .btn-group ul{
-    background-color: #F2F2F2 !important;
+    background-color: #F5F8F8 !important;
 }
 
 
@@ -100,19 +116,22 @@ html{
     width: 100%;
     height: 50px;
     background-color: #002868 !important;
-    border-bottom: 5px solid #FFC61E !important;
+    border-bottom: 5px solid rgb(251, 198, 33) !important;
     display: flex !important;
     flex-direction: row !important;
     color: white !important;
     justify-content: center !important;
-    position: fixed;
+    position: fixed !important;
+    z-index: 999;
+    top: 90px !important;
 }
 
 .nav-link{
     color: white !important;
     font-size: 17px !important;
     margin-left: 50px !important;
-    font-weight: 700 !important;
+    font-weight: 500 !important;
+    letter-spacing: 1px;
     color: white !important;
     float: right !important;
     line-height: 30px !important;
@@ -123,18 +142,51 @@ html{
 }
 
 .navbar-nav ul{
-    background-color: white !important;
-    padding: 5px !important;
+    position: fixed !important;
+    top: 134px !important;
+    background-color: #F5F8F8;
+    padding: 0px !important;
     min-width: 250px;
+    height: 500px;
+    border-left: 1px solid white !important;
+    border-bottom: 10px solid #F5F8F8 !important;
+    border-right: 10px solid #F5F8F8 !important;
+    border-radius: 0px !important;
+    margin-left: 18px;
 }
 
-.dropdown-item{
+.dropdown-menu-empresa{
+    margin-left: 330px !important;
+}
+
+.main-ul:first-child{
+    background-color: black !important;
+}
+
+.fa-main{
+    color: #002868 !important;
+}
+
+.dropdown-item-main{
+    background-color: #F5F8F8 !important;
+}
+
+.dropdown-item-main:hover{
     background-color: white !important;
-    color: black !important;
+}
+
+
+.dropdown-item{
     padding: 5px !important;
     top: 0 !important;
     bottom: 0 !important;
     height: 100%;
+    font-weight: 500 !important;
+}
+
+.dropdown-item:hover{
+    color: #002868 !important;
+    background-color: white !important;
 }
 
 .dropdown-menu{
@@ -142,12 +194,27 @@ html{
     height: auto;
 }
 
+.dropdown-menu-main{
+    background-color: #F5F8F8 !important;
+}
+
 .navbar-nav > li:hover > .dropdown-menu {
     display: block;
 }
 
+.fa-menu{
+    position: relative;
+    float: right;
+    top: 12px;
+    right: 8px;
+}
+
 
 /* HERO ---------------------------------------------------------------------------------------------------------------------------------------- */
+
+.body-content{
+    margin-top: 140px !important;
+}
 
 .hero, .slider{
     width: 100%;
@@ -213,15 +280,23 @@ html{
     top: 220px;
     left: 0;
     font-size: 18px;
-    font-weight: 500;
     position: absolute;
+    transition: all 2s ease;
+    font-weight: 200 !important;
+}
+
+.slider-btn:hover{
+    background-color: white;
+    color: black;
+    font-weight: 300;
+
 }
 
 .yellow{
     position: absolute;
     top: 0;
 	left: 0;
-    background-color: #9991194a;
+    background-color: #113c5e4a;
     width: 60%;
     height: 100%;
     -webkit-clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 100%, 70% 0);
@@ -256,7 +331,7 @@ html{
     position: absolute;
     top: 0;
 	left: 0;
-    background-color: rgba(119, 32, 0, 0.398);
+    background-color: rgba(112, 71, 9, 0.398);
     width: 60%;
     height: 100%;
     -webkit-clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 100%, 70% 100%);
@@ -301,13 +376,13 @@ button{
     width: 100%;
     height: auto;
     padding: 10px;
-    background-color: #F2F2F2;
+    background-color: #F5F8F8;
 }
 
 .new-products-title{
     width: 90%;
     margin-left: 5%;
-    border-bottom: 5px solid #FFC61E;
+    border-bottom: 5px solid rgb(251, 198, 33);
     padding: 10px;
 }
 
@@ -317,12 +392,20 @@ button{
     font-weight: 700;
 }
 
+.controls{
+    height: 100px;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
 /* OUTLET PRODUCTS ---------------------------------------------------------------------------------------------------------------------------- */
 .outlet-products{
     width: 100%;
     height: auto;
     padding: 10px;
-    background-color: #ffb81e;
+    background-color: rgb(251, 198, 33);
 }
 
 .outlet-products-title{
@@ -365,7 +448,7 @@ button{
     left: 0% auto;
     height: auto;
     margin-top: 50px;
-    margin-bottom: 100px;
+    margin-bottom: 10px;
 }
 
 .swiper-2 {
@@ -373,7 +456,7 @@ button{
     left: 0% auto;
     height: auto;
     margin-top: 50px;
-    margin-bottom: 100px;
+    margin-bottom: 10px;
 }
 
 .swiper-slide-products{
@@ -385,6 +468,7 @@ button{
     flex-direction: column;
     align-items: center;
     overflow: hidden !important;
+    cursor: pointer;
 }
 
 .swiper-slide-products img{
@@ -401,47 +485,6 @@ button{
     text-align: center !important;
 }
 
-.swiper-pagination-1{
-    bottom: -130px !important;
-}
-
-.swiper-pagination-2{
-    bottom: -650px !important;
-}
-
-.swiper-button-prev-1, .swiper-button-next-1, .swiper-button-prev-2, .swiper-button-next-2{
-    position: absolute !important;
-    margin-top: 250px !important;
-    background-color: #002868 !important;
-    height: 120px !important;
-    padding: 5px !important;
-    width: 35px !important;
-    border-radius: 10px;
-    font-size: 15px !important;
-}
-
-.swiper-button-prev-1, .swiper-button-next-1{
-    margin-top: 315px !important;
-}
-
-.swiper-button-prev::after, .swiper-button-next::after{
-    font-size: 30px !important;
-    font-weight: 700;
-    text-align: center;
-    color: white;
-}
-
-.swiper-button-prev-1, .swiper-button-prev-2{
-    margin-left: 40px !important;
-}
-.swiper-button-next-1, .swiper-button-next-2{
-    margin-right: 40px !important;
-}
-
-.swiper-button-prev-2, .swiper-button-next-2{
-    margin-top: 835px !important;
-}
-
 
 .swiper-pagination-bullet{
     background-color: transparent !important;
@@ -452,6 +495,30 @@ button{
 
 .swiper-pagination-bullet-active{
     background-color: #555555 !important;
+}
+
+.swiper-button-indar{
+    background-color: #002868;
+    color: white !important;
+    font-size: 10px !important;
+    height: 60% !important;
+    font-size: 100px !important;
+    padding: 1% !important;
+    border-radius: 10px !important;
+}
+
+.swiper-button-indar::after{
+    font-size: 20px !important;
+}
+
+.swiper-buttons-indar-left{
+    margin-left: 10% !important;
+}
+
+
+
+.swiper-buttons-indar-right{
+    margin-right: 10% !important;
 }
 
 .original-price{
@@ -478,7 +545,7 @@ button{
     display: block;
     width: 225px;
     padding: 10px 0;
-    background-color: #ffb81e;
+    background-color: rgb(251, 198, 33);
     box-shadow: 0 5px 10px rgba(0,0,0,.1);
     color: #002868;
     font: 750 18px/1 'Lato', sans-serif;
@@ -583,6 +650,7 @@ button{
     justify-content: center;
     color: #002868;
 }
+
 
 .social-media-icons a{
     text-decoration: none;
@@ -713,7 +781,7 @@ button{
 
 .login-btn{
     width: 40%;
-    background-color: #ffb81e !important;
+    background-color: rgb(251, 198, 33) !important;
     color: white !important;
     font-size: 20px !important;
     font-weight: 500 !important;
@@ -740,75 +808,77 @@ button{
     color: #002868 !important;
 }
 
+
 .modal-body a{
     text-decoration: none;
     font-size: 18px;
     color: #002868;
 }
 
+/* DISCONTINUED ---------------------------------------------------------------------------------------------- */
+.yellow-bar{
+    background-color: rgb(251, 198, 33);
+    width: 100%;
+    min-height: 150px;
+    height: auto;
+}
+
+.yellow-bar-content{
+    color: #002868;
+    border-bottom: 5px solid #002868;
+    display: flex;
+    flex-direction: row;
+}
+
+.yellow-bar-content h4{
+    margin-left: 50px;
+    margin-top: 10px;
+}
+
+.product-card{
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden !important;
+    height: auto !important;
+    margin-left: 10px;
+    margin-top: 10px !important;
+}
+
+.product-card img{
+    object-fit: cover !important;
+    max-width: 100%;
+    max-height: 100px;
+}
+
+.product-card h5{
+    color:  #002868;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 5px;
+    text-align: center !important;
+}
+
+.ribbon-discontinued span {
+    padding: 2px 0 !important;
+    font: 750 12px/1 'Lato', sans-serif;
+}
+
+.ribbon-discontinued{
+    top: -12px !important;
+    left: -25px !important;
+}
+
+.gray-background{
+    background-color: #F5F8F8;
+}
+
 
 /* RESPONSIVE ------------------------------------------------------------------------------------------------- */
-
-
-@media (max-width: 1570px) {
-    .swiper-button-prev-1, .swiper-button-next-1{
-        margin-top: 350px !important;
-    }
-    .swiper-button-prev-2, .swiper-button-next-2{
-        margin-top: 870px !important;
-    }
-    .swiper-pagination-1{
-        bottom: -180px !important;
-    }
-    
-    .swiper-pagination-2{
-        bottom: -750px !important;
-    }
-}
-
-@media (max-width: 1100px) and (orientation:portrait) {
-    .swiper-button-prev-1, .swiper-button-next-1{
-        margin-top: 80px !important;
-    }
-    .swiper-button-prev-2, .swiper-button-next-2{
-        margin-top: 600px !important;
-    }
-    .swiper-pagination-1{
-        bottom: 350px !important;
-    }
-    
-    .swiper-pagination-2{
-        bottom: -220px !important;
-    }
-}
-
-@media(max-width: 1490px){
-    .oferta-flag{
-        margin-left: -130px !important;
-    }
-}
-
-@media (max-width: 1380px){
-    .oferta-flag{
-        margin-left: -180px !important;
-    }
-}
-
-@media (max-width: 1370px) and (orientation:landscape) {
-    .swiper-button-prev-1, .swiper-button-next-1{
-        margin-top: 230px !important;
-    }
-    .swiper-button-prev-2, .swiper-button-next-2{
-        margin-top: 780px !important;
-    }
-    .swiper-pagination-1{
-        bottom: 10px !important;
-    }
-    
-    .swiper-pagination-2{
-        bottom: -550px !important;
-    }
-}
 
 @media(max-width:1370px){
     .oferta-flag{
@@ -822,42 +892,9 @@ button{
     }
 }
 
-@media (max-width: 1024px) and (orientation:landscape) {
-    .swiper-button-prev-1, .swiper-button-next-1{
-        margin-top: 370px !important;
-    }
-    .swiper-button-prev-2, .swiper-button-next-2{
-        margin-top: 910px !important;
-    }
-    .swiper-pagination-1{
-        bottom: -230px !important;
-    }
-    
-    .swiper-pagination-2{
-        bottom: -800px !important;
-    }
-}
-
 
 
 @media (max-width: 991px) {
-    .swiper-button-prev-1, .swiper-button-next-1{
-        margin-top: 400px !important;
-    }
-    .swiper-button-prev-2, .swiper-button-next-2{
-        margin-top: 950px !important;
-    }
-    .swiper-pagination-1{
-        bottom: -250px !important;
-    }
-    
-    .swiper-pagination-2{
-        bottom: -810px !important;
-    }
-
-    .oferta-flag{
-        margin-left: -140px !important;
-    }
 
     .footer-links{
         display: flex;
@@ -872,30 +909,9 @@ button{
 }
 
 
-@media (max-width: 900px) {
-    .swiper-button-prev-1, .swiper-button-next-1{
-        display: none !important;
-    }
-    .swiper-button-prev-2, .swiper-button-next-2{
-        display: none !important;
-    }
-}
-
-@media (max-width: 830px){
-    .oferta-flag{
-        margin-left: -150px !important;
-    }
-}
-
-@media (max-width: 812px) and (orientation:landscape) { /*IPHONE LANDSCAPE */
-    .swiper-pagination-1{
-        bottom: -700px !important;
-    }
-    .swiper-pagination-2{
-        bottom: -1250px !important;
-    }
-    .oferta-flag{
-        margin-left: -200px !important;
+@media (max-width: 767px) {
+    .input-discontinued{
+        width: 100% !important;
     }
 }
 
@@ -914,11 +930,6 @@ button{
     }
 }
 
-@media (max-width: 599x){
-    .oferta-flag{
-        margin-left: -450px !important;
-    }
-}
 
 @media (max-width: 455px) {
     .new-products-title h3{
@@ -944,15 +955,6 @@ button{
 }
 
 @media (max-width: 414px) and (orientation:portrait) /*IPHONE PORTRAIT*/ {
-    .swiper-pagination-1{
-        bottom: -380px !important;
-    }
-    .swiper-pagination-2{
-        bottom: -930px !important;
-    }
-    .oferta-flag{
-        margin-left: -220px !important;
-    }
     .slider h1{
         font-size: 30px !important;
         margin-top: -10px !important;
@@ -961,24 +963,12 @@ button{
 }
 
 @media (max-width: 375px) and (orientation:portrait) /*IPHONE PORTRAIT*/ {
-    .swiper-pagination-1{
-        bottom: -300px !important;
-    }
-    .swiper-pagination-2{
-        bottom: -860px !important;
-    }
     .oferta-flag{
         margin-left: -170px !important;
     }
 }
 
 @media (max-width: 360px) and (orientation:portrait) /*IPHONE PORTRAIT*/ {
-    .swiper-pagination-1{
-        bottom: -480px !important;
-    }
-    .swiper-pagination-2{
-        bottom: -1030px !important;
-    }
     .oferta-flag{
         margin-left: -170px !important;
     }
@@ -1006,19 +996,22 @@ button{
 	.dropdown-menu li{ position: relative; 	}
 	.nav-item .submenu{ 
 		display: none;
-		position: relative;
-        margin-top: -20%;
-        margin-left: 100px;
+		position: fixed !important;
+        margin-left: 255px;
+	}
+    .nav-item .submenu-2{ 
+		display: none;
+		position: fixed !important;
+        margin-left: 489px;
 	}
     .navbar-nav .dropdown-menu{
         display: none;
         position: absolute;
-        top: 43px;
+        top: 45px;
         left: 50px;
     }
 
     .navbar-nav > li:hover > .dropdown-menu {display: block;}
-	.dropdown-menu > li:hover{ background-color: black }
 	.dropdown-menu > li:hover > .submenu{ display: block; }
 }	
 

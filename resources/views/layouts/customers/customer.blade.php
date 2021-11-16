@@ -17,15 +17,26 @@
         <script src="https://unpkg.com/scrollreveal"></script>
         <title>@yield('title')</title>
         <!-- Custom Styles -->
-        @yield('styles')
+        @yield('assets')
 </head>
 <body>
 
     <!-- LOGIN OPTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------->
     <div class="login-options">
-        <h5 onclick="activeModal(2)">Regístrate</h5>
-        <h5 onclick="activeModal(1)">Iniciar sesión</h5>
-        <i onclick="navigate('faq')" class="fas fa-question-circle question fa-lg"></i> 
+        <h5>Síguenos en </h5>
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i style="color: #002868; margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>  
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a> 
+        <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a> 
+        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a> 
+
+        @if($token && $token != 'error')
+            <h5 onclick="navigate('logout')">Cerrar sesión</h5>
+        @else
+            <h5 onclick="activeModal(2)">Regístrate  &nbsp;&nbsp;|</h5>
+            <h5 onclick="activeModal(1)">Iniciar sesión</h5>
+        @endif
+        <h5 onclick="navigate('faq')">Ayuda</h5>
+        <i onclick="navigate('faq')" class="fas fa-question-circle question fa-sm"></i> 
     </div>
 
     <!-- BRAND LOGO ----------------------------------------------------------------------------------------------------------------------------------------------------- -->
@@ -33,7 +44,7 @@
     <div class="brand-logo">
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12 row-logo">
-                <img onclick="navigate('/')" class="logo appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="250">
+                <img onclick="navigate('/')" class="logo appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="150">
             </div>
             <div class="col-lg-6 col-md-10 col-sm-10 col-xs-8">
                 <div class="input-group mb-3 mt-3">
@@ -42,9 +53,10 @@
                             <button class="btn btn-secondary dropdown-toggle input-indar" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
                                 Filtrar por
                             </button>
-                            <ul class="dropdown-menu w-100" aria-labelledby="defaultDropdown">
-                                <li><a class="dropdown-item" href="#">Producto</a></li>
-                                <li><a class="dropdown-item" href="#">Marca</a></li>
+                            <ul class="dropdown-menu w-100" aria-labelledby="defaultDropdown" style="transform: translate(0px, 38px) !important; padding: 0 !important;">
+                                <li><a class="dropdown-item" href="#">Artículo <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item" href="#">Marca <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item" href="#">Proveedor <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -73,45 +85,87 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#">Abrasivos</a>
+                            <ul class="dropdown-menu dropdown-menu-main" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Abrasivos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
                                     <ul class="submenu dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Diamantados</a></li>
-                                        <li><a class="dropdown-item" href="#">Fibras</a></li>
-                                        <li><a class="dropdown-item" href="#">Metálicos</a>
-                                        <li><a class="dropdown-item" href="#">Paquete</a>
-                                        <li><a class="dropdown-item" href="#">Revestidos</a>
-                                        <li><a class="dropdown-item" href="#">Sólidos</a>
-                                            <ul class="submenu dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Discos de cubo</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos tipo 41</a></li>
+                                        <li class="list-item"><a class="dropdown-item" href="#">Diamantados <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                            <ul class="submenu submenu-2 dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Copas de diamantada</a></li>
+                                                <li><a class="dropdown-item" href="#">Discos de diamante</a></li>
+                                                <li><a class="dropdown-item" href="#">Lija de carburo</a></li>
+                                                <li><a class="dropdown-item" href="#">Lija de diamante</a></li>
+                                                <li><a class="dropdown-item" href="#">Pads diamantados</a></li>
+                                                <li><a class="dropdown-item" href="#">Rueda de diamante</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Fibras <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                            <ul class="submenu submenu-2 dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Almohadillas</a></li>
+                                                <li><a class="dropdown-item" href="#">Bandas de lija</a></li>
+                                                <li><a class="dropdown-item" href="#">Discos de fibra</a></li>
+                                                <li><a class="dropdown-item" href="#">Rodillos</a></li>
+                                                <li><a class="dropdown-item" href="#">Ruedas</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Metálicos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                            <ul class="submenu submenu-2 dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Cardas</a></li>
+                                                <li><a class="dropdown-item" href="#">Cepillos</a></li>
+                                                <li><a class="dropdown-item" href="#">Espirales</a></li>
+                                                <li><a class="dropdown-item" href="#">Limas</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Paquete <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                            <ul class="submenu submenu-2 dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Paquete</a></li>
+                                                <li><a class="dropdown-item" href="#">Paquete</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Revestidos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                            <ul class="submenu submenu-2 dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Bandas de lija</a></li>
+                                                <li><a class="dropdown-item" href="#">Cilindros</a></li>
+                                                <li><a class="dropdown-item" href="#">Discos de esponja</a></li>
+                                                <li><a class="dropdown-item" href="#">Discos de lija</a></li>
+                                                <li><a class="dropdown-item" href="#">Lijas en hoja</a></li>
+                                                <li><a class="dropdown-item" href="#">Lijas esponja</a></li>
+                                                <li><a class="dropdown-item" href="#">Rehilete de lija</a></li>
+                                                <li><a class="dropdown-item" href="#">Rollos de lija</a></li>
+                                                <li><a class="dropdown-item" href="#">Rueda flap</a></li>
+                                                <li><a class="dropdown-item" href="#">Tiras de lija</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Sólidos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                            <ul class="submenu submenu-2 dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Discos de cubo <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                                <li><a class="dropdown-item" href="#">Discos tipo 41 para <br> máquinas estacionarias<i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
                                             </ul>
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a class="dropdown-item" href="#">Adhesivos y selladores</a></li>
-                                <li><a class="dropdown-item" href="#">Automotriz</a></li>
-                                <li><a class="dropdown-item" href="#">Cables, cadenas y soga</a></li>
-                                <li><a class="dropdown-item" href="#">Cerraduras y herrajes</a></li>
-                                <li><a class="dropdown-item" href="#">Herramientas</a></li>
-                                <li><a class="dropdown-item" href="#">Herrería y soldadura</a></li>
-                                <li><a class="dropdown-item" href="#">Jardinería</a></li>
-                                <li><a class="dropdown-item" href="#">Material eléctrico</a></li>
-                                <li><a class="dropdown-item" href="#">Mercadeo</a></li>
-                                <li><a class="dropdown-item" href="#">Pintura y accesorios</a></li>
-                                <li><a class="dropdown-item" href="#">Plomería y gas</a></li>
-                                <li><a class="dropdown-item" href="#">Seguridad industrial &raquo;</a>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Adhesivos y selladores <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Automotriz <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Cables, cadenas y soga <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Cerraduras y herrajes <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Herramientas <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Herrería y soldadura <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Jardinería <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Material eléctrico <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Mercadeo <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Pintura y accesorios <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Plomería y gas <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item dropdown-item-main" href="#">Seguridad industrial <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
                                     <ul class="submenu dropdown-menu">
-                                        <li><a class="dropdown-item" href="submenuitem1">Submenu item 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 2</a></li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 3 &raquo; </a>
-                                        <ul class="submenu dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Multi level 1</a></li>
-                                            <li><a class="dropdown-item" href="#">Multi level 2</a></li>
+                                        <li><a class="dropdown-item" href="submenuitem1">Submenu item 1 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 2 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 3 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                        <ul class="submenu submenu-2 dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Multi level 1 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                            <li><a class="dropdown-item" href="#">Multi level 2 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
                                         </ul>
                                         </li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 4</a></li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 5</a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 4 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                        <li><a class="dropdown-item" href="#">Submenu item 5 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -120,13 +174,13 @@
                             <a class="nav-link" href="/catalogo">Catálogo</a>
                         </li>
                         <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  data-bs-toggle="dropdown" aria-expanded="false">
                             Empresa
                         </a>
-                        <ul class="dropdown-menu" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="about">Nosotros</a></li>
-                            <li><a class="dropdown-item" href="sucursales">Sucursales</a></li>
-                            <li><a class="dropdown-item" href="postventa">Servicio postventa</a></li>
+                        <ul class="dropdown-menu dropdown-menu-empresa dropdown-menu-main" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="about"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
+                            <li><a class="dropdown-item" href="sucursales"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Sucursales </a></li>
+                            <li><a class="dropdown-item" href="postventa"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
                         </ul>
                         </li>
                         <li class="nav-item">
@@ -144,9 +198,10 @@
     <!-- BODY CONTENT -->
 
 
+    <div class="body-content">
+        @yield('body')
+    </div>
 
-
-    @yield('body')
 
 
 
@@ -177,25 +232,22 @@
                             <div class="swiper-wrapper swiper-wrapper-suppliers">
                                 <!-- Slides -->
                                 <div class="swiper-slide swiper-slide-suppliers">
+                                    <img  src="https://cdn.worldvectorlogo.com/logos/austromex.svg" alt="">
+                                </div> 
+                                <div class="swiper-slide swiper-slide-suppliers">
+                                    <img  src="https://cdn.worldvectorlogo.com/logos/black-decker-3.svg" alt="">
+                                </div>
+                                <div class="swiper-slide swiper-slide-suppliers">
+                                    <img  src="https://logodownload.org/wp-content/uploads/2014/12/bosch-logo.png" alt="">
+                                </div>
+                                <div class="swiper-slide swiper-slide-suppliers">
                                     <img  src="data:image/webp;base64,UklGRowDAABXRUJQVlA4TIADAAAvmAAJEAfGoG0jSeHPacH1mzsI4z8XCtI2YGG7o8ht2wY+JelgvgG8Bb8Cuc7tvU0x5AhL51LBAxCj70EhP+gtgUUQsVc4ROuFwkKBNrMJRTQiKYl3auZofO8ICGm3bRvPs4Latm3btm3bbvq8tW3btpWc//Y859wbFB8j+j8B8h/2w98rf6+H7AeDNZPax7Mx9ZC+IWL8IXVDROdDxipA6pDxYFlDvUPGYaHmh3yLxzebGvobI/qPEqHzov4qHVoh+hOghZgHG1qLcUmou+Ty701lfdU2SAcg+UWTbqGThq3AMtueAiFyt74n7homA63FuACIvTcMAG7bPhYvFPK0pqd1hhQw0XIEaCT6z3LQWBz7Fgy5lPDT13Ab2Gl5G4MRhjPAIpfthUOmAMMDV0p/19Jl4J5FmsBGwzzgmsureOF4URzWiyuc0qQz5TOmsXDZ0BIaiHOXPFq/quipSQb5mWuYRS8xpyj2XXsBzHFb66366EjLg9GRlroQn/jLssdPK8MeFtoe0F70FHDZ7bE31XKOSAeYZ3nqJ/ZSe8hhm1SeZBgMdUS/qEirPCv1ySAVvVCkSYVXDv1SWroiTNPuL9KW5hknLC0NQfdoYJRhvDiuuqtdAM5rO3tpt/Jth6W7YQnGaobrLtfT2mKontHGlc8o0iDP1lt6Go7PjCwBcF3LYnuYJHoT7mlz8myXpbtBrRha7fToudPrOJzW3sfYpV3Ms6uWVp56OAV7nIqg0m/tGEzUMjXyqmHaUtFTia8u4yY5jYSxoi+G1ppMyqcSZ8X4FE8cdWncxCVTBY4ZHI/nT4VBN8W6x9sMhzfE3jhcgQo/fP2qkCfPP4jjQMvxmZElIpo4HIQDDstglHgf6fLhido0S87Pi1uWYH9qmw0zHTrBIX/7XYytc2sSlm2to6N22jpCO9u7BGW/+ftcqhCci5v0qCGmr0lIfDTtg2GSxf45Uz4Lj6qThUppyxmA46bRsM/wbEDkQUOQIy03TFrXzNe1WmSDK5ZlofmmGpT6bNhL5GDDu2RubJk9a85mP99WlCQ7yyy9Q10sN2CgGKdGVTVIz9xYP/Non/U+Hi+vgeqtqyFdNlT8m2EV7La0jeKOYXNuzJtad/qcwJ5av2BoA6zDA1clmQrUVUQuCfQ2sCHQU0llQqCvpE7gsw4ExvnEhs0ZGuPv9cPfq/yHBQ==" alt="">
                                 </div>
                                 <div class="swiper-slide swiper-slide-suppliers">
+                                    <img  src="https://1000marcas.net/wp-content/uploads/2021/05/Dremel-logo.png" alt="">
+                                </div> 
+                                <div class="swiper-slide swiper-slide-suppliers">
                                     <img  src="https://cdn.shopify.com/s/files/1/0333/9953/7802/collections/marca-logo-fandeli_Mesa_de_trabajo_1_1024x.png?v=1594413377" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://img.ffx.co.uk/website2/brands/BrandLogos/WD40.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://trataconanmeco.com/Ventas/logo_bc_rugo.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.shopify.com/s/files/1/0333/9953/7802/collections/marcas-logos-resistol_Mesa_de_trabajo_1_1024x.png?v=1594413544" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://seeklogo.com/images/P/PFERD-logo-E79ADDAD39-seeklogo.com.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://www.makita.es/data/pam/public/Content-Pages/About-Us/About-Makita/makita_white_logo_png.png" alt="">
                                 </div> 
                                 <div class="swiper-slide swiper-slide-suppliers">
                                     <img  src="https://www.coestan.com/uploads/productos/resized/600_0567ec86e0407dcf50f5bf1f524ce299.png" alt="">
@@ -204,23 +256,32 @@
                                     <img  src="https://elpro.mx/wp-content/uploads/2018/08/Distintivo-GRUPOELPRO-w-500px-01.png" alt="">
                                 </div> 
                                 <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.worldvectorlogo.com/logos/black-decker-3.svg" alt="">
+                                    <img  src="https://cdn.worldvectorlogo.com/logos/klein-tools.svg" alt="">
                                 </div> 
                                 <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.worldvectorlogo.com/logos/austromex.svg" alt="">
+                                    <img  src="https://www.makita.es/data/pam/public/Content-Pages/About-Us/About-Makita/makita_white_logo_png.png" alt="">
                                 </div> 
                                 <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://logodownload.org/wp-content/uploads/2014/12/bosch-logo.png" alt="">
+                                    <img  src="https://seeklogo.com/images/P/PFERD-logo-E79ADDAD39-seeklogo.com.png" alt="">
+                                </div> 
+                                <div class="swiper-slide swiper-slide-suppliers">
+                                    <img  src="https://cdn.shopify.com/s/files/1/0333/9953/7802/collections/marcas-logos-resistol_Mesa_de_trabajo_1_1024x.png?v=1594413544" alt="">
+                                </div>
+                                <div class="swiper-slide swiper-slide-suppliers">
+                                    <img  src="https://trataconanmeco.com/Ventas/logo_bc_rugo.png" alt="">
                                 </div> 
                                 <div class="swiper-slide swiper-slide-suppliers">
                                     <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Skil_logo.svg/1280px-Skil_logo.svg.png" alt="">
-                                </div> 
+                                </div>                                 
                                 <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://1000marcas.net/wp-content/uploads/2021/05/Dremel-logo.png" alt="">
+                                    <img  src="https://img.ffx.co.uk/website2/brands/BrandLogos/WD40.png" alt="">
                                 </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.worldvectorlogo.com/logos/klein-tools.svg" alt="">
-                                </div> 
+                                
+                                
+                                
+                                
+                               
+                                
                                 
                             </div>
     </div>
@@ -263,7 +324,7 @@
     <!-- COPYRIGHT ------------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
     <div class="copyright">
-        <h5>*1987-2021 Ferretería Indar, S.A. de C.V.* Dudas o aclaraciones sobre esta página: indarweb@indar.com.mx</h5>
+        <h5>* 1987-2021 Ferretería Indar, S.A. de C.V. * Dudas o aclaraciones sobre esta página: indarweb@indar.com.mx</h5>
     </div>
 
 
@@ -276,7 +337,8 @@
                 <i style="cursor:pointer;" class="fas fa-times" onclick="closeModal()"></i>
             </div>
             <div class="modal-body">
-                <form action="#">
+                <form action="login" method="post">
+                    @csrf
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
                         <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Correo electrónico" required></div>      
@@ -288,7 +350,7 @@
                     <br>
                     <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> No cerrar sesión</label><br>
                     <div class="login-buttons">
-                        <button class="btn login-btn" type="submit">Iniciar Sesión</button>
+                        <button class="btn login-btn" type="submit" onclick="allowMiddleware()">Iniciar Sesión</button>
                         <!-- <a href="#">Iniciar como empleado*</a> -->
                     </div>
                     <br> <hr class="hr-indar"> <br>

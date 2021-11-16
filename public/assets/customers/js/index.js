@@ -3,7 +3,10 @@ $('document').ready(function(){
 
     AOS.init();
     ScrollReveal().reveal('.appear-500', {delay:500});
-    ScrollReveal().reveal('.appear-1000', {delay:500});
+    ScrollReveal().reveal('.appear-1000', {delay:1000});
+    ScrollReveal().reveal('.appear-1500', {delay:1500});
+    ScrollReveal().reveal('.appear-2000', {delay:2000});
+    
     
 
       const swiper = new Swiper(".swiper-1", {
@@ -189,6 +192,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
     }
 
+    function allowMiddleware(){
+        //ver qué se puede hacer para que funcione el middleware
+    }
+
     function closeModal(){
         var activeModal = document.getElementsByClassName("active-modal")[0];
         activeModal.style.opacity = 0;
@@ -204,4 +211,16 @@ document.addEventListener("DOMContentLoaded", function(){
     function changeEstadoPostventa(estado, src){
       document.getElementById('estado').innerHTML = estado;
       document.getElementById('estadoPostventa').src = "/assets/customers/img/jpg/postventa/CSA"+src+".jpg";
+    }
+
+    function changePagination(page){
+      $('.active-page').delay(500).fadeToggle().css('display','flex');
+      $('.page-'+page).delay(500).fadeToggle().css('display','flex');
+      $('.active-page').toggleClass('active-page');
+      $('.page-'+page).toggleClass('active-page');    
+      console.log('change to page '+page);
+    }
+
+    function showPdf(proveedor){
+      
     }
