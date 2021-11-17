@@ -6,6 +6,7 @@
         <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/index.css')}}">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"></script>   
         <script src="{{asset('assets/customers/js/index.js')}}"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -173,6 +174,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/catalogo">Catálogo</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/catalogo">Ferreimpulsos</a>
+                        </li>
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  data-bs-toggle="dropdown" aria-expanded="false">
                             Empresa
@@ -185,6 +189,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="contacto">Contacto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/catalogo">Reclutamiento</a>
                         </li>
                     </ul>
                 </div>
@@ -225,101 +232,57 @@
         </div>
     </div> -->
 
-    <!-- SUPPLIERS CAROUSEL  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-
-    <div class="swiper swiper-suppliers">
-                            <!-- Additional required wrapper -->
-                            <div class="swiper-wrapper swiper-wrapper-suppliers">
-                                <!-- Slides -->
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.worldvectorlogo.com/logos/austromex.svg" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.worldvectorlogo.com/logos/black-decker-3.svg" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://logodownload.org/wp-content/uploads/2014/12/bosch-logo.png" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="data:image/webp;base64,UklGRowDAABXRUJQVlA4TIADAAAvmAAJEAfGoG0jSeHPacH1mzsI4z8XCtI2YGG7o8ht2wY+JelgvgG8Bb8Cuc7tvU0x5AhL51LBAxCj70EhP+gtgUUQsVc4ROuFwkKBNrMJRTQiKYl3auZofO8ICGm3bRvPs4Latm3btm3bbvq8tW3btpWc//Y859wbFB8j+j8B8h/2w98rf6+H7AeDNZPax7Mx9ZC+IWL8IXVDROdDxipA6pDxYFlDvUPGYaHmh3yLxzebGvobI/qPEqHzov4qHVoh+hOghZgHG1qLcUmou+Ty701lfdU2SAcg+UWTbqGThq3AMtueAiFyt74n7homA63FuACIvTcMAG7bPhYvFPK0pqd1hhQw0XIEaCT6z3LQWBz7Fgy5lPDT13Ab2Gl5G4MRhjPAIpfthUOmAMMDV0p/19Jl4J5FmsBGwzzgmsureOF4URzWiyuc0qQz5TOmsXDZ0BIaiHOXPFq/quipSQb5mWuYRS8xpyj2XXsBzHFb66366EjLg9GRlroQn/jLssdPK8MeFtoe0F70FHDZ7bE31XKOSAeYZ3nqJ/ZSe8hhm1SeZBgMdUS/qEirPCv1ySAVvVCkSYVXDv1SWroiTNPuL9KW5hknLC0NQfdoYJRhvDiuuqtdAM5rO3tpt/Jth6W7YQnGaobrLtfT2mKontHGlc8o0iDP1lt6Go7PjCwBcF3LYnuYJHoT7mlz8myXpbtBrRha7fToudPrOJzW3sfYpV3Ms6uWVp56OAV7nIqg0m/tGEzUMjXyqmHaUtFTia8u4yY5jYSxoi+G1ppMyqcSZ8X4FE8cdWncxCVTBY4ZHI/nT4VBN8W6x9sMhzfE3jhcgQo/fP2qkCfPP4jjQMvxmZElIpo4HIQDDstglHgf6fLhido0S87Pi1uWYH9qmw0zHTrBIX/7XYytc2sSlm2to6N22jpCO9u7BGW/+ftcqhCci5v0qCGmr0lIfDTtg2GSxf45Uz4Lj6qThUppyxmA46bRsM/wbEDkQUOQIy03TFrXzNe1WmSDK5ZlofmmGpT6bNhL5GDDu2RubJk9a85mP99WlCQ7yyy9Q10sN2CgGKdGVTVIz9xYP/Non/U+Hi+vgeqtqyFdNlT8m2EV7La0jeKOYXNuzJtad/qcwJ5av2BoA6zDA1clmQrUVUQuCfQ2sCHQU0llQqCvpE7gsw4ExvnEhs0ZGuPv9cPfq/yHBQ==" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://1000marcas.net/wp-content/uploads/2021/05/Dremel-logo.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.shopify.com/s/files/1/0333/9953/7802/collections/marca-logo-fandeli_Mesa_de_trabajo_1_1024x.png?v=1594413377" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://www.coestan.com/uploads/productos/resized/600_0567ec86e0407dcf50f5bf1f524ce299.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://elpro.mx/wp-content/uploads/2018/08/Distintivo-GRUPOELPRO-w-500px-01.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.worldvectorlogo.com/logos/klein-tools.svg" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://www.makita.es/data/pam/public/Content-Pages/About-Us/About-Makita/makita_white_logo_png.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://seeklogo.com/images/P/PFERD-logo-E79ADDAD39-seeklogo.com.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://cdn.shopify.com/s/files/1/0333/9953/7802/collections/marcas-logos-resistol_Mesa_de_trabajo_1_1024x.png?v=1594413544" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://trataconanmeco.com/Ventas/logo_bc_rugo.png" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Skil_logo.svg/1280px-Skil_logo.svg.png" alt="">
-                                </div>                                 
-                                <div class="swiper-slide swiper-slide-suppliers">
-                                    <img  src="https://img.ffx.co.uk/website2/brands/BrandLogos/WD40.png" alt="">
-                                </div> 
-                                
-                                
-                                
-                                
-                               
-                                
-                                
-                            </div>
-    </div>
-
+    
     <!-- FOOTER ---------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
     <div class="footer">
         <div class="row">
-            <div class="col-lg-4 col-md-12 col-sm-12 contact-footer">
-                <div class="row">
-                    <div class="col-12">
-                        <img class="logo-footer appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="350">
-                    </div>
-                </div>
-                <div class="social-media-icons appear-500">
-                    <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i class="fab fa-facebook-square fa-2x"></i></a>  
-                    <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i class="fab fa-youtube-square fa-2x"></i> </a> 
-                    <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a> 
-                    <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i class="fab fa-linkedin fa-2x"></i></a> 
-                </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 contact-footer">
+                        <img class="logo-footer appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="250">
+            </div>
+            <div class="col-12 d-flex justify-content-center align-items-center flex-row">
+              <div class="social-media-icons appear-500">
+                        <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i class="fab fa-facebook-square fa-2x"></i></a>  
+                        <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i class="fab fa-youtube-square fa-2x"></i> </a> 
+                        <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a> 
+                        <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i class="fab fa-linkedin fa-2x"></i></a> 
+            </div>
+        </div>
+        </div>
+        <br><br><br>
+        <div class="row">
+            <div class="col-lg-3 col-md-12 col-sm-12 footer-links">
+                <h4><strong>Acerca de INDAR</strong></h4>
+                <h5>¿Quiénes somos?</h5>
+                <h5>Centros de Cruce</h5>
+                <h5>Catálogo INDAR</h5>
+                <h5>Aviso de privacidad</h5>
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12 footer-links">
-                <h5>Productos</h5>
-                <h5>Especiales</h5>
-                <h5 onclick="navigate('sucursales')">Sucursales</h5>
-                <h5 onclick="navigate('about')">Nosotros</h5>
-                <h5 onclick="navigate('catalogo')">Catálogos</h5>
-                <h5 onclick="navigate('postventa')">Servicios Postventa</h5>
-                <h5 onclick="navigate('contacto')">Contacto</h5>
-                <h5>Aviso de Privacidad</h5>
+                <h4><strong>Promociones INDAR</strong></h4>
+                <h5>Ofertas relámpago</h5>
+                <h5>Lanzamientos INDAR</h5>
+                <h5>Especiales del mes</h5>
+                <h5>Eventos</h5>
+                <h5>Combos INDAR</h5>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 footer-links">
+                <h4><strong>Servicio al Cliente</strong></h4>
+                <h5>Servicio Postventa</h5>
+                <h5>Contacto</h5>
                 <h5>Ayuda</h5>
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12 footer-links">
-                <h5>Mi Cuenta</h5>
-                <h5>Mi Carrito</h5>
+                <h4><strong>Cliente INDAR</strong></h4>
+                <h5>Quiero ser cliente</h5>
+                <h5>Cuenta</h5>
+                <h5>Carrito</h5>
             </div>
         </div>
     </div>
+
+
+    <br><br>
 
     <!-- COPYRIGHT ------------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
