@@ -66,8 +66,8 @@ html{
 
 .row-logo{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 
@@ -156,7 +156,7 @@ button:focus {
 }
 
 .dropdown-menu-empresa{
-    margin-left: 330px !important;
+    margin-left: 517px !important;
 }
 
 .main-ul:first-child{
@@ -218,7 +218,7 @@ button:focus {
 
 .hero, .slider{
     width: 100%;
-    height: 350px;
+    height: 340px;
     z-index: -1;
 }
 
@@ -274,10 +274,10 @@ button:focus {
     border-radius: 10px;
     color: white;
     padding: 5px;
-    width: 150px;
+    width: 180px;
     z-index: 10 !important;
     margin-left: 50px;
-    top: 220px;
+    top: 250px;
     left: 0;
     font-size: 18px;
     position: absolute;
@@ -368,6 +368,34 @@ button:focus {
     min-width: 100% !important;
 }
 
+
+/* .ferreimpulsos-hero{
+    background-image: url("../img/jpg/ferreimpulsos.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+} */
+
+
+
+/* OFERTA RELAMPAGO ------------------------------------------------------------------------------------------------------------------------ */
+
+.a-yellow{
+    color: rgb(251, 198, 33); 
+    font-weight: 500; 
+    font-size: 18px; 
+    text-decoration: none;
+    text-align: center;
+}
+
+.a-yellow:hover{
+    color: rgb(255, 227, 142); 
+}
+
+h5{
+    text-align: center;
+}
+
+
 /* NEW PRODUCTS ---------------------------------------------------------------------------------------------------------------------------- */
 button{
     cursor: pointer !important;
@@ -399,6 +427,47 @@ button{
     left: 0;
     right: 0;
 }
+
+
+/* RELÁMPAGO ----------------------------------------------------------------------------------------------------------------------------------- */
+
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+ 
+  
+  ul#countdown {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 70%;
+    margin: 0 auto;
+    padding: 15px 0 20px 0;
+    color: #000;
+    border: 1px solid #002868;
+    border-width: 1px 0;
+    overflow: hidden;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-weight: bold;
+  }
+  ul#countdown li {
+    margin: 0 -3px 0 0;
+    padding: 0;
+    display: inline-block;
+    width: 25%;
+    font-size: 72px;
+    font-size: 6vw;
+    text-align: center;
+  }
+  ul#countdown li .label {
+    color: #adafb2;
+    font-size: 18px;
+    font-size: 1.5vw;
+    text-transform: uppercase;
+  }
 
 /* OUTLET PRODUCTS ---------------------------------------------------------------------------------------------------------------------------- */
 .outlet-products{
@@ -649,6 +718,7 @@ button{
     flex-direction: row !important;
     justify-content: center;
     color: #002868;
+    margin-left: 20px !important;
 }
 
 
@@ -689,6 +759,7 @@ button{
 .copyright h5{
     font-size: 17px;
     margin-top: 5px;
+    text-align: center;
 }
 
 
@@ -906,12 +977,31 @@ button{
     .footer-links h5{
         width: 100%;
     }
+
+    .ferreimpulsos-hero{
+        margin-top: 10px !important;
+        margin-left: 10px !important;
+    }
+
+    .logo{
+        margin-top: 15px !important;
+    }
+
+    .input-group{
+        width: 90% !important;
+        margin-left: 5% !important;
+    }
 }
 
 
 @media (max-width: 767px) {
     .input-discontinued{
         width: 100% !important;
+    }
+    .bienvenido-hero, .ferreimpulsos-hero{
+        margin-left: 3% !important;
+        width: 94% !important;
+        margin-top: 20px !important;
     }
 }
 
@@ -930,6 +1020,21 @@ button{
     }
 }
 
+@media (max-width: 575px) {
+    .iconos-cuenta{
+        display: none !important;
+    }
+    .login-options{
+        display: none !important;
+    }
+    .brand-logo{
+        top: 0 !important;
+    }
+    .container-hero{
+        padding-top: 0 !important;
+    }
+}
+
 
 @media (max-width: 455px) {
     .new-products-title h3{
@@ -941,7 +1046,11 @@ button{
     .show-more{
         font-size: 15px !important;
     }
+
 }
+
+
+/* SLIDER RESPONSIVE */
 
 @media (max-width: 420px) {
     .slider h1{
