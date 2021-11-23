@@ -9,19 +9,24 @@
 @section('body')
     <!-- HERO --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-    <div class="container-hero" style="width:100%; padding-top:20px">
+    <div class="container-hero" style="width:100%;">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="hero">
                     <input type="hidden" name="token" id="token" value="{{$token}}">
                     @if($token == "error")
                         <div class="alert alert-danger alert-dismissible fade in show appear-1000" role="alert" style="width:30%; margin-left:35%; position: absolute; z-index:11000; margin-top: 10px;text-align:center;">
                             Usuario inválido o contraseña incorrecta
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="deleteTokenCookie()" aria-label="Close"></button>
                         </div>
                     @endif
                     <div class="slider">
-                        <div class="carousel slide h-100 w-100" data-bs-ride="carousel">
+                        <div class="carousel slide h-100 w-100" id="carouselIndar" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselIndar" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselIndar" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselIndar" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
                             <div class="carousel-inner h-100">
                                 <div class="carousel-item active h-100">
                                     <div class="slider-img slider-1 appear-500"></div>
@@ -29,8 +34,8 @@
                                     <div data-aos="fade-right" data-aos-duration="2000" class="orange"></div>
                                     <div data-aos="fade-right" data-aos-duration="2000" data-aos-delay="500" class="yellow"></div>
                                     <div data-aos="fade-right" data-aos-duration="2000" data-aos-delay="600" class="white"></div>
-                                    <h1 class="left" data-aos="fade-right" data-aos-easing="ease-out-cubic" data-aos-duration="2000" data-aos-delay="1000">Tu bodega ferretera. Precio, rapidez y atención.</h1>
-                                    <button data-aos="fade-left" data-aos-easing="ease-out-cubic" data-aos-duration="2500" data-aos-delay="1000" onclick="conocerMas()" class="slider-btn">COMPRAR AHORA</button>
+                                    <h1 class="left" data-aos="fade-right" data-aos-easing="ease-out-cubic" data-aos-duration="2000" data-aos-delay="1000">BIENVENIDO A INDAR. Regístrate para dar seguimiento a tu proceso de alta como cliente</h1>
+                                    <button data-aos="fade-left" data-aos-easing="ease-out-cubic" data-aos-duration="2500" data-aos-delay="1000" onclick="conocerMas()" class="slider-btn">REGÍSTRATE AHORA</button>
                                 </div>
                                 <div class="carousel-item h-100">
                                     <div class="slider-img slider-2"></div>
@@ -38,8 +43,8 @@
                                     <div data-aos="fade-right" data-aos-duration="2000" class="orange"></div>
                                     <div data-aos="fade-right" data-aos-duration="2000" data-aos-delay="500" class="red"></div>
                                     <div data-aos="fade-right" data-aos-duration="2000" data-aos-delay="600" class="white"></div>
-                                    <h1 class="left" data-aos="fade-right" data-aos-easing="ease-out-cubic" data-aos-duration="2000" data-aos-delay="1000">Principal mayorista ferretero en la región Centro-Occidente</h1>
-                                    <button data-aos="fade-left" data-aos-easing="ease-out-cubic" data-aos-duration="2500" data-aos-delay="1000" onclick="conocerMas()" class="slider-btn">COMPRAR AHORA</button>
+                                    <h1 class="left" data-aos="fade-right" data-aos-easing="ease-out-cubic" data-aos-duration="2000" data-aos-delay="1000">Ferreimpulsos del mes <br>Noviembre 2021</h1>
+                                    <button data-aos="fade-left" data-aos-easing="ease-out-cubic" data-aos-duration="2500" data-aos-delay="1000" onclick="conocerMas()" class="slider-btn">DESCÁRGALO AHORA</button>
                                 </div>
                                 <div class="carousel-item h-100">
                                     <div class="slider-img slider-3"></div>
@@ -50,31 +55,19 @@
                                     <h1 class="left" data-aos="fade-right" data-aos-easing="ease-out-cubic" data-aos-duration="2000" data-aos-delay="1000">¡Ofertas relámpago! Aprovecha las mejores ofertas por tiempo limitado</h1>
                                     <button data-aos="fade-left" data-aos-easing="ease-out-cubic" data-aos-duration="2500" data-aos-delay="1000" onclick="conocerMas()" class="slider-btn">COMPRAR AHORA</button>
                                 </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselIndar" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselIndar" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
-            <div class="col-lg-4">
-                <div class="row">
-                    <div class="col-lg-12 col-md-6">
-                        <div class="row d-flex justify-content-center align-items-center ferreimpulsos-hero" style="width: 100%; height: 165px; background-color: #F5F8F8;">
-                        <h2 style="text-align: center; width: 100%;">Ferreimpulsos del mes</h2>
-                        <a href="#" style="text-decoration: none; color: #002868; width: 100%; text-align: center; font-weight: 500;">¡DESCÁRGALO AHORA!</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 col-md-6">
-                        <div class="row d-flex justify-content-center align-items-center bienvenido-hero" style="width: 100%; height: 165px; background-color: #F5F8F8; margin-top: 10px;">
-                        <h2 style="text-align: center; width: 100%;">Bienvenido a Indar</h2>
-                        <h5 style="text-align: center; width: 100%;">Regístrate para dar seguimiento a tu proceso de alta como cliente</h5>
-                        <a href="#" style="text-decoration: none; color: #002868; width: 100%; text-align: center; font-weight: 500;">DEJA TUS DATOS AQUÍ</a>
-                        </div>
-                    </div>
-                </div>
-               
-              
             </div>
 
         </div>
@@ -85,51 +78,51 @@
     <br>
     <div class="row">
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/abrasivos.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Abrasivos</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/adhesivos_y_selladores.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Adhesivos y Selladores</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/automotriz.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Automotriz</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/cerraduras_y_herrajes.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Cerraduras y Herrajes</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/fijacion.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Fijación</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/herramientas.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Herramientas</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/herreria_y_soldadura.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Herrería y Soldadura</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/jardineria.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Jardinería</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/material_electrico.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Material Eléctrico</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/pintura_y_accesorios.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Pintura y Accesorios</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-circle fa-3x" style="color:#002868"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/plomeria_y_gas.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Plomería y Gas</p>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4 col-3 d-flex align-items-center flex-column" style="cursor:pointer;">
-            <i class="fas fa-trophy fa-3x" style="color:rgb(251, 198, 0);"></i>
+            <img width="60px" class="loading load-product-category" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/Iconos Productos/mas_vendidos.png')}}" alt="">
             <p style="font-weight: 500; font-size: 15px; text-align: center;">Los Más Vendidos</p>
         </div>
     </div>
@@ -194,6 +187,7 @@
 
 
     <!-- RELAMPAGO ----------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    @if($token && $token != 'error')
     <br>
     <div class="row">
         <div class="col-12 d-flex justify-content-center align-items-center flex-column">
@@ -202,10 +196,10 @@
                 <h4>¡OFERTA RELÁMPAGO!</h4>
             </div>
             <ul id="countdown">
-            <li id="days">
+            <!-- <li id="days">
                 <div class="number">00</div>
                 <div class="label">DÍAS</div>
-            </li>
+            </li> -->
             <li id="hours">
                 <div class="number">00</div>
                 <div class="label">HORAS</div>
@@ -263,8 +257,9 @@
     </div>
     
     <br><br>
-    <!-- NEW PRODUCTS -------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <br>
+    @endif
+    <!-- NEW PRODUCTS / TOP SELLERS  -------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
     <div class="new-products">
         <div class="new-products-title">
             <h3>Los más vendidos</h3>
@@ -275,147 +270,15 @@
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('U1 1212')">
-                        <img src="https://m.media-amazon.com/images/I/61vJaKuqa6L._AC_SL1000_.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
+                    @for ($x = 0; $x < 20; $x++)
+                    <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
+                        <img src="http://www.iindar.com.mx/imagenes/articulos/02_JPG_MD/{{$bestSellers[$x]->itemid}}_MD.jpg" onerror="showLoadImg(this)" alt="">
+                        <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                         @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
+                        <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>
                         @endif
                     </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_730841-MLM44000592476_112020-F.webp" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://resources.sears.com.mx/medios-plazavip/fotos/productos_sears1/original/3031928.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://tiendamakita.com/6754-large_default/taladro-de-rotacion-38-makita-450-watts-6413.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://cdn.shopify.com/s/files/1/0033/8418/0848/products/73d47fb5-0b87-4bac-841a-de12606994f6_1024x.jpg?v=1630656145" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://www.diprofer.com/catalogo/5153-large_default/cerraduras-sobreponer-clasica-blister.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://www.diprofer.com/catalogo/5163-large_default/cerraduras-sobreponer-puertas-corredizas-clasica.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://tlapalero-16ac7.kxcdn.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/f/a/fan014_4.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRibv4h012POe7NdUlvZtQ553bsEIDDfnBlv1dmQLdNc6LpE9T85iyS7H3Vu4kaGOr-AcY&usqp=CAU" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://medios.urrea.com/catalogo/Urrea/hd/1616HD.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://s1.kaercher-media.com/products/11509300/main/1/d0.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://cdn.homedepot.com.mx/productos/140503/140503-d.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://static.grainger.com/rp/s/is/image/Grainger/28M616_AS01?$glgmain$" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://static.grainger.com/rp/s/is/image/Grainger/28M666_AS01?$zmmain$" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://medios.urrea.com/catalogo/Surtek/hd/CP-NO.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://tauber.com.mx/storage/customer/images/83755_U1_268GHL.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://medios.urrea.com/catalogo/Urrea/hd/JC10.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://static.grainger.com/rp/s/is/image/Grainger/41ZU61_AS01?$glgmain$" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://cdn.masterlock.com/product/orig/MLLA_PRODUCT_S1017.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <img src="https://cdn1.coppel.com/images/catalog/mkp/226/3000/2261100-1.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-
+                    @endFor
                 </div>
             </div>
         </div>
@@ -429,6 +292,7 @@
 
 
     <!-- ESPECIALES DEL MES --------------------------------------------------------------------------- -->
+    @if($token && $token != 'error')
     <br><br>
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-6 p-3">
@@ -458,11 +322,12 @@
     </div>
     
     <br><br>
+    @endif
 
 
     <!-- WEBINAR / CORPORATIVO ---------------------------------------------------------------------------------------------------------------------------------------- -->
 
-
+    @if($token && $token != 'error')
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 p-3">
             <div class="supplier-relampago d-flex flex-column align-items-center justify-content-center" style="height: 200px; width: 100%; background-color: #002868; color: white;">
@@ -495,8 +360,7 @@
 
 
 
-
-    <!-- OUTLET ---------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- OUTLET / OFERTAS DE OPORTUNIDAD ---------------------------------------------------------------------------------------------------------------------------------------------------------->
 
 
     <div class="row">
@@ -514,14 +378,16 @@
         </div>
     </div>
 
-
-
-
-
     <br>
+    @endif
+
+    <!---------------------------------------------------------------------------- SLIDER OUTLET ------------------------------------------------------------------------>
+
+
+
     <div class="outlet-products">
         <div class="outlet-products-title">
-            <h3 data-aos="fade-right" data-aos-duration="2000">Outlet y descontinuados <a class="show-more">Ver más</a> </h3>
+            <h3 data-aos="fade-right" data-aos-duration="2000">Outlet y descontinuados  @if($token && $token != 'error') <a class="show-more">Ver más</a> @endif </h3>
         </div>
         <div class="carousel-2" data-aos="fade-left" data-aos-duration="2000">
           <!-- Slider main container -->
@@ -529,167 +395,16 @@
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide swiper-slide-products">
+                    @for ($x = 0; $x < 20; $x++)
+                    <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
                         <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://m.media-amazon.com/images/I/61vJaKuqa6L._AC_SL1000_.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
+                        <img class="b-lazy" src="http://www.iindar.com.mx/imagenes/articulos/02_JPG_MD/{{$bestSellers[$x]->itemid}}_MD.jpg"  onerror="showLoadImg(this)" alt="">
+                        <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                         @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
+                        <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>
                         @endif
                     </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://http2.mlstatic.com/D_NQ_NP_2X_730841-MLM44000592476_112020-F.webp" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://resources.sears.com.mx/medios-plazavip/fotos/productos_sears1/original/3031928.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://tiendamakita.com/6754-large_default/taladro-de-rotacion-38-makita-450-watts-6413.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://cdn.shopify.com/s/files/1/0033/8418/0848/products/73d47fb5-0b87-4bac-841a-de12606994f6_1024x.jpg?v=1630656145" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://www.diprofer.com/catalogo/5153-large_default/cerraduras-sobreponer-clasica-blister.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://www.diprofer.com/catalogo/5163-large_default/cerraduras-sobreponer-puertas-corredizas-clasica.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://tlapalero-16ac7.kxcdn.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/f/a/fan014_4.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRibv4h012POe7NdUlvZtQ553bsEIDDfnBlv1dmQLdNc6LpE9T85iyS7H3Vu4kaGOr-AcY&usqp=CAU" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://medios.urrea.com/catalogo/Urrea/hd/1616HD.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://s1.kaercher-media.com/products/11509300/main/1/d0.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://cdn.homedepot.com.mx/productos/140503/140503-d.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://static.grainger.com/rp/s/is/image/Grainger/28M616_AS01?$glgmain$" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://static.grainger.com/rp/s/is/image/Grainger/28M666_AS01?$zmmain$" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://medios.urrea.com/catalogo/Surtek/hd/CP-NO.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://tauber.com.mx/storage/customer/images/83755_U1_268GHL.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://medios.urrea.com/catalogo/Urrea/hd/JC10.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://static.grainger.com/rp/s/is/image/Grainger/41ZU61_AS01?$glgmain$" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://cdn.masterlock.com/product/orig/MLLA_PRODUCT_S1017.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-                    <div class="swiper-slide swiper-slide-products">
-                        <div class="ribbon ribbon-top-left"><span>¡OFERTA!</span></div>
-                        <img src="https://cdn1.coppel.com/images/catalog/mkp/226/3000/2261100-1.jpg" alt="">
-                        <h5>Nombre del producto <br>Marca del producto </h5>
-                        @if($token && $token != 'error')
-                        <h5> <span class="original-price">$000</span>  <br> <span class="price"></span>$000</h5>
-                        @endif
-                    </div>
-
+                    @endFor
                 </div>
             </div>
         </div>
@@ -701,5 +416,24 @@
         </div>
 
     </div>
+
+
+
+    <!-- BOLSA DE TRABAJO / RECLUTAMIENTO -->
+
+    <div class="reclutamiento">
+        <div class="overlay"></div>
+        <div class="row" style="height: 100%;">
+            <div class="col-12 d-flex justify-content-center align-items-center flex-column" style="height: 100%">
+                <h3>Forma parte de INDAR</h3>
+                <p>Somos una importante empresa del giro ferretero con más de 34 años de trayectoria y presencia en toda la República Mexicana</p>
+                <button data-aos="fade-up" data-aos-easing="ease-out-cubic" data-aos-duration="2500" data-aos-delay="1000" class="btn-reclutamiento">POSTULARME</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
 
 @endsection

@@ -2,10 +2,10 @@
  * GLOBAL VARS
  * -------------------------- */
 // The date you want to count down to
-var targetDate = new Date("2021/11/16 23:59:59");   
+var targetDate = new Date("2021/11/23 23:59:59");   
 
 // Other date related variables
-var days;
+// var days;
 var hrs;
 var min;
 var sec;
@@ -14,10 +14,10 @@ var sec;
  * ON DOCUMENT LOAD
  * -------------------------- */
 $(function() {
-   // Calculate time until launch date
-   timeToLaunch();
+  // Calculate time until launch date
+  timeToLaunch();
   // Transition the current countdown from 0 
-  numberTransition('#days .number', days, 1000, 'easeOutQuad');
+  // numberTransition('#days .number', days, 1000, 'easeOutQuad');
   numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
   numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
   numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
@@ -95,7 +95,43 @@ $('document').ready(function(){
     ScrollReveal().reveal('.appear-1500', {delay:1500});
     ScrollReveal().reveal('.appear-2000', {delay:2000});
     
-    
+
+      var bLazy = new Blazy({
+        success: function(element){ 
+          setTimeout(function(){
+            var parent = element.parentNode;
+            parent.className = parent.className.replace(/\bloading\b/,'');
+          }, 200);
+        },
+        error: function(element){
+          setTimeout(function(){
+            var parent = element.parentNode;
+            parent.className = parent.className.replace(/\bloading\b/,'');
+          }, 200);
+        }
+    });
+
+   
+    $('a.dropdown-item-main').hover(
+      function(){
+        var active = document.querySelectorAll('.active-item-main');
+        [].forEach.call(active, function(el){
+          el.classList.remove("active-item-main");
+        })
+        $(this).addClass('active-item-main')
+      }
+    );
+
+    $('a.dropdown-item-2').hover(
+      function(){
+        var active = document.querySelectorAll('.active-item-2');
+        [].forEach.call(active, function(el){
+          el.classList.remove("active-item-2");
+        })
+        $(this).addClass('active-item-2')
+      }
+    );
+
 
       const swiper = new Swiper(".swiper-1", {
         slidesPerView: 5,
@@ -291,10 +327,38 @@ document.addEventListener("DOMContentLoaded", function(){
         activeModal.classList.remove("active-modal");
     }
 
-    function navigate(blade){
-        window.location.href = blade;
+    function navigate(blade, validateToken){ //validateToken => Boolean   true: vista protegida, únicamente usuarios logueados      false: vista pública
+        if(validateToken){
+            if(getCookie("laravel-token")){
+              window.location.href = blade;
+            }
+            else{
+              activeModal(1);
+            }
+        }
+        else{
+          window.location.href = blade;
+        }
     }
 
+    function getCookie(name) { //saber si una cookie existe 
+      var dc = document.cookie;
+      var prefix = name + "=";
+      var begin = dc.indexOf("; " + prefix);
+      if (begin == -1) {
+          begin = dc.indexOf(prefix);
+          if (begin != 0) return null;
+      }
+      else
+      {
+          begin += 2;
+          var end = document.cookie.indexOf(";", begin);
+          if (end == -1) {
+          end = dc.length;
+          }
+      }
+      return decodeURI(dc.substring(begin + prefix.length, end));
+  } 
 
     function changeEstadoPostventa(estado, src){
       document.getElementById('estado').innerHTML = estado;
@@ -306,9 +370,22 @@ document.addEventListener("DOMContentLoaded", function(){
       $('.page-'+page).delay(500).fadeToggle().css('display','flex');
       $('.active-page').toggleClass('active-page');
       $('.page-'+page).toggleClass('active-page');    
-      console.log('change to page '+page);
     }
 
     function showPdf(proveedor){
       
     }
+
+    function deleteTokenCookie(){
+      document.cookie = "laravel-token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    }
+
+    function showLoadImg(element){
+      element.src = "/assets/customers/img/jpg/imagen_no_disponible.jpg";
+    }
+
+    function removeLoading(element){
+      element.classList.remove("loading");
+    }
+
+    

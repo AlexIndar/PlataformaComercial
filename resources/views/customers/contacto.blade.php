@@ -3,7 +3,7 @@
 
 @section('title') Indar - Contacto @endsection
 
-@section('styles')
+@section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
 @endsection
 
@@ -13,7 +13,7 @@
 
     <div class="section appear-500">
         <div class="section-body">
-            <div class="section-title appear-500">
+            <div class="section-title"> 
                 <h3 data-aos="fade-right" data-aos-duration="2000">Contacto</h3>
             </div>
             <br><br>
@@ -128,6 +128,10 @@
                                 <div class="modal-inputs row mb-0">
                                     <div class="col-lg-3 col-md-12"><label class="gray-h5 appear-500" style="font-size:20px; font-weight: 500;" for="Correo">Correo:</label></div>
                                     <div class="col-lg-9 col-md-12"><input class="w-100" type="text" id="email" name="email" required></div>      
+                                </div> <br>
+                                <div class="modal-inputs row mb-0">
+                                    <div class="col-lg-3 col-md-12"><label class="gray-h5 appear-500" style="font-size:20px; font-weight: 500;" for="Asunto">Asunto:</label></div>
+                                    <div class="col-lg-9 col-md-12"><input class="w-100" type="text" id="subject" name="subject" required></div>      
                                 </div> <br>
                                 <div class="modal-inputs row mb-0">
                                     <div class="col-lg-3 col-md-12"><label class="gray-h5 appear-500" style="font-size:20px; font-weight: 500;" for="Empresa">Empresa:</label></div>

@@ -1,48 +1,96 @@
 
-$('document').ready(function(){
-    /* 
- Demo for jQuery AnythingZoomer Plugin
- https://github.com/CSS-Tricks/AnythingZoomer
- */
-$(function() {
-    $("#zoom").anythingZoomer({
-        // content areas
-        smallArea   : 'small',    // class of small content area; the element with this class name must be inside of the wrapper
-        largeArea   : 'large',    // class of large content area; this class must exist inside of the wrapper. When the clone option is true, it will add this automatically
-        clone       : false,      // Make a clone of the small content area, use css to modify the style
-      
-        // appearance
-        overlay     : false,      // set to true to apply overlay class "az-overlay"; false to not apply it
-        speed       : 100,        // fade animation speed (in milliseconds)
-        edge        : 30,         // How far outside the wrapped edges the mouse can go; previously called "expansionSize"
-        offsetX     : 0,          // adjust the horizontal position of the large content inside the zoom window as desired
-        offsetY     : 0,          // adjust the vertical position of the large content inside the zoom window as desired
-      
-        // functionality
-        switchEvent : 'dblclick', // event that allows toggling between small and large elements - default is double click
-      
-        // edit mode
-        edit        : false,      // add x,y coordinates into zoom window to make it easier to find coordinates
-      
-        // callbacks
-        initialzied : function(event, zoomer){}, // AnythingZoomer done initializing
-        zoom        : function(event, zoomer){}, // zoom window visible
-        unzoom      : function(event, zoomer){}  // zoom window hidden
-      
-      });
-  });
-  
-});
+
+$(document).ready(function(){
+
+	var native_width = 0;
+	var native_height = 0;
+
+	$(".magnify").mousemove(function(e){
+		
+		if(!native_width && !native_height)
+		{
+		
+			var image_object = new Image();
+			image_object.src = $(".small").attr("src");
+			
+		
+			native_width = image_object.width;
+			native_height = image_object.height;
+		}
+		else
+		{
+		
+			var magnify_offset = $(this).offset();
+		
+			var mx = e.pageX - magnify_offset.left;
+			var my = e.pageY - magnify_offset.top;
+		
+			if(mx < $(this).width() && my < $(this).height() && mx > 0 && my > 0)
+			{
+				$(".large").fadeIn(100);
+			}
+			else
+			{
+				$(".large").fadeOut(100);
+			}
+			if($(".large").is(":visible"))
+			{
+
+				var rx = Math.round(mx/$(".small").width()*native_width - $(".large").width()/2)*-1;
+				var ry = Math.round(my/$(".small").height()*native_height - $(".large").height()/2)*-1;
+				var bgp = rx + "px " + ry + "px";
+				
+				var px = mx - $(".large").width()/2;
+				var py = my - $(".large").height()/2;
+			
+				$(".large").css({left: px, top: py, backgroundPosition: bgp});
+			}
+		}
+	})
+})
 
 
+function ver(e){
+    var x, y, x1, x2, y1, y2;
+    fact = 1;
+    opp = 150;
+    
+    if(e == null) e = window.event;
 
+    else{
 
+        x = e.clientX;
+        y = e.clientY;
+
+        console.log(document.images.grande.style.clip);
+    
+        x1 =- opp + (x)*fact -250;
+        y1 =- opp + (y)*fact - 100;
+        x2 =+ opp + (x)*fact -250;
+        y2 =+ opp + (y)*fact -100;
+    
+        document.images.grande.style.display = "inline";
+        document.images.grande.style.left = (x) * (2-fact);
+        document.images.grande.style.top = (y) * (2-fact);
+        document.images.grande.style.clip = "rect("+y1+"px,"+x2+"px,"+y2+"px,"+x1+"px)";
+
+        console.log(document.images.grande.style.clip);
+
+    }
+
+ 
+
+}
 
 
 
 function detailsProduct(id){
-    id.replace(/\s/g, "_");
-    window.location.href = "detallesProducto/"+id;
+	if(getCookie("laravel-token")){
+		window.location.href = "detallesProducto/"+id;
+	  }
+	  else{
+		activeModal(1);
+	  }
 }
 
 function increaseQuantity(){
@@ -63,4 +111,6 @@ function decreaseQuantity(){
     }
     document.getElementById('quantity').innerHTML = num.toString();
 }
+
+
 

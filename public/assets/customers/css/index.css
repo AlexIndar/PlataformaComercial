@@ -1,5 +1,4 @@
-body {
-    background: #000 url(bg.jpg) top left no-repeat;
+body, html{
     overflow-x: hidden !important;
 }
 
@@ -128,13 +127,14 @@ button:focus {
 
 .nav-link{
     color: white !important;
-    font-size: 17px !important;
+    font-size: 13px !important;
     margin-left: 50px !important;
     font-weight: 500 !important;
     letter-spacing: 1px;
     color: white !important;
     float: right !important;
-    line-height: 30px !important;
+    text-transform: uppercase;
+    margin-top: 4px;
 }
 
 .navbar-toggler-icon{
@@ -143,7 +143,7 @@ button:focus {
 
 .navbar-nav ul{
     position: fixed !important;
-    top: 134px !important;
+    top: 133.5px !important;
     background-color: #F5F8F8;
     padding: 0px !important;
     min-width: 250px;
@@ -156,7 +156,7 @@ button:focus {
 }
 
 .dropdown-menu-empresa{
-    margin-left: 517px !important;
+    margin-left: 497px !important;
 }
 
 .main-ul:first-child{
@@ -171,11 +171,6 @@ button:focus {
     background-color: #F5F8F8 !important;
 }
 
-.dropdown-item-main:hover{
-    background-color: white !important;
-}
-
-
 .dropdown-item{
     padding: 5px !important;
     top: 0 !important;
@@ -185,6 +180,11 @@ button:focus {
 }
 
 .dropdown-item:hover{
+    color: #002868 !important;
+    background-color: white !important;
+}
+
+.active-item-main, .active-item-2{
     color: #002868 !important;
     background-color: white !important;
 }
@@ -218,7 +218,7 @@ button:focus {
 
 .hero, .slider{
     width: 100%;
-    height: 340px;
+    height: 400px;
     z-index: -1;
 }
 
@@ -234,6 +234,8 @@ button:focus {
 
 .slider-1{
     background: url('../img/jpg/hero-1.jpg');
+    background-attachment: fixed;
+    scroll-behavior: smooth;
 }
 
 .slider-2{
@@ -250,17 +252,18 @@ button:focus {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background-color: rgba(0, 0, 0, 0.576);
+	background-color: rgba(0, 0, 0, 0.7);
     z-index: -1;
 }
 .slider h1{
     position: relative;
-    max-width: 700px;
+    width: 80%;
+    margin-left: 10%;
     color: white;
-    padding: 50px;
     z-index: 10;
     font-size: 45px !important;
     top: -320px;
+    text-align: center;
 } 
 .left{
     float: left;
@@ -274,15 +277,14 @@ button:focus {
     border-radius: 10px;
     color: white;
     padding: 5px;
-    width: 180px;
+    width: 20%;
     z-index: 10 !important;
-    margin-left: 50px;
-    top: 250px;
-    left: 0;
+    margin-left: 40%;
     font-size: 18px;
-    position: absolute;
+    position: relative;
     transition: all 2s ease;
-    font-weight: 200 !important;
+    font-weight: 500 !important;
+    top:-250px;
 }
 
 .slider-btn:hover{
@@ -375,7 +377,29 @@ button:focus {
     background-size: cover;
 } */
 
+/* PRODUCT CATEGORIES -------------------------------------------------------------------------------------------------------------------- */
 
+.loading{
+    background-image: linear-gradient(90deg, #F5F8F8 0px, #e8e8e8 50px, #F5F8F8 70px);
+    animation: shine-avatar 1s;
+    animation-iteration-count: infinite;
+    border-radius: 10px;
+}
+
+.load-product-category{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%
+}
+
+@keyframes shine-avatar {
+    0% {
+      background-position: -32px;
+    }
+    40%, 100% {
+      background-position: 208px;
+    }
+  }
 
 /* OFERTA RELAMPAGO ------------------------------------------------------------------------------------------------------------------------ */
 
@@ -391,7 +415,7 @@ button:focus {
     color: rgb(255, 227, 142); 
 }
 
-h5{
+.supplier-relampago h5{
     text-align: center;
 }
 
@@ -404,7 +428,7 @@ button{
     width: 100%;
     height: auto;
     padding: 10px;
-    background-color: #F5F8F8;
+    background-color: white;
 }
 
 .new-products-title{
@@ -443,25 +467,27 @@ button{
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    width: 70%;
+    width: 50%;
     margin: 0 auto;
     padding: 15px 0 20px 0;
     color: #000;
-    border: 1px solid #002868;
     border-width: 1px 0;
     overflow: hidden;
     font-family: "Arial Narrow", Arial, sans-serif;
     font-weight: bold;
+
   }
   ul#countdown li {
     margin: 0 -3px 0 0;
     padding: 0;
     display: inline-block;
-    width: 25%;
+    width: 33%;
     font-size: 72px;
     font-size: 6vw;
     text-align: center;
   }
+
+
   ul#countdown li .label {
     color: #adafb2;
     font-size: 18px;
@@ -474,13 +500,13 @@ button{
     width: 100%;
     height: auto;
     padding: 10px;
-    background-color: rgb(251, 198, 33);
+    background-color: white;
 }
 
 .outlet-products-title{
     width: 90%;
     margin-left: 5%;
-    border-bottom: 5px solid #002868;
+    border-bottom: 5px solid rgb(251, 198, 33);
     padding: 10px;
 }
 
@@ -529,7 +555,6 @@ button{
 }
 
 .swiper-slide-products{
-    padding: 10px;
     background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
@@ -548,7 +573,7 @@ button{
 
 .swiper-slide-products h5{
     color:  #002868;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
     margin-top: 5px;
     text-align: center !important;
@@ -650,15 +675,15 @@ button{
     height: auto !important;
     background-color: #002868 !important;
     margin-top: 30px !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 0 !important;
 }
 
 .swiper-slide-suppliers{
     position: relative !important;
-    height: 100px !important;
+    height: 80px !important;
     padding: 10px !important;
     background-color: #002868 !important;
-    display: flex !important;
+    display: flex !important; 
     justify-content: center !important;
     flex-wrap: wrap !important;
     flex-direction: column !important;
@@ -668,14 +693,14 @@ button{
 
 .swiper-slide-suppliers img{
     width: auto !important;
-    max-width: 90% !important;
+    max-width: 80% !important;
     margin-left: 5% !important;
     filter: brightness(0) invert(1) !important;
     max-height: 70px !important;
 }
 
 .swiper-wrapper-suppliers{
-    height: 100px !important;
+    height: 80px !important;
 }
 
 .supplier-logo{
@@ -700,10 +725,49 @@ button{
     max-height: 70px;
 }
 
+/* RECLUTAMIENTO ------------------------------------------------------------------------------------------- */
+
+.reclutamiento{
+    background-image: url("../img/jpg/reclutamiento.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    width: 100%;
+    height: 300px;
+    position: relative;
+    z-index: 1;
+    padding: 50px !important;
+}
+
+.reclutamiento h3, .reclutamiento p{
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+.btn-reclutamiento{
+    background-color: transparent;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    border: 1px solid white;
+    transition: all .2s ease;
+    z-index: 10;
+}
+
+.btn-reclutamiento:hover{
+    color: black;
+    background-color: white;
+}
+
+
+
 /* FOOTER -------------------------------------------------------------------------------------------------- */
 
 .footer{
-    padding: 50px !important;
+    padding: 80px !important;
+    background-color: #F5F8F8 !important;
 }
 
 .contact-footer{
@@ -733,12 +797,21 @@ button{
 .footer-links{
     width: 100%;
 }
+
+.footer-links h4{
+    font-size: 15px !important;
+    color: black;
+    margin-left: 50px;
+    font-weight: 500;
+}
 .footer-links h5{
     color: #555555;
     width: 80%;
     padding: 2px;
-    border-bottom: 3px solid #555555aa;
     cursor: pointer;
+    font-size: 15px !important;
+    font-weight: 500;
+    margin-left: 46px;
 }
 .footer-links h5:hover{
     color: black;
@@ -748,18 +821,25 @@ button{
 .copyright{
     width: 100%;
     height: auto;
-    padding: 5px;
-    background-color: #002868;
-    color: white;
+    padding: 50px;
+    background-color: #F5F8F8;
+    color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.192);
 }
 
 .copyright h5{
-    font-size: 17px;
+    font-size: 15px;
     margin-top: 5px;
     text-align: center;
+    font-weight: 500;
+}
+
+.black-strong{
+    color: black !important;
+    font-weight: 600;
 }
 
 
@@ -820,7 +900,7 @@ button{
     float: right;
     height: 40px;
     margin-left: auto;
-    background-color: #F7F7F7;
+    background-color: #F5F8F8;
     border-radius: 10px;
     border:none;
     text-indent: 10px;
@@ -1014,14 +1094,13 @@ button{
     }
 }
 
-@media (max-width: 635px) {
-    .slider h1{
-        font-size: 35px !important;
-    }
-}
+
 
 @media (max-width: 575px) {
     .iconos-cuenta{
+        display: none !important;
+    }
+    .navbar{
         display: none !important;
     }
     .login-options{
@@ -1052,24 +1131,7 @@ button{
 
 /* SLIDER RESPONSIVE */
 
-@media (max-width: 420px) {
-    .slider h1{
-        font-size: 30px !important;
-        text-align: center;
-    }
-   .slider-btn{
-        width: 50%;
-        margin-left: 25%;
-   }
-}
 
-@media (max-width: 414px) and (orientation:portrait) /*IPHONE PORTRAIT*/ {
-    .slider h1{
-        font-size: 30px !important;
-        margin-top: -10px !important;
-        text-align: center;
-    }
-}
 
 @media (max-width: 375px) and (orientation:portrait) /*IPHONE PORTRAIT*/ {
     .oferta-flag{
@@ -1081,25 +1143,8 @@ button{
     .oferta-flag{
         margin-left: -170px !important;
     }
-    .slider h1{
-        font-size: 30px !important;
-        margin-top: -10px !important;
-        text-align: center;
-    }
 }
 
-@media (max-width: 360px) {
-    .slider h1{
-        font-size: 30px !important;
-        top: -50;
-        margin-top: -100px;
-        text-align: center;
-    }
-   .slider-btn{
-        width: 50%;
-        margin-left: 25%;
-   }
-}
 
 @media all and (min-width: 992px) {
 	.dropdown-menu li{ position: relative; 	}
@@ -1116,7 +1161,6 @@ button{
     .navbar-nav .dropdown-menu{
         display: none;
         position: absolute;
-        top: 45px;
         left: 50px;
     }
 
