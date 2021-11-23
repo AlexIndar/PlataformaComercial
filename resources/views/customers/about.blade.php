@@ -14,7 +14,7 @@
     <div class="section">
         <div class="section-body">
             <div class="section-title">
-                <h3 data-aos="fade-right" data-aos-duration="2000">Nosotros</h3>
+                <h3 data-aos="fade-right" data-aos-duration="2000">Nosotros</h3> 
             </div>
             <br><br>
 

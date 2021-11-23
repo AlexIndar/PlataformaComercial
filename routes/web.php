@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Customer\ItemsController;
+use App\Http\Controllers\Customer\TokenController;
 use App\Http\Middleware\ValidateSession;
 /*
 |--------------------------------------------------------------------------
@@ -16,63 +17,80 @@ use App\Http\Middleware\ValidateSession;
 |
 */
 Route::get('/', function () {
-    $token = Config::get('token');
-    return view('customers.index', ['token' => $token]);
+    $token = TokenController::getToken();
+    if($token && $token != 'error'){
+        $bestSellers = ItemsController::getBestSellers($token);
+    }
+    else{
+        $bestSellers = ItemsController::getBestSellers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM");
+    }
+    // dd($bestSellers);
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers]);
+
 })->name('/');
 
 Route::post('/login', [LoginController::class, 'authenticate']);
 
 Route::get('/main', function () {
     // VALIDAR LOGIN
-    $token = Config::get('token');
+    $token = TokenController::getToken();
     return view('main', ['token' => $token]);
 });
 
 Route::get('/faq', function () {
-     $token = Config::get('token');
+    $token = TokenController::getToken();
     return view('customers.faq', ['token' => $token]);
 });
 
-Route::get('/catalogo', function () {
-     $token = Config::get('token');
-    return view('customers.catalogo', ['token' => $token]);
-});
+
 
 Route::get('/about', function () {
-     $token = Config::get('token');
+    $token = TokenController::getToken();
     return view('customers.about', ['token' => $token]);
 });
 
-Route::get('/sucursales', function () {
-     $token = Config::get('token');
-    return view('customers.sucursales', ['token' => $token]);
+Route::get('/centros', function () {
+    $token = TokenController::getToken();
+    return view('customers.centros', ['token' => $token]);
 });
 
 Route::get('/postventa', function () {
-     $token = Config::get('token');
+    $token = TokenController::getToken();
     return view('customers.postventa', ['token' => $token]);
 });
 
 Route::get('/contacto', function () {
-     $token = Config::get('token');
+    $token = TokenController::getToken();
     return view('customers.contacto', ['token' => $token]);
 });
 
 Route::get('/descontinuados', function () {
-     $token = Config::get('token');
+    $token = TokenController::getToken();
     return view('customers.descontinuados', ['token' => $token]);
 });
 
 
 Route::get('/logout', [LoginController::class, 'logout']);
 
-Route::get('/detallesProducto/{id}', [ItemsController::class, 'getProduct']);
+
+//---------------------------------------------------------------------------------------------------------------- PROTECTED VIEWS - ONLY CUSTOMERS -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Route::middleware([ValidateSession::class])->group(function(){ 
+    
+    Route::get('/catalogo', function () {
+        $token = TokenController::getToken();
+        return view('customers.catalogo', ['token' => $token]);
+    });
 
 
-Route::middleware([ValidateSession::class])->group(function(){ // COMMON -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Route::get('/detallesProducto/{id}',function ($id) {
+        $token = TokenController::getToken();
+        $item = ItemsController::getProduct($id, $token);
+    });
 
-   
+
 });
+
 
 
 
