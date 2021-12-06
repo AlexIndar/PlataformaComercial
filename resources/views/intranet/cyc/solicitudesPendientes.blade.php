@@ -9,7 +9,7 @@
 
 @section('body')
 
-<div class="content-wrapper">
+<div class="content-wrapper"> 
     <section class="content-header">
         <div class="container-fluid text-indarBlue">
             <div class="row mb-2">
@@ -589,6 +589,9 @@
             "searching": true,
             "ordering": true,
             "info": true,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
 

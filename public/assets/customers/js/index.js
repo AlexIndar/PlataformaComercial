@@ -2,7 +2,7 @@
  * GLOBAL VARS
  * -------------------------- */
 // The date you want to count down to
-var targetDate = new Date("2021/11/23 23:59:59");   
+var targetDate = new Date("2021/12/03 23:59:59");   
 
 // Other date related variables
 // var days;
@@ -97,20 +97,36 @@ $('document').ready(function(){
     
 
       var bLazy = new Blazy({
+        selector: '.b-lazy',
+        offset: 180, // Loads images 180px before they're visible
         success: function(element){ 
+          console.log("success blazy");
           setTimeout(function(){
             var parent = element.parentNode;
             parent.className = parent.className.replace(/\bloading\b/,'');
           }, 200);
         },
-        error: function(element){
-          setTimeout(function(){
-            var parent = element.parentNode;
-            parent.className = parent.className.replace(/\bloading\b/,'');
-          }, 200);
+        error: function(element, message){
+          console.log(element + " - " +message);
         }
     });
 
+    var timer = setInterval(function () {
+      document.getElementById('first-carousel-item').classList.add('active');
+      clearInterval(timer);
+    }, 300);
+
+    $('#check').on('click', function (event){
+      console.log('click');
+      var icon = document.getElementsByClassName('navbar-mobile')[0];
+      console.log(icon.classList);
+      if(icon.classList.contains('active')){
+        icon.classList.remove('active');
+      }
+      else{
+        icon.classList.add('active');
+      }
+    });
    
     $('a.dropdown-item-main').hover(
       function(){
@@ -176,9 +192,9 @@ $('document').ready(function(){
       });
 
       const swiper2 = new Swiper(".swiper-2", {
-        slidesPerView: 5,
+        slidesPerView: 2,
         spaceBetween: 15,
-        slidesPerGroup: 5,
+        slidesPerGroup: 2,
         loop: true,
         pagination: {
           el: ".swiper-pagination-2",
@@ -199,25 +215,67 @@ $('document').ready(function(){
                 slidesPerGroup: 1,
             },
             600: {
+                slidesPerView: 1,
+                slidesPerGroup: 1,
+            },
+            850: {
+                slidesPerView: 1,
+                slidesPerGroup: 1,
+            },
+            1350: {
                 slidesPerView: 2,
                 slidesPerGroup: 2,
             },
-            850: {
-                slidesPerView: 3,
-                slidesPerGroup: 3,
-            },
-            1350: {
-                slidesPerView: 4,
-                slidesPerGroup: 4,
-            },
             1400:{
-                slidesPerView: 5,
-                slidesPerGroup: 5,
+                slidesPerView: 2,
+                slidesPerGroup: 2,
             }
         }
       });
 
-      const swiper3 = new Swiper(".swiper-suppliers", {
+      const swiper3 = new Swiper(".swiper-3", {
+        slidesPerView: 2,
+        spaceBetween: 15,
+        slidesPerGroup: 2,
+        loop: true,
+        pagination: {
+          el: ".swiper-pagination-3",
+          clickable: true,
+        },
+        autoplay: false,
+        navigation: {
+          nextEl: ".swiper-button-next-3",
+          prevEl: ".swiper-button-prev-3",
+        },
+        breakpoints: {
+            0: {
+                slidesPerView: 1,
+                slidesPerGroup: 1,
+            },
+            400: {
+                slidesPerView: 1,
+                slidesPerGroup: 1,
+            },
+            600: {
+                slidesPerView: 1,
+                slidesPerGroup: 1,
+            },
+            850: {
+                slidesPerView: 1,
+                slidesPerGroup: 1,
+            },
+            1350: {
+                slidesPerView: 2,
+                slidesPerGroup: 2,
+            },
+            1400:{
+                slidesPerView: 2,
+                slidesPerGroup: 2,
+            }
+        }
+      });
+
+      const suppliers = new Swiper(".swiper-suppliers", {
         slidesPerView: 10,
         spaceBetween: 0,
         slidesPerGroup: 1,
@@ -384,8 +442,61 @@ document.addEventListener("DOMContentLoaded", function(){
       element.src = "/assets/customers/img/jpg/imagen_no_disponible.jpg";
     }
 
-    function removeLoading(element){
-      element.classList.remove("loading");
+    function activeRama1(categoria, ele){
+      if(ele.childNodes[3].classList.contains('fa-angle-down')){
+        ele.childNodes[3].classList.remove('fa-angle-down');
+        ele.childNodes[3].classList.add('fa-chevron-up');
+        var ramas = document.getElementsByClassName('rama-1 rama-'+categoria);
+        Array.prototype.forEach.call(ramas, function(rama){
+          rama.classList.add('active');
+        });
+      }
+      else{
+        ele.childNodes[3].classList.add('fa-angle-down');
+        ele.childNodes[3].classList.remove('fa-chevron-up');
+        var ramas = document.getElementsByClassName('rama-1 rama-'+categoria);
+        Array.prototype.forEach.call(ramas, function(rama){
+          rama.classList.remove('active');
+        });
+      }
+    }
+
+    function activeRama2(categoria, ele){
+      if(ele.childNodes[3].classList.contains('fa-caret-down')){
+        ele.childNodes[3].classList.remove('fa-caret-down');
+        ele.childNodes[3].classList.add('fa-caret-up');
+        var ramas = document.getElementsByClassName('rama-2 rama-'+categoria);
+        Array.prototype.forEach.call(ramas, function(rama){
+          rama.classList.add('active');
+        });
+      }
+      else{
+        ele.childNodes[3].classList.add('fa-caret-down');
+        ele.childNodes[3].classList.remove('fa-caret-up');
+        var ramas = document.getElementsByClassName('rama-2 rama-'+categoria);
+        Array.prototype.forEach.call(ramas, function(rama){
+          rama.classList.remove('active');
+        });
+      }
+    }
+
+    function activeRama3(categoria, ele){
+      if(ele.childNodes[3].classList.contains('fa-plus')){
+        ele.childNodes[3].classList.remove('fa-plus');
+        ele.childNodes[3].classList.add('fa-minus');
+        var ramas = document.getElementsByClassName('rama-3 rama-'+categoria);
+        Array.prototype.forEach.call(ramas, function(rama){
+          rama.classList.add('active');
+        });
+      }
+      else{
+        ele.childNodes[3].classList.add('fa-plus');
+        ele.childNodes[3].classList.remove('fa-minus');
+        var ramas = document.getElementsByClassName('rama-3 rama-'+categoria);
+        Array.prototype.forEach.call(ramas, function(rama){
+          rama.classList.remove('active');
+        });
+      }
     }
 
     
