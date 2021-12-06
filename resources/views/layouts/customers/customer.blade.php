@@ -41,14 +41,162 @@
         <i onclick="navigate('faq', false)" class="fas fa-question-circle question fa-sm"></i> 
     </div>
 
+    <!-- NAVBAR MOBILE ------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+    <label for="check" class="hamburguer">
+      <input type="checkbox" id="check"/> 
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+    <div class="navbar-mobile">
+        <div class="container-navbar-mobile">
+            <div class="row">
+                <div class="col-12">
+                    <div class="menu-item" onclick="activeRama1('productos', this)">
+                        <h5>Productos</h5>  <i class="fas fa-angle-down submenu-icon"></i> 
+                    </div>
+
+                                <div class="rama-1 rama-productos" onclick="activeRama2('abrasivos', this)">
+                                    <h5>Abrasivos</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+
+                                                        <div class="rama-2 rama-abrasivos" onclick="activeRama3('diamantados', this)">
+                                                            <h5>Diamantados</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                                        </div>
+
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Copas de diamantada</h5>
+                                                                            </div>
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Discos de diamante</h5>
+                                                                            </div>
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Lija de carburo</h5>
+                                                                            </div>
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Lima de diamante</h5>
+                                                                            </div>
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Pads diamantados</h5>
+                                                                            </div>
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Rectificadores diamantados</h5>
+                                                                            </div>
+                                                                            <div class="rama-3 rama-diamantados">
+                                                                                <h5>Rueda de diamante</h5>
+                                                                            </div>
+
+                                                        <div class="rama-2 rama-abrasivos">
+                                                            <h5>Fibras</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                                        </div>
+                                                        <div class="rama-2 rama-abrasivos">
+                                                            <h5>Metálicos</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                                        </div>
+                                                        <div class="rama-2 rama-abrasivos">
+                                                            <h5>Paquete</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                                        </div>
+                                                        <div class="rama-2 rama-abrasivos">
+                                                            <h5>Revestidos</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                                        </div>
+                                                        <div class="rama-2 rama-abrasivos">
+                                                            <h5>Sólidos</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                                        </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Adhesivos y selladores</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Automotriz</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Cerraduras y Herrajes</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Fijación</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Herramientas</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Herrería y soldadura</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Jardinería</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Material eléctrico</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Mercadeo</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Pintura y accesorios</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Plomería y gas</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                                <div class="rama-1 rama-productos">
+                                    <h5>Seguridad industrial</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="menu-item">
+                        <h5>Catálogo</h5> 
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="menu-item">
+                        <h5>Ferreimpulsos</h5> 
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="menu-item" onclick="activeRama1('empresa', this)">
+                        <h5>Empresa</h5> <i class="fas fa-angle-down submenu-icon"></i>
+                    </div>
+                </div>
+
+                                <div class="rama-1 rama-empresa">
+                                    <h5>Nosotros</h5>
+                                </div>
+                                <div class="rama-1 rama-empresa">
+                                    <h5>Centros de cruce</h5>
+                                </div>
+                                <div class="rama-1 rama-empresa">
+                                    <h5>Servicio postventa</h5>
+                                </div>
+                
+                <div class="col-12">
+                    <div class="menu-item">
+                        <h5>Contacto</h5> 
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="menu-item">
+                        @if ($level == ('C')) 
+                            <h5>Bolsa de Trabajo</h5> 
+                        @else 
+                            <h5>Intranet</h5> 
+                        @endif
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
     <!-- BRAND LOGO ----------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
     <div class="brand-logo">
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12 row-logo">
-                <img onclick="navigate('/', false)" class="logo appear-500 loading" onload="removeLoading(this)" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="150">
+                <img onclick="navigate('/', false)" class="logo appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="150">
             </div>
-            <div class="col-lg-6 col-md-10 col-sm-10 col-xs-8">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div class="input-group mb-3 mt-3">
                     <div class="input-group-prepend">
                         <div class="btn-group">
@@ -88,226 +236,21 @@
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                             <ul class="dropdown-menu dropdown-menu-main" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Abrasivos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                    <ul class="submenu dropdown-menu">
-                                        <li><a class="dropdown-item dropdown-item-2" href="#">Diamantados <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                            <ul class="submenu submenu-2 dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Copas de diamantada</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos de diamante</a></li>
-                                                <li><a class="dropdown-item" href="#">Lija de carburo</a></li>
-                                                <li><a class="dropdown-item" href="#">Lija de diamante</a></li>
-                                                <li><a class="dropdown-item" href="#">Pads diamantados</a></li>
-                                                <li><a class="dropdown-item" href="#">Rectificadores diamantados</a></li>
-                                                <li><a class="dropdown-item" href="#">Rueda de diamante</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item dropdown-item-2" href="#">Fibras <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                            <ul class="submenu submenu-2 dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Almohadillas</a></li>
-                                                <li><a class="dropdown-item" href="#">Bandas de lija</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos de fibra</a></li>
-                                                <li><a class="dropdown-item" href="#">Rodillos</a></li>
-                                                <li><a class="dropdown-item" href="#">Ruedas</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item dropdown-item-2" href="#">Metálicos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                            <ul class="submenu submenu-2 dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Cardas</a></li>
-                                                <li><a class="dropdown-item" href="#">Cepillos</a></li>
-                                                <li><a class="dropdown-item" href="#">Espirales</a></li>
-                                                <li><a class="dropdown-item" href="#">Limas</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item dropdown-item-2" href="#">Paquete <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                            <ul class="submenu submenu-2 dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Paquete</a></li>
-                                                <li><a class="dropdown-item" href="#">Paquete</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item dropdown-item-2" href="#">Revestidos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                            <ul class="submenu submenu-2 dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Bandas de lija</a></li>
-                                                <li><a class="dropdown-item" href="#">Cilindros</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos de esponja</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos de lija</a></li>
-                                                <li><a class="dropdown-item" href="#">Lijas en hoja</a></li>
-                                                <li><a class="dropdown-item" href="#">Lijas esponja</a></li>
-                                                <li><a class="dropdown-item" href="#">Rehilete de lija</a></li>
-                                                <li><a class="dropdown-item" href="#">Rollos de lija</a></li>
-                                                <li><a class="dropdown-item" href="#">Rueda flap</a></li>
-                                                <li><a class="dropdown-item" href="#">Tiras de lija</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item dropdown-item-2" href="#">Sólidos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                            <ul class="submenu submenu-2 dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Discos de cubo</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos tipo 41 para <br> máquinas estacionarias</a></li>
-                                                <li><a class="dropdown-item" href="#">Discos tipo 41 para <br> máquinas portatiles</a></li>
-                                                <li><a class="dropdown-item" href="#">Limas y piedras abrasivas</a></li>
-                                                <li><a class="dropdown-item" href="#">Pastas para pulido</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Adhesivos y selladores <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                    <ul class="submenu dropdown-menu">
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Cintas adhesivas <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Adhesivos de montaje</a></li>
-                                                    <li><a class="dropdown-item" href="#">Adhesivo epóxico</a></li>
-                                                    <li><a class="dropdown-item" href="#">Adhesivos estructural</a></li>
-                                                    <li><a class="dropdown-item" href="#">Adhesivos fijador</a></li>
-                                                    <li><a class="dropdown-item" href="#">Adhesivos instantáneo</a></li>
-                                                    <li><a class="dropdown-item" href="#">Adhesivos de contacto</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cemento</a></li>
-                                                    <li><a class="dropdown-item" href="#">Pegamento blanco</a></li>
-                                                    <li><a class="dropdown-item" href="#">Pegamento universal</a></li>
+                                @for($i = 0; $i < count($rama1); $i ++)
+                                    <li><a class="dropdown-item dropdown-item-main" href="#">{{$rama1[$i]}} <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                        @for($x = 0; $x < count($rama2[$i]); $x ++)
+                                            @if($x == 0) <ul class="submenu dropdown-menu"> @endif
+                                            <li><a class="dropdown-item dropdown-item-2" href="#">{{$rama2[$i][$x]}} <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                                @for($y = 0; $y < count($rama3[$i][$x]); $y ++)
+                                                    @if($y == 0)<ul class="submenu submenu-2 dropdown-menu"> @endif
+                                                    <li><a class="dropdown-item" href="{{$rama3[$i][$x][$y]}}">{{$rama3[$i][$x][$y]}}</a></li>
+                                                @endfor
                                                 </ul>
                                             </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Cintas adhesivas <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Cinta adhesiva reflejante</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta aislante</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta antiderrapante</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta asfáltica</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta decorativa</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta doble cara</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta masking</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta para ducto</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cinta para empaque</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cintas de acero inoxidable</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cintas selladoras</a></li>
-
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Impermeabilizantes <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Concreto impermeable</a></li>
-                                                    <li><a class="dropdown-item" href="#">Impermeabilizante</a></li>
-                                                    <li><a class="dropdown-item" href="#">Morteros y aditivos</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Paquete de solventes <br> y otros químicos <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Paquete de solventes <br> y otros químicos</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Resanadores y reparadores <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Resanadores</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Selladores <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Juntas </a></li>
-                                                    <li><a class="dropdown-item" href="#">Pistola calafateadora </a></li>
-                                                    <li><a class="dropdown-item" href="#">Sellador de rosca </a></li>
-                                                    <li><a class="dropdown-item" href="#">Selladores </a></li>
-                                                    <li><a class="dropdown-item" href="#">Silicón </a></li>
-                                                </ul>
-                                            </li>
-                                    </ul>
-                                </li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Automotriz <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                    <ul class="submenu dropdown-menu">
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Complementos automotrices <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Anticongelante</a></li>
-                                                    <li><a class="dropdown-item" href="#">Inversores y arrancadores</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Limpieza automotriz <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Equipo de limpieza</a></li>
-                                                    <li><a class="dropdown-item" href="#">Escobas</a></li>
-                                                    <li><a class="dropdown-item" href="#">Limpiadores automotrices</a></li>
-                                                    <li><a class="dropdown-item" href="#">Shampoos</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Lubricantes <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Lubricantes en aerosol</a></li>
-                                                    <li><a class="dropdown-item" href="#">Lubricantes líquidos</a></li>
-                                                    <li><a class="dropdown-item" href="#">Lubricantes sólidos</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Pulido y encerado <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Complementos para pulido y encerado</a></li>
-                                                    <li><a class="dropdown-item" href="#">Encerado automotriz</a></li>
-                                                    <li><a class="dropdown-item" href="#">Pulimento automotriz</a></li>
-                                                </ul>
-                                            </li>
-                                    </ul>
-                                </li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Cerraduras y herrajes <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                    <ul class="submenu dropdown-menu">
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Cajas fuertes <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Caja fuerte</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Candados <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Candado de combinación</a></li>
-                                                    <li><a class="dropdown-item" href="#">Candado de llave</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Cerraduras <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Cerradura de embutir</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cerradura de sobreponer</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cerradura para mueble</a></li>
-                                                    <li><a class="dropdown-item" href="#">Pomos, manijas y cerrojos</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Herrajes <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Bisagras</a></li>
-                                                    <li><a class="dropdown-item" href="#">Carro de rodamientos</a></li>
-                                                    <li><a class="dropdown-item" href="#">Cierrapuertas</a></li>
-                                                    <li><a class="dropdown-item" href="#">Correderas</a></li>
-                                                    <li><a class="dropdown-item" href="#">Escuadras y mensulas</a></li>
-                                                    <li><a class="dropdown-item" href="#">Fijapuerta y topes</a></li>
-                                                    <li><a class="dropdown-item" href="#">Gancho y percheros</a></li>
-                                                    <li><a class="dropdown-item" href="#">Guardapolvos</a></li>
-                                                    <li><a class="dropdown-item" href="#">Jaladeras<a></li>
-                                                    <li><a class="dropdown-item" href="#">Ruedas y rodajas</a></li>
-                                                    <li><a class="dropdown-item" href="#">Señalamiento de fachada</a></li>
-                                                    <li><a class="dropdown-item" href="#">Tubo para closet</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">Vigilancia <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                <ul class="submenu submenu-2 dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Circuito cerradp de televisión</a></li>
-                                                    <li><a class="dropdown-item" href="#">Mirillas</a></li>
-                                                    <li><a class="dropdown-item" href="#">Videoportero</a></li>
-                                                </ul>
-                                            </li>
-                                    </ul>
-                                </li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Fijación <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Herramientas <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Herrería y soldadura <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Jardinería <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Material eléctrico <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Mercadeo <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Pintura y accesorios <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Plomería y gas <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item dropdown-item-main" href="#">Seguridad industrial <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                    <ul class="submenu dropdown-menu">
-                                        <li><a class="dropdown-item" href="submenuitem1">Submenu item 1 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 2 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 3 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                        <ul class="submenu submenu-2 dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Multi level 1 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                            <li><a class="dropdown-item" href="#">Multi level 2 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                        @endfor
                                         </ul>
-                                        </li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 4 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                        <li><a class="dropdown-item" href="#">Submenu item 5 <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                    </ul>
-                                </li>
+                                    </li>
+                                @endfor
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -330,7 +273,8 @@
                             <a class="nav-link" href="contacto">Contacto</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="navigate('catalogo', true)">Reclutamiento</a>
+                        @if($level == ('C'))<a class="nav-link" href="#bolsa">Bolsa de Trabajo</a> @else <h5><a class="nav-link" href="Intranet">Intranet</a></h5> @endif
+                            
                         </li>
                     </ul>
                 </div>

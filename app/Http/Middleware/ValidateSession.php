@@ -4,7 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Customer\TokenController;
+ 
 class ValidateSession
 {
     /**
@@ -21,6 +22,11 @@ class ValidateSession
             $token = $_COOKIE["laravel-token"];
             return $this->nocache($next($request));
         }
+        else if(isset($_COOKIE["refresh"])){
+            $token = TokenController::refreshToken();
+            return $this->nocache($next($request));
+        }
+        
         else{
             return redirect('/');
         }

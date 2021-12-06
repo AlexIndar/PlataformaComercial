@@ -1,0 +1,83 @@
+h5{
+    font-size: 12px !important;
+    text-align: center;
+}
+
+
+
+.box{
+    padding: 2px !important;
+}
+
+body{
+    background-color: #F7F5FF !important;
+}
+
+.inner{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px) !important;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    min-height: 200px;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.398);
+}
+
+
+
+.inner-red:hover{
+    background-color: rgba(250, 91, 91, 0.5);
+}
+
+.inner-green:hover{
+    background-color: rgba(41, 165, 46, 0.5);
+}
+
+.green{
+    background-color: rgba(104, 192, 107, 1);
+}
+
+.red{
+    background-color: rgba(250, 91, 91, 1);
+}
+
+.indicador{
+    width: 0%;
+    height: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    backdrop-filter: blur(5px);
+    animation-duration: 1s;
+    animation-name: slide;
+    animation-fill-mode: forwards;
+    position:relative;
+}
+
+@keyframes slide{
+    0% {
+      width: 0%
+    }
+  
+    100% {
+      width: 100%;
+    }
+  }
+
+.row{
+    margin-bottom: 50px !important;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+    border: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #313761;
+    border-radius: 10px;
+}
