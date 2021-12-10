@@ -113,6 +113,51 @@ $('document').ready(function(){
 
     var timer = setInterval(function () {
       document.getElementById('first-carousel-item').classList.add('active');
+      if(getCookie("laravel-token")){
+        if(getCookie("laravel-token").includes('error')){
+          var toast = Swal.mixin({
+            toast: true,
+            icon: 'success',
+            title: 'General Title',
+            animation: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: false,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          });
+          toast.fire({
+            animation: true,
+            title: 'Nombre de usuario inválido o contraseña incorrecta',
+            icon: 'error'
+          });
+        }
+        else{
+          var toast = Swal.mixin({
+            toast: true,
+            icon: 'success',
+            title: 'General Title',
+            animation: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          });
+          toast.fire({
+            animation: true,
+            title: '¡Bienvenido de nuevo!',
+            icon: 'success'
+          });
+        }
+        
+      }
       clearInterval(timer);
     }, 300);
 
@@ -147,6 +192,13 @@ $('document').ready(function(){
         $(this).addClass('active-item-2')
       }
     );
+
+    $(window).resize(function() {
+      var navmobile =  document.getElementById('navmobile');
+      if ($(window).width() > 991 && navmobile.classList.contains('active')) {
+          document.getElementById('check').click();
+      }
+    });
 
 
       const swiper = new Swiper(".swiper-1", {
@@ -359,6 +411,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     function activeModal(modal){ //if modal = 1 active login / if modal = 2 active register
+        var navmobile =  document.getElementById('navmobile');
+        if ($(window).width() <= 991 && navmobile.classList.contains('active')) {
+            document.getElementById('check').click();
+        }
         if(modal == 1){
             var login = document.getElementById('loginModal');
             login.style.opacity = 1;
@@ -374,9 +430,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
     }
 
-    function allowMiddleware(){
-        //ver qué se puede hacer para que funcione el middleware
-    }
 
     function closeModal(){
         var activeModal = document.getElementsByClassName("active-modal")[0];

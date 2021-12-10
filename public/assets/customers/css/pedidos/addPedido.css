@@ -1,0 +1,136 @@
+.bg-blue{
+    background-color: #002868 !important;
+    color: white !important;
+}
+
+.title{
+    height: auto;
+    width: 100%;
+    padding: 0px 0px 0px 5px;
+    vertical-align: middle;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.title p{
+    margin-top: 10px;
+}
+
+.content{
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    padding: 50px;
+}
+
+h5, label{
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+
+input{
+    width: 100%;
+}
+
+.rowPedido{
+    margin-top: 30px;
+}
+
+.selectPedido, .inputPedido{
+    width: 100% !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 30px;
+    border-radius: 2px;
+    background-color: #F5F8F8;
+}
+
+input[type="text"]:disabled{
+    background-color: #F2F2F2;
+    height: 30px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.1);   
+    cursor: not-allowed; 
+}
+
+/* TAGS INPUT */
+
+.tags-input 
+{
+  	list-style : none;   
+  	display:inline-block;
+  	padding:5px;
+  	height: auto !important;
+    width: 100% !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 30px;
+    border-radius: 2px;
+    background-color: #F5F8F8;
+}
+
+.tags-input li
+{
+  	float:left;
+}
+
+.tags
+{
+    margin-top: 5px;
+  	background:#5C6BC0;
+    color: white;
+  	padding:5px 20px 5px 8px;
+  	border-radius:3px;
+  	margin-right: 5px;
+  	position: relative;
+}
+
+.tags i
+{
+	position: absolute; 
+	right:6px;
+	top:3px;
+	width: 8px;
+	height: 8px;
+	content:'';
+	cursor:pointer;
+	opacity: .7;
+  font-size:12px;
+}
+
+.tags i:hover
+{
+	opacity: 1;
+}
+
+.tags-new input[type="text"]
+{
+  border:0;
+	margin: 0;
+	padding: 0 0 0 3px;
+	font-size: 14px;
+	margin-top: 5px;
+  background:transparent;
+}
+
+.tags-new input[type="text"]:focus
+{
+  	outline:none; 
+}
+
+.checkboxPedido{
+  display:inline-block !important;
+  width: auto !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 2px;
+  background-color: #F5F8F8 !important;
+}
+
+
+
+/* CUERPO PEDIDO  */
+
+/* -------------------------- TABLA -------------------- */
+
+.tablaPedido{
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}

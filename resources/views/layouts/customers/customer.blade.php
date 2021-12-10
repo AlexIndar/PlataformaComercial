@@ -2,21 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js" integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/index.css')}}">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"></script>   
-        <script src="{{asset('assets/customers/js/index.js')}}"></script>
-        <script src="{{asset('assets/libraries/blazy/blazy.min.js')}}"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+        <link rel="stylesheet" href="sweetalert2.min.css">
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
+        <script src="{{asset('assets/customers/js/index.js')}}"></script>
+        <script src="{{asset('assets/libraries/blazy/blazy.min.js')}}"></script>
+        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script src="https://unpkg.com/scrollreveal"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <title>@yield('title')</title>
         <!-- Custom Styles -->
         @yield('assets')
@@ -50,95 +58,48 @@
       <span></span>
     </label>
 
-    <div class="navbar-mobile">
+    <div class="navbar-mobile" id="navmobile">
         <div class="container-navbar-mobile">
             <div class="row">
+                <div class="col-12">
+                    <div class="menu-item" onclick="activeRama1('cuenta', this)">
+                        <h5>Cuenta</h5> <i class="fas fa-angle-down submenu-icon"></i>
+                    </div>
+
+                                @if($token && $token != 'error')
+                                    <div class="rama-1 rama-cuenta">
+                                        <h5 onclick="navigate('logout', false)">Cerrar Sesión</h5>
+                                    </div>
+                                @else
+                                    <div class="rama-1 rama-cuenta">
+                                        <h5 onclick="activeModal(2)">Regístrate</h5>
+                                    </div>
+                                    <div class="rama-1 rama-cuenta">
+                                        <h5 onclick="activeModal(1)">Iniciar sesión</h5>
+                                    </div>                                    
+                                @endif
+                                
+                </div>
+
                 <div class="col-12">
                     <div class="menu-item" onclick="activeRama1('productos', this)">
                         <h5>Productos</h5>  <i class="fas fa-angle-down submenu-icon"></i> 
                     </div>
-
-                                <div class="rama-1 rama-productos" onclick="activeRama2('abrasivos', this)">
-                                    <h5>Abrasivos</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-
-                                                        <div class="rama-2 rama-abrasivos" onclick="activeRama3('diamantados', this)">
-                                                            <h5>Diamantados</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                                        </div>
-
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Copas de diamantada</h5>
-                                                                            </div>
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Discos de diamante</h5>
-                                                                            </div>
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Lija de carburo</h5>
-                                                                            </div>
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Lima de diamante</h5>
-                                                                            </div>
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Pads diamantados</h5>
-                                                                            </div>
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Rectificadores diamantados</h5>
-                                                                            </div>
-                                                                            <div class="rama-3 rama-diamantados">
-                                                                                <h5>Rueda de diamante</h5>
-                                                                            </div>
-
-                                                        <div class="rama-2 rama-abrasivos">
-                                                            <h5>Fibras</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                                        </div>
-                                                        <div class="rama-2 rama-abrasivos">
-                                                            <h5>Metálicos</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                                        </div>
-                                                        <div class="rama-2 rama-abrasivos">
-                                                            <h5>Paquete</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                                        </div>
-                                                        <div class="rama-2 rama-abrasivos">
-                                                            <h5>Revestidos</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                                        </div>
-                                                        <div class="rama-2 rama-abrasivos">
-                                                            <h5>Sólidos</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                                        </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Adhesivos y selladores</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Automotriz</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Cerraduras y Herrajes</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Fijación</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Herramientas</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Herrería y soldadura</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Jardinería</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Material eléctrico</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Mercadeo</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Pintura y accesorios</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Plomería y gas</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
-                                <div class="rama-1 rama-productos">
-                                    <h5>Seguridad industrial</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                </div>
+                                 @for($i = 0; $i < count($rama1); $i ++)
+                                        <div class="rama-1 rama-productos" onclick="activeRama2('{{$rama1[$i]}}', this)">
+                                            <h5>{{$rama1[$i]}}</h5>  <i class="fas fa-caret-down submenu-icon"></i>
+                                        </div>
+                                        @for($x = 0; $x < count($rama2[$i]); $x ++)
+                                            <div class="rama-2 rama-{{$rama1[$i]}}" onclick="activeRama3('{{$rama2[$i][$x]}}', this)">
+                                                <h5>{{$rama2[$i][$x]}}</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
+                                            </div>
+                                                @for($y = 0; $y < count($rama3[$i][$x]); $y ++)
+                                                    <div class="rama-3 rama-{{$rama2[$i][$x]}}">
+                                                        <h5>{{$rama3[$i][$x][$y]}}</h5>
+                                                    </div>
+                                                @endfor
+                                        @endfor
+                                @endfor       
                 </div>
                 
                 <div class="col-12">
@@ -157,7 +118,6 @@
                     <div class="menu-item" onclick="activeRama1('empresa', this)">
                         <h5>Empresa</h5> <i class="fas fa-angle-down submenu-icon"></i>
                     </div>
-                </div>
 
                                 <div class="rama-1 rama-empresa">
                                     <h5>Nosotros</h5>
@@ -168,6 +128,7 @@
                                 <div class="rama-1 rama-empresa">
                                     <h5>Servicio postventa</h5>
                                 </div>
+                </div>
                 
                 <div class="col-12">
                     <div class="menu-item">
@@ -177,9 +138,7 @@
                 
                 <div class="col-12">
                     <div class="menu-item">
-                        @if ($level == ('C')) 
-                            <h5>Bolsa de Trabajo</h5> 
-                        @else 
+                        @if ($level == ('E')) 
                             <h5>Intranet</h5> 
                         @endif
                     </div>
@@ -273,8 +232,7 @@
                             <a class="nav-link" href="contacto">Contacto</a>
                         </li>
                         <li class="nav-item">
-                        @if($level == ('C'))<a class="nav-link" href="#bolsa">Bolsa de Trabajo</a> @else <h5><a class="nav-link" href="Intranet">Intranet</a></h5> @endif
-                            
+                        @if($level == ('E'))<h5><a class="nav-link" href="Intranet">Intranet</a></h5> @endif
                         </li>
                     </ul>
                 </div>
@@ -395,8 +353,7 @@
                     <br>
                     <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> No cerrar sesión</label><br>
                     <div class="login-buttons">
-                        <button class="btn login-btn" type="submit" onclick="allowMiddleware()">Iniciar Sesión</button>
-                        <!-- <a href="#">Iniciar como empleado*</a> -->
+                        <button class="btn login-btn" type="submit">Iniciar Sesión</button>
                     </div>
                     <br> <hr class="hr-indar"> <br>
                     <div class="modal-links">

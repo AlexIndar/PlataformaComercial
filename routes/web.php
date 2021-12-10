@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer\ItemsController;
 use App\Http\Controllers\Customer\RamasController;
 use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\Customer\InvoicesController;
+use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Middleware\ValidateSession;
 
 /*
@@ -41,18 +42,6 @@ Route::get('/', function () {
 
 })->name('/');
 
-Route::get('/pedidosAnteriores', function (){
-    $token = TokenController::getToken();
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
-    $level = "C";
-    if(isset($_COOKIE["level"])){
-        $level = $_COOKIE["level"];
-    }
-    
-    return view('customers.pedidosAnteriores', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
-});
 
 Route::post('/login', [LoginController::class, 'authenticate']);
 
@@ -102,20 +91,6 @@ Route::get('/bladeInvoice', function () {
     
     return view('customers.invoice', ['customer' => $customer, 'total' => $total, 'level' => $level]);
 });
-
-Route::get('/bladeTest', function () {
-    $token = TokenController::getToken();
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
-    $level = "C";
-    if(isset($_COOKIE["level"])){
-        $level = $_COOKIE["level"];
-    }
-    
-    return view('customers.test', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
-});
- 
 
 
 Route::get('/about', function () {
@@ -221,6 +196,43 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // CUSTOMERS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+                            Route::get('/pedidosAnteriores/{customer}', function ($customer){
+                                $token = TokenController::getToken();
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                }
+                                $saleOrders = SaleOrdersController::getSaleOrders($token, $customer);
+                                return view('customers.pedidos.pedidosAnteriores', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'saleOrders' => $saleOrders, 'customer' => $customer]);
+                            });
+                            
+                            Route::get('pedidosAnteriores/getSaleOrders/{customer}', function ($customer){
+                                $token = TokenController::getToken();
+                                $saleOrders = SaleOrdersController::getSaleOrders($token, $customer);
+                                
+                                return $saleOrders;
+                            });
+
+                            Route::get('pedido/nuevo/{entity}', function ($entity){
+                                $token = TokenController::getToken();
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = $entity[0];
+                                $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
+                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
+
+                            });
+
+                            Route::get('pedido/nuevo/getInfoHeatWeb/{customer}', function ($customer){
+                                $token = TokenController::getToken();
+                                $entity = $customer;
+                                $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
+                                return  $data;
+                            });
 
 
 
