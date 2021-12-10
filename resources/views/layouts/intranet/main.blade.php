@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title')</title>
-  <link rel="icon" type="image/png" href="../assets/img/png/favicon.png">
+  <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
   <script src="{{asset('assets/js/scripts.js')}}"></script>
@@ -167,7 +167,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-light-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="main" class="brand-link">
+      <a href="Intranet" class="brand-link">
         <img class="logo" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="200" style="padding:10px; margin-left: 10px;">
 
       </a>

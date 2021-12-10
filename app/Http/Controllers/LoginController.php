@@ -49,9 +49,8 @@ class LoginController extends Controller
                 }
                 
                 
-        }
+        } 
         else{
-            dd($response);
             setcookie("laravel-token", "error", time()+900);
             return redirect('/');
         }
@@ -59,6 +58,7 @@ class LoginController extends Controller
 
     public function logout(){
         setcookie("laravel-token", "", time()-3600);
+        setcookie("level", "", time()- 60 * 480);
         setcookie("refresh", "", time()- 60 * 480);
         return redirect('/');
     }

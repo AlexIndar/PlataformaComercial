@@ -43,3 +43,7 @@
     background: #313761;
     border-radius: 10px;
 }
+
+.nav{
+    overflow: hidden;
+}
