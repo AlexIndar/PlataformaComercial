@@ -5,6 +5,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js" integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/index.css')}}">
         
@@ -14,16 +15,47 @@
         <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
         <link rel="stylesheet" href="sweetalert2.min.css">
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+
 
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
+        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script src="{{asset('assets/customers/js/index.js')}}"></script>
         <script src="{{asset('assets/libraries/blazy/blazy.min.js')}}"></script>
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script src="https://unpkg.com/scrollreveal"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  
+
+
+        <!-- DataTables  & Plugins -->
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <!-- Tempusdominus Bootstrap 4 -->
+        <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+        <!-- iCheck -->
+        <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+        <!-- JQVMap -->
+        <link rel="stylesheet" href="{{asset('plugins/jqvmap/jqvmap.min.css')}}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
+        <!-- overlayScrollbars -->
+        <link rel="stylesheet" href="{{asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
+        <!-- Daterange picker -->
+        <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
+        <!-- summernote -->
+        <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
+
+        <!-- DataTables  & Plugins -->
+
+        
 
         <title>@yield('title')</title>
         <!-- Custom Styles -->

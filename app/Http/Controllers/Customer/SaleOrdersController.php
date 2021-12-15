@@ -89,17 +89,6 @@ class SaleOrdersController extends Controller
             }
             else{ 
                 
-                // if(count($shippingWays)>0){
-                //     $last = array_values(array_slice($shippingWays, -1))[0];
-                //     if($last != $info[$x]->shippingWay){
-                //         array_push($shippingWays, $info[$x]->shippingWay);
-                //         array_push($packageDeliveries, $info[$x]->packageDelivery);
-                //     }
-                // }
-                // else{
-                //     array_push($shippingWays, $info[$x]->shippingWay);
-                //     array_push($packageDeliveries, $info[$x]->packageDelivery);
-                // }
                 array_push($shippingWays, $info[$x]->shippingWay);
                 array_push($packageDeliveries, $info[$x]->packageDelivery);
                 $temp_address = array(
@@ -117,8 +106,24 @@ class SaleOrdersController extends Controller
             
         }
 
-
-        // dd($data);
         return $data;
     }
+
+    public static function getItems($token, $entity){
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/getItems', [
+            "codCustomer" => $entity,
+        ]);
+        $info = json_decode($response->body());
+        return $info;
+    } 
+
+    public static function getItemByID($token, $id, $entity){
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/getItemByID', [
+            "itemID" => $id,
+            "codCustomer" => $entity,
+        ]);
+        $info = json_decode($response->body());
+        return $info;
+    } 
+
 }
