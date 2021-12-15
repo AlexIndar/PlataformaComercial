@@ -18,7 +18,7 @@ class TokenController extends Controller
      */
     public function __invoke(Request $request)
     {
-        //
+        // 
     }
 
     public static function getToken(){

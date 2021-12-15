@@ -9,6 +9,7 @@ use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Middleware\ValidateSession;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,7 @@ Route::get('/', function () {
         $bestSellers = ItemsController::getBestSellers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM");
     }
 
-    $rama1 = RamasController::getRama1();
+    $rama1 = RamasController::getRama1(); 
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
 
@@ -231,6 +232,21 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $token = TokenController::getToken();
                                 $entity = $customer;
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
+                                return  $data;
+                            });
+
+                            Route::post('pedido/nuevo/getItems/all', function (Request $request){
+                                $token = TokenController::getToken();
+                                $entity = $request->entity;
+                                $data = SaleOrdersController::getItems($token, $entity);
+                                return  $data;
+                            });
+
+                            Route::post('pedido/nuevo/getItemByID', function (Request $request){
+                                $token = TokenController::getToken();
+                                $id = (string)$request->id;
+                                $entity = (string)$request->entity;
+                                $data = SaleOrdersController::getItemByID($token, $id, $entity);
                                 return  $data;
                             });
 

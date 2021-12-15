@@ -53,7 +53,7 @@ input[type="text"]:disabled{
     cursor: not-allowed; 
 }
 
-/* TAGS INPUT */
+/* -------------------------------------------------------------------------------------- TAGS INPUT PROMOCIONES ------------------------------------------------------------------------------------------------------------ */
 
 .tags-input 
 {
@@ -129,8 +129,141 @@ input[type="text"]:disabled{
 
 /* CUERPO PEDIDO  */
 
-/* -------------------------- TABLA -------------------- */
+/* ----------------------------------------------------------------------------------- TABLA CUERPO PEDIDO ---------------------------------------------------------------------------------- */
+.cuerpoPedido{
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 0 10px 0;
+}
 
 .tablaPedido{
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  width: 100%;
+  min-width: 900px;
+  overflow-x: scroll;
+}
+
+.tablaPedido th{
+  background-color: #002868;
+  color: white;
+  padding: 2px;
+  text-align: center;
+}
+
+.tablaPedido tr{
+  padding: 20px 0px 20px 0px !important;
+  background-color: #F5F8F8;
+}
+
+.tablaPedido td{
+  padding: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.quantityBtn{
+  background-color: #E9ECEF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 25px;
+  height: 40px;
+  position: relative;
+  margin-top: -5px;
+}
+
+.input-cantidad{
+  background-color: #F2F2F2 !important;
+  text-align: center !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  height: 30px;
+}
+
+.td-center{
+  text-align: center !important;
+}
+
+#categoria-linea{
+  color: #139966;
+  font-weight: 700;
+}
+
+#categoria-pedido{
+  color: #C82333;
+  font-weight: 700;
+}
+
+.fa-delete{
+  position: relative;
+  color: #C82333 !important;
+  padding: 5px !important;
+  margin-top: -20px !important;
+  cursor: pointer;
+}
+
+.subpedido-desc td{
+  background-color: #FFC61E;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------------------- DIV CARGAR POR CODIGO --------------------------------------------------------- */
+
+fieldset.scheduler-border {
+  border: 1px groove #ddd !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  margin-top: 30px !important;
+}
+
+legend.scheduler-border {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  text-align: left !important;
+  width: auto;
+  padding: 0 10px;
+  border-bottom: none;
+  margin-top: -15px;
+  background-color: white;
+  color: black;
+}
+
+.btnCargarPorCodigo, .btnAgregarPorCodigo{
+  background-color: #002868;
+  color: white;
+  text-align: center;
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  transition: all .1s ease;
+}
+
+.btnAgregarPorCodigo:hover, .btnCargarPorCodigo:hover{
+  background-color: #011a42;
+}
+
+
+.tableCargarPorCodigo{
+  display: none;
+}
+
+/* ------------------------------------------------------------------------------- TABLA MODAL CARGAR INVENTARIO --------------------------------------------------------- */
+
+
+
+
+.modal .modal-content {
+  height: 100%;
+  border: 0;
+  border-radius: 5px;
+  padding: 20px;
+  width: 100% !important;
+}
+.modal .modal-body {
+  width: 100% !important;
+  min-width: 900px;
+  overflow-x: auto !important;
+}
+
+.modal-xl{
+  min-width: 95% !important;
 }

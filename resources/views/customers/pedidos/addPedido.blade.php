@@ -6,6 +6,7 @@
 @section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/addPedido.css')}}">
 <script src="{{asset('assets/customers/js/pedidos/addPedido.js')}}"></script>
+<link rel="stylesheet" href="{{asset('plugins/bs-stepper/css/bs-stepper.min.css')}}">
 @endsection
 
 @section('body')
@@ -31,7 +32,7 @@
                     <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{$data[0]['companyId']}}] - {{$data[0]['company']}}" disabled></div>
                 @else
                     <div class="col-lg-5 col-md-5 col-12 rowPedido">
-                        <select id="customerID" name="customerID" class="form-control selectpicker" data-live-search="true" >
+                        <select id="customerID" name="customerID" class="form-control selectpicker" data-live-search="true">
                             <option selected value="none">Selecciona un cliente</option>
                             @for($x=0; $x < (count($data)); $x++)
                                 <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{$data[$x]['companyId']}}] - {{$data[$x]['company']}}</option>
@@ -64,6 +65,7 @@
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
                             <select id="sucursal" name="sucursal" class="form-control selectpicker" data-live-search="true">
                                 @if(count($data)==1)
+                                    <option style="height: 30px !important;" value="none">Selecciona una sucursal</option>
                                     @for($x=0; $x < (count($data[0]['addresses'])); $x++)
                                         <option style="height: 30px !important;" value="{{$x}}">{{$data[0]['addresses'][$x]['address']}}</option>
                                     @endfor
@@ -135,23 +137,97 @@
 
     <!---------------------------------------------------------------------------------------------------- ARTICULOS PEDIDO ---------------------------------------------------------------------------------------------->
 
-    <table class="tablaPedido">
-        <tr>
-            <th></th>
-            <th>Art</th>
-            <th>Cant</th>
-            <th>Unidad</th>
-            <th>Descripción</th>
-            <th>Precio Lista</th>
-            <th>Promo</th>
-            <th>Precio Unitario</th>
-            <th>Importe</th>
-        </tr>
-    </table>
+    <div class="cuerpoPedido row">
+        <div class="col-12 overflow-auto">
+            <table class="tablaPedido" id="tablaPedido">
+                <!-- CABECERA DE TABLA -->
+                <tr>
+                    <th>#</th>
+                    <th>Art</th>
+                    <th>Cant</th>
+                    <th>Descripción</th>
+                    <th>Precio Lista</th>
+                    <th>Promo</th>
+                    <th>Precio Unitario</th>
+                    <th>Importe</th>
+                    <th></th>
+                </tr>
+               
+                <!-- CUERPO DE TABLA -->
+
+            </table>
+        </div>
+
+        <div class="col-12 text-center mt-3 messageAddProducts">
+                Agrega Productos
+        </div>
+    </div>
+   
     
     <!---------------------------------------------------------------------------------------------------- FIN ARTICULOS PEDIDO ---------------------------------------------------------------------------------------------->
+    <br>
+
+    <!-- CARGAR POR CÓDIGO -->
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-12">
+            <fieldset class="scheduler-border">
+                <legend class="scheduler-border">Cargar por código</legend>
+
+                <table id="tableCargarPorCodigo" class="tableCargarPorCodigo inactive w-100">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Cantidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <button class="btnAgregarPorCodigo mt-3" onclick="addRowCargarPorCodigo()"><i class="fas fa-plus"></i> Agregar</button>
+                <button id="btnCargarPorCodigo" class="btnCargarPorCodigo mt-3 d-none" onclick="cargarProductosPorCodigo()"><i class="fas fa-arrow-up"></i> Cargar</button>
+            </fieldset>
+        </div>
+    </div>
+
+    <!-- BUSCAR -->
+
+    <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btnCargarPorCodigo" data-toggle="modal" data-target=".bd-example-modal-xl">Buscar</button>
 
 
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+                            <input type="text" id="empty" value="yes" hidden>
+                            <table id="example1" class="table table-striped table-bordered table-hover" >
+                                <thead>
+                                    <tr>
+                                        <th>Img</th>
+                                        <th>Categoría</th>
+                                        <th>Fab</th>
+                                        <th>Fam</th>
+                                        <th>Grupo</th>
+                                        <th>Tipo</th>
+                                        <th>ID</th>
+                                        <th>Cod Art</th>
+                                        <th>Descripción</th>
+                                        <th>Multiplo</th>
+                                        <th>Precio</th>
+                                        <th>Unidad</th>
+                                        <th>Promo</th>
+                                        <th>Existencia</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+        </div>
+    </div>
+    </div>
+
+
+    
     <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
 
 

@@ -111,55 +111,59 @@ $('document').ready(function(){
         }
     });
 
-    var timer = setInterval(function () {
-      document.getElementById('first-carousel-item').classList.add('active');
-      if(getCookie("laravel-token")){
-        if(getCookie("laravel-token").includes('error')){
-          var toast = Swal.mixin({
-            toast: true,
-            icon: 'success',
-            title: 'General Title',
-            animation: true,
-            position: 'top-right',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: false,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          });
-          toast.fire({
-            animation: true,
-            title: 'Nombre de usuario inválido o contraseña incorrecta',
-            icon: 'error'
-          });
+    if(document.getElementById('first-carousel-item')){
+      var timer = setInterval(function () {
+      
+        document.getElementById('first-carousel-item').classList.add('active');
+        if(getCookie("laravel-token")){
+          if(getCookie("laravel-token").includes('error')){
+            var toast = Swal.mixin({
+              toast: true,
+              icon: 'success',
+              title: 'General Title',
+              animation: true,
+              position: 'top-right',
+              showConfirmButton: false,
+              timer: 4000,
+              timerProgressBar: false,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+            });
+            toast.fire({
+              animation: true,
+              title: 'Nombre de usuario inválido o contraseña incorrecta',
+              icon: 'error'
+            });
+          }
+          else{
+            var toast = Swal.mixin({
+              toast: true,
+              icon: 'success',
+              title: 'General Title',
+              animation: true,
+              position: 'top-right',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: false,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+            });
+            toast.fire({
+              animation: true,
+              title: '¡Bienvenido de nuevo!',
+              icon: 'success'
+            });
+          }
+          
         }
-        else{
-          var toast = Swal.mixin({
-            toast: true,
-            icon: 'success',
-            title: 'General Title',
-            animation: true,
-            position: 'top-right',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: false,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          });
-          toast.fire({
-            animation: true,
-            title: '¡Bienvenido de nuevo!',
-            icon: 'success'
-          });
-        }
-        
-      }
-      clearInterval(timer);
-    }, 300);
+        clearInterval(timer);
+      }, 300);
+    }
+    
 
     $('#check').on('click', function (event){
       console.log('click');
