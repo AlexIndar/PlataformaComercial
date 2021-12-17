@@ -92,7 +92,7 @@ class SaleOrdersController extends Controller
                 array_push($shippingWays, $info[$x]->shippingWay);
                 array_push($packageDeliveries, $info[$x]->packageDelivery);
                 $temp_address = array(
-                    "addressID" => $info[$x]->addressID,
+                    "addressID" => $info[$x]->addressID, 
                     "address" => $info[$x]->address,
                 );
                 array_push($addresses, $temp_address);

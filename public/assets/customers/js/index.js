@@ -94,22 +94,6 @@ $('document').ready(function(){
     ScrollReveal().reveal('.appear-1000', {delay:1000});
     ScrollReveal().reveal('.appear-1500', {delay:1500});
     ScrollReveal().reveal('.appear-2000', {delay:2000});
-    
-
-      var bLazy = new Blazy({
-        selector: '.b-lazy',
-        offset: 180, // Loads images 180px before they're visible
-        success: function(element){ 
-          console.log("success blazy");
-          setTimeout(function(){
-            var parent = element.parentNode;
-            parent.className = parent.className.replace(/\bloading\b/,'');
-          }, 200);
-        },
-        error: function(element, message){
-          console.log(element + " - " +message);
-        }
-    });
 
     if(document.getElementById('first-carousel-item')){
       var timer = setInterval(function () {

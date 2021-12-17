@@ -28,8 +28,8 @@ class ItemsController extends Controller
 
     public static function getBestSellers($token){
         $getProducts = Http::withToken($token)->post('http://192.168.70.107:64444/item/GetItemsWhere', [
-            "columns" => "isinactive",
-            "values" => "false"
+            "columns" => "fabricanteArticulo",
+            "values" => "34"
         ]);
 
         $bestSellers = json_decode($getProducts->body());

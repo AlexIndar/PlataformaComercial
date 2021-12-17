@@ -237,7 +237,7 @@
                     <!-- Slides -->
                     @for ($x = 0; $x < 20; $x++)
                     <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
-                        <img loading="lazy" src="http://192.168.70.108:8080/public/assets/customers/img/articulos/01_JPG_CH/{{$bestSellers[$x]->itemid}}_CH.jpg" onerror="showLoadImg(this)" alt="">
+                        <img loading="lazy" src="http://192.168.70.108:8080/public/assets/articulos/img/01_JPG_CH/{{$bestSellers[$x]->itemid}}_CH.jpg" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
                         <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                         @if($token && $token != 'error')
                         <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>
@@ -335,7 +335,7 @@
                             @for ($x = 0; $x < 20; $x++)
                             <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
                                 <div class="ribbon ribbon-oferta ribbon-top-left"><span>¡OFERTA!</span></div>
-                                <img loading="lazy" class="b-lazy" src="http://www.iindar.com.mx/imagenes/articulos/02_JPG_MD/{{$bestSellers[$x]->itemid}}_MD.jpg"  onerror="showLoadImg(this)" alt="">
+                                <img loading="lazy" src="http://192.168.70.108:8080/public/assets/articulos/img/01_JPG_CH/{{$bestSellers[$x]->itemid}}_CH.jpg" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
                                 <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                                 @if($token && $token != 'error')
                                 <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>
@@ -366,7 +366,7 @@
                             @for ($x = 0; $x < 20; $x++)
                             <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
                                 <div class="ribbon ribbon-outlet ribbon-top-left"><span>¡OUTLET!</span></div>
-                                <img loading="lazy" class="b-lazy" src="http://www.iindar.com.mx/imagenes/articulos/02_JPG_MD/{{$bestSellers[$x]->itemid}}_MD.jpg"  onerror="showLoadImg(this)" alt="">
+                                <img loading="lazy" src="http://192.168.70.108:8080/public/assets/articulos/img/01_JPG_CH/{{$bestSellers[$x]->itemid}}_CH.jpg" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
                                 <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                                 @if($token && $token != 'error')
                                 <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>

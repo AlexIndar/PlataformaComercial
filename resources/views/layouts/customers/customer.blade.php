@@ -6,7 +6,7 @@
         <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js" integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
+        <link rel="icon" type="image/png" href="/assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/index.css')}}">
         
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
         <link rel="stylesheet" href="sweetalert2.min.css">
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.css">
 
 
         
@@ -23,7 +23,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script src="{{asset('assets/customers/js/index.js')}}"></script>
-        <script src="{{asset('assets/libraries/blazy/blazy.min.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/blazy/1.8.2/blazy.min.js" integrity="sha512-Yrd3VqXNBUzyCQWVBlL65mTdE1snypc9E3XnGJba0zJmxweyJAqDNp6XSARxxAO6hWdwMpKQOIGE5uvGdG0+Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script src="https://unpkg.com/scrollreveal"></script>
@@ -33,7 +33,8 @@
 
 
         <!-- DataTables  & Plugins -->
-        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
 
 
         <!-- Ionicons -->
@@ -53,15 +54,29 @@
         <!-- summernote -->
         <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
 
-        <!-- DataTables  & Plugins -->
+        <!-- DATEPICKER -->
 
-        
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+        <!-- CHOSEN SELECT -->
+        <script type="text/javascript" src="{{asset('plugins/chosen/chosen.jquery.js')}}"></script>
+        <link rel="stylesheet" type="text/css" href="{{asset('plugins/chosen/chosen.min.css')}}" />
+
+        <!-- xlsx reader  -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.8/xlsx.full.min.js"></script>
+
 
         <title>@yield('title')</title>
         <!-- Custom Styles -->
         @yield('assets')
 </head>
 <body>
+
+
 
     <!-- LOGIN OPTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------->
     <div class="login-options">

@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 |
 */
 Route::get('/', function () { 
+
     $token = TokenController::getToken();
     if($token && $token != 'error'){
         $bestSellers = ItemsController::getBestSellers($token);
@@ -33,6 +34,7 @@ Route::get('/', function () {
     $rama1 = RamasController::getRama1(); 
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
+
 
     $level = "C";
     if(isset($_COOKIE["level"])){
@@ -194,7 +196,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
             
-                // CUSTOMERS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                // PEDIDOS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
@@ -250,7 +252,32 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+                Route::get('/promociones', function (){
+                    $token = TokenController::getToken();
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE["level"])){
+                        $level = $_COOKIE["level"];
+                    } 
+                    return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
+                });
+
+                Route::get('/promociones/nueva', function (){
+                    $token = TokenController::getToken();
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE["level"])){
+                        $level = $_COOKIE["level"];
+                    }
+                    return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
+                });
 
 
                 // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
