@@ -36,7 +36,6 @@ class ItemsController extends Controller
 
         foreach($bestSellers as $item){
             $item->itemid = strtr($item->itemid, " ", "_");
-            // dd($item);
         }
 
         return $bestSellers;

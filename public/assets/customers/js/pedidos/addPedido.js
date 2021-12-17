@@ -108,56 +108,55 @@ $(document ).ready(function() {
 
 		var index = table.row( this ).index();
 		var item = items[index];
-		var value = table.cell(index,10).data();
-		alert(value);
+		var cant = table.cell(index,10).nodes().to$().find('input').val();
 		if(cell_clicked == "<i class='fas fa-plus-square btn-add-product fa-2x'></i>"){
-			alert("Add product "+item['itemid']);
+			if(item['disponible']==0){
+				var toast = Swal.mixin({
+					toast: true,
+					icon: 'success',
+					title: 'General Title',
+					animation: true,
+					position: 'top-right',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: false,
+					didOpen: (toast) => {
+					  toast.addEventListener('mouseenter', Swal.stopTimer)
+					  toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				  });
+				  toast.fire({
+					animation: true,
+					title: 'Producto '+item['itemid']+' Insuficiente',
+					icon: 'error'
+				});
+			}
+			else{
+				addRowPedido(item,cant);
+				var toast = Swal.mixin({
+					toast: true,
+					icon: 'success',
+					title: 'General Title',
+					animation: true,
+					position: 'top-right',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: false,
+					didOpen: (toast) => {
+					  toast.addEventListener('mouseenter', Swal.stopTimer)
+					  toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				  });
+				  toast.fire({
+					animation: true,
+					title: 'Producto '+item['itemid']+' Agregado',
+					icon: 'success'
+				});
+			}
 		}
 
 
-		// if(item['disponible']==0){
-		// 	var toast = Swal.mixin({
-		// 		toast: true,
-		// 		icon: 'success',
-		// 		title: 'General Title',
-		// 		animation: true,
-		// 		position: 'top-right',
-		// 		showConfirmButton: false,
-		// 		timer: 3000,
-		// 		timerProgressBar: false,
-		// 		didOpen: (toast) => {
-		// 		  toast.addEventListener('mouseenter', Swal.stopTimer)
-		// 		  toast.addEventListener('mouseleave', Swal.resumeTimer)
-		// 		}
-		// 	  });
-		// 	  toast.fire({
-		// 		animation: true,
-		// 		title: 'Producto '+item['itemid']+' Insuficiente',
-		// 		icon: 'error'
-		// 	});
-		// }
-		// else{
-		// 	addRowPedido(item);
-		// 	var toast = Swal.mixin({
-		// 		toast: true,
-		// 		icon: 'success',
-		// 		title: 'General Title',
-		// 		animation: true,
-		// 		position: 'top-right',
-		// 		showConfirmButton: false,
-		// 		timer: 3000,
-		// 		timerProgressBar: false,
-		// 		didOpen: (toast) => {
-		// 		  toast.addEventListener('mouseenter', Swal.stopTimer)
-		// 		  toast.addEventListener('mouseleave', Swal.resumeTimer)
-		// 		}
-		// 	  });
-		// 	  toast.fire({
-		// 		animation: true,
-		// 		title: 'Producto '+item['itemid']+' Agregado',
-		// 		icon: 'success'
-		// 	});
-		// }
+		
 	} );
 	
 
@@ -363,7 +362,7 @@ function cargarProductosPorCodigo(){
 		var inputCodigo = document.getElementById('input-codigo-'+x);
 		var inputCantidad = document.getElementById('input-cantidad-'+x);
 		var item = {"articulo" : inputCodigo.value, "cantidad" : inputCantidad.value};
-		getItemById(item);
+		getItemById(item, inputCantidad.value);
 
 	}
 }
@@ -372,7 +371,7 @@ function cargarProductosExcel(json){
 	jsonObj = JSON.parse(json);
 	console.log(jsonObj);
 	for(var x = 0; x < jsonObj.length; x++){
-		var item = {"articulo" : jsonObj[x]['Valores']};
+		var item = {"articulo" : jsonObj[x]['Codigos'], "cantidad" : jsonObj[x]['Cantidad']};
 		getItemById(item);
 	}	
 	document.getElementById("excelCodes").value = "";
@@ -380,7 +379,9 @@ function cargarProductosExcel(json){
 
 function getItemById(item){
 	var entity = document.getElementById('entity').value;
-	let data = {id: item['articulo'], entity: entity};
+	var data = {id: item['articulo'], entity: entity};
+	var cantidad = item['cantidad'];
+	
 		$.ajax({
 			type: "POST",
 			enctype: 'multipart/form-data',
@@ -409,7 +410,7 @@ function getItemById(item){
 						promo: data[0]['promo'],
 						disponible: data[0]['disponible']
 					};
-					addRowPedido(item);
+					addRowPedido(item, cantidad);
 			}, 
 			error: function(error){
 			 }
@@ -498,7 +499,7 @@ function cargarInventario(){
 }
 
 
-function addRowPedido(item){
+function addRowPedido(item,cant){
 		var table = document.getElementById('tablaPedido');
 		var row = table.insertRow(table.rows.length);
 
@@ -512,9 +513,14 @@ function addRowPedido(item){
 		var cell8 = row.insertCell(7);
 		var cell9 = row.insertCell(8);
 
+		var cantidad = validarMultiplo(item['multiploVenta'], cant);
+		var itemid = item['itemid'];
+		var pUnitario = ((100 - parseFloat(item['promo']))*parseFloat(item['price'])/100).toFixed(2);
+		var importe = (cantidad * pUnitario).toFixed(2);
+
 		cell1.innerHTML = "<h4>"+(row.rowIndex)+"</h4>";
 		cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>"+item["itemid"]+"</h4></div><div class='col-12'>Unidad: <span id='unidad'>"+item["unidad"]+"</span> </div></div>";
-		cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='text' aria-label='cantidad' id='cantidad' name='cantidad' class='form-control input-cantidad' value='"+item['multiploVenta']+"'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
+		cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='text' aria-label='cantidad' id='cantidad' name='cantidad' class='form-control input-cantidad' value='"+cantidad+"' step='"+cantidad+"' min='"+item['multiploVenta']+"' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\'itemid\')'>+</button></div></div>";
 
 		if(item["categoriaItem"]=="CADUCADO" || item["categoriaItem"]=="S/PEDIDO")
 			cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>"+item["purchasedescription"]+"</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>"+item["categoriaItem"]+"</span> Existencia: <span id='existencia'>"+item["disponible"]+"</span> Múltiplo: <span id='multiplo'>"+item["multiploVenta"]+"</span></div></div>";
@@ -522,9 +528,9 @@ function addRowPedido(item){
 			cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>"+item["purchasedescription"]+"</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>"+item["categoriaItem"]+"</span> Existencia: <span id='existencia'>"+item["disponible"]+"</span> Múltiplo: <span id='multiplo'>"+item["multiploVenta"]+"</span></div></div>";
 		
 		cell5.innerHTML = "<h5 id='precioLista'>$"+item["price"]+"</h5>";
-		cell6.innerHTML = "<h5 id='promo'>"+item["promo"]+"</h5>";
-		cell7.innerHTML = "<h5 id='precioUnitario'>$"+item["price"]+"</h5>";
-		cell8.innerHTML = "<h5 id='importe'>CALCULAR</h5>";
+		cell6.innerHTML = "<h5 id='promo'>"+item["promo"]+"%</h5>";
+		cell7.innerHTML = "<h5 id='precioUnitario'>$"+pUnitario+"</h5>";
+		cell8.innerHTML = "<h5 id='importe'>$"+importe+"</h5>";
 		cell9.innerHTML = "<i class='fas fa-minus-square fa-2x fa-delete' onclick='deleteRowPedido(this)'></i>";
 
 		cell1.classList.add('td-center');
@@ -538,6 +544,35 @@ function addRowPedido(item){
 		cell9.classList.add('td-center');
 
 }
+
+function validarMultiplo(multiplo, cant){
+	var done = false;
+	var cantidad = 0;
+	var tempMult = multiplo;
+	while(!done){
+		if(cant%tempMult == 0){
+			cantidad = cant;
+			done = true;
+		}
+		else if(tempMult > cant){
+			cantidad = tempMult;
+			done = true;
+		}
+		else if(tempMult == cant){
+			cantidad = tempMult;
+			done = true;
+		}
+		else if(multiplo<cant){
+			tempMult = tempMult + multiplo;
+		}
+	}
+	return cantidad;
+}
+
+function addItemCant(item){
+	alert(item);
+}
+
 
 function triggerInputFile(){
 	document.getElementById('excelCodes').click();

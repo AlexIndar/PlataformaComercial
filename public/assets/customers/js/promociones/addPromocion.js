@@ -1,6 +1,12 @@
 $('document').ready(function(){
 
-    $(".chosen").chosen({max_selected_options: 5});
+    $(".chosen").chosen({
+        no_results_text: "Sin resultados para",
+        placeholder_text_single: "Buscar",
+        placeholder_text_multiple: "Seleccione una o más opciones"
+    });
+
+    
 
     const fileArticulos = document.getElementById('articulosFile');
 	fileArticulos.addEventListener('change', (event) => {
@@ -204,11 +210,7 @@ function triggerInputFile(input){
 
 function addTags(json, element){
     var jsonObj = JSON.parse(json);
-    for(var x = 0; x < jsonObj.length; x++){
-        var opt = document.createElement('option');
-        opt.value = jsonObj[x]['Valores'];
-        opt.innerHTML = jsonObj[x]['Valores'];
-        opt.selected = 'true';
-        element.appendChild(opt);
-    }
+    console.log(jsonObj);
+    console.log(element);
+    $('#articulos').val(["22", "25", "27"]).trigger('chosen:updated');
 }

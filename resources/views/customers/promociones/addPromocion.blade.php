@@ -111,7 +111,7 @@
                         <h5>Puntos:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="puntos" id="puntos">
+                        <input class="input-promociones" type="number" name="puntos" id="puntos" min="0">
                     </div>
                 </div>
                 <div class="row reglas-row">
@@ -130,7 +130,7 @@
                         <h5>Descuento Web:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuentoweb" id="descuentoweb" step=".01">
+                        <input class="input-promociones" type="number" name="descuentoweb" id="descuentoweb" step=".01" min="0">
                     </div>
                 </div>
                 <div class="row reglas-row">
@@ -156,14 +156,14 @@
                         <h5>Precio mínimo:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuento" id="descuento" value="1" step=".01" min="0">
+                        <input class="input-promociones" type="number" name="preciomin" id="preciomin" value="1" step=".01" min="0">
                     </div>
 
                     <div class="col-lg-2 col-md-3 col-12 text-center">
                         <h5>Cantidad mínima:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="puntos" id="puntos">
+                        <input class="input-promociones" type="number" name="cantidadmin" id="cantidadmin" value="1" step="1" min="0">
                     </div>
                 </div>
 
@@ -195,14 +195,12 @@
                 <br>
                 <div class="col-12">
                             <select id="regalos" name="regalos[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                <option value="aa">AA</option>
-                                <option value="ab">AB</option>
-                                <option value="ac">AC</option>
-                                <option value="b">B</option>
+                                @foreach($categories as $category)
+                                    <option value="{{$category}}">{{$category}}</option>
+                                @endforeach
                             </select>
                 </div>
                 <br>
-
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
                 <button class="btn btn-blue"><i class="fas fa-file-excel"></i> Desde archivo</button>
                     <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar todos</button>
@@ -232,13 +230,13 @@
 
                 <br>
                 <div class="col-12">
-                            <ul class="tags-input">
-                                <li class="tags-new">
-                                    <input type="text" placeholder="Buscar"> 
-                                </li>
-                            </ul>  
+                            <select id="giros" name="giros[]" class="form-control chosen" data-placeholder="Buscar" multiple>
+                                @foreach($giros as $giro)
+                                    <option value="{{$giro}}">{{$giro}}</option>
+                                @endforeach
+                            </select>
                 </div>
-
+                <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
                     <button class="btn btn-blue"><i class="fas fa-file-excel"></i> Desde archivo</button>
                     <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar todos</button>
@@ -269,13 +267,13 @@
 
                 <br>
                 <div class="col-12">
-                            <ul class="tags-input">
-                                <li class="tags-new">
-                                    <input type="text" placeholder="Buscar"> 
-                                </li>
-                            </ul>  
+                            <select id="clientes" name="clientes[]" class="form-control chosen" data-placeholder="Buscar" multiple>
+                                @foreach($customers as $customer)
+                                    <option value="{{$customer}}">{{$customer}}</option>
+                                @endforeach
+                            </select> 
                 </div>
-
+                <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
                     <button class="btn btn-blue"><i class="fas fa-file-excel"></i> Desde archivo</button>
                     <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar todos</button>
@@ -306,13 +304,13 @@
 
                 <br>
                 <div class="col-12">
-                            <ul class="tags-input">
-                                <li class="tags-new">
-                                    <input type="text" placeholder="Buscar"> 
-                                </li>
-                            </ul>  
+                            <select id="proveedores" name="proveedores[]" class="form-control chosen" data-placeholder="Buscar" multiple>
+                                @foreach($proveedores as $proveedor)
+                                    <option value="{{$proveedor}}">{{$proveedor}}</option>
+                                @endforeach
+                            </select>  
                 </div>
-
+                <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
                     <button class="btn btn-blue"><i class="fas fa-file-excel"></i> Desde archivo</button>
                     <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar todos</button>
@@ -343,13 +341,13 @@
 
                 <br>
                 <div class="col-12">
-                            <ul class="tags-input">
-                                <li class="tags-new">
-                                    <input type="text" placeholder="Buscar"> 
-                                </li>
-                            </ul>  
+                            <select id="marcas" name="marcas[]" class="form-control chosen" data-placeholder="Buscar" multiple>
+                                @foreach($marcas as $marca)
+                                    <option value="{{$marca}}">{{$marca}}</option>
+                                @endforeach
+                            </select>  
                 </div>
-
+                <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
                     <button class="btn btn-blue"><i class="fas fa-file-excel"></i> Desde archivo</button>
                     <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar todos</button>
@@ -381,6 +379,13 @@
                 <br>
                 <div class="col-12">
                             <select id="articulos" name="articulos[]" class="form-control chosen" data-placeholder="Buscar" multiple>
+                                @foreach($articulos as $articulo)
+                                    <option value="{{$articulo}}">{{$articulo}}</option>
+                                @endforeach
+                                <option value="22">{{$articulo}}</option>
+                                <option value="25">{{$articulo}}</option>
+                                <option value="27">{{$articulo}}</option>
+
                             </select>
                 </div>
                 <br>

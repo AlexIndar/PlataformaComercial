@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\RamasController;
 use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
+use App\Http\Controllers\Customer\PromoController;
 use App\Http\Middleware\ValidateSession;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,6 @@ use Illuminate\Http\Request;
 |
 */
 Route::get('/', function () { 
-
     $token = TokenController::getToken();
     if($token && $token != 'error'){
         $bestSellers = ItemsController::getBestSellers($token);
@@ -275,8 +275,21 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $level = "C";
                     if(isset($_COOKIE["level"])){
                         $level = $_COOKIE["level"];
-                    }
-                    return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
+                    } 
+                    $customersInfo = PromoController::getCustomersInfo($token);
+
+                    $categories = PromoController::getCategories($customersInfo);
+                    $giros = PromoController::getGiros($customersInfo);
+                    $customers = PromoController::getCustomers($customersInfo);
+                    
+                    $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
+                    $proveedores = PromoController::getProveedores($infoArticulos);
+                    $marcas = PromoController::getMarcas($infoArticulos);
+                    $articulos = PromoController::getArticulos($infoArticulos);
+                    
+                    
+
+                    return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos]);
                 });
 
 
