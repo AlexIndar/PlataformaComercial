@@ -1,0 +1,188 @@
+.bg-blue{
+    background-color: #002868 !important;
+    color: white !important;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.btn-blue{
+    background-color: #002868;
+    color: white;
+    margin-right: 5px;
+
+}
+
+.btn-blue:hover{
+    background-color: #011941;
+    color: white !important;
+}
+
+.datos-generales{
+    height: auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.content-datos-generales{
+    padding: 20px;
+}
+
+h5{
+    font-size: 16px !important;
+}
+
+.input-promociones{
+    width: 100% !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 30px;
+    border-radius: 2px;
+    background-color: #F5F8F8;
+    position: relative;
+    padding-left:12px ;
+}
+
+/* ENCABEZADO PROMOCIONES / DATOS GENERALES -------------------------------------------------------------------------------------------------------- */
+
+.mensaje{
+    font-size: 16px !important;
+}
+
+.mensaje.green{
+    color: rgb(0, 153, 0) !important;
+}
+
+.mensaje.red{
+    color: rgb(255, 0, 0) !important;
+}
+
+.daterangepicker{
+    margin-top: 520px;
+}
+
+/* REGLAS ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+.reglas-row{
+    margin-top: 10px;
+}
+
+/* -------------------------------------------------------------------------------------- TAGS INPUT PROMOCIONES ------------------------------------------------------------------------------------------------------------ */
+
+.tags-input 
+{
+  	list-style : none;   
+  	display:inline-block;
+  	padding:5px;
+  	height: auto !important;
+    width: 100% !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 30px;
+    border-radius: 2px;
+    background-color: #F5F8F8;
+}
+
+.tags-input li
+{
+  	float:left;
+}
+
+.tags
+{
+    margin-top: 5px;
+  	background:#5C6BC0;
+    color: white;
+  	padding:5px 20px 5px 8px;
+  	border-radius:3px;
+  	margin-right: 5px;
+  	position: relative;
+}
+
+.tags i
+{
+	position: absolute; 
+	right:6px;
+	top:3px;
+	width: 8px;
+	height: 8px;
+	content:'';
+	cursor:pointer;
+	opacity: .7;
+  font-size:12px;
+}
+
+.tags i:hover
+{
+	opacity: 1;
+}
+
+.tags-new input[type="text"]
+{
+  border:0;
+	margin: 0;
+	padding: 0 0 0 3px;
+	font-size: 14px;
+	margin-top: 5px;
+  background:transparent;
+}
+
+.tags-new input[type="text"]:focus
+{
+  	outline:none; 
+}
+
+.checkboxPedido{
+  display:inline-block !important;
+  width: auto !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 2px;
+  background-color: #F5F8F8 !important;
+}
+
+/* ---------------------------------------------------------------------------------------------- CHOSEN ----------------------------------------------------------- */
+
+
+.chosen-container-multi .chosen-choices li.search-choice{
+    background-color: #5C6BC0 !important;
+    color: white !important;
+    background-image: none !important;
+    line-height: 20px !important;
+    font-size: 13px !important;
+    border: none !important;
+    padding: 3px 20px 3px 15px !important;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type=text]{
+    width: auto !important;
+}
+
+.chosen-container .chosen-results li.highlighted{
+    background-color: #002868 !important;
+    color: white;
+    background-image: none !important;
+
+}
+
+
+/* RESPONSIVE ------------------------------------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+    .daterangepicker{
+        margin-top: 600px !important;
+    } 
+}
+
+@media (max-width: 397px) {
+    .daterangepicker{
+        margin-top: 628px !important;
+    } 
+}
+
+@media (max-width: 385px) {
+    .daterangepicker{
+        margin-top: 645px !important;
+    } 
+}

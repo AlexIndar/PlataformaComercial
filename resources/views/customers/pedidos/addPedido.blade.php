@@ -13,6 +13,7 @@
 
   <br><br>
 
+
   <div class="container-fluid">
     <div class="title bg-blue">
         <p>Cotizar y levantar pedido a clientes</p>
@@ -86,11 +87,11 @@
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
                             <ul class="tags-input">
-                                <li class="tags last">1PREMIABM<i class="fa fa-times"></i></li>
+                                <li class="tags">1PREMIABM<i class="fa fa-times"></i></li>
                                 <li class="tags last">1PREMIAF4<i class="fa fa-times"></i></li>
-                                <li class="tags-new">
+                                <!-- <li class="tags-new">
                                     <input type="text" placeholder="Buscar"> 
-                                </li>
+                                </li> -->
                             </ul>  
                         </div>
                     </div>
@@ -135,98 +136,131 @@
         
     <br><br>
 
-    <!---------------------------------------------------------------------------------------------------- ARTICULOS PEDIDO ---------------------------------------------------------------------------------------------->
+    <!---------------------------------------------------------------------------------------------------- PEDIDO  ---------------------------------------------------------------------------------------------->
 
-    <div class="cuerpoPedido row">
-        <div class="col-12 overflow-auto">
-            <table class="tablaPedido" id="tablaPedido">
-                <!-- CABECERA DE TABLA -->
-                <tr>
-                    <th>#</th>
-                    <th>Art</th>
-                    <th>Cant</th>
-                    <th>Descripción</th>
-                    <th>Precio Lista</th>
-                    <th>Promo</th>
-                    <th>Precio Unitario</th>
-                    <th>Importe</th>
-                    <th></th>
-                </tr>
-               
-                <!-- CUERPO DE TABLA -->
-
-            </table>
-        </div>
-
-        <div class="col-12 text-center mt-3 messageAddProducts">
-                Agrega Productos
-        </div>
+    <div id="loading" class="d-flex flex-row justify-content-center align-items-center" style="width: 100%; height: 100px; background-color: #002868; color: white;">
+        <h5>Cargando inventario ...</h5>
     </div>
-   
-    
-    <!---------------------------------------------------------------------------------------------------- FIN ARTICULOS PEDIDO ---------------------------------------------------------------------------------------------->
-    <br>
 
-    <!-- CARGAR POR CÓDIGO -->
 
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-12">
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Cargar por código</legend>
+    <div id="pedido" style="display:none;">
 
-                <table id="tableCargarPorCodigo" class="tableCargarPorCodigo inactive w-100">
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>Cantidad</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
+        <!-- TABLA ARTICULOS PEDIDO -->
+
+        <div class="cuerpoPedido row">
+            <div class="col-12 overflow-auto">
+                <table class="tablaPedido" id="tablaPedido">
+                    <!-- CABECERA DE TABLA -->
+                    <tr>
+                        <th>#</th>
+                        <th>Art</th>
+                        <th>Cant</th>
+                        <th>Descripción</th>
+                        <th>Precio Lista</th>
+                        <th>Promo</th>
+                        <th>Precio Unitario</th>
+                        <th>Importe</th>
+                        <th></th>
+                    </tr>
+                
+                    <!-- CUERPO DE TABLA -->
+
                 </table>
+            </div>
 
-                <button class="btnAgregarPorCodigo mt-3" onclick="addRowCargarPorCodigo()"><i class="fas fa-plus"></i> Agregar</button>
-                <button id="btnCargarPorCodigo" class="btnCargarPorCodigo mt-3 d-none" onclick="cargarProductosPorCodigo()"><i class="fas fa-arrow-up"></i> Cargar</button>
-            </fieldset>
+            <div class="col-12 text-center mt-3 messageAddProducts">
+                    Agrega Productos
+            </div>
         </div>
-    </div>
+        
+        <br>
 
-    <!-- BUSCAR -->
+        <!-- CARGAR POR CÓDIGO -->
 
-    <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btnCargarPorCodigo" data-toggle="modal" data-target=".bd-example-modal-xl">Buscar</button>
+        <div class="row">
+            <div class="col-lg-4 col-md-5 col-12">
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Cargar por código</legend>
 
+                    <table id="tableCargarPorCodigo" class="tableCargarPorCodigo inactive w-100">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
 
-    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-                            <input type="text" id="empty" value="yes" hidden>
-                            <table id="example1" class="table table-striped table-bordered table-hover" >
-                                <thead>
-                                    <tr>
-                                        <th>Img</th>
-                                        <th>Categoría</th>
-                                        <th>Fab</th>
-                                        <th>Fam</th>
-                                        <th>Grupo</th>
-                                        <th>Tipo</th>
-                                        <th>ID</th>
-                                        <th>Cod Art</th>
-                                        <th>Descripción</th>
-                                        <th>Multiplo</th>
-                                        <th>Precio</th>
-                                        <th>Unidad</th>
-                                        <th>Promo</th>
-                                        <th>Existencia</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                    <button class="btnAgregarPorCodigo mt-3" onclick="addRowCargarPorCodigo()"><i class="fas fa-plus"></i> Agregar</button>
+                    <button id="btnCargarPorCodigo" class="btnCargarPorCodigo mt-3 d-none" onclick="cargarProductosPorCodigo()"><i class="fas fa-arrow-up"></i> Cargar</button>
+                </fieldset>
+            </div>
+
+            <div class="col-lg-8 col-md-7 col-12">
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Comentarios</legend>
+                    <textarea id="textarea" name="textarea" cols="40" rows="2" class="form-control" style="min-height: 50px;"></textarea>
+                </fieldset>
+            </div>
         </div>
-    </div>
-    </div>
 
+        <!-- INVENTARIO -->
 
+        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+            <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fab fa-searchengin"></i> Buscar</button>
+            <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
+            <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
+            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons"><i class="fas fa-save"></i> Guardar</button>
+        </div>
+        <br><br>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+            <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons"><i class="fas fa-file"></i> Nueva cotización</button>
+            <button type="button" id="borrarCotizacion" class="btn btn-group-buttons"><i class="fas fa-trash"></i> Borrar cotización</button>
+            <button type="button" id="enviarCotizacion" class="btn btn-group-buttons"><i class="fas fa-share-square"></i> Enviar cotización</button>
+        </div>
+        <br><br>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+            <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
+            <button type="button" id="levantarPedido" class="btn btn-group-buttons"><i class="fas fa-check"></i> Levantar pedido</button>
+            <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
+            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button>
+        </div>
+
+        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                                <input type="text" id="empty" value="yes" hidden>
+                                <table id="example1" class="table table-striped table-bordered table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th class="customHeader">Img</th>
+                                            <th class="customHeader">Categoría</th>
+                                            <th class="customHeader" id="orderHeader">Fab</th>
+                                            <th class="customHeader">Fam</th>
+                                            <th class="customHeader">Grupo</th>
+                                            <th class="customHeader">Tipo</th>
+                                            <th class="customHeader">ID</th>
+                                            <th class="customHeader">Cod Art</th>
+                                            <th class="customHeader">Descripción</th>
+                                            <th class="customHeader">Multiplo</th>
+                                            <th class="customHeader">Cantidad</th>
+                                            <th class="customHeader">Precio</th>
+                                            <th class="customHeader">Unidad</th>
+                                            <th class="customHeader">Promo</th>
+                                            <th class="customHeader">Existencia</th>
+                                            <th class="customHeader">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+            </div>
+        </div>
+        </div>
+
+    </div>
     
     <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
 

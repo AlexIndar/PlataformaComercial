@@ -4,12 +4,74 @@ var shippingWays = [];
 var packageDeliveries = [];
 var items = [];
 
+// VARIABLES GLOBALES PARA CAMBIAR DE FLETERA Y FORMA DE ENVÍO CUANDO CAMBIA CLIENTE O SUCURSAL
 indexCustomer = 0;
 indexAddress = 0;
+// VARIABLE PARA DETECTAR CUANDO EL INVENTARIO ESTÁ CARGADO
+var intervalInventario;
+// VARIABLE PARA VALIDAR QUE EL CLICK EN LA TABLA HAYA SIDO EN EL BOTÓN DE AGREGAR
+var cell_clicked;
 
 $(document ).ready(function() {
+
+
+	const fileSelector = document.getElementById('excelCodes');
+	fileSelector.addEventListener('change', (event) => {
+		var input = event.target;
+		var reader = new FileReader();
+		reader.onload = function(){
+			var fileData = reader.result;
+			var wb = XLSX.read(fileData, {type : 'binary'});
+	
+			wb.SheetNames.forEach(function(sheetName){
+			var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
+			var jsonObj = JSON.stringify(rowObj);
+			cargarProductosExcel(jsonObj);
+
+			})
+		};
+		reader.readAsBinaryString(input.files[0]);
+	});
+
+
+
+	intervalInventario = window.setInterval(checkItems, 1000);
+
+	var bLazy = new Blazy({
+        selector: '.b-lazy',
+        offset: 180, // Loads images 180px before they're visible
+        success: function(element){ 
+          console.log("success blazy");
+          setTimeout(function(){
+            var parent = element.parentNode;
+            parent.className = parent.className.replace(/\bloading\b/,'');
+          }, 200);
+        },
+        error: function(element, message){
+          console.log(element + " - " +message);
+        }
+    });
+
+	function checkItems(){
+		if(items.length>0){
+			document.getElementById('pedido').style.display = "block";
+			document.getElementById('loading').style.display = "none";
+			document.getElementById('loading').classList.remove('d-flex');
+			clearInterval(intervalInventario);
+		}
+		else{
+			document.getElementById('pedido').style.display = "none";
+			document.getElementById('loading').style.display = "block";
+			document.getElementById('loading').classList.add('d-flex');
+
+		}
+	}
     
 	var entity = document.getElementById('entity').value;
+
+	if(!entity.startsWith("Z")){
+		getItems(entity);
+	}
 
 	$.ajaxSetup({
 		headers: {
@@ -32,78 +94,73 @@ $(document ).ready(function() {
                   console.log(error);
              }
     }); 
-	let data = { entity: entity };
-	$.ajax({
-		'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-		'url': "getItems/all",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': data,
-		'enctype': 'multipart/form-data',
-		'timeout': 2*60*60*1000,
-		success: function(data){
-				items = data;
-		}, 
-		error: function(error){
-			  console.log(error);
-		 }
-	});
+	
 
 
 	// INVENTARIO ON CLICK ADD ROW TO ORDER
+	$('#example1 tbody').on('click', 'td', function () {
+		table = $("#example1").DataTable();
+		cell_clicked    = table.cell(this).data();
+	});
 
 	$('#example1 tbody').on('click', 'tr', function () {
 		table = $("#example1").DataTable();
+
 		var index = table.row( this ).index();
 		var item = items[index];
-		if(item['disponible']==0){
-			var toast = Swal.mixin({
-				toast: true,
-				icon: 'success',
-				title: 'General Title',
-				animation: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 3000,
-				timerProgressBar: false,
-				didOpen: (toast) => {
-				  toast.addEventListener('mouseenter', Swal.stopTimer)
-				  toast.addEventListener('mouseleave', Swal.resumeTimer)
-				}
-			  });
-			  toast.fire({
-				animation: true,
-				title: 'Producto '+item['itemid']+' Insuficiente',
-				icon: 'error'
-			});
+		var value = table.cell(index,10).data();
+		alert(value);
+		if(cell_clicked == "<i class='fas fa-plus-square btn-add-product fa-2x'></i>"){
+			alert("Add product "+item['itemid']);
 		}
-		else{
-			addRowPedido(item);
-			var toast = Swal.mixin({
-				toast: true,
-				icon: 'success',
-				title: 'General Title',
-				animation: true,
-				position: 'top-right',
-				showConfirmButton: false,
-				timer: 3000,
-				timerProgressBar: false,
-				didOpen: (toast) => {
-				  toast.addEventListener('mouseenter', Swal.stopTimer)
-				  toast.addEventListener('mouseleave', Swal.resumeTimer)
-				}
-			  });
-			  toast.fire({
-				animation: true,
-				title: 'Producto '+item['itemid']+' Agregado',
-				icon: 'success'
-			});
-		}
+
+
+		// if(item['disponible']==0){
+		// 	var toast = Swal.mixin({
+		// 		toast: true,
+		// 		icon: 'success',
+		// 		title: 'General Title',
+		// 		animation: true,
+		// 		position: 'top-right',
+		// 		showConfirmButton: false,
+		// 		timer: 3000,
+		// 		timerProgressBar: false,
+		// 		didOpen: (toast) => {
+		// 		  toast.addEventListener('mouseenter', Swal.stopTimer)
+		// 		  toast.addEventListener('mouseleave', Swal.resumeTimer)
+		// 		}
+		// 	  });
+		// 	  toast.fire({
+		// 		animation: true,
+		// 		title: 'Producto '+item['itemid']+' Insuficiente',
+		// 		icon: 'error'
+		// 	});
+		// }
+		// else{
+		// 	addRowPedido(item);
+		// 	var toast = Swal.mixin({
+		// 		toast: true,
+		// 		icon: 'success',
+		// 		title: 'General Title',
+		// 		animation: true,
+		// 		position: 'top-right',
+		// 		showConfirmButton: false,
+		// 		timer: 3000,
+		// 		timerProgressBar: false,
+		// 		didOpen: (toast) => {
+		// 		  toast.addEventListener('mouseenter', Swal.stopTimer)
+		// 		  toast.addEventListener('mouseleave', Swal.resumeTimer)
+		// 		}
+		// 	  });
+		// 	  toast.fire({
+		// 		animation: true,
+		// 		title: 'Producto '+item['itemid']+' Agregado',
+		// 		icon: 'success'
+		// 	});
+		// }
 	} );
 	
-	
+
 	
 
 	// UPDATE ADDRESSES AND DEFAULT SHIPPING WAT / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
@@ -114,6 +171,11 @@ $(document ).ready(function() {
 		addresses = info[selected]['addresses'];
 		shippingWays = info[selected]['shippingWays'];
 		packageDeliveries = info[selected]['packageDeliveries'];
+
+		items=[];
+		intervalInventario = window.setInterval(checkItems, 1000);
+		document.getElementById('entity').value = info[selected]["companyId"];
+		getItems(info[selected]["companyId"]);
 
 		var itemSelectorOption = $('#sucursal option');
 		itemSelectorOption.remove(); 
@@ -297,19 +359,28 @@ function addInputsCodigo(table){
                
 function cargarProductosPorCodigo(){
 	var rows = document.getElementsByClassName('input-codigo');
-	var entity = document.getElementById('entity').value;
-	var item = [];
-	var articulos = [];
 	for(var x=1; x<=rows.length;x++){
 		var inputCodigo = document.getElementById('input-codigo-'+x);
 		var inputCantidad = document.getElementById('input-cantidad-'+x);
-		var temp = {"articulo" : inputCodigo.value, "cantidad" : inputCantidad.value};
-		articulos.push(temp);
+		var item = {"articulo" : inputCodigo.value, "cantidad" : inputCantidad.value};
+		getItemById(item);
+
 	}
+}
 
-	for(var x = 0; x < articulos.length ; x ++){
-		let data = {id: articulos[x]['articulo'], entity: entity};
+function cargarProductosExcel(json){
+	jsonObj = JSON.parse(json);
+	console.log(jsonObj);
+	for(var x = 0; x < jsonObj.length; x++){
+		var item = {"articulo" : jsonObj[x]['Valores']};
+		getItemById(item);
+	}	
+	document.getElementById("excelCodes").value = "";
+}
 
+function getItemById(item){
+	var entity = document.getElementById('entity').value;
+	let data = {id: item['articulo'], entity: entity};
 		$.ajax({
 			type: "POST",
 			enctype: 'multipart/form-data',
@@ -322,13 +393,13 @@ function cargarProductosPorCodigo(){
 				'Accept':'application/json'
 			},
 			success: function(data){
-				console.log(data);
+					console.log(data);
 					var item = {
-						categoriaItem: 'PENDIENTE',
-						clavefabricante: "XX",
-						familia: "PENDIENTE",
-						grupoArticulo: "PENDIENTE",
-						tipoArticulo: "PENDIENTE",
+						categoriaItem: '',
+						clavefabricante: "",
+						familia: "",
+						grupoArticulo: "",
+						tipoArticulo: "",
 						id: data[0]['id'],
 						itemid: data[0]['itemid'],
 						purchasedescription: data[0]['purchasedescription'],
@@ -339,16 +410,37 @@ function cargarProductosPorCodigo(){
 						disponible: data[0]['disponible']
 					};
 					addRowPedido(item);
-
 			}, 
 			error: function(error){
-				  console.log(error);
 			 }
 		});
-	}
+}
 
 
+function getItems(entity){
+	let data = { entity: entity };
+	$.ajax({
+		'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+		'url': "getItems/all",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+				items = data;
+		}, 
+		error: function(error){
+			  console.log(error);
+		 }
+	});
+}
 
+function noDisponible(img){
+	img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
+	console.clear();
 }
 
 function cargarInventario(){
@@ -362,7 +454,9 @@ function cargarInventario(){
 
 			for (var x = 0; x < items.length; x ++){
 				var arr = [];
-				arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
+				// arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
+				var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
+				arr.push("<img src='http://192.168.70.108:8080/public/assets/articulos/img/01_JPG_CH/"+items[x]['itemid'].replaceAll(" ", "_").replaceAll("-","_")+"_CH.jpg' onerror='noDisponible(this)' height='auto' width='80px'/><img src='http://192.168.70.108:8080/public/assets/articulos/img/LOGOTIPOS/"+items[x]['familia'].replaceAll(" ", "_").replaceAll("-","_")+".jpg' height='auto' width='80px'/>");
 				arr.push(items[x]['categoriaItem']);
 				arr.push(items[x]['clavefabricante']);
 				arr.push(items[x]['familia']);
@@ -372,16 +466,18 @@ function cargarInventario(){
 				arr.push(items[x]['itemid']);
 				arr.push(items[x]['purchasedescription']);
 				arr.push(items[x]['multiploVenta']);
+				arr.push("<input type='number' value="+items[x]['multiploVenta']+">")
 				arr.push(items[x]['price']);
 				arr.push(items[x]['unidad']);
 				arr.push(items[x]['promo']);
 				arr.push(items[x]['disponible']);
+				arr.push("<i class='fas fa-plus-square btn-add-product fa-2x'></i>")
+
 				dataset.push(arr);
 			}
 		
-			// console.log(JSON.stringify(dataset));
-		
-			var table = $("#example1").DataTable({
+
+			$("#example1").dataTable({
 				"data": dataset,
 				"scrollX": 900,
 				"responsive": true,
@@ -391,7 +487,12 @@ function cargarInventario(){
 				"searching": true,
 				"ordering": true,
 				"info": true,
+				"orderCellsTop": true,
+				"fixedHeader": true,
 			});
+
+			$('#orderHeader').click();
+
 		}
 
 }
@@ -436,4 +537,12 @@ function addRowPedido(item){
 		cell8.classList.add('td-center');
 		cell9.classList.add('td-center');
 
+}
+
+function triggerInputFile(){
+	document.getElementById('excelCodes').click();
+} 
+
+function pedidosAnteriores(){
+	window.open("/pedidosAnteriores/"+document.getElementById('entity').value, '_blank');
 }
