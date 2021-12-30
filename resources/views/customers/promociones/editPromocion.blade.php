@@ -1,4 +1,4 @@
-
+ 
 @extends('layouts.customers.customer')
 
 @section('title') Indar - Agregar Promoción @endsection
@@ -144,7 +144,7 @@
                                 @endforeach
                             </select>
                     </div>
-                </div> 
+                </div>
 
                 <br><br>
                 <hr>
@@ -152,7 +152,7 @@
 
                 <div class="row reglas-row">
                     <div class="col-lg-2 col-md-3 col-12 text-center">
-                        <h5>Monto mínimo:</h5>
+                        <h5>Precio mínimo:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
                         <input class="input-promociones" type="number" name="preciomin" id="preciomin" value="1" step=".01" min="0">

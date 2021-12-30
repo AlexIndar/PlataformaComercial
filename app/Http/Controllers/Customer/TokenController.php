@@ -18,7 +18,7 @@ class TokenController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // 
+        //  
     }
 
     public static function getToken(){
@@ -38,7 +38,9 @@ class TokenController extends Controller
         $token = "";
         if($response->getStatusCode() == 200){ 
                 $token = $response->body();
+                setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()-900);
                 setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900);
+                setcookie("refresh", "", time()- 60 * 480);
                 setcookie("refresh", encrypt($token, "7Ind4r7Refresh"), time()+ 60 * 480);
         }
         return $token;

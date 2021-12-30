@@ -37,21 +37,6 @@ $(document ).ready(function() {
 
 	intervalInventario = window.setInterval(checkItems, 1000);
 
-	var bLazy = new Blazy({
-        selector: '.b-lazy',
-        offset: 180, // Loads images 180px before they're visible
-        success: function(element){ 
-          console.log("success blazy");
-          setTimeout(function(){
-            var parent = element.parentNode;
-            parent.className = parent.className.replace(/\bloading\b/,'');
-          }, 200);
-        },
-        error: function(element, message){
-          console.log(element + " - " +message);
-        }
-    });
-
 	function checkItems(){
 		if(items.length>0){
 			document.getElementById('pedido').style.display = "block";
@@ -91,7 +76,7 @@ $(document ).ready(function() {
                     info = data;
             }, 
             error: function(error){
-                  console.log(error);
+                //   console.log(error);
              }
     }); 
 	
@@ -369,9 +354,12 @@ function cargarProductosPorCodigo(){
 
 function cargarProductosExcel(json){
 	jsonObj = JSON.parse(json);
+	console.log(json);
 	console.log(jsonObj);
+	var item = {"articulo" : Object.keys(jsonObj[0])[1], "cantidad" : Object.keys(jsonObj[0])[0]}; //tomar encabezado como valor de primer item
+	getItemById(item);
 	for(var x = 0; x < jsonObj.length; x++){
-		var item = {"articulo" : jsonObj[x]['Codigos'], "cantidad" : jsonObj[x]['Cantidad']};
+		var item = {"articulo" : jsonObj[x][Object.keys(jsonObj[x])[1]], "cantidad" : jsonObj[x][Object.keys(jsonObj[x])[0]]};
 		getItemById(item);
 	}	
 	document.getElementById("excelCodes").value = "";
@@ -394,7 +382,6 @@ function getItemById(item){
 				'Accept':'application/json'
 			},
 			success: function(data){
-					console.log(data);
 					var item = {
 						categoriaItem: '',
 						clavefabricante: "",
@@ -434,7 +421,7 @@ function getItems(entity){
 				items = data;
 		}, 
 		error: function(error){
-			  console.log(error);
+			//   console.log(error);
 		 }
 	});
 }

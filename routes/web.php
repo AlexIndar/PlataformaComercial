@@ -11,6 +11,13 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Middleware\ValidateSession;
 use Illuminate\Http\Request;
+use App\Exports\TemplateCategories;
+use App\Exports\TemplateGiros;
+use App\Exports\TemplateClientes;
+use App\Exports\TemplateMarcas;
+use App\Exports\TemplateProveedores;
+use App\Exports\TemplateArticulos;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +29,7 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () { 
+Route::get('/', function () {  
     $token = TokenController::getToken();
     if($token && $token != 'error'){
         $bestSellers = ItemsController::getBestSellers($token);
@@ -40,6 +47,8 @@ Route::get('/', function () {
     if(isset($_COOKIE["level"])){
         $level = $_COOKIE["level"];
     }
+    
+    
     
     return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
 
@@ -255,42 +264,81 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-                Route::get('/promociones', function (){
-                    $token = TokenController::getToken();
-                    $rama1 = RamasController::getRama1();
-                    $rama2 = RamasController::getRama2();
-                    $rama3 = RamasController::getRama3();
-                    $level = "C";
-                    if(isset($_COOKIE["level"])){
-                        $level = $_COOKIE["level"];
-                    } 
-                    return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
-                });
+                            Route::get('/promociones', function (){
+                                $token = TokenController::getToken();
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                } 
+                                $promociones = PromoController::getAllEvents($token);
+                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones]);
+                            });
 
-                Route::get('/promociones/nueva', function (){
-                    $token = TokenController::getToken();
-                    $rama1 = RamasController::getRama1();
-                    $rama2 = RamasController::getRama2();
-                    $rama3 = RamasController::getRama3();
-                    $level = "C";
-                    if(isset($_COOKIE["level"])){
-                        $level = $_COOKIE["level"];
-                    } 
-                    $customersInfo = PromoController::getCustomersInfo($token);
+                            Route::get('/promociones/nueva', function (){
+                                $token = TokenController::getToken();
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                } 
+                                $customersInfo = PromoController::getCustomersInfo($token);
 
-                    $categories = PromoController::getCategories($customersInfo);
-                    $giros = PromoController::getGiros($customersInfo);
-                    $customers = PromoController::getCustomers($customersInfo);
-                    
-                    $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                    $proveedores = PromoController::getProveedores($infoArticulos);
-                    $marcas = PromoController::getMarcas($infoArticulos);
-                    $articulos = PromoController::getArticulos($infoArticulos);
-                    
-                    
+                                $categories = PromoController::getCategories($customersInfo);
+                                $giros = PromoController::getGiros($customersInfo);
+                                $customers = PromoController::getCustomers($customersInfo);
+                                
+                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
+                                $proveedores = PromoController::getProveedores($infoArticulos);
+                                $marcas = PromoController::getMarcas($infoArticulos);
+                                $articulos = PromoController::getArticulos($infoArticulos);
+                                
+                                
 
-                    return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos]);
-                });
+                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos]);
+                            });
+
+                            Route::get('/downloadTemplateCategorias', function (){
+                                return Excel::download(new TemplateCategories,'Categorias.xlsx');
+                            });
+
+                            Route::get('/downloadTemplateGiros', function (){
+                                return Excel::download(new TemplateGiros,'Giros.xlsx');
+                            });
+
+                            Route::get('/downloadTemplateClientes', function (){
+                                return Excel::download(new TemplateClientes,'Clientes.xlsx');
+                            });
+
+                            Route::get('/downloadTemplateMarcas', function (){
+                                return Excel::download(new TemplateMarcas,'Marcas.xlsx');
+                            });
+
+                            Route::get('/downloadTemplateProveedores', function (){
+                                return Excel::download(new TemplateProveedores,'Proveedores.xlsx');
+                            });
+
+                            Route::get('/downloadTemplateArticulos', function (){
+                                return Excel::download(new TemplateArticulos,'Articulos.xlsx');
+                            });
+
+                            Route::post('/promociones/storePromo', function (Request $request){
+                                $token = TokenController::getToken();
+                                $response = PromoController::storePromo($token, json_encode($request->all()));
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                }   
+                                return $response;
+                               
+                            });
 
 
                 // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

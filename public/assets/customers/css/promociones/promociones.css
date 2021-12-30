@@ -7,3 +7,176 @@
     font-size: 18px;
     border-radius: 5px;
 }
+
+
+/* PROMOS */
+
+.promo{
+    height: auto;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
+}
+
+.promo-header{
+    background-color: #002868;
+    color: white;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    justify-content: space-between;
+}
+
+.actions{
+    margin-right: 20px;
+}
+
+.cuerpo-promo{
+    padding: 10px 0 0 20px;
+}
+
+.cuerpo-promo h5{
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.fecha{
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    vertical-align: baseline;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    width: auto !important;
+}
+
+/* SWITCH */
+
+  .btn-toggle {
+    padding: 0;
+    position: relative;
+    border: none;
+    height: 1.5rem;
+    width: 3rem;
+    border-radius: 1.5rem;
+    color: white;
+    background: #939393;
+  }
+  
+  .btn-toggle.btn-sm:before,
+  .btn-toggle.btn-sm:after {
+    line-height: -0.5rem;
+    color: #fff;
+    letter-spacing: 0.75px;
+    width: 2.325rem;
+  }
+  .btn-toggle.btn-sm:before {
+    text-align: right;
+  }
+  .btn-toggle.btn-sm:after {
+    text-align: left;
+    opacity: 0;
+  }
+  .btn-toggle.btn-sm.active:before {
+    opacity: 0;
+  }
+  .btn-toggle.btn-sm.active:after {
+    opacity: 1;
+  }
+  .btn-toggle.btn-xs:before,
+  .btn-toggle.btn-xs:after {
+    display: none;
+  }
+  .btn-toggle:before,
+  .btn-toggle:after {
+    color: #6b7381;
+  }
+  .btn-toggle.active {
+    background-color: #29b5a8;
+  }
+  
+  .btn-toggle.btn-sm {
+    padding: 0;
+    position: relative;
+    border: none;
+    height: 1.5rem;
+    width: 4rem;
+    border-radius: 1.5rem;
+  }
+  .btn-toggle.btn-sm:focus,
+  .btn-toggle.btn-sm.focus,
+  .btn-toggle.btn-sm:focus.active,
+  .btn-toggle.btn-sm.focus.active {
+    outline: none;
+  }
+  .btn-toggle.btn-sm:before,
+  .btn-toggle.btn-sm:after {
+    line-height: 1.5rem;
+    width: 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: absolute;
+    bottom: 0;
+    transition: opacity 0.25s;
+  }
+  .btn-toggle.btn-sm:before {
+    content: '';
+    left: -0.7rem;
+  }
+  .btn-toggle.btn-sm:after {
+    content: '';
+    right: -0.7rem;
+    opacity: 0.5;
+  }
+  .btn-toggle.btn-sm > .handle {
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 1.125rem;
+    background: #fff;
+    transition: left 0.25s;
+  }
+  .btn-toggle.btn-sm.active {
+    background-color: #5850EC;
+  }
+  .btn-toggle.btn-sm.active > .handle {
+    left: 2.6875rem;
+    transition: left 0.25s;
+  }
+  .btn-toggle.btn-sm.active:before {
+    opacity: 0.5;
+  }
+  .btn-toggle.btn-sm.active:after {
+    opacity: 1;
+  }
+  .btn-toggle.btn-sm.btn-sm:before,
+  .btn-toggle.btn-sm.btn-sm:after {
+    line-height: -0.5rem;
+    color: #fff;
+    letter-spacing: 0.75px;
+    left: 0.4125rem;
+    width: 2.325rem;
+  }
+  .btn-toggle.btn-sm.btn-sm:before {
+    text-align: right;
+  }
+  .btn-toggle.btn-sm.btn-sm:after {
+    text-align: left;
+    opacity: 0;
+  }
+  .btn-toggle.btn-sm.btn-sm.active:before {
+    opacity: 0;
+  }
+  .btn-toggle.btn-sm.btn-sm.active:after {
+    opacity: 1;
+  }
