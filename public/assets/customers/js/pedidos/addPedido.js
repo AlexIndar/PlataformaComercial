@@ -37,6 +37,19 @@ $(document).ready(function() {
 
     intervalInventario = window.setInterval(checkItems, 1000);
 
+<<<<<<< HEAD
+	function checkItems(){
+		if(items.length>0){
+			document.getElementById('pedido').style.display = "block";
+			document.getElementById('loading').style.display = "none";
+			document.getElementById('loading').classList.remove('d-flex');
+			clearInterval(intervalInventario);
+		}
+		else{
+			document.getElementById('pedido').style.display = "none";
+			document.getElementById('loading').style.display = "block";
+			document.getElementById('loading').classList.add('d-flex');
+=======
     var bLazy = new Blazy({
         selector: '.b-lazy',
         offset: 180, // Loads images 180px before they're visible
@@ -62,6 +75,7 @@ $(document).ready(function() {
             document.getElementById('pedido').style.display = "none";
             document.getElementById('loading').style.display = "block";
             document.getElementById('loading').classList.add('d-flex');
+>>>>>>> accf200a6994ebb53ad8a2a729bbb80f84633a67
 
         }
     }
@@ -72,6 +86,24 @@ $(document).ready(function() {
         getItems(entity);
     }
 
+<<<<<<< HEAD
+	$.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "getInfoHeatWeb/" + entity,
+            data: FormData,
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function(data){
+                    info = data;
+            }, 
+            error: function(error){
+                //   console.log(error);
+             }
+    }); 
+	
+=======
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -93,6 +125,7 @@ $(document).ready(function() {
             console.log(error);
         }
     });
+>>>>>>> accf200a6994ebb53ad8a2a729bbb80f84633a67
 
 
 
@@ -343,6 +376,58 @@ function addInputsCodigo(table) {
     document.getElementById('btnCargarPorCodigo').classList.remove('d-none');
 }
 
+<<<<<<< HEAD
+function cargarProductosExcel(json){
+	jsonObj = JSON.parse(json);
+	console.log(json);
+	console.log(jsonObj);
+	var item = {"articulo" : Object.keys(jsonObj[0])[1], "cantidad" : Object.keys(jsonObj[0])[0]}; //tomar encabezado como valor de primer item
+	getItemById(item);
+	for(var x = 0; x < jsonObj.length; x++){
+		var item = {"articulo" : jsonObj[x][Object.keys(jsonObj[x])[1]], "cantidad" : jsonObj[x][Object.keys(jsonObj[x])[0]]};
+		getItemById(item);
+	}	
+	document.getElementById("excelCodes").value = "";
+}
+
+function getItemById(item){
+	var entity = document.getElementById('entity').value;
+	var data = {id: item['articulo'], entity: entity};
+	var cantidad = item['cantidad'];
+	
+		$.ajax({
+			type: "POST",
+			enctype: 'multipart/form-data',
+			url: "getItemByID",
+			timeout: 2*60*60*1000,
+			data: JSON.stringify(data),
+			headers: {
+				'Content-Type':'application/json',
+				X_CSRF_TOKEN:('meta[name="csrf-token"]').content,
+				'Accept':'application/json'
+			},
+			success: function(data){
+					var item = {
+						categoriaItem: '',
+						clavefabricante: "",
+						familia: "",
+						grupoArticulo: "",
+						tipoArticulo: "",
+						id: data[0]['id'],
+						itemid: data[0]['itemid'],
+						purchasedescription: data[0]['purchasedescription'],
+						multiploVenta: data[0]['multiploVenta'],
+						price: data[0]['price'],
+						unidad: data[0]['unidad'],
+						promo: data[0]['promo'],
+						disponible: data[0]['disponible']
+					};
+					addRowPedido(item, cantidad);
+			}, 
+			error: function(error){
+			 }
+		});
+=======
 function cargarProductosPorCodigo() {
     var rows = document.getElementsByClassName('input-codigo');
     for (var x = 1; x <= rows.length; x++) {
@@ -401,6 +486,7 @@ function getItemById(item) {
         },
         error: function(error) {}
     });
+>>>>>>> accf200a6994ebb53ad8a2a729bbb80f84633a67
 }
 
 
@@ -414,6 +500,17 @@ function getItems(entity) {
         'type': 'POST',
         'dataType': 'json',
         'data': data,
+<<<<<<< HEAD
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+				items = data;
+		}, 
+		error: function(error){
+			//   console.log(error);
+		 }
+	});
+=======
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(data) {
@@ -423,6 +520,7 @@ function getItems(entity) {
             console.log(error);
         }
     });
+>>>>>>> accf200a6994ebb53ad8a2a729bbb80f84633a67
 }
 
 function noDisponible(img) {

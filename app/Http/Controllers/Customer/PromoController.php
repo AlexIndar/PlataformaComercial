@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Customer;
 
+
+use \PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Exports\TemplateCategories;
+use Maatwebsite\Excel\Facades\Excel;
 use Config;
-
+ 
 
 class PromoController extends Controller
 {
@@ -18,7 +23,7 @@ class PromoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
-    {
+    { 
         // 
     }
 
@@ -170,5 +175,39 @@ class PromoController extends Controller
         return $articulos;
     }
 
+    public static function downloadTemplateCategories() {
+        return Excel::download(new TemplateCategories,'invoices.xlsx');
+    }
+
+    public static function storePromo($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/Eventos/EventADDNewEdit', [
+            "id" => $json->id,
+            "nombrePromo" => $json->nombrePromo,
+            "descuento" => $json->descuento,
+            "puntosIndar" => $json->puntosIndar,
+            "plazosIndar" => $json->plazosIndar,
+            "regalosIndar" => $json->regalosIndar,
+            "categoriaClientes" => $json->categoriaClientes,
+            "categoriaClientesIncluye" => $json->categoriaClientesIncluye,
+            "gruposclientesIds" => $json->gruposclientesIds,
+            "gruposclientesIncluye" => $json->gruposclientesIncluye,
+            "clientesId" => $json->clientesId,
+            "clientesIncluye" => $json->clientesIncluye,
+            "plazo" => $json->plazo,
+            "montoMinCash" => $json->montoMinCash,
+            "montoMinQty" => $json->montoMinQty,
+            "fechaInicio" => $json->fechaInicio,
+            "fechaFin" => $json->fechaFin,
+            "pedidoPromoRulesD" => $json->pedidoPromoRulesD,
+        ]);
+
+        return $response;
+    }
+
+    public static function getAllEvents($token){
+        $events = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getAllEvents');
+        return json_decode($events->body());
+    }
     
 }
