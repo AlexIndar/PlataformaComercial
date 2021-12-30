@@ -1,43 +1,50 @@
-.bg-indarBlue{
+.bg-indarBlue {
     background-color: #002868 !important;
     color: #fff !important;
 }
 
-.bg-indarYellow{
+.bg-indarYellow {
     background-color: #FFC61E !important;
     color: #000;
 }
 
-.icon-indar{
+.icon-indar {
     color: white !important;
 }
 
-.icon-indar:hover{
+.icon-indar:hover {
     color: rgb(208, 208, 208) !important;
 }
 
-.text-indarBlue{
+.text-indarBlue {
     color: #002868;
 }
 
-.bs-stepper-content hr{
+.bs-stepper-content hr {
     background: #FFC61E;
     height: 3px;
 }
 
-.input-group-prepend span{
+.input-group-prepend span {
     background: #002868;
     color: #fff;
 }
 
-.input-group-prepend label{
+.input-group-prepend label {
     background: #002868;
     color: #fff;
 }
 
-.hr-indarYellow{
+.hr-indarYellow {
     background-color: #FFC61E;
     height: 3px;
     width: 60%;
 }
 
+#headCash {
+    display: none;
+}
+
+#bodyCash {
+    display: none;
+}
