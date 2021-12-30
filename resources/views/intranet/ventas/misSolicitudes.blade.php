@@ -15,10 +15,11 @@
             <div class="row mb-2">
                 <div class="col-sm-8">
                     <h1>Mis Solicitudes</h1>
+                    <input type="text" id="zoneP" value="{{$zone['description']}}" hidden>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="check" id="defaultCheck1">
+                        <input class="form-check-input" type="checkbox" id="defaultCheck1" onclick="refresh()">
                         <label class="form-check-label" for="defaultCheck1">Ver solo pendientes</label>
                         <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#solicitudModal">
                             <i class="fa fa-plus"></i>
@@ -50,13 +51,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($listSol as $item)
                                     <tr>
-                                        <td>P011098</td>
-                                        <td>DIAZ GOMEZ MA DEL REFUGIO</td>
-                                        <td>Feb 6, 2020, 11:37:38 AM</td>
-                                        <td>Rechazada</td>
+                                        <td>{{$item->claveP}}</td>
+                                        <td>{{$item->razonSocial}}</td>
+                                        <td>{{$item->fechaAlta}}</td>
+                                        <td>{{$item->status}}</td>
                                         <td>
-                                            <div class="btn btn-info btn-circle" id="btnInfo" matTooltip="Detalle" data-toggle="modal" data-target="#infoModal" *ngIf="element.Status != 1">
+                                            <div class="btn btn-info btn-circle" id="btnInfo" onclick='detalleSol("{{$item->folio}}")'>
                                                 <i class="fas fa-bars"></i>
                                             </div>
                                             <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
@@ -67,278 +69,7 @@
                                             <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>P026645</td>
-                                        <td>HURTADO ROMO ADAIR JOSUE</td>
-                                        <td>Mar 10, 2021, 1:55:49 PM</td>
-                                        <td>Rechazada Credito (Aceptada Contado)</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" data-toggle="modal" data-target="#auxInfoModel" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P027121</td>
-                                        <td>LA FERRETEQUILA SAS DE CV</td>
-                                        <td>May 19, 2021, 5:24:05 PM</td>
-                                        <td>Rechazada</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P027531</td>
-                                        <td>OLIVAS MADRIGAL LUZ NOEMI</td>
-                                        <td>Jun 23, 2021, 2:36:07 PM</td>
-                                        <td>Rechazada Credito (Aceptada Contado)</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P028423</td>
-                                        <td>ROMERO RIOS JOSE LAZARO</td>
-                                        <td>Oct 26, 2018, 5:23:44 PM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P021458</td>
-                                        <td>MARIA GORETTI RUIZ PEREZ</td>
-                                        <td>Mar 4, 2019, 10:15:27 AM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P022532</td>
-                                        <td>CUENCA LOPEZ ELBA</td>
-                                        <td>Jul 30, 2019, 5:55:08 PM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P022672</td>
-                                        <td>VENTURA GATICA JOEL</td>
-                                        <td>Aug 22, 2019, 12:18:48 PM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P023374</td>
-                                        <td>OCAMPO JAUREGUI MARIA DOLORES</td>
-                                        <td>Oct 3, 2019, 8:50:36 AM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P011098</td>
-                                        <td>DIAZ GOMEZ MA DEL REFUGIO</td>
-                                        <td>Feb 6, 2020, 11:37:38 AM</td>
-                                        <td>Rechazada</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P026645</td>
-                                        <td>HURTADO ROMO ADAIR JOSUE</td>
-                                        <td>Mar 10, 2021, 1:55:49 PM</td>
-                                        <td>Rechazada Credito (Aceptada Contado)</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P027121</td>
-                                        <td>LA FERRETEQUILA SAS DE CV</td>
-                                        <td>May 19, 2021, 5:24:05 PM</td>
-                                        <td>Rechazada</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P027531</td>
-                                        <td>OLIVAS MADRIGAL LUZ NOEMI</td>
-                                        <td>Jun 23, 2021, 2:36:07 PM</td>
-                                        <td>Rechazada Credito (Aceptada Contado)</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P028423</td>
-                                        <td>ROMERO RIOS JOSE LAZARO</td>
-                                        <td>Oct 26, 2018, 5:23:44 PM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P021458</td>
-                                        <td>MARIA GORETTI RUIZ PEREZ</td>
-                                        <td>Mar 4, 2019, 10:15:27 AM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P022532</td>
-                                        <td>CUENCA LOPEZ ELBA</td>
-                                        <td>Jul 30, 2019, 5:55:08 PM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P022672</td>
-                                        <td>VENTURA GATICA JOEL</td>
-                                        <td>Aug 22, 2019, 12:18:48 PM</td>
-                                        <td>Aceptada Contado</td>
-                                        <td>
-                                            <div class="btn btn-info btn-circle" matTooltip="Detalle" (click)="openDetail(detailModal, element)" *ngIf="element.Status != 1">
-                                                <i class="fas fa-bars"></i>
-                                            </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
-                                            <div class="btn btn-info btn-circle" matTooltip="Historial Transacciones" (click)="initDialogTransactionHistory( element)">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
-                                        </td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -367,9 +98,9 @@
 <div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-indarBlue">
+            <div class="modal-header bg-indarBlue" id="headerUNO">
                 <h3 class="text-center oswald title ml-auto">Solicitud para Alta de Cliente</h3>
-                <h4 class="ml-auto oswald">ZONA: Z520</h4>
+                <h4 class="ml-auto oswald">ZONA: {{$zone['description']}}</h4>
                 <button type="button" class="close text-warning" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -383,19 +114,19 @@
                                     <div class="col-md-12 text-center">
                                         <h5>TIPO DE SOLICITUD</h5>
                                         <form>
-                                            <label class="mr-3"><input type="radio" name="typeSoli" value="credit">Credito</label>
-                                            <label class="mr-3"><input type="radio" name="typeSoli" value="creditAB">AB</label>
-                                            <label class="mr-3"><input type="radio" name="typeSoli" value="cash">Contado</label>
-                                            <label class="mr-3"><input type="radio" name="typeSoli" value="changeRS">Carta Responsiva</label>
+                                            <label class="mr-3"><input type="radio" name="typeSoli" value="credit" onclick="valiteTypeForm()" id="creditRadio">Credito</label>
+                                            <label class="mr-3"><input type="radio" name="typeSoli" value="creditAB" onclick="valiteTypeForm()" id="creditABRadio">AB</label>
+                                            <label class="mr-3"><input type="radio" name="typeSoli" value="cash" onclick="valiteTypeForm()" id="cashRadio">Contado</label>
+                                            <label class="mr-3"><input type="radio" name="typeSoli" value="changeRS" onclick="valiteTypeForm()" id="changeRSRadio">Carta Responsiva</label>
                                         </form>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" id="amountSol">
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4 text-center">
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-indarYellow">$</span>
-                                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                            <input type="text" class="form-control">
                                             <span class="input-group-text bg-indarYellow">.00</span>
                                         </div>
                                     </div>
@@ -486,7 +217,7 @@
                                                         <span class="input-group-text">Constancia de Situacion Fiscal</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ConstFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileCtrl">
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/x-png,image/gif,image/jpeg">
                                                         <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
@@ -498,8 +229,8 @@
                                                         <span class="input-group-text">Constancia de Situacion Fiscal (2da Pagina)</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ConstFileTitleReverso);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileReversoCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile02" accept="image/x-png,image/gif,image/jpeg">
+                                                        <label class="custom-file-label" for="inputGroupFile02">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -509,12 +240,13 @@
                                                         <span class="input-group-text">Fotografia de Solicitud</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, FirmFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="FirmCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
+                                                        <input type="file" class="custom-file-input" id="FirmCtrl" accept="image/x-png,image/gif,image/jpeg">
+                                                        <label class="custom-file-label" for="inputGroupFile03" id="firmCtrlL">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button class="btn bg-warning" onclick="stepper.next()">Siguiente</button>
+                                            <!--<button class="btn bg-warning" onclick="stepper.next()">Siguiente</button>-->
+                                            <button class="btn bg-warning" onclick="verificarDatosGenerales() ? stepper.next() : alert('llena los campos')">Siguiente</button>
                                         </div>
                                         <div id="direccionFiscal" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -544,6 +276,9 @@
                                                 <div class="col-md-4">
                                                     <button onclick="actualizarGeo()" class="btn btn-info">Actualizar GeoLocation</button>
                                                 </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <!-- ADD COLONIA, CIUDAD, ESTADO IMPUTS-->
                                             </div>
                                             <div class="row">
                                                 <div class="input-group input-group-sm">
@@ -1050,12 +785,12 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Solicitud No. 18606</h3>
+                <h3 class="text-center title ml-auto">Detalle de Solicitud <span id="folioInf">No. 18606</span></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body text-indarBlue" id="modal">
+            <div class="modal-body text-indarBlue" id="modal2">
                 <div class="row">
                     <div class="col-md-12">
                         <h3 class="text-center">Datos Generales</h3>
@@ -1190,14 +925,14 @@
                             <div class="col-md-4">Estado</div>
                             <div class="col-md-4">Jalisco</div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                               
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
                             <div class="col-md-4">San Jode Del Castillo</div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                           
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1246,14 +981,14 @@
                             <div class="col-md-4">Foto Izquierda</div>
                             <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                         
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Derecha</div>
                             <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                          
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                     </div>
@@ -1277,7 +1012,7 @@
                             <div class="col-md-4">Telefono</div>
                             <div class="col-md-4">3336881130</div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                             
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1297,7 +1032,7 @@
                             <div class="col-md-4">Tipo Local</div>
                             <div class="col-md-4">Propio</div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>                              
+                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1332,7 +1067,7 @@
                         <div class="row mb-3">
                             <div class="col-md-4">IFE/INE Representante (Reverso)</div>
                             <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">                                
+                            <div class="col-md-4">
                                 <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
                                 <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
                             </div>
@@ -1376,7 +1111,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body text-indarBlue" id="modal">
+            <div class="modal-body text-indarBlue" id="modal3">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row mb-3 bg-dark">
@@ -1415,7 +1150,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body text-indarBlue" id="modal">
+            <div class="modal-body text-indarBlue" id="modal4">
                 <div class="row">
                     <div class="col-md-12">
                         <h3 class="text-center">Datos Generales</h3>
@@ -1639,7 +1374,7 @@
 @endsection
 
 @section('js')
-<script src="{{asset('asset/js/misSolicitudes.js')}}"></script>
+<script src="{{asset('assets/intranet/js/misSolicitudes.js')}}"></script>
 <!-- DataTables  & Plugins -->
 <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>

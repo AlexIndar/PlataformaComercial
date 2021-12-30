@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\RamasController;
 use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
+use App\Http\Controllers\Intranet\MisSolicitudesController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Middleware\ValidateSession;
 use Illuminate\Http\Request;
@@ -300,7 +301,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 });
 
                                 Route::get('/MisSolicitudes', function(){
-                                    return view('intranet.ventas.misSolicitudes');
+                                    $token = TokenController::getToken();
+                                    $user = "crolon";
+                                    $zone = MisSolicitudesController::getZone($token,$user);
+                                    $listSol = MisSolicitudesController::getTableView($token,$zone);
+                                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'zone' => $zone, 'listSol' => $listSol]);
+                                    /*return view('intranet.ventas.misSolicitudes');*/
+                                });
+
+                                Route::post('/MisSolicitudes/getInfoSol', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::getInfoSol($token, $fol);
+                                    return  $data;
                                 });
 
                                 Route::get('/SolicitudesPendientes', function(){
