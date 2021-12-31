@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{asset('plugins/bs-stepper/css/bs-stepper.min.css')}}">
 @endsection
 
-@section('body')
+@section('body') 
 
 <div class="content-wrapper">
     <section class="content-header">
@@ -217,8 +217,8 @@
                                                         <span class="input-group-text">Constancia de Situacion Fiscal</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/x-png,image/gif,image/jpeg">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/x-png,image/gif,image/jpeg" lang="es">
+                                                        <label class="custom-file-label" for="inputGroupFile01" id="label-inputGroupFile01">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
                                                 <small class="form-text ml-4 mb-1 text-indarBlue">Formato R1*</small>
@@ -230,7 +230,7 @@
                                                     </div>
                                                     <div class="custom-file">
                                                         <input type="file" class="custom-file-input" id="inputGroupFile02" accept="image/x-png,image/gif,image/jpeg">
-                                                        <label class="custom-file-label" for="inputGroupFile02">Seleccionar Archivo...</label>
+                                                        <label class="custom-file-label" for="inputGroupFile02" id="label-inputGroupFile02">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -240,13 +240,13 @@
                                                         <span class="input-group-text">Fotografia de Solicitud</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="FirmCtrl" accept="image/x-png,image/gif,image/jpeg">
-                                                        <label class="custom-file-label" for="inputGroupFile03" id="firmCtrlL">Seleccionar Archivo...</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile03" accept="image/x-png,image/gif,image/jpeg">
+                                                        <label class="custom-file-label" for="inputGroupFile03" id="label-inputGroupFile03">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!--<button class="btn bg-warning" onclick="stepper.next()">Siguiente</button>-->
-                                            <button class="btn bg-warning" onclick="verificarDatosGenerales() ? stepper.next() : alert('llena los campos')">Siguiente</button>
+                                            <button class="btn bg-warning" onclick="verificarDatosGenerales() ? stepper.next() : alert('Llena los campos')">Siguiente</button>
                                         </div>
                                         <div id="direccionFiscal" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -283,37 +283,62 @@
                                             <div class="row">
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
-                                                        <span class="input-group-text">Constancia de Situacion Fiscal</span>
+                                                        <span class="input-group-text">Comprobante de Domicilio</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ConstFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile04" (change)="onFileChange($event, ConstFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile04" id="label-inputGroupFile04">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
-                                                <small class="form-text text-muted ml-4 mb-1">Formato R1*</small>
                                             </div>
-                                            <div class="row mb-3">
+                                            <div class="row">
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
-                                                        <span class="input-group-text">Constancia de Situacion Fiscal (2da Pagina)</span>
+                                                        <span class="input-group-text">Comprobante de Domicilio (Reverso)</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ConstFileTitleReverso);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileReversoCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile05" (change)="onFileChange($event, ConstFileTitleReverso);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileReversoCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile05" id="label-inputGroupFile05">Seleccionar Archivo...</label>
                                                     </div>
                                                 </div>
+                                                <small class="form-text text-muted ml-4 mb-1">CFE, Teléfono, Agua (No mayor a 90 días)</small>
                                             </div>
-                                            <div class="row mb-3">
-                                                <div class="input-group input-group-sm">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Fotografia de Solicitud</span>
-                                                    </div>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, FirmFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="FirmCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Seleccionar Archivo...</label>
+
+                                            <div class="row mb-3 form-check">
+                                                <input class="form-check-input" type="checkbox" value="" onclick="addAddress()" id="checkAddAddress">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    ¿Desea usar una dirección diferente para la entrega?
+                                                </label>
+                                            </div>
+
+                                            <div class="shippingAddress" id="shippingAddress" style="display: none">
+                                                <div class="row">
+                                                    <div class="input-group input-group-sm">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Comprobante de Domicilio Para Entrega</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile04-2" (change)="onFileChange($event, ConstFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileCtrl">
+                                                            <label class="custom-file-label" for="inputGroupFile04-2" id="label-inputGroupFile04-2">Seleccionar Archivo...</label>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="input-group input-group-sm">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Comprobante de Domicilio Para Entrega (Reverso)</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile05-2" (change)="onFileChange($event, ConstFileTitleReverso);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileReversoCtrl">
+                                                            <label class="custom-file-label" for="inputGroupFile05-2" id="label-inputGroupFile05-2">Seleccionar Archivo...</label>
+                                                        </div>
+                                                    </div>
+                                                    <small class="form-text text-muted ml-4 mb-3">CFE, Teléfono, Agua (No mayor a 90 días)</small>
+                                                </div>
                                             </div>
+
+                                            
+                                            
                                             <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
                                             <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
                                         </div>
@@ -344,7 +369,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antiguedad" class="form-control">
+                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -353,8 +378,8 @@
                                                         <span class="input-group-text">FOTO FRENTE</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, FotoFFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="BusinessPic1Ctrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">FotoFrente</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile06" (change)="onFileChange($event, FotoFFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="BusinessPic1Ctrl">
+                                                        <label class="custom-file-label" for="inputGroupFile06" id="label-inputGroupFile06">FotoFrente</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -364,8 +389,8 @@
                                                         <span class="input-group-text">FOTO PERFIL IZQ.</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, FotoIzqFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="BusinessPic2Ctrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">FotoperfilIZq</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile07" (change)="onFileChange($event, FotoIzqFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="BusinessPic2Ctrl">
+                                                        <label class="custom-file-label" for="inputGroupFile07" id="label-inputGroupFile07">FotoperfilIZq</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -375,8 +400,8 @@
                                                         <span class="input-group-text">FOTO PERFIL DER.</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, FotoDerFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="BusinessPic3Ctrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">fotoPerfilDerecho</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile08" (change)="onFileChange($event, FotoDerFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="BusinessPic3Ctrl">
+                                                        <label class="custom-file-label" for="inputGroupFile08" id="label-inputGroupFile08">fotoPerfilDerecho</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -396,11 +421,11 @@
                                                         <div class="input-group-prepend">
                                                             <label class="input-group-text" for="inputGroupSelect01">Tipo de contacto</label>
                                                         </div>
-                                                        <select class="custom-select" id="inputGroupSelect01">
+                                                        <select class="custom-select" id="tipoContacto">
                                                             <option selected>SELECCIONAR</option>
                                                             <option value="1">PRINCIPAL</option>
                                                             <option value="2">PAGOS</option>
-                                                            <option value="3">COMPAS</option>
+                                                            <option value="3">COMPRAS</option>
                                                             <option value="4">ADMON</option>
                                                             <option value="5">EMERGENCIA</option>
                                                         </select>
@@ -418,12 +443,12 @@
                                                         <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <button class="btn btn-info">Agregar Contacto</button>
+                                                        <button class="btn btn-info" onclick="addContactData()">Agregar Contacto</button>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-7">
-                                                    <table class="table">
+                                                    <table class="table" id="contactData">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Nombre</th>
@@ -433,7 +458,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <th scope="row">Francisco</th>
                                                                 <td>332255889966</td>
                                                                 <td>Principal</td>
@@ -444,7 +469,7 @@
                                                                 <td>3355778855</td>
                                                                 <td>Pagos</td>
                                                                 <td><i class="fas fa-user-times"></i></td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -466,16 +491,16 @@
                                                     </div>
                                                     <div class="row">
                                                         <form>
-                                                            <label class="mr-3"><input type="radio" name="localSoli" value="propio">Propio</label>
-                                                            <label class="mr-3"><input type="radio" name="localSoli" value="rentado">Rentado</label>
+                                                            <label class="mr-3"><input type="radio" name="localSoli" value="propio" onclick="changeTipoLocal('Propio')">Propio</label>
+                                                            <label class="mr-3"><input type="radio" name="localSoli" value="rentado" onclick="changeTipoLocal('Rentado')">Rentado</label>
                                                         </form>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p>Tipo de persona</p>
                                                     <form>
-                                                        <label class="mr-3"><input type="radio" name="typePeople" value="ficisa">Fisica</label>
-                                                        <label class="mr-3"><input type="radio" name="typePeople" value="moral">Moral</label>
+                                                        <label class="mr-3"><input type="radio" name="typePeople" value="fisica" onclick="changeTipoPersona('Fisica')">Fisica</label>
+                                                        <label class="mr-3"><input type="radio" name="typePeople" value="moral" onclick="changeTipoPersona('Moral')">Moral</label>
                                                     </form>
                                                 </div>
                                             </div>
@@ -485,8 +510,8 @@
                                                         <span class="input-group-text">PAGARE</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, PagareFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="PagareCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Pagare</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile09" (change)="onFileChange($event, PagareFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="PagareCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile09" id="label-inputGroupFile09">Pagare</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -496,8 +521,8 @@
                                                         <span class="input-group-text">IFE/INE REPRESENTANTE</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, IFERepFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFECtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">IFE</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile10" (change)="onFileChange($event, IFERepFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFECtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile10" id="label-inputGroupFile10">IFE</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -507,8 +532,8 @@
                                                         <span class="input-group-text">IFE/INE REPRESENTANTE (Reverso)</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, IFERepFileTitleReverso)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEReversoCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">IFER</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile11" (change)="onFileChange($event, IFERepFileTitleReverso)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEReversoCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile11" id="label-inputGroupFile11">IFER</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -518,8 +543,8 @@
                                                         <span class="input-group-text">IFE/INE AVAL</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, IFEAvalFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEAvalCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">IFEA</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile12" (change)="onFileChange($event, IFEAvalFileTitle)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEAvalCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile12" id="label-inputGroupFile12">IFEA</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -529,8 +554,8 @@
                                                         <span class="input-group-text">IFE/INE AVAL (Reverso)</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, IFEAvalFileTitleReverso)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEAvalReversoCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile01">IFEAR</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile13" (change)="onFileChange($event, IFEAvalFileTitleReverso)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEAvalReversoCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile13"id="label-inputGroupFile13">IFEAR</label>
                                                     </div>
                                                 </div>
                                             </div>
