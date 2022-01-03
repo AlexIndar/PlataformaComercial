@@ -56,7 +56,7 @@ Route::get('/', function () {
 })->name('/');
 
 
-Route::post('/login', [LoginController::class, 'authenticate']);
+Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::get('/main', function () {
     // VALIDAR LOGIN
