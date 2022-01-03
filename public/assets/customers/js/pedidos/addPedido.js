@@ -369,16 +369,20 @@ function getItemById(item) {
     var data = { id: item['articulo'], entity: entity };
     var cantidad = item['cantidad'];
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
         url: "getItemByID",
         timeout: 2 * 60 * 60 * 1000,
-        data: JSON.stringify(data),
+        data: data,
         headers: {
-            'Content-Type': 'application/json',
-            X_CSRF_TOKEN: ('meta[name="csrf-token"]').content,
-            'Accept': 'application/json'
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
             console.log(data);

@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        '/pedido/nuevo/getItems/all',
+        '/pedido/nuevo/getItemByID'
     ];
 }

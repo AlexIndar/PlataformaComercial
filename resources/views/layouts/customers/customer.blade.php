@@ -387,7 +387,7 @@
                 <i style="cursor:pointer;" class="fas fa-times" onclick="closeModal()"></i>
             </div>
             <div class="modal-body">
-                <form action="login" method="post">
+                <form action="login" method="get">
                     @csrf
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
