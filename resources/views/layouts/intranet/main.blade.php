@@ -181,7 +181,7 @@
             <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alejandro Jiménez</a>
+            <a href="#" class="d-block">Vendedor</a>
           </div>
         </div>
 
@@ -211,7 +211,7 @@
                 </p>
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-warehouse"></i>
                 <p>
@@ -333,7 +333,7 @@
                   Viáticos
                 </p>
               </a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
@@ -347,24 +347,6 @@
                   <a href="/MisSolicitudes" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Mis solicitudes</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="pages/charts/flot.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Flot</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="pages/charts/inline.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Inline</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="pages/charts/uplot.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>uPlot</p>
                   </a>
                 </li>
               </ul>

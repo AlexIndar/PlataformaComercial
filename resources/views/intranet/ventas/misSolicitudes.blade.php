@@ -56,17 +56,24 @@
                                         <td>{{$item->claveP}}</td>
                                         <td>{{$item->razonSocial}}</td>
                                         <td>{{$item->fechaAlta}}</td>
-                                        <td>{{$item->status}}</td>
+                                        <td>{{getStatus($item->status)}}</td>
                                         <td>
+                                            @if($item->status != 1)
                                             <div class="btn btn-info btn-circle" id="btnInfo" onclick='detalleSol("{{$item->folio}}")'>
                                                 <i class="fas fa-bars"></i>
                                             </div>
-                                            <div class="btn btn-primary btn-circle" matTooltip="Reenviar" (click)="initDialogQuestion(element)" *ngIf="(element.Status == 7 || element.Status == 8)"><i class="fas fa-paper-plane"></i></div>
+                                            @endif
+                                            @if($item->status == 7 || $item->status == 8)
+                                            <div class="btn btn-primary btn-circle" ><i class="fas fa-paper-plane"></i></div>
+                                            @endif
                                             <div class="btn btn-info btn-circle" data-toggle="modal" data-target="#historialModal">
                                                 <i class="far fa-clock"></i>
                                             </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Continuar" (click)="Continue(content, element)" *ngIf="element.Status == 1 && !isManager()"><i class="fas fa-pencil-alt"></i></div>
-                                            <div class="btn btn-danger btn-circle" matTooltip="Cancelar" (click)="initDialogQuestionCancel(element)" *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>
+                                            @if($item->status == 1)
+                                            <div class="btn btn-warning btn-circle"><i class="fas fa-pencil-alt"></i></div>
+                                            @endif
+
+                                            <!--<div class="btn btn-danger btn-circle"  *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>-->
                                         </td>
                                     </tr>
                                     @endforeach
@@ -137,49 +144,49 @@
                                 <div class="bs-stepper">
                                     <div class="bs-stepper-header" role="tablist">
                                         <!-- your steps here -->
-                                        <div class="step" data-target="#datosGenerales" onclick="stepper.to(1)">
+                                        <div class="step" data-target="#datosGenerales" onclick="stepper.to(1)" id="datosGe">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-user-shield"></i></span>
                                                 <span class="bs-stepper-label">Datos Generales</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#direccionFiscal" onclick="stepper.to(2)">
+                                        <div class="step" data-target="#direccionFiscal" onclick="stepper.to(2)" id="dirFisc">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-map-marker-alt"></i></span>
                                                 <span class="bs-stepper-label">Dirección Fiscal</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#negocio" onclick="stepper.to(3)">
+                                        <div class="step" data-target="#negocio" onclick="stepper.to(3)" id="negoSol">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-store"></i></span>
                                                 <span class="bs-stepper-label">Negocio</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#datosContacto" onclick="stepper.to(4)">
+                                        <div class="step" data-target="#datosContacto" onclick="stepper.to(4)" id="datConSol">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-address-book"></i></span>
                                                 <span class="bs-stepper-label">Datos Contacto</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#credito" onclick="stepper.to(5)">
+                                        <div class="step" data-target="#credito" onclick="stepper.to(5)" id="credSol">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-credit-card"></i></span>
                                                 <span class="bs-stepper-label">Credito</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#actaConstitutiva" onclick="stepper.to(6)">
+                                        <div class="step" data-target="#actaConstitutiva" onclick="stepper.to(6)" id="actaConst">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-file-invoice"></i></span>
                                                 <span class="bs-stepper-label">Acta constitutiva</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#referencias" onclick="stepper.to(7)">
+                                        <div class="step" data-target="#referencias" onclick="stepper.to(7)" id="referenciaSol">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-users"></i></span>
                                                 <span class="bs-stepper-label">Referencias</span>
                                             </button>
                                         </div>
-                                        <div class="step" data-target="#final" onclick="stepper.to(8)">
+                                        <div class="step" data-target="#final" onclick="stepper.to(8)" id="enviarSol">
                                             <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                                                 <span class="bs-stepper-circle"><i class="fas fa-flag-checkered"></i></span>
                                                 <span class="bs-stepper-label">Enviar</span>
@@ -201,6 +208,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control">
+                                                    <span>Apellido Paterno - Materno - Nombres(s)</span>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control">
@@ -209,6 +217,7 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
                                                     <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control">
+                                                    <span>Capturar número de prospecto de la página web</span>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -246,7 +255,7 @@
                                                 </div>
                                             </div>
                                             <!--<button class="btn bg-warning" onclick="stepper.next()">Siguiente</button>-->
-                                            <button class="btn bg-warning" onclick="verificarDatosGenerales() ? stepper.next() : alert('Llena los campos')">Siguiente</button>
+                                            <!-- <button class="btn bg-warning" onclick="verificarDatosGenerales() ? stepper.next() : alert('Llena los campos')">Siguiente</button> -->
                                         </div>
                                         <div id="direccionFiscal" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -268,14 +277,26 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="codPos" id="cpInput" placeholder="Número de prospecto" class="form-control">
+                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="colDF" id="colDF" placeholder="Colonia" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="CiudadDF" id="ciudadDF" placeholder="Ciudad" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="EstadoDF" id="EstadoDF" placeholder="Estado" class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control">
+                                                    <span>Correo donde se enviará la factura</span>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <!-- <div class="col-md-4">
                                                     <button onclick="actualizarGeo()" class="btn btn-info">Actualizar GeoLocation</button>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="row mb-3">
                                                 <!-- ADD COLONIA, CIUDAD, ESTADO IMPUTS-->
@@ -312,35 +333,36 @@
                                             </div>
 
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
-                                                <div class="row">
-                                                    <div class="input-group input-group-sm">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">Comprobante de Domicilio Para Entrega</span>
-                                                        </div>
-                                                        <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile04-2" (change)="onFileChange($event, ConstFileTitle);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileCtrl">
-                                                            <label class="custom-file-label" for="inputGroupFile04-2" id="label-inputGroupFile04-2">Seleccionar Archivo...</label>
-                                                        </div>
-                                                    </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control">
                                                 </div>
-                                                <div class="row">
-                                                    <div class="input-group input-group-sm">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">Comprobante de Domicilio Para Entrega (Reverso)</span>
-                                                        </div>
-                                                        <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile05-2" (change)="onFileChange($event, ConstFileTitleReverso);" accept="image/x-png,image/gif,image/jpeg" formControlName="RFCFileReversoCtrl">
-                                                            <label class="custom-file-label" for="inputGroupFile05-2" id="label-inputGroupFile05-2">Seleccionar Archivo...</label>
-                                                        </div>
-                                                    </div>
-                                                    <small class="form-text text-muted ml-4 mb-3">CFE, Teléfono, Agua (No mayor a 90 días)</small>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control">
                                                 </div>
                                             </div>
-
-                                            
-                                            
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="colDF" id="colDF" placeholder="Colonia" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="CiudadDF" id="ciudadDF" placeholder="Ciudad" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="EstadoDF" id="EstadoDF" placeholder="Estado" class="form-control">
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
+                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
                                         </div>
                                         <div id="negocio" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -405,8 +427,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
+                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
                                         </div>
                                         <div id="datosContacto" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -474,8 +496,8 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
+                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
                                         </div>
                                         <div id="credito" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -554,13 +576,13 @@
                                                         <span class="input-group-text">IFE/INE AVAL (Reverso)</span>
                                                     </div>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="inputGroupFile13" (change)="onFileChange($event, IFEAvalFileTitleReverso)" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEAvalReversoCtrl">
-                                                        <label class="custom-file-label" for="inputGroupFile13"id="label-inputGroupFile13">IFEAR</label>
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile13" accept="image/x-png,image/gif,image/jpeg" formControlName="IFEAvalReversoCtrl">
+                                                        <label class="custom-file-label" for="inputGroupFile13" id="label-inputGroupFile13">IFEAR</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
+                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
                                         </div>
                                         <div id="actaConstitutiva" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -573,9 +595,9 @@
                                                 <div class="col-md-5">
                                                     <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
-                                                            <label class="input-group-text" for="inputGroupSelect01">Tipo Archivo</label>
+                                                            <label class="input-group-text" for="inputGroupSelect14">Tipo Archivo</label>
                                                         </div>
-                                                        <select class="custom-select" id="inputGroupSelect01">
+                                                        <select class="custom-select" id="inputGroupSelect14">
                                                             <option selected>SELECCIONAR</option>
                                                             <option value="1">RAZON SOCIAL</option>
                                                             <option value="2">FECHA DE CONSTITUCION</option>
@@ -589,17 +611,17 @@
                                                             <span class="input-group-text">ACTA CONSTITUTIVA</span>
                                                         </div>
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
-                                                            <label class="custom-file-label" for="inputGroupFile01">Acta</label>
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile14" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                                            <label class="custom-file-label" for="inputGroupFile14" id="label-inputGroupFile14">Acta</label>
                                                         </div>
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <button class="btn btn-info">Agregar Documento</button>
+                                                        <button class="btn btn-info" onclick="addActaConstData()">Agregar Documento</button>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-6">
-                                                    <table class="table">
+                                                    <table class="table" id="actaConsData">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Tipo</th>
@@ -608,7 +630,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <th scope="row">Razon Social</th>
                                                                 <td>Razondocial.jpg</td>
                                                                 <td><i class="fas fa-trash-alt"></i></td>
@@ -617,13 +639,13 @@
                                                                 <th scope="row">Giro empresa</th>
                                                                 <td>GiroEmpresa.jpg</td>
                                                                 <td><i class="fas fa-trash-alt"></i></td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
+                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
                                         </div>
                                         <div id="referencias" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
@@ -635,14 +657,14 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <form>
-                                                        <label class="mr-3"><input type="radio" name="refSoli" value="datos">Datos</label>
-                                                        <label class="mr-3"><input type="radio" name="refSoli" value="caratula">Caratula</label>
-                                                        <label class="mr-3"><input type="radio" name="refSoli" value="facturas">Facturas</label>
+                                                        <label class="mr-3"><input type="radio" name="refSoli" value="datos" onclick="changeRef()">Datos</label>
+                                                        <label class="mr-3"><input type="radio" name="refSoli" value="caratula" onclick="changeRef()">Caratula</label>
+                                                        <label class="mr-3"><input type="radio" name="refSoli" value="facturas" onclick="changeRef()">Facturas</label>
                                                     </form>
                                                 </div>
                                             </div>
                                             <hr>
-                                            <div class="row">
+                                            <div class="row" id="refGroup" style="display: none;">
                                                 <div class="col-md-4">
                                                     <div class="input-group mb-3">
                                                         <input type="text" name="razonSocialRef" id="razonSocialRef" placeholder="Razón Social" class="form-control">
@@ -657,12 +679,12 @@
                                                         <input type="text" name="telefonoRef" id="telefonoRef" placeholder="Telefono" class="form-control">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <button class="btn btn-info">Agregar Referencias</button>
+                                                        <button class="btn btn-info" onclick="addRefData()">Agregar Referencias</button>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-7">
-                                                    <table class="table">
+                                                    <table class="table" id="refData">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Razon Social</th>
@@ -672,7 +694,7 @@
                                                                 <th scope="col">Eliminar</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <!-- <tbody>
                                                             <tr>
                                                                 <td scope="row">Sierraz Sanchez</td>
                                                                 <td>Contacto</td>
@@ -687,24 +709,24 @@
                                                                 <td>3355778855</td>
                                                                 <td><i class="fas fa-user-times"></i></td>
                                                             </tr>
-                                                        </tbody>
+                                                        </tbody> -->
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" id="cartGroup" style="display: none;">
                                                 <div class="col-md-12 text-center">
                                                     <div class="input-group input-group-sm mb-3" [formGroupName]="i">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">Caratula</span>
                                                         </div>
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
-                                                            <label class="custom-file-label" for="inputGroupFile01">Archivo ...</label>
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile15" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                                            <label class="custom-file-label" for="inputGroupFile15" id="label-inputGroupFile15">Archivo ...</label>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" id="factGroup" style="display: none;">
                                                 <div class="col-md-5">
                                                     <p>Las facturas deben ser de la competencia, no mayores a 30 dias y la suma del importe de estas deben ser igual o mayor al doble del credito solicitado*</p>
                                                     <div class="input-group input-group-sm mb-3" [formGroupName]="i">
@@ -712,8 +734,8 @@
                                                             <span class="input-group-text">Datos de Factura</span>
                                                         </div>
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
-                                                            <label class="custom-file-label" for="inputGroupFile01">Factura</label>
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile16" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                                            <label class="custom-file-label" for="inputGroupFile16" id="label-inputGroupFile16">Factura</label>
                                                         </div>
                                                         <span>Ésta página debe mostrar RFC del interesado y de su proveedor*</span>
                                                     </div>
@@ -722,27 +744,26 @@
                                                             <span class="input-group-text">Importe de factura</span>
                                                         </div>
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
-                                                            <label class="custom-file-label" for="inputGroupFile01">Factura</label>
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile17" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                                            <label class="custom-file-label" for="inputGroupFile17" id="label-inputGroupFile17">Factura</label>
                                                         </div>
                                                         <span>Ésta página debe mostrar el importe total de la factura*</span>
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <span>Importe</span>
                                                         <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                                        <input type="text" class="form-control" id="importFactura">
                                                         <span class="input-group-text">.00</span>
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <button class="btn btn-info">Agregar Factura</button>
+                                                        <button class="btn btn-info" onclick="addFacturaData()">Agregar Factura</button>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-6">
-                                                    <table class="table">
+                                                    <table class="table" id="facturaData">
                                                         <thead>
                                                             <tr>
-                                                                <th scope="col">#</th>
                                                                 <th scope="col">Datos Factura</th>
                                                                 <th scope="col">Importe Factura</th>
                                                                 <th scope="col">Importe</th>
@@ -750,7 +771,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <th scope="row">1</th>
                                                                 <td>DatosFactura.jpg</td>
                                                                 <td>ImporteFactura.jpg</td>
@@ -763,13 +784,13 @@
                                                                 <td>ImporteFactura.jpg</td>
                                                                 <td>$$$</td>
                                                                 <td><i class="fas fa-trash-alt"></i></td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
+                                            <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
 
                                         </div>
                                         <div id="final" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
@@ -779,8 +800,8 @@
                                                     <h3>SOLICITUD TERMINADA</h3>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
-                                            <button type="submit" class="btn btn-success">Enviar</button>
+                                            <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button> -->
+                                            <button type="submit" class="btn btn-success" onclick="SendForm()">Enviar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -807,7 +828,7 @@
 
 <!--MODAL INFO -->
 <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
                 <h3 class="text-center title ml-auto">Detalle de Solicitud <span id="folioInf">No. 18606</span></h3>
@@ -822,22 +843,21 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">RFC</div>
-                            <div class="col-md-4">HURA850521718</div>
+                            <div class="col-md-4"><input type="text" name="rfcEdit" id="rfcEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Razon Social</div>
-                            <div class="col-md-4">HURTADO ROMO ADAIR JOSUE</div>
+                            <div class="col-md-4"><input type="text" name="rzEdit" id="rzEdit" disabled></div>
                             <div class="col-md-4">
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Constancia de Situacion Fiscal</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
@@ -856,13 +876,6 @@
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-12 text-center">
-                                <div class="alert alert-danger" role="alert">
-                                    El nombre está escrito incorrectamente
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -872,42 +885,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Calle</div>
-                            <div class="col-md-4">rio juchipila</div>
+                            <div class="col-md-4"><input type="text" name="calleFEdit" id="calleFEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exteriorl</div>
-                            <div class="col-md-4">1173</div>
+                            <div class="col-md-4"><input type="text" name="noFEdit" id="noFEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Ciudad</div>
-                            <div class="col-md-4">Guadalajara</div>
+                            <div class="col-md-4"><input type="text" name="cityFEdit" id="cityFEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Estado</div>
-                            <div class="col-md-4">Jalisco</div>
+                            <div class="col-md-4"><input type="text" name="estadoFEdit" id="estadoFEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-4">Quinta Velarde</div>
+                            <div class="col-md-4"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">CP</div>
-                            <div class="col-md-4">44430</div>
+                            <div class="col-md-4"><input type="text" name="cpFEdit" id="cpFEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
@@ -927,42 +940,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Calle</div>
-                            <div class="col-md-4">carr. al castillo</div>
+                            <div class="col-md-4"><input type="text" name="calleEEdit" id="calleEEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-4">37a</div>
+                            <div class="col-md-4"><input type="text" name="noEEdit" id="noEEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Ciudad</div>
-                            <div class="col-md-4">El salto</div>
+                            <div class="col-md-4"><input type="text" name="cityEEdit" id="cityEEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Estado</div>
-                            <div class="col-md-4">Jalisco</div>
+                            <div class="col-md-4"><input type="text" name="estadoEEdit" id="estadoEEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-4">San Jode Del Castillo</div>
+                            <div class="col-md-4"><input type="text" name="coloniaEEdit" id="coloniaEEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">C.P.</div>
-                            <div class="col-md-4">45685</div>
+                            <div class="col-md-4"><input type="text" name="cpEEdit" id="cpEEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
@@ -976,42 +989,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Metodo de pago</div>
-                            <div class="col-md-4">Por Definir</div>
+                            <div class="col-md-4"><input type="text" name="metPagoEdit" id="metPagoEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Giro</div>
-                            <div class="col-md-4">Ferreteria y Tlapaleria</div>
+                            <div class="col-md-4"><input type="text" name="giroEdit" id="giroEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Antiguedad</div>
-                            <div class="col-md-4">31</div>
+                            <div class="col-md-4"><input type="text" name="antiguedadEdit" id="antiguedadEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Frente</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Izquierda</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Derecha</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
@@ -1024,25 +1037,25 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-6 text-bold">Tipo Contacto</div>
-                            <div class="col-md-6 text-bold">Principal</div>
+                            <div class="col-md-6 text-bold"><input type="text" name="tipoCEdit" id="tipoCEdit" disabled></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Nombre</div>
-                            <div class="col-md-4">adair josue hurtado romo</div>
+                            <div class="col-md-4"><input type="text" name="nombreCEdit" id="nombreCEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Telefono</div>
-                            <div class="col-md-4">3336881130</div>
+                            <div class="col-md-4"><input type="text" name="phoneCEdit" id="phoneCEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Celular</div>
-                            <div class="col-md-4">3336881130</div>
+                            <div class="col-md-4"><input type="text" name="CelCEdit" id="CelCEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
@@ -1055,14 +1068,14 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Tipo Local</div>
-                            <div class="col-md-4">Propio</div>
+                            <div class="col-md-4"><input type="text" name="typeLEdit" id="typeLEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Tipo Persona</div>
-                            <div class="col-md-4">Fisica</div>
+                            <div class="col-md-4"><input type="text" name="typePEdit" id="typePEdit" disabled></div>
                             <div class="col-md-4">
                                 <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
@@ -1085,23 +1098,14 @@
                             <div class="col-md-4">IFE/INE Representante</div>
                             <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
+                            <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">IFE/INE Representante (Reverso)</div>
                             <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4">
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-12 text-center">
-                                <div class="alert alert-danger" role="alert">
-                                    La Idenficación del representante es ilegible
-                                </div>
+                            <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
                             </div>
                         </div>
                     </div>
@@ -1395,6 +1399,25 @@
         </div>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" id="respuestaForm">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titleModalR">Respuesta Formulario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="infoModalR">Enviado correctamente</p>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
 
 @endsection
 
