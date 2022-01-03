@@ -350,9 +350,12 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 Route::get('/MisSolicitudes', function(){
                                     $token = TokenController::getToken();
-                                    $user = "crolon";
+                                    $user = "crolon"; //MisSolicitudesController::getUser($token);
                                     $zone = MisSolicitudesController::getZone($token,$user);
                                     $listSol = MisSolicitudesController::getTableView($token,$zone);
+                                    function getStatus($id){
+                                        return MisSolicitudesController::getStatus($id);
+                                    }
                                     return view('intranet.ventas.misSolicitudes',['token' => $token, 'zone' => $zone, 'listSol' => $listSol]);
                                     /*return view('intranet.ventas.misSolicitudes');*/
                                 });
