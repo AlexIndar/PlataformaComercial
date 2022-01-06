@@ -133,7 +133,7 @@
                                     <div class="col-md-4 text-center">
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-indarYellow">$</span>
-                                            <input type="text" class="form-control">
+                                            <input type="text" class="form-control" id="creditoInput">
                                             <span class="input-group-text bg-indarYellow">.00</span>
                                         </div>
                                     </div>
@@ -204,6 +204,7 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
+                                                    
                                                     <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
@@ -280,27 +281,36 @@
                                                     <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="colDF" id="colDF" placeholder="Colonia" class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="CiudadDF" id="ciudadDF" placeholder="Ciudad" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <input type="text" name="EstadoDF" id="EstadoDF" placeholder="Estado" class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
                                                     <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control">
                                                     <span>Correo donde se enviará la factura</span>
                                                 </div>
-                                                <!-- <div class="col-md-4">
-                                                    <button onclick="actualizarGeo()" class="btn btn-info">Actualizar GeoLocation</button>
-                                                </div> -->
+                                                <div class="col-md-4">
+                                                    <button onclick="updateGeolocation()" class="btn btn-info">Actualizar Geolocalización</button>
+                                                </div>
                                             </div>
-                                            <div class="row mb-3">
-                                                <!-- ADD COLONIA, CIUDAD, ESTADO IMPUTS-->
+                                            <div class="row mb-3 d-none" id="rowInputsGeo">
+                                                <div class="col-md-4">
+                                                    <span>Colonia</span>
+                                                    <select id="colDF" name="colDF" class="form-control selectpicker" data-live-search="true">
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span>Ciudad</span>
+                                                    <input type="text" name="CiudadDF" id="ciudadDF" placeholder="Ciudad" class="form-control" disabled>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span>Estado</span>
+                                                    <input type="text" name="estadoDF" id="estadoDF" placeholder="Estado" class="form-control" disabled>
+                                                </div>
                                             </div>
+
+                                            <div class="row mb-3 d-none" id="rowOtraColonia">
+                                                <div class="col-md-4">
+                                                    <span>Ingresa el nombre de la colonia</span>
+                                                    <input type="text" name="otraCol" id="otraCol" placeholder="Colonia" class="form-control">
+                                                </div>
+                                            </div>
+                                            
                                             <div class="row">
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
@@ -335,29 +345,29 @@
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control">
+                                                    <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control">
+                                                    <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="colDF" id="colDF" placeholder="Colonia" class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="CiudadDF" id="ciudadDF" placeholder="Ciudad" class="form-control">
+                                                    <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="EstadoDF" id="EstadoDF" placeholder="Estado" class="form-control">
+                                                    <input type="text" name="codPos" id="cpInputShipping" placeholder="C.P." class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="colDF" id="colDFShipping" placeholder="Colonia" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" name="CiudadDF" id="ciudadDFShipping" placeholder="Ciudad" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="estadoDF" id="estadoDFShipping" placeholder="Estado" class="form-control">
                                                 </div>
                                             </div>
                                             </div>
@@ -377,21 +387,18 @@
                                                         <div class="input-group-prepend">
                                                             <label class="input-group-text" for="inputGroupSelect01">Giro del negocio</label>
                                                         </div>
-                                                        <select class="custom-select" id="inputGroupSelect01">
-                                                            <option selected>SELECCIONAR</option>
-                                                            <option value="1">FABRICA</option>
-                                                            <option value="2">FERRETERIA</option>
-                                                            <option value="3">FERRETERIA INSDUSTRIAL</option>
-                                                            <option value="4">FERRETERIA Y TLAPALERIA</option>
-                                                            <option value="5">IMPERMEABILIZANTES</option>
-                                                            <option value="6">INDUSTRIA</option>
-                                                            <option value="7">MADERIA</option>
-
+                                                        <select id="inputGroupSelect01" name="inputGroupSelect01" class="form-control selectpicker" data-live-search="true">
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 d-none" id="rowOtroGiro">
+                                                <div class="col-md-4">
+                                                    <span>Ingresa el giro del negocio</span>
+                                                    <input type="text" name="otroGiro" id="otroGiro" placeholder="Giro" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -559,7 +566,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row" *ngIf="fifthFormGroup.controls.AntiquityCtrl.value<=1 || this.TypeRequestCtrl == 'changeRS'">
+                                            <div class="row" id="ineAval" *ngIf="fifthFormGroup.controls.AntiquityCtrl.value<=1 || this.TypeRequestCtrl == 'changeRS'">
                                                 <div class="input-group input-group-sm mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">IFE/INE AVAL</span>
@@ -570,7 +577,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row" *ngIf="fifthFormGroup.controls.AntiquityCtrl.value<=1 || this.TypeRequestCtrl == 'changeRS'">
+                                            <div class="row" id="ineAvalBack" *ngIf="fifthFormGroup.controls.AntiquityCtrl.value<=1 || this.TypeRequestCtrl == 'changeRS'">
                                                 <div class="input-group input-group-sm mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">IFE/INE AVAL (Reverso)</span>
@@ -598,12 +605,12 @@
                                                             <label class="input-group-text" for="inputGroupSelect14">Tipo Archivo</label>
                                                         </div>
                                                         <select class="custom-select" id="inputGroupSelect14">
-                                                            <option selected>SELECCIONAR</option>
+                                                            <option value="-1" selected>SELECCIONAR</option>
                                                             <option value="1">RAZON SOCIAL</option>
                                                             <option value="2">FECHA DE CONSTITUCION</option>
                                                             <option value="3">GIRO DE LA EMPRESA</option>
-                                                            <option value="3">DURACIÓN DE LA SOCIEDAD</option>
-                                                            <option value="3">ACCIONISTAS</option>
+                                                            <option value="4">DURACIÓN DE LA SOCIEDAD</option>
+                                                            <option value="5">ACCIONISTAS</option>
                                                         </select>
                                                     </div>
                                                     <div class="input-group input-group-sm mb-3" [formGroupName]="i">
@@ -654,13 +661,24 @@
                                                     <h3>REFERENCIAS</h3>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" id="referenciasOptions">
                                                 <div class="col-md-12 text-center">
                                                     <form>
-                                                        <label class="mr-3"><input type="radio" name="refSoli" value="datos" onclick="changeRef()">Datos</label>
-                                                        <label class="mr-3"><input type="radio" name="refSoli" value="caratula" onclick="changeRef()">Caratula</label>
-                                                        <label class="mr-3"><input type="radio" name="refSoli" value="facturas" onclick="changeRef()">Facturas</label>
+                                                        <label class="mr-3"><input type="radio" name="refSoli" id="refSoliDatos" value="datos" onclick="changeRef()">Datos</label>
+                                                        <label class="mr-3"><input type="radio" name="refSoli" id="refSoliCaratula" value="caratula" onclick="changeRef()">Caratula</label>
+                                                        <label class="mr-3"><input type="radio" name="refSoli" id="refSoliFactura" value="facturas" onclick="changeRef()">Facturas</label>
                                                     </form>
+                                                </div>
+                                            </div>
+                                            <div class="row d-none" id="referenciasCarta">
+                                                <div class="input-group input-group-sm mb-3" [formGroupName]="i">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Carta Responsiva</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input" id="inputGroupFile18" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="CartaResponsiva">
+                                                            <label class="custom-file-label" for="inputGroupFile18" id="label-inputGroupFile18">Archivo ...</label>
+                                                        </div>
                                                 </div>
                                             </div>
                                             <hr>
@@ -793,7 +811,7 @@
                                             <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
 
                                         </div>
-                                        <div id="final" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+                                        <div id="final" class="content d-flex justify-content-center align-items-center flex-column" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
@@ -801,7 +819,7 @@
                                                 </div>
                                             </div>
                                             <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button> -->
-                                            <button type="submit" class="btn btn-success" onclick="SendForm()">Enviar</button>
+                                            <button type="submit" class="btn btn-success" onclick="SendForm('{{$zone}}')">Enviar</button>
                                         </div>
                                     </div>
                                 </div>

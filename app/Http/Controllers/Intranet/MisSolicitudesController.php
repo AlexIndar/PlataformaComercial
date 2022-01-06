@@ -31,14 +31,24 @@ class MisSolicitudesController extends Controller
     }
 
     public static function getTableView($token, $zone){
-        $zDescription = $zone['description'];
+        $zDescription = $zone->description;
         $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zDescription);
         return json_decode($solicitudes->body());
+    }
+
+    public static function getBusinessLines($token){
+        $businessLines = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetBusinessLines');
+        return json_decode($businessLines->body());
     }
 
     public static function getInfoSol($token, $folio){
         $solicitud = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getRequestDetail?fol='.$folio);
         return json_decode($solicitud->body());
+    }
+
+    public static function getCPData($token, $cp){
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getCPData?cp='.$cp);
+        return json_decode($data->body());
     }
 
     public static function getStatus($id)
@@ -85,4 +95,25 @@ class MisSolicitudesController extends Controller
         }
         return $descripcion;
     }
+
+    public static function storeSolicitud($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Create', [
+            "folio" => $json->folio,
+            "fecha" => $json->fecha,
+            "tipo" => $json->tipo,
+            "credito" => $json->credito,
+            "zona" => $json->zona,
+            "cliente" => $json->cliente,
+            "referencias" => $json->referencias,
+            // "historyForm" => $json->historyForm,
+            "archivos" => $json->archivos,
+            "factura" => $json->factura,
+            "observations" => $json->observations,
+        ]);
+
+
+        return $response;
+    }
+
 }

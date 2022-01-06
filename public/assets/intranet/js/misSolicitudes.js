@@ -85,6 +85,13 @@
 
 // ----------------------------------------------------------------- VARIABLES GLOBALES ------------------------------------------
 
+
+var tipoForm = '';
+var archivosType = [];
+var archivosBase64 = [];
+var businessLines = [];
+
+
 // DATOS GENERALES
 
 var rfc = '';
@@ -104,10 +111,13 @@ var comprobanteDomicilio = '';
 var comprobanteDomicilioBack = '';
 var comprobanteDomicilioShipping = '';
 var comprobanteDomicilioShippingBack = '';
+var colonias;
+var coloniaSelect = '';
 
 // NEGOCIO
 
-var giro = '';
+var tipoNegocio = 1;
+var giroSelect = '';
 var antiguedad = '';
 var negocioFrente = '';
 var negocioLeft = '';
@@ -129,141 +139,219 @@ var ineAvalBack = '';
 
 // ACTA CONSTITUTIVA
 
-var contactos = [];
-
 var docsActa = [];
+var subtype;
+
+// REFERENCIAS
 var referenciasSol = [];
+var caratula = '';
 var facturasSol = [];
+var cartaResponsiva = '';
+
 
 $(document).ready(function() {
 
     $('#inputGroupFile01').change(function(e) {
         var fileName = e.target.files[0].name;
-        constanciaSituacionFiscal = toBase64(e.target.files[0]);
+        constanciaSituacionFiscal = toBase64(e.target.files[0], 1, null);
         $('#label-inputGroupFile01').html(fileName);
     });
 
     $('#inputGroupFile02').change(function(e) {
         var fileName = e.target.files[0].name;
-        constanciaSituacionFiscalBack = toBase64(e.target.files[0]);
+        constanciaSituacionFiscalBack = toBase64(e.target.files[0], 11, null);
         $('#label-inputGroupFile02').html(fileName);
     });
 
     $('#inputGroupFile03').change(function(e) {
         var fileName = e.target.files[0].name;
-        fotoSolicitud = toBase64(e.target.files[0]);
+        fotoSolicitud = toBase64(e.target.files[0], 13, null);
         $('#label-inputGroupFile03').html(fileName);
     });
 
     $('#inputGroupFile04').change(function(e) {
         var fileName = e.target.files[0].name;
-        comprobanteDomicilio = toBase64(e.target.files[0]);
+        comprobanteDomicilio = toBase64(e.target.files[0], 2, null);
         $('#label-inputGroupFile04').html(fileName);
     });
 
     $('#inputGroupFile05').change(function(e) {
         var fileName = e.target.files[0].name;
-        comprobanteDomicilioBack = toBase64(e.target.files[0]);
+        comprobanteDomicilioBack = toBase64(e.target.files[0], 21, null);
         $('#label-inputGroupFile05').html(fileName);
-    });
-
-    $('#inputGroupFile04-2').change(function(e) {
-        var fileName = e.target.files[0].name;
-        comprobanteDomicilioShipping = toBase64(e.target.files[0]);
-        $('#label-inputGroupFile04-2').html(fileName);
-    });
-
-    $('#inputGroupFile05-2').change(function(e) {
-        var fileName = e.target.files[0].name;
-        comprobanteDomicilioShippingBack = toBase64(e.target.files[0]);
-        $('#label-inputGroupFile05-2').html(fileName);
     });
 
     $('#inputGroupFile06').change(function(e) {
         var fileName = e.target.files[0].name;
-        negocioFrente = toBase64(e.target.files[0]);
+        negocioFrente = toBase64(e.target.files[0], 4, null);
         $('#label-inputGroupFile06').html(fileName);
     });
 
     $('#inputGroupFile07').change(function(e) {
         var fileName = e.target.files[0].name;
-        negocioLeft = toBase64(e.target.files[0]);
+        negocioLeft = toBase64(e.target.files[0], 5, null);
         $('#label-inputGroupFile07').html(fileName);
     });
 
     $('#inputGroupFile08').change(function(e) {
         var fileName = e.target.files[0].name;
-        negocioRight = toBase64(e.target.files[0]);
+        negocioRight = toBase64(e.target.files[0], 6, null);
         $('#label-inputGroupFile08').html(fileName);
     });
 
     $('#inputGroupFile09').change(function(e) {
         var fileName = e.target.files[0].name;
-        pagare = toBase64(e.target.files[0]);
+        pagare = toBase64(e.target.files[0], 7, null);
         $('#label-inputGroupFile09').html(fileName);
     });
 
     $('#inputGroupFile10').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineRep = toBase64(e.target.files[0]);
+        ineRep = toBase64(e.target.files[0], 3, null);
         $('#label-inputGroupFile10').html(fileName);
     });
 
     $('#inputGroupFile11').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineRepBack = toBase64(e.target.files[0]);
+        ineRepBack = toBase64(e.target.files[0], 31, null);
         $('#label-inputGroupFile11').html(fileName);
     });
 
     $('#inputGroupFile12').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineAval = toBase64(e.target.files[0]);
+        ineAval = toBase64(e.target.files[0], 8, null);
         $('#label-inputGroupFile12').html(fileName);
     });
 
     $('#inputGroupFile13').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineAvalBack = toBase64(e.target.files[0]);
+        ineAvalBack = toBase64(e.target.files[0], 81, null);
         $('#label-inputGroupFile13').html(fileName);
     });
 
     $('#inputGroupFile14').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineAvalBack = toBase64(e.target.files[0]);
+        actaConstitutiva = e.target.files[0];
         $('#label-inputGroupFile14').html(fileName);
     });
 
     $('#inputGroupFile15').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineAvalBack = toBase64(e.target.files[0]);
+        caratula = toBase64(e.target.files[0], 10, null);
         $('#label-inputGroupFile15').html(fileName);
     });
 
     $('#inputGroupFile16').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineAvalBack = toBase64(e.target.files[0]);
         $('#label-inputGroupFile16').html(fileName);
     });
 
     $('#inputGroupFile17').change(function(e) {
         var fileName = e.target.files[0].name;
-        ineAvalBack = toBase64(e.target.files[0]);
         $('#label-inputGroupFile17').html(fileName);
     });
+
+    $('#inputGroupFile18').change(function(e) {
+        var fileName = e.target.files[0].name;
+        cartaResponsiva = toBase64(e.target.files[0], 12, null);
+        $('#label-inputGroupFile18').html(fileName);
+    });
+
+    $('#colDF').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        var selected = clickedIndex;
+        if(colonias[selected]==undefined){
+            document.getElementById('rowOtraColonia').classList.remove('d-none');
+        }
+        else{
+            document.getElementById('rowOtraColonia').classList.add('d-none');
+            coloniaSelect = colonias[selected];
+        }
+    });
+
+    $('#inputGroupSelect01').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        var selected = clickedIndex+1;
+        if(businessLines.length < selected){
+            tipoNegocio = -1;
+            document.getElementById('rowOtroGiro').classList.remove('d-none');
+        }
+        else{
+            document.getElementById('rowOtroGiro').classList.add('d-none');
+            tipoNegocio = businessLines[clickedIndex]['id'];
+        }
+    });
+
+    $('#antiguedad').change(function(){
+        if(document.getElementById('antiguedad').value >= 2){
+            document.getElementById('ineAval').classList.add('d-none');
+            document.getElementById('ineAvalBack').classList.add('d-none');
+        }
+        else{
+            document.getElementById('ineAval').classList.remove('d-none');
+            document.getElementById('ineAvalBack').classList.remove('d-none');
+        }
+    });
+
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/MisSolicitudes/getBusinessLines",
+        'type': 'GET',
+        'dataType': 'json',
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            businessLines = data;
+
+            var selectBusinessLines = $('#inputGroupSelect01 option');
+            selectBusinessLines.remove();
+            $('#inputGroupSelect01').selectpicker('refresh');
+
+            for (var x = 0; x < businessLines.length; x++) { //Agregar todas las inputGroupSelect01es del cliente seleccionado al select inputGroupSelect01
+                $('#inputGroupSelect01').append('<option value="' + businessLines[x]['id'] + '">' + businessLines[x]['description'] + '</option>');
+                $('#inputGroupSelect01').val(businessLines[x]['id']);
+                $('#inputGroupSelect01').selectpicker("refresh");
+            }
+
+            $('#inputGroupSelect01').append('<option value="-1">Otro</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+            $('#inputGroupSelect01').val('1');
+            $('#inputGroupSelect01').selectpicker("refresh");
+
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
+
 })
 
-function toBase64(file) {
+
+function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARAMETRO Y LA RETORNA EN BASE 64
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    var result = "";
-    reader.onload = function() {
-        result = reader.result;
-        console.log(result);
+    reader.onload = function(subtype) {
+        var result = reader.result.split(',')[1];
+        alert(result);
+        base64 = result;
+        archivosBase64.push(base64);
     };
     reader.onerror = function(error) {
-        result = "Error";
+        return "Error"
     };
-    return result;
+
+    var temp = {
+        type: type,
+        subtype: subtype,
+    };
+
+    for(var x = 0; x < archivosType.length; x ++){
+        if(archivosType[x]['type']==type && archivosType[x]['type'] != 9){
+            archivosType.splice(x,1);
+            archivosBase64.splice(x,1);
+        }
+    }
+
+    archivosType.push(temp);
 }
 
 function addAddress() {
@@ -279,6 +367,51 @@ function addAddress() {
         $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
         $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
 
+    }
+}
+
+function updateGeolocation(){
+    var cp = document.getElementById('cpInput').value;
+    if(cp==""){
+        alert('Ingresa un código postal');
+    }
+    else{
+        let data = { cp: cp };
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/getCPData",
+            'type': 'GET',
+            'dataType': 'json',
+            'data': data,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                colonias = data['suburbs'];
+                document.getElementById('ciudadDF').value = data['town'];
+                document.getElementById('estadoDF').value = data['state'];
+                document.getElementById('rowInputsGeo').classList.remove('d-none');
+               
+                var itemSelectorOption = $('#colDF option');
+                itemSelectorOption.remove();
+                $('#colDF').selectpicker('refresh');
+
+                for (var x = 0; x < colonias.length; x++) { //Agregar todas las colonias del CP ingresado
+                    $('#colDF').append('<option value="' + x + '">' + colonias[x] + '</option>');
+                    $('#colDF').val(colonias[x]);
+                    $('#colDF').selectpicker("refresh");
+                }
+
+                $('#colDF').append('<option value="Otra">Otra</option>'); //Agregar Primera opción de colDF en Blanco
+                $('#colDF').val('0');
+                $('#colDF').selectpicker("refresh");
+
+            },
+            error: function(error) {
+                console.log(error + "Error");
+            }
+        });
     }
 }
 
@@ -358,7 +491,6 @@ function changeTipoPersona(tipo) {
         tipoPersona = 'Moral';
         document.getElementById("actaConst").style.display = 'flex';
     }
-    console.log(tipoPersona);
 }
 
 
@@ -373,6 +505,17 @@ function addActaConstData() {
     };
 
     docsActa.push(data);
+
+    subtype = document.getElementById('inputGroupSelect14').value;
+    actaConstitutiva = toBase64(actaConstitutiva, 9, subtype);
+
+
+
+
+
+    document.getElementById('label-inputGroupFile14').innerHTML = "";
+    document.getElementById('inputGroupFile14').value = "";
+    document.getElementById('inputGroupSelect14').value = '-1';
 
 
     var table = document.getElementById('actaConsData');
@@ -392,7 +535,15 @@ function deleteActaRow(t) {
     var table = document.getElementById('actaConsData');
     var index = row.rowIndex;
     table.deleteRow(index);
+    tipoDelete = docsActa[index - 1]['tipo'];
     docsActa.splice(index - 1, 1);
+
+    for(var x = 0; x < archivosType.length; x ++){
+        if(archivosType[x]['subtype']==tipoDelete && archivosType[x]['type']==9){
+            archivosType.splice(x,1);
+            archivosBase64.splice(x,1);
+        }
+    }
 }
 
 
@@ -494,6 +645,7 @@ function deleteFactRow(t) {
 
 function valiteTypeForm() {
     let activoFijo = $('input[name="typeSoli"]:checked').val();
+    tipoForm = activoFijo;
     if (activoFijo == "cash") {
         document.getElementById("amountSol").style.display = 'none';
         document.getElementById("credSol").style.display = 'none';
@@ -505,6 +657,22 @@ function valiteTypeForm() {
         document.getElementById("actaConst").style.display = 'flex';
         document.getElementById("referenciaSol").style.display = 'flex';
     }
+
+    if(activoFijo == "changeRS"){
+        document.getElementById('referenciasCarta').classList.remove('d-none');
+        document.getElementById('referenciasOptions').classList.add('d-none');
+        document.getElementById('refGroup').style.display = 'none';
+        document.getElementById('cartGroup').style.display = 'none';
+        document.getElementById('factGroup').style.display = 'none';
+        document.getElementById('refSoliDatos').checked = false;
+        document.getElementById('refSoliCaratula').checked = false;
+        document.getElementById('refSoliFactura').checked = false;
+    }
+    else{
+        document.getElementById('referenciasCarta').classList.add('d-none');
+        document.getElementById('referenciasOptions').classList.remove('d-none');
+    }
+    
     /*switch (activoFijo) {
         case "credit":
             document.getElementById("amountSol").style.display = 'flex';
@@ -626,8 +794,167 @@ function showInfoModal(data) {
 }
 
 
-function SendForm() {
+function getTipoForm(){
+    var tipo = null;
+    switch(tipoForm){
+        case 'cash': tipo = 0; break;
+        case 'credit': tipo = 1; break;
+        case 'creditAB': tipo = 2; break;
+        case 'changeRS': tipo = null; break;
+    }
+
+    return tipo;
+}
+
+function getDateTime(){
+    return (new Date()).toJSON();
+}
+
+function getColoniaSelected(){
+    if (document.getElementById('rowOtraColonia').classList.contains('d-none')){
+        return coloniaSelect;
+    }
+    else{
+        return document.getElementById('otraCol').value;
+    }
+}
+
+
+
+function SendForm(zone) {
+
+    var contactosData = [];
+    var referenciasData = [];
+    var archivosData = [];
+
+    for(var x = 0; x < contactos.length; x++){
+        var temp = {
+            id: 0,
+            tipo: parseInt(contactos[x]['tipo']),
+            nombre: contactos[x]['nombre'],
+            email: contactos[x]['email'],
+            celular: contactos[x]['celular'],
+            phone: contactos[x]['telefono'],
+        };
+        contactosData.push(temp);
+    }
+
+
+    for(var x = 0; x < referenciasSol.length; x++){
+        var temp = {
+            id: 0,
+            tipo: 1,
+            nombre: referenciasSol[x]['rzRef'],
+            email: null,
+            celular: referenciasSol[x]['contRef'],
+            phone: referenciasSol[x]['telRef'],
+            city: referenciasSol[x]['cityRef'],
+        };
+        referenciasData.push(temp);
+    }
+
+    for(var x = 0; x < archivosType.length; x++){
+        var temp = {
+            id: 0,
+            fileStr: archivosBase64[x],
+            type: archivosType[x]['type'],
+            subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
+        };
+        archivosData.push(temp);
+    }
+
+        
+    var json = {
+        folio: -1,
+        fecha: getDateTime(),
+        tipo: getTipoForm(),
+        credito: getTipoForm()==0 ? null : document.getElementById('creditoInput').value,
+        zona: JSON.parse(zone),
+        cliente:{
+            clave: document.getElementById('prospecto').value,
+            nombreComercial: document.getElementById('nameComeInput').value,
+            tipoNegocio: tipoNegocio,
+            otroGiro: tipoNegocio == -1 ? document.getElementById('otroGiro').value : null,
+            tiempoConst: document.getElementById('antiguedad').value,
+            tipoLocal: local == 'Propio' ? true : false,
+            tipoPersona: tipoPersona == 'Moral' ? true : false,
+            status: 1,
+            datosF: {
+                id: 0,
+                rfc: document.getElementById('rfcInput').value,
+                razonSocial: document.getElementById('rzInput').value,
+                emailFacturacion: document.getElementById('emailFac').value,
+                domicilio: {
+                    id: 0,
+                    calle: document.getElementById('calleInput').value,
+                    noInt: document.getElementById('noIntInput').value,
+                    colonia:  getColoniaSelected(),
+                    ciudad: document.getElementById('ciudadDF').value,
+                    estado: document.getElementById('estadoDF').value,
+                    cp: document.getElementById('cpInput').value,
+                    noExt: document.getElementById('noExtInput').value,
+                    longitude: 0,
+                    latitude: 0,
+                }
+            },
+            datosE: {
+                id: 0,
+                nombre: "Direccion Entrega",
+                rutaVenta: false,
+                ruta: null,
+                formaEnvio: null,
+                domicilio: {
+                    id: 0,
+                    calle: document.getElementById('calleInputShipping').value == '' ? document.getElementById('calleInput').value : document.getElementById('calleInputShipping').value,
+                    noInt: document.getElementById('noIntInputShipping').value == '' ? document.getElementById('noIntInput').value : document.getElementById('noIntInputShipping').value,
+                    colonia: document.getElementById('colDFShipping').value == '' ? getColoniaSelected() : document.getElementById('colDFShipping').value,
+                    ciudad: document.getElementById('ciudadDFShipping').value == '' ? document.getElementById('ciudadDF').value : document.getElementById('ciudadDFShipping').value,
+                    estado: document.getElementById('estadoDFShipping').value == '' ? document.getElementById('estadoDF').value : document.getElementById('estadoDFShipping').value,
+                    cp: document.getElementById('cpInputShipping').value == '' ? document.getElementById('cpInput').value : document.getElementById('cpInputShipping').value,
+                    noExt: document.getElementById('noExtInputShipping').value == '' ? document.getElementById('noExtInput').value : document.getElementById('noExtInputShipping').value,
+                    longitude: 0,
+                    latitude: 0,
+                }
+            },
+            contactos: contactosData,
+            metodoPago: "pd",
+            noCuentaBanco: null,
+        },
+        referencias: $('input[name="refSoli"]:checked').val() == 'datos' ? referenciasData : null,
+        // historyForm: {
+        //     id: null,
+        //     folioSol: null,
+        //     fecha: null,
+        //     tipo: null, 
+        //     idTipo: null, 
+        // }, 
+        archivos: archivosData,
+        factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
+        observations: null
+    };
+
+    console.log(json);
+    console.log(JSON.stringify(json));
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "MisSolicitudes/storeSolicitud",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': json,
+        'enctype': 'multipart/form-data',
+        'timeout': 2*60*60*1000,
+        success: function(data){
+                console.log(data);
+        }, 
+        error: function(error){
+                console.log(error);
+         }
+    });
+
     $('#solicitudModal').modal('hide');
     $('#respuestaForm').modal('show');
-    document.getElementById()
+
+
 }
