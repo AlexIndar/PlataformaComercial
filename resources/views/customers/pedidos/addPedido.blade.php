@@ -233,12 +233,12 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                                 <input type="text" id="empty" value="yes" hidden>
-                                <table id="example1" class="table table-striped table-bordered table-hover" >
+                                <table id="tablaInventario" class="table-striped table-bordered table-hover" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="customHeader">Img</th>
                                             <th class="customHeader">Categoría</th>
-                                            <th class="customHeader" id="orderHeader">Fab</th>
+                                            <th class="customHeader">Fab</th>
                                             <th class="customHeader">Fam</th>
                                             <th class="customHeader">Grupo</th>
                                             <th class="customHeader">Tipo</th>

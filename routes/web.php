@@ -350,9 +350,9 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 Route::get('/MisSolicitudes', function(){
                                     $token = TokenController::getToken();
-                                    $user = "crolon"; //MisSolicitudesController::getUser($token);
-                                    $zone = MisSolicitudesController::getZone($token,$user);
-                                    $listSol = MisSolicitudesController::getTableView($token,$zone);
+                                    $user = MisSolicitudesController::getUser($token);
+                                    $zone = MisSolicitudesController::getZone($token,$user->body());
+                                    $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
                                     function getStatus($id){
                                         return MisSolicitudesController::getStatus($id);
                                     }
@@ -360,10 +360,29 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     /*return view('intranet.ventas.misSolicitudes');*/
                                 });
 
+                                Route::post('/MisSolicitudes/storeSolicitud', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $response = MisSolicitudesController::storeSolicitud($token, json_encode($request->all()));
+                                    return $response;
+                                });
+
+                                Route::get('/MisSolicitudes/getBusinessLines', function (){
+                                    $token = TokenController::getToken();
+                                    $data = MisSolicitudesController::getBusinessLines($token);
+                                    return  $data;
+                                });
+
                                 Route::post('/MisSolicitudes/getInfoSol', function (Request $request){
                                     $token = TokenController::getToken();
                                     $fol = $request->Item;
                                     $data = MisSolicitudesController::getInfoSol($token, $fol);
+                                    return  $data;
+                                });
+
+                                Route::get('/MisSolicitudes/getCPData', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $cp = $request->cp;
+                                    $data = MisSolicitudesController::getCPData($token, $cp);
                                     return  $data;
                                 });
 

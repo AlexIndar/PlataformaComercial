@@ -97,13 +97,13 @@ $(document).ready(function() {
 
 
     // INVENTARIO ON CLICK ADD ROW TO ORDER
-    $('#example1 tbody').on('click', 'td', function() {
-        table = $("#example1").DataTable();
+    $('#tablaInventario tbody').on('click', 'td', function() {
+        table = $("#tablaInventario").DataTable();
         cell_clicked = table.cell(this).data();
     });
 
-    $('#example1 tbody').on('click', 'tr', function() {
-        table = $("#example1").DataTable();
+    $('#tablaInventario tbody').on('click', 'tr', function() {
+        table = $("#tablaInventario").DataTable();
 
         var index = table.row(this).index();
         var item = items[index];
@@ -466,23 +466,38 @@ function cargarInventario() {
 
             dataset.push(arr);
         }
+        
 
 
-        $("#example1").dataTable({
-            "data": dataset,
-            "scrollX": 900,
-            "responsive": true,
-            "lengthChange": true,
-            "autoWidth": false,
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "orderCellsTop": true,
-            "fixedHeader": true,
+        $("#tablaInventario").dataTable({
+            data: dataset,
+            autoWidth: false, // might need this
+            scrollCollapse: true,
+            columns: [
+                { "width": "20%" },
+                null, // automatically calculates
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ],
+            "initComplete": function (settings, json) {  
+                $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+              },
         });
 
-        $('#orderHeader').click();
+        document.getElementById('tablaInventario').columns.adjust().draw();
+
 
     }
 
