@@ -386,6 +386,34 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return  $data;
                                 });
 
+                                Route::post('/MisSolicitudes/getTransactionHistory', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::getTransactionHistory($token, $fol);
+                                    return  $data;
+                                });
+
+                                Route::post('/MisSolicitudes/getValidacionContactos', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::getValidacionContactos($token, $fol);
+                                    return  $data;
+                                });
+
+                                Route::post('/MisSolicitudes/getValidationRequest', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::getValidationRequest($token, $fol);
+                                    return  $data;
+                                });
+
+                                Route::post('/MisSolicitudes/getFiles', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::getFiles($token, $fol);
+                                    return  $data;
+                                });
+
                                 Route::get('/SolicitudesPendientes', function(){
                                     return view('intranet.cyc.solicitudesPendientes');
                                 });
