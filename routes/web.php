@@ -362,7 +362,15 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 Route::post('/MisSolicitudes/storeSolicitud', function (Request $request){
                                     $token = TokenController::getToken();
+                                    // dd($request->all());
                                     $response = MisSolicitudesController::storeSolicitud($token, json_encode($request->all()));
+                                    return $response;
+                                });
+
+                                Route::post('/MisSolicitudes/saveSolicitud', function (Request $request){
+                                    $token = TokenController::getToken();
+                                    // dd($request->all());
+                                    $response = MisSolicitudesController::saveSolicitud($token, json_encode($request->all()));
                                     return $response;
                                 });
 

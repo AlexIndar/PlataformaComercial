@@ -12,7 +12,7 @@ $('document').ready(function(){
 
     const fileArticulos = document.getElementById('articulosFile');
 	fileArticulos.addEventListener('change', (event) => {
-		var input = event.target;
+		var input = event.target; 
 		var reader = new FileReader();
 		reader.onload = function(){
 			var fileData = reader.result;

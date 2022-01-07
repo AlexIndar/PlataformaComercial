@@ -282,7 +282,13 @@ $(document).ready(function() {
         if (document.getElementById('antiguedad').value >= 2) {
             document.getElementById('ineAval').classList.add('d-none');
             document.getElementById('ineAvalBack').classList.add('d-none');
+            document.getElementById('pagare').classList.add('d-none');
         } else {
+            document.getElementById('ineAval').classList.remove('d-none');
+            document.getElementById('ineAvalBack').classList.remove('d-none');
+            document.getElementById('pagare').classList.remove('d-none');
+        }
+        if(tipoForm == 'changeRS'){
             document.getElementById('ineAval').classList.remove('d-none');
             document.getElementById('ineAvalBack').classList.remove('d-none');
         }
@@ -328,7 +334,6 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
     reader.readAsDataURL(file);
     reader.onload = function(subtype) {
         var result = reader.result.split(',')[1];
-        alert(result);
         base64 = result;
         archivosBase64.push(base64);
     };
@@ -668,6 +673,12 @@ function valiteTypeForm() {
         document.getElementById('referenciasOptions').classList.remove('d-none');
     }
 
+
+    if(activoFijo == "changeRS"){
+        document.getElementById('ineAval').classList.remove('d-none');
+            document.getElementById('ineAvalBack').classList.remove('d-none');
+    }
+
     /*switch (activoFijo) {
         case "credit":
             document.getElementById("amountSol").style.display = 'flex';
@@ -752,218 +763,405 @@ function getColoniaSelected() {
 
 
 
+function validateFullForm(){
+    var save = true;
+
+    var rfc = document.getElementById('rfcInput').value;
+    var razonSocial = document.getElementById('rzInput').value;
+    var nombreComercial = document.getElementById('nameComeInput').value;
+    var prospecto = document.getElementById('prospecto').value;
+    var constanciaSituacionFiscal = document.getElementById('inputGroupFile01').value;
+    var constanciaSituacionFiscalBack = document.getElementById('inputGroupFile02').value;
+    var solicitud = document.getElementById('inputGroupFile03').value;
+    var calleFiscal = document.getElementById('calleInput').value;
+    var noExtFiscal = document.getElementById('noExtInput').value;
+    var noIntFiscal = document.getElementById('noIntInput').value;
+    var cpFiscal = document.getElementById('cpInput').value;
+    var emailFac = document.getElementById('emailFac').value;
+    var colDF = document.getElementById('colDF').value;
+    var comprobanteDomicilio = document.getElementById('inputGroupFile04').value;
+    var comprobanteDomicilioBack = document.getElementById('inputGroupFile05').value;
+
+    if(getTipoForm() != 0 && document.getElementById('creditoInput').value == ''){
+        save = false;
+    }
+
+    if(tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || noIntFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || comprobanteDomicilio == '' || comprobanteDomicilioBack == ''){
+        save = false;
+    }
+    
+    return save;
+}
+
+function validateSaveForm(){
+    var save = true;
+
+    var rfc = document.getElementById('rfcInput').value;
+    var razonSocial = document.getElementById('rzInput').value;
+    var nombreComercial = document.getElementById('nameComeInput').value;
+    var prospecto = document.getElementById('prospecto').value;
+
+    if(tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == ''){
+        save = false;
+    }
+    
+    return save;
+}
+
 function SendForm(zone) {
+    if(validateFullForm()){
+        var json = createJsonSolicitud(zone);
+        // alert('See json send');
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "MisSolicitudes/storeSolicitud",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    
+        $('#solicitudModal').modal('hide');
+        document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
+        $('#respuestaForm').modal('show');
+    }
+    else if (validateSaveForm()){
+        var json = createJsonSolicitud(zone);
+        // alert('See json save');
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "MisSolicitudes/saveSolicitud",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    
+        $('#solicitudModal').modal('hide');
+        document.getElementById('infoModalR').innerHTML = 'Solicitud guardada correctamente';
+        $('#respuestaForm').modal('show');
+    }
+    else{
+        alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial y Número de Prospecto');
+    }
+}
 
+
+function createJsonSolicitud(zone){
     var contactosData = [];
-    var referenciasData = [];
-    var archivosData = [];
+        var referenciasData = [];
+        var archivosData = [];
+        var archivosNull = [{
+            "Id": 0,
+            "FileStr": "",
+            "Type": 4,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 5,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 6,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 1,
+            "SubType": 1
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 11,
+            "SubType": 1
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 13,
+            "SubType": 1
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 2,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 3,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 31,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 7,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 8,
+            "SubType": null
+          },
+          {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 81,
+            "SubType": null
+          }
+        ];
 
-    for (var x = 0; x < contactos.length; x++) {
-        var temp = {
-            id: 0,
-            tipo: parseInt(contactos[x]['tipo']),
-            nombre: contactos[x]['nombre'],
-            email: contactos[x]['email'],
-            celular: contactos[x]['celular'],
-            phone: contactos[x]['telefono'],
-        };
-        contactosData.push(temp);
-    }
-
-
-    for (var x = 0; x < referenciasSol.length; x++) {
-        var temp = {
-            id: 0,
-            tipo: 1,
-            nombre: referenciasSol[x]['rzRef'],
-            email: null,
-            celular: referenciasSol[x]['contRef'],
-            phone: referenciasSol[x]['telRef'],
-            city: referenciasSol[x]['cityRef'],
-        };
-        referenciasData.push(temp);
-    }
-
-    for (var x = 0; x < archivosType.length; x++) {
-        var temp = {
-            id: 0,
-            fileStr: archivosBase64[x],
-            type: archivosType[x]['type'],
-            subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
-        };
-        archivosData.push(temp);
-    }
-
-
-    var json = {
-        folio: -1,
-        fecha: getDateTime(),
-        tipo: getTipoForm(),
-        credito: getTipoForm() == 0 ? null : document.getElementById('creditoInput').value,
-        zona: JSON.parse(zone),
-        cliente: {
-            clave: document.getElementById('prospecto').value,
-            nombreComercial: document.getElementById('nameComeInput').value,
-            tipoNegocio: tipoNegocio,
-            otroGiro: tipoNegocio == -1 ? document.getElementById('otroGiro').value : null,
-            tiempoConst: document.getElementById('antiguedad').value,
-            tipoLocal: local == 'Propio' ? true : false,
-            tipoPersona: tipoPersona == 'Moral' ? true : false,
-            status: 1,
-            datosF: {
+        var contactosNull = [{
+            "Id": 0,
+            "Tipo": 1,
+            "Nombre": "",
+            "Email": "",
+            "Celular": "",
+            "Phone": ""
+          },
+          {
+            "Id": 0,
+            "Tipo": 0,
+            "Nombre": "",
+            "Email": "",
+            "Celular": "",
+            "Phone": ""
+          },
+          {
+            "Id": 0,
+            "Tipo": 0,
+            "Nombre": "",
+            "Email": "",
+            "Celular": "",
+            "Phone": ""
+          }];
+    
+        for (var x = 0; x < contactos.length; x++) {
+            var temp = {
                 id: 0,
-                rfc: document.getElementById('rfcInput').value,
-                razonSocial: document.getElementById('rzInput').value,
-                emailFacturacion: document.getElementById('emailFac').value,
-                domicilio: {
-                    id: 0,
-                    calle: document.getElementById('calleInput').value,
-                    noInt: document.getElementById('noIntInput').value,
-                    colonia: getColoniaSelected(),
-                    ciudad: document.getElementById('ciudadDF').value,
-                    estado: document.getElementById('estadoDF').value,
-                    cp: document.getElementById('cpInput').value,
-                    noExt: document.getElementById('noExtInput').value,
-                    longitude: 0,
-                    latitude: 0,
-                }
-            },
-            datosE: {
+                tipo: parseInt(contactos[x]['tipo']),
+                nombre: contactos[x]['nombre'],
+                email: contactos[x]['email'],
+                celular: contactos[x]['celular'],
+                phone: contactos[x]['telefono'],
+            };
+            contactosData.push(temp);
+        }
+    
+    
+        for (var x = 0; x < referenciasSol.length; x++) {
+            var temp = {
                 id: 0,
-                nombre: "Direccion Entrega",
-                rutaVenta: false,
-                ruta: null,
-                formaEnvio: null,
-                domicilio: {
+                tipo: 1,
+                nombre: referenciasSol[x]['rzRef'],
+                email: null,
+                celular: referenciasSol[x]['contRef'],
+                phone: referenciasSol[x]['telRef'],
+                city: referenciasSol[x]['cityRef'],
+            };
+            referenciasData.push(temp);
+        }
+    
+        for (var x = 0; x < archivosType.length; x++) {
+            var temp = {
+                id: 0,
+                fileStr: archivosBase64[x],
+                type: archivosType[x]['type'],
+                subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
+            };
+            archivosData.push(temp);
+        }
+    
+        if(document.getElementById('cpInput').value == ''){
+            document.getElementById('cpInput').value = '0';
+        }
+
+        if(document.getElementById('antiguedad').value == ''){
+            document.getElementById('antiguedad').value = '0';
+        }
+    
+        var json = {
+            folio: -1,
+            fecha: getDateTime(),
+            tipo: getTipoForm(),
+            credito: getTipoForm() == 0 ? null : document.getElementById('creditoInput').value,
+            zona: JSON.parse(zone),
+            cliente: {
+                clave: document.getElementById('prospecto').value,
+                nombreComercial: document.getElementById('nameComeInput').value,
+                tipoNegocio: tipoNegocio,
+                otroGiro: tipoNegocio == -1 ? document.getElementById('otroGiro').value : null,
+                tiempoConst: document.getElementById('antiguedad').value,
+                tipoLocal: local == 'Propio' ? true : false,
+                tipoPersona: tipoPersona == 'Moral' ? true : false,
+                status: 1,
+                datosF: {
                     id: 0,
-                    calle: document.getElementById('calleInputShipping').value == '' ? document.getElementById('calleInput').value : document.getElementById('calleInputShipping').value,
-                    noInt: document.getElementById('noIntInputShipping').value == '' ? document.getElementById('noIntInput').value : document.getElementById('noIntInputShipping').value,
-                    colonia: document.getElementById('colDFShipping').value == '' ? getColoniaSelected() : document.getElementById('colDFShipping').value,
-                    ciudad: document.getElementById('ciudadDFShipping').value == '' ? document.getElementById('ciudadDF').value : document.getElementById('ciudadDFShipping').value,
-                    estado: document.getElementById('estadoDFShipping').value == '' ? document.getElementById('estadoDF').value : document.getElementById('estadoDFShipping').value,
-                    cp: document.getElementById('cpInputShipping').value == '' ? document.getElementById('cpInput').value : document.getElementById('cpInputShipping').value,
-                    noExt: document.getElementById('noExtInputShipping').value == '' ? document.getElementById('noExtInput').value : document.getElementById('noExtInputShipping').value,
-                    longitude: 0,
-                    latitude: 0,
-                }
+                    rfc: document.getElementById('rfcInput').value,
+                    razonSocial: document.getElementById('rzInput').value,
+                    emailFacturacion: document.getElementById('emailFac').value,
+                    domicilio: {
+                        id: 0,
+                        calle: document.getElementById('calleInput').value,
+                        noInt: document.getElementById('noIntInput').value,
+                        colonia: getColoniaSelected(),
+                        ciudad: document.getElementById('ciudadDF').value,
+                        estado: document.getElementById('estadoDF').value,
+                        cp: document.getElementById('cpInput').value,
+                        noExt: document.getElementById('noExtInput').value,
+                        longitude: 0,
+                        latitude: 0,
+                    }
+                },
+                datosE: {
+                    id: 0,
+                    nombre: "Direccion Entrega",
+                    rutaVenta: false,
+                    ruta: null,
+                    formaEnvio: null,
+                    domicilio: {
+                        id: 0,
+                        calle: document.getElementById('calleInputShipping').value == '' ? document.getElementById('calleInput').value : document.getElementById('calleInputShipping').value,
+                        noInt: document.getElementById('noIntInputShipping').value == '' ? document.getElementById('noIntInput').value : document.getElementById('noIntInputShipping').value,
+                        colonia: document.getElementById('colDFShipping').value == '' ? getColoniaSelected() : document.getElementById('colDFShipping').value,
+                        ciudad: document.getElementById('ciudadDFShipping').value == '' ? document.getElementById('ciudadDF').value : document.getElementById('ciudadDFShipping').value,
+                        estado: document.getElementById('estadoDFShipping').value == '' ? document.getElementById('estadoDF').value : document.getElementById('estadoDFShipping').value,
+                        cp: document.getElementById('cpInputShipping').value == '' ? document.getElementById('cpInput').value : document.getElementById('cpInputShipping').value,
+                        noExt: document.getElementById('noExtInputShipping').value == '' ? document.getElementById('noExtInput').value : document.getElementById('noExtInputShipping').value,
+                        longitude: 0,
+                        latitude: 0,
+                    }
+                },
+                contactos: contactosData.length > 0 ? contactosData : contactosNull,
+                metodoPago: "pd",
+                noCuentaBanco: null,
             },
-            contactos: contactosData,
-            metodoPago: "pd",
-            noCuentaBanco: null,
-        },
-        referencias: $('input[name="refSoli"]:checked').val() == 'datos' ? referenciasData : null,
-        // historyForm: {
-        //     id: null,
-        //     folioSol: null,
-        //     fecha: null,
-        //     tipo: null, 
-        //     idTipo: null, 
-        // }, 
-        archivos: archivosData,
-        factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
-        observations: null
-    };
-
-    console.log(json);
-    console.log(JSON.stringify(json));
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "MisSolicitudes/storeSolicitud",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': json,
-        'enctype': 'multipart/form-data',
-        'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
-            console.log(data);
-        },
-        error: function(error) {
-            console.log(error);
-        }
-    });
-
-    $('#solicitudModal').modal('hide');
-    $('#respuestaForm').modal('show');
-
-
+            referencias: $('input[name="refSoli"]:checked').val() == 'datos' ? referenciasData : null,
+            // historyForm: {
+            //     id: null,
+            //     folioSol: null,
+            //     fecha: null,
+            //     tipo: null, 
+            //     idTipo: null, 
+            // }, 
+            archivos: archivosData.length > 0 ? archivosData : archivosNull,
+            factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
+            observations: null
+        };
+    
+        console.log(json);
+        console.log(JSON.stringify(json));
+        return json;
 }
-
-function detalleSol(item) {
-    if (item != null) {
-        getInfoDetalleSol(item);
+    
+    function detalleSol(item) {
+        if (item != null) {
+            getInfoDetalleSol(item);
+        }
     }
-}
+    
+    function getInfoDetalleSol(item) {
+        let info = { Item: item };
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/getInfoSol",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': info,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                $.ajax({
+                    'headers': {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    'url': "/MisSolicitudes/getValidationRequest",
+                    'type': 'POST',
+                    'dataType': 'json',
+                    'data': info,
+                    'enctype': 'multipart/form-data',
+                    'timeout': 2 * 60 * 60 * 1000,
+                    success: function(data2) {
+                        $.ajax({
+                            'headers': {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            'url': "/MisSolicitudes/getValidacionContactos",
+                            'type': 'POST',
+                            'dataType': 'json',
+                            'data': info,
+                            'enctype': 'multipart/form-data',
+                            'timeout': 2 * 60 * 60 * 1000,
+                            success: function(valContac) {
+                                $.ajax({
+                                    'headers': {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    'url': "/MisSolicitudes/getFiles",
+                                    'type': 'POST',
+                                    'dataType': 'json',
+                                    'data': info,
+                                    'enctype': 'multipart/form-data',
+                                    'timeout': 2 * 60 * 60 * 1000,
+                                    success: function(filesList) {
+                                        showInfoModal(data, data2, valContac, filesList);
+                                    },
+                                    error: function(error) {
+                                        console.log(error + "Error");
+                                    }
+                                });
+                            },
+                            error: function(error) {
+                                console.log(error + "Error");
+                            }
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error + "Error");
+                    }
+                });
+            },
+            error: function(error) {
+                console.log(error + "Error");
+            }
+        });
+    }
 
-function getInfoDetalleSol(item) {
-    let info = { Item: item };
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "/MisSolicitudes/getInfoSol",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': info,
-        'enctype': 'multipart/form-data',
-        'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
-            $.ajax({
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                'url': "/MisSolicitudes/getValidationRequest",
-                'type': 'POST',
-                'dataType': 'json',
-                'data': info,
-                'enctype': 'multipart/form-data',
-                'timeout': 2 * 60 * 60 * 1000,
-                success: function(data2) {
-                    $.ajax({
-                        'headers': {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        'url': "/MisSolicitudes/getValidacionContactos",
-                        'type': 'POST',
-                        'dataType': 'json',
-                        'data': info,
-                        'enctype': 'multipart/form-data',
-                        'timeout': 2 * 60 * 60 * 1000,
-                        success: function(valContac) {
-                            $.ajax({
-                                'headers': {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                'url': "/MisSolicitudes/getFiles",
-                                'type': 'POST',
-                                'dataType': 'json',
-                                'data': info,
-                                'enctype': 'multipart/form-data',
-                                'timeout': 2 * 60 * 60 * 1000,
-                                success: function(filesList) {
-                                    showInfoModal(data, data2, valContac, filesList);
-                                },
-                                error: function(error) {
-                                    console.log(error + "Error");
-                                }
-                            });
-                        },
-                        error: function(error) {
-                            console.log(error + "Error");
-                        }
-                    });
-                },
-                error: function(error) {
-                    console.log(error + "Error");
-                }
-            });
-        },
-        error: function(error) {
-            console.log(error + "Error");
-        }
-    });
-}
+
 
 function getGiro(id) {
     businessLines;

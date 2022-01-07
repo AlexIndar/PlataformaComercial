@@ -174,7 +174,6 @@
       <!-- Brand Logo -->
       <a href="Intranet" class="brand-link">
         <img class="logo" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="200" style="padding:10px; margin-left: 10px;">
-
       </a>
 
       <!-- Sidebar -->
@@ -207,7 +206,11 @@
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
             <li class="nav-item">
+              @if($active == 'Dashboard')
               <a href="/Intranet" class="nav-link active">
+              @else
+              <a href="/Intranet" class="nav-link">
+              @endif
                 <i class="nav-icon fas fa-th"></i>
                 <p>
                   Dashboard
@@ -339,7 +342,11 @@
               </a>
             </li> -->
             <li class="nav-item">
+              @if($active == 'Intranet')
+              <a href="#" class="nav-link active">
+              @else
               <a href="#" class="nav-link">
+              @endif
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>
                   IndarNet

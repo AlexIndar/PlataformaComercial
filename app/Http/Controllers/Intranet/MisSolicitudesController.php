@@ -126,13 +126,27 @@ class MisSolicitudesController extends Controller
             "zona" => $json->zona,
             "cliente" => $json->cliente,
             "referencias" => $json->referencias,
-            // "historyForm" => $json->historyForm,
             "archivos" => $json->archivos,
             "factura" => $json->factura,
             "observations" => $json->observations,
         ]);
+        return $response;
+    }
 
-
+    public static function saveSolicitud($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Save', [
+            "folio" => $json->folio,
+            "fecha" => $json->fecha,
+            "tipo" => $json->tipo,
+            "credito" => $json->credito,
+            "zona" => $json->zona,
+            "cliente" => $json->cliente,
+            "referencias" => $json->referencias,
+            "archivos" => $json->archivos,
+            "factura" => $json->factura,
+            "observations" => $json->observations,
+        ]);
         return $response;
     }
 

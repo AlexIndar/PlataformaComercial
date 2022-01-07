@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main')
+@extends('layouts.intranet.main', ['active' => 'Intranet'])
 
 @section('title') IndarNet - Mis Solicitudes @endsection
 
@@ -533,7 +533,7 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            <div class="row" *ngIf="fifthFormGroup.controls.AntiquityCtrl.value<=1">
+                                            <div class="row" id="pagare" *ngIf="fifthFormGroup.controls.AntiquityCtrl.value<=1">
                                                 <div class="input-group input-group-sm mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">PAGARE</span>
@@ -811,15 +811,15 @@
                                             <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
 
                                         </div>
-                                        <div id="final" class="content d-flex justify-content-center align-items-center flex-column" role="tabpanel" aria-labelledby="information-part-trigger">
+                                        <div id="final" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <h3>SOLICITUD TERMINADA</h3>
+                                                    <button type="submit" class="btn btn-success" onclick="SendForm('{{$zone}}')">Enviar</button>
                                                 </div>
                                             </div>
                                             <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button> -->
-                                            <button type="submit" class="btn btn-success" onclick="SendForm('{{$zone}}')">Enviar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1194,6 +1194,16 @@
     </div>
 </div>
 
+ <!-- VALIDATE DATA MODAL -->
+ <div class="modal-background" id="validateModal">
+            <div class="modal-header bg-indarBlue">
+                <h4>Verifica los siguientes datos</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            </div>
+            <div class="modal-body">
+                <div id="bodyValidations"></div> <br>
+            </div>
+    </div> 
 
 
 @endsection
