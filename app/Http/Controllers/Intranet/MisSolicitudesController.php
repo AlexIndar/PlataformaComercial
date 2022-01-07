@@ -117,6 +117,7 @@ class MisSolicitudesController extends Controller
     }
 
     public static function storeSolicitud($token, $data){
+        
         $json = json_decode($data);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Create', [
             "folio" => $json->folio,

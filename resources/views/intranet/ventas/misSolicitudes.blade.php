@@ -950,6 +950,12 @@
                             </div>
                         </div>
                         <div class="row mb-3">
+                            <div class="col-md-4">Comprobante Domicilio</div>
+                            <div class="col-md-4" id="imgCDRButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="comDFERButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
                             <div class="col-12 text-center" id="alertDF">
                             </div>
                         </div>
@@ -1060,7 +1066,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="crediSection" style="display: none;">
                     <div class="col-md-12">
                         <h3 class="text-center">Credito</h3>
                         <hr class="hr-indarYellow">
@@ -1076,16 +1082,10 @@
                             <div class="col-md-4" id="typePButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">IFE/INE Aval</div>
-                            <div class="col-md-4" id="imgIfeA"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
-                            <div class="col-md-4" id="picIFEAButtons">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">IFE/INE Aval (Reverso)</div>
-                            <div class="col-md-4" id="imgIfeAR"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
-                            <div class="col-md-4" id="picIFERAButtons">
+                        <div class="row mb-3" id="pagareSection" style="display: none;">
+                            <div class="col-md-4">Pagare</div>
+                            <div class="col-md-4" id="imgPagA"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picPagAButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1100,19 +1100,44 @@
                             <div class="col-md-4" id="picIFERRButtons">
                             </div>
                         </div>
+                        <div class="row mb-3" id="ifeASection" style="display:  none;">
+                            <div class="col-md-4">IFE/INE Aval</div>
+                            <div class="col-md-4" id="imgIfeA"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picIFEAButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3" id="ifeARSection" style="display: none;">
+                            <div class="col-md-4">IFE/INE Aval (Reverso)</div>
+                            <div class="col-md-4" id="imgIfeAR"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picIFERAButtons">
+                            </div>
+                        </div>
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertCredit">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="aCSection" style="display: none;">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Acta Constitutiva</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="acRow" id="acRow">
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertAC">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="cRSection" style="display: none;">
                     <div class="col-md-12">
                         <h3 class="text-center">Carta Responsiva</h3>
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Carta Responsiva</div>
-                            <div class="col-md-4" id="imgCR"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4" id="imgCR"> <button class="btn btn-warning"><i class="far fa-eye"></i> No hay archivo</button></div>
                             <div class="col-md-4" id="cartRButtons">
                             </div>
                         </div>
@@ -1122,9 +1147,39 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" id="cartSection" style="display: none;">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Caratula</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="row mb-3">
+                            <div class="col-md-4">Caratula</div>
+                            <div class="col-md-4" id="imgCara"> <button class="btn btn-warning"><i class="far fa-eye"></i> No hay archivo</button></div>
+                            <div class="col-md-4" id="caraButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertRef">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="refSection" style="display: none;">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Referencias</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="acRow" id="refList">
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertRef">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning float-right" onclick="saveEdit()">Guardar</button>
             </div>
         </div>
     </div>
