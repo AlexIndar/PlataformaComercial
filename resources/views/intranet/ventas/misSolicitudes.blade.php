@@ -66,7 +66,7 @@
                                             @if($item->status == 7 || $item->status == 8)
                                             <div class="btn btn-primary btn-circle" ><i class="fas fa-paper-plane"></i></div>
                                             @endif
-                                            <div class="btn btn-info btn-circle" data-toggle="modal" data-target="#historialModal">
+                                            <div class="btn btn-info btn-circle" onclick='getTransactionHistory("{{$item->folio}}")'>
                                                 <i class="far fa-clock"></i>
                                             </div>
                                             @if($item->status == 1)
@@ -849,7 +849,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Solicitud <span id="folioInf">No. 18606</span></h3>
+                <h3 class="text-center title ml-auto">Detalle de Solicitud <span id="folioInf"></span></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -861,37 +861,43 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">RFC</div>
-                            <div class="col-md-4"><input type="text" name="rfcEdit" id="rfcEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="rfcEdit" id="rfcEdit" class="form-control" disabled></div>
+                            <div class="col-md-2" id="rfcButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Razon Social</div>
-                            <div class="col-md-4"><input type="text" name="rzEdit" id="rzEdit" disabled></div>
-                            <div class="col-md-4">
-                            <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="rzEdit" id="rzEdit" class="form-control" disabled></div>
+                            <div class="col-md-2" id="rzButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Nombre Comercial</div>
+                            <div class="col-md-6"><input type="text" name="nomComEdit" id="nomComEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="nomComButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Constancia de Situacion Fiscal</div>
-                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6" id="imgCSFButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-2" id="csfButtons1">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6" id="imgCSF2Button"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-2" id="csfButtons2">
+                                
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Fotografia de Solicitud</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6" id="imgFSButton"></div>
+                            <div class="col-md-2" id="picSolButtons">                                
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertDG">
                             </div>
                         </div>
                     </div>
@@ -903,51 +909,48 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Calle</div>
-                            <div class="col-md-4"><input type="text" name="calleFEdit" id="calleFEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="calleFEdit" id="calleFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="callFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exteriorl</div>
-                            <div class="col-md-4"><input type="text" name="noFEdit" id="noFEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="noFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Ciudad</div>
-                            <div class="col-md-4"><input type="text" name="cityFEdit" id="cityFEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="cityFEdit" id="cityFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="cityFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Estado</div>
-                            <div class="col-md-4"><input type="text" name="estadoFEdit" id="estadoFEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="estadoFEdit" id="estadoFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="estadoFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-4"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="coloniaFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">CP</div>
-                            <div class="col-md-4"><input type="text" name="cpFEdit" id="cpFEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="cpFEdit" id="cpFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="cpFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Comprobante Domicilio</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgCDButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="comDFEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertDF">
                             </div>
                         </div>
                     </div>
@@ -958,44 +961,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Calle</div>
-                            <div class="col-md-4"><input type="text" name="calleEEdit" id="calleEEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="calleEEdit" id="calleEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="calleEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-4"><input type="text" name="noEEdit" id="noEEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="noEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Ciudad</div>
-                            <div class="col-md-4"><input type="text" name="cityEEdit" id="cityEEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="cityEEdit" id="cityEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="cityEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Estado</div>
-                            <div class="col-md-4"><input type="text" name="estadoEEdit" id="estadoEEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="estadoEEdit" id="estadoEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="estadoEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-4"><input type="text" name="coloniaEEdit" id="coloniaEEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="coloniaEEdit" id="coloniaEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="coloniaEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">C.P.</div>
-                            <div class="col-md-4"><input type="text" name="cpEEdit" id="cpEEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="cpEEdit" id="cpEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="cpEEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertDE">
                             </div>
                         </div>
                     </div>
@@ -1007,44 +1008,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Metodo de pago</div>
-                            <div class="col-md-4"><input type="text" name="metPagoEdit" id="metPagoEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="metPagoEdit" id="metPagoEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="metPagoButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Giro</div>
-                            <div class="col-md-4"><input type="text" name="giroEdit" id="giroEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="giroEdit" id="giroEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="giroButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Antiguedad</div>
-                            <div class="col-md-4"><input type="text" name="antiguedadEdit" id="antiguedadEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-6"><input type="text" name="antiguedadEdit" id="antiguedadEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="antiguedadButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Frente</div>
-                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgFFN"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picNegFButtons">                                
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Izquierda</div>
-                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgFIN"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4" id="picNegIButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Derecha</div>
-                            <div class="col-md-4"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgFDN"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4" id="picNegDButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertNegocio">
                             </div>
                         </div>
                     </div>
@@ -1053,29 +1052,10 @@
                     <div class="col-md-12">
                         <h3 class="text-center">Datos de Contacto</h3>
                         <hr class="hr-indarYellow">
-                        <div class="row mb-3">
-                            <div class="col-md-6 text-bold">Tipo Contacto</div>
-                            <div class="col-md-6 text-bold"><input type="text" name="tipoCEdit" id="tipoCEdit" disabled></div>
+                        <div class="contactos" id="datContactos">                         
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4">Nombre</div>
-                            <div class="col-md-4"><input type="text" name="nombreCEdit" id="nombreCEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Telefono</div>
-                            <div class="col-md-4"><input type="text" name="phoneCEdit" id="phoneCEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Celular</div>
-                            <div class="col-md-4"><input type="text" name="CelCEdit" id="CelCEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-12 text-center" id="alertCont">
                             </div>
                         </div>
                     </div>
@@ -1086,44 +1066,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Tipo Local</div>
-                            <div class="col-md-4"><input type="text" name="typeLEdit" id="typeLEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4"><input type="text" name="typeLEdit" id="typeLEdit" disabled class="form-control"></div>
+                            <div class="col-md-4" id="typeLButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Tipo Persona</div>
-                            <div class="col-md-4"><input type="text" name="typePEdit" id="typePEdit" disabled></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4"><input type="text" name="typePEdit" id="typePEdit" disabled class="form-control"></div>
+                            <div class="col-md-4" id="typePButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">IFE/INE Aval</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgIfeA"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picIFEAButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">IFE/INE Aval (Reverso)</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgIfeAR"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picIFERAButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">IFE/INE Representante</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                            <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgIfeR"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picIFERButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">IFE/INE Representante (Reverso)</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                            <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgIfeRR"> <button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                            <div class="col-md-4" id="picIFERRButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertCredit">
                             </div>
                         </div>
                     </div>
@@ -1134,9 +1112,12 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Carta Responsiva</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>
+                            <div class="col-md-4" id="imgCR"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-md-4" id="cartRButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center" id="alertCR">
                             </div>
                         </div>
                     </div>
@@ -1149,11 +1130,12 @@
     </div>
 </div>
 
+<!-- MODAL HISTORIAL DE SOLICITUD-->
 <div class="modal fade" id="historialModal" tabindex="-1" aria-labelledby="historialModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Historial de transacciones de la solicitud 18606</h3>
+                <h3 class="text-center title ml-auto" id="titleHistory"></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -1165,254 +1147,12 @@
                             <div class="col-md-6">Fecha</div>
                             <div class="col-md-6">Tipo de Transacción</div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 text-bold">19/May/2021 05:24:05 pm</div>
-                            <div class="col-md-6">Solicitud Enviada</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 text-bold">20/May/2021 11:23:20 am</div>
-                            <div class="col-md-6">Validacion Guardada</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 text-bold">20/May/2021 11:23:25 am</div>
-                            <div class="col-md-6">Rechazada</div>
-                        </div>
+                        <div id="historyList"></div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="auxInfoModel" tabindex="-1" aria-labelledby="auxInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Solicitud No. 18606</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body text-indarBlue" id="modal4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3 class="text-center">Datos Generales</h3>
-                        <hr class="hr-indarYellow">
-                        <div class="row mb-3">
-                            <div class="col-md-4">RFC</div>
-                            <div class="col-md-4">HURA850521718</div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Razon Social</div>
-                            <div class="col-md-4">HURTADO ROMO ADAIR JOSUE</div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Constancia de Situacion Fiscal</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Fotografia de Solicitud</div>
-                            <div class="col-md-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-success btn-circle"><i class="fas fa-check"></i></button>
-                                <button class="btn btn-info btn-circle"><i class="fas fa-edit"></i></i></button>
-                                <button class="btn btn-danger btn-circle"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Begin Title -->
-                <div class="row">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4">
-                        <h4 class="text-muted ml-auto oswald text-center">Direccion Fiscal</h4>
-                        <hr class="hr_style">
-                    </div>
-                    <div class="col-md-4"></div>
-                </div>
-                <!-- End Title -->
-                <!-- Begin Direccion Fiscal -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Calle</th>
-                                    <td>rio juchipila</td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'Calle'], 1)" *ngIf="validateRequest.Calle == false"><i class="fas fa-pencil-alt"></i></div>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.Calle == null,
-                                                          'btn-success': validateRequest.Calle == true,
-                                                          'btn-danger': validateRequest.Calle == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.Calle == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.Calle == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.Calle == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">No. Exterior</th>
-                                    <td>1173</td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'NoExt'], 1)" *ngIf="validateRequest.NumeroExterior == false"><i class="fas fa-pencil-alt"></i></div>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.NumeroExterior == null,
-                                                          'btn-success': validateRequest.NumeroExterior == true,
-                                                          'btn-danger': validateRequest.NumeroExterior == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.NumeroExterior == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.NumeroExterior == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.NumeroExterior == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="requestDetail.Cliente.DatosF.Domicilio.NoInt != null && requestDetail.Cliente.DatosF.Domicilio.NoInt != ''">
-                                    <th scope="row">No. Interior</th>
-                                    <td>Guadalajara</td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'NoInt'], 1)" *ngIf="validateRequest.Ciudad == false"><i class="fas fa-pencil-alt"></i></div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Ciudad</th>
-                                    <td>Jalisco</td>
-                                    <td>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.Ciudad == null,
-                                                          'btn-success': validateRequest.Ciudad == true,
-                                                          'btn-danger': validateRequest.Ciudad == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.Ciudad == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.Ciudad == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.Ciudad == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Estado</th>
-                                    <td>Quinta Velarde</td>
-                                    <td>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.Estado == null,
-                                                          'btn-success': validateRequest.Estado == true,
-                                                          'btn-danger': validateRequest.Estado == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.Estado == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.Estado == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.Estado == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Colonia</th>
-                                    <td>44430</td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'Colonia'], 1)" *ngIf="validateRequest.Colonia == false"><i class="fas fa-pencil-alt"></i></div>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.Colonia == null,
-                                                          'btn-success': validateRequest.Colonia == true,
-                                                          'btn-danger': validateRequest.Colonia == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.Colonia == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.Colonia == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.Colonia == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">CP</th>
-                                    <td>44430</td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateField(updateFieldModal, ['Cliente', 'DatosF', 'Domicilio', 'CP'], 2)" *ngIf="validateRequest.CP == false"><i class="fas fa-pencil-alt"></i></div>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.CP == null,
-                                                          'btn-success': validateRequest.CP == true,
-                                                          'btn-danger': validateRequest.CP == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.CP == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.CP == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.CP == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="requestDetail.Tipo != false">
-                                    <th scope="row">Comprobante Domicilio</th>
-                                    <td>
-                                        <button mat-raised-button color="primary" (click)="openPic(2)">
-                                            <i class="fas fa-eye"></i> Ver Archivo
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateFile(2)" *ngIf="validateRequest.ComprobanteDomicilio == false"><i class="fas fa-pencil-alt"></i></div>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.ComprobanteDomicilio == null,
-                                                          'btn-success': validateRequest.ComprobanteDomicilio == true,
-                                                          'btn-danger': validateRequest.ComprobanteDomicilio == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.ComprobanteDomicilio == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.ComprobanteDomicilio == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.ComprobanteDomicilio == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="requestDetail.Tipo != false && existsFileComDomR()">
-                                    <th scope="row">Comprobante Domicilio (Reverso)</th>
-                                    <td>
-                                        <button mat-raised-button color="primary" (click)="openPic(21)">
-                                            <i class="fas fa-eye"></i> Ver Archivo
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <div class="btn btn-primary btn-circle" matTooltip="Editar" (click)="openUpdateFile(21)" *ngIf="validateRequest.ComprobanteDomicilio == false"><i class="fas fa-pencil-alt"></i></div>
-                                        <div class="btn btn-circle" [ngClass]="{
-                                                          'btn-secondary': validateRequest.ComprobanteDomicilio == null,
-                                                          'btn-success': validateRequest.ComprobanteDomicilio == true,
-                                                          'btn-danger': validateRequest.ComprobanteDomicilio == false
-                                                          }">
-                                            <i class="fas fa-minus" *ngIf="validateRequest.ComprobanteDomicilio == null"></i>
-                                            <i class="fas fa-check" *ngIf="validateRequest.ComprobanteDomicilio == true"></i>
-                                            <i class="fas fa-times" *ngIf="validateRequest.ComprobanteDomicilio == false"></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
@@ -1435,6 +1175,25 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL DE MOSTRAR IMAGEN-->
+<div class="modal" tabindex="-1" id="showIMGModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalR">Visualización de Archivo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="showIMGBody">             
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @endsection
