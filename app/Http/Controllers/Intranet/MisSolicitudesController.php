@@ -51,6 +51,26 @@ class MisSolicitudesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function getTransactionHistory($token, $folio){
+        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTransactionHistory?fol='.$folio);
+        return json_decode($history->body());
+    }
+
+    public static function getValidacionContactos($token, $folio){
+        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionContactos?id='.$folio);
+        return json_decode($history->body());
+    }
+
+    public static function getValidationRequest($token, $folio){
+        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionSolicitud?id='.$folio);
+        return json_decode($valSol->body());
+    }
+
+    public static function getFiles($token, $folio){
+        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getFiles?id='.$folio);
+        return json_decode($valSol->body());
+    }
+
     public static function getStatus($id)
     {
         switch ($id) {
