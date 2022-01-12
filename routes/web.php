@@ -433,6 +433,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return view('intranet.cyc.solicitudesPendientes');
                                 });
 
+                                Route::get('/EstadisticaSolicitudesClientes', function(){
+                                    return view('intranet.ventas.estadisticaCliente');
+                                });
 
     
 });
