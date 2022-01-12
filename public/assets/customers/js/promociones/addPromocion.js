@@ -212,7 +212,31 @@ $('document').ready(function(){
         opens: 'right',
         autoUpdateInput: true,
         locale: {
-            cancelLabel: 'Clear'
+            cancelLabel: 'Cancelar',
+            applyLabel: 'Aplicar',
+            daysOfWeek: [
+                'Do',
+                'Lu',
+                'Ma',
+                'Mi',
+                'Ju',
+                'Vi',
+                'Sa'
+            ],
+            monthNames: [
+                'Enero',
+                'Febrero',
+                'Marzo',
+                'Abril',
+                'Mayo',
+                'Junio',
+                'Julio',
+                'Agosto',
+                'Septiembre',
+                'Octubre',
+                'Noviembre',
+                'Diciembre'
+            ]
         }
       }, function(start, end, label) {
         startDate = start.format('YYYY-MM-DD');
@@ -367,7 +391,7 @@ function validarPromo(){
 
     if(save && document.getElementById('btn-guardar').innerHTML == 'Guardar'){
         var categorias = $('#categorias').chosen().val();
-        var giros = $('#giros').chosen().val();
+        // var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
         var proveedores = $('#proveedores').chosen().val();
         var marcas = $('#marcas').chosen().val();

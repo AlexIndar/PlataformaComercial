@@ -211,7 +211,7 @@
 
                 <!-- GIROS DE CLIENTES -------------------------------------------------------------------------------------------------------------------------->
 
-                <div class="row reglas-row text-center">
+                <div class="row reglas-row text-center d-none">
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Giros de clientes:</h4></div>
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
                     <div class="col-lg-6 col-md-4 col-sm-12 col-12">
@@ -222,23 +222,24 @@
                     </div>
                 </div>
 
-                <br><br>
-                <div class="row text-center">
+                <!-- <br><br> -->
+                <div class="row text-center d-none">
                     <div class="col-12">
                         <h5 id="mensaje-giros" class="mensaje-giros mensaje green"> <strong>Sólo estos giros de clientes</strong> participan en la promoción</h5>
                     </div>
                 </div>
 
-                <br>
-                <div class="col-12">
+                <!-- <br> -->
+                <div class="col-12 d-none">
                             <select id="giros" name="giros[]" class="form-control chosen" data-placeholder="Buscar" multiple>
                                 @foreach($giros as $giro)
                                     <option value="{{$giro}}">{{$giro}}</option>
                                 @endforeach
                             </select>
                 </div>
-                <br>
-                <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                <!-- <br> -->
+                <!-- <div class="col-12 d-flex flex-row justify-content-center align-items-center"> -->
+                <div class="col-12 d-none">
                     <button class="btn btn-blue" onclick="triggerInputFile('giros')"><i class="fas fa-file-upload"></i> Desde archivo</button>
                     <input type="file" name="girosFile" id="girosFile" accept=".csv, .xls, .xlsx" hidden>
                     <button class="btn btn-blue" onclick="downloadTemplate('Giros')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
@@ -246,7 +247,7 @@
                 </div>
                 
 
-                <br><br>
+                <!-- <br><br> -->
 
                 <!-- CLIENTES -------------------------------------------------------------------------------------------------------------------------->
 
