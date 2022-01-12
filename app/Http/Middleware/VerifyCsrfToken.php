@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/pedido/nuevo/getItems/all',
         '/pedido/nuevo/getItemByID',
+        'pedido/nuevo/SepararPedidosPromo',
         '/promociones/storePromo',
         '/MisSolicitudes/storeSolicitud',
         '/MisSolicitudes/saveSolicitud',

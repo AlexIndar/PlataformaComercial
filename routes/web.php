@@ -262,6 +262,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                            Route::post('pedido/nuevo/SepararPedidosPromo', function (Request $request){
+                                $token = TokenController::getToken();
+                                $json = $request->key;
+                                $data = SaleOrdersController::separarPedidosPromo($token, $json);
+                                return  $data;
+                            });
+
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
 
 

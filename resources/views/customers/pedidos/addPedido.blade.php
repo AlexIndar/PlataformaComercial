@@ -162,6 +162,18 @@
                         <th>Importe</th>
                         <th></th>
                     </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 
                     <!-- CUERPO DE TABLA -->
 
@@ -229,7 +241,7 @@
             <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button>
         </div>
 
-        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="modalInventario" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                                 <input type="text" id="empty" value="yes" hidden>

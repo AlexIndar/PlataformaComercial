@@ -126,4 +126,12 @@ class SaleOrdersController extends Controller
         return $info;
     } 
 
+    public static function separarPedidosPromo($token, $json){
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/SeparaPedidosPromo', [
+            "articulos" => json_decode($json)
+        ]);
+        $info = json_decode($response->body());
+        return $info;
+    }
+
 }

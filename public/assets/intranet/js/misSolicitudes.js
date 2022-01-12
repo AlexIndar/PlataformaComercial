@@ -783,10 +783,12 @@ function validateFullForm() {
     var comprobanteDomicilioBack = document.getElementById('inputGroupFile05').value;
 
     if (getTipoForm() != 0 && document.getElementById('creditoInput').value == '') {
+        alert('false');
         save = false;
     }
 
     if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || noIntFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
+        alert('false 2'); 
         save = false;
     }
 
