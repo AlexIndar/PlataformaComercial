@@ -1,19 +1,20 @@
+@extends('layouts.intranet.main', ['active' => 'Ventas'])
 
-@extends('layouts.customers.customer')
+@section('title') Ventas - Promociones @endsection
 
-@section('title') Indar - Promociones @endsection
-
-@section('assets')
+@section('styles') 
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/promociones.css')}}">
+<link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
 <script src="{{asset('assets/customers/js/promociones/promociones.js')}}"></script>
 @endsection
 
 @section('body')
 
+<div class="content-wrapper p-5">
     <div class="container">
         <br><br>
         <div>
-            <button class="btn-blue" onclick="addPromocion()"> <i class="fas fa-file"></i> Nueva</button>
+            <button class="bg-promo btn-primary" onclick="addPromocion()"> <i class="fas fa-file"></i> Nueva</button>
         </div>
         <br><br>
 
@@ -65,5 +66,5 @@
 
     </div>
     
-
+</div>
 @endsection

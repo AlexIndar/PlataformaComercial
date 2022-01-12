@@ -54,7 +54,7 @@
         <!-- summernote -->
         <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
 
-        <!-- DATEPICKER -->
+        <!-- DATEPICKER --> 
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -87,7 +87,7 @@
         <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a> 
 
         @if($token && $token != 'error')
-            <h5 onclick="navigate('logout', false)">Cerrar sesión</h5>
+            <h5 onclick="navigate('/logout', false)">Cerrar sesión</h5>
         @else
             <h5 onclick="activeModal(2)">Regístrate  &nbsp;&nbsp;|</h5>
             <h5 onclick="activeModal(1)">Iniciar sesión</h5>

@@ -20,7 +20,7 @@ use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
 use Maatwebsite\Excel\Facades\Excel;
 
-/*
+/* 
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -31,7 +31,10 @@ use Maatwebsite\Excel\Facades\Excel;
 |
 */
 Route::get('/', function () {  
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     if($token && $token != 'error'){
         $bestSellers = ItemsController::getBestSellers($token);
     }
@@ -60,7 +63,10 @@ Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::get('/main', function () {
     // VALIDAR LOGIN
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -68,7 +74,10 @@ Route::get('/main', function () {
 });
 
 Route::get('/faq', function () {
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -107,7 +116,10 @@ Route::get('/bladeInvoice', function () {
 
 
 Route::get('/about', function () {
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -120,7 +132,10 @@ Route::get('/about', function () {
 });
 
 Route::get('/centros', function () {
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -133,7 +148,10 @@ Route::get('/centros', function () {
 });
 
 Route::get('/postventa', function () {
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -146,7 +164,10 @@ Route::get('/postventa', function () {
 });
 
 Route::get('/contacto', function () {
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -159,7 +180,10 @@ Route::get('/contacto', function () {
 });
 
 Route::get('/descontinuados', function () {
-    $token = TokenController::getToken();
+    $token = TokenController::refreshToken();
+    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -183,7 +207,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // GENERAL ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
                                 Route::get('/catalogo', function () {
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
@@ -197,7 +224,10 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                                 Route::get('/detallesProducto/{id}',function ($id) {
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
@@ -210,7 +240,10 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -223,14 +256,20 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
                             
                             Route::get('pedidosAnteriores/getSaleOrders/{customer}', function ($customer){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $saleOrders = SaleOrdersController::getSaleOrders($token, $customer);
                                 
                                 return $saleOrders;
                             });
 
                             Route::get('pedido/nuevo/{entity}', function ($entity){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -241,21 +280,30 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::get('pedido/nuevo/getInfoHeatWeb/{customer}', function ($customer){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $entity = $customer;
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return  $data;
                             });
 
                             Route::post('pedido/nuevo/getItems/all', function (Request $request){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $entity = $request->entity;
                                 $data = SaleOrdersController::getItems($token, $entity);
                                 return  $data;
                             });
 
                             Route::post('pedido/nuevo/getItemByID', function (Request $request){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $id = (string)$request->id;
                                 $entity = (string)$request->entity;
                                 $data = SaleOrdersController::getItemByID($token, $id, $entity);
@@ -263,7 +311,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('pedido/nuevo/SepararPedidosPromo', function (Request $request){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $json = $request->key;
                                 $data = SaleOrdersController::separarPedidosPromo($token, $json);
                                 return  $data;
@@ -273,7 +324,10 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                             Route::get('/promociones', function (){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -286,7 +340,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::get('/promociones/nueva', function (){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -295,7 +352,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 } 
                                 $customersInfo = PromoController::getCustomersInfo($token);
-
                                 $categories = PromoController::getCategories($customersInfo);
                                 $giros = PromoController::getGiros($customersInfo);
                                 $customers = PromoController::getCustomers($customersInfo);
@@ -335,7 +391,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/promociones/storePromo', function (Request $request){
-                                $token = TokenController::getToken();
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $response = PromoController::storePromo($token, json_encode($request->all()));
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
@@ -356,9 +415,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 });
 
                                 Route::get('/MisSolicitudes', function(){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $user = MisSolicitudesController::getUser($token);
                                     $zone = MisSolicitudesController::getZone($token,$user->body());
+                                    if($zone->getStatusCode()== 400){
+                                        return redirect('/Intranet');
+                                    }
                                     $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
                                     function getStatus($id){
                                         return MisSolicitudesController::getStatus($id);
@@ -368,62 +433,89 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 });
 
                                 Route::post('/MisSolicitudes/storeSolicitud', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     // dd($request->all());
                                     $response = MisSolicitudesController::storeSolicitud($token, json_encode($request->all()));
                                     return $response;
                                 });
 
                                 Route::post('/MisSolicitudes/saveSolicitud', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     // dd($request->all());
                                     $response = MisSolicitudesController::saveSolicitud($token, json_encode($request->all()));
                                     return $response;
                                 });
 
                                 Route::get('/MisSolicitudes/getBusinessLines', function (){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $data = MisSolicitudesController::getBusinessLines($token);
                                     return  $data;
                                 });
 
                                 Route::post('/MisSolicitudes/getInfoSol', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $fol = $request->Item;
                                     $data = MisSolicitudesController::getInfoSol($token, $fol);
                                     return  $data;
                                 });
 
                                 Route::get('/MisSolicitudes/getCPData', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $cp = $request->cp;
                                     $data = MisSolicitudesController::getCPData($token, $cp);
                                     return  $data;
                                 });
 
                                 Route::post('/MisSolicitudes/getTransactionHistory', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $fol = $request->Item;
                                     $data = MisSolicitudesController::getTransactionHistory($token, $fol);
                                     return  $data;
                                 });
 
                                 Route::post('/MisSolicitudes/getValidacionContactos', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $fol = $request->Item;
                                     $data = MisSolicitudesController::getValidacionContactos($token, $fol);
                                     return  $data;
                                 });
 
                                 Route::post('/MisSolicitudes/getValidationRequest', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $fol = $request->Item;
                                     $data = MisSolicitudesController::getValidationRequest($token, $fol);
                                     return  $data;
                                 });
 
                                 Route::post('/MisSolicitudes/getFiles', function (Request $request){
-                                    $token = TokenController::getToken();
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
                                     $fol = $request->Item;
                                     $data = MisSolicitudesController::getFiles($token, $fol);
                                     return  $data;

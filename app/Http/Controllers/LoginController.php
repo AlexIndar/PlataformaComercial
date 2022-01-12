@@ -36,30 +36,30 @@ class LoginController extends Controller
                 $token = $response->body();
                 $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
                 if(json_decode($typeUser->body())->typeUser == "C"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900);
-                    setcookie("refresh", encrypt($token, "7Ind4r7Refresh"), time()+ 60 * 480);
-                    setcookie("level", "C", time()+ 60 * 480);
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900, '/');
+                    setcookie("refresh", $token, time()+900, '/');
+                    setcookie("level", "C", time()+900, '/');
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900);
-                    setcookie("refresh", encrypt($token, "7Ind4r7Refresh"), time()+ 60 * 480);
-                    setcookie("level", "E", time()+ 60 * 480);
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900, '/');
+                    setcookie("refresh", $token, time()+900, '/');
+                    setcookie("level", "E", time()+900, '/');
                     return redirect('/Intranet');
                 }
                 
                 
         } 
         else{
-            setcookie("laravel-token", "error", time()+900);
+            setcookie("laravel-token", "error", time()+900, '/');
             return redirect('/');
         }
     }
 
     public function logout(){
-        setcookie("laravel-token", "", time()-3600);
-        setcookie("level", "", time()- 60 * 480);
-        setcookie("refresh", "", time()- 60 * 480);
+        setcookie("laravel-token", "", time()-3600, '/');
+        setcookie("level", "", time()- 60 * 480, '/');
+        setcookie("refresh", "", time()- 60 * 480, '/');
         return redirect('/');
     }
 

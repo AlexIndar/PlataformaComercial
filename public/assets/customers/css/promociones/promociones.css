@@ -8,6 +8,26 @@
     border-radius: 5px;
 }
 
+.bg-blue{
+  background-color: #002868 !important;
+  color: white !important;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.bg-promo {
+  width: 100% !important;
+  text-align: center !important;
+  padding: 10px !important;
+  font-size: 18px !important;
+  border-radius: 5px !important;
+  border: none !important;
+}
+
 
 /* PROMOS */
 
@@ -65,7 +85,7 @@
     width: 3rem;
     border-radius: 1.5rem;
     color: white;
-    background: #939393;
+    background: #f14646 !important;
   }
   
   .btn-toggle.btn-sm:before,
@@ -147,7 +167,7 @@
     transition: left 0.25s;
   }
   .btn-toggle.btn-sm.active {
-    background-color: #5850EC;
+    background-color: #5850EC !important;
   }
   .btn-toggle.btn-sm.active > .handle {
     left: 2.6875rem;

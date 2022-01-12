@@ -387,6 +387,26 @@ function validarPromo(){
         document.getElementById('rangoFechas').classList.add('valid-input');
     }
 
+    if(startTime == ""){
+        save = false;
+        document.getElementById('startTime').classList.add('invalid-input');
+        bodyValidations += '<h5>Ingresa una hora de inicio</h5>';
+    }
+    else{
+        document.getElementById('startTime').classList.remove('invalid-input');
+        document.getElementById('startTime').classList.add('valid-input');
+    }
+
+    if(endTime == ""){
+        save = false;
+        document.getElementById('endTime').classList.add('invalid-input');
+        bodyValidations += '<h5>Ingresa una hora de fin</h5>';
+    }
+    else{
+        document.getElementById('endTime').classList.remove('invalid-input');
+        document.getElementById('endTime').classList.add('valid-input');
+    }
+
     
 
     if(save && document.getElementById('btn-guardar').innerHTML == 'Guardar'){

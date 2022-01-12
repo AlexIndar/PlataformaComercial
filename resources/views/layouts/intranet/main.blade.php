@@ -150,7 +150,7 @@
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <span class="dropdown-item dropdown-header">Mi Cuenta</span>
             <div class="dropdown-divider"></div>
-            <a href="logout" class="dropdown-item">
+            <a href="/logout" class="dropdown-item">
               Cerrar sesión <i class="fas fa-sign-out-alt mr-2 mt-1 float-right"></i>
             </a>
             <div class="dropdown-divider"></div>
@@ -181,7 +181,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
             <a href="#" class="d-block">Vendedor</a>
@@ -342,7 +342,7 @@
               </a>
             </li> -->
             <li class="nav-item">
-              @if($active == 'Intranet')
+              @if($active == 'Intranet') 
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -358,6 +358,28 @@
                   <a href="/MisSolicitudes" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Mis solicitudes</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              @if($active == 'Ventas') 
+              <a href="#" class="nav-link active">
+              @else
+              <a href="#" class="nav-link">
+              @endif
+                <i class="nav-icon fas fa-chart-pie"></i>
+                <p>
+                  Ventas
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="/promociones" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Promociones</p>
                   </a>
                 </li>
               </ul>
@@ -1020,6 +1042,21 @@
   <script src="{{asset('dist/js/pages/dashboard.js')}}"></script>
   <!-- select -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
+
+        <!-- DATEPICKER -->
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+        <!-- CHOSEN SELECT -->
+        <script type="text/javascript" src="{{asset('plugins/chosen/chosen.jquery.js')}}"></script>
+        <link rel="stylesheet" type="text/css" href="{{asset('plugins/chosen/chosen.min.css')}}" />
+
+        <!-- xlsx reader  -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.8/xlsx.full.min.js"></script>
 
   @yield('js')
 </body>

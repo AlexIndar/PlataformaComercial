@@ -1,3 +1,14 @@
+.bg-indar{
+    background-color: #002868 !important;
+    color: white !important;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 .bg-blue{
     background-color: #002868 !important;
     color: white !important;
@@ -9,15 +20,26 @@
     border-top-right-radius: 5px;
 }
 
+.bg-yellow {
+    background-color: #FFC61E !important;
+    color: #000 !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 10px !important;
+    font-size: 18px !important;
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+}
+
 .btn-blue{
-    background-color: #002868;
-    color: white;
-    margin-right: 5px;
+    background-color: #002868 !important;
+    color: white !important;
+    margin-right: 5px !important;
 
 }
 
 .btn-blue:hover{
-    background-color: #011941;
+    background-color: #011941 !important;
     color: white !important;
 }
 
@@ -37,12 +59,135 @@ h5{
 
 .input-promociones{
     width: 100% !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
     height: 30px;
     border-radius: 2px;
-    background-color: #F5F8F8;
+    background-color: white !important;
     position: relative;
     padding-left:12px ;
+}
+
+/* MODAL */
+
+.modal-background{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    z-index: -10000;
+    transition: opacity .4s ease;
+}
+
+.modal-indar{
+    width: 50%;
+    height: auto;
+    background-color: white;
+    border-radius: 50% !important;
+}
+
+.modal-header{
+    background-color: #002868 !important;
+    color: white !important;
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}
+
+.modal-body{
+    padding: 50px !important;
+    width: 100% !important;
+    background-color: white;
+    height: 100%;
+}
+
+.modal-inputs{
+    display: flex !important;
+    align-items: center;
+    flex-direction: row;
+}
+
+.modal-body label{
+    color: #555555;
+    font-size: 18px;
+    
+}
+
+.modal-body input{
+    width: 100%;
+    float: right;
+    height: 40px;
+    margin-left: auto;
+    background-color: #F5F8F8;
+    border-radius: 10px;
+    border:none;
+    text-indent: 10px;
+}
+
+.remember-login{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #002868 !important;
+    font-weight: 500;
+}
+
+.checkbox{
+    width: 15px !important;
+    height: 15px !important;
+    margin-right: 10px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+.login-buttons{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-btn{
+    width: 40%;
+    background-color: rgb(251, 198, 33) !important;
+    color: white !important;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    transition: all .5s ease;
+    cursor: pointer;
+}
+
+.login-btn:hover{
+    background-color: #002868 !important;
+}
+
+.login-buttons a{
+    text-decoration: none;
+    color: #878787;
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.hr-indar{
+    border: 2px solid #002868 !important;
+    border-color: #002868 !important;
+    background-color: #002868 !important;
+    color: #002868 !important;
+}
+
+
+.modal-body a{
+    text-decoration: none;
+    font-size: 18px;
+    color: #002868;
 }
 
 /* ENCABEZADO PROMOCIONES / DATOS GENERALES -------------------------------------------------------------------------------------------------------- */
@@ -169,11 +314,11 @@ h5{
 /* VALIDAR INPUTS */
 
 .invalid-input{
-    border: 1px solid red;
+    border: 1px solid red !important;
 }
 
 .valid-input{
-    border: 1px solid green;
+    border: 1px solid green !important;
 }
 
 #div-loading{

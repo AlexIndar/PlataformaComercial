@@ -1251,7 +1251,7 @@
 </div>
 
 <!-- VALIDATE DATA MODAL -->
-<div class="modal-background" id="validateModal">
+<!-- <div class="modal-background" id="validateModal">
     <div class="modal-header bg-indarBlue">
         <h4>Verifica los siguientes datos</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1259,7 +1259,7 @@
     <div class="modal-body">
         <div id="bodyValidations"></div> <br>
     </div>
-</div>
+</div> -->
 
 
 @endsection

@@ -33,17 +33,25 @@ class TokenController extends Controller
     }
 
     public static function refreshToken(){
-        $old = decrypt($_COOKIE["refresh"], "7Ind4r7Refresh");
-        $response = Http::withToken($old)->post('http://192.168.70.107:64444/login/RefreshToken');
-        $token = "";
-        if($response->getStatusCode() == 200){ 
-                $token = $response->body();
-                setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()-900);
-                setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900);
-                setcookie("refresh", "", time()- 60 * 480);
-                setcookie("refresh", encrypt($token, "7Ind4r7Refresh"), time()+ 60 * 480);
+        if(isset($_COOKIE["refresh"])){
+            $old = $_COOKIE["refresh"];
+            $response = Http::withToken($old)->post('http://192.168.70.107:64444/Login/RefreshToken');
+            if($response->getStatusCode() == 200){ 
+                    $token = $response->body();
+                    setcookie("laravel-token", "", time()-900, '/');
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900, '/');
+                    setcookie("refresh", "", time()- 60 * 480, '/');
+                    setcookie("refresh", $token, time()+900, '/');
+                    return $token;
+            }
+            else{
+                return "error";
+            }
         }
-        return $token;
+        else{
+            return "";
+        }
+        
     }
 
     public function encrypt($token, $key){

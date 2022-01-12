@@ -1,23 +1,24 @@
+@extends('layouts.intranet.main', ['active' => 'Ventas'])
 
-@extends('layouts.customers.customer')
+@section('title') Ventas - Agregar Promoción @endsection
 
-@section('title') Indar - Agregar Promoción @endsection
-
-@section('assets')
+@section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
+<link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
 <script src="{{asset('assets/customers/js/promociones/addPromocion.js')}}"></script>
+<script src="{{asset('assets/customers/js/index.js')}}"></script>
+
 @endsection
 
 @section('body')
 
+<div class="content-wrapper p-5">
     <div class="container">
-
         <br><br>
-
         <!---------------------------------------------------------------------------------- DATOS GENERALES / ENCABEZADO PROMOCIONES ------------------------------------------------->
 
         <div class="datos-generales">
-            <div class="title bg-blue">
+            <div class="title bg-indar">
                 <h4>Datos generales de la promoción</h4>
             </div>
             <br>
@@ -93,7 +94,7 @@
         <br><br>
 
         <div class="datos-generales">
-            <div class="title bg-blue">
+            <div class="title bg-indar">
                 <h4>Descuento promo <span id="percent-disccount">: 1</span>% sobre máximo del cliente</h4>
             </div>
             <br>
@@ -425,6 +426,7 @@
         <br><br><br><br>
     </div>
 
+</div>
 
     <!-- DELETE TAGS MODAL -->
     <div class="modal-background" id="deleteModal">
@@ -460,5 +462,7 @@
             </div>
         </div>
     </div> 
+
+
 
 @endsection
