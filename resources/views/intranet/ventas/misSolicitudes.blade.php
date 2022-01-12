@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{asset('plugins/bs-stepper/css/bs-stepper.min.css')}}">
 @endsection
 
-@section('body') 
+@section('body')
 
 <div class="content-wrapper">
     <section class="content-header">
@@ -64,7 +64,7 @@
                                             </div>
                                             @endif
                                             @if($item->status == 7 || $item->status == 8)
-                                            <div class="btn btn-primary btn-circle" ><i class="fas fa-paper-plane"></i></div>
+                                            <div class="btn btn-primary btn-circle"><i class="fas fa-paper-plane"></i></div>
                                             @endif
                                             <div class="btn btn-info btn-circle" onclick='getTransactionHistory("{{$item->folio}}")'>
                                                 <i class="far fa-clock"></i>
@@ -204,7 +204,7 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    
+
                                                     <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
@@ -223,6 +223,13 @@
                                             </div>
                                             <div class="row">
                                                 <div class="input-group input-group-sm">
+                                                    <div class="dropdown">
+                                                        <i class="fas fa-question"></i>
+                                                        <div class="dropdown-content">
+                                                            <img src="{{asset('assets/intranet/images/situacionFiscal.jpg')}}" alt="Situación Fiscal" width="147" height="225">
+                                                            <div class="desc">Situación Fiscal</div>
+                                                        </div>
+                                                    </div>
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">Constancia de Situacion Fiscal</span>
                                                     </div>
@@ -310,7 +317,7 @@
                                                     <input type="text" name="otraCol" id="otraCol" placeholder="Colonia" class="form-control">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row">
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
@@ -343,33 +350,33 @@
                                             </div>
 
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
-                                            <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control">
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="codPos" id="cpInputShipping" placeholder="C.P." class="form-control">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="colDF" id="colDFShipping" placeholder="Colonia" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="CiudadDF" id="ciudadDFShipping" placeholder="Ciudad" class="form-control">
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="estadoDF" id="estadoDFShipping" placeholder="Estado" class="form-control">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <input type="text" name="codPos" id="cpInputShipping" placeholder="C.P." class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="colDF" id="colDFShipping" placeholder="Colonia" class="form-control">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text" name="CiudadDF" id="ciudadDFShipping" placeholder="Ciudad" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-md-4">
-                                                    <input type="text" name="estadoDF" id="estadoDFShipping" placeholder="Estado" class="form-control">
-                                                </div>
-                                            </div>
                                             </div>
                                             <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button>
                                             <button class="btn btn-warning" onclick="stepper.next()">Siguiente</button> -->
@@ -672,13 +679,13 @@
                                             </div>
                                             <div class="row d-none" id="referenciasCarta">
                                                 <div class="input-group input-group-sm mb-3" [formGroupName]="i">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">Carta Responsiva</span>
-                                                        </div>
-                                                        <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="inputGroupFile18" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="CartaResponsiva">
-                                                            <label class="custom-file-label" for="inputGroupFile18" id="label-inputGroupFile18">Archivo ...</label>
-                                                        </div>
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Carta Responsiva</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="inputGroupFile18" (change)="onFileChange($event, ActaFileTitle[i])" accept="image/x-png,image/gif,image/jpeg" formControlName="CartaResponsiva">
+                                                        <label class="custom-file-label" for="inputGroupFile18" id="label-inputGroupFile18">Archivo ...</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <hr>
@@ -887,13 +894,13 @@
                             <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
                             <div class="col-md-6" id="imgCSF2Button"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
                             <div class="col-md-2" id="csfButtons2">
-                                
+
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Fotografia de Solicitud</div>
                             <div class="col-md-6" id="imgFSButton"></div>
-                            <div class="col-md-2" id="picSolButtons">                                
+                            <div class="col-md-2" id="picSolButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -948,13 +955,7 @@
                             <div class="col-md-4" id="imgCDButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
                             <div class="col-md-4" id="comDFEButtons">
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Comprobante Domicilio</div>
-                            <div class="col-md-4" id="imgCDRButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
-                            <div class="col-md-4" id="comDFERButtons">
-                            </div>
-                        </div>
+                        </div>                        
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertDF">
                             </div>
@@ -1033,7 +1034,7 @@
                         <div class="row mb-3">
                             <div class="col-md-4">Foto Frente</div>
                             <div class="col-md-4" id="imgFFN"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
-                            <div class="col-md-4" id="picNegFButtons">                                
+                            <div class="col-md-4" id="picNegFButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1058,7 +1059,7 @@
                     <div class="col-md-12">
                         <h3 class="text-center">Datos de Contacto</h3>
                         <hr class="hr-indarYellow">
-                        <div class="contactos" id="datContactos">                         
+                        <div class="contactos" id="datContactos">
                         </div>
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertCont">
@@ -1214,21 +1215,21 @@
 </div>
 
 <div class="modal" tabindex="-1" id="respuestaForm">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="titleModalR">Respuesta Formulario</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="infoModalR">Enviado correctamente</p>
-      </div>
-      <div class="modal-footer">
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalR">Respuesta Formulario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="infoModalR">Enviado correctamente</p>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- MODAL DE MOSTRAR IMAGEN-->
@@ -1241,7 +1242,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="showIMGBody">             
+            <div class="modal-body" id="showIMGBody">
             </div>
             <div class="modal-footer">
             </div>
@@ -1249,16 +1250,16 @@
     </div>
 </div>
 
- <!-- VALIDATE DATA MODAL -->
- <div class="modal-background" id="validateModal">
-            <div class="modal-header bg-indarBlue">
-                <h4>Verifica los siguientes datos</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            </div>
-            <div class="modal-body">
-                <div id="bodyValidations"></div> <br>
-            </div>
-    </div> 
+<!-- VALIDATE DATA MODAL -->
+<div class="modal-background" id="validateModal">
+    <div class="modal-header bg-indarBlue">
+        <h4>Verifica los siguientes datos</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    </div>
+    <div class="modal-body">
+        <div id="bodyValidations"></div> <br>
+    </div>
+</div>
 
 
 @endsection

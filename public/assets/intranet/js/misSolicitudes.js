@@ -788,7 +788,7 @@ function validateFullForm() {
     }
 
     if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || noIntFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
-        alert('false 2'); 
+        alert('false 2');
         save = false;
     }
 
@@ -1210,6 +1210,14 @@ function getButtons(dato, id) {
 }
 
 function showInfoModal(data, data2, valContac, filesList) {
+    document.getElementById("refSection").style.display = "none";
+    document.getElementById("crediSection").style.display = "none";
+    document.getElementById("pagareSection").style.display = "none";
+    document.getElementById("ifeASection").style.display = "none";
+    document.getElementById("ifeARSection").style.display = "none";
+    document.getElementById("aCSection").style.display = "none";
+    document.getElementById("cRSection").style.display = "none";
+    document.getElementById("cartSection").style.display = "none";
     if (data != null) {
         console.log(data);
         console.log(data2);
@@ -1344,21 +1352,21 @@ function showInfoModal(data, data2, valContac, filesList) {
             // }
 
             if (filesList != null) {
-                console.log("Entra");
                 var actaList = filesList.filter(r => r.type == 9 && r.subType != -1).length > 0 ? filesList.filter(r => r.type == 9 && r.subType != -1) : null;
+                /*console.log("Entra");
+                console.log(actaList);*/
                 if (actaList != null) {
                     document.getElementById("aCSection").style.display = "flex";
-
+                    var fileActa = "";
                     for (var i = 0; i < actaList.length; i++) {
-                        var btn = getButtonImg("imgAC" + i, actaList[i].fileStr);
-                        var fileActa = `<div class="row mb-3">
+                        fileActa = `<div class="row mb-3">
                             <div class="col-md-4">Acta Constitutiva ` + actaList[i].subType + `</div>
-                            <div class="col-md-4" id="imgAC` + i + `"> <button class="btn btn-warning"><i class="far fa-eye"></i> No hay archivo</button></div>
+                            <div class="col-md-4" id="imgAC` + i + `"> <button class="btn btn-warning" onclick="showIMG('` + actaList[i].fileStr + `')"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4" id="ActCButtons` + i + `">
                             </div>
                         </div>`;
-                        break;
                     }
+                    document.getElementById("acRow").innerHTML = fileActa;
                 }
 
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;
@@ -1370,14 +1378,16 @@ function showInfoModal(data, data2, valContac, filesList) {
 
             if (data.referencias.length > 0) {
                 document.getElementById("refSection").style.display = "flex";
+                var fileRef = "";
                 for (var i = 0; i < data.referencias.length; i++) {
-                    var fileActa = `<div class="row mb-3">
+                    fileRef += `<div class="row mb-3">
                             <div class="col-md-4">` + data.referencias[i].nombre + `(` + data.referencias[i].city + `)</div>
                             <div class="col-md-4">` + data.referencias[i].phone + `</div>
                             <div class="col-md-4" id="refCheck` + i + `">
                             </div>
                         </div>`;
                 }
+                document.getElementById("refList").innerHTML = fileRef;
                 getAlert("alertRef", data.observations.referencias);
             }
         }
