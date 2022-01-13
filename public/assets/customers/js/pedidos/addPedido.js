@@ -312,9 +312,22 @@ $(function() {
 });
 
 //ELIMINAR ARTICULO DE LA TABLA 
-function deleteRowPedido(t) {
+function deleteRowPedido(t, item, index) {
     var row = t.parentNode.parentNode;
     document.getElementById("tablaPedido").deleteRow(row.rowIndex);
+    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
+    pedido[index]['items'].splice(indexItem, 1);
+
+    alert(document.getElementById("tablaPedido").rows.length);
+
+    if(pedido[index]['items'].length == 0){
+        console.log(pedido);
+        pedido.splice(index, 1);
+    }
+
+    createTablePedido();
+   
+
 }
 
 //ELIMINAR FILA DE LA TABLA CARGAR POR CODIGO
@@ -394,7 +407,7 @@ function prepareJsonSeparaPedidos(){
 }
 
 function separarPedidosPromo(json){
-    console.log(json);
+    // console.log(json);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -420,8 +433,8 @@ function separarPedidosPromo(json){
 }
 
 function separarFilas(json){
-    // alert('separar filas');
-    console.log(json);
+    alert('Separando pedido');
+    // console.log(json);
     for(var x=0; x<json.length; x++){
         var art = items.find(o => o.itemid === json[x]['itemID']);
         var item = {
@@ -499,19 +512,19 @@ function getItemById(item) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            console.log(data);
+            // console.log(data);
             cantItemsCargados ++;
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
+                // console.log(data);
                 var itemSeparar = {
                     itemID: data[0]['itemid'],
                     codCustomer: entity,
-                    quantity: cantidad,
+                    quantity: validarMultiplo(data[0]['multiploVenta'], cantidad),
                     punitario: data[0]['price'],
-                    multiplo: data[0]['multiploVenta'],
+                    multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
                     regalo: 0,
                     existencia: art['disponible']
-        
                 };
     
                 // alert('CORRIENDO SEPARAR PEDIDO\nITEMS POR CARGAR: '+cantItemsPorCargar+"\nITEMS CARGADOS: "+cantItemsCargados+"\nCODIGO ARTICULO: "+item['articulo']);
@@ -530,7 +543,7 @@ function getItemById(item) {
             if(data.length==0 && cantItemsCargados == cantItemsPorCargar){
                     var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
                     newJson = newJson + ']';
-                    console.log(newJson);
+                    // console.log(newJson);
                     separarPedidosPromo(newJson);
                     cantItemsCargados = 0;
                     cantItemsPorCargar = 0;
@@ -639,7 +652,15 @@ function cargarInventario() {
 }
 
 function createTablePedido(){
-    console.log(pedido);
+    // console.log(pedido);
+    var table = document.getElementById('tablaPedido');
+    var filas = table.rows.length - 1;
+
+    while(filas > 1){
+        table.deleteRow(filas);
+        filas --;
+    }
+
     var fila = 1;
     for(var x = 0; x < pedido.length; x++){
         var subtotal = 0;
@@ -651,13 +672,13 @@ function createTablePedido(){
         }
         addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], subtotal);
         for(var y = 0; y < pedido[x]['items'].length; y++){
-            addRowPedido(pedido[x]['items'][y], fila);
+            addRowPedido(pedido[x]['items'][y], fila, x);
             fila ++;
         }
     }
 }
 
-function addRowPedido(item, fila) {
+function addRowPedido(item, fila, indexPedido) {
     var table = document.getElementById('tablaPedido');
     var row = table.insertRow(table.rows.length);
 
@@ -694,7 +715,7 @@ function addRowPedido(item, fila) {
 
     cell1.innerHTML = "<h4>" + fila + "</h4>";
     cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'>Unidad: <span id='unidad'>" + item["unidad"] + "</span> </div></div>";
-    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+")'>+</button></div></div>";
+    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO")
         cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
@@ -704,8 +725,8 @@ function addRowPedido(item, fila) {
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>" + item["promo"] + "%</h5>";
     cell7.innerHTML = "<h5 id='precioUnitario'>" + unitario + "</h5>";
-    cell8.innerHTML = "<h5 id='importe'>" + imp + "</h5>";
-    cell9.innerHTML = "<i class='fas fa-minus-square fa-2x fa-delete' onclick='deleteRowPedido(this)'></i>";
+    cell8.innerHTML = "<h5 id='importe-"+item["itemid"]+"-"+indexPedido+"'>" + imp + "</h5>";
+    cell9.innerHTML = "<i class='fas fa-minus-square fa-2x fa-delete' onclick='deleteRowPedido(this, \"" + item['itemid'] + "\", "+indexPedido+")'></i>";
 
     cell1.classList.add('td-center');
     cell2.classList.add('td-center');
@@ -763,7 +784,7 @@ function addHeaderPedido(descuento, plazo, tipo, subtotal){
 function validarMultiplo(multiplo, cant) {
     var done = false;
     var cantidad = 0;
-    var tempMult = multiplo;
+    var tempMult = multiplo != null ? multiplo : 1;
     while (!done) {
         if (cant % tempMult == 0) {
             cantidad = cant;
@@ -781,12 +802,41 @@ function validarMultiplo(multiplo, cant) {
     return cantidad;
 }
 
-function addItemCant(item, cant) {
-    document.getElementById('cant-'+item).stepUp(cant);
+function addItemCant(item, cant, index) {
+    document.getElementById('cant-'+item+"-"+index).stepUp(cant);
+    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
+    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
+    var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
+    var price = pedido[index]['items'][indexItem]['price'];
+    var promo = pedido[index]['items'][indexItem]['promo'];
+    var pUnitario = ((100 - parseFloat(promo)) * parseFloat(price) / 100).toFixed(2);
+    var importe = ((cantidad + multiploVenta) * pUnitario).toFixed(2);
+    var imp = (parseFloat(importe)).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
+
+    createTablePedido();
 }
 
-function decreaseItemCant(item, cant) {
-    document.getElementById('cant-'+item).stepDown(cant);
+function decreaseItemCant(item, cant, index) {
+    document.getElementById('cant-'+item+"-"+index).stepDown(cant);
+    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
+    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
+    var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
+    var price = pedido[index]['items'][indexItem]['price'];
+    var promo = pedido[index]['items'][indexItem]['promo'];
+    var pUnitario = ((100 - parseFloat(promo)) * parseFloat(price) / 100).toFixed(2);
+    var importe = ((cantidad - multiploVenta) * pUnitario).toFixed(2);
+    var imp = (parseFloat(importe)).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    if(cantidad - multiploVenta >= multiploVenta){
+        pedido[index]['items'][indexItem]['cantidad'] = cantidad - multiploVenta;
+        createTablePedido();
+    }            
 }
 
 
