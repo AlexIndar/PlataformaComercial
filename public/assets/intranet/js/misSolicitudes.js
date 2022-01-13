@@ -326,6 +326,10 @@ $(document).ready(function() {
         }
     });
 
+    $('#respuestaForm').on('hidden.bs.modal', function () {
+            location.reload();
+      })
+
 })
 
 
@@ -813,7 +817,6 @@ function validateSaveForm() {
 function SendForm(zone) {
     if (validateFullForm()) {
         var json = createJsonSolicitud(zone);
-        // alert('See json send');
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -834,10 +837,9 @@ function SendForm(zone) {
 
         $('#solicitudModal').modal('hide');
         document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
-        $('#respuestaForm').modal('show');
+        $('#respuestaForm').modal('show');  
     } else if (validateSaveForm()) {
         var json = createJsonSolicitud(zone);
-        // alert('See json save');
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

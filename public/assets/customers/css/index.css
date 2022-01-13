@@ -1211,6 +1211,21 @@ button{
 
 }
 
+@media(max-width:930px){
+    .modal-indar{
+        width: 90%;
+        height: auto;
+        background-color: white;
+        border-radius: 50% !important;
+    }
+
+    .login-btn{
+        width: 80%;
+    }
+    
+}
+
+
 
 @media (max-width: 767px) {
     .input-discontinued{

@@ -420,7 +420,7 @@ function separarPedidosPromo(json){
 }
 
 function separarFilas(json){
-    alert('separar filas');
+    // alert('separar filas');
     console.log(json);
     for(var x=0; x<json.length; x++){
         var art = items.find(o => o.itemid === json[x]['itemID']);
@@ -437,7 +437,7 @@ function separarFilas(json){
             cantidad: json[x]['quantity'],
             price: json[x]['punitario'],
             unidad: art['unidad'],
-            promo: json[x]['descuento'],
+            promo: art['promo'],
             marca: json[x]['marca'],
             plazo: json[x]['plazo'],
             regalo: json[x]['regalo'],
@@ -499,27 +499,40 @@ function getItemById(item) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            var itemSeparar = {
-                itemID: data[0]['itemid'],
-                codCustomer: entity,
-                quantity: cantidad,
-                punitario: data[0]['price'],
-                multiplo: data[0]['multiploVenta'],
-                regalo: 0
-            };
-
-            // alert('CORRIENDO SEPARAR PEDIDO\nITEMS POR CARGAR: '+cantItemsPorCargar+"\nITEMS CARGADOS: "+cantItemsCargados+"\nCODIGO ARTICULO: "+item['articulo']);
-            
+            console.log(data);
             cantItemsCargados ++;
-            if(cantItemsCargados == cantItemsPorCargar){
-                jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
-                separarPedidosPromo(jsonItemsSeparar);
-                cantItemsCargados = 0;
-                cantItemsPorCargar = 0;
+            if(data.length>0){
+                var itemSeparar = {
+                    itemID: data[0]['itemid'],
+                    codCustomer: entity,
+                    quantity: cantidad,
+                    punitario: data[0]['price'],
+                    multiplo: data[0]['multiploVenta'],
+                    regalo: 0
+                };
+    
+                // alert('CORRIENDO SEPARAR PEDIDO\nITEMS POR CARGAR: '+cantItemsPorCargar+"\nITEMS CARGADOS: "+cantItemsCargados+"\nCODIGO ARTICULO: "+item['articulo']);
+                
+                if(cantItemsCargados == cantItemsPorCargar){
+                    jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
+                    separarPedidosPromo(jsonItemsSeparar);
+                    cantItemsCargados = 0;
+                    cantItemsPorCargar = 0;
+                }
+                else{
+                    jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+                }
             }
-            else{
-                jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+
+            if(data.length==0 && cantItemsCargados == cantItemsPorCargar){
+                    var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+                    newJson = newJson + ']';
+                    console.log(newJson);
+                    separarPedidosPromo(newJson);
+                    cantItemsCargados = 0;
+                    cantItemsPorCargar = 0;
             }
+            
             // addRowPedido(item, cantidad);
         },
         error: function(error) {}

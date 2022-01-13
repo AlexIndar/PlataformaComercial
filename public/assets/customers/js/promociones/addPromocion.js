@@ -411,7 +411,7 @@ function validarPromo(){
 
     if(save && document.getElementById('btn-guardar').innerHTML == 'Guardar'){
         var categorias = $('#categorias').chosen().val();
-        // var giros = $('#giros').chosen().val();
+        var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
         var proveedores = $('#proveedores').chosen().val();
         var marcas = $('#marcas').chosen().val();
