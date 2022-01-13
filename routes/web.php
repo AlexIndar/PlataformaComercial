@@ -280,7 +280,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::get('pedido/nuevo/getInfoHeatWeb/{customer}', function ($customer){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -300,7 +300,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('pedido/nuevo/getItemByID', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -311,7 +311,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('pedido/nuevo/SepararPedidosPromo', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }

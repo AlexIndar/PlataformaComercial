@@ -22,7 +22,7 @@ class TokenController extends Controller
     }
 
     public static function getToken(){
-        $token = "";
+        $token = "error";
         if(isset($_COOKIE["laravel-token"]) && $_COOKIE["laravel-token"] != 'error'){ 
             $token = decrypt($_COOKIE["laravel-token"], "7Ind4r7");
         }
