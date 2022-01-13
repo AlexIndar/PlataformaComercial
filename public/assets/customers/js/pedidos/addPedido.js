@@ -502,13 +502,16 @@ function getItemById(item) {
             console.log(data);
             cantItemsCargados ++;
             if(data.length>0){
+                var art = items.find(o => o.itemid === data[0]['itemid']);
                 var itemSeparar = {
                     itemID: data[0]['itemid'],
                     codCustomer: entity,
                     quantity: cantidad,
                     punitario: data[0]['price'],
                     multiplo: data[0]['multiploVenta'],
-                    regalo: 0
+                    regalo: 0,
+                    existencia: art['disponible']
+        
                 };
     
                 // alert('CORRIENDO SEPARAR PEDIDO\nITEMS POR CARGAR: '+cantItemsPorCargar+"\nITEMS CARGADOS: "+cantItemsCargados+"\nCODIGO ARTICULO: "+item['articulo']);
