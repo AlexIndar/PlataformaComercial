@@ -18,6 +18,7 @@ use App\Exports\TemplateClientes;
 use App\Exports\TemplateMarcas;
 use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
+use App\Exports\TemplatePedido;
 use Maatwebsite\Excel\Facades\Excel;
 
 /* 
@@ -318,6 +319,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $json = $request->key;
                                 $data = SaleOrdersController::separarPedidosPromo($token, $json);
                                 return  $data;
+                            });
+
+                            Route::get('/downloadTemplatePedido', function (){
+                                return Excel::download(new TemplatePedido,'Pedido.xlsx');
                             });
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------

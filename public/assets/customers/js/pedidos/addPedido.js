@@ -875,3 +875,7 @@ function triggerInputFile() {
 function pedidosAnteriores() {
     window.open("/pedidosAnteriores/" + document.getElementById('entity').value, '_blank');
 }
+
+function downloadPlantillaPedido(){
+    window.location.href = '/downloadTemplatePedido';
+}
