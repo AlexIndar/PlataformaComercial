@@ -876,6 +876,10 @@ function addFacturaData() {
     cell2.innerHTML = fact2;
     cell3.innerHTML = importFact;
     cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRow(this)'></i>";
+
+    document.getElementById('label-inputGroupFile16').innerHTML = "";
+    document.getElementById('label-inputGroupFile17').innerHTML = "";
+    document.getElementById('importFactura').value = "";
 }
 
 function deleteFactRow(t) {
@@ -2122,11 +2126,12 @@ function continueModal(facturas, archivos, data) {
     // document.getElementById('inputGroupFile14').value = "";
     // document.getElementById('label-inputGroupFile14').innerHTML = "Seleccionar Archivo...";
     docsActa = [];
-    clearTableDatos("actaConsData");
+    // clearTableDatos("actaConsData");
 
     referenciasSol = data.referencias;
+    addRefDataR(data.referencias);
 
-    addFacturaData(facturas);
+    addFacturaDataR(facturas);
     facturasSol = facturas;
 
 }
@@ -2177,7 +2182,7 @@ function addContactDataCon(conCon) {
 }
 
 
-function addRefData(dataRef) {
+function addRefDataR(dataRef) {
 
     if (dataRef != null) {
         for (var i = 0; i < dataRef.length; i++) {
@@ -2208,7 +2213,7 @@ function addRefData(dataRef) {
 }
 
 
-function addFacturaData(dataFact) {
+function addFacturaDataR(dataFact) {
 
     if (dataFact != null) {
         for (var i = 0; i < dataFact.length; i++) {
