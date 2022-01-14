@@ -19,9 +19,9 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="defaultCheck1" onclick="refresh()">
-                        <label class="form-check-label" for="defaultCheck1">Ver solo pendientes</label>
-                        <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#solicitudModal">
+                        <!-- <input class="form-check-input" type="checkbox" id="defaultCheck1" onclick="refresh()">
+                        <label class="form-check-label" for="defaultCheck1">Ver solo pendientes</label> -->
+                        <button type="button" class="btn btn-success float-right" onclick="startForm()">
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>
@@ -64,13 +64,13 @@
                                             </div>
                                             @endif
                                             @if($item->status == 7 || $item->status == 8)
-                                            <div class="btn btn-primary btn-circle"><i class="fas fa-paper-plane"></i></div>
+                                            <div class="btn btn-primary btn-circle" onclick='reSendFol("{{$item->folio}}")'><i class="fas fa-paper-plane"></i></div>
                                             @endif
                                             <div class="btn btn-info btn-circle" onclick='getTransactionHistory("{{$item->folio}}")'>
                                                 <i class="far fa-clock"></i>
                                             </div>
                                             @if($item->status == 1)
-                                            <div class="btn btn-warning btn-circle"><i class="fas fa-pencil-alt"></i></div>
+                                            <div class="btn btn-warning btn-circle" onclick='continueForm("{{$item->folio}}")'><i class="fas fa-pencil-alt"></i></div>
                                             @endif
 
                                             <!--<div class="btn btn-danger btn-circle"  *ngIf="isManager() && element.Status == 10"><i class="fas fa-times"></i></div>-->
@@ -133,7 +133,7 @@
                                     <div class="col-md-4 text-center">
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-indarYellow">$</span>
-                                            <input type="text" class="form-control" id="creditoInput">
+                                            <input type="text" class="form-control" id="creditoInput" style="text-align:right;">
                                             <span class="input-group-text bg-indarYellow">.00</span>
                                         </div>
                                     </div>
@@ -205,19 +205,19 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
 
-                                                    <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control">
+                                                    <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control" onfocusout="validaRFC()">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control">
+                                                    <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control" onfocusout="validaRZI()">
                                                     <span>Apellido Paterno - Materno - Nombres(s)</span>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control">
+                                                    <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control" onfocusout="validaNameC()">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control">
+                                                    <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control" onfocusout="validaProsP()">
                                                     <span>Capturar número de prospecto de la página web</span>
                                                 </div>
                                             </div>
@@ -274,21 +274,21 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control">
+                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control" onfocusout="validaCalle()">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control">
+                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control">
+                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control">
+                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control" onfocusout="validarCP()" maxlength="5">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control">
+                                                    <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()">
                                                     <span>Correo donde se enviará la factura</span>
                                                 </div>
                                                 <div class="col-md-4">
@@ -352,18 +352,18 @@
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
                                                 <div class="row mb-3">
                                                     <div class="col-md-4">
-                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control">
+                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control" onfocusout="validaCalleS()">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control">
+                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control">
+                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-4">
-                                                        <input type="text" name="codPos" id="cpInputShipping" placeholder="C.P." class="form-control">
+                                                        <input type="text" name="codPos" id="cpInputShipping" placeholder="C.P." class="form-control" onfocusout="validarCPS()" maxlength="5">
                                                     </div>
                                                     <div class="col-md-4">
                                                         <input type="text" name="colDF" id="colDFShipping" placeholder="Colonia" class="form-control">
@@ -399,7 +399,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control">
+                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control" onfocusout="validaAnti()">
                                                 </div>
                                             </div>
                                             <div class="row mb-3 d-none" id="rowOtroGiro">
@@ -527,16 +527,16 @@
                                                     </div>
                                                     <div class="row">
                                                         <form>
-                                                            <label class="mr-3"><input type="radio" name="localSoli" value="propio" onclick="changeTipoLocal('Propio')">Propio</label>
-                                                            <label class="mr-3"><input type="radio" name="localSoli" value="rentado" onclick="changeTipoLocal('Rentado')">Rentado</label>
+                                                            <label class="mr-3"><input type="radio" name="localSoli" value="propio" onclick="changeTipoLocal('Propio')" id="typePropio">Propio</label>
+                                                            <label class="mr-3"><input type="radio" name="localSoli" value="rentado" onclick="changeTipoLocal('Rentado')" id="typeRentado">Rentado</label>
                                                         </form>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p>Tipo de persona</p>
                                                     <form>
-                                                        <label class="mr-3"><input type="radio" name="typePeople" value="fisica" onclick="changeTipoPersona('Fisica')">Fisica</label>
-                                                        <label class="mr-3"><input type="radio" name="typePeople" value="moral" onclick="changeTipoPersona('Moral')">Moral</label>
+                                                        <label class="mr-3"><input type="radio" name="typePeople" value="fisica" onclick="changeTipoPersona('Fisica')" id="typeFisica">Fisica</label>
+                                                        <label class="mr-3"><input type="radio" name="typePeople" value="moral" onclick="changeTipoPersona('Moral')" id="typeMoral">Moral</label>
                                                     </form>
                                                 </div>
                                             </div>
@@ -613,14 +613,21 @@
                                                         </div>
                                                         <select class="custom-select" id="inputGroupSelect14">
                                                             <option value="-1" selected>SELECCIONAR</option>
-                                                            <option value="1">RAZON SOCIAL</option>
                                                             <option value="2">FECHA DE CONSTITUCION</option>
+                                                            <option value="1">RAZON SOCIAL</option>
                                                             <option value="3">GIRO DE LA EMPRESA</option>
                                                             <option value="4">DURACIÓN DE LA SOCIEDAD</option>
                                                             <option value="5">ACCIONISTAS</option>
                                                         </select>
                                                     </div>
                                                     <div class="input-group input-group-sm mb-3" [formGroupName]="i">
+                                                        <div class="dropdown">
+                                                            <i class="fas fa-question"></i>
+                                                            <div class="dropdown-content">
+                                                                <img src="{{asset('assets/intranet/images/fechaConstitucion.jpg')}}" alt="Acta constitutiva" width="147" height="225">
+                                                                <div class="desc">Acta constitutiva</div>
+                                                            </div>
+                                                        </div>
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">ACTA CONSTITUTIVA</span>
                                                         </div>
@@ -777,7 +784,7 @@
                                                     <div class="input-group mb-3">
                                                         <span>Importe</span>
                                                         <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control" id="importFactura">
+                                                        <input type="text" class="form-control" id="importFactura" style="text-align:right;">
                                                         <span class="input-group-text">.00</span>
                                                     </div>
                                                     <div class="input-group mb-3">
@@ -824,6 +831,7 @@
                                                 <div class="col-md-12 text-center">
                                                     <h3>SOLICITUD TERMINADA</h3>
                                                     <button type="submit" class="btn btn-success" onclick="SendForm('{{$zone}}')">Enviar</button>
+                                                    <button type="submit" class="btn btn-warning" onclick="saveForm('{{$zone}}')">Guardar</button>
                                                 </div>
                                             </div>
                                             <!-- <button class="btn btn-warning" onclick="stepper.previous()">Anterior</button> -->
@@ -955,7 +963,7 @@
                             <div class="col-md-4" id="imgCDButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
                             <div class="col-md-4" id="comDFEButtons">
                             </div>
-                        </div>                        
+                        </div>
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertDF">
                             </div>
@@ -1243,6 +1251,24 @@
                 </button>
             </div>
             <div class="modal-body" id="showIMGBody">
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div class="modal" tabindex="-1" id="confirModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalConfirm">¿Es seguro?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyModalConfirm" style="text-align: center;">
             </div>
             <div class="modal-footer">
             </div>

@@ -19,7 +19,8 @@
 .text-indarBlue {
     color: #002868;
 }
-.bs-stepper-header{
+
+.bs-stepper-header {
     max-width: 100% !important;
     overflow-x: auto !important;
 }
@@ -57,6 +58,9 @@
     width: 100%;
 }
 
+.warningText {
+    border: 1px solid red !important;
+}
 
 
 /*SHOW INFO HELP*/

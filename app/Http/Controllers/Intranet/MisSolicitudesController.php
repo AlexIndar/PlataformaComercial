@@ -56,6 +56,11 @@ class MisSolicitudesController extends Controller
         return json_decode($history->body());
     }
 
+    public static function reSendForm($token, $folio){
+        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/resendRequest?fol='.$folio);
+        return json_decode($history->body());
+    }
+
     public static function getValidacionContactos($token, $folio){
         $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionContactos?id='.$folio);
         return json_decode($history->body());
@@ -71,6 +76,11 @@ class MisSolicitudesController extends Controller
         return json_decode($valSol->body());
     }
 
+    public static function getBills($token, $folio){
+        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getBills?id='.$folio);
+        return json_decode($valSol->body());
+    }
+    
     public static function getStatus($id)
     {
         switch ($id) {

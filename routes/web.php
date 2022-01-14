@@ -521,6 +521,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return  $data;
                                 });
 
+                                Route::post('/MisSolicitudes/getBills', function (Request $request){
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::getBills($token, $fol);
+                                    return  $data;
+                                });
+                                
+                                Route::post('/MisSolicitudes/reSendForm', function (Request $request){
+                                    $token = TokenController::refreshToken();
+                                    if($token == 'error'){
+                                        return redirect('/logout');
+                                    }
+                                    $fol = $request->Item;
+                                    $data = MisSolicitudesController::reSendForm($token, $fol);
+                                    return  $data;
+                                });
+
                                 Route::get('/SolicitudesPendientes', function(){
                                     return view('intranet.cyc.solicitudesPendientes');
                                 });
