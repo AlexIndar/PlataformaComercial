@@ -318,7 +318,7 @@ function deleteRowPedido(t, item, index) {
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     pedido[index]['items'].splice(indexItem, 1);
 
-    alert(document.getElementById("tablaPedido").rows.length);
+    // alert(document.getElementById("tablaPedido").rows.length);
 
     if(pedido[index]['items'].length == 0){
         console.log(pedido);
@@ -425,7 +425,7 @@ function separarPedidosPromo(json){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            // console.log(data);
+            console.log(data);
             separarFilas(data);
         },
         error: function(error) {}
@@ -433,7 +433,7 @@ function separarPedidosPromo(json){
 }
 
 function separarFilas(json){
-    alert('Separando pedido');
+    // alert('Separando pedido');
     // console.log(json);
     for(var x=0; x<json.length; x++){
         var art = items.find(o => o.itemid === json[x]['itemID']);
@@ -655,11 +655,18 @@ function createTablePedido(){
     // console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
-
+    if(filas >= 1){
+        document.getElementById('messageAddProducts').classList.add('d-none');
+    }
+    else{
+        document.getElementById('messageAddProducts').classList.remove('d-none');
+    }
     while(filas > 1){
         table.deleteRow(filas);
         filas --;
     }
+
+    
 
     var fila = 1;
     for(var x = 0; x < pedido.length; x++){
@@ -675,6 +682,10 @@ function createTablePedido(){
             addRowPedido(pedido[x]['items'][y], fila, x);
             fila ++;
         }
+    }
+
+    if(filas == 1){
+        document.getElementById('messageAddProducts').classList.remove('d-none');
     }
 }
 
@@ -769,16 +780,32 @@ function addHeaderPedido(descuento, plazo, tipo, subtotal){
     cell8.innerHTML = "<th></th>";
     cell9.innerHTML = "<th></th>";
 
-    cell1.classList.add('bg-blue');
-    cell2.classList.add('bg-blue');
-    cell3.classList.add('bg-blue');
-    cell4.classList.add('bg-blue');
-    cell5.classList.add('bg-blue');
-    cell6.classList.add('bg-blue');
-    cell7.classList.add('bg-blue');
-    cell8.classList.add('bg-blue');
-    cell9.classList.add('bg-blue');
+    if(tipo == 'BO'){
+        cell1.classList.add('bg-bo');
+        cell2.classList.add('bg-bo');
+        cell3.classList.add('bg-bo');
+        cell4.classList.add('bg-bo');
+        cell5.classList.add('bg-bo');
+        cell6.classList.add('bg-bo');
+        cell7.classList.add('bg-bo');
+        cell8.classList.add('bg-bo');
+        cell9.classList.add('bg-bo');
+    
+    }
+    else{
+        cell1.classList.add('bg-blue');
+        cell2.classList.add('bg-blue');
+        cell3.classList.add('bg-blue');
+        cell4.classList.add('bg-blue');
+        cell5.classList.add('bg-blue');
+        cell6.classList.add('bg-blue');
+        cell7.classList.add('bg-blue');
+        cell8.classList.add('bg-blue');
+        cell9.classList.add('bg-blue');
+    
+    }
 
+  
 }
 
 function validarMultiplo(multiplo, cant) {

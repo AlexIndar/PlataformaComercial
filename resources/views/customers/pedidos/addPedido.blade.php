@@ -180,7 +180,7 @@
                 </table>
             </div>
 
-            <div class="col-12 text-center mt-3 messageAddProducts">
+            <div class="col-12 text-center mt-3 messageAddProducts" id="messageAddProducts">
                     Agrega Productos
             </div>
         </div>
