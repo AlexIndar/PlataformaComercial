@@ -2075,7 +2075,7 @@ function manejoArchivos(archivos) {
 function continueModal(facturas, archivos, data) {
     // console.log(facturas);
     // console.log(archivos);
-    console.log(data);
+    //console.log(data);
     $('#solicitudModal').modal('show');
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
@@ -2118,12 +2118,11 @@ function continueModal(facturas, archivos, data) {
     var idTypeL = data.cliente.tipoLocal == true ? "typePropio" : "typeRentado";
     document.getElementById(idTypeL).checked = true;
 
-    document.getElementById('inputGroupSelect14').value = '-1';
-    document.getElementById('inputGroupFile14').value = "";
-    document.getElementById('label-inputGroupFile14').innerHTML = "Seleccionar Archivo...";
+    // document.getElementById('inputGroupSelect14').value = '-1';
+    // document.getElementById('inputGroupFile14').value = "";
+    // document.getElementById('label-inputGroupFile14').innerHTML = "Seleccionar Archivo...";
     docsActa = [];
     clearTableDatos("actaConsData");
-
 
     referenciasSol = data.referencias;
 

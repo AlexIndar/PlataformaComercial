@@ -23,5 +23,7 @@ class VerifyCsrfToken extends Middleware
         '/MisSolicitudes/getValidacionContactos',
         '/MisSolicitudes/getValidationRequest',
         '/MisSolicitudes/getFiles',
+        '/MisSolicitudes/getBills',
+        '/MisSolicitudes/reSendForm',
     ];
 }
