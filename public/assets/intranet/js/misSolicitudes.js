@@ -1077,7 +1077,7 @@ function SendForm(zone) {
 
         $('#solicitudModal').modal('hide');
         document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
-        window.location.href = "/MisSolicitudes";
+        // window.location.href = "/MisSolicitudes";
         $('#respuestaForm').modal('show');
     } else {
         alert('Error al intentar enviar la solicitud, verifique los datos');
@@ -1091,13 +1091,14 @@ function saveForm(zone) {
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            'url': "MisSolicitudes/saveSolicitud",
+            'url': "/MisSolicitudes/saveSolicitud",
             'type': 'POST',
             'dataType': 'json',
             'data': json,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
+                console.log("Guardo");
                 console.log(data);
             },
             error: function(error) {
@@ -1108,7 +1109,7 @@ function saveForm(zone) {
         $('#solicitudModal').modal('hide');
         document.getElementById('infoModalR').innerHTML = 'Solicitud guardada correctamente';
         $('#respuestaForm').modal('show');
-        window.location.href = "/MisSolicitudes";
+        // window.location.href = "/MisSolicitudes";
     } else {
         alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial y Número de Prospecto');
     }
