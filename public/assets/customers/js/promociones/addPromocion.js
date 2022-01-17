@@ -493,26 +493,25 @@ function validarPromo(){
             pedidoPromoRulesD: listaPedidoPromoRulesD
         }
 
-        console.log(json);
+        // console.log(json);
 
-       
-        // $.ajax({
-        //     'headers': {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     },
-        //     'url': "storePromo",
-        //     'type': 'POST',
-        //     'dataType': 'json',
-        //     'data': json,
-        //     'enctype': 'multipart/form-data',
-        //     'timeout': 2*60*60*1000,
-        //     success: function(data){
-        //             window.location.href = '/promociones';
-        //     }, 
-        //     error: function(error){
-        //             window.location.href = '/promociones';
-        //      }
-        // });
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "storePromo",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2*60*60*1000,
+            success: function(data){
+                    window.location.href = '/promociones';
+            }, 
+            error: function(error){
+                    window.location.href = '/promociones';
+             }
+        });
     }
 
     if(!save){
