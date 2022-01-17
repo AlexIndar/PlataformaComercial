@@ -387,7 +387,7 @@ function validarPromo(){
         document.getElementById('rangoFechas').classList.add('valid-input');
     }
 
-    if(startTime == ""){
+    if(document.getElementById('startTime').value == ""){
         save = false;
         document.getElementById('startTime').classList.add('invalid-input');
         bodyValidations += '<h5>Ingresa una hora de inicio</h5>';
@@ -397,7 +397,7 @@ function validarPromo(){
         document.getElementById('startTime').classList.add('valid-input');
     }
 
-    if(endTime == ""){
+    if(document.getElementById('endTime').value == ""){
         save = false;
         document.getElementById('endTime').classList.add('invalid-input');
         bodyValidations += '<h5>Ingresa una hora de fin</h5>';
@@ -471,13 +471,12 @@ function validarPromo(){
             });
         }
 
-        console.log(listaPedidoPromoRulesD);
     
         var json = {
             id: 0,
             nombrePromo: document.getElementById('nombrePromo').value,
             descuento: parseInt(document.getElementById('descuento').value),
-            puntosIndar: parseInt( document.getElementById('puntos').value),
+            puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),
             categoriaClientes: categorias.toString(),
@@ -487,31 +486,33 @@ function validarPromo(){
             clientesId: clientes.toString(),
             clientesIncluye: document.getElementById('listaClientes').value == 'blanca' ? true:false,
             plazo: '',
-            montoMinCash: parseInt(document.getElementById('preciomin').value),
-            montoMinQty: parseInt(document.getElementById('cantidadmin').value),
+            montoMinCash: document.getElementById('preciomin').value == "" ? 0 : parseInt(document.getElementById('preciomin').value),
+            montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
             fechaInicio: startTime,
             fechaFin: endTime,
             pedidoPromoRulesD: listaPedidoPromoRulesD
         }
 
+        console.log(json);
+
        
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "storePromo",
-            'type': 'POST',
-            'dataType': 'json',
-            'data': json,
-            'enctype': 'multipart/form-data',
-            'timeout': 2*60*60*1000,
-            success: function(data){
-                    window.location.href = '/promociones';
-            }, 
-            error: function(error){
-                    window.location.href = '/promociones';
-             }
-        });
+        // $.ajax({
+        //     'headers': {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     },
+        //     'url': "storePromo",
+        //     'type': 'POST',
+        //     'dataType': 'json',
+        //     'data': json,
+        //     'enctype': 'multipart/form-data',
+        //     'timeout': 2*60*60*1000,
+        //     success: function(data){
+        //             window.location.href = '/promociones';
+        //     }, 
+        //     error: function(error){
+        //             window.location.href = '/promociones';
+        //      }
+        // });
     }
 
     if(!save){
