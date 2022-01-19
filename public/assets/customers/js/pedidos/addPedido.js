@@ -25,10 +25,10 @@ var entityCte;
 $(document).ready(function() {
 
     entity = document.getElementById('entity').value;
-    if (!entity.startsWith("Z")) {
+    if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
         getItems(entity);
     }
-    else{
+    else{ //si es zona o all (vendedor o apoyo)
         document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
     }
 

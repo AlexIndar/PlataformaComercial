@@ -66,8 +66,8 @@ Route::get('/main', function () {
     // VALIDAR LOGIN
     $token = TokenController::refreshToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -417,8 +417,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                 Route::get('/Intranet', function(){
-                                    $entity = "Z320";
-                                    return view('intranet.main', ['entity' => $entity]);
+                                    $entity = "C002620";
+                                    $permissions = LoginController::getPermissions();
+                                    return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions]);
                                 });
 
                                 Route::get('/MisSolicitudes', function(){
