@@ -44,7 +44,7 @@
                 <div class="col-lg-3 col-md-3 col-12 rowPedido">
                     <h5>Orden de compra</h5>
                 </div>
-                <div class="col-lg-3 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra" value="657191" disabled></div>
+                <div class="col-lg-3 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra"></div>
             </div>
             <div class="row  text-start">
                 <div class="col-lg-6 col-md-6 col-12">
@@ -139,7 +139,7 @@
     <!---------------------------------------------------------------------------------------------------- PEDIDO  ---------------------------------------------------------------------------------------------->
 
     <div id="loading" class="d-flex flex-row justify-content-center align-items-center" style="width: 100%; height: 100px; background-color: #002868; color: white;">
-        <h5>Cargando inventario ...</h5>
+        <h5 id="loading-message">Cargando inventario ...</h5>
     </div>
 
 
@@ -214,7 +214,7 @@
             <div class="col-lg-8 col-md-7 col-12">
                 <fieldset class="scheduler-border">
                     <legend class="scheduler-border">Comentarios</legend>
-                    <textarea id="textarea" name="textarea" cols="40" rows="2" class="form-control" style="min-height: 50px;"></textarea>
+                    <textarea id="comments" name="textarea" cols="40" rows="2" class="form-control" maxlength="400" style="min-height: 50px;"></textarea>
                 </fieldset>
             </div>
         </div>
@@ -226,7 +226,7 @@
             <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
             <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
-            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons"><i class="fas fa-save"></i> Guardar</button>
+            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save()"><i class="fas fa-save"></i> Guardar</button>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">

@@ -275,10 +275,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = $entity[0];
+                                if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
 
-                            });
+                            }); 
 
                             Route::get('pedido/nuevo/getInfoHeatWeb/{customer}', function ($customer){
                                 $token = TokenController::getToken();
@@ -416,7 +417,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                 Route::get('/Intranet', function(){
-                                    return view('intranet.main');
+                                    $entity = "Z320";
+                                    return view('intranet.main', ['entity' => $entity]);
                                 });
 
                                 Route::get('/MisSolicitudes', function(){

@@ -184,7 +184,7 @@
             <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Vendedor</a>
+            <a href="#" class="d-block">{{$entity}}</a>
           </div>
         </div>
 
@@ -380,6 +380,14 @@
                   <a href="/promociones" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Promociones</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="/pedido/nuevo/{{$entity}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Pedido Web</p>
                   </a>
                 </li>
               </ul>

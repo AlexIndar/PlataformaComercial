@@ -20,8 +20,17 @@ var intervalInventario;
 var cell_clicked;
 // CODIGO DE CLIENTE
 var entity;
+var entityCte;
 
 $(document).ready(function() {
+
+    entity = document.getElementById('entity').value;
+    if (!entity.startsWith("Z")) {
+        getItems(entity);
+    }
+    else{
+        document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
+    }
 
 
     const fileSelector = document.getElementById('excelCodes');
@@ -75,11 +84,7 @@ $(document).ready(function() {
         }
     }
 
-    entity = document.getElementById('entity').value;
-
-    if (!entity.startsWith("Z")) {
-        getItems(entity);
-    }
+   
 
     $.ajaxSetup({
         headers: {
@@ -97,6 +102,7 @@ $(document).ready(function() {
         },
         success: function(data) {
             info = data;
+            // console.log(info);
         },
         error: function(error) {
             // console.log(error);
@@ -183,9 +189,13 @@ $(document).ready(function() {
         shippingWays = info[selected]['shippingWays'];
         packageDeliveries = info[selected]['packageDeliveries'];
 
+        document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
+
+
         items = [];
         intervalInventario = window.setInterval(checkItems, 1000);
         document.getElementById('entity').value = info[selected]["companyId"];
+        entityCte = info[selected]["companyId"];
         getItems(info[selected]["companyId"]);
 
         var itemSelectorOption = $('#sucursal option');
@@ -321,13 +331,12 @@ function deleteRowPedido(t, item, index) {
     // alert(document.getElementById("tablaPedido").rows.length);
 
     if(pedido[index]['items'].length == 0){
-        console.log(pedido);
+        // console.log(pedido);
         pedido.splice(index, 1);
     }
 
     createTablePedido();
    
-
 }
 
 //ELIMINAR FILA DE LA TABLA CARGAR POR CODIGO
@@ -380,6 +389,18 @@ function cargarProductosPorCodigo() {
         selectedItemsFromInventory.push({ item: inputCodigo.value, cant: inputCantidad.value });
     }
 
+    var table = document.getElementById('tableCargarPorCodigo');
+    var filas = table.rows.length - 1;
+    while(filas > 0){
+        table.deleteRow(filas);
+        filas --;
+    } 
+
+    document.getElementById('tableCargarPorCodigo').style.display = 'none';
+    table.classList.remove('active');
+    table.classList.add('inactive');
+    document.getElementById('btnCargarPorCodigo').classList.add('d-none');
+
     prepareJsonSeparaPedidos();
 }
 
@@ -407,7 +428,7 @@ function prepareJsonSeparaPedidos(){
 }
 
 function separarPedidosPromo(json){
-    // console.log(json);
+    // console.log(JSON.parse(json));
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -425,7 +446,7 @@ function separarPedidosPromo(json){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            console.log(data);
+            // console.log(data);
             separarFilas(data);
         },
         error: function(error) {}
@@ -435,6 +456,7 @@ function separarPedidosPromo(json){
 function separarFilas(json){
     // alert('Separando pedido');
     // console.log(json);
+    pedido = [];
     for(var x=0; x<json.length; x++){
         var art = items.find(o => o.itemid === json[x]['itemID']);
         var item = {
@@ -655,16 +677,11 @@ function createTablePedido(){
     // console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
-    if(filas >= 1){
-        document.getElementById('messageAddProducts').classList.add('d-none');
-    }
-    else{
-        document.getElementById('messageAddProducts').classList.remove('d-none');
-    }
+    
     while(filas > 1){
         table.deleteRow(filas);
         filas --;
-    }
+    } 
 
     
 
@@ -830,6 +847,9 @@ function validarMultiplo(multiplo, cant) {
 }
 
 function addItemCant(item, cant, index) {
+    var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
+
+
     document.getElementById('cant-'+item+"-"+index).stepUp(cant);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     var cantidad = pedido[index]['items'][indexItem]['cantidad'];
@@ -844,7 +864,13 @@ function addItemCant(item, cant, index) {
     });
     pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
 
-    createTablePedido();
+    selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
+    // createTablePedido();
+    var jsonObj = JSON.parse(jsonItemsSeparar);
+    var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
+    jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) + multiploVenta).toString(); 
+    jsonItemsSeparar = JSON.stringify(jsonObj);
+    separarPedidosPromo(jsonItemsSeparar);
 }
 
 function decreaseItemCant(item, cant, index) {
@@ -862,7 +888,14 @@ function decreaseItemCant(item, cant, index) {
     });
     if(cantidad - multiploVenta >= multiploVenta){
         pedido[index]['items'][indexItem]['cantidad'] = cantidad - multiploVenta;
-        createTablePedido();
+        selectedItemsFromInventory[indexInventory]['cant'] = cantidad - multiploVenta;
+        // createTablePedido();
+        
+        var jsonObj = JSON.parse(jsonItemsSeparar);
+        var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
+        jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString(); 
+        jsonItemsSeparar = JSON.stringify(jsonObj);
+        separarPedidosPromo(jsonItemsSeparar);
     }            
 }
 
@@ -878,4 +911,93 @@ function pedidosAnteriores() {
 
 function downloadPlantillaPedido(){
     window.location.href = '/downloadTemplatePedido';
+}
+
+function save(){
+    if(pedido.length == 0){
+        alert('Agrega artículos al pedido');
+    }
+    else{
+        var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
+
+        var idCustomer; //id
+        var correo; //texto
+        var ordenCompra; //texto
+        var idSucursal; //id
+        var dividir2000; // 1 o 0
+        var cteRecoge; //1 o 0
+        var shippingWay; //id
+        var packageDelivery; //id
+        var comentarios; //maximo 400 caracteres
+    
+        if (!entity.startsWith("Z")) {
+            idCustomer = entity;
+            idSucursal = info[0]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[0]['shippingWays'][indexAddress];
+            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+        }
+        else{
+            idCustomer = entityCte;
+            idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
+            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+        }
+    
+        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
+        correo = document.getElementById("correo").value;
+        ordenCompra = document.getElementById("ordenCompra").value;
+        comentarios = document.getElementById("comments").value;
+
+        pedidoJson = [];
+        var itemsJson = [];
+
+        for(var x = 0; x < pedido.length; x++){
+            var descuento = pedido[x]['descuento'];
+            var plazo = pedido[x]['plazo'];
+            var marca = pedido[x]['marca'];
+            var tipo = pedido[x]['tipo'];
+            for(var y = 0; y < pedido[x]['items'].length; y++){
+                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                    prepareJsonSeparaPedidos();
+                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                    update = true;
+                }
+                var item = {
+                    id: pedido[x]['items'][y]['id'],
+                    itemid: pedido[x]['items'][y]['itemid'],
+                    cantidad: pedido[x]['items'][y]['cantidad'],
+                };
+                itemsJson.push(item);
+            }
+            var items = itemsJson;
+            var temp = {
+                descuento: descuento,
+                plazo: plazo,
+                marca: marca,
+                tipo: tipo,
+                items: items,
+            };
+            pedidoJson.push(temp);
+            itemsJson = [];
+        }
+    
+        var json = {
+            companyId: idCustomer,
+            orderC: ordenCompra,
+            email: correo,
+            addressId: idSucursal,
+            shippingWay: shippingWay,
+            packageDelivery: packageDelivery,
+            divide: dividir2000,
+            pickUp: cteRecoge,
+            order: pedidoJson,
+            comments: comentarios,
+        };
+
+        if(!update){ // No hubo modificaciones y puede guardarse el pedido
+            console.log(JSON.stringify(json));
+            alert('Guardar Pedido');
+        }
+    }    
 }

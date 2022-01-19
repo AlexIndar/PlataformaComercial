@@ -103,12 +103,12 @@ $('document').ready(function(){
           if(getCookie("laravel-token").includes('error')){
             var toast = Swal.mixin({
               toast: true,
-              icon: 'success',
+              icon: 'error',
               title: 'General Title',
               animation: true,
-              position: 'top-right',
+              position: 'top-start',
               showConfirmButton: false,
-              timer: 4000,
+              timer: 3000,
               timerProgressBar: false,
               didOpen: (toast) => {
                 toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -127,7 +127,7 @@ $('document').ready(function(){
               icon: 'success',
               title: 'General Title',
               animation: true,
-              position: 'top-right',
+              position: 'top-start',
               showConfirmButton: false,
               timer: 3000,
               timerProgressBar: false,
