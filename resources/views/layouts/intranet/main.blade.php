@@ -385,7 +385,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="/pedido/nuevo/{{$entity}}" class="nav-link">
+                  <a href="/pedido/nuevo/ALL" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Pedido Web</p>
                   </a>

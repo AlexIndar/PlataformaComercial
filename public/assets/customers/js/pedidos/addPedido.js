@@ -134,7 +134,7 @@ $(document).ready(function() {
                     icon: 'success',
                     title: 'General Title',
                     animation: true,
-                    position: 'top-right',
+                    position: 'top-start',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: false,
@@ -156,7 +156,7 @@ $(document).ready(function() {
                     icon: 'success',
                     title: 'General Title',
                     animation: true,
-                    position: 'top-right',
+                    position: 'top-start',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: false,
@@ -683,7 +683,9 @@ function createTablePedido(){
         filas --;
     } 
 
-    
+    var subtotalPedido = 0;
+    var ivaPedido;
+    var totalPedido;
 
     var fila = 1;
     for(var x = 0; x < pedido.length; x++){
@@ -694,12 +696,37 @@ function createTablePedido(){
             var importe = (cantidad * pUnitario).toFixed(2);
             subtotal += parseFloat(importe);
         }
+        subtotalPedido = subtotalPedido + subtotal;
+        console.log(subtotal);
+        console.log(subtotalPedido);
         addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], subtotal);
         for(var y = 0; y < pedido[x]['items'].length; y++){
             addRowPedido(pedido[x]['items'][y], fila, x);
             fila ++;
         }
     }
+
+    ivaPedido = subtotalPedido * .16;
+    totalPedido = subtotalPedido + ivaPedido;
+
+    var subtotalFinal = (subtotalPedido).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    var ivaFinal = (ivaPedido).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    var totalFinal = (totalPedido).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    document.getElementById('subtotalPedido').innerHTML = subtotalFinal;
+    document.getElementById('ivaPedido').innerHTML = ivaFinal;
+    document.getElementById('totalPedido').innerHTML = totalFinal;
 
     if(filas == 1){
         document.getElementById('messageAddProducts').classList.remove('d-none');

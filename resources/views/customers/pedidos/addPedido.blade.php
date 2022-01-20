@@ -191,7 +191,7 @@
 
         <div class="row">
             <div class="col-lg-4 col-md-5 col-12">
-                <fieldset class="scheduler-border">
+                <fieldset class="scheduler-border" style="min-height: 140px !important">
                     <legend class="scheduler-border">Cargar por código</legend>
 
                     <table id="tableCargarPorCodigo" class="tableCargarPorCodigo inactive w-100">
@@ -211,12 +211,23 @@
                 </fieldset>
             </div>
 
-            <div class="col-lg-8 col-md-7 col-12">
-                <fieldset class="scheduler-border">
+            <div class="col-lg-5 col-md-3 col-12">
+                <fieldset class="scheduler-border" style="min-height: 140px !important">
                     <legend class="scheduler-border">Comentarios</legend>
                     <textarea id="comments" name="textarea" cols="40" rows="2" class="form-control" maxlength="400" style="min-height: 50px;"></textarea>
                 </fieldset>
             </div>
+
+            <div class="col-lg-3 col-md-4 col-12">
+                <fieldset class="scheduler-border" style="min-height: 140px !important">
+                    <legend class="scheduler-border">Detalles Pedido</legend>
+                    <h5><strong>SUBTOTAL:</strong> <span style="float: right; text-align: right" id="subtotalPedido">$0.00</span></h5>
+                    <h5><strong>IVA:</strong> <span style="float: right; text-align: right" id="ivaPedido">$0.00</span></h5>
+                    <h5><strong>TOTAL:</strong> <span style="float: right; text-align: right" id="totalPedido">$0.00</span></h5>
+                </fieldset>
+                
+            </div>
+
         </div>
 
         <!-- INVENTARIO -->
