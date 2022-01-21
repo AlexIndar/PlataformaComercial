@@ -193,6 +193,8 @@ $(document).ready(function() {
 
         document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
 
+        document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
+        document.getElementById('categoryCte').classList.remove('d-none');
 
         items = [];
         intervalInventario = window.setInterval(checkItems, 1000);
@@ -331,7 +333,6 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
     else{
         var row = t.parentNode.parentNode;
     }
-    alert(row.rowIndex);
     document.getElementById("tablaPedido").deleteRow(row.rowIndex);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     if(pedido[index]['items'][indexItem]['regalo']==1){
@@ -464,7 +465,7 @@ function separarPedidosPromo(json){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            // console.log(data);
+            console.log(data);
             separarFilas(data);
         },
         error: function(error) {}

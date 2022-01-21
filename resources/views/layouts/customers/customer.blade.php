@@ -99,7 +99,7 @@
     <!-- NAVBAR MOBILE ------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
     <label for="check" class="hamburguer">
-      <input type="checkbox" id="check"/> 
+      <input type="checkbox" class="checkboxHamburguer" id="check"/> 
       <span></span>
       <span></span>
       <span></span>
@@ -398,9 +398,9 @@
                         <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>      
                     </div>
                     <br>
-                    <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> No cerrar sesión</label><br>
+                    <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> Recordar credenciales</label><br>
                     <div class="login-buttons">
-                        <button class="btn login-btn" type="submit">Iniciar Sesión</button>
+                        <button class="btn login-btn" type="submit" value="Login">Iniciar Sesión</button>
                     </div>
                     <br> <hr class="hr-indar"> <br>
                     <div class="modal-links">

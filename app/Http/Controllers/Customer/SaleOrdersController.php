@@ -50,6 +50,7 @@ class SaleOrdersController extends Controller
                     "email"=>$info[$x]->email,
                     "shippingWayF"=>$info[$x]->shippingWayF,
                     "packgeDeliveryF"=>$info[$x]->packgeDeliveryF,
+                    "category"=>$info[$x]->category
                 );
                 array_push($data, $temp);
             }
@@ -76,6 +77,7 @@ class SaleOrdersController extends Controller
                     "email"=>$info[$x]->email,
                     "shippingWayF"=>$info[$x]->shippingWayF,
                     "packgeDeliveryF"=>$info[$x]->packgeDeliveryF,
+                    "category"=>$info[$x]->category
                 );
                 array_push($data, $temp);
                 array_push($shippingWays, $info[$x]->shippingWay);

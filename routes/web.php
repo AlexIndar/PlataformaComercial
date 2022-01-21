@@ -276,7 +276,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama3 = RamasController::getRama3();
                                 $level = $entity[0];
                                 if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
+                                if(str_starts_with($entity, 'Z1')){
+                                    $entity = 'ALL';
+                                }
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
+                                // dd($data);
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
 
                             }); 

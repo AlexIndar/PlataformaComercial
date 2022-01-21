@@ -30,21 +30,21 @@
                     <h5>Cliente</h5>
                 </div>
                 @if(count($data)==1)
-                    <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{$data[0]['companyId']}}] - {{$data[0]['company']}}" disabled></div>
+                    <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}}" disabled></div>
                 @else
                     <div class="col-lg-5 col-md-5 col-12 rowPedido">
                         <select id="customerID" name="customerID" class="form-control selectpicker" data-live-search="true">
                             <option selected value="none">Selecciona un cliente</option>
                             @for($x=0; $x < (count($data)); $x++)
-                                <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{$data[$x]['companyId']}}] - {{$data[$x]['company']}}</option>
+                                <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}}</option>
                             @endfor
                         </select>
                     </div>
                 @endif
-                <div class="col-lg-3 col-md-3 col-12 rowPedido">
+                <div class="col-lg-2 col-md-3 col-12 rowPedido">
                     <h5>Orden de compra</h5>
                 </div>
-                <div class="col-lg-3 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra"></div>
+                <div class="col-lg-4 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra"></div>
             </div>
             <div class="row  text-start">
                 <div class="col-lg-6 col-md-6 col-12">
@@ -74,12 +74,35 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col-12 rowPedido">
-                            <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
-                        </div>
+                            <div class="col-lg-2 col-md-2 col-12 rowPedido">
+                                <h5>Form. Envío</h5>
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-12 rowPedido">
+                                @if(count($data)==1)
+                                    <input type="text" class="inputPedido" id="envio" name="envio" value="{{$data[0]['shippingWayF']}}" disabled>
+                                @else
+                                    <input type="text" class="inputPedido" id="envio" name="envio" value="" disabled>
+                                @endif
+                            </div>
                     </div>
+
+                    <div class="row">
+                            <div class="col-lg-2 col-md-2 col-12 rowPedido">
+                                <h5>Fletera</h5>
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-12 rowPedido">
+                                @if(count($data)==1)
+                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
+                                @else
+                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="" disabled>
+                                @endif
+                            </div>
+                    </div>
+
                 </div>
+
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
@@ -95,42 +118,28 @@
                             </ul>  
                         </div>
                     </div>
-                    <div class="col-12 rowPedido">
+                    <br>
+                    <div class="row d-flex flex-row justify-content-center align-items-center">
+                        <div class="col-lg-6 col-md-8 col-12 rowPedido">
+                            <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
+                        </div>
+                        <div class="col-lg-6 col-md-4 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="dividir"> <label for="dividir">Dividir 2000</label>
+                        </div>
+                    </div>
+                   <div class="row">
+                        <div class="col-6 rowPedido">
+                            @if(count($data)==1)    
+                                <label id="categoryCte">Categoría Cliente: {{$data[0]['category']}}</label>
+                            @else 
+                                <label class="d-none" id="categoryCte"></label>
+                            @endif
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div class="row text-start">
-                <div class="col-lg-6 col-md-6 col-12">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12 rowPedido">
-                            <h5>Form. Envío</h5>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="envio" name="envio" value="{{$data[0]['shippingWayF']}}" disabled>
-                                @else
-                                    <input type="text" class="inputPedido" id="envio" name="envio" value="" disabled>
-                                @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-12">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Fletera</h5>
-                        </div>
-                        <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
-                                @else
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="" disabled>
-                                @endif
-                        </div>
-                    </div>
-                </div>
-               
-            </div>
+
         </div>
     <!---------------------------------------------------------------------------------------------------- FIN ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
         
