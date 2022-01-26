@@ -1,7 +1,7 @@
 
 @extends('layouts.customers.customer')
 
-@section('title') Indar - Agregar Pedido @endsection
+@section('title') Indar - Editar Pedido @endsection
 
 @section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/addPedido.css')}}">
@@ -16,13 +16,14 @@
 
   <div class="container-fluid">
     <div class="title bg-blue">
-        <p>Cotizar y levantar pedido a clientes</p>
+        <p>Editar pedido</p>
     </div>
     <br><br>
 
 
     <div class="content">
         <input type="text" id="entity" value="{{$entity}}" hidden>
+        <input type="text" id="idCotizacion" value="{{$cotizacion->idCotizacion}}" hidden>
         <!---------------------------------------------------------------------------------------------------- ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
         <div class="header">
             <div class="row  text-start">
@@ -44,7 +45,7 @@
                 <div class="col-lg-2 col-md-3 col-12 rowPedido">
                     <h5>Orden de compra</h5>
                 </div>
-                <div class="col-lg-4 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra"></div>
+                <div class="col-lg-4 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra" value="{{$cotizacion->orderC}}"></div>
             </div>
             <div class="row  text-start">
                 <div class="col-lg-6 col-md-6 col-12">
@@ -53,7 +54,7 @@
                             <h5>Correo</h5>
                         </div>
                         @if(count($data)==1)
-                            <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo" value="{{$data[0]['email']}}"></div>
+                            <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo" value="{{$cotizacion->email}}"></div>
                         @else
                             <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo"></div>
                         @endif
@@ -80,11 +81,7 @@
                                 <h5>Form. Envío</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="envio" name="envio" value="{{$data[0]['shippingWayF']}}" disabled>
-                                @else
-                                    <input type="text" class="inputPedido" id="envio" name="envio" value="" disabled>
-                                @endif
+                                <input type="text" class="inputPedido" id="envio" name="envio" value="{{$cotizacion->shippingWay}}" disabled>
                             </div>
                     </div>
 
@@ -93,11 +90,7 @@
                                 <h5>Fletera</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
-                                @else
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="" disabled>
-                                @endif
+                                <input type="text" class="inputPedido" id="envio" name="envio" value="{{$cotizacion->packageDelivery}}" disabled>
                             </div>
                     </div>
 
@@ -223,7 +216,7 @@
             <div class="col-lg-5 col-md-3 col-12">
                 <fieldset class="scheduler-border" style="min-height: 140px !important">
                     <legend class="scheduler-border">Comentarios</legend>
-                    <textarea id="comments" name="textarea" cols="40" rows="2" class="form-control" maxlength="400" style="min-height: 50px;"></textarea>
+                    <textarea id="comments" name="textarea" cols="40" rows="2" class="form-control" maxlength="400" style="min-height: 50px;">{{$cotizacion->comments}}</textarea>
                 </fieldset>
             </div>
 
@@ -246,7 +239,7 @@
             <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
             <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
-            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save()"><i class="fas fa-save"></i> Guardar</button>
+            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="update()"><i class="fas fa-save"></i> Guardar</button>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">

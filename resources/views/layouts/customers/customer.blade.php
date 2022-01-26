@@ -92,8 +92,8 @@
             <h5 onclick="activeModal(2)">Regístrate  &nbsp;&nbsp;|</h5>
             <h5 onclick="activeModal(1)">Iniciar sesión</h5>
         @endif
-        <h5 onclick="navigate('faq', false)">Ayuda</h5>
-        <i onclick="navigate('faq', false)" class="fas fa-question-circle question fa-sm"></i> 
+        <h5 onclick="navigate('/faq', false)">Ayuda</h5>
+        <i onclick="navigate('/faq', false)" class="fas fa-question-circle question fa-sm"></i> 
     </div>
 
     <!-- NAVBAR MOBILE ------------------------------------------------------------------------------------------------------------------------------------------------- -->
@@ -115,7 +115,7 @@
 
                                 @if($token && $token != 'error')
                                     <div class="rama-1 rama-cuenta">
-                                        <h5 onclick="navigate('logout', false)">Cerrar Sesión</h5>
+                                        <h5 onclick="navigate('/logout', false)">Cerrar Sesión</h5>
                                     </div>
                                 @else
                                     <div class="rama-1 rama-cuenta">
@@ -260,10 +260,10 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="navigate('catalogo', true)">Catálogo</a>
+                            <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Catálogo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="navigate('catalogo', true)">Ferreimpulsos</a>
+                            <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Ferreimpulsos</a>
                         </li>
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  data-bs-toggle="dropdown" aria-expanded="false">
@@ -341,7 +341,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12 footer-links">
                 <h4><strong>ACERCA</strong></h4>
-                <h5 onclick="navigate('about', false)">¿Quiénes somos?</h5>
+                <h5 onclick="navigate('/about', false)">¿Quiénes somos?</h5>
                 <h5>Centros de Cruce</h5>
                 <h5>Catálogo INDAR</h5>
                 <h5>Aviso de privacidad</h5>

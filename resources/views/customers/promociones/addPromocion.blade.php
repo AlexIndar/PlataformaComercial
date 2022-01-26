@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main', ['active' => 'Ventas'])
 
-@section('title') Ventas - Agregar Promoción @endsection
+@section('title') Ventas - Agregar Promoción @endsection 
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
@@ -13,7 +13,7 @@
 @section('body')
 
 <div class="content-wrapper p-5">
-    <div class="container">
+    <div class="container-fluid">
         <br><br>
         <!---------------------------------------------------------------------------------- DATOS GENERALES / ENCABEZADO PROMOCIONES ------------------------------------------------->
 

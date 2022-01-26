@@ -34,6 +34,51 @@ $(document).ready(function() {
         document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
     }
 
+    if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+        document.getElementById('loading-message').innerHTML = 'Cargando pedido ...';
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    
+        $.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
+            data: FormData,
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function(data) {
+                console.log(data);
+
+                $('#sucursal').val(data['addressId']); //Seleccionar la primera opcion
+                $('#sucursal').selectpicker('refresh');
+
+                if(data['pickUp']==1){
+                    $('#cliente_recoge').prop("checked", true);
+                }
+
+                if(data['divide']==1){
+                    $('#dividir').prop("checked", true);
+                }
+            
+                for (var x = 0; x < data['order'].length; x++) {
+                    for(var y = 0; y < data['order'][0]['items'].length; y++){
+                        selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
+                        cantItemsPorCargar ++;
+                    }
+                }
+
+                prepareJsonSeparaPedidos();
+            },
+            error: function(error) {
+
+            }
+        });
+    }
 
     const fileSelector = document.getElementById('excelCodes');
     fileSelector.addEventListener('change', (event) => {
@@ -57,20 +102,20 @@ $(document).ready(function() {
 
     intervalInventario = window.setInterval(checkItems, 1000);
 
-    var bLazy = new Blazy({
-        selector: '.b-lazy',
-        offset: 180, // Loads images 180px before they're visible
-        success: function(element) {
-            // console.log("success blazy");
-            setTimeout(function() {
-                var parent = element.parentNode;
-                parent.className = parent.className.replace(/\bloading\b/, '');
-            }, 200);
-        },
-        error: function(element, message) {
-            // console.log(element + " - " + message);
-        }
-    });
+    // var bLazy = new Blazy({
+    //     selector: '.b-lazy',
+    //     offset: 180, // Loads images 180px before they're visible
+    //     success: function(element) {
+    //         // console.log("success blazy");
+    //         setTimeout(function() {
+    //             var parent = element.parentNode;
+    //             parent.className = parent.className.replace(/\bloading\b/, '');
+    //         }, 200);
+    //     },
+    //     error: function(element, message) {
+    //         // console.log(element + " - " + message);
+    //     }
+    // });
 
     function checkItems() {
         if (items.length > 0) {
@@ -97,7 +142,7 @@ $(document).ready(function() {
     $.ajax({
         type: "GET",
         enctype: 'multipart/form-data',
-        url: "getInfoHeatWeb/" + entity,
+        url: "nuevo/getInfoHeatWeb/" + entity,
         data: FormData,
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
@@ -342,6 +387,7 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
         pedido[index]['items'].splice(indexItem, 1);
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
         selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) - cantidad;
+        console.log(jsonItemsSeparar);
         var jsonObj = JSON.parse(jsonItemsSeparar);
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - cantidad).toString(); 
@@ -424,6 +470,7 @@ function cargarProductosPorCodigo() {
 
 function cargarProductosExcel(json) {
     jsonObj = JSON.parse(json);
+    console.log(jsonObj);
     cantItemsPorCargar = jsonObj.length;
     for (var x = 0; x < jsonObj.length; x++) {
         selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
@@ -446,8 +493,9 @@ function prepareJsonSeparaPedidos(){
 
 function separarPedidosPromo(json){
     console.log('SEPARAR PEDIDOS PROMO');
-    console.log(JSON.parse(json));
-    console.log(pedido);
+    console.log(json);
+    // console.log(JSON.parse(json));
+    // console.log(pedido);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -457,7 +505,7 @@ function separarPedidosPromo(json){
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "SepararPedidosPromo",
+        url: "nuevo/SepararPedidosPromo",
         timeout: 2 * 60 * 60 * 1000,
         contentType: "application/json",
         data: JSON.stringify({key: json}),
@@ -498,7 +546,7 @@ function separarFilas(json){
             cantidad: json[x]['quantity'],
             price: json[x]['punitario'],
             unidad: art['unidad'],
-            promo: art['promo'],
+            promo: json[x]['promo'],
             marca: json[x]['marca'],
             plazo: json[x]['plazo'],
             regalo: json[x]['regalo'],
@@ -555,14 +603,14 @@ function getItemById(item) {
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "getItemByID",
+        url: "nuevo/getItemByID",
         timeout: 2 * 60 * 60 * 1000,
         data: data,
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            // console.log(data);
+            console.log(data);
             cantItemsCargados ++;
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
@@ -589,11 +637,12 @@ function getItemById(item) {
                     jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
                 }
             }
-
+            // console.log("DATA LENGTH: "+ data.length + " ITEMS CARGADOS: " + cantItemsCargados + " ITEMS POR CARGAR: " + cantItemsPorCargar )
             if(data.length==0 && cantItemsCargados == cantItemsPorCargar){
                     var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
                     newJson = newJson + ']';
                     // console.log(newJson);
+                    jsonItemsSeparar = newJson;
                     separarPedidosPromo(newJson);
                     cantItemsCargados = 0;
                     cantItemsPorCargar = 0;
@@ -601,7 +650,9 @@ function getItemById(item) {
             
             // addRowPedido(item, cantidad);
         },
-        error: function(error) {}
+        error: function(error) {
+            // alert('error');
+        }
     });
 }
 
@@ -612,7 +663,7 @@ function getItems(entity) {
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        'url': "getItems/all",
+        'url': "nuevo/getItems/all",
         'type': 'POST',
         'dataType': 'json',
         'data': data,
@@ -702,7 +753,7 @@ function cargarInventario() {
 }
 
 function createTablePedido(){
-    console.log(pedido);
+    // console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -765,6 +816,8 @@ function createTablePedido(){
     if(filas == 1){
         document.getElementById('messageAddProducts').classList.remove('d-none');
     }
+
+
 }
 
 function addRowPedido(item, fila, indexPedido) {
@@ -977,10 +1030,10 @@ function addItemCant(item, cant, index) {
         currency: 'USD',
     });
     pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
-    console.log(selectedItemsFromInventory);
-    console.log(item);
+    // console.log(selectedItemsFromInventory);
+    // console.log(item);
     var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
-    console.log(indexInventory);
+    // console.log(indexInventory);
     selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
     var jsonObj = JSON.parse(jsonItemsSeparar);
     var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
@@ -1046,7 +1099,7 @@ function save(){
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
     
-        if (!entity.startsWith("Z")) {
+        if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
             idSucursal = info[0]['addresses'][indexAddress]["addressID"];
             shippingWay = info[0]['shippingWays'][indexAddress];
@@ -1113,7 +1166,126 @@ function save(){
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
             console.log(JSON.stringify(json));
-            alert('Guardar Pedido');
+
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "storePedido",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': json,
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        window.location.href = '/pedidos';
+                }, 
+                error: function(error){
+                        // window.location.href = '/pedidos';
+                 }
+            });
         }
     }    
 }
+
+function update(){
+    var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
+
+        var idCustomer; //id
+        var correo; //texto
+        var ordenCompra; //texto
+        var idSucursal; //id
+        var dividir2000; // 1 o 0
+        var cteRecoge; //1 o 0
+        var shippingWay; //id
+        var packageDelivery; //id
+        var comentarios; //maximo 400 caracteres
+    
+        if (!entity.startsWith("Z") && !entity.startsWith("A")) {
+            idCustomer = entity;
+            idSucursal = info[0]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[0]['shippingWays'][indexAddress];
+            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+        }
+        else{
+            idCustomer = entityCte;
+            idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
+            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+        }
+    
+        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
+        correo = document.getElementById("correo").value;
+        ordenCompra = document.getElementById("ordenCompra").value;
+        comentarios = document.getElementById("comments").value;
+
+        pedidoJson = [];
+        var itemsJson = [];
+
+        for(var x = 0; x < pedido.length; x++){
+            var descuento = pedido[x]['descuento'];
+            var plazo = pedido[x]['plazo'];
+            var marca = pedido[x]['marca'];
+            var tipo = pedido[x]['tipo'];
+            for(var y = 0; y < pedido[x]['items'].length; y++){
+                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                    prepareJsonSeparaPedidos();
+                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                    update = true;
+                }
+                var item = {
+                    id: pedido[x]['items'][y]['id'],
+                    itemid: pedido[x]['items'][y]['itemid'],
+                    cantidad: pedido[x]['items'][y]['cantidad'],
+                };
+                itemsJson.push(item);
+            }
+            var items = itemsJson;
+            var temp = {
+                descuento: descuento,
+                plazo: plazo,
+                marca: marca,
+                tipo: tipo,
+                items: items,
+            };
+            pedidoJson.push(temp);
+            itemsJson = [];
+        }
+    
+        var json = {
+            idCotizacion: document.getElementById('idCotizacion').value,
+            companyId: idCustomer,
+            orderC: ordenCompra,
+            email: correo,
+            addressId: idSucursal,
+            shippingWay: shippingWay,
+            packageDelivery: packageDelivery,
+            divide: dividir2000,
+            pickUp: cteRecoge,
+            order: pedidoJson,
+            comments: comentarios,
+        };
+
+        if(!update){ // No hubo modificaciones y puede guardarse el pedido
+            console.log(JSON.stringify(json));
+
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "updatePedido",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': json,
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        window.location.href = '/pedidos';
+                }, 
+                error: function(error){
+                        window.location.href = '/pedidos';
+                 }
+            });
+        }
+}    
