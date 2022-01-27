@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/pedidosAnteriores.css')}}">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
@@ -84,7 +85,7 @@
         </div>
         @else
             @foreach($saleOrders as $order)
-                <div class="col-lg-1 col-md-2 col-sm-3 col-6 box">
+                <div class="col-lg-1 col-md-2 col-sm-3 col-6 box" onclick="openDetail('{{$order->numPedido}}')">
                     @if($order->numFactura != null)
                     <div class="inner inner-green">
                     @else
@@ -112,5 +113,36 @@
         @endif
     </div>
 </div>
+
+
+<!-- MODAL DETALLE PEDIDO -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titleModalDetail">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="bodyModalDetail">
+            <div class="process flat">
+                <a href="#" class="active">PEDIDO LEVANTADO</a>
+                <a href="#" id="labelWMS">WMS</a>
+                <a href="#" id="labelFactura">FACTURA</a>
+                <a href="#" id="labelEmbarque">EMBARQUE</a>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 </body>
 </html>

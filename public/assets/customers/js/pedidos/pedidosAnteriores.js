@@ -17,7 +17,7 @@ $(document).ready(function(){
                     saleOrders = data;
             }, 
             error: function(error){
-                  console.log(error);
+                //   console.log(error);
              }
     
         }); 
@@ -243,7 +243,7 @@ $(document).ready(function(){
                     saleOrders = data;
             }, 
             error: function(error){
-                  console.log(error);
+                //   console.log(error);
              }
     
         }); 
@@ -288,7 +288,7 @@ function getCookie(name) { //saber si una cookie existe
 
 
 function formatCurrency(number){
-    console.log(number);
+    // console.log(number);
     const options = { style: 'currency', currency: 'USD' };
     const numberFormat = new Intl.NumberFormat('en-US', options);
     var format = numberFormat.format(number);
@@ -370,4 +370,71 @@ function showAll(){
         div.appendChild(inner);
         row.appendChild(div);
 }
+}
+
+function openDetail(numPedido){
+    $('#modalDetail').modal('show');
+    document.getElementById('titleModalDetail').innerHTML = '<h3>Estatus Pedido: '+numPedido+'</h3>';
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "RegresaEstadoPedido",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {id: numPedido},
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+                console.log(data);
+                if(data.length == 0){
+                    document.getElementById("labelWMS").innerHTML = 'WMS';
+                    document.getElementById("labelWMS").classList.remove('active');
+                    document.getElementById("labelFactura").innerHTML = 'FACTURA';
+                    document.getElementById("labelFactura").classList.remove('active');
+                    document.getElementById("labelEmbarque").innerHTML = 'EMBARQUE';
+                    document.getElementById("labelEmbarque").classList.remove('active');
+                }
+                else{
+                    if(data[0]['wms'] != null && data[0]['wms'] != ''){
+                        var statusWMS = '';
+                        switch(data[0]['wms']){
+                            case 0: statusWMS = 'Ingresado'; break;
+                            case 1: statusWMS = 'Liberado'; break;
+                            case 2: statusWMS = 'Pausado'; break;
+                            case 3: statusWMS = 'Cancelado'; break;
+                            case 4: statusWMS = 'En Proceso'; break;
+                            case 5: statusWMS = 'Surtido'; break;
+                            case 6: statusWMS = 'Embarcado'; break;
+                        }
+                        document.getElementById("labelWMS").innerHTML = 'EN ALMACÉN: '+statusWMS;
+                        document.getElementById("labelWMS").classList.add('active');
+                    }
+                    else{
+                        document.getElementById("labelWMS").innerHTML = 'WMS';
+                        document.getElementById("labelWMS").classList.remove('active');
+                    }
+                    if(data[0]['factura'] != null && data[0]['factura'] != ''){
+                        document.getElementById("labelFactura").innerHTML = 'FACTURADO';
+                        document.getElementById("labelFactura").classList.add('active');
+                    }
+                    else{
+                        document.getElementById("labelFactura").innerHTML = 'FACTURA';
+                        document.getElementById("labelFactura").classList.remove('active');
+                    }
+                    if(data[0]['embarque'] != null && data[0]['embarque'] != ''){
+                        document.getElementById("labelEmbarque").innerHTML = 'EN EMBARQUE: '+data[0]['embarque'];
+                        document.getElementById("labelEmbarque").classList.add('active');
+                    }
+                    else{
+                        document.getElementById("labelEmbarque").innerHTML = 'EMBARQUE';
+                        document.getElementById("labelEmbarque").classList.remove('active');
+                    }
+                }
+				
+		}, 
+		error: function(error){
+			//   console.log(error);
+		 }
+	});
 }

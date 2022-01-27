@@ -52,7 +52,7 @@ $(document).ready(function() {
                 'X-CSRF-Token': '{{ csrf_token() }}',
             },
             success: function(data) {
-                console.log(data);
+                
 
                 $('#sucursal').val(data['addressId']); //Seleccionar la primera opcion
                 $('#sucursal').selectpicker('refresh');
@@ -106,14 +106,14 @@ $(document).ready(function() {
     //     selector: '.b-lazy',
     //     offset: 180, // Loads images 180px before they're visible
     //     success: function(element) {
-    //         // console.log("success blazy");
+    
     //         setTimeout(function() {
     //             var parent = element.parentNode;
     //             parent.className = parent.className.replace(/\bloading\b/, '');
     //         }, 200);
     //     },
     //     error: function(element, message) {
-    //         // console.log(element + " - " + message);
+    
     //     }
     // });
 
@@ -149,10 +149,10 @@ $(document).ready(function() {
         },
         success: function(data) {
             info = data;
-            // console.log(info);
+            
         },
         error: function(error) {
-            // console.log(error);
+            
         }
     });
 
@@ -387,7 +387,7 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
         pedido[index]['items'].splice(indexItem, 1);
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
         selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) - cantidad;
-        console.log(jsonItemsSeparar);
+        
         var jsonObj = JSON.parse(jsonItemsSeparar);
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - cantidad).toString(); 
@@ -395,7 +395,7 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
     }
 
     if(pedido[index]['items'].length == 0){
-        // console.log(pedido);
+        
         pedido.splice(index, 1);
     }
     
@@ -470,7 +470,7 @@ function cargarProductosPorCodigo() {
 
 function cargarProductosExcel(json) {
     jsonObj = JSON.parse(json);
-    console.log(jsonObj);
+    
     cantItemsPorCargar = jsonObj.length;
     for (var x = 0; x < jsonObj.length; x++) {
         selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
@@ -492,10 +492,10 @@ function prepareJsonSeparaPedidos(){
 }
 
 function separarPedidosPromo(json){
-    console.log('SEPARAR PEDIDOS PROMO');
-    console.log(json);
-    // console.log(JSON.parse(json));
-    // console.log(pedido);
+    
+    
+    
+    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -513,7 +513,8 @@ function separarPedidosPromo(json){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            console.log(data);
+            
+            
             separarFilas(data);
         },
         error: function(error) {}
@@ -568,7 +569,7 @@ function separarFilas(json){
             pedido.push(rowPedido);
         }
         else{
-            var header = pedido.find(o => o.descuento === json[x]['descuento'] && o.plazo === json[x]['plazo'] && o.marca === json[x]['marca'] && o.tipo === json[x]['tipo'] && o.regalo === json[x]['regalo']);
+            var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
             if(header != undefined){
                 header['items'].push(item);
             }
@@ -610,11 +611,9 @@ function getItemById(item) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            console.log(data);
             cantItemsCargados ++;
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
-                // console.log(data);
                 var itemSeparar = {
                     itemID: data[0]['itemid'],
                     codCustomer: entity,
@@ -637,11 +636,9 @@ function getItemById(item) {
                     jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
                 }
             }
-            // console.log("DATA LENGTH: "+ data.length + " ITEMS CARGADOS: " + cantItemsCargados + " ITEMS POR CARGAR: " + cantItemsPorCargar )
             if(data.length==0 && cantItemsCargados == cantItemsPorCargar){
                     var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
                     newJson = newJson + ']';
-                    // console.log(newJson);
                     jsonItemsSeparar = newJson;
                     separarPedidosPromo(newJson);
                     cantItemsCargados = 0;
@@ -673,7 +670,6 @@ function getItems(entity) {
 				items = data;
 		}, 
 		error: function(error){
-			//   console.log(error);
 		 }
 	});
 }
@@ -753,7 +749,6 @@ function cargarInventario() {
 }
 
 function createTablePedido(){
-    // console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -1030,10 +1025,10 @@ function addItemCant(item, cant, index) {
         currency: 'USD',
     });
     pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
-    // console.log(selectedItemsFromInventory);
-    // console.log(item);
+    
+    
     var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
-    // console.log(indexInventory);
+    
     selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
     var jsonObj = JSON.parse(jsonItemsSeparar);
     var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
@@ -1165,7 +1160,7 @@ function save(){
         };
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
-            console.log(JSON.stringify(json));
+            
 
             $.ajax({
                 'headers': {
@@ -1268,7 +1263,7 @@ function update(){
         };
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
-            console.log(JSON.stringify(json));
+            
 
             $.ajax({
                 'headers': {

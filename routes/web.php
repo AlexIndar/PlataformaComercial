@@ -429,6 +429,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                            Route::post('pedidosAnteriores/RegresaEstadoPedido', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::regresaEstadoPedido($token, $request->id);
+                                return  $data;
+                            });
+
                             Route::get('/downloadTemplatePedido', function (){
                                 return Excel::download(new TemplatePedido,'Pedido.xlsx');
                             });
