@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
+
+// CUSTOMERS -------------------------------------------------------------------------------
 use App\Http\Controllers\Customer\ItemsController;
 use App\Http\Controllers\Customer\RamasController;
 use App\Http\Controllers\Customer\TokenController;
@@ -10,8 +12,15 @@ use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
+// -----------------------------------------------------------------------------------------
+
+// INTRANET --------------------------------------------------------------------------------
 
 use App\Http\Controllers\Intranet\MisSolicitudesController;
+use App\Http\Controllers\Intranet\EstadisticasClientesController;
+
+// ------------------------------------------------------------------------------------------
+
 
 use App\Http\Middleware\ValidateSession;
 use Illuminate\Http\Request;
@@ -429,7 +438,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
-                            Route::post('pedidosAnteriores/RegresaEstadoPedido', function (Request $request){
+                            Route::post('/pedidosAnteriores/RegresaEstadoPedido', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
@@ -530,148 +539,170 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
 
-                // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                 // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                Route::get('/Intranet', function(){
-                                    $entity = "C002620";
-                                    // $permissions = LoginController::getPermissions();
-                                    return view('intranet.main', ['entity' => $entity]);
-                                });
+                 Route::get('/Intranet', function(){
+                    $entity = "C002620";
+                    // $permissions = LoginController::getPermissions();
+                    return view('intranet.main', ['entity' => $entity]);
+                });
 
-                                Route::get('/MisSolicitudes', function(){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $user = MisSolicitudesController::getUser($token);
-                                    $zone = MisSolicitudesController::getZone($token,$user->body());
-                                    if($zone->getStatusCode()== 400){
-                                        return redirect('/Intranet');
-                                    }
-                                    $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
-                                    function getStatus($id){
-                                        return MisSolicitudesController::getStatus($id);
-                                    }
-                                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'zone' => $zone, 'listSol' => $listSol]);
-                                    /*return view('intranet.ventas.misSolicitudes');*/
-                                });
+                Route::get('/MisSolicitudes', function(){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUser($token);
+                    $zone = MisSolicitudesController::getZone($token,$user->body());
+                    if($zone->getStatusCode()== 400){
+                        return redirect('/Intranet');
+                    }
+                    $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
+                    function getStatus($id){
+                        return MisSolicitudesController::getStatus($id);
+                    }
+                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'zone' => $zone, 'listSol' => $listSol]);
+                    /*return view('intranet.ventas.misSolicitudes');*/
+                });
 
-                                Route::post('/MisSolicitudes/storeSolicitud', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    // dd($request->all());
-                                    $response = MisSolicitudesController::storeSolicitud($token, json_encode($request->all()));
-                                    return $response;
-                                });
+                Route::post('/MisSolicitudes/storeSolicitud', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request->all());
+                    $response = MisSolicitudesController::storeSolicitud($token, json_encode($request->all()));
+                    return $response;
+                });
 
-                                Route::post('/MisSolicitudes/saveSolicitud', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    // dd($request->all());
-                                    $response = MisSolicitudesController::saveSolicitud($token, json_encode($request->all()));
-                                    return $response;
-                                });
+                Route::post('/MisSolicitudes/saveSolicitud', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request->all());
+                    $response = MisSolicitudesController::saveSolicitud($token, json_encode($request->all()));
+                    return $response;
+                });
 
-                                Route::get('/MisSolicitudes/getBusinessLines', function (){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $data = MisSolicitudesController::getBusinessLines($token);
-                                    return  $data;
-                                });
+                Route::get('/MisSolicitudes/getBusinessLines', function (){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = MisSolicitudesController::getBusinessLines($token);
+                    return  $data;
+                });
 
-                                Route::post('/MisSolicitudes/getInfoSol', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::getInfoSol($token, $fol);
-                                    return  $data;
-                                });
+                Route::post('/MisSolicitudes/getInfoSol', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getInfoSol($token, $fol);
+                    return  $data;
+                });
 
-                                Route::get('/MisSolicitudes/getCPData', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $cp = $request->cp;
-                                    $data = MisSolicitudesController::getCPData($token, $cp);
-                                    return  $data;
-                                });
+                Route::get('/MisSolicitudes/getCPData', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $cp = $request->cp;
+                    $data = MisSolicitudesController::getCPData($token, $cp);
+                    return  $data;
+                });
 
-                                Route::post('/MisSolicitudes/getTransactionHistory', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::getTransactionHistory($token, $fol);
-                                    return  $data;
-                                });
+                Route::post('/MisSolicitudes/getTransactionHistory', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getTransactionHistory($token, $fol);
+                    return  $data;
+                });
 
-                                Route::post('/MisSolicitudes/getValidacionContactos', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::getValidacionContactos($token, $fol);
-                                    return  $data;
-                                });
+                Route::post('/MisSolicitudes/getValidacionContactos', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getValidacionContactos($token, $fol);
+                    return  $data;
+                });
 
-                                Route::post('/MisSolicitudes/getValidationRequest', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::getValidationRequest($token, $fol);
-                                    return  $data;
-                                });
+                Route::post('/MisSolicitudes/getValidationRequest', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getValidationRequest($token, $fol);
+                    return  $data;
+                });
 
-                                Route::post('/MisSolicitudes/getFiles', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::getFiles($token, $fol);
-                                    return  $data;
-                                });
+                Route::post('/MisSolicitudes/getFiles', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getFiles($token, $fol);
+                    return  $data;
+                });
 
-                                Route::post('/MisSolicitudes/getBills', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::getBills($token, $fol);
-                                    return  $data;
-                                });
-                                
-                                Route::post('/MisSolicitudes/reSendForm', function (Request $request){
-                                    $token = TokenController::refreshToken();
-                                    if($token == 'error'){
-                                        return redirect('/logout');
-                                    }
-                                    $fol = $request->Item;
-                                    $data = MisSolicitudesController::reSendForm($token, $fol);
-                                    return  $data;
-                                });
+                Route::post('/MisSolicitudes/getBills', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getBills($token, $fol);
+                    return  $data;
+                });
+                
+                Route::post('/MisSolicitudes/reSendForm', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::reSendForm($token, $fol);
+                    return  $data;
+                });
 
-                                Route::get('/SolicitudesPendientes', function(){
-                                    return view('intranet.cyc.solicitudesPendientes');
-                                });
+                Route::get('/SolicitudesPendientes', function(){
+                    return view('intranet.cyc.solicitudesPendientes');
+                });
 
-                                Route::get('/EstadisticaSolicitudesClientes', function(){
-                                    return view('intranet.ventas.estadisticaCliente');
-                                });
+                Route::get('/EstadisticaSolicitudesClientes', function(){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUser($token);
+                    $zone = MisSolicitudesController::getZone($token,$user->body());
+                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'zone' => $zone]);
+                });
+
+                Route::post('/EstadisticaCliente/getEmployeeReport', function (Request $request){
+                    $token = TokenController::refreshToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $typeR = $request->TypeR;
+                    $ini = $request->Ini;
+                    $fin = $request->Fin;
+                    $zoneObj = json_decode($request->Zona);
+                    $zone = $zoneObj->description;                                    
+                    $data = EstadisticasClientesController::getEmployeeReport($token, $zone, $typeR, $ini, $fin);                                    
+                    return  $data;
+                    
+                });
+
 
     
 });

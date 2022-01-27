@@ -25,7 +25,7 @@ $(document).ready(function(){
         var today = new Date();
         var hour =  today.getHours();
         var suffix = hour >= 12 ? "PM":"AM";
-        var hours = ("0"+(hour + 11) % 12 + 1).slice(-2) +":"+("0"+today.getMinutes()).slice(-2)+" " + suffix;
+        var hours = (hour+":"+today.getMinutes()+" " + suffix);
         var date = ("0"+today.getDate()).slice(-2) + "/" + ("0"+(today.getMonth()+1)).slice(-2) + "/" + today.getFullYear() + " - "+hours;
 
         document.getElementById('hora').innerHTML = date;
@@ -396,7 +396,8 @@ function openDetail(numPedido){
                     document.getElementById("labelEmbarque").classList.remove('active');
                 }
                 else{
-                    if(data[0]['wms'] != null && data[0]['wms'] != ''){
+
+                    if(data[0]['wms'] != null){
                         var statusWMS = '';
                         switch(data[0]['wms']){
                             case 0: statusWMS = 'Ingresado'; break;
@@ -405,7 +406,7 @@ function openDetail(numPedido){
                             case 3: statusWMS = 'Cancelado'; break;
                             case 4: statusWMS = 'En Proceso'; break;
                             case 5: statusWMS = 'Surtido'; break;
-                            case 6: statusWMS = 'Embarcado'; break;
+                            case 6: statusWMS = 'Empacado'; break;
                         }
                         document.getElementById("labelWMS").innerHTML = 'EN ALMACÉN: '+statusWMS;
                         document.getElementById("labelWMS").classList.add('active');

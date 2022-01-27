@@ -2,11 +2,15 @@
 .bg-blue{
   background-color: #002868 !important;
   color: white !important;
+  font-size: 15px;
+  text-align: center;
 }
 
 .bg-bo{
-background-color: #fcbf49 !important;
-color: black !important;
+  background-color: #fcbf49 !important;
+  color: black !important;
+  font-size: 15px;
+  text-align: center;
 }
 
 .title{
@@ -51,6 +55,7 @@ input{
   height: 30px;
   border-radius: 2px;
   background-color: #F5F8F8;
+  display: inline-block;
 }
 
 input[type="text"]:disabled{
@@ -201,6 +206,34 @@ text-align: center !important;
 font-size: 18px !important;
 font-weight: 500 !important;
 height: 30px;
+}
+
+.select-descuento{
+  background-color: #F2F2F2 !important;
+  text-align: center !important;
+  height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  width: 100% !important;
+}
+
+.input-descuento{
+  background-color: #F2F2F2 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  height: 30px !important;
+}
+
+.input-group-append{
+  height: 30px !important;
+}
+
+#unidad, #existencia, #multiplo{
+  font-weight: 500;
+  font-size: 15px;
+}
+
+#descripcion{
+  font-size: 15px;
 }
 
 .td-center{

@@ -360,6 +360,12 @@
                     <p>Mis solicitudes</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="/EstadisticaSolicitudesClientes" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Estadistica Cliente</p>
+                  </a>
+                </li>
               </ul>
             </li>
 

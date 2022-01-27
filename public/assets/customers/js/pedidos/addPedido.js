@@ -72,7 +72,6 @@ $(document).ready(function() {
                     }
                 }
 
-                prepareJsonSeparaPedidos();
             },
             error: function(error) {
 
@@ -122,6 +121,10 @@ $(document).ready(function() {
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
             document.getElementById('loading').classList.remove('d-flex');
+            if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+                prepareJsonSeparaPedidos();
+            }
+
             clearInterval(intervalInventario);
         } else {
             document.getElementById('pedido').style.display = "none";
@@ -612,6 +615,7 @@ function getItemById(item) {
         },
         success: function(data) {
             cantItemsCargados ++;
+            console.log(data);
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
                 var itemSeparar = {
@@ -849,13 +853,17 @@ function addRowPedido(item, fila, indexPedido) {
     });
 
     cell1.innerHTML = "<h4>" + fila + "</h4>";
-    cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'>Unidad: <span id='unidad'>" + item["unidad"] + "</span> </div></div>";
+    if (item["categoriaItem"] == "LINEA")
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center'><span class='input-group-text text-center'>% &nbsp;</span></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg' name='autoriza-desneg' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+    else
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
+
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO")
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>" + item["promo"] + "%</h5>";
@@ -964,13 +972,13 @@ function addRowRegalo(item, fila, indexPedido) {
     });
 
     cell1.innerHTML = "<h4>" + fila + "</h4>";
-    cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'>Unidad: <span id='unidad'>" + item["unidad"] + "</span> </div></div>";
+    cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO")
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>0%</h5>";
@@ -1284,3 +1292,24 @@ function update(){
             });
         }
 }    
+
+
+function applyDesneg(itemid, select, index){
+    if(select.value == ''){
+        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.add('d-none');
+    }
+    if(select.value == 'desneg'){
+        console.log("Item id: "+itemid);
+        console.log("Index pedido: "+index);
+        console.log(pedido);
+        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
+    }
+    if(select.value == 'desgar'){
+        alert('apply desgar');
+    }
+}
+
+function updatePedidoDesneg(itemid, select, index){
+    pedido[index]['descuento'] = pedido[index]['descuento'] + parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
+    console.log(pedido);
+}

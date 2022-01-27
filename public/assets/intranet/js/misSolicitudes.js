@@ -316,9 +316,9 @@ $(document).ready(function() {
                 $('#inputGroupSelect01').selectpicker("refresh");
             }
 
-            $('#inputGroupSelect01').append('<option value="-1">Otro</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+            /*$('#inputGroupSelect01').append('<option value="-1">Otro</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
             $('#inputGroupSelect01').val('1');
-            $('#inputGroupSelect01').selectpicker("refresh");
+            $('#inputGroupSelect01').selectpicker("refresh");*/
 
         },
         error: function(error) {

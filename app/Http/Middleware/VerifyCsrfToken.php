@@ -18,6 +18,7 @@ class VerifyCsrfToken extends Middleware
         '/pedido/editar',
         '/pedido/storePedido',
         '/pedido/updatePedido',
+        '/pedidosAnteriores/RegresaEstadoPedido',
         '/promociones/storePromo',
         '/MisSolicitudes/storeSolicitud',
         '/MisSolicitudes/saveSolicitud',
@@ -28,5 +29,6 @@ class VerifyCsrfToken extends Middleware
         '/MisSolicitudes/getFiles',
         '/MisSolicitudes/getBills',
         '/MisSolicitudes/reSendForm',
+        '/EstadisticaCliente/getEmployeeReport',
     ];
 }

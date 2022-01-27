@@ -470,10 +470,10 @@
                                                         <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="telefonoContacto" id="telefonoContacto" placeholder="Telefono" class="form-control">
+                                                        <input type="text" name="telefonoContacto" id="telefonoContacto" placeholder="Telefono" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control">
+                                                        <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">
@@ -708,7 +708,7 @@
                                                         <input type="text" name="ciudadRef" id="ciudadRef" placeholder="Ciudad" class="form-control">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="telefonoRef" id="telefonoRef" placeholder="Telefono" class="form-control">
+                                                        <input type="text" name="telefonoRef" id="telefonoRef" placeholder="Telefono" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <button class="btn btn-info" onclick="addRefData()">Agregar Referencias</button>
