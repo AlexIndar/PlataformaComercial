@@ -113,6 +113,8 @@ var comprobanteDomicilioShipping = '';
 var comprobanteDomicilioShippingBack = '';
 var colonias;
 var coloniaSelect = '';
+var auxColonias;
+var auxColoniaSelect = '';
 
 // NEGOCIO
 
@@ -126,6 +128,8 @@ var negocioRight = '';
 // DATOS DE CONTACTO
 
 var contactos = [];
+
+var maxContactos = 3;
 
 // CREDITO
 
@@ -264,6 +268,16 @@ $(document).ready(function() {
         } else {
             document.getElementById('rowOtraColonia').classList.add('d-none');
             coloniaSelect = colonias[selected];
+        }
+    });
+
+    $('#colDFShipping').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        var selected = clickedIndex;
+        if (auxColonias[selected] == undefined) {
+            document.getElementById('rowOtraColonia').classList.remove('d-none');
+        } else {
+            document.getElementById('rowOtraColonia').classList.add('d-none');
+            auxColoniaSelect = auxColonias[selected];
         }
     });
 
@@ -469,7 +483,7 @@ function clearForm() {
 
 function clearTableDatos(id) {
     var table = document.getElementById(id);
-    console.log(table.rows.length);
+    // console.log(table.rows.length);
     if (table.rows.length > 1) {
         for (var i = table.rows.length - 1; i >= 1; i--) {
             table.deleteRow(i);
@@ -536,8 +550,8 @@ function updateGeolocation() {
                 }
 
                 // $('#colDF').append('<option value="Otra">Otra</option>'); //Agregar Primera opción de colDF en Blanco
-                $('#colDF').val('0');
-                $('#colDF').selectpicker("refresh");
+                /*$('#colDF').val('0');
+                $('#colDF').selectpicker("refresh");*/
 
             },
             error: function(error) {
@@ -554,54 +568,59 @@ function addContactData() {
     var email = document.getElementById('emailContacto').value;
     var tipo = document.getElementById('tipoContacto').value;
 
-    if (tipo != "SELECCIONAR") {
-        $('#tipoContacto').removeClass("warningText");
-        if (validarDataContact(nombre, email, telefono, celular)) {
-            var data = {
-                "tipo": tipo,
-                "nombre": nombre,
-                "telefono": telefono,
-                "celular": celular,
-                "email": email
-            };
+    if (contactos.length < maxContactos) {
+        if (tipo != "SELECCIONAR") {
+            $('#tipoContacto').removeClass("warningText");
+            if (validarDataContact(nombre, email, telefono, celular)) {
+                var data = {
+                    "tipo": tipo,
+                    "nombre": nombre,
+                    "telefono": telefono,
+                    "celular": celular,
+                    "email": email
+                };
 
-            contactos.push(data);
+                contactos.push(data);
 
-            switch (tipo) {
-                case "1":
-                    tipo = "PRINCIPAL";
-                    break;
-                case "2":
-                    tipo = "PAGOS";
-                    break;
-                case "3":
-                    tipo = "COMPRAS";
-                    break;
-                case "4":
-                    tipo = "ADMON";
-                    break;
-                case "5":
-                    tipo = "EMERGENCIA";
-                    break;
+                switch (tipo) {
+                    case "1":
+                        tipo = "PRINCIPAL";
+                        break;
+                    case "2":
+                        tipo = "PAGOS";
+                        break;
+                    case "3":
+                        tipo = "COMPRAS";
+                        break;
+                    case "4":
+                        tipo = "ADMON";
+                        break;
+                    case "5":
+                        tipo = "EMERGENCIA";
+                        break;
+                }
+
+                var table = document.getElementById('contactData');
+                var row = table.insertRow(table.rows.length);
+
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                cell1.innerHTML = nombre;
+                cell2.innerHTML = celular;
+                cell3.innerHTML = tipo;
+                cell4.innerHTML = "<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i>";
+                cleanDatosContacto();
             }
-
-            var table = document.getElementById('contactData');
-            var row = table.insertRow(table.rows.length);
-
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
-
-            cell1.innerHTML = nombre;
-            cell2.innerHTML = celular;
-            cell3.innerHTML = tipo;
-            cell4.innerHTML = "<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i>";
-            cleanDatosContacto();
+        } else {
+            $('#tipoContacto').addClass("warningText");
         }
     } else {
-        $('#tipoContacto').addClass("warningText");
+        alert("Maximo de contactos agregado");
     }
+
 }
 
 function cleanDatosContacto() {
@@ -898,11 +917,13 @@ function valiteTypeForm() {
         document.getElementById("credSol").style.display = 'none';
         document.getElementById("actaConst").style.display = 'none';
         document.getElementById("referenciaSol").style.display = 'none';
+        maxContactos = 1;
     } else {
         document.getElementById("amountSol").style.display = 'flex';
         document.getElementById("credSol").style.display = 'flex';
         document.getElementById("actaConst").style.display = 'flex';
         document.getElementById("referenciaSol").style.display = 'flex';
+        maxContactos = 3;
     }
 
     if (activoFijo == "changeRS") {
@@ -999,13 +1020,13 @@ function getDateTime() {
     return (new Date()).toJSON();
 }
 
-function getColoniaSelected() {
-    if (document.getElementById('rowOtraColonia').classList.contains('d-none')) {
-        return coloniaSelect;
-    } else {
-        return document.getElementById('otraCol').value;
-    }
-}
+// function getColoniaSelected() {
+//     if (document.getElementById('rowOtraColonia').classList.contains('d-none')) {
+//         return coloniaSelect;
+//     } else {
+//         return document.getElementById('otraCol').value;
+//     }
+// }
 
 function validateFullForm() {
     var save = true;
@@ -1031,7 +1052,7 @@ function validateFullForm() {
         save = false;
     }
 
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || noIntFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
+    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || noIntFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || comprobanteDomicilio == '' || comprobanteDomicilioBack == '' || coloniaSelect == '') {
         alert('false 2');
         save = false;
     }
@@ -1289,7 +1310,7 @@ function createJsonSolicitud(zone) {
                     id: 0,
                     calle: document.getElementById('calleInput').value,
                     noInt: document.getElementById('noIntInput').value,
-                    colonia: getColoniaSelected(),
+                    colonia: coloniaSelect,
                     ciudad: document.getElementById('ciudadDF').value,
                     estado: document.getElementById('estadoDF').value,
                     cp: document.getElementById('cpInput').value,
@@ -1308,7 +1329,7 @@ function createJsonSolicitud(zone) {
                     id: 0,
                     calle: document.getElementById('calleInputShipping').value == '' ? document.getElementById('calleInput').value : document.getElementById('calleInputShipping').value,
                     noInt: document.getElementById('noIntInputShipping').value == '' ? document.getElementById('noIntInput').value : document.getElementById('noIntInputShipping').value,
-                    colonia: document.getElementById('colDFShipping').value == '' ? getColoniaSelected() : document.getElementById('colDFShipping').value,
+                    colonia: auxColoniaSelect == '' ? coloniaSelect : auxColoniaSelect,
                     ciudad: document.getElementById('ciudadDFShipping').value == '' ? document.getElementById('ciudadDF').value : document.getElementById('ciudadDFShipping').value,
                     estado: document.getElementById('estadoDFShipping').value == '' ? document.getElementById('estadoDF').value : document.getElementById('estadoDFShipping').value,
                     cp: document.getElementById('cpInputShipping').value == '' ? document.getElementById('cpInput').value : document.getElementById('cpInputShipping').value,
@@ -1858,9 +1879,42 @@ function validaNoInS() {
 
 function validarCPS() {
     numbers = /^[0-9]+$/;
-    var num = document.getElementById("cpInputShipping").value;
-    if (num.match(numbers) && num.length > 3) {
+    var cp = document.getElementById("cpInputShipping").value;
+    if (cp.match(numbers) && cp.length > 3) {
         $('#cpInputShipping').removeClass("warningText");
+        let data = { cp: cp };
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/getCPData",
+            'type': 'GET',
+            'dataType': 'json',
+            'data': data,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                console.log(data['suburbs']);
+                auxColonias = data['suburbs'];
+                document.getElementById('ciudadDFShipping').value = data['town'];
+                document.getElementById('estadoDFShipping').value = data['state'];
+                // document.getElementById('rowInputsGeo').classList.remove('d-none');
+
+                var itemSelectorOption = $('#colDFShipping option');
+                itemSelectorOption.remove();
+                $('#colDFShipping').selectpicker('refresh');
+
+                for (var x = 0; x < auxColonias.length; x++) { //Agregar todas las colonias del CP ingresado
+                    $('#colDFShipping').append('<option value="' + x + '">' + auxColonias[x] + '</option>');
+                    $('#colDFShipping').val(auxColonias[x]);
+                    $('#colDFShipping').selectpicker("refresh");
+                }
+
+            },
+            error: function(error) {
+                console.log(error + "Error");
+            }
+        });
     } else {
         $('#cpInputShipping').addClass("warningText");
     }

@@ -133,7 +133,7 @@
                                     <div class="col-md-4 text-center">
                                         <div class="input-group mb-3">
                                             <span class="input-group-text bg-indarYellow">$</span>
-                                            <input type="text" class="form-control" id="creditoInput" style="text-align:right;">
+                                            <input type="text" class="form-control" id="creditoInput">
                                             <span class="input-group-text bg-indarYellow">.00</span>
                                         </div>
                                     </div>
@@ -346,7 +346,7 @@
                                                 <input class="form-check-input" type="checkbox" value="" onclick="addAddress()" id="checkAddAddress">
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     ¿Desea usar una dirección diferente para la entrega?
-                                                </label>
+                                                </label>                                                
                                             </div>
 
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
@@ -365,16 +365,31 @@
                                                     <div class="col-md-4">
                                                         <input type="text" name="codPos" id="cpInputShipping" placeholder="C.P." class="form-control" onfocusout="validarCPS()" maxlength="5">
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <!-- <div class="col-md-4">
                                                         <input type="text" name="colDF" id="colDFShipping" placeholder="Colonia" class="form-control">
                                                     </div>
                                                     <div class="col-md-4">
                                                         <input type="text" name="CiudadDF" id="ciudadDFShipping" placeholder="Ciudad" class="form-control">
-                                                    </div>
+                                                    </div> -->
                                                 </div>
-                                                <div class="row mb-3">
+                                                <!-- <div class="row mb-3">
                                                     <div class="col-md-4">
                                                         <input type="text" name="estadoDF" id="estadoDFShipping" placeholder="Estado" class="form-control">
+                                                    </div>
+                                                </div> -->
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4">
+                                                        <span>Colonia</span>
+                                                        <select id="colDFShipping" name="colDFShipping" class="form-control selectpicker" data-live-search="true">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span>Ciudad</span>
+                                                        <input type="text" name="ciudadDFShipping" id="ciudadDFShipping" placeholder="Ciudad" class="form-control" disabled>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span>Estado</span>
+                                                        <input type="text" name="estadoDFShipping" id="estadoDFShipping" placeholder="Estado" class="form-control" disabled>
                                                     </div>
                                                 </div>
                                             </div>
