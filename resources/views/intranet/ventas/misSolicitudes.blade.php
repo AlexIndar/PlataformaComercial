@@ -318,7 +318,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row" id="compDom1">
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">Comprobante de Domicilio</span>
@@ -329,7 +329,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" id="compDom2">
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">Comprobante de Domicilio (Reverso)</span>
