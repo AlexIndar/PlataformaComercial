@@ -918,12 +918,16 @@ function valiteTypeForm() {
         document.getElementById("actaConst").style.display = 'none';
         document.getElementById("referenciaSol").style.display = 'none';
         maxContactos = 1;
+        document.getElementById("compDom1").classList.add('d-none');
+        document.getElementById("compDom2").classList.add('d-none');
     } else {
         document.getElementById("amountSol").style.display = 'flex';
         document.getElementById("credSol").style.display = 'flex';
         document.getElementById("actaConst").style.display = 'flex';
         document.getElementById("referenciaSol").style.display = 'flex';
         maxContactos = 3;
+        document.getElementById("compDom1").classList.remove('d-none');
+        document.getElementById("compDom2").classList.remove('d-none');
     }
 
     if (activoFijo == "changeRS") {
@@ -1051,8 +1055,13 @@ function validateFullForm() {
         alert('false');
         save = false;
     }
+    if (getTipoForm() != 0) {
+        if (comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
+            save = false;
+        }
+    }
 
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || noIntFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || comprobanteDomicilio == '' || comprobanteDomicilioBack == '' || coloniaSelect == '') {
+    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || coloniaSelect == '') {
         alert('false 2');
         save = false;
     }
@@ -1090,16 +1099,17 @@ function SendForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 console.log(data);
+                $('#solicitudModal').modal('hide');
+                document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
+                // window.location.href = "/MisSolicitudes";
+                $('#respuestaForm').modal('show');
             },
             error: function(error) {
                 console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
 
-        $('#solicitudModal').modal('hide');
-        document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
-        // window.location.href = "/MisSolicitudes";
-        $('#respuestaForm').modal('show');
     } else {
         alert('Error al intentar enviar la solicitud, verifique los datos');
     }
@@ -1290,14 +1300,14 @@ function createJsonSolicitud(zone) {
         folio: -1,
         fecha: getDateTime(),
         tipo: getTipoForm(),
-        credito: getTipoForm() == 0 ? null : document.getElementById('creditoInput').value,
+        credito: getTipoForm() == 0 ? null : parseInt(document.getElementById('creditoInput').value),
         zona: JSON.parse(zone),
         cliente: {
             clave: document.getElementById('prospecto').value,
             nombreComercial: document.getElementById('nameComeInput').value,
             tipoNegocio: tipoNegocio,
             otroGiro: tipoNegocio == -1 ? document.getElementById('otroGiro').value : null,
-            tiempoConst: document.getElementById('antiguedad').value,
+            tiempoConst: parseInt(document.getElementById('antiguedad').value),
             tipoLocal: local == 'Propio' ? true : false,
             tipoPersona: tipoPersona == 'Moral' ? true : false,
             status: 1,
