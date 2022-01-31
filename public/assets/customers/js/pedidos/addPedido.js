@@ -13,6 +13,8 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 
+var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
+
 // VARIABLES GLOBALES PARA CAMBIAR DE FLETERA Y FORMA DE ENVÍO CUANDO CAMBIA CLIENTE O SUCURSAL
 indexCustomer = 0;
 indexAddress = 0;
@@ -556,7 +558,11 @@ function separarFilas(json){
             regalo: json[x]['regalo'],
             addRegalo: ignorarRegalos.includes(json[x]['itemID']) ? 0 : 1,
             separa: json[x]['separa'],
-            disponible: art['disponible']
+            disponible: art['disponible'],
+            desneg: 0,
+            autorizaDesneg: "",
+            desgar: 0,
+            autorizaDesgar: "",
         };
         if(x==0){
             // addHeaderPedido(json[x]['descuento'], json[x]['plazo'], json[x]['tipo']);
@@ -615,7 +621,6 @@ function getItemById(item) {
         },
         success: function(data) {
             cantItemsCargados ++;
-            console.log(data);
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
                 var itemSeparar = {
@@ -853,9 +858,13 @@ function addRowPedido(item, fila, indexPedido) {
     });
 
     cell1.innerHTML = "<h4>" + fila + "</h4>";
-    if (item["categoriaItem"] == "LINEA")
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center'><span class='input-group-text text-center'>% &nbsp;</span></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg' name='autoriza-desneg' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
-    else
+    if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0)
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+    
+    else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0)
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+    
+    else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
@@ -880,6 +889,9 @@ function addRowPedido(item, fila, indexPedido) {
     cell7.classList.add('td-center');
     cell8.classList.add('td-center');
     cell9.classList.add('td-center');
+
+    if(item['desneg'] != 0)
+        document.getElementById("autoriza-desneg-"+item['itemid']+"-"+indexPedido).value = item['autorizaDesneg'];
 
 }
 
@@ -1085,6 +1097,7 @@ function downloadPlantillaPedido(){
     window.location.href = '/downloadTemplatePedido';
 }
 
+// FUNCIÓN GUARDAR PEDIDO WEB
 function save(){
     if(pedido.length == 0){
         alert('Agrega artículos al pedido');
@@ -1295,21 +1308,177 @@ function update(){
 
 
 function applyDesneg(itemid, select, index){
+    tipoDesc = select.value;
     if(select.value == ''){
         document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.add('d-none');
     }
     if(select.value == 'desneg'){
-        console.log("Item id: "+itemid);
-        console.log("Index pedido: "+index);
-        console.log(pedido);
         document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
     }
     if(select.value == 'desgar'){
-        alert('apply desgar');
+        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
     }
 }
 
 function updatePedidoDesneg(itemid, select, index){
-    pedido[index]['descuento'] = pedido[index]['descuento'] + parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
+    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === itemid);
+    var newDesc;
+    var item;
+    if(tipoDesc == 'desneg'){
+        var desneg = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
+        newDesc = desneg;
+        var autorizaDesneg = select.value;
+        item = pedido[index]['items'][indexItem];
+        item['desneg'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
+        item['autorizaDesneg'] = autorizaDesneg;
+    }
+    if(tipoDesc == 'desgar'){
+        var desgar = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
+        newDesc = desgar;
+        var autorizaDesgar = select.value;
+        item = pedido[index]['items'][indexItem];
+        item['desgar'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
+        item['autorizaDesgar'] = autorizaDesgar;
+    }
+    
+    pedido[index]['items'].splice(indexItem, 1);
+    if(pedido[index]['items'].length == 0){
+        pedido.splice(index, 1);
+        var rowPedido = {
+            descuento: newDesc,
+            plazo: pedido[index]['plazo'],
+            marca: pedido[index]['marca'],
+            tipo: pedido[index]['tipo'],
+            regalo: pedido[index]['regalo'],
+            items: []
+        };
+        rowPedido['items'].push(item);
+    
+        pedido.splice(index, 0, rowPedido);
+    }
+    else{
+        var rowPedido = {
+            descuento: newDesc,
+            plazo: pedido[index]['plazo'],
+            marca: pedido[index]['marca'],
+            tipo: pedido[index]['tipo'],
+            regalo: pedido[index]['regalo'],
+            items: []
+        };
+        rowPedido['items'].push(item);
+    
+        pedido.splice(index+1, 0, rowPedido);
+    }
+    
     console.log(pedido);
+
+    createTablePedido();
+}
+
+// FUNCIÓN ENVIAR A NETSUITE
+
+function saveNS(){
+    if(pedido.length == 0){
+        alert('Agrega artículos al pedido');
+    }
+    else{
+        var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
+
+        var idCustomer; //id
+        var correo; //texto
+        var ordenCompra; //texto
+        var idSucursal; //id
+        var dividir2000; // 1 o 0
+        var cteRecoge; //1 o 0
+        var shippingWay; //id
+        var packageDelivery; //id
+        var comentarios; //maximo 400 caracteres
+    
+        if (!entity.startsWith("Z") && !entity.startsWith("A")) {
+            idCustomer = entity;
+            idSucursal = info[0]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[0]['shippingWays'][indexAddress];
+            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+        }
+        else{
+            idCustomer = entityCte;
+            idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
+            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+        }
+    
+        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
+        correo = document.getElementById("correo").value;
+        ordenCompra = document.getElementById("ordenCompra").value;
+        comentarios = document.getElementById("comments").value;
+
+        pedidoJson = [];
+        var itemsJson = [];
+
+        for(var x = 0; x < pedido.length; x++){
+            var descuento = pedido[x]['descuento'];
+            var plazo = pedido[x]['plazo'];
+            var marca = pedido[x]['marca'];
+            var tipo = pedido[x]['tipo'];
+            for(var y = 0; y < pedido[x]['items'].length; y++){
+                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                    prepareJsonSeparaPedidos();
+                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                    update = true;
+                }
+                var item = {
+                    id: pedido[x]['items'][y]['id'],
+                    itemid: pedido[x]['items'][y]['itemid'],
+                    cantidad: pedido[x]['items'][y]['cantidad'],
+                };
+                itemsJson.push(item);
+            }
+            var items = itemsJson;
+            var temp = {
+                descuento: descuento,
+                plazo: plazo,
+                marca: marca,
+                tipo: tipo,
+                items: items,
+            };
+            pedidoJson.push(temp);
+            itemsJson = [];
+        }
+    
+        var json = {
+            companyId: idCustomer,
+            orderC: ordenCompra,
+            email: correo,
+            addressId: idSucursal,
+            shippingWay: shippingWay,
+            packageDelivery: packageDelivery,
+            divide: dividir2000,
+            pickUp: cteRecoge,
+            order: pedidoJson,
+            comments: comentarios,
+        };
+
+        if(!update){ // No hubo modificaciones y puede guardarse el pedido
+            
+
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "storePedido",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': json,
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        window.location.href = '/pedidos';
+                }, 
+                error: function(error){
+                        // window.location.href = '/pedidos';
+                 }
+            });
+        }
+    }    
 }
