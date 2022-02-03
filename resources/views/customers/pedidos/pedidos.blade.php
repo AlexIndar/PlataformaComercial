@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Ventas'])
+@extends('layouts.intranet.main', ['active' => 'Ventas', 'permissions' => $permissions])
 
 @section('title') Ventas - Pedidos @endsection
 

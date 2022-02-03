@@ -8,4 +8,4 @@ function editarPedido(id, companyId){
     $("#companyId").val(companyId);
     $("#form").submit();
 
-}
+} 

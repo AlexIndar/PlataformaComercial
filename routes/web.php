@@ -265,7 +265,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 } 
                                 $entity = 'ALL';
                                 $pedidos = CotizacionController::getCotizaciones($token, $entity);
-                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos]);
+                                $permissions = LoginController::getPermissions();
+
+                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions]);
                             });
 
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
@@ -496,7 +498,43 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 } 
                                 $promociones = PromoController::getAllEvents($token);
-                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones]);
+                                $permissions = LoginController::getPermissions();
+                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions]);
+                            });
+
+                            Route::post('/promociones/editar', function (Request $request){
+                                $idPromo = $request->id;
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                } 
+                                $promociones = PromoController::getAllEvents($token);
+                                $promocion = [];
+                                foreach($promociones as $key => $value){
+                                    if($value->id == $idPromo){
+                                        $promocion = $value;
+                                    }
+                                }
+
+                                $customersInfo = PromoController::getCustomersInfo($token);
+                                $categories = PromoController::getCategories($customersInfo);
+                                $giros = PromoController::getGiros($customersInfo);
+                                $customers = PromoController::getCustomers($customersInfo);
+                                
+                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
+                                $proveedores = PromoController::getProveedores($infoArticulos);
+                                $marcas = PromoController::getMarcas($infoArticulos);
+                                $articulos = PromoController::getArticulos($infoArticulos);
+
+                                $permissions = LoginController::getPermissions();
+                                return view('customers.promociones.editPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promocion' => $promocion, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos, 'permissions' => $permissions]);
                             });
 
                             Route::get('/promociones/nueva', function (){
@@ -512,6 +550,25 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 } 
                                 $customersInfo = PromoController::getCustomersInfo($token);
+                                
+                                $categories = PromoController::getCategories($customersInfo);
+                                $giros = PromoController::getGiros($customersInfo);
+                                $customers = PromoController::getCustomers($customersInfo);
+                                
+                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
+                                dd($infoArticulos);
+                                $proveedores = PromoController::getProveedores($infoArticulos);
+                                $marcas = PromoController::getMarcas($infoArticulos);
+                                $articulos = PromoController::getArticulos($infoArticulos);
+                                
+                                $permissions = LoginController::getPermissions();
+
+                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos, 'permissions' => $permissions]);
+                            });
+
+                            Route::get('promociones/getPromocionesInfo', function (){
+                                $token = TokenController::getToken();
+                                $customersInfo = PromoController::getCustomersInfo($token);
                                 $categories = PromoController::getCategories($customersInfo);
                                 $giros = PromoController::getGiros($customersInfo);
                                 $customers = PromoController::getCustomers($customersInfo);
@@ -520,10 +577,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $proveedores = PromoController::getProveedores($infoArticulos);
                                 $marcas = PromoController::getMarcas($infoArticulos);
                                 $articulos = PromoController::getArticulos($infoArticulos);
-                                
-                                
 
-                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos]);
+                                $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos);
+                                dd($info);
+                                return $customersInfo;
                             });
 
                             Route::get('/downloadTemplateCategorias', function (){

@@ -68,7 +68,7 @@ class PromoController extends Controller
                     if($giros[$y]==$customers[$x]->groupC){
                         $insert = false;
                         break;
-                    }
+                    } 
                 }
                 if($insert){
                     array_push($giros, $customers[$x]->groupC);

@@ -1,23 +1,24 @@
- 
-@extends('layouts.customers.customer')
+@extends('layouts.intranet.main', ['active' => 'Ventas', 'permissions' => $permissions])
 
-@section('title') Indar - Agregar Promoción @endsection
+@section('title') Ventas - Editar Promoción @endsection 
 
-@section('assets')
+@section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
+<link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
 <script src="{{asset('assets/customers/js/promociones/addPromocion.js')}}"></script>
+<script src="{{asset('assets/customers/js/index.js')}}"></script>
+
 @endsection
 
 @section('body')
 
-    <div class="container">
-
+<div class="content-wrapper p-5">
+    <div class="container-fluid">
         <br><br>
-
         <!---------------------------------------------------------------------------------- DATOS GENERALES / ENCABEZADO PROMOCIONES ------------------------------------------------->
 
         <div class="datos-generales">
-            <div class="title bg-blue">
+            <div class="title bg-indar">
                 <h4>Datos generales de la promoción</h4>
             </div>
             <br>
@@ -25,7 +26,7 @@
             <div class="content-datos-generales">
                 <div class="row text-center">
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Nombre:</h5></div>
-                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="nombrePromo" name="nombrePromo" required></div>
+                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="nombrePromo" name="nombrePromo" value="{{$promocion->nombrePromo}}" required></div>
                 </div>
                 <br>
                 <div class="row text-center">
@@ -93,7 +94,7 @@
         <br><br>
 
         <div class="datos-generales">
-            <div class="title bg-blue">
+            <div class="title bg-indar">
                 <h4>Descuento promo <span id="percent-disccount">: 1</span>% sobre máximo del cliente</h4>
             </div>
             <br>
@@ -144,7 +145,7 @@
                                 @endforeach
                             </select>
                     </div>
-                </div>
+                </div> 
 
                 <br><br>
                 <hr>
@@ -152,7 +153,7 @@
 
                 <div class="row reglas-row">
                     <div class="col-lg-2 col-md-3 col-12 text-center">
-                        <h5>Precio mínimo:</h5>
+                        <h5>Monto mínimo:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
                         <input class="input-promociones" type="number" name="preciomin" id="preciomin" value="1" step=".01" min="0">
@@ -211,7 +212,7 @@
 
                 <!-- GIROS DE CLIENTES -------------------------------------------------------------------------------------------------------------------------->
 
-                <div class="row reglas-row text-center">
+                <div class="row reglas-row text-center d-none">
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Giros de clientes:</h4></div>
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
                     <div class="col-lg-6 col-md-4 col-sm-12 col-12">
@@ -222,23 +223,24 @@
                     </div>
                 </div>
 
-                <br><br>
-                <div class="row text-center">
+                <!-- <br><br> -->
+                <div class="row text-center d-none">
                     <div class="col-12">
                         <h5 id="mensaje-giros" class="mensaje-giros mensaje green"> <strong>Sólo estos giros de clientes</strong> participan en la promoción</h5>
                     </div>
                 </div>
 
-                <br>
-                <div class="col-12">
+                <!-- <br> -->
+                <div class="col-12 d-none">
                             <select id="giros" name="giros[]" class="form-control chosen" data-placeholder="Buscar" multiple>
                                 @foreach($giros as $giro)
                                     <option value="{{$giro}}">{{$giro}}</option>
                                 @endforeach
                             </select>
                 </div>
-                <br>
-                <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                <!-- <br> -->
+                <!-- <div class="col-12 d-flex flex-row justify-content-center align-items-center"> -->
+                <div class="col-12 d-none">
                     <button class="btn btn-blue" onclick="triggerInputFile('giros')"><i class="fas fa-file-upload"></i> Desde archivo</button>
                     <input type="file" name="girosFile" id="girosFile" accept=".csv, .xls, .xlsx" hidden>
                     <button class="btn btn-blue" onclick="downloadTemplate('Giros')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
@@ -246,7 +248,7 @@
                 </div>
                 
 
-                <br><br>
+                <!-- <br><br> -->
 
                 <!-- CLIENTES -------------------------------------------------------------------------------------------------------------------------->
 
@@ -424,6 +426,7 @@
         <br><br><br><br>
     </div>
 
+</div>
 
     <!-- DELETE TAGS MODAL -->
     <div class="modal-background" id="deleteModal">
@@ -459,5 +462,7 @@
             </div>
         </div>
     </div> 
+
+
 
 @endsection
