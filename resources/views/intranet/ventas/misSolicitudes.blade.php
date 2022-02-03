@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Intranet'])
+@extends('layouts.intranet.main', ['active' => 'Intranet', 'permissions' => $permissions])
 
 @section('title') IndarNet - Mis Solicitudes @endsection
 
