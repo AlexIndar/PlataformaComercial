@@ -341,63 +341,97 @@
                 </p>
               </a>
             </li> -->
+            @if(in_array('MisSolicitudes', $permissions) || in_array('Estadistica Cliente', $permissions))
             <li class="nav-item">
               @if($active == 'Intranet') 
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
               @endif
-                <i class="nav-icon fas fa-chart-pie"></i>
+                <i class="nav-icon fas fa-user"></i>
                 <p>
-                  IndarNet
+                  Alta de Clientes
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
+                @if(in_array('MisSolicitudes', $permissions))
                 <li class="nav-item">
                   <a href="/MisSolicitudes" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="far fa-address-card nav-icon"></i>
                     <p>Mis solicitudes</p>
                   </a>
                 </li>
+                @endif
+                @if(in_array('Estadistica Cliente', $permissions))
                 <li class="nav-item">
                   <a href="/EstadisticaSolicitudesClientes" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-chart-line nav-icon"></i>
                     <p>Estadistica Cliente</p>
                   </a>
                 </li>
+                @endif
               </ul>
             </li>
+            @endif
 
+            @if(in_array('Promociones', $permissions) || in_array('Pedidos', $permissions))
             <li class="nav-item">
               @if($active == 'Ventas') 
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
               @endif
-                <i class="nav-icon fas fa-chart-pie"></i>
+                <i class="nav-icon fas fa-search-dollar"></i>
                 <p>
                   Ventas
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
+                @if(in_array('Promociones', $permissions))
                 <li class="nav-item">
                   <a href="/promociones" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-tags nav-icon"></i>
                     <p>Promociones</p>
                   </a>
                 </li>
-              </ul>
-              <ul class="nav nav-treeview">
+                @endif
+                @if(in_array('Pedidos', $permissions))
                 <li class="nav-item">
                   <a href="/pedidos" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Pedido Web</p>
+                    <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                    <p>Pedidos</p>
+                  </a>
+                </li>
+                @endif
+              </ul>
+            </li>
+            @endif
+
+            @if(in_array('Portal Viaticos', $permissions))
+            <li class="nav-item">
+              @if($active == 'Viaticos') 
+              <a href="#" class="nav-link active">
+              @else
+              <a href="#" class="nav-link">
+              @endif
+                <i class="nav-icon fas fa-plane"></i>
+                <p>
+                  Viáticos
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="https://5327814.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=980&deploy=1&compid=5327814&h=a519d7a1694f67babcc1&ppConfId=1" class="nav-link" target="_blank">
+                    <i class="fas fa-globe nav-icon"></i>
+                    <p>Portal Viáticos</p>
                   </a>
                 </li>
               </ul>
             </li>
+            @endif
 
 
             <!-- <li class="nav-item">

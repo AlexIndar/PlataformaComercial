@@ -37,17 +37,17 @@ class LoginController extends Controller
                 $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
                 if(json_decode($typeUser->body())->typeUser == "C"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900, '/');
-                    setcookie("refresh", $token, time()+900, '/');
-                    setcookie("level", "C", time()+900, '/');
-                    // setcookie('access', json_encode($permissions), time()+3600);
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
+                    setcookie("refresh", $token, time()+3600, '/');
+                    setcookie("level", "C", time()+3600, '/');
+                    setcookie('access', json_encode($permissions), time()+3600);
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+900, '/');
-                    setcookie("refresh", $token, time()+900, '/');
-                    setcookie("level", "E", time()+900, '/');
-                    // setcookie('access', json_encode($permissions), time()+3600);
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
+                    setcookie("refresh", $token, time()+3600, '/');
+                    setcookie("level", "E", time()+3600, '/');
+                    setcookie('access', json_encode($permissions), time()+3600);
                     return redirect('/Intranet');
                 }
                 

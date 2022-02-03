@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Dashboard']) 
+@extends('layouts.intranet.main', ['active' => 'Dashboard', 'permissions' => $permissions]) 
 
 @section('title') Indar @endsection
 

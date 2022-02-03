@@ -286,6 +286,8 @@ $(document).ready(function() {
                 indexAddress = 0;
                 $('#envio').val(info[0]['shippingWayF']);
                 $('#fletera').val(info[0]['packgeDeliveryF']);
+                document.getElementById('envio').classList.add('d-none');
+                document.getElementById('containerSelectEnvio').classList.remove('d-none');
             } else {
                 indexAddress = selected;
                 addresses = info[0]['addresses'];
@@ -293,21 +295,85 @@ $(document).ready(function() {
                 packageDeliveries = info[0]['packageDeliveries'];
                 $('#envio').val(shippingWays[selected]);
                 $('#fletera').val(packageDeliveries[selected]);
+                document.getElementById('envio').classList.remove('d-none');
+                document.getElementById('containerSelectEnvio').classList.add('d-none');
             }
         } else {
             if (clickedIndex == 0) {
                 indexAddress = 0;
-                $('#envio').val(info[indexCustomer]['shippingWayF']);
-                $('#fletera').val(info[indexCustomer]['packgeDeliveryF']);
+                $('#fletera').val('');
                 document.getElementById('envio').classList.add('d-none');
-                document.getElementById('selectEnvio').classList.remove('d-none');
+                document.getElementById('containerSelectEnvio').classList.remove('d-none');
+                shippingWays = info[indexCustomer]['shippingWays'];
+                var itemSelectorOption = $('#selectEnvio option');
+                itemSelectorOption.remove();
+                $('#selectEnvio').selectpicker('refresh');
+        
+                $('#selectEnvio').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
+                $('#selectEnvio').val('none');
+                $('#selectEnvio').selectpicker("refresh");
+                for (var x = 0; x < shippingWays.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+                    $('#selectEnvio').append('<option value="' + x + '">' + shippingWays[x] + '</option>');
+                    $('#selectEnvio').val(shippingWays[x]);
+                    $('#selectEnvio').selectpicker("refresh");
+                }
+        
+                $('#sucursal').val('none'); //Seleccionar la primera opcion
+                $('#sucursal').selectpicker('refresh');
+        
                 
             } else {
                 indexAddress = selected;
                 $('#envio').val(shippingWays[selected]);
                 $('#fletera').val(packageDeliveries[selected]);
+                document.getElementById('envio').classList.remove('d-none');
+                document.getElementById('containerSelectEnvio').classList.add('d-none');
             }
         }
+    });
+
+    // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
+
+    $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        console.log('Index Clicked')
+        // var selected = clickedIndex - 1;
+        // indexCustomer = selected;
+        // addresses = info[selected]['addresses'];
+        // shippingWays = info[selected]['shippingWays'];
+        // packageDeliveries = info[selected]['packageDeliveries'];
+
+        // document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
+
+        // document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
+        // document.getElementById('categoryCte').classList.remove('d-none');
+
+        // items = [];
+        // intervalInventario = window.setInterval(checkItems, 1000);
+        // document.getElementById('entity').value = info[selected]["companyId"];
+        // entityCte = info[selected]["companyId"];
+        // getItems(info[selected]["companyId"]);
+
+        // var itemSelectorOption = $('#sucursal option');
+        // itemSelectorOption.remove();
+        // $('#sucursal').selectpicker('refresh');
+
+        // $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
+        // $('#sucursal').val('none');
+        // $('#sucursal').selectpicker("refresh");
+
+        // for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+        //     $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
+        //     $('#sucursal').val(addresses[x]['addressID']);
+        //     $('#sucursal').selectpicker("refresh");
+        // }
+
+        // $('#sucursal').val('none'); //Seleccionar la primera opcion
+        // $('#sucursal').selectpicker('refresh');
+
+        // $('#envio').val(info[selected]['shippingWayF']);
+        // $('#fletera').val(info[selected]['packgeDeliveryF']);
+        // $('#correo').val(info[selected]['email']);
+
     });
 
 });
@@ -729,7 +795,7 @@ function cargarInventario() {
             arr.push(items[x]['itemid']);
             arr.push(items[x]['purchasedescription']);
             arr.push(items[x]['multiploVenta']);
-            arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='0' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
+            arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
             arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
             arr.push(items[x]['unidad']);
             arr.push(items[x]['promo']);
@@ -886,10 +952,10 @@ function addRowPedido(item, fila, indexPedido) {
 
     cell1.innerHTML = "<h4>" + fila + "</h4>";
     if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0)
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0)
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
@@ -1471,8 +1537,18 @@ function saveNS(){
             var desneg = 0;
             var desgar = 0;
             var specialAuthorization = "";
-
-            var indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == pedido[x]['descuento'] && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            var indexItemSeparado;
+            if(pedido[x]['items'][0]['desneg'] != 0){
+                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            }
+            else if(pedido[x]['items'][0]['desgar'] != 0){
+                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desgar']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            }
+            else{
+                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            }
+            
+            console.log(indexItemSeparado);
             var evento = pedidoSeparado[indexItemSeparado]['evento'];
 
             for(var y = 0; y < pedido[x]['items'].length; y++){

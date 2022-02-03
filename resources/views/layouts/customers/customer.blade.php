@@ -391,7 +391,7 @@
                     @csrf
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Correo electrónico" required></div>      
+                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Usuario o Correo electrónico" required></div>      
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Password">Contraseña:</label></div>

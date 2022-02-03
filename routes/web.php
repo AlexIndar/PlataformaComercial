@@ -572,8 +572,8 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                  Route::get('/Intranet', function(){
                     $entity = "C002620";
-                    // $permissions = LoginController::getPermissions();
-                    return view('intranet.main', ['entity' => $entity]);
+                    $permissions = LoginController::getPermissions();
+                    return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions]);
                 });
 
                 Route::get('/MisSolicitudes', function(){
