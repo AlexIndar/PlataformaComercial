@@ -635,6 +635,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 Route::get('/MisSolicitudes', function(){
                     $token = TokenController::refreshToken();
+                    $permissions = LoginController::getPermissions();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -647,7 +648,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     function getStatus($id){
                         return MisSolicitudesController::getStatus($id);
                     }
-                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'zone' => $zone, 'listSol' => $listSol]);
+                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol]);
                     /*return view('intranet.ventas.misSolicitudes');*/
                 });
 
@@ -766,12 +767,13 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 Route::get('/EstadisticaSolicitudesClientes', function(){
                     $token = TokenController::refreshToken();
+                    $permissions = LoginController::getPermissions();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
                     $user = MisSolicitudesController::getUser($token);
                     $zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'zone' => $zone]);
+                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'permissions' => $permissions, 'zone' => $zone]);
                 });
 
                 Route::post('/EstadisticaCliente/getEmployeeReport', function (Request $request){
