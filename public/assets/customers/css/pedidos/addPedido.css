@@ -13,6 +13,10 @@
   text-align: center;
 }
 
+/* input{
+  width: auto;
+} */
+
 .title{
   height: auto;
   width: 100%;
@@ -162,12 +166,12 @@ overflow-x: scroll;
 .customHeader{
 background-color: #002868 !important;
 color: white !important;
-width: 100% !important;
+width: auto !important;
 }
 
 #tableInventario.display {
 margin: 0 auto;
-width: 100%;
+width: auto;
 clear: both;
 border-collapse: collapse;
 table-layout: fixed;       
@@ -191,13 +195,20 @@ padding: 5px;
 border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.text-inventario{
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
 .quantityBtn{
 background-color: #E9ECEF;
 border: 1px solid rgba(0, 0, 0, 0.1);
 width: 25px;
-height: 40px;
+height: 34px;
 position: relative;
-margin-top: -5px;
+margin-top: -2px;
 }
 
 .input-cantidad{
@@ -223,7 +234,7 @@ height: 30px;
   height: 30px !important;
 }
 
-.input-group-append{
+.append-inventario{
   height: 30px !important;
 }
 
@@ -234,6 +245,7 @@ height: 30px;
 
 #descripcion{
   font-size: 15px;
+  /* text-align: left !important; */
 }
 
 .td-center{

@@ -327,6 +327,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(str_starts_with($entity, 'Z1')){
                                     $entity = 'ALL';
                                 }
+
                                 
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 // dd($data);
@@ -386,6 +387,34 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $response = CotizacionController::updatePedido($token, json_encode($request->all()));
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                }   
+                                return $response;
+
+                            }); 
+
+                            Route::post('/pedido/storePedidoNS', function (Request $request){
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+
+                                $getUser = MisSolicitudesController::getUser($token);
+                                $user = $getUser->body();
+                                $json = $request->json;
+
+                                foreach($json as $key => $field){
+                                    $json[$key]['user'] = $user;
+                                }
+
+                                dd($json);
+                                
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();

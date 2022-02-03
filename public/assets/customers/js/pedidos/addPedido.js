@@ -1,8 +1,8 @@
-var info = [];
+var info = []; //result getInfoHeatWeb
 var addresses = [];
 var shippingWays = [];
 var packageDeliveries = [];
-var items = [];
+var items = []; //result inventario getItems/All
 var jsonItemsSeparar = "";
 var ignorarRegalos = [];
 
@@ -12,6 +12,7 @@ var cantItemsPorCargar = 0;
 var cantItemsCargados = 0;
 
 var pedido = [];
+var pedidoSeparado = []; //result separaPedidosPromo
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
 
@@ -154,7 +155,8 @@ $(document).ready(function() {
         },
         success: function(data) {
             info = data;
-            
+            console.log('GetInfoHeatWeb')
+            console.log(data);
         },
         error: function(error) {
             
@@ -297,6 +299,9 @@ $(document).ready(function() {
                 indexAddress = 0;
                 $('#envio').val(info[indexCustomer]['shippingWayF']);
                 $('#fletera').val(info[indexCustomer]['packgeDeliveryF']);
+                document.getElementById('envio').classList.add('d-none');
+                document.getElementById('selectEnvio').classList.remove('d-none');
+                
             } else {
                 indexAddress = selected;
                 $('#envio').val(shippingWays[selected]);
@@ -496,11 +501,7 @@ function prepareJsonSeparaPedidos(){
     }
 }
 
-function separarPedidosPromo(json){
-    
-    
-    
-    
+function separarPedidosPromo(json){  //envía json a back y recibe pedido separado
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -518,15 +519,14 @@ function separarPedidosPromo(json){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
-            
-            
+            pedidoSeparado = data;
             separarFilas(data);
         },
         error: function(error) {}
     });
 }
 
-function separarFilas(json){
+function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
     
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
@@ -565,7 +565,6 @@ function separarFilas(json){
             autorizaDesgar: "",
         };
         if(x==0){
-            // addHeaderPedido(json[x]['descuento'], json[x]['plazo'], json[x]['tipo']);
             var rowPedido = {
                 descuento: json[x]['descuento'],
                 plazo: json[x]['plazo'],
@@ -603,13 +602,11 @@ function getItemById(item) {
     var entity = document.getElementById('entity').value;
     var data = { id: item['articulo'], entity: entity };
     var cantidad = item['cantidad'];
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
@@ -697,11 +694,32 @@ function cargarInventario() {
         document.getElementById('empty').value = 'No';
         var dataset = [];
 
+        console.log(items);
         for (var x = 0; x < items.length; x++) {
             var arr = [];
             // arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
+
+            var precio = (items[x]['price']).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+
+            var precioIVA = ((items[x]['price']*1.16)).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+
+            var existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+        
+            existenciaFormat = existenciaFormat.slice(1, -1);
+            existenciaFormat = existenciaFormat.split('.')[0];
+
             var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
-            arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' width='80px'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' width='80px'/>");
+            // arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' width='80px'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' width='80px'/>");
+            arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' width='80px'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='80px'/>");
             arr.push(items[x]['categoriaItem']);
             arr.push(items[x]['clavefabricante']);
             arr.push(items[x]['familia']);
@@ -711,11 +729,11 @@ function cargarInventario() {
             arr.push(items[x]['itemid']);
             arr.push(items[x]['purchasedescription']);
             arr.push(items[x]['multiploVenta']);
-            arr.push("<input type='number' value=" + items[x]['multiploVenta'] + ">")
-            arr.push(items[x]['price']);
+            arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='0' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
+            arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
             arr.push(items[x]['unidad']);
             arr.push(items[x]['promo']);
-            arr.push(items[x]['disponible']);
+            arr.push(existenciaFormat);
             arr.push("<i class='fas fa-plus-square btn-add-product fa-2x'></i>");
 
             dataset.push(arr);
@@ -727,8 +745,8 @@ function cargarInventario() {
             data: dataset,
             autoWidth: false, // might need this
             scrollCollapse: true,
-            columns: [
-                { "width": "20%" },
+            "columns": [
+                null,
                 null, // automatically calculates
                 null,
                 null,
@@ -739,11 +757,11 @@ function cargarInventario() {
                 null,
                 null,
                 null,
+                { "width": "30%" },
                 null,
                 null,
                 null,
                 null,
-                null
             ],
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
@@ -857,22 +875,31 @@ function addRowPedido(item, fila, indexPedido) {
         currency: 'USD',
     });
 
+    var existenciaFormat = (parseFloat(item['disponible'])).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    existenciaFormat = existenciaFormat.slice(1, -1);
+    existenciaFormat = existenciaFormat.split('.')[0];
+    
+
     cell1.innerHTML = "<h4>" + fila + "</h4>";
     if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0)
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
     
     else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0)
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='HSS'>HSS</option><option value='JRG'>JRG</option><option value='JSB'>JSB</option></select></div></div>";
     
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
 
-    if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO")
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+    if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>" + item["promo"] + "%</h5>";
@@ -983,14 +1010,22 @@ function addRowRegalo(item, fila, indexPedido) {
         currency: 'USD',
     });
 
+    var existenciaFormat = (parseFloat(item['disponible'])).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    existenciaFormat = existenciaFormat.slice(1, -1);
+    existenciaFormat = existenciaFormat.split('.')[0];
+
     cell1.innerHTML = "<h4>" + fila + "</h4>";
     cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
 
-    if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO")
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+    if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + item["disponible"] + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>0%</h5>";
@@ -1382,7 +1417,6 @@ function saveNS(){
         alert('Agrega artículos al pedido');
     }
     else{
-        var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
 
         var idCustomer; //id
         var correo; //texto
@@ -1393,6 +1427,11 @@ function saveNS(){
         var shippingWay; //id
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
+        console.log('Pedido Separado Final');
+        console.log(pedidoSeparado);
+        console.log('Pedido Web');
+        console.log(pedido);
+
     
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
@@ -1407,69 +1446,124 @@ function saveNS(){
             packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
         }
     
+        var indexCustomerInfo = info.findIndex(o => o.companyId === idCustomer);
+        var internalId = info[indexCustomerInfo]['internalID'];
+
         dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
         comentarios = document.getElementById("comments").value;
 
-        pedidoJson = [];
-        var itemsJson = [];
+        var lineItems = [];
+        var listNS = [];
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
 
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
             var marca = pedido[x]['marca'];
             var tipo = pedido[x]['tipo'];
+            var desneg = 0;
+            var desgar = 0;
+            var specialAuthorization = "";
+
+            var indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == pedido[x]['descuento'] && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            var evento = pedidoSeparado[indexItemSeparado]['evento'];
+
             for(var y = 0; y < pedido[x]['items'].length; y++){
-                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos();
-                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                    update = true;
-                }
+                
+                var listaPrecio = info[indexCustomerInfo]['priceList'];
+                
+
                 var item = {
-                    id: pedido[x]['items'][y]['id'],
                     itemid: pedido[x]['items'][y]['itemid'],
-                    cantidad: pedido[x]['items'][y]['cantidad'],
+                    quantity: pedido[x]['items'][y]['cantidad'],
+                    listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
                 };
-                itemsJson.push(item);
+                if(pedido[x]['items'][y]['desneg'] != 0){
+                    desneg = pedido[x]['items'][y]['desneg'];
+                    specialAuthorization = pedido[x]['items'][y]['autorizaDesneg'];
+                }
+                if(pedido[x]['items'][y]['desgar'] != 0){
+                    desgar = pedido[x]['items'][y]['desgar'];
+                    specialAuthorization = pedido[x]['items'][y]['autorizaDesgar'];
+                }
+                lineItems.push(item);
             }
-            var items = itemsJson;
             var temp = {
-                descuento: descuento,
-                plazo: plazo,
-                marca: marca,
-                tipo: tipo,
-                items: items,
+                internalId: 0,
+                idCustomer: internalId,
+                date: dd + "/" + mm + "/" + yyyy,
+                location: marca == 'OUTLET' ? "36" : "1",
+                billingAddress: {
+                    id: "XXXXXX" //no tengo este dato
+                },
+                shippingAddress: {
+                    id: idSucursal
+                },
+                typeOrder: {
+                    id: "1",
+                    txt: ""
+                },
+                idWeb: "XXXXXX-X/X", //no tengo este dato
+                noCotizacion: "XXXXXX", //no tengo este dato
+                lineItems: lineItems,
+                shippingWay: {
+                    id: 0,
+                    txt: shippingWay
+                },
+                package: {
+                    id: 0,
+                    txt: packageDelivery
+                },
+                typeSale: {
+                    id: "1",
+                    txt: ""
+                },
+                user: "USUARIO", //usuario que genera venta
+                methodPayment: {
+                    id: "10",
+                    txt: ""
+                },
+                useCFDI: null,
+                comments: comentarios,
+                events: {
+                    id: "0", 
+                    txt: evento
+                },
+                plazoEvento: {
+                    id: "0",
+                    txt: plazo
+                },
+                eventSpecialDiscount: descuento - desneg, //descuento original del subpedido
+                customerDiscountPP: descuento, //total de descuento cabecera con desneg o desgar
+                discountSpecial: desneg != 0 ? desneg : desgar, //desneg o desgar
+                specialAuthorization: specialAuthorization,
+                numPurchase: ordenCompra, 
+                desneg: desneg != 0 ? 1 : 0, 
+                desgar: desgar != 0 ? 1 : 0
             };
-            pedidoJson.push(temp);
-            itemsJson = [];
+            listNS.push(temp);
+            lineItems = [];
         }
+
+        console.log('LISTA NETSUITE');
+        console.log(listNS);
+        console.log(JSON.stringify(listNS));
     
-        var json = {
-            companyId: idCustomer,
-            orderC: ordenCompra,
-            email: correo,
-            addressId: idSucursal,
-            shippingWay: shippingWay,
-            packageDelivery: packageDelivery,
-            divide: dividir2000,
-            pickUp: cteRecoge,
-            order: pedidoJson,
-            comments: comentarios,
-        };
-
-        if(!update){ // No hubo modificaciones y puede guardarse el pedido
-            
-
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                'url': "storePedido",
+                'url': "storePedidoNS",
                 'type': 'POST',
                 'dataType': 'json',
-                'data': json,
+                'data': {json: listNS},
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
@@ -1479,6 +1573,15 @@ function saveNS(){
                         // window.location.href = '/pedidos';
                  }
             });
-        }
     }    
+}
+
+function updatePrecioIVA(input, itemid, precio){
+    var desc = input.value;
+    var precioIVA = ((precio*((100-desc)/100)*1.16)).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    document.getElementById('precioIVA-'+itemid).innerHTML = "<strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído";
 }

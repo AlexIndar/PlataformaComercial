@@ -85,6 +85,15 @@
                                 @else
                                     <input type="text" class="inputPedido" id="envio" name="envio" value="" disabled>
                                 @endif
+
+                                <select id="selectEnvio" name="selectEnvio" class="form-control selectpicker d-none" data-live-search="true">
+                                @if(count($data)==1)
+                                    <option style="height: 30px !important;" value="none">Selecciona una forma de envío</option>
+                                    @for($x=0; $x < (count($data[0]['shippingWays'])); $x++)
+                                        <option style="height: 30px !important;" value="{{$x}}">{{$data[0]['shippingWays'][$x]}}</option>
+                                    @endfor
+                                @endif
+                            </select>
                             </div>
                     </div>
 
@@ -257,7 +266,7 @@
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-            <button type="button" id="levantarPedido" class="btn btn-group-buttons"><i class="fas fa-check"></i> Levantar pedido</button>
+            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="saveNS()"><i class="fas fa-check"></i> Levantar pedido</button>
             <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
             <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button>
         </div>
