@@ -71,5 +71,14 @@
                     @endfor
 
                 </table>
+
+                <br>
+
+                <fieldset class="scheduler-border" style="min-height: 140px !important">
+                    <legend class="scheduler-border">Detalles Pedido</legend>
+                    <h5><strong>SUBTOTAL:</strong> <span style="float: right; text-align: right">${{$detallesPedido['subtotal']}}</span></h5>
+                    <h5><strong>IVA:</strong> <span style="float: right; text-align: right">${{$detallesPedido['iva']}}</span></h5>
+                    <h5><strong>TOTAL:</strong> <span style="float: right; text-align: right">${{$detallesPedido['total']}}</span></h5>
+                </fieldset>
 </body>
 </html> 
