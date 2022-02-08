@@ -5,6 +5,7 @@ var packageDeliveries = [];
 var items = []; //result inventario getItems/All
 var jsonItemsSeparar = "";
 var ignorarRegalos = [];
+var noCotizacionNS;
 
 
 var selectedItemsFromInventory = [];
@@ -30,7 +31,9 @@ var entityCte;
 $(document).ready(function() {
 
     entity = document.getElementById('entity').value;
+    entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
+        console.log(entity);
         getItems(entity);
     }
     else{ //si es zona o all (vendedor o apoyo)
@@ -48,7 +51,7 @@ $(document).ready(function() {
     
         $.ajax({
             type: "GET",
-            enctype: 'multipart/form-data',
+            enctype: 'multipart/form-data', 
             url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
             data: FormData,
             headers: {
@@ -56,20 +59,19 @@ $(document).ready(function() {
             },
             success: function(data) {
                 
-
                 $('#sucursal').val(data['addressId']); //Seleccionar la primera opcion
                 $('#sucursal').selectpicker('refresh');
 
                 if(data['pickUp']==1){
                     $('#cliente_recoge').prop("checked", true);
-                }
+                } 
 
                 if(data['divide']==1){
                     $('#dividir').prop("checked", true);
                 }
             
                 for (var x = 0; x < data['order'].length; x++) {
-                    for(var y = 0; y < data['order'][0]['items'].length; y++){
+                    for(var y = 0; y < data['order'][x]['items'].length; y++){
                         selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
                         cantItemsPorCargar ++;
                     }
@@ -77,7 +79,7 @@ $(document).ready(function() {
 
             },
             error: function(error) {
-
+                alert('Error cargando pedido');
             }
         });
     }
@@ -120,6 +122,7 @@ $(document).ready(function() {
     // });
 
     function checkItems() {
+        console.log(items);
         if (items.length > 0) {
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
@@ -593,7 +596,6 @@ function separarPedidosPromo(json){  //envía json a back y recibe pedido separa
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
-    
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -1298,15 +1300,366 @@ function save(){
                         window.location.href = '/pedidos';
                 }, 
                 error: function(error){
-                        // window.location.href = '/pedidos';
+                        window.location.href = '/pedidos';
                  }
             });
         }
     }    
 }
 
-function update(){
-    var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
+
+function applyDesneg(itemid, select, index){
+    tipoDesc = select.value;
+    if(select.value == ''){
+        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.add('d-none');
+    }
+    if(select.value == 'desneg'){
+        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
+    }
+    if(select.value == 'desgar'){
+        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
+    }
+}
+
+function updatePedidoDesneg(itemid, select, index){
+    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === itemid);
+    var newDesc;
+    var item;
+    if(tipoDesc == 'desneg'){
+        var desneg = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
+        newDesc = desneg;
+        var autorizaDesneg = select.value;
+        item = pedido[index]['items'][indexItem];
+        item['desneg'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
+        item['autorizaDesneg'] = autorizaDesneg;
+    }
+    if(tipoDesc == 'desgar'){
+        var desgar = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
+        newDesc = desgar;
+        var autorizaDesgar = select.value;
+        item = pedido[index]['items'][indexItem];
+        item['desgar'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
+        item['autorizaDesgar'] = autorizaDesgar;
+    }
+    
+    pedido[index]['items'].splice(indexItem, 1);
+    if(pedido[index]['items'].length == 0){
+        pedido.splice(index, 1);
+        var rowPedido = {
+            descuento: newDesc,
+            plazo: pedido[index]['plazo'],
+            marca: pedido[index]['marca'],
+            tipo: pedido[index]['tipo'],
+            regalo: pedido[index]['regalo'],
+            items: []
+        };
+        rowPedido['items'].push(item);
+    
+        pedido.splice(index, 0, rowPedido);
+    }
+    else{
+        var rowPedido = {
+            descuento: newDesc,
+            plazo: pedido[index]['plazo'],
+            marca: pedido[index]['marca'],
+            tipo: pedido[index]['tipo'],
+            regalo: pedido[index]['regalo'],
+            items: []
+        };
+        rowPedido['items'].push(item);
+    
+        pedido.splice(index+1, 0, rowPedido);
+    }
+    
+    console.log(pedido);
+
+    createTablePedido();
+}
+
+// FUNCIÓN ENVIAR A NETSUITE
+
+function saveNS(){
+
+    if(pedido.length == 0){
+        alert('Agrega artículos al pedido');
+    }
+    else{
+        var numCotizacion
+        if(window.location.href.includes('pedido/editar')) //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+            numCotizacion = noCotizacionNS;
+        else
+            numCotizacion = noCotizacionNS['idCotizacion'];
+        var idCustomer; //id
+        var correo; //texto
+        var ordenCompra; //texto
+        var idSucursal; //id
+        var dividir2000; // 1 o 0
+        var cteRecoge; //1 o 0
+        var shippingWay; //id
+        var packageDelivery; //id
+        var comentarios; //maximo 400 caracteres
+        console.log('Pedido Separado Final');
+        console.log(pedidoSeparado);
+        console.log('Pedido Web');
+        console.log(pedido);
+
+    
+        if (!entity.startsWith("Z") && !entity.startsWith("A")) {
+            idCustomer = entity;
+            idSucursal = info[0]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[0]['shippingWays'][indexAddress];
+            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+        }
+        else{
+            idCustomer = entityCte;
+            idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
+            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
+            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+        }
+    
+
+        var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === idCustomer.toUpperCase());
+        var internalId = info[indexCustomerInfo]['internalID'];
+
+        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
+        correo = document.getElementById("correo").value;
+        ordenCompra = document.getElementById("ordenCompra").value;
+        comentarios = document.getElementById("comments").value;
+
+        var lineItems = [];
+        var listNS = [];
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+
+        for(var x = 0; x < pedido.length; x++){
+            var descuento = pedido[x]['descuento'];
+            var plazo = pedido[x]['plazo'];
+            var marca = pedido[x]['marca'];
+            var tipo = pedido[x]['tipo'];
+            var desneg = 0;
+            var desgar = 0;
+            var specialAuthorization = "";
+            var indexItemSeparado;
+            if(pedido[x]['items'][0]['desneg'] != 0){
+                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            }
+            else if(pedido[x]['items'][0]['desgar'] != 0){
+                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desgar']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            }
+            else{
+                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
+            }
+            
+            console.log(indexItemSeparado);
+            var evento = pedidoSeparado[indexItemSeparado]['evento'];
+
+            for(var y = 0; y < pedido[x]['items'].length; y++){
+                
+                var listaPrecio = info[indexCustomerInfo]['priceList'];
+                
+
+                var item = {
+                    itemid: pedido[x]['items'][y]['itemid'],
+                    quantity: pedido[x]['items'][y]['cantidad'],
+                    listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
+                };
+                if(pedido[x]['items'][y]['desneg'] != 0){
+                    desneg = pedido[x]['items'][y]['desneg'];
+                    specialAuthorization = pedido[x]['items'][y]['autorizaDesneg'];
+                }
+                if(pedido[x]['items'][y]['desgar'] != 0){
+                    desgar = pedido[x]['items'][y]['desgar'];
+                    specialAuthorization = pedido[x]['items'][y]['autorizaDesgar'];
+                }
+                lineItems.push(item);
+            }
+            var temp = {
+                internalId: 0,
+                idCustomer: internalId,
+                date: dd + "/" + mm + "/" + yyyy,
+                location: marca == 'OUTLET' ? "36" : "1",
+                billingAddress: {
+                    id: "XXXXXX" //se llena en el back
+                },
+                shippingAddress: {
+                    id: idSucursal
+                },
+                typeOrder: {
+                    id: "1",
+                    txt: ""
+                },
+                idWeb: numCotizacion.toString() + "-" + (x+1) + "/" + pedido.length, //no tengo este dato
+                noCotizacion: numCotizacion.toString(), //no tengo este dato
+                lineItems: lineItems,
+                shippingWay: {
+                    id: 0,
+                    txt: shippingWay
+                },
+                package: {
+                    id: 0,
+                    txt: packageDelivery
+                },
+                typeSale: {
+                    id: pedido[x]['tipo'] == 'BO' ? "6" : "5",
+                    txt: ""
+                },
+                user: "USUARIO",
+                methodPayment: {
+                    id: "10",
+                    txt: ""
+                },
+                useCFDI: null,
+                comments: comentarios,
+                events: {
+                    id: "0", 
+                    txt: evento
+                },
+                plazoEvento: {
+                    id: "0",
+                    txt: plazo
+                },
+                eventSpecialDiscount: descuento - desneg, //descuento original del subpedido
+                customerDiscountPP: descuento, //total de descuento cabecera con desneg o desgar
+                discountSpecial: desneg != 0 ? desneg : desgar, //desneg o desgar
+                specialAuthorization: specialAuthorization,
+                numPurchase: ordenCompra, 
+                desneg: desneg != 0 ? 1 : 0, 
+                desgar: desgar != 0 ? 1 : 0
+            };
+            listNS.push(temp);
+            lineItems = [];
+        }
+
+        console.log('LISTA NETSUITE');
+        console.log(listNS);
+        console.log(JSON.stringify(listNS));
+    
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "storePedidoNS",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': {json: listNS},
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        // alert('success');
+                        sendEmail();
+                        // window.location.href = '/pedidos';
+                }, 
+                error: function(error){
+                        alert('error');
+                        sendEmail();
+                        // window.location.href = '/pedidos';
+                 }
+            });
+    }    
+}
+
+function saveAndGetIDCotizacion(){
+            var idCustomer; //id
+            var correo; //texto
+            var ordenCompra; //texto
+            var idSucursal; //id
+            var dividir2000; // 1 o 0
+            var cteRecoge; //1 o 0
+            var shippingWay; //id
+            var packageDelivery; //id
+            var comentarios; //maximo 400 caracteres
+    
+            if (!entity.startsWith("Z") && !entity.startsWith("A")) {
+                idCustomer = entity;
+                idSucursal = info[0]['addresses'][indexAddress]["addressID"];
+                shippingWay = info[0]['shippingWays'][indexAddress];
+                packageDelivery = info[0]['packageDeliveries'][indexAddress];
+            }
+            else{
+                idCustomer = entityCte;
+                idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
+                shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
+                packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+            }
+        
+            dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+            cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
+            correo = document.getElementById("correo").value;
+            ordenCompra = document.getElementById("ordenCompra").value;
+            comentarios = document.getElementById("comments").value;
+
+            pedidoJson = [];
+            var itemsJson = [];
+
+            for(var x = 0; x < pedido.length; x++){
+                var descuento = pedido[x]['descuento'];
+                var plazo = pedido[x]['plazo'];
+                var marca = pedido[x]['marca'];
+                var tipo = pedido[x]['tipo'];
+                for(var y = 0; y < pedido[x]['items'].length; y++){
+                    if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                        prepareJsonSeparaPedidos();
+                        alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                        update = true;
+                    }
+                    var item = {
+                        id: pedido[x]['items'][y]['id'],
+                        itemid: pedido[x]['items'][y]['itemid'],
+                        cantidad: pedido[x]['items'][y]['cantidad'],
+                    };
+                    itemsJson.push(item);
+                }
+                var items = itemsJson;
+                var temp = {
+                    descuento: descuento,
+                    plazo: plazo,
+                    marca: marca,
+                    tipo: tipo,
+                    items: items,
+                };
+                pedidoJson.push(temp);
+                itemsJson = [];
+            }
+    
+            var json = {
+                companyId: idCustomer,
+                orderC: ordenCompra,
+                email: correo,
+                addressId: idSucursal,
+                shippingWay: shippingWay,
+                packageDelivery: packageDelivery,
+                divide: dividir2000,
+                pickUp: cteRecoge,
+                order: pedidoJson,
+                comments: comentarios,
+            };
+
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "storePedidoGetID",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': json,
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        noCotizacionNS = data;
+                        saveNS();
+                }, 
+                error: function(error){
+                        // window.location.href = '/pedidos';
+                 }
+            });
+}
+
+function update(action){
+        var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
 
         var idCustomer; //id
         var correo; //texto
@@ -1393,263 +1746,29 @@ function update(){
                 },
                 'url': "updatePedido",
                 'type': 'POST',
-                'dataType': 'json',
                 'data': json,
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
-                        window.location.href = '/pedidos';
+                        if(action == 'save'){
+                            window.location.href = '/pedidos';
+                        }
+                        else{
+                            noCotizacionNS = document.getElementById('idCotizacion').value;
+                            saveNS();
+                        }
                 }, 
                 error: function(error){
-                        window.location.href = '/pedidos';
+                        if(action == 'save'){
+                            window.location.href = '/pedidos';
+                        }
+                        else{
+                            noCotizacionNS = document.getElementById('idCotizacion').value;
+                            saveNS();
+                        }
                  }
             });
         }
-}    
-
-
-function applyDesneg(itemid, select, index){
-    tipoDesc = select.value;
-    if(select.value == ''){
-        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.add('d-none');
-    }
-    if(select.value == 'desneg'){
-        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
-    }
-    if(select.value == 'desgar'){
-        document.getElementById('row-descuento-detalles-'+itemid+'-'+index).classList.remove('d-none');
-    }
-}
-
-function updatePedidoDesneg(itemid, select, index){
-    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === itemid);
-    var newDesc;
-    var item;
-    if(tipoDesc == 'desneg'){
-        var desneg = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
-        newDesc = desneg;
-        var autorizaDesneg = select.value;
-        item = pedido[index]['items'][indexItem];
-        item['desneg'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
-        item['autorizaDesneg'] = autorizaDesneg;
-    }
-    if(tipoDesc == 'desgar'){
-        var desgar = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
-        newDesc = desgar;
-        var autorizaDesgar = select.value;
-        item = pedido[index]['items'][indexItem];
-        item['desgar'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
-        item['autorizaDesgar'] = autorizaDesgar;
-    }
-    
-    pedido[index]['items'].splice(indexItem, 1);
-    if(pedido[index]['items'].length == 0){
-        pedido.splice(index, 1);
-        var rowPedido = {
-            descuento: newDesc,
-            plazo: pedido[index]['plazo'],
-            marca: pedido[index]['marca'],
-            tipo: pedido[index]['tipo'],
-            regalo: pedido[index]['regalo'],
-            items: []
-        };
-        rowPedido['items'].push(item);
-    
-        pedido.splice(index, 0, rowPedido);
-    }
-    else{
-        var rowPedido = {
-            descuento: newDesc,
-            plazo: pedido[index]['plazo'],
-            marca: pedido[index]['marca'],
-            tipo: pedido[index]['tipo'],
-            regalo: pedido[index]['regalo'],
-            items: []
-        };
-        rowPedido['items'].push(item);
-    
-        pedido.splice(index+1, 0, rowPedido);
-    }
-    
-    console.log(pedido);
-
-    createTablePedido();
-}
-
-// FUNCIÓN ENVIAR A NETSUITE
-
-function saveNS(){
-    if(pedido.length == 0){
-        alert('Agrega artículos al pedido');
-    }
-    else{
-
-        var idCustomer; //id
-        var correo; //texto
-        var ordenCompra; //texto
-        var idSucursal; //id
-        var dividir2000; // 1 o 0
-        var cteRecoge; //1 o 0
-        var shippingWay; //id
-        var packageDelivery; //id
-        var comentarios; //maximo 400 caracteres
-        console.log('Pedido Separado Final');
-        console.log(pedidoSeparado);
-        console.log('Pedido Web');
-        console.log(pedido);
-
-    
-        if (!entity.startsWith("Z") && !entity.startsWith("A")) {
-            idCustomer = entity;
-            idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[0]['shippingWays'][indexAddress];
-            packageDelivery = info[0]['packageDeliveries'][indexAddress];
-        }
-        else{
-            idCustomer = entityCte;
-            idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
-        }
-    
-        var indexCustomerInfo = info.findIndex(o => o.companyId === idCustomer);
-        var internalId = info[indexCustomerInfo]['internalID'];
-
-        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
-        cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
-        correo = document.getElementById("correo").value;
-        ordenCompra = document.getElementById("ordenCompra").value;
-        comentarios = document.getElementById("comments").value;
-
-        var lineItems = [];
-        var listNS = [];
-
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-
-        for(var x = 0; x < pedido.length; x++){
-            var descuento = pedido[x]['descuento'];
-            var plazo = pedido[x]['plazo'];
-            var marca = pedido[x]['marca'];
-            var tipo = pedido[x]['tipo'];
-            var desneg = 0;
-            var desgar = 0;
-            var specialAuthorization = "";
-            var indexItemSeparado;
-            if(pedido[x]['items'][0]['desneg'] != 0){
-                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
-            }
-            else if(pedido[x]['items'][0]['desgar'] != 0){
-                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desgar']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
-            }
-            else{
-                indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
-            }
-            
-            console.log(indexItemSeparado);
-            var evento = pedidoSeparado[indexItemSeparado]['evento'];
-
-            for(var y = 0; y < pedido[x]['items'].length; y++){
-                
-                var listaPrecio = info[indexCustomerInfo]['priceList'];
-                
-
-                var item = {
-                    itemid: pedido[x]['items'][y]['itemid'],
-                    quantity: pedido[x]['items'][y]['cantidad'],
-                    listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
-                };
-                if(pedido[x]['items'][y]['desneg'] != 0){
-                    desneg = pedido[x]['items'][y]['desneg'];
-                    specialAuthorization = pedido[x]['items'][y]['autorizaDesneg'];
-                }
-                if(pedido[x]['items'][y]['desgar'] != 0){
-                    desgar = pedido[x]['items'][y]['desgar'];
-                    specialAuthorization = pedido[x]['items'][y]['autorizaDesgar'];
-                }
-                lineItems.push(item);
-            }
-            var temp = {
-                internalId: 0,
-                idCustomer: internalId,
-                date: dd + "/" + mm + "/" + yyyy,
-                location: marca == 'OUTLET' ? "36" : "1",
-                billingAddress: {
-                    id: "XXXXXX" //no tengo este dato
-                },
-                shippingAddress: {
-                    id: idSucursal
-                },
-                typeOrder: {
-                    id: "1",
-                    txt: ""
-                },
-                idWeb: "XXXXXX-X/X", //no tengo este dato
-                noCotizacion: "XXXXXX", //no tengo este dato
-                lineItems: lineItems,
-                shippingWay: {
-                    id: 0,
-                    txt: shippingWay
-                },
-                package: {
-                    id: 0,
-                    txt: packageDelivery
-                },
-                typeSale: {
-                    id: "1",
-                    txt: ""
-                },
-                user: "USUARIO", //usuario que genera venta
-                methodPayment: {
-                    id: "10",
-                    txt: ""
-                },
-                useCFDI: null,
-                comments: comentarios,
-                events: {
-                    id: "0", 
-                    txt: evento
-                },
-                plazoEvento: {
-                    id: "0",
-                    txt: plazo
-                },
-                eventSpecialDiscount: descuento - desneg, //descuento original del subpedido
-                customerDiscountPP: descuento, //total de descuento cabecera con desneg o desgar
-                discountSpecial: desneg != 0 ? desneg : desgar, //desneg o desgar
-                specialAuthorization: specialAuthorization,
-                numPurchase: ordenCompra, 
-                desneg: desneg != 0 ? 1 : 0, 
-                desgar: desgar != 0 ? 1 : 0
-            };
-            listNS.push(temp);
-            lineItems = [];
-        }
-
-        console.log('LISTA NETSUITE');
-        console.log(listNS);
-        console.log(JSON.stringify(listNS));
-    
-            $.ajax({
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                'url': "storePedidoNS",
-                'type': 'POST',
-                'dataType': 'json',
-                'data': {json: listNS},
-                'enctype': 'multipart/form-data',
-                'timeout': 2*60*60*1000,
-                success: function(data){
-                        window.location.href = '/pedidos';
-                }, 
-                error: function(error){
-                        // window.location.href = '/pedidos';
-                 }
-            });
-    }    
 }
 
 function updatePrecioIVA(input, itemid, precio){
@@ -1660,4 +1779,27 @@ function updatePrecioIVA(input, itemid, precio){
     });
 
     document.getElementById('precioIVA-'+itemid).innerHTML = "<strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído";
+}
+
+function sendEmail(){
+    console.log(pedido);
+    correo = document.getElementById("correo").value;
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmail",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {pedido: pedido, email: correo},
+        'enctype': 'multipart/form-data',
+        'timeout': 2*60*60*1000,
+        success: function(data){
+                alert('success email');
+        }, 
+        error: function(error){
+                alert('error email');
+         }
+    });
+    alert('Enviar email');
 }

@@ -28,6 +28,7 @@ class SaleOrdersController extends Controller
     } 
 
     public static function getInfoHeatWeb($token, $entity){
+        $entity = strtoupper($entity);
         $response = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.$entity);
         $info = json_decode($response->body());
         $data = [];

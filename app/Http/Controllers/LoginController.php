@@ -40,14 +40,14 @@ class LoginController extends Controller
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
                     setcookie("refresh", $token, time()+3600, '/');
                     setcookie("level", "C", time()+3600, '/');
-                    setcookie('access', json_encode($permissions), time()+3600);
+                    setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
                     setcookie("refresh", $token, time()+3600, '/');
                     setcookie("level", "E", time()+3600, '/');
-                    setcookie('access', json_encode($permissions), time()+3600);
+                    setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
                     return redirect('/Intranet');
                 }
                 
@@ -63,6 +63,7 @@ class LoginController extends Controller
         setcookie("laravel-token", "", time()-3600, '/');
         setcookie("level", "", time()- 60 * 480, '/');
         setcookie("refresh", "", time()- 60 * 480, '/');
+        setcookie("access", "", time()- 60*60*24*30, '/');
         return redirect('/');
     }
 

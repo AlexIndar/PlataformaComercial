@@ -1,13 +1,31 @@
 var startDate;
 var endDate;
+var reglas = [];
 $('document').ready(function(){
+
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/promociones/getPromocionesInfo",
+        'type': 'GET',
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+				reglas = data;
+		}, 
+		error: function(error){
+		 }
+	});
+
+    intervalRules = window.setInterval(checkRules, 1000);
 
     $(".chosen").chosen({
         no_results_text: "Sin resultados para",
         placeholder_text_single: "Buscar",
         placeholder_text_multiple: "Seleccione una o más opciones"
     });
-
+ 
     
 
     const fileArticulos = document.getElementById('articulosFile');
@@ -329,6 +347,94 @@ function triggerInputFile(input){
 }
 
 
+function checkRules() {
+    if (reglas.length > 0) {
+        document.getElementById('regalos_chosen').style.display = "block";
+        document.getElementById('regalosLoading').style.display = "none";
+        var selectRegalos = document.getElementById('regalos');
+        for(var x = 0; x<reglas[7].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[7][x];
+            option.value = (reglas[7][x].split(']'))[0].substring(1);
+            selectRegalos.appendChild(option);
+        }
+        $('#regalos').trigger("chosen:updated");
+        document.getElementById('regalos_chosen').style.width = '100%';
+
+        document.getElementById('categorias_chosen').style.display = "block";
+        document.getElementById('categoriasLoading').style.display = "none";
+        var selectCategorias = document.getElementById('categorias');
+        for(var x = 0; x<reglas[1].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[1][x];
+            option.value =  reglas[1][x];
+            selectCategorias.appendChild(option);
+        }
+        $('#categorias').trigger("chosen:updated");
+        document.getElementById('categorias_chosen').style.width = '100%';
+
+
+        document.getElementById('clientes_chosen').style.display = "block";
+        document.getElementById('clientesLoading').style.display = "none";
+        var selectClientes = document.getElementById('clientes');
+        for(var x = 0; x<reglas[3].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[3][x];
+            option.value = (reglas[3][x].split(']'))[0].substring(1);
+            selectClientes.appendChild(option);
+        }
+        $('#clientes').trigger("chosen:updated");
+        document.getElementById('clientes_chosen').style.width = '100%';
+
+        document.getElementById('proveedores_chosen').style.display = "block";
+        document.getElementById('proveedoresLoading').style.display = "none";
+        var selectProveedores = document.getElementById('proveedores');
+        for(var x = 0; x<reglas[5].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[5][x];
+            option.value = reglas[5][x];
+            selectProveedores.appendChild(option);
+        }
+        $('#proveedores').trigger("chosen:updated");
+        document.getElementById('proveedores_chosen').style.width = '100%';
+
+        document.getElementById('marcas_chosen').style.display = "block";
+        document.getElementById('marcasLoading').style.display = "none";
+        var selectMarcas = document.getElementById('marcas');
+        for(var x = 0; x<reglas[6].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[6][x];
+            option.value = reglas[6][x];
+            selectMarcas.appendChild(option);
+        }
+        $('#marcas').trigger("chosen:updated");
+        document.getElementById('marcas_chosen').style.width = '100%';
+
+        document.getElementById('articulos_chosen').style.display = "block";
+        document.getElementById('articulosLoading').style.display = "none";
+        var selectArticulos = document.getElementById('articulos');
+        for(var x = 0; x<reglas[7].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[7][x];
+            option.value = (reglas[7][x].split(']'))[0].substring(1);
+            selectArticulos.appendChild(option);
+        }
+        $('#articulos').trigger("chosen:updated");
+        document.getElementById('articulos_chosen').style.width = '100%';
+
+        clearInterval(intervalRules);
+    } 
+    else{
+        document.getElementById('regalos_chosen').style.display = "none";
+        document.getElementById('giros_chosen').style.display = "none";
+        document.getElementById('marcas_chosen').style.display = "none";
+        document.getElementById('proveedores_chosen').style.display = "none";
+        document.getElementById('articulos_chosen').style.display = "none";
+        document.getElementById('categorias_chosen').style.display = "none";
+        document.getElementById('clientes_chosen').style.display = "none";
+    }
+}
+
 function addTags(json, id){
     var jsonObj = JSON.parse(json);
     var selectedOptions = [];
@@ -345,6 +451,7 @@ function addTags(json, id){
     jsonObj.forEach(function(valor, indice, array){
         selectedOptions.push(valor[key]);
     });
+    console.log(selectedOptions);
     $('#'+id).val(selectedOptions).trigger('chosen:updated');
 }
 
@@ -501,7 +608,7 @@ function validarPromo(){
             },
             'url': "storePromo",
             'type': 'POST',
-            'dataType': 'json',
+            'dataType': 'json', 
             'data': json,
             'enctype': 'multipart/form-data',
             'timeout': 2*60*60*1000,

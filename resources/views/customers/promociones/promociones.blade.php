@@ -25,10 +25,10 @@
                     <div class="actions">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
-                            <button type="button" class="btn btn-info" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button type="button" class="btn btn-info" title="Editar" onclick="editarPromo('{{$promo->id}}')"><i class="fas fa-edit"></i></button>
                             <button type="button" class="btn btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
                 <div class="cuerpo-promo">
                     <h5>Vigencia de <span class="fecha"><i class="fas fa-calendar"></i> {{$promo->fechaInicio}}</span> a <span class="fecha"><i class="fas fa-calendar"></i> {{$promo->fechaFin}}</span> </h5>

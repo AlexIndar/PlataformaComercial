@@ -48,6 +48,7 @@ class CotizacionController extends Controller
             "order" => $json->order,
             "comments" => $json->comments
         ]);
+        return $response;
     }
 
     public static function updatePedido($token, $data){
