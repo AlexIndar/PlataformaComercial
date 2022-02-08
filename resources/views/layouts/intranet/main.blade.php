@@ -343,7 +343,7 @@
             </li> -->
             @if(in_array('MisSolicitudes', $permissions) || in_array('Estadistica Cliente', $permissions))
             <li class="nav-item">
-              @if($active == 'Intranet') 
+              @if($active == 'Intranet')
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -377,7 +377,7 @@
 
             @if(in_array('Promociones', $permissions) || in_array('Pedidos', $permissions))
             <li class="nav-item">
-              @if($active == 'Ventas') 
+              @if($active == 'Ventas')
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -411,7 +411,7 @@
 
             @if(in_array('Portal Viaticos', $permissions))
             <li class="nav-item">
-              @if($active == 'Viaticos') 
+              @if($active == 'Viaticos')
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -432,6 +432,80 @@
               </ul>
             </li>
             @endif
+
+            <li class="nav-item">
+              @if($active == 'CXC')
+              <a href="#" class="nav-link active">
+              @else
+              <a href="#" class="nav-link">
+              @endif
+                <i class="nav-icon fas fa-file-invoice"></i>
+                <p>
+                  Cuentas Por Cobrar
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-hand-holding-usd nav-icon"></i>
+                        <p>
+                          Pagos
+                          <i class="right fas fa-angle-left"></i>
+                        </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/AplicarPagos" class="nav-link">
+                              <p>Aplicar Pagos</p>
+                            </a>
+                        </li>
+                      </ul>
+                {{-- </li>
+                <li class="nav-item">
+                    <a href="/OrdenCobro" class="nav-link">
+                      <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                      <p>Orden de Cobro</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-globe nav-icon"></i>
+                        <p>
+                          SAD
+                          <i class="right fas fa-angle-left"></i>
+                        </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+
+                      </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      <i class="fas fa-file nav-icon"></i>
+                      <p>
+                        Reportes
+                        <i class="right fas fa-angle-left"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/OrdenCobro" class="nav-link">
+                      <i class="fas fa-receipt nav-icon"></i>
+                      <p>Recibos de Cobro</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/OrdenCobro" class="nav-link">
+                      <i class="fas fa-money-bill nav-icon"></i>
+                      <p>Arqueo</p>
+                    </a>
+                </li> --}}
+              </ul>
+            </li>
 
 
             <!-- <li class="nav-item">
@@ -1035,7 +1109,7 @@
 
     @yield('body')
 
-<!-- 
+<!--
     <footer class="main-footer">
       <strong>Copyright &copy; * 1987-2021 <a href="http://www.indar.com.mx/">Ferreteria Indar, S.A. de C.V.</a> *</strong>
       <div class="float-right d-none d-sm-inline-block">
