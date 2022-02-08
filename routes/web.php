@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\LoginController;
 
 // CUSTOMERS -------------------------------------------------------------------------------
@@ -12,6 +13,7 @@ use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
+use App\Mail\ConfirmarPedido;
 // -----------------------------------------------------------------------------------------
 
 // INTRANET --------------------------------------------------------------------------------
@@ -380,7 +382,23 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 }   
                                 return $response;
+                            }); 
 
+                            Route::post('/pedido/storePedidoGetID', function (Request $request){
+                                $token = TokenController::refreshToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                }   
+                                // dd($response->body());
+                                return $response;
                             }); 
 
                             Route::post('/pedido/updatePedido', function (Request $request){
@@ -397,7 +415,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 }   
                                 return $response;
-
                             }); 
 
                             Route::post('/pedido/storePedidoNS', function (Request $request){
@@ -405,26 +422,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-
-                                $getUser = MisSolicitudesController::getUser($token);
-                                $user = $getUser->body();
-                                $json = $request->json;
-
-                                foreach($json as $key => $field){
-                                    $json[$key]['user'] = $user;
-                                }
-
-                                dd($json);
-                                
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
-                                $level = "C";
-                                if(isset($_COOKIE["level"])){
-                                    $level = $_COOKIE["level"];
-                                }   
-                                return $response;
+                                $json = $request->json; //json para guardar pedido en netsuite
+                                return $json;
 
                             }); 
 
@@ -481,6 +480,34 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::get('/downloadTemplatePedido', function (){
                                 return Excel::download(new TemplatePedido,'Pedido.xlsx');
                             });
+
+                            Route::post('/sendmail', function (Request $request) {
+
+                                $pedido = $request->pedido;
+                                $correo = $request->email;
+                                $subtotal = 0;
+                                for($x = 0; $x < count($pedido); $x++){
+                                    $subtotal = 0;
+                                    for($y = 0; $y < count($pedido[$x]['items']); $y++){
+                                        $precioUnitario = round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2);
+                                        $importe = (round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2)) * $pedido[$x]['items'][$y]['cantidad'];
+                                        $subtotal = $subtotal + $importe;
+                                        $precioUnitario = number_format($precioUnitario, 2, '.', ',');
+                                        $importe = number_format($importe, 2, '.', ',');
+                                        $pedido[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
+                                        $pedido[$x]['items'][$y]['importe'] = $importe;
+                                    }
+                                    $subtotal = number_format($subtotal, 2, '.', ',');
+                                    $pedido[$x]['subtotal'] = $subtotal;
+                                }
+                                
+                                Mail::to($correo)->send(new ConfirmarPedido($pedido));
+
+                                dd('Mail Sent to '.$correo);
+                             
+                                return view('contact',  ['lang' => $lang, 'send' => true, 'id' => '1']);
+                             
+                             });
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -549,21 +576,21 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
                                 } 
-                                $customersInfo = PromoController::getCustomersInfo($token);
+                                // $customersInfo = PromoController::getCustomersInfo($token);
+
+                                // $categories = PromoController::getCategories($customersInfo);
+                                // $giros = PromoController::getGiros($customersInfo);
+                                // $customers = PromoController::getCustomers($customersInfo);
                                 
-                                $categories = PromoController::getCategories($customersInfo);
-                                $giros = PromoController::getGiros($customersInfo);
-                                $customers = PromoController::getCustomers($customersInfo);
-                                
-                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                                dd($infoArticulos);
-                                $proveedores = PromoController::getProveedores($infoArticulos);
-                                $marcas = PromoController::getMarcas($infoArticulos);
-                                $articulos = PromoController::getArticulos($infoArticulos);
+                                // $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
+                                // dd($infoArticulos);
+                                // $proveedores = PromoController::getProveedores($infoArticulos);
+                                // $marcas = PromoController::getMarcas($infoArticulos);
+                                // $articulos = PromoController::getArticulos($infoArticulos);
                                 
                                 $permissions = LoginController::getPermissions();
 
-                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos, 'permissions' => $permissions]);
+                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
                             });
 
                             Route::get('promociones/getPromocionesInfo', function (){
@@ -579,8 +606,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $articulos = PromoController::getArticulos($infoArticulos);
 
                                 $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos);
-                                dd($info);
-                                return $customersInfo;
+                                return $info;
                             });
 
                             Route::get('/downloadTemplateCategorias', function (){

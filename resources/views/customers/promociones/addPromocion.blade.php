@@ -82,8 +82,8 @@
 
         <br><br>
 
-
         <!------------------------------------------------------------------------------------ REGLAS -------------------------------------------------------------------->
+    <div id="rules" id="rules">
 
         <div class="row">
             <div class="col-12 text-center">
@@ -139,11 +139,9 @@
                         <h5>Regalos:</h5>
                     </div>
                     <div class="col-lg-10 col-md-9 col-12">
-                            <select id="regalos" name="regalos[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($articulos as $articulo)
-                                    <option value="{{substr(explode(']',$articulo)[0],1)}}">{{$articulo}}</option>
-                                @endforeach
+                            <select id="regalos" name="regalos[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none">
                             </select>
+                            <h5 id="regalosLoading">Cargando regalos ...</h5>
                     </div>
                 </div> 
 
@@ -194,11 +192,9 @@
 
                 <br>
                 <div class="col-12">
-                            <select id="categorias" name="categorias[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($categories as $category)
-                                    <option value="{{$category}}">{{$category}}</option>
-                                @endforeach
+                            <select id="categorias" name="categorias[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>
+                            <h5 id="categoriasLoading">Cargando categorías ...</h5>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -232,11 +228,9 @@
 
                 <!-- <br> -->
                 <div class="col-12 d-none">
-                            <select id="giros" name="giros[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($giros as $giro)
-                                    <option value="{{$giro}}">{{$giro}}</option>
-                                @endforeach
+                            <select id="giros" name="giros[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>
+                            <h5 id="girosLoading">Cargando giros ...</h5>
                 </div>
                 <!-- <br> -->
                 <!-- <div class="col-12 d-flex flex-row justify-content-center align-items-center"> -->
@@ -272,11 +266,9 @@
 
                 <br>
                 <div class="col-12">
-                            <select id="clientes" name="clientes[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($customers as $customer)
-                                    <option value="{{substr(explode(']',$customer)[0],1)}}">{{$customer}}</option>
-                                @endforeach
+                            <select id="clientes" name="clientes[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select> 
+                            <h5 id="clientesLoading">Cargando clientes ...</h5>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -311,11 +303,9 @@
 
                 <br>
                 <div class="col-12">
-                            <select id="proveedores" name="proveedores[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($proveedores as $proveedor)
-                                    <option value="{{$proveedor}}">{{$proveedor}}</option>
-                                @endforeach
+                            <select id="proveedores" name="proveedores[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>  
+                            <h5 id="proveedoresLoading">Cargando proveedores ...</h5>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -350,11 +340,9 @@
 
                 <br>
                 <div class="col-12">
-                            <select id="marcas" name="marcas[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($marcas as $marca)
-                                    <option value="{{$marca}}">{{$marca}}</option>
-                                @endforeach
+                            <select id="marcas" name="marcas[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>  
+                            <h5 id="marcasLoading">Cargando marcas ...</h5>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -389,11 +377,9 @@
 
                 <br>
                 <div class="col-12">
-                            <select id="articulos" name="articulos[]" class="form-control chosen" data-placeholder="Buscar" multiple>
-                                @foreach($articulos as $articulo)
-                                    <option value="{{substr(explode(']',$articulo)[0],1)}}">{{$articulo}}</option>
-                                @endforeach
+                            <select id="articulos" name="articulos[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>
+                            <h5 id="articulosLoading">Cargando artículos ...</h5>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">

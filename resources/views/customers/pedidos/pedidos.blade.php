@@ -21,7 +21,7 @@
         @foreach($pedidos as $pedido)
             <div class="promo">
                 <div class="promo-header">
-                    <h4>[#{{$pedido->idCotizacion}} - {{$pedido->companyId}}] {{$pedido->orderC}}</h4>
+                    <h4>[#{{$pedido->idCotizacion}} - {{strtoupper($pedido->companyId)}}] {{$pedido->orderC}}</h4>
                     <div class="actions">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
