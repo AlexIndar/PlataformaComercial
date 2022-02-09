@@ -250,9 +250,9 @@
 
         </div>
 
-        <!-- INVENTARIO -->
+             <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
 
-        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fab fa-searchengin"></i> Buscar</button>
             <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
             <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
@@ -261,21 +261,26 @@
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-            <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons"><i class="fas fa-file"></i> Nueva cotización</button>
-            <button type="button" id="borrarCotizacion" class="btn btn-group-buttons"><i class="fas fa-trash"></i> Borrar cotización</button>
-            <button type="button" id="enviarCotizacion" class="btn btn-group-buttons"><i class="fas fa-share-square"></i> Enviar cotización</button>
+            <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons" onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
+            <button type="button" id="borrarCotizacion" class="btn btn-group-buttons" onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
+            <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i class="fas fa-share-square"></i> Enviar cotización</button>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="saveAndGetIDCotizacion()"><i class="fas fa-check"></i> Levantar pedido</button>
-            <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button>
+            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="update('saveNS')"><i class="fas fa-check"></i> Levantar pedido</button>
+            <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
+            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
         </div>
+
+        <!---------------------------------------------------------------------------------------------------- FIN PIE PEDIDO ---------------------------------------------------------------------------------------------->
+
+
+        <!---------------------------------------------------------------------------------------------------- INVENTARIO ---------------------------------------------------------------------------------------------->
 
         <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="modalInventario" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
-            <div class="modal-content">
+            <div class="modal-content modal-content-inventario">
                                 <input type="text" id="empty" value="yes" hidden>
                                 <table id="tablaInventario" class="table-striped table-bordered table-hover" style="width:100%">
                                     <thead>
@@ -304,17 +309,40 @@
         </div>
         </div>
 
-    </div>
-    
-    <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
+        <!---------------------------------------------------------------------------------------------------- FIN INVENTARIO ---------------------------------------------------------------------------------------------->
 
 
-    <!---------------------------------------------------------------------------------------------------- FIN PIE PEDIDO ---------------------------------------------------------------------------------------------->
+    </div> <!-- Cierre Pedido -->
+    </div> <!-- Cierre content -->
+  </div> <!-- Cierre container-fluid -->
 
-
-    </div>
-  </div>
+    <!-- FORM OCULTO PARA NUEVA COTIZACIÓN -->
   
+    <form style="display: none" action="/pedido/nuevo" method="POST" id="formNuevo" target="_blank">
+            @csrf
+            <input type="text" name="entity" id="entity" value="{{$entity}}" hidden>
+    </form>
+
+    <!-- MODAL PARA CONFIRMAR ELIMINAR COTIZACIÓN -->
+
+    <!-- Modal -->
+        <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4>Eliminar Cotización</h4>
+                <i style="cursor:pointer;" class="fas fa-times" onclick="closeModalDelete()"></i>
+            </div>
+            <div class="modal-body">
+                <h5>¿Desea eliminar esta cotización?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModalDelete()">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="eliminarCotizacion('nueva')">Eliminar</button>
+            </div>
+            </div>
+        </div>
+        </div>
 
   <br><br>
 

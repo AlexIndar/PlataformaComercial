@@ -24,9 +24,9 @@
                     <h4>[#{{$pedido->idCotizacion}} - {{strtoupper($pedido->companyId)}}] {{$pedido->orderC}}</h4>
                     <div class="actions">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
+                            <!-- <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button> -->
                             <button type="button" class="btn btn-info" title="Editar" onclick="editarPedido('{{$pedido->idCotizacion}}', '{{$pedido->companyId}}')"><i class="fas fa-edit"></i></button>
-                            <button type="button" class="btn btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$pedido->idCotizacion}}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -40,11 +40,45 @@
 
         @endforeach
 
-        <form style="display: none" action="/pedido/editar" method="POST" id="form">
+        <form style="display: none" action="/pedido/editar" method="POST" id="formEditar">
             @csrf
             <input type="hidden" id="id" name="id" value=""/>
             <input type="hidden" id="companyId" name="companyId" value=""/>
         </form>
+
+        <form style="display: none" action="/pedido/nuevo" method="POST" id="formNuevo">
+            @csrf
+            <input type="hidden" id="entity" name="entity" value="ALL"/>
+        </form>
+
+        <!-- FORM OCULTO PARA ELIMINAR COTIZACIÓN GUARDADA-->
+  
+        <form style="display: none" action="/pedido/eliminar" method="POST" id="formDelete">
+                @csrf
+                <input type="text" id="idCotizacion" name="idCotizacion" value="" hidden>
+
+        </form>
+
+         <!-- MODAL PARA CONFIRMAR ELIMINAR COTIZACIÓN -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Eliminar Cotización</h4>
+                    <i style="cursor:pointer;" class="fas fa-times" onclick="closeModalDelete()"></i>
+                </div>
+                <div class="modal-body">
+                    <h5>¿Desea eliminar esta cotización?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModalDelete()">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarCotizacion()">Eliminar</button>
+                </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     

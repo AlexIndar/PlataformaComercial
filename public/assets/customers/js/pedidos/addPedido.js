@@ -33,7 +33,6 @@ $(document).ready(function() {
     entity = document.getElementById('entity').value;
     entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
-        console.log(entity);
         getItems(entity);
     }
     else{ //si es zona o all (vendedor o apoyo)
@@ -122,7 +121,6 @@ $(document).ready(function() {
     // });
 
     function checkItems() {
-        console.log(items);
         if (items.length > 0) {
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
@@ -130,7 +128,6 @@ $(document).ready(function() {
             if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
                 prepareJsonSeparaPedidos();
             }
-
             clearInterval(intervalInventario);
         } else {
             document.getElementById('pedido').style.display = "none";
@@ -158,8 +155,6 @@ $(document).ready(function() {
         },
         success: function(data) {
             info = data;
-            console.log('GetInfoHeatWeb')
-            console.log(data);
         },
         error: function(error) {
             
@@ -338,7 +333,6 @@ $(document).ready(function() {
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
 
     $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        console.log('Index Clicked')
         // var selected = clickedIndex - 1;
         // indexCustomer = selected;
         // addresses = info[selected]['addresses'];
@@ -762,7 +756,6 @@ function cargarInventario() {
         document.getElementById('empty').value = 'No';
         var dataset = [];
 
-        console.log(items);
         for (var x = 0; x < items.length; x++) {
             var arr = [];
             // arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
@@ -1371,7 +1364,6 @@ function updatePedidoDesneg(itemid, select, index){
         pedido.splice(index+1, 0, rowPedido);
     }
     
-    console.log(pedido);
 
     createTablePedido();
 }
@@ -1398,10 +1390,6 @@ function saveNS(){
         var shippingWay; //id
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
-        console.log('Pedido Separado Final');
-        console.log(pedidoSeparado);
-        console.log('Pedido Web');
-        console.log(pedido);
 
     
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
@@ -1454,7 +1442,6 @@ function saveNS(){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
             
-            console.log(indexItemSeparado);
             var evento = pedidoSeparado[indexItemSeparado]['evento'];
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
@@ -1759,13 +1746,7 @@ function update(action){
                         }
                 }, 
                 error: function(error){
-                        if(action == 'save'){
-                            window.location.href = '/pedidos';
-                        }
-                        else{
-                            noCotizacionNS = document.getElementById('idCotizacion').value;
-                            saveNS();
-                        }
+                        alert('Error actualizando cotización');
                  }
             });
         }
@@ -1782,7 +1763,6 @@ function updatePrecioIVA(input, itemid, precio){
 }
 
 function sendEmail(){
-    console.log(pedido);
     correo = document.getElementById("correo").value;
     $.ajax({
         'headers': {
@@ -1795,11 +1775,34 @@ function sendEmail(){
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){
-                alert('success email');
+                alert(data['success']);
         }, 
-        error: function(error){
-                alert('error email');
+        error: function(data){
+                alert(data['error']);
          }
     });
-    alert('Enviar email');
+}
+
+function nuevaCotizacion(){
+    alert(document.getElementById('entity').value);
+    $("#formNuevo").submit();
+}
+
+function activarEliminarModal(){
+    //type indica si se quiere  borrar una cotización que ya estaba guardada o una cotización que se estaba realizando pero nunca se guardó
+    $('#confirmDeleteModal').modal('show');
+}
+
+function closeModalDelete(){
+    $('#confirmDeleteModal').modal('hide');
+}
+
+function eliminarCotizacion(type){
+    if(type == 'nueva'){
+        window.location.href = '/pedidos';
+    }
+    else{
+        $("#formDelete").submit();
+        // window.location.href = '/pedidos';
+    }
 }

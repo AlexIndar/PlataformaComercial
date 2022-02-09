@@ -91,8 +91,8 @@ Route::get('/main', function () {
 Route::get('/faq', function () {
     $token = TokenController::refreshToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -298,7 +298,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return $saleOrders;
                             });
 
-                            Route::get('pedido/nuevo/{entity}', function ($entity){
+                            // Route::get('/pedido/nuevo/{entity}', function ($entity){
+                            //     $token = TokenController::refreshToken();
+                            //     if($token == 'error'){
+                            //         return redirect('/logout');
+                            //     }
+                            //     $rama1 = RamasController::getRama1();
+                            //     $rama2 = RamasController::getRama2();
+                            //     $rama3 = RamasController::getRama3();
+                            //     $level = $entity[0];
+                            //     if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
+                            //     if(str_starts_with($entity, 'Z1')){
+                            //         $entity = 'ALL';
+                            //     }
+                            //     $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
+                            //     // dd($data);
+                            //     return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
+
+                            // }); 
+
+                            Route::post('/pedido/nuevo', function (Request $request){
                                 $token = TokenController::refreshToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
@@ -306,26 +325,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
-                                $level = $entity[0];
-                                if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
-                                if(str_starts_with($entity, 'Z1')){
-                                    $entity = 'ALL';
-                                }
-                                $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
-                                // dd($data);
-                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
-
-                            }); 
-
-                            Route::get('pedido/nuevo', function (){
-                                $token = TokenController::refreshToken();
-                                if($token == 'error'){
-                                    return redirect('/logout');
-                                }
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
-                                $entity = 'ALL';
+                                $entity = $request->entity;
                                 $level = $entity[0];
                                 if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
                                 if(str_starts_with($entity, 'Z1')){
@@ -336,6 +336,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 // dd($data);
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
+
+                            }); 
+
+                            Route::post('/pedido/eliminar', function (Request $request){
+                                $token = TokenController::refreshToken();
+                                
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+
+                                $response = CotizacionController::deletePedido($token, $request->idCotizacion);
+
+                                return redirect('/pedidos');
 
                             }); 
 
@@ -511,11 +524,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
                                 
-                                Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
 
-                                dd('Mail Sent to '.$correo);
-                             
-                                return view('contact',  ['lang' => $lang, 'send' => true, 'id' => '1']);
+                                // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
+                                Mail::to('alejandro.jimenez@indar.com.mx')->send(new ConfirmarPedido($pedido, $detallesPedido));
+
+                                 // check for failures
+                                if (Mail::failures()) {
+                                    return response()->json(['error' => 'Error al enviar cotización'], 404);
+                                }
+                                else{
+                                    return response()->json(['success' => 'Cotización enviada correctamente a '.$correo], 200);
+                                }
                              
                              });
 
@@ -571,7 +590,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $articulos = PromoController::getArticulos($infoArticulos);
 
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.editPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promocion' => $promocion, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos, 'permissions' => $permissions]);
+                                return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promocion' => $promocion, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos, 'permissions' => $permissions]);
                             });
 
                             Route::get('/promociones/nueva', function (){
