@@ -45,11 +45,16 @@ use Maatwebsite\Excel\Facades\Excel;
 | contains the "web" middleware group. Now create something great!
 |
 */
+<<<<<<< HEAD
 Route::get('/', function () {
     $token = TokenController::refreshToken();
+=======
+Route::get('/', function () {  
+    $token = TokenController::getToken();
+>>>>>>> 1859fd66f0fc8aeb75269433409ef4a7b18ed792
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     if($token && $token != 'error'){
         $bestSellers = ItemsController::getBestSellers($token);
     }
@@ -78,7 +83,7 @@ Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::get('/main', function () {
     // VALIDAR LOGIN
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
     }
@@ -485,7 +490,11 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 $pedido = $request->pedido;
                                 $correo = $request->email;
-                                $subtotal = 0;
+                                $detallesPedido = [
+                                    "subtotal" => 0,
+                                    "iva" => 0,
+                                    "total" => 0,
+                                ]; 
                                 for($x = 0; $x < count($pedido); $x++){
                                     $subtotal = 0;
                                     for($y = 0; $y < count($pedido[$x]['items']); $y++){
@@ -497,11 +506,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                                         $pedido[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
                                         $pedido[$x]['items'][$y]['importe'] = $importe;
                                     }
+                                    $detallesPedido['subtotal'] = $detallesPedido['subtotal'] + $subtotal;
                                     $subtotal = number_format($subtotal, 2, '.', ',');
                                     $pedido[$x]['subtotal'] = $subtotal;
                                 }
+<<<<<<< HEAD
 
                                 Mail::to($correo)->send(new ConfirmarPedido($pedido));
+=======
+                                $detallesPedido['iva'] = $detallesPedido['subtotal'] * 0.16;
+                                $detallesPedido['total'] = $detallesPedido['subtotal'] + $detallesPedido['iva'];
+                                $detallesPedido['subtotal'] = number_format($detallesPedido['subtotal'], 2, '.', ',');
+                                $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
+                                $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
+                                
+                                Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
+>>>>>>> 1859fd66f0fc8aeb75269433409ef4a7b18ed792
 
                                 dd('Mail Sent to '.$correo);
 

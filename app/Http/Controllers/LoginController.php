@@ -24,7 +24,7 @@ class LoginController extends Controller
 
     public function authenticate(Request $request){
         $username = explode('@', $request->email)[0];
-        $password = $request->password;
+        $password = $request->password; 
 
         $response = Http::post('http://192.168.70.107:64444/login/authenticate', [
             'username' => $username,
@@ -38,20 +38,20 @@ class LoginController extends Controller
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
                 if(json_decode($typeUser->body())->typeUser == "C"){
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
-                    setcookie("refresh", $token, time()+3600, '/');
-                    setcookie("level", "C", time()+3600, '/');
+                    setcookie("refresh", $token, time()+7200, '/');
+                    setcookie("level", "C", time()+7200, '/');
                     setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
+                    setcookie('username', $username, time()+60*60*24*30, '/');
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
-                    setcookie("refresh", $token, time()+3600, '/');
-                    setcookie("level", "E", time()+3600, '/');
+                    setcookie("refresh", $token, time()+7200, '/');
+                    setcookie("level", "E", time()+7200, '/');
                     setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
+                    setcookie('username', $username, time()+60*60*24*30, '/');
                     return redirect('/Intranet');
                 }
-                
-                
         } 
         else{
             setcookie("laravel-token", "error", time()+900, '/');
@@ -61,9 +61,10 @@ class LoginController extends Controller
 
     public function logout(){
         setcookie("laravel-token", "", time()-3600, '/');
-        setcookie("level", "", time()- 60 * 480, '/');
-        setcookie("refresh", "", time()- 60 * 480, '/');
+        setcookie("level", "", time()- 7200, '/');
+        setcookie("refresh", "", time()- 7200, '/');
         setcookie("access", "", time()- 60*60*24*30, '/');
+        setcookie("username", "", time()- 60*60*24*30, '/');
         return redirect('/');
     }
 
