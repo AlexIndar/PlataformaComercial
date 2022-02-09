@@ -579,18 +579,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     }
                                 }
 
-                                $customersInfo = PromoController::getCustomersInfo($token);
-                                $categories = PromoController::getCategories($customersInfo);
-                                $giros = PromoController::getGiros($customersInfo);
-                                $customers = PromoController::getCustomers($customersInfo);
+
+                                // $customersInfo = PromoController::getCustomersInfo($token);
+                                // $categories = PromoController::getCategories($customersInfo);
+                                // $giros = PromoController::getGiros($customersInfo);
+                                // $customers = PromoController::getCustomers($customersInfo);
                                 
-                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                                $proveedores = PromoController::getProveedores($infoArticulos);
-                                $marcas = PromoController::getMarcas($infoArticulos);
-                                $articulos = PromoController::getArticulos($infoArticulos);
+                                // $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
+                                // $proveedores = PromoController::getProveedores($infoArticulos);
+                                // $marcas = PromoController::getMarcas($infoArticulos);
+                                // $articulos = PromoController::getArticulos($infoArticulos);
 
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promocion' => $promocion, 'customersInfo' => $customersInfo, 'categories' => $categories, 'giros' => $giros, 'customers' => $customers, 'proveedores' => $proveedores, 'marcas' => $marcas, 'articulos' => $articulos, 'permissions' => $permissions]);
+                                return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
                             });
 
                             Route::get('/promociones/nueva', function (){
@@ -624,15 +625,20 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::get('promociones/getPromocionesInfo', function (){
                                 $token = TokenController::getToken();
-                                $customersInfo = PromoController::getCustomersInfo($token);
-                                $categories = PromoController::getCategories($customersInfo);
-                                $giros = PromoController::getGiros($customersInfo);
-                                $customers = PromoController::getCustomers($customersInfo);
-                                
-                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                                $proveedores = PromoController::getProveedores($infoArticulos);
-                                $marcas = PromoController::getMarcas($infoArticulos);
-                                $articulos = PromoController::getArticulos($infoArticulos);
+                                ini_set('max_execution_time', 300); //300 segundos = 5 minutos
+
+                                $dataCustomers = PromoController::getCustomersInfo($token);
+
+                                $customersInfo = $dataCustomers['customersInfo'];
+                                $categories = $dataCustomers['categories'];
+                                $giros = $dataCustomers['giros'];
+                                $customers = $dataCustomers['customers'];
+
+                                $dataArticulos = PromoController::getItems($token);
+                                $infoArticulos = $dataArticulos['items'];
+                                $proveedores = $dataArticulos['proveedores'];
+                                $marcas = $dataArticulos['marcas'];
+                                $articulos = $dataArticulos['articulos'];
 
                                 $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos);
                                 return $info;

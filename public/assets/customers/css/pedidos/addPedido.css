@@ -202,6 +202,40 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center !important;
 }
 
+.text-promo{
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+}
+
+.text-red{
+  color: #C82333;
+  font-weight: 600 !important;
+}
+
+.detalles-item-right{
+  float: right;
+  text-align: right;
+  white-space: nowrap !important;
+}
+
+.detalles-item{
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  min-width: 250px !important;
+  white-space: nowrap !important;
+  line-height: 5px !important;
+}
+
+.table-actions{
+  width: 100%;
+  text-align: center !important;
+}
+
+.detalles-green{
+  color: #139966 !important;
+}
+
 .quantityBtn{
 background-color: #E9ECEF;
 border: 1px solid rgba(0, 0, 0, 0.1);

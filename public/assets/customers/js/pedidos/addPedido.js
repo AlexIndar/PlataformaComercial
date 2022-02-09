@@ -765,7 +765,7 @@ function cargarInventario() {
                 currency: 'USD',
             });
 
-            var precioIVA = ((items[x]['price']*1.16)).toLocaleString('en-US', {
+            var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD',
             });
@@ -784,18 +784,36 @@ function cargarInventario() {
             arr.push(items[x]['categoriaItem']);
             arr.push(items[x]['clavefabricante']);
             arr.push(items[x]['familia']);
-            arr.push(items[x]['grupoArticulo']);
-            arr.push(items[x]['tipoArticulo']);
-            arr.push(items[x]['id']);
             arr.push(items[x]['itemid']);
             arr.push(items[x]['purchasedescription']);
-            arr.push(items[x]['multiploVenta']);
+            
+            var detalles = "";
+            detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>"+items[x]['minVenta']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>"+items[x]['inner']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>"+items[x]['master']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>"+items[x]['multiploVenta']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>"+items[x]['unidad']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
+
+            arr.push(detalles);
             arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
             arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
-            arr.push(items[x]['unidad']);
-            arr.push(items[x]['promo']);
-            arr.push(existenciaFormat);
-            arr.push("<i class='fas fa-plus-square btn-add-product fa-2x'></i>");
+            if(items[x]['promoART'] == null){
+                arr.push("<p>Sin promoción</p>");
+            }
+            else{
+                var promociones = "";
+                for(var y=0; y < items[x]['promoART'].length; y++){
+                    if(items[x]['promoART'][y]['cantidad'] == 1)
+                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                    else
+                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                    promociones = promociones + temp;
+                }
+                arr.push(promociones)
+            }
+            arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
 
             dataset.push(arr);
         }
@@ -806,30 +824,13 @@ function cargarInventario() {
             data: dataset,
             autoWidth: false, // might need this
             scrollCollapse: true,
-            "columns": [
-                null,
-                null, // automatically calculates
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                { "width": "30%" },
-                null,
-                null,
-                null,
-                null,
-            ],
+            fixedHeader: true,
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
               },
         });
 
-        document.getElementById('tablaInventario').columns.adjust().draw();
+        // document.getElementById('tablaInventario').columns.adjust().draw();
 
 
     }

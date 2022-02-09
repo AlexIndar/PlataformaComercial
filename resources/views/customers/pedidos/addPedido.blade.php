@@ -289,17 +289,12 @@
                                             <th class="customHeader">Categoría</th>
                                             <th class="customHeader">Fab</th>
                                             <th class="customHeader">Fam</th>
-                                            <th class="customHeader">Grupo</th>
-                                            <th class="customHeader">Tipo</th>
-                                            <th class="customHeader">ID</th>
                                             <th class="customHeader">Cod Art</th>
                                             <th class="customHeader">Descripción</th>
-                                            <th class="customHeader">Multiplo</th>
+                                            <th class="customHeader">Detalles</th>
                                             <th class="customHeader">Cantidad</th>
                                             <th class="customHeader">Precio</th>
-                                            <th class="customHeader">Unidad</th>
                                             <th class="customHeader">Promo</th>
-                                            <th class="customHeader">Existencia</th>
                                             <th class="customHeader">Acciones</th>
                                         </tr>
                                     </thead>
