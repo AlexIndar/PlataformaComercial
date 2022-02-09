@@ -629,6 +629,7 @@ function cleanDatosContacto() {
     document.getElementById('celularContacto').value = "";
     document.getElementById('emailContacto').value = "";
     document.getElementById('tipoContacto').value = "SELECCIONAR";
+    document.getElementById('flexCheckChecked').checked = false;
 }
 
 function validarDataContact(nombre, email, telefono, celular) {
@@ -1459,7 +1460,7 @@ function getGiro(id) {
             giro = "FERRETERIA Y TLAPLALERIA";
             break;
         default:
-            giro = "ERROR";
+            giro = "INFO";
     }
     return giro;
 }
@@ -1502,10 +1503,10 @@ function showInfoModal(data, data2, valContac, filesList) {
     document.getElementById("cRSection").style.display = "none";
     document.getElementById("cartSection").style.display = "none";
     if (data != null) {
-        console.log(data);
-        console.log(data2);
-        console.log(valContac);
-        console.log(filesList);
+        // console.log(data);
+        // console.log(data2);
+        // console.log(valContac);
+        // console.log(filesList);
         //DATOS HEADER
         document.getElementById("folioInf").innerHTML = "No. " + data.folio;
         //DATOS GENERALES
@@ -1736,7 +1737,8 @@ function saveEdit() {
 }
 
 function getButtonImg(idBtn, file) {
-    document.getElementById(idBtn).innerHTML = `<button class="btn btn-warning" onclick="showIMG('` + file + `')"><i class="far fa-eye"></i> Ver Archivo</button>`;
+    if (document.getElementById(idBtn))
+        document.getElementById(idBtn).innerHTML = `<button class="btn btn-warning" onclick="showIMG('` + file + `')"><i class="far fa-eye"></i> Ver Archivo</button>`;
 }
 
 function getAlert(idAlert, msg) {

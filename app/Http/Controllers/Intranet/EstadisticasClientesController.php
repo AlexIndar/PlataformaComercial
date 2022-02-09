@@ -23,4 +23,25 @@ class EstadisticasClientesController extends Controller
         $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetEmployeeReport?zona='.$zone.'&typeSol='.$typeR.'&ini='.$ini.'&end='.$fin);        
         return json_decode($solicitudes->body());
     }
+
+    public static function getGeneralReport($token, $typeS, $ini, $end){
+        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetGeneralReport?typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        return json_decode($solicitudes->body());
+    }
+
+    public static function getGeneralReportByManagement($token, $typeS, $ini, $end){
+        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetGeneralReportByManagement?typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        return json_decode($solicitudes->body());
+    }
+
+    public static function getManagementReport($token, $idGerencia, $typeS, $ini, $end){
+        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetManagementReport?id='.$idGerencia.'&typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        return json_decode($solicitudes->body());
+    }
+
+    public static function getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end){
+        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetManagementReportByEmployee?id='.$idGerencia.'&typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        return json_decode($solicitudes->body());
+    }
+    
 }
