@@ -382,11 +382,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 }
                                 return $response;
-                            }); 
-
-<<<<<<< HEAD
                             });
-=======
+
                             Route::post('/pedido/storePedidoGetID', function (Request $request){
                                 $token = TokenController::refreshToken();
                                 if($token == 'error'){
@@ -399,11 +396,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $level = "C";
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
-                                }   
+                                }
                                 // dd($response->body());
                                 return $response;
-                            }); 
->>>>>>> cb5852347df0357cc6178872ef72c3c7d1d524b0
+                            });
 
                             Route::post('/pedido/updatePedido', function (Request $request){
                                 $token = TokenController::refreshToken();
@@ -419,43 +415,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE["level"];
                                 }
                                 return $response;
-<<<<<<< HEAD
-
                             });
-=======
-                            }); 
->>>>>>> cb5852347df0357cc6178872ef72c3c7d1d524b0
 
                             Route::post('/pedido/storePedidoNS', function (Request $request){
                                 $token = TokenController::refreshToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-<<<<<<< HEAD
-
-                                $getUser = MisSolicitudesController::getUser($token);
-                                $user = $getUser->body();
-                                $json = $request->json;
-
-                                foreach($json as $key => $field){
-                                    $json[$key]['user'] = $user;
-                                }
-
-                                dd($json);
-
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
-                                $level = "C";
-                                if(isset($_COOKIE["level"])){
-                                    $level = $_COOKIE["level"];
-                                }
-                                return $response;
-=======
                                 $json = $request->json; //json para guardar pedido en netsuite
                                 return $json;
->>>>>>> cb5852347df0357cc6178872ef72c3c7d1d524b0
 
                             });
 
@@ -532,13 +500,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $subtotal = number_format($subtotal, 2, '.', ',');
                                     $pedido[$x]['subtotal'] = $subtotal;
                                 }
-                                
+
                                 Mail::to($correo)->send(new ConfirmarPedido($pedido));
 
                                 dd('Mail Sent to '.$correo);
-                             
+
                                 return view('contact',  ['lang' => $lang, 'send' => true, 'id' => '1']);
-                             
+
                              });
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -607,35 +575,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $level = "C";
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
-<<<<<<< HEAD
                                 }
-                                $customersInfo = PromoController::getCustomersInfo($token);
-
-                                $categories = PromoController::getCategories($customersInfo);
-                                $giros = PromoController::getGiros($customersInfo);
-                                $customers = PromoController::getCustomers($customersInfo);
-
-                                $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                                dd($infoArticulos);
-                                $proveedores = PromoController::getProveedores($infoArticulos);
-                                $marcas = PromoController::getMarcas($infoArticulos);
-                                $articulos = PromoController::getArticulos($infoArticulos);
-
-=======
-                                } 
                                 // $customersInfo = PromoController::getCustomersInfo($token);
 
                                 // $categories = PromoController::getCategories($customersInfo);
                                 // $giros = PromoController::getGiros($customersInfo);
                                 // $customers = PromoController::getCustomers($customersInfo);
-                                
+
                                 // $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
                                 // dd($infoArticulos);
                                 // $proveedores = PromoController::getProveedores($infoArticulos);
                                 // $marcas = PromoController::getMarcas($infoArticulos);
                                 // $articulos = PromoController::getArticulos($infoArticulos);
-                                
->>>>>>> cb5852347df0357cc6178872ef72c3c7d1d524b0
+
                                 $permissions = LoginController::getPermissions();
 
                                 return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
