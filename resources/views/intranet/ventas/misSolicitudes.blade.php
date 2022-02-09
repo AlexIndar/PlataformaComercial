@@ -346,7 +346,7 @@
                                                 <input class="form-check-input" type="checkbox" value="" onclick="addAddress()" id="checkAddAddress">
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     ¿Desea usar una dirección diferente para la entrega?
-                                                </label>                                                
+                                                </label>
                                             </div>
 
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
@@ -491,7 +491,13 @@
                                                         <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">
+                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">                                                        
+                                                    </div>
+                                                    <div class="input-group mb-3 checkForm">
+                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                                                        <label class="form-check-label" for="flexCheckChecked">
+                                                            ¿Desea recibir publicidad sobre nuestras promociones en este correo?
+                                                        </label>
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <button class="btn btn-info" onclick="addContactData()">Agregar Contacto</button>

@@ -1,16 +1,98 @@
-function search(zona) {
+let isAdmin = true;
+let zonaD = '';
+$(document).ready(function() {
+    let user = document.getElementById("userP").value;
+    let data = { User: user };
+
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/Indarnet/getMyZone",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(zona) {
+            document.getElementById("btnSearch").disabled = false;
+            if (zona.description != undefined) {
+                zonaD = zona;
+                document.getElementById('seeByGroup').classList.add('d-none');
+                document.getElementById('showByGroup').classList.add('d-none');
+            } else {
+                document.getElementById('seeByGroup').classList.remove('d-none');
+                document.getElementById('showByGroup').classList.remove('d-none');
+                $('#showStatusRadio').prop('checked', true);
+                $('#generalRadio').prop('checked', true);
+            }
+        },
+        error: function(error) {
+            console.log(error + "Error");
+            console.log("No tiene zona");
+        }
+    });
+})
+
+function seeBySol() {
+    let activoFijo = $('input[name="seeBy"]:checked').val();
+    $('#showStatusRadio').prop('checked', true);
+    if (activoFijo != "general") {
+        document.getElementById('gerenciaGroup').classList.remove('d-none');
+        document.getElementById('showGerRadioD').innerHTML = `<input type="radio" name="showBy" value="false">Por Empleado`;
+    } else {
+        document.getElementById('showGerRadioD').innerHTML = `<input type="radio" name="showBy" value="false">Por Gerencia`;
+        document.getElementById('gerenciaGroup').classList.add('d-none');
+    }
+
+
+
+}
+
+function search() {
+    let zona = zonaD.description;
     var fecha = $('#reservation').daterangepicker()[0].value;
-    var aunx = fecha.split('-').map(s => s.trim());
+    var dateIF = fecha.split('-').map(s => s.trim());
     var typeR = document.getElementById("typeForms").value;
     if (typeR == "SELECCIONAR") {
         $('#infoReport').modal('show');
         document.getElementById("infoModalR").innerHTML = "Verifica el tipo de solicitud";
     } else {
-        getEmployeeReport(zona, typeR, aunx[0], aunx[1]);
+        if (zona != undefined) {
+            getEmployeeReport(zona, typeR, dateIF[0], dateIF[1]);
+        } else {
+            let seeR = $('input[name="seeBy"]:checked').val();
+            let showR = $('input[name="showBy"]:checked').val();
+            console.log(seeR);
+            console.log(showR);
+            let idGerencia = document.getElementById("gerencias").value;
+            if (seeR == "general" && showR == "true") {
+                getGeneralReport(typeR, dateIF[0], dateIF[1]);
+            } else if (seeR == "general" && showR == "false") {
+                getGeneralReportByManagement(typeR, dateIF[0], dateIF[1]);
+            } else if (seeR == "gerencia" && showR == "true") {
+                if (idGerencia != "SELECCIONAR")
+                    getManagementReport(idGerencia, typeR, dateIF[0], dateIF[1]);
+                else {
+                    $('#infoReport').modal('show');
+                    document.getElementById("infoModalR").innerHTML = "Verifica la gerencia seleccionada";
+                }
+            } else if (seeR == "gerencia" && showR == "false") {
+                if (idGerencia != "SELECCIONAR")
+                    getManagementReportByEmployee(idGerencia, typeR, dateIF[0], dateIF[1]);
+                else {
+                    $('#infoReport').modal('show');
+                    document.getElementById("infoModalR").innerHTML = "Verifica la gerencia seleccionada";
+                }
+            } else {
+                alert("Error, verifica los datos");
+            }
+        }
     }
 }
 
 function getEmployeeReport(zona, typeR, ini, fin) {
+    console.log(zona);
     let data = { Zona: zona, TypeR: typeR, Ini: ini, Fin: fin };
     $.ajax({
         'headers': {
@@ -23,6 +105,7 @@ function getEmployeeReport(zona, typeR, ini, fin) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(report) {
+            console.log(report);
             iniciarB(report);
         },
         error: function(error) {
@@ -31,8 +114,96 @@ function getEmployeeReport(zona, typeR, ini, fin) {
     });
 }
 
+function getGeneralReport(typeS, ini, end) {
+    let data = { TypeS: typeS, Ini: ini, End: end }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/EstadisticaCliente/getGeneralReport",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(report) {
+            console.log(report);
+            iniciarB(report);
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
+}
+
+function getGeneralReportByManagement(typeS, ini, end) {
+    let data = { TypeS: typeS, Ini: ini, End: end }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/EstadisticaCliente/getGeneralReportByManagement",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(report) {
+            console.log(report);
+            graficaSol(report);
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
+
+}
+
+function getManagementReport(idGerencia, typeS, ini, end) {
+    let data = { IdGerencia: idGerencia, TypeS: typeS, Ini: ini, End: end }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/EstadisticaCliente/getManagementReport",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(report) {
+            console.log(report);
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
+}
+
+function getManagementReportByEmployee(idGerencia, typeS, ini, end) {
+    let data = { IdGerencia: idGerencia, TypeS: typeS, Ini: ini, End: end }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/EstadisticaCliente/getManagementReportByEmployee",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(report) {
+            console.log(report);
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
+}
 
 function iniciarB(report) {
+    document.getElementById("donutShow").style.display = 'block';
+    document.getElementById("barCharShow").style.display = 'none';
     if (report.length != 0) {
         var acceptadas = 0;
         var rechadaza = 0;
@@ -142,4 +313,56 @@ function iniciarB(report) {
         $('#infoReport').modal('show');
         document.getElementById("infoModalR").innerHTML = "No se encontraron resultados";
     }
+}
+
+function graficaSol(report) {
+    document.getElementById("donutShow").style.display = 'none';
+    document.getElementById("barCharShow").style.display = 'block';
+    var areaChartData = {
+        labels: ['Casa', 'CDMX', 'Centro', 'Centro Norte', 'Guadalajara', 'Jalisco', 'NorEste', 'Pacifico', 'Telefono'],
+        datasets: [{
+                label: 'Aceptadas',
+                backgroundColor: 'rgba(0,40,104,0.9)',
+                borderColor: 'rgba(60,141,188,0.8)',
+                pointRadius: false,
+                pointColor: '#3b8bba',
+                pointStrokeColor: 'rgba(60,141,188,1)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(60,141,188,1)',
+                data: [28, 48, 40, 19, 86, 27, 90, 22, 12]
+            },
+            {
+                label: 'Rechazadas',
+                backgroundColor: 'rgba(255, 0, 0, 1)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: [65, 59, 80, 81, 56, 55, 40, 30, 25]
+            },
+        ]
+    }
+
+
+
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        datasetFill: false
+    }
+
+    new Chart(barChartCanvas, {
+        type: 'bar',
+        data: barChartData,
+        options: barChartOptions
+    })
 }
