@@ -15,7 +15,7 @@ class VerifyCsrfToken extends Middleware
         '/pedido/nuevo/getItems/all',
         '/pedido/nuevo/getItemByID',
         '/pedido/nuevo/SepararPedidosPromo',
-        '/pedido/editar',
+        '/pedido/editar', 
         '/pedido/nuevo',
         '/pedido/eliminar',
         '/pedido/storePedido',
@@ -36,5 +36,10 @@ class VerifyCsrfToken extends Middleware
         '/MisSolicitudes/getBills',
         '/MisSolicitudes/reSendForm',
         '/EstadisticaCliente/getEmployeeReport',
+        '/EstadisticaCliente/getGeneralReport',
+        '/EstadisticaCliente/getGeneralReportByManagement',
+        '/EstadisticaCliente/getManagementReport', 
+        '/EstadisticaCliente/getManagementReportByEmployee',
+        '/Indarnet/getMyZone',
     ];
 }

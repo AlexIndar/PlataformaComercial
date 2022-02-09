@@ -89,7 +89,7 @@ Route::get('/main', function () {
 });
 
 Route::get('/faq', function () {
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
     }
@@ -131,7 +131,7 @@ Route::get('/bladeInvoice', function () {
 
 
 Route::get('/about', function () {
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -147,7 +147,7 @@ Route::get('/about', function () {
 });
 
 Route::get('/centros', function () {
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -163,7 +163,7 @@ Route::get('/centros', function () {
 });
 
 Route::get('/postventa', function () {
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -179,7 +179,7 @@ Route::get('/postventa', function () {
 });
 
 Route::get('/contacto', function () {
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -195,7 +195,7 @@ Route::get('/contacto', function () {
 });
 
 Route::get('/descontinuados', function () {
-    $token = TokenController::refreshToken();
+    $token = TokenController::getToken();
     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -222,7 +222,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // GENERAL ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
                                 Route::get('/catalogo', function () {
-                                    $token = TokenController::refreshToken();
+                                    $token = TokenController::getToken();
                                     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -239,7 +239,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                                 Route::get('/detallesProducto/{id}',function ($id) {
-                                    $token = TokenController::refreshToken();
+                                    $token = TokenController::getToken();
                                     if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -254,7 +254,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 // PEDIDOS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                             Route::get('/pedidos', function (){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -273,7 +273,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -289,7 +289,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
                             
                             Route::get('pedidosAnteriores/getSaleOrders/{customer}', function ($customer){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -299,7 +299,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             // Route::get('/pedido/nuevo/{entity}', function ($entity){
-                            //     $token = TokenController::refreshToken();
+                            //     $token = TokenController::getToken();
                             //     if($token == 'error'){
                             //         return redirect('/logout');
                             //     }
@@ -318,7 +318,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             // }); 
 
                             Route::post('/pedido/nuevo', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -340,7 +340,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             }); 
 
                             Route::post('/pedido/eliminar', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 
                                 if($token == 'error'){
                                     return redirect('/logout');
@@ -353,7 +353,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             }); 
 
                             Route::post('/pedido/editar', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -382,7 +382,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             }); 
 
                             Route::post('/pedido/storePedido', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -398,7 +398,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             }); 
 
                             Route::post('/pedido/storePedidoGetID', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -415,7 +415,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             }); 
 
                             Route::post('/pedido/updatePedido', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -431,7 +431,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             }); 
 
                             Route::post('/pedido/storePedidoNS', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -451,7 +451,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/pedido/nuevo/getItems/all', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -542,7 +542,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                             Route::get('/promociones', function (){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -560,7 +560,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::post('/promociones/editar', function (Request $request){
                                 $idPromo = $request->id;
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -595,7 +595,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::get('/promociones/nueva', function (){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -669,7 +669,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/promociones/storePromo', function (Request $request){
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
@@ -695,7 +695,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/MisSolicitudes', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
                     if($token == 'error'){
                         return redirect('/logout');
@@ -827,7 +827,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/EstadisticaSolicitudesClientes', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
                     if($token == 'error'){
                         return redirect('/logout');
