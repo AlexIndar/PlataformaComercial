@@ -679,7 +679,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/storeSolicitud', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -689,7 +689,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/saveSolicitud', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -699,7 +699,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/MisSolicitudes/getBusinessLines', function (){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -708,7 +708,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/getInfoSol', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -718,7 +718,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/MisSolicitudes/getCPData', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -728,7 +728,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/getTransactionHistory', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -738,7 +738,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/getValidacionContactos', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -748,7 +748,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/getValidationRequest', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -758,7 +758,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/getFiles', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -768,7 +768,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::post('/MisSolicitudes/getBills', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -778,7 +778,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
                 
                 Route::post('/MisSolicitudes/reSendForm', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -798,26 +798,84 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $user = MisSolicitudesController::getUser($token);
-                    $zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'permissions' => $permissions, 'zone' => $zone]);
+                    //$zone = MisSolicitudesController::getZone($token,$user->body());
+                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                });
+
+                Route::post('/Indarnet/getMyZone', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }                
+                    $user = $request->User;
+                    $zona = MisSolicitudesController::getZone($token,$user);
+                    return $zona;
                 });
 
                 Route::post('/EstadisticaCliente/getEmployeeReport', function (Request $request){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
                     $typeR = $request->TypeR;
                     $ini = $request->Ini;
                     $fin = $request->Fin;
-                    $zoneObj = json_decode($request->Zona);
-                    $zone = $zoneObj->description;                                    
+                    $zone = $request->Zona;                                   
                     $data = EstadisticasClientesController::getEmployeeReport($token, $zone, $typeR, $ini, $fin);                                    
                     return  $data;
-                    
                 });
 
+                Route::post('/EstadisticaCliente/getGeneralReport', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd(json_encode($request->all()));
+                    $typeS = $request->TypeS;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $data = EstadisticasClientesController::getGeneralReport($token, $typeS, $ini, $end);
+                    // dd(json_encode($data));
+                    return  $data;
+                });
 
+                Route::post('/EstadisticaCliente/getGeneralReportByManagement', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $typeS = $request->TypeS;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $data = EstadisticasClientesController::getGeneralReportByManagement($token, $typeS, $ini, $end);                                    
+                    return  $data;
+                });
+
+                Route::post('/EstadisticaCliente/getManagementReport', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $idGerencia = $request->IdGerencia;
+                    $typeS = $request->TypeS;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $data = EstadisticasClientesController::getManagementReport($token, $idGerencia, $typeS, $ini, $end);                                    
+                    return  $data;
+                });
+
+                Route::post('/EstadisticaCliente/getManagementReportByEmployee', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $idGerencia = $request->IdGerencia;
+                    $typeS = $request->TypeS;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $data = EstadisticasClientesController::getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end);                                    
+                    return  $data;
+                });
     
 });
 
