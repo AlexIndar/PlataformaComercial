@@ -134,10 +134,10 @@
                         <div class="col-lg-6 col-md-8 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
                         </div>
-                        <div class="col-lg-6 col-md-4 col-12 rowPedido">
+                        <!-- <div class="col-lg-6 col-md-4 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="dividir"> <label for="dividir">Dividir 2000</label>
-                        </div>
-                    </div>
+                        </div> -->
+                    </div> 
                    <div class="row">
                         <div class="col-6 rowPedido">
                             @if(count($data)==1)    
@@ -264,6 +264,7 @@
             <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons" onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
             <button type="button" id="borrarCotizacion" class="btn btn-group-buttons" onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
             <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i class="fas fa-share-square"></i> Enviar cotización</button>
+            <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacionExcel')"><i class="fas fa-file-download"></i> Descargar cotización</button>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -299,6 +300,21 @@
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
+                                    <tfoot>
+                                    <tr>
+                                            <th class="customHeader">Img</th>
+                                            <th class="customHeader">Categoría</th>
+                                            <th class="customHeader">Fab</th>
+                                            <th class="customHeader">Fam</th>
+                                            <th class="customHeader">Cod Art</th>
+                                            <th class="customHeader">Descripción</th>
+                                            <th class="customHeader">Detalles</th>
+                                            <th class="customHeader">Cantidad</th>
+                                            <th class="customHeader">Precio</th>
+                                            <th class="customHeader">Promo</th>
+                                            <th class="customHeader">Acciones</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
             </div>
         </div>

@@ -402,7 +402,8 @@ display: none;
 
 
 .modal .modal-content-inventario {
-height: 100%;
+height: 95vh;
+overflow-y: scroll;
 border: 0;
 border-radius: 5px;
 padding: 20px;

@@ -318,6 +318,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             // }); 
 
                             Route::post('/pedido/nuevo', function (Request $request){
+                                ini_set('max_input_vars','5000' );
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
@@ -495,7 +496,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/sendmail', function (Request $request) {
-
+                                ini_set('max_input_vars','5000' );
                                 $pedido = $request->pedido;
                                 $correo = $request->email;
                                 $detallesPedido = [

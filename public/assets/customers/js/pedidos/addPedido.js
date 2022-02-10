@@ -178,8 +178,8 @@ $(document).ready(function() {
 
         var index = table.row(this).index();
         var item = items[index];
-        var cant = table.cell(index, 10).nodes().to$().find('input').val();
-        if (cell_clicked == "<i class='fas fa-plus-square btn-add-product fa-2x'></i>") {
+        var cant = table.cell(index, 7).nodes().to$().find('input').val();
+        if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
             if (item['disponible'] == 0) {
                 var toast = Swal.mixin({
                     toast: true,
@@ -202,6 +202,7 @@ $(document).ready(function() {
                 });
             } else {
                 selectedItemsFromInventory.push({item: item['itemid'].trim(), cant: cant});
+                console.log(selectedItemsFromInventory);
                 // addRowPedido(item, cant);
                 var toast = Swal.mixin({
                     toast: true,
@@ -556,6 +557,7 @@ function cargarProductosExcel(json) {
 
 
 function prepareJsonSeparaPedidos(){
+    console.log(selectedItemsFromInventory);
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
@@ -820,15 +822,19 @@ function cargarInventario() {
         
 
 
-        $("#tablaInventario").dataTable({
+        var inventarioTable = $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
             scrollCollapse: true,
-            fixedHeader: true,
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
-              },
+            },
         });
+
 
         // document.getElementById('tablaInventario').columns.adjust().draw();
 
@@ -1785,7 +1791,6 @@ function sendEmail(){
 }
 
 function nuevaCotizacion(){
-    alert(document.getElementById('entity').value);
     $("#formNuevo").submit();
 }
 
@@ -1805,5 +1810,38 @@ function eliminarCotizacion(type){
     else{
         $("#formDelete").submit();
         // window.location.href = '/pedidos';
+    }
+}
+
+function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    console.log(tableID);
+    console.log(tableHTML);
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        console.log(downloadLink.href);
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
     }
 }
