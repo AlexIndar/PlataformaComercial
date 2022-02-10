@@ -637,7 +637,7 @@
                                                             <option value="2">FECHA DE CONSTITUCION</option>
                                                             <option value="1">RAZON SOCIAL</option>
                                                             <option value="3">GIRO DE LA EMPRESA</option>
-                                                            <option value="4">DURACIÓN DE LA SOCIEDAD</option>
+                                                            <option value="4">TRANSITORIOS</option>
                                                             <option value="5">ACCIONISTAS</option>
                                                         </select>
                                                     </div>

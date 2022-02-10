@@ -63,8 +63,6 @@ function search() {
         } else {
             let seeR = $('input[name="seeBy"]:checked').val();
             let showR = $('input[name="showBy"]:checked').val();
-            console.log(seeR);
-            console.log(showR);
             let idGerencia = document.getElementById("gerencias").value;
             if (seeR == "general" && showR == "true") {
                 getGeneralReport(typeR, dateIF[0], dateIF[1]);
@@ -92,7 +90,6 @@ function search() {
 }
 
 function getEmployeeReport(zona, typeR, ini, fin) {
-    console.log(zona);
     let data = { Zona: zona, TypeR: typeR, Ini: ini, Fin: fin };
     $.ajax({
         'headers': {
@@ -105,7 +102,6 @@ function getEmployeeReport(zona, typeR, ini, fin) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(report) {
-            console.log(report);
             iniciarB(report);
         },
         error: function(error) {
@@ -127,7 +123,6 @@ function getGeneralReport(typeS, ini, end) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(report) {
-            console.log(report);
             iniciarB(report);
         },
         error: function(error) {
@@ -149,7 +144,6 @@ function getGeneralReportByManagement(typeS, ini, end) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(report) {
-            console.log(report);
             graficaSol(report);
         },
         error: function(error) {
@@ -172,7 +166,7 @@ function getManagementReport(idGerencia, typeS, ini, end) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(report) {
-            console.log(report);
+            iniciarB(report);
         },
         error: function(error) {
             console.log(error + "Error");
@@ -193,7 +187,7 @@ function getManagementReportByEmployee(idGerencia, typeS, ini, end) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(report) {
-            console.log(report);
+            graficaSol(report);
         },
         error: function(error) {
             console.log(error + "Error");
@@ -202,9 +196,13 @@ function getManagementReportByEmployee(idGerencia, typeS, ini, end) {
 }
 
 function iniciarB(report) {
-    document.getElementById("donutShow").style.display = 'block';
-    document.getElementById("barCharShow").style.display = 'none';
     if (report.length != 0) {
+
+        // donutChartCanvas.destroy();
+        document.getElementById("donutShow").style.display = 'block';
+        document.getElementById("barCharShow").style.display = 'none';
+        document.getElementById('tabla1Es').classList.remove('d-none');
+        document.getElementById('tablaInfo2').classList.add('d-none');
         var acceptadas = 0;
         var rechadaza = 0;
         var pendientes = 0;
@@ -286,7 +284,10 @@ function iniciarB(report) {
         info.push(acceptadas);
         info.push(rechadaza);
 
-        var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+
+        // var donutChartCanvas = $('#donutChart').get(0).getContext('2d');
+        var donutChartCanvas = document.getElementById("donutChart").getContext("2d");
+        console.log(donutChartCanvas);
         var donutData = {
             labels: [
                 'Pendientes',
@@ -312,57 +313,201 @@ function iniciarB(report) {
     } else {
         $('#infoReport').modal('show');
         document.getElementById("infoModalR").innerHTML = "No se encontraron resultados";
+        document.getElementById('tabla1Es').classList.add('d-none');
+
     }
 }
 
 function graficaSol(report) {
-    document.getElementById("donutShow").style.display = 'none';
-    document.getElementById("barCharShow").style.display = 'block';
-    var areaChartData = {
-        labels: ['Casa', 'CDMX', 'Centro', 'Centro Norte', 'Guadalajara', 'Jalisco', 'NorEste', 'Pacifico', 'Telefono'],
-        datasets: [{
-                label: 'Aceptadas',
-                backgroundColor: 'rgba(0,40,104,0.9)',
-                borderColor: 'rgba(60,141,188,0.8)',
-                pointRadius: false,
-                pointColor: '#3b8bba',
-                pointStrokeColor: 'rgba(60,141,188,1)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: [28, 48, 40, 19, 86, 27, 90, 22, 12]
-            },
-            {
-                label: 'Rechazadas',
-                backgroundColor: 'rgba(255, 0, 0, 1)',
-                borderColor: 'rgba(210, 214, 222, 1)',
-                pointRadius: false,
-                pointColor: 'rgba(210, 214, 222, 1)',
-                pointStrokeColor: '#c1c7d1',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(220,220,220,1)',
-                data: [65, 59, 80, 81, 56, 55, 40, 30, 25]
-            },
-        ]
+    var table = document.getElementById('infoSolTab');
+    document.getElementById('tablaInfo2').classList.remove('d-none');
+    if (table.rows.length > 1) {
+        for (var i = table.rows.length - 1; i >= 1; i--) {
+            table.deleteRow(i);
+        }
     }
 
+    if (report.length > 0) {
+
+        var aceptadasList = [];
+        var rechazadasList = [];
+        var pendientesList = [];
+        var labelList = [];
+        for (let i = 0; i < report.length; i++) {
+            var acceptadas = 0;
+            var rechadaza = 0;
+            var pendientes = 0;
+            var status1 = 0;
+            var status2 = 0;
+            var status3 = 0;
+            var status4 = 0;
+            var status5 = 0;
+            var status6 = 0;
+            var status7 = 0;
+            var status8 = 0;
+            var status9 = 0;
+            var status10 = 0;
+            var status11 = 0;
+            var status12 = 0;
+            for (let j = 0; j < report[i].requests.length; j++) {
+                switch (report[i].requests[j].tipo) {
+                    case 1:
+                        status1++;
+                        break;
+                    case 2:
+                        status2++;
+                        break;
+                    case 3:
+                        status3++;
+                        break;
+                    case 4:
+                        status4++;
+                        break;
+                    case 5:
+                        status5++;
+                        break;
+                    case 6:
+                        status6++;
+                        break;
+                    case 7:
+                        status7++;
+                        break;
+                    case 8:
+                        status8++;
+                        break;
+                    case 9:
+                        status9++;
+                        break;
+                    case 10:
+                        status10++;
+                        break;
+                    case 11:
+                        status11++;
+                        break;
+                    case 12:
+                        status12++;
+                        break;
+                    default:
+                        console.log("Error en tipo" + report[i]);
+                        break;
+                }
+            }
+
+            pendientes = status1 + status2 + status3 + status5 + status9 + status11 + status12;
+            rechadaza = status7 + status8;
+            acceptadas = status4 + status6;
+
+            labelList.push(report[i].name);
+            pendientesList.push(pendientes);
+            aceptadasList.push(acceptadas);
+            rechazadasList.push(rechadaza);
 
 
-    var barChartCanvas = $('#barChart').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
-    var temp1 = areaChartData.datasets[1]
-    barChartData.datasets[0] = temp1
-    barChartData.datasets[1] = temp0
+            var table = document.getElementById('infoSolTab');
+            var row = table.insertRow(table.rows.length);
 
-    var barChartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        datasetFill: false
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
+            var cell9 = row.insertCell(8);
+            var cell10 = row.insertCell(9);
+            var cell11 = row.insertCell(10);
+            var cell12 = row.insertCell(11);
+            var cell13 = row.insertCell(12);
+            var cell14 = row.insertCell(13);
+
+            cell1.innerHTML = report[i].name;
+            cell1.classList.add('bg-indarYellow');
+            cell2.innerHTML = report[i].requests.length;
+            cell2.classList.add('bg-info');
+            cell3.innerHTML = status1;
+            cell4.innerHTML = status2;
+            cell5.innerHTML = status3;
+            cell6.innerHTML = status4;
+            cell6.classList.add('bg-success');
+            cell7.innerHTML = status5;
+            cell8.innerHTML = status6;
+            cell8.classList.add('bg-success');
+            cell9.innerHTML = status7;
+            cell9.classList.add('bg-danger');
+            cell10.innerHTML = status8;
+            cell10.classList.add('bg-danger');
+            cell11.innerHTML = status9;
+            cell12.innerHTML = status10;
+            cell13.innerHTML = status11;
+            cell14.innerHTML = status12;
+        }
+
+        document.getElementById("donutShow").style.display = 'none';
+        document.getElementById("barCharShow").style.display = 'block';
+        document.getElementById('tabla1Es').classList.add('d-none');
+        document.getElementById('tablaInfo2').classList.remove('d-none');
+        var areaChartData = {
+            labels: labelList,
+            datasets: [{
+                    label: 'Aceptadas',
+                    backgroundColor: 'rgba(0,40,104,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: aceptadasList
+                },
+                {
+                    label: 'Rechazadas',
+                    backgroundColor: 'rgba(255, 0, 0, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: rechazadasList
+                },
+                {
+                    label: 'Pendientes',
+                    backgroundColor: 'rgba(255, 198, 30, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: pendientesList
+                },
+            ]
+        }
+
+
+
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        var barChartData = $.extend(true, {}, areaChartData)
+        var temp0 = areaChartData.datasets[0]
+        var temp1 = areaChartData.datasets[1]
+        barChartData.datasets[0] = temp1
+        barChartData.datasets[1] = temp0
+
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            datasetFill: false
+        }
+
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+        })
+    } else {
+        $('#infoReport').modal('show');
+        document.getElementById("infoModalR").innerHTML = "No se encontraron resultados";
+        document.getElementById('tablaInfo2').classList.add('d-none');
     }
-
-    new Chart(barChartCanvas, {
-        type: 'bar',
-        data: barChartData,
-        options: barChartOptions
-    })
 }
