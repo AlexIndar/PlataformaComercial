@@ -527,7 +527,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 
 
                                 // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
-                                Mail::to('alejandro.jimenez@indar.com.mx')->send(new ConfirmarPedido($pedido, $detallesPedido));
+                                $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
+                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido));
+                                // Mail::to('rvelasco@indar.com.mx')->send(new ConfirmarPedido($pedido, $detallesPedido));
+
 
                                  // check for failures
                                 if (Mail::failures()) {
