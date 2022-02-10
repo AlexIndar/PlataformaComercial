@@ -3,7 +3,7 @@
 @section('title') Indar - Estadistica Solicitudes Clientes @endsection
 
 @section('styles')
-<link rel="stylesheet" href="{{asset('assets/intranet/css/')}}">
+<link rel="stylesheet" href="{{asset('assets/intranet/css/estadisticaSolicitudes.css')}}">
 @endsection
 
 @section('body')
@@ -36,6 +36,7 @@
                 <div class="col-md-4 text-center">
                     <!-- <button class="btn btn-success"><i class="fas fa-download"></i> Exportar documento</button> -->
                     <button class="btn btn-success" onclick="search()" disabled id="btnSearch"><i class="fab fa-searchengin"></i> Buscar</button>
+                    <!-- <button class="btn btn-info" onclick="ChangeTableG()" id="btnChange"><i class="fa-solid fa-table"></i> Ver Tabla</button> -->
                 </div>
                 <div class="col-md-4 text-center">
                     <div class="form-group">
@@ -100,7 +101,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row d-none" id="tabla1Es">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
                     <h3 class="text-center">Tabla de solicitudes</h3>
@@ -159,6 +160,32 @@
                     </div>
                 </div>
                 <div class="col-md-3"></div>
+            </div>
+            <hr class="hr-indarYellow">
+            <div class="row d-none" id="tablaInfo2">
+                <table class="table" id="infoSolTab">
+                    <thead>
+                        <tr class="bg-indarBlue">
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Solicitud Guardada</th>
+                            <th scope="col">Solicitud Enviada</th>
+                            <th scope="col">Validación Guardada</th>
+                            <th scope="col">Aceptada Contado</th>
+                            <th scope="col">Aceptada Contado (Pendiente Credito)</th>
+                            <th scope="col">Aceptada Credito</th>
+                            <th scope="col">Rechazada</th>
+                            <th scope="col">Rechadaza Credito (Aceptada Contado)</th>
+                            <th scope="col">Solicitud Reenviada</th>
+                            <th scope="col">Solicitud Cancelada</th>
+                            <th scope="col">Revisión Referencias</th>
+                            <th scope="col">Proceso Autorización</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
