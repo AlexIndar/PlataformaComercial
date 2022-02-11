@@ -161,6 +161,10 @@ border: 1px solid rgba(0, 0, 0, 0.1) !important;
 width: 100%;
 min-width: 900px;
 overflow-x: scroll;
+transition: opacity .5s ease-in-out;
+-moz-transition: opacity .5s ease-in-out;
+-webkit-transition: opacity .5s ease-in-out;
+opacity: 1;
 }
 
 .customHeader{
@@ -169,20 +173,17 @@ color: white !important;
 width: auto !important;
 }
 
-#tableInventario.display {
-margin: 0 auto;
-width: auto;
-clear: both;
-border-collapse: collapse;
-table-layout: fixed;       
-word-wrap:break-word;       
-}
+
 
 .tablaPedido th{
 background-color: #002868;
 color: white;
 padding: 2px;
 text-align: center;
+}
+
+.fadeOut{
+  opacity: 0;
 }
 
 .tablaPedido tr{

@@ -451,7 +451,6 @@ function addTags(json, id){
     jsonObj.forEach(function(valor, indice, array){
         selectedOptions.push(valor[key]);
     });
-    console.log(selectedOptions);
     $('#'+id).val(selectedOptions).trigger('chosen:updated');
 }
 

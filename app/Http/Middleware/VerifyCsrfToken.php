@@ -22,6 +22,7 @@ class VerifyCsrfToken extends Middleware
         '/pedido/storePedidoGetID',
         '/pedido/updatePedido',
         '/pedido/storePedidoNS',
+        '/pedido/getEventosCliente',
         '/sendmail',
         '/pedidosAnteriores/RegresaEstadoPedido',
         '/promociones/storePromo',
