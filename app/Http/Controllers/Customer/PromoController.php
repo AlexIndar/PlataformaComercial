@@ -30,7 +30,67 @@ class PromoController extends Controller
     public static function getCustomersInfo($token){
         $getCustomers = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/GetCustomers');
         $customers = json_decode($getCustomers->body());
-        return $customers;
+
+        $categories = [];
+        $giros = [];
+        $customersArray = [];
+        $ids = [];
+
+        for($x = 0; $x < count($customers); $x++){
+            if(count($categories)==0){
+                array_push($categories, $customers[$x]->category);
+            }
+            else{
+                $insert = true;
+                for($y = 0; $y < count($categories); $y++){
+                    if($categories[$y]==$customers[$x]->category){
+                        $insert = false;
+                        break;
+                    }
+                }
+                if($insert){
+                    array_push($categories, $customers[$x]->category);
+                }
+            }
+
+            if(count($giros)==0){
+                array_push($giros, $customers[$x]->groupC);
+            }
+            else{
+                $insert = true;
+                for($y = 0; $y < count($giros); $y++){
+                    if($giros[$y]==$customers[$x]->groupC){
+                        $insert = false;
+                        break;
+                    } 
+                }
+                if($insert){
+                    array_push($giros, $customers[$x]->groupC);
+                }
+            }
+
+            if(count($customersArray)==0){
+                array_push($customersArray, "[".$customers[$x]->companyID."] ".$customers[$x]->company);
+                array_push($ids, $customers[$x]->companyID);
+            }
+            else{
+                $insert = true;
+                for($y = 0; $y < count($customersArray); $y++){
+                    if($ids[$y]==$customers[$x]->companyID){
+                        $insert = false;
+                        break;
+                    }
+                }
+                if($insert){
+                    array_push($customersArray, "[".$customers[$x]->companyID."] ".$customers[$x]->company);
+                    array_push($ids, $customers[$x]->companyID);
+                }
+            }
+
+        }
+
+        $info = ["customersInfo" => $customers, "categories" => $categories, "giros" => $giros, "customers" => $customersArray];
+        return $info;
     } 
 
     public static function getCategories($customers){
@@ -102,6 +162,71 @@ class PromoController extends Controller
         }
         return $customers;
     }
+
+    public static function getItems($token){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/GetItemsForEvents');
+        $info = json_decode($response->body());
+        
+        $proveedores = [];
+        $marcas = [];
+        $articulos = [];
+        $ids = [];
+
+        for($x = 0; $x < count($info); $x++){
+            if(count($proveedores)==0){
+                array_push($proveedores, $info[$x]->clavefabricante);
+            }
+            else{
+                $insert = true;
+                for($y = 0; $y < count($proveedores); $y++){
+                    if($proveedores[$y]==$info[$x]->clavefabricante){
+                        $insert = false;
+                        break;
+                    }
+                }
+                if($insert){
+                    array_push($proveedores, $info[$x]->clavefabricante);
+                }
+            }
+
+            if(count($marcas)==0){
+                array_push($marcas, $info[$x]->familia);
+            }
+            else{
+                $insert = true;
+                for($y = 0; $y < count($marcas); $y++){
+                    if($marcas[$y]==$info[$x]->familia){
+                        $insert = false;
+                        break;
+                    }
+                }
+                if($insert){
+                    array_push($marcas, $info[$x]->familia);
+                }
+            }
+
+            if(count($articulos)==0){
+                array_push($articulos, "[".$info[$x]->itemid."] ".$info[$x]->purchasedescription);
+                array_push($ids, $info[$x]->itemid);
+            }
+            else{
+                $insert = true;
+                for($y = 0; $y < count($articulos); $y++){
+                    if($ids[$y]==$info[$x]->itemid){
+                        $insert = false;
+                        break;
+                    }
+                }
+                if($insert){
+                    array_push($articulos, "[".$info[$x]->itemid."] ".$info[$x]->purchasedescription);
+                    array_push($ids, $info[$x]->itemid);
+                }
+            }
+        }
+
+        $response = ["items" => $info, "proveedores" => $proveedores, "marcas" => $marcas, "articulos" => $articulos];
+        return $response;
+    } 
 
     public static function getProveedores($info){
         $proveedores = [];
@@ -183,7 +308,7 @@ class PromoController extends Controller
         $json = json_decode($data);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Eventos/EventADDNewEdit', [
             "id" => $json->id,
-            "nombrePromo" => $json->nombrePromo,
+            "nombrePromo" => $json->nombrePromo, 
             "descuento" => $json->descuento,
             "puntosIndar" => $json->puntosIndar,
             "plazosIndar" => $json->plazosIndar,

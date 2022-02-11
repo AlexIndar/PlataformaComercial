@@ -37,17 +37,17 @@ class LoginController extends Controller
                 $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
                 if(json_decode($typeUser->body())->typeUser == "C"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
-                    setcookie("refresh", $token, time()+7200, '/');
-                    setcookie("level", "C", time()+7200, '/');
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
+                    setcookie("refresh", $token, time()+60*60*24, '/');
+                    setcookie("level", "C", time()+60*60*24, '/');
                     setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
                     setcookie('username', $username, time()+60*60*24*30, '/');
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+3600, '/');
-                    setcookie("refresh", $token, time()+7200, '/');
-                    setcookie("level", "E", time()+7200, '/');
+                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
+                    setcookie("refresh", $token, time()+60*60*24, '/');
+                    setcookie("level", "E", time()+60*60*24, '/');
                     setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
                     setcookie('username', $username, time()+60*60*24*30, '/');
                     return redirect('/Intranet');
@@ -60,9 +60,9 @@ class LoginController extends Controller
     }
 
     public function logout(){
-        setcookie("laravel-token", "", time()-3600, '/');
-        setcookie("level", "", time()- 7200, '/');
-        setcookie("refresh", "", time()- 7200, '/');
+        setcookie("laravel-token", "", time()-60*60*24, '/');
+        setcookie("level", "", time()- 60*60*24, '/');
+        setcookie("refresh", "", time()- 60*60*24, '/');
         setcookie("access", "", time()- 60*60*24*30, '/');
         setcookie("username", "", time()- 60*60*24*30, '/');
         return redirect('/');

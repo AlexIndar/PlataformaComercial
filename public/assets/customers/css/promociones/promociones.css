@@ -200,3 +200,68 @@
   .btn-toggle.btn-sm.btn-sm.active:after {
     opacity: 1;
   }
+
+  /* MODAL */
+
+  /* MODAL */
+
+.modal-background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  z-index: -10000;
+  transition: opacity .4s ease;
+}
+
+.modal-indar{
+  width: 50%;
+  height: auto;
+  background-color: white;
+  border-radius: 50% !important;
+}
+
+.modal-header{
+  background-color: #002868 !important;
+  color: white !important;
+  padding-left: 50px !important;
+  padding-right: 50px !important;
+}
+
+.modal-body{
+  padding: 50px !important;
+  width: 100% !important;
+  background-color: white;
+  height: 100%;
+}
+
+.modal-inputs{
+  display: flex !important;
+  align-items: center;
+  flex-direction: row;
+}
+
+.modal-body label{
+  color: #555555;
+  font-size: 18px;
+  
+}
+
+.modal-body input{
+  width: 100%;
+  float: right;
+  height: 40px;
+  margin-left: auto;
+  background-color: #F5F8F8;
+  border-radius: 10px;
+  border:none;
+  text-indent: 10px;
+}

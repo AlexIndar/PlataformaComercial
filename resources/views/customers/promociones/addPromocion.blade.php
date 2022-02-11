@@ -366,7 +366,7 @@
                             <option value="negra">Negra (exclusiva)</option>
                         </select>
                     </div>
-                </div>
+                </div> 
 
                 <br><br>
                 <div class="row text-center">

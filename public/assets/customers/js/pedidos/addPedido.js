@@ -33,7 +33,6 @@ $(document).ready(function() {
     entity = document.getElementById('entity').value;
     entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
-        console.log(entity);
         getItems(entity);
     }
     else{ //si es zona o all (vendedor o apoyo)
@@ -122,7 +121,6 @@ $(document).ready(function() {
     // });
 
     function checkItems() {
-        console.log(items);
         if (items.length > 0) {
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
@@ -130,7 +128,6 @@ $(document).ready(function() {
             if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
                 prepareJsonSeparaPedidos();
             }
-
             clearInterval(intervalInventario);
         } else {
             document.getElementById('pedido').style.display = "none";
@@ -158,8 +155,6 @@ $(document).ready(function() {
         },
         success: function(data) {
             info = data;
-            console.log('GetInfoHeatWeb')
-            console.log(data);
         },
         error: function(error) {
             
@@ -183,8 +178,8 @@ $(document).ready(function() {
 
         var index = table.row(this).index();
         var item = items[index];
-        var cant = table.cell(index, 10).nodes().to$().find('input').val();
-        if (cell_clicked == "<i class='fas fa-plus-square btn-add-product fa-2x'></i>") {
+        var cant = table.cell(index, 7).nodes().to$().find('input').val();
+        if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
             if (item['disponible'] == 0) {
                 var toast = Swal.mixin({
                     toast: true,
@@ -207,6 +202,7 @@ $(document).ready(function() {
                 });
             } else {
                 selectedItemsFromInventory.push({item: item['itemid'].trim(), cant: cant});
+                console.log(selectedItemsFromInventory);
                 // addRowPedido(item, cant);
                 var toast = Swal.mixin({
                     toast: true,
@@ -338,7 +334,6 @@ $(document).ready(function() {
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
 
     $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        console.log('Index Clicked')
         // var selected = clickedIndex - 1;
         // indexCustomer = selected;
         // addresses = info[selected]['addresses'];
@@ -562,6 +557,7 @@ function cargarProductosExcel(json) {
 
 
 function prepareJsonSeparaPedidos(){
+    console.log(selectedItemsFromInventory);
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
@@ -762,7 +758,6 @@ function cargarInventario() {
         document.getElementById('empty').value = 'No';
         var dataset = [];
 
-        console.log(items);
         for (var x = 0; x < items.length; x++) {
             var arr = [];
             // arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
@@ -772,7 +767,7 @@ function cargarInventario() {
                 currency: 'USD',
             });
 
-            var precioIVA = ((items[x]['price']*1.16)).toLocaleString('en-US', {
+            var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD',
             });
@@ -791,52 +786,57 @@ function cargarInventario() {
             arr.push(items[x]['categoriaItem']);
             arr.push(items[x]['clavefabricante']);
             arr.push(items[x]['familia']);
-            arr.push(items[x]['grupoArticulo']);
-            arr.push(items[x]['tipoArticulo']);
-            arr.push(items[x]['id']);
             arr.push(items[x]['itemid']);
             arr.push(items[x]['purchasedescription']);
-            arr.push(items[x]['multiploVenta']);
+            
+            var detalles = "";
+            detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>"+items[x]['minVenta']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>"+items[x]['inner']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>"+items[x]['master']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>"+items[x]['multiploVenta']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>"+items[x]['unidad']+"</span></p>";
+            detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
+
+            arr.push(detalles);
             arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
             arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
-            arr.push(items[x]['unidad']);
-            arr.push(items[x]['promo']);
-            arr.push(existenciaFormat);
-            arr.push("<i class='fas fa-plus-square btn-add-product fa-2x'></i>");
+            if(items[x]['promoART'] == null){
+                arr.push("<p>Sin promoción</p>");
+            }
+            else{
+                var promociones = "";
+                for(var y=0; y < items[x]['promoART'].length; y++){
+                    if(items[x]['promoART'][y]['cantidad'] == 1)
+                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                    else
+                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                    promociones = promociones + temp;
+                }
+                arr.push(promociones)
+            }
+            arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
 
             dataset.push(arr);
         }
         
 
 
-        $("#tablaInventario").dataTable({
+        var inventarioTable = $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
             scrollCollapse: true,
-            "columns": [
-                null,
-                null, // automatically calculates
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                { "width": "30%" },
-                null,
-                null,
-                null,
-                null,
-            ],
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
-              },
+            },
         });
 
-        document.getElementById('tablaInventario').columns.adjust().draw();
+
+        // document.getElementById('tablaInventario').columns.adjust().draw();
 
 
     }
@@ -1371,7 +1371,6 @@ function updatePedidoDesneg(itemid, select, index){
         pedido.splice(index+1, 0, rowPedido);
     }
     
-    console.log(pedido);
 
     createTablePedido();
 }
@@ -1398,10 +1397,6 @@ function saveNS(){
         var shippingWay; //id
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
-        console.log('Pedido Separado Final');
-        console.log(pedidoSeparado);
-        console.log('Pedido Web');
-        console.log(pedido);
 
     
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
@@ -1454,7 +1449,6 @@ function saveNS(){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
             
-            console.log(indexItemSeparado);
             var evento = pedidoSeparado[indexItemSeparado]['evento'];
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
@@ -1759,13 +1753,7 @@ function update(action){
                         }
                 }, 
                 error: function(error){
-                        if(action == 'save'){
-                            window.location.href = '/pedidos';
-                        }
-                        else{
-                            noCotizacionNS = document.getElementById('idCotizacion').value;
-                            saveNS();
-                        }
+                        alert('Error actualizando cotización');
                  }
             });
         }
@@ -1782,7 +1770,6 @@ function updatePrecioIVA(input, itemid, precio){
 }
 
 function sendEmail(){
-    console.log(pedido);
     correo = document.getElementById("correo").value;
     $.ajax({
         'headers': {
@@ -1795,11 +1782,66 @@ function sendEmail(){
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){
-                alert('success email');
+                alert(data['success']);
         }, 
-        error: function(error){
-                alert('error email');
+        error: function(data){
+                alert(data['error']);
          }
     });
-    alert('Enviar email');
+}
+
+function nuevaCotizacion(){
+    $("#formNuevo").submit();
+}
+
+function activarEliminarModal(){
+    //type indica si se quiere  borrar una cotización que ya estaba guardada o una cotización que se estaba realizando pero nunca se guardó
+    $('#confirmDeleteModal').modal('show');
+}
+
+function closeModalDelete(){
+    $('#confirmDeleteModal').modal('hide');
+}
+
+function eliminarCotizacion(type){
+    if(type == 'nueva'){
+        window.location.href = '/pedidos';
+    }
+    else{
+        $("#formDelete").submit();
+        // window.location.href = '/pedidos';
+    }
+}
+
+function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    console.log(tableID);
+    console.log(tableHTML);
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        console.log(downloadLink.href);
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
 }
