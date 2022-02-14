@@ -8,6 +8,10 @@
   <title>@yield('title')</title>
   <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
   <script src="{{asset('assets/js/scripts.js')}}"></script>
 
@@ -36,7 +40,7 @@
   <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
   <!-- SELECT -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 
@@ -434,78 +438,50 @@
             @endif
 
             <li class="nav-item">
-              @if($active == 'CXC')
-              <a href="#" class="nav-link active">
-              @else
-              <a href="#" class="nav-link">
-              @endif
-                <i class="nav-icon fas fa-file-invoice"></i>
+                @if($active == 'CXC')
+                <a href="#" class="nav-link active">
+                @else
+                <a href="#" class="nav-link">
+                @endif
+                  <i class="nav-icon fas fa-file-invoice"></i>
+                  <p>
+                    Cuentas Por Cobrar
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <i class="fas fa-hand-holding-usd nav-icon"></i>
+                          <p>
+                            Pagos
+                            <i class="right fas fa-angle-left"></i>
+                          </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                              <a href="/AplicarPagos" class="nav-link">
+                                  <p>Aplicar Pagos</p>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                @if($active == 'Comisiones')
+                <a href="#" class="nav-link active">
+                @else
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#comisionesModal">
+                @endif
+                <i class="nav-icon fas fa-cash-register"></i>
                 <p>
-                  Cuentas Por Cobrar
-                  <i class="right fas fa-angle-left"></i>
+                Comisiones
                 </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-hand-holding-usd nav-icon"></i>
-                        <p>
-                          Pagos
-                          <i class="right fas fa-angle-left"></i>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/AplicarPagos" class="nav-link">
-                              <p>Aplicar Pagos</p>
-                            </a>
-                        </li>
-                      </ul>
-                {{-- </li>
-                <li class="nav-item">
-                    <a href="/OrdenCobro" class="nav-link">
-                      <i class="fas fa-file-invoice-dollar nav-icon"></i>
-                      <p>Orden de Cobro</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-globe nav-icon"></i>
-                        <p>
-                          SAD
-                          <i class="right fas fa-angle-left"></i>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview">
-
-                      </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-file nav-icon"></i>
-                      <p>
-                        Reportes
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="/OrdenCobro" class="nav-link">
-                      <i class="fas fa-receipt nav-icon"></i>
-                      <p>Recibos de Cobro</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/OrdenCobro" class="nav-link">
-                      <i class="fas fa-money-bill nav-icon"></i>
-                      <p>Arqueo</p>
-                    </a>
-                </li> --}}
-              </ul>
+                </a>
             </li>
+
+
 
 
             <!-- <li class="nav-item">
@@ -1100,11 +1076,51 @@
               <i class="nav-icon far fa-circle text-info"></i>
               <p>Informational</p>
             </a>
-          </li>
-        </ul> -->
+          </li> -->
+        </ul>
         </nav>
       </div>
     </aside>
+    <!--Comisiones Modal-->
+    <div class="modal fade" id="comisionesModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Consultar Comisiones</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group" style="display:flex; flex-direction: row">
+                    <div class="col-md-3 ">
+                        <label class="form-control-label">Gerencias:</label>
+                    </div>
+                    <div class=" col-md-9">
+                            <select id="gerencias" name="gerencias[]" class="form-control chosen" data-placeholder="Buscar" >
+                            </select>
+                    </div>
+                </div>
+                <div class="form-group" style="display:flex; flex-direction: row">
+                    <div class="col-md-3 text-center">
+                        <label class="form-control-label">Vendedores:</label>
+                    </div>
+                    <div class="col-md-9">
+                            <select id="vendedores" name="vendedores[]" class="form-control chosen" data-placeholder="Buscar" >
+                            </select>
+                    </div>
+                </div>
+              </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+            <a href="/comisiones">
+              <button type="button" class="btn btn-success">Consultar</button>
+            </a>
+            </div>
+
+          </div>
+        </div>
+    </div>
 
 
     @yield('body')
@@ -1184,3 +1200,4 @@
 </body>
 
 </html>
+

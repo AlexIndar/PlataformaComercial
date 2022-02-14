@@ -23,7 +23,9 @@ use App\Http\Controllers\Intranet\EstadisticasClientesController;
 
 // ------------------------------------------------------------------------------------------
 
-
+//SAI----------------------------------------------------------------
+use App\Http\Controllers\Sai\AplicarPagoController;
+//-------------------------------------------------------------------
 use App\Http\Middleware\ValidateSession;
 use Illuminate\Http\Request;
 use App\Exports\TemplateCategories;
@@ -914,6 +916,45 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $end = $request->End;
                     $data = EstadisticasClientesController::getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end);
                     return  $data;
+                });
+
+                //CXC
+                Route::get('/AplicarPagos', function(){
+                    $token = TokenController::getToken();
+
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    //$user = MisSolicitudesController::getUser($token);
+                    $zonas = AplicarPagoController::getZonas($token);
+                    //$cliente = AplicarPagoController::getRegresaClientes($token);
+                    $clientes = AplicarPagoController::getCargaListaClientes($token);
+                    //$empleados = AplicarPagoController::getLlenaEmpleados($token);
+                    //dd($clientes);
+                    return view('intranet.sai.aplicarPagos',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
+                });
+
+                Route::post('AplicarPagos/getDetalle', function (Request $request){
+
+                    dd($request);
+                    /* $idGerencia = $request->IdGerencia;
+                    $typeS = $request->TypeS;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $data = EstadisticasClientesController::getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end);
+                    return  $data; */
+                });
+
+                Route::get('/comisiones', function(){
+                    $token = TokenController::refreshToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    //$user = MisSolicitudesController::getUser($token);
+                    //$zone = MisSolicitudesController::getZone($token,$user->body());
+                    return view('intranet.comisiones.comisiones',['token' => $token, 'permissions' => $permissions]);
                 });
 
 });

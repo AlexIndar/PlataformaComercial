@@ -36,34 +36,31 @@
                       </div>
                    </div>
                    <div class="card-body">
-                        <div class="form-group" style="display:flex; flex-direction: row">
+                    <div class="form-group">
+                    <form id="myForm">
+                    <div class="form-check form-check-inline form-group">
+                        <input class="form-check-input" type="radio" name="radiobtn" id="radioZona" value="zona"  checked>
+                        <label class="form-check-label" for="inlineRadio1">Zona</label>
+                     </div>
+                     <div class="form-check form-check-inline form-group">
+                        <input class="form-check-input" type="radio" name="radiobtn" id="radioCliente" value="cliente">
+                        <label class="form-check-label" for="inlineRadio2">Cliente</label>
+                     </div>
+                    </form>
+                        <div class="form-group zonas" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Zona: </label>
-                            <select class="form-control selectpicker" id="select-zona" data-live-search="true">
-                                <option data-tokens="0">Seleccione Opción</option>
-                                <option data-tokens="1">Opcion2</option>
-                                <option data-tokens="2">Opcion3</option>
-                             </select>
-                        </div>
-                      <div class="form-check form-check-inline">
-                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioZona" value="option1">
-                         <label class="form-check-label" for="inlineRadio1">Zona</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioCliente" value="option2">
-                         <label class="form-check-label" for="inlineRadio2">Cliente</label>
-                      </div>
-                      <div class="form-group row">
-                         <div class="col-sm-12">
-                            <select class="form-control selectpicker" id="select-zona" data-live-search="true">
-                               <option data-tokens="0">Seleccione Opción</option>
-                               <option data-tokens="1">Opcion2</option>
-                               <option data-tokens="2">Opcion3</option>
+                            <select class="js-example-basic-single form-control" id="zonas" name="zonas"  data-live-search="true">
                             </select>
-                         </div>
-                      </div>
+                        </div>
+                        <div class="form-group clientes" style="display:flex; flex-direction: row">
+                            <label class="form-control-sm">Clientes: </label>
+                            <select class="js-example-basic-single form-control" id="clientes" name="clientes" data-live-search="true">
+                            </select>
+                        </div>
                    <div class="col-auto text-center">
-                      <button type="submit" class="btn btn-primary mb-3">Consultar</button>
+                    <button type="submit" class="btn btn-success mb-3"   onclick="consultar()" id="btnConsultar"> Consultar</button>
                    </div>
+                </div>
                    <hr>
                    <div class="card-header border-0">
                         <div class="d-flex justify-content-between">
@@ -111,7 +108,7 @@
                         </div>
                         <div class="form-group" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">SAT: </label>
-                            <select class="form-control selectpicker" id="select-sat" data-live-search="true">
+                            <select class="form-control js-example-basic" id="select-sat" data-live-search="true">
                                 <option data-tokens="0">Seleccione Opción</option>
                                 <option data-tokens="1">Opcion2</option>
                                 <option data-tokens="2">Opcion3</option>
@@ -172,17 +169,60 @@
 @endsection
 
 @section('js')
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 <script>
+
+
     $(document).ready(function() {
+
         $('#aplicarPagos').DataTable();
         //$('#pagosTable').DataTable();
 
-        $(function() {
-        $('.selectpicker').selectpicker();
+
+        //Recibe Json
+        var zonas = JSON.parse({!! json_encode($zonas) !!});
+        var clientes = JSON.parse({!! json_encode($clientes) !!});
+
+
+        //Llena select zonas
+        $('.js-example-basic-single').select2();
+
+        var $selectZonas = $('#zonas');
+        $.each(zonas, function(id, name) {
+            $selectZonas.append('<option value=' + name.id + '>'+ name.id + '&nbsp|&nbsp'+ name.zona+'</option>');
+        });
+        //Llena select Clientes
+        var $selectClientes = $('#clientes');
+        $.each(clientes, function(id, name) {
+            $selectClientes.append('<option value=' + name.internalid + '>'+ name.internalid + '&nbsp|&nbsp'+ name.companyId+'</option>');
         });
 
-    } );
+        //RadioButtons
+        $("div.clientes").hide();
+        $("input[name$='radiobtn']").click(function() {
+        var test = $(this).val();
+        if(test == 'cliente'){
+            $("div.clientes").show();
+            $("div.zonas").hide();
+        }else{
+            $("div.clientes").hide();
+            $("div.zonas").show();
+        }
+        });
+
+    });
+    function consultar() {
+        //var x = document.getElementById("zonas").value;
+        var selectedRadio = $('input[name=radiobtn]:checked', '#myForm').val()
+        if(selectedRadio === 'zona'){
+            var idZona = document.getElementById("zonas").value;
+            console.log(idZona);
+        }else{
+            var idCliente = document.getElementById("clientes").value;
+            console.log(idCliente);
+        }
+    }
 </script>
 @endsection
