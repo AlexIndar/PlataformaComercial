@@ -463,6 +463,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                            Route::post('/pedido/getEventosCliente', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $entity = $request->entity;
+                                $data = SaleOrdersController::getEventosCliente($token, $entity);
+                                return  $data;
+                            });
+
                             Route::post('/pedido/nuevo/getItemByID', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){

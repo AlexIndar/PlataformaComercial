@@ -120,9 +120,7 @@
                             <h5>Promo</h5>
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                            <ul class="tags-input">
-                                <li class="tags">1PREMIABM<i class="fa fa-times"></i></li>
-                                <li class="tags last">1PREMIAF4<i class="fa fa-times"></i></li>
+                            <ul class="tags-input" id="tags-promo">
                                 <!-- <li class="tags-new">
                                     <input type="text" placeholder="Buscar"> 
                                 </li> -->
@@ -264,12 +262,12 @@
             <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons" onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
             <button type="button" id="borrarCotizacion" class="btn btn-group-buttons" onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
             <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i class="fas fa-share-square"></i> Enviar cotización</button>
-            <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacionExcel')"><i class="fas fa-file-download"></i> Descargar cotización</button>
+            <!-- <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacionExcel')"><i class="fas fa-file-download"></i> Descargar cotización</button> -->
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="update('saveNS')"><i class="fas fa-check"></i> Levantar pedido</button>
+            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="saveAndGetIDCotizacion()"><i class="fas fa-check"></i> Levantar pedido</button>
             <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
             <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
         </div>
@@ -283,7 +281,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-content-inventario">
                                 <input type="text" id="empty" value="yes" hidden>
-                                <table id="tablaInventario" class="table-striped table-bordered table-hover" style="width:100%">
+                                <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="customHeader">Img</th>
@@ -299,7 +297,7 @@
                                             <th class="customHeader">Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody></tbody>
+                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
                                     <tfoot>
                                     <tr>
                                             <th class="customHeader">Img</th>

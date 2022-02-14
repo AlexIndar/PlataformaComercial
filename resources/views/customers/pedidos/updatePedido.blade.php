@@ -102,9 +102,7 @@
                             <h5>Promo</h5>
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                            <ul class="tags-input">
-                                <li class="tags">1PREMIABM<i class="fa fa-times"></i></li>
-                                <li class="tags last">1PREMIAF4<i class="fa fa-times"></i></li>
+                            <ul class="tags-input" id="tags-promo">
                                 <!-- <li class="tags-new">
                                     <input type="text" placeholder="Buscar"> 
                                 </li> -->
@@ -113,12 +111,12 @@
                     </div>
                     <br>
                     <div class="row d-flex flex-row justify-content-center align-items-center">
-                        <div class="col-lg-6 col-md-8 col-12 rowPedido">
+                        <div class="col-lg-12 col-md-12 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
                         </div>
-                        <div class="col-lg-6 col-md-4 col-12 rowPedido">
+                        <!-- <div class="col-lg-6 col-md-4 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="dividir"> <label for="dividir">Dividir 2000</label>
-                        </div>
+                        </div> -->
                     </div>
                    <div class="row">
                         <div class="col-6 rowPedido">

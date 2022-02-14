@@ -46,7 +46,8 @@ class CotizacionController extends Controller
             "divide" => $json->divide,
             "pickUp" => $json->pickUp,
             "order" => $json->order,
-            "comments" => $json->comments
+            "comments" => $json->comments,
+            "enviado" => $json->enviado
         ]);
         return $response;
     }
@@ -64,7 +65,8 @@ class CotizacionController extends Controller
             "divide" => $json->divide,
             "pickUp" => $json->pickUp,
             "order" => $json->order,
-            "comments" => $json->comments
+            "comments" => $json->comments,
+            "enviado" => $json->enviado
         ]);
         return $response;
     }

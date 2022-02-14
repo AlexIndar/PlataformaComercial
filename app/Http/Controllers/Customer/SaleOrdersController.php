@@ -120,6 +120,12 @@ class SaleOrdersController extends Controller
         return $info;
     } 
 
+    public static function getEventosCliente($token, $entity){
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EventosParaCliente?cliente='.$entity);
+        $info = json_decode($response->body());
+        return $info;
+    } 
+
     public static function getItemByID($token, $id, $entity){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/getItemByID', [
             "itemID" => $id,

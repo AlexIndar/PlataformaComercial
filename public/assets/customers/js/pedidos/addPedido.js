@@ -3,6 +3,8 @@ var addresses = [];
 var shippingWays = [];
 var packageDeliveries = [];
 var items = []; //result inventario getItems/All
+var promocionesCliente = []; //result getEventosCliente para cargar codigos de promociones activas para el cliente
+var checkPromocionesCliente = true;
 var jsonItemsSeparar = "";
 var ignorarRegalos = [];
 var noCotizacionNS;
@@ -121,6 +123,16 @@ $(document).ready(function() {
     // });
 
     function checkItems() {
+        if(promocionesCliente.length > 0 && checkPromocionesCliente){
+            checkPromocionesCliente = false;
+            $("#tags-promo").empty();
+            for(var x = 0; x<promocionesCliente.length; x++){
+                if(x+1 == promocionesCliente.length)
+                    $("#tags-promo").append('<li class="tags last">'+promocionesCliente[x]['nombrePromo']+'<i class="fa fa-times"></i></li>');
+                else
+                    $("#tags-promo").append('<li class="tags">'+promocionesCliente[x]['nombrePromo']+'<i class="fa fa-times"></i></li>');
+            }
+        }
         if (items.length > 0) {
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
@@ -133,7 +145,6 @@ $(document).ready(function() {
             document.getElementById('pedido').style.display = "none";
             document.getElementById('loading').style.display = "block";
             document.getElementById('loading').classList.add('d-flex');
-
         }
     }
 
@@ -249,6 +260,7 @@ $(document).ready(function() {
 
         items = [];
         intervalInventario = window.setInterval(checkItems, 1000);
+        checkPromocionesCliente = true;
         document.getElementById('entity').value = info[selected]["companyId"];
         entityCte = info[selected]["companyId"];
         getItems(info[selected]["companyId"]);
@@ -561,6 +573,7 @@ function prepareJsonSeparaPedidos(){
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
+        console.log(selectedItemsFromInventory[x]['item']);
         var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
         getItemById(item);
     }
@@ -663,6 +676,8 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
 }
 
 function getItemById(item) {
+    console.log(item);
+    console.clear();
     var entity = document.getElementById('entity').value;
     var data = { id: item['articulo'], entity: entity };
     var cantidad = item['cantidad'];
@@ -726,6 +741,22 @@ function getItemById(item) {
 
 function getItems(entity) {
     let data = { entity: entity };
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/pedido/getEventosCliente",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+				promocionesCliente = data;
+		}, 
+		error: function(error){
+		 }
+	});
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -825,11 +856,10 @@ function cargarInventario() {
         var inventarioTable = $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
+            // scrollY: '70vh',
             scrollCollapse: true,
-            fixedHeader: {
-                header: true,
-                footer: true
-            },
+            pageLength : 5,
+            lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'Todos']],
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
             },
@@ -844,6 +874,8 @@ function cargarInventario() {
 }
 
 function createTablePedido(){
+
+
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -902,6 +934,10 @@ function createTablePedido(){
     document.getElementById('subtotalPedido').innerHTML = subtotalFinal;
     document.getElementById('ivaPedido').innerHTML = ivaFinal;
     document.getElementById('totalPedido').innerHTML = totalFinal;
+
+    if(document.getElementById('tablaPedido').classList.contains('fadeOut')){
+        $('#tablaPedido').removeClass('fadeOut');
+    }
 
     if(filas == 1){
         document.getElementById('messageAddProducts').classList.remove('d-none');
@@ -1135,6 +1171,7 @@ function validarMultiplo(multiplo, cant) {
 }
 
 function addItemCant(item, cant, index) {
+    $('#tablaPedido').addClass('fadeOut');
     document.getElementById('cant-'+item+"-"+index).stepUp(cant);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     var cantidad = pedido[index]['items'][indexItem]['cantidad'];
@@ -1161,6 +1198,7 @@ function addItemCant(item, cant, index) {
 }
 
 function decreaseItemCant(item, cant, index) {
+    $('#tablaPedido').addClass('fadeOut');
     document.getElementById('cant-'+item+"-"+index).stepDown(cant);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     var cantidad = pedido[index]['items'][indexItem]['cantidad'];
@@ -1231,7 +1269,8 @@ function save(){
             packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
         }
     
-        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        dividir2000 = 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
@@ -1281,6 +1320,7 @@ function save(){
             pickUp: cteRecoge,
             order: pedidoJson,
             comments: comentarios,
+            enviado: 0,
         };
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
@@ -1416,7 +1456,8 @@ function saveNS(){
         var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === idCustomer.toUpperCase());
         var internalId = info[indexCustomerInfo]['internalID'];
 
-        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        dividir2000 = 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
@@ -1580,7 +1621,8 @@ function saveAndGetIDCotizacion(){
                 packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
             }
         
-            dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+            // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+            dividir2000 = 0;
             cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
             correo = document.getElementById("correo").value;
             ordenCompra = document.getElementById("ordenCompra").value;
@@ -1630,6 +1672,7 @@ function saveAndGetIDCotizacion(){
                 pickUp: cteRecoge,
                 order: pedidoJson,
                 comments: comentarios,
+                enviado: 1,
             };
 
             $.ajax({
@@ -1678,7 +1721,8 @@ function update(action){
             packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
         }
     
-        dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
+        dividir2000 = 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
@@ -1729,6 +1773,7 @@ function update(action){
             pickUp: cteRecoge,
             order: pedidoJson,
             comments: comentarios,
+            enviado: action == 'save' ? 0 : 1, //si es un pedido editado, se actualiza y después se envía a ns
         };
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
