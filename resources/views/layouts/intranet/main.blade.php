@@ -405,6 +405,14 @@
                   </a>
                 </li>
                 @endif
+                @if(in_array('ForzarPedidos', $permissions))
+                <li class="nav-item">
+                  <a href="/forzarPedido" class="nav-link">
+                    <i class="fas fa-paper-plane nav-icon"></i>
+                    <p>Forzar Pedidos</p>
+                  </a>
+                </li>
+                @endif
               </ul>
             </li>
             @endif

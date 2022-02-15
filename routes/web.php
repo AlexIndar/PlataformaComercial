@@ -552,6 +552,23 @@ Route::middleware([ValidateSession::class])->group(function(){
                              
                              });
 
+                             Route::get('forzarPedido', function (){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                } 
+                                $permissions = LoginController::getPermissions();
+
+                                return view('customers.pedidos.forzarPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions]);
+                            });
+
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
 
 

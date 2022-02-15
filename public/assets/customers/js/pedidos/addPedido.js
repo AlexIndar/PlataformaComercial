@@ -9,6 +9,9 @@ var jsonItemsSeparar = "";
 var ignorarRegalos = [];
 var noCotizacionNS;
 
+var indexFocus = []; //guardar el index de las filas editadas para que parpadeen después de crear nuevamente la tabla
+var intervalVar; //variable para asignar intervalo y hacer clear al intervalo después de x segundos+
+var itemToFocus; //saber qué artículo debe resaltarse después de crear nuevamente la tabla
 
 var selectedItemsFromInventory = [];
 var cantItemsPorCargar = 0;
@@ -464,6 +467,7 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
     else{
         var row = t.parentNode.parentNode;
     }
+    itemToFocus = item;
     document.getElementById("tablaPedido").deleteRow(row.rowIndex);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     if(pedido[index]['items'][indexItem]['regalo']==1){
@@ -856,7 +860,7 @@ function cargarInventario() {
         var inventarioTable = $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
-            // scrollY: '70vh',
+            scrollY: '70vh',
             scrollCollapse: true,
             pageLength : 5,
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'Todos']],
@@ -935,9 +939,30 @@ function createTablePedido(){
     document.getElementById('ivaPedido').innerHTML = ivaFinal;
     document.getElementById('totalPedido').innerHTML = totalFinal;
 
-    if(document.getElementById('tablaPedido').classList.contains('fadeOut')){
-        $('#tablaPedido').removeClass('fadeOut');
+    var table = document.getElementById('tablaPedido');
+    for(var x = 0; x < table.rows.length; x++){
+       if(table.rows[x].cells[1].innerText.indexOf(itemToFocus) >=0){
+            indexFocus.push(x);
+       }
     }
+
+    if(indexFocus.length > 1){
+        intervalVar =  setInterval(function(){
+            for(var x = 0; x < indexFocus.length; x++){
+                table.rows[indexFocus[x]].classList.toggle('focusRow');
+            }
+        }, 500);         
+    }
+
+    setTimeout(function( ) { 
+        clearInterval( intervalVar ); 
+        for(var x = 0; x < indexFocus.length; x++){
+            table.rows[indexFocus[x]].classList.remove('focusRow');
+        }
+        indexFocus = [];
+        itemToFocus = 'XXXXXXX';
+    }, 3000);
+
 
     if(filas == 1){
         document.getElementById('messageAddProducts').classList.remove('d-none');
@@ -945,6 +970,7 @@ function createTablePedido(){
 
 
 }
+
 
 function addRowPedido(item, fila, indexPedido) {
     var table = document.getElementById('tablaPedido');
@@ -1171,7 +1197,13 @@ function validarMultiplo(multiplo, cant) {
 }
 
 function addItemCant(item, cant, index) {
-    $('#tablaPedido').addClass('fadeOut');
+    var table = document.getElementById('tablaPedido');
+    for(var x = 0; x < table.rows.length; x++){
+        if(table.rows[x].cells[1].innerText.indexOf(item) >=0){
+             table.rows[x].classList.add('fadeOut');
+        }
+     }
+    itemToFocus = item;
     document.getElementById('cant-'+item+"-"+index).stepUp(cant);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     var cantidad = pedido[index]['items'][indexItem]['cantidad'];
@@ -1198,7 +1230,7 @@ function addItemCant(item, cant, index) {
 }
 
 function decreaseItemCant(item, cant, index) {
-    $('#tablaPedido').addClass('fadeOut');
+    itemToFocus = item;
     document.getElementById('cant-'+item+"-"+index).stepDown(cant);
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
     var cantidad = pedido[index]['items'][indexItem]['cantidad'];
@@ -1212,6 +1244,12 @@ function decreaseItemCant(item, cant, index) {
         currency: 'USD',
     });
     if(cantidad - multiploVenta >= multiploVenta){
+        var table = document.getElementById('tablaPedido');
+        for(var x = 0; x < table.rows.length; x++){
+            if(table.rows[x].cells[1].innerText.indexOf(item) >=0){
+                 table.rows[x].classList.add('fadeOut');
+            }
+        }
         pedido[index]['items'][indexItem]['cantidad'] = cantidad - multiploVenta;
         
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
