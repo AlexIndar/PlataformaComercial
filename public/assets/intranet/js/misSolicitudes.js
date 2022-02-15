@@ -518,6 +518,7 @@ function addAddress() {
 }
 
 function updateGeolocation() {
+    validarCP();
     var cp = document.getElementById('cpInput').value;
     if (cp == "") {
         alert('Ingresa un código postal');
@@ -621,6 +622,12 @@ function addContactData() {
         alert("Maximo de contactos agregado");
     }
 
+}
+
+function validateNameC() {
+    if (!validacionTextOne("nombreContacto")) {
+        getAlert("alertContacto", "El nombre no puede ser numeros o menor a cuatro caracteres")
+    }
 }
 
 function cleanDatosContacto() {
@@ -750,7 +757,7 @@ function addActaConstData() {
                 nameTypeConst = "GIRO DE LA EMPRESA";
                 break;
             case '4':
-                nameTypeConst = "DURACIÓN DE LA SOCIEDAD";
+                nameTypeConst = "TRANSITORIOS";
                 break;
             case '5':
                 nameTypeConst = "ACCIONISTAS";
@@ -814,7 +821,7 @@ function addRefData() {
     var cityRef = document.getElementById('ciudadRef').value.toUpperCase();
     var telRef = document.getElementById('telefonoRef').value;
 
-    if (validarDataContact(rzRef, contRef, cityRef, telRef)) {
+    if (validarDataDatosF(rzRef, contRef, cityRef, telRef)) {
         var data = {
             "rzRef": rzRef,
             "contRef": contRef,
@@ -858,7 +865,7 @@ function cleanDatosRefData() {
     document.getElementById('telefonoRef').value = "";
 }
 
-function validarDataContact(rz, cont, city, phone) {
+function validarDataDatosF(rz, cont, city, phone) {
     var auxR = validacionText("#razonSocialRef", rz);
     var auxC = validacionText("#contactoRef", cont);
     var auxCt = validacionText("#ciudadRef", city);
@@ -1075,10 +1082,13 @@ function validateSaveForm() {
 
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
-    var nombreComercial = document.getElementById('nameComeInput').value;
+    // var nombreComercial = document.getElementById('nameComeInput').value;
     var prospecto = document.getElementById('prospecto').value;
-
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '') {
+    var emailFac = document.getElementById('emailFac').value;
+    var colDF = document.getElementById('colDF').value;
+    var cpFiscal = document.getElementById('cpInput').value;
+    // || nombreComercial == ''
+    if (tipoForm == '' || rfc == '' || razonSocial == '' || prospecto == '' || tipoNegocio == '' || emailFac == '' || cpFiscal == '' || colDF == '') {
         save = false;
     }
 
@@ -1119,6 +1129,7 @@ function SendForm(zone) {
 function saveForm(zone) {
     if (validateSaveForm()) {
         var json = createJsonSolicitud(zone);
+        console.log(json);
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1130,20 +1141,22 @@ function saveForm(zone) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
-                console.log("Guardo");
-                console.log(data);
+                if (Number.isInteger(data)) {
+                    $('#solicitudModal').modal('hide');
+                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    $('#respuestaForm').modal('show');
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                }
             },
             error: function(error) {
                 console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-
-        $('#solicitudModal').modal('hide');
-        document.getElementById('infoModalR').innerHTML = 'Solicitud guardada correctamente';
-        $('#respuestaForm').modal('show');
-        // window.location.href = "/MisSolicitudes";
     } else {
-        alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial y Número de Prospecto');
+        alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
     }
 }
 
@@ -1228,30 +1241,13 @@ function createJsonSolicitud(zone) {
     ];
 
     var contactosNull = [{
-            "Id": 0,
-            "Tipo": 1,
-            "Nombre": "",
-            "Email": "",
-            "Celular": "",
-            "Phone": ""
-        },
-        {
-            "Id": 0,
-            "Tipo": 0,
-            "Nombre": "",
-            "Email": "",
-            "Celular": "",
-            "Phone": ""
-        },
-        {
-            "Id": 0,
-            "Tipo": 0,
-            "Nombre": "",
-            "Email": "",
-            "Celular": "",
-            "Phone": ""
-        }
-    ];
+        "Id": 0,
+        "Tipo": 1,
+        "Nombre": "",
+        "Email": "",
+        "Celular": "",
+        "Phone": ""
+    }, ];
 
     for (var x = 0; x < contactos.length; x++) {
         var temp = {
@@ -1799,8 +1795,10 @@ function validacionTextOne(id) {
     document.getElementById(id).value = item.toUpperCase();
     if (item.length > 4 && item != "") {
         $('#' + id).removeClass("warningText");
+        return true;
     } else {
         $('#' + id).addClass("warningText");
+        return false;
     }
 }
 

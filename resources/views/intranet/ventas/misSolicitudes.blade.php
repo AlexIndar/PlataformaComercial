@@ -285,7 +285,7 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control" onfocusout="validarCP()" maxlength="5">
+                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control" onfocusout="updateGeolocation()" maxlength="5">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()">
@@ -482,7 +482,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control">
+                                                        <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control" onfocusout="validateNameC()">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <input type="text" name="telefonoContacto" id="telefonoContacto" placeholder="Telefono" class="form-control" maxlength="10">
@@ -491,13 +491,16 @@
                                                         <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">                                                        
+                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">
                                                     </div>
                                                     <div class="input-group mb-3 checkForm">
                                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
                                                         <label class="form-check-label" for="flexCheckChecked">
                                                             ¿Desea recibir publicidad sobre nuestras promociones en este correo?
                                                         </label>
+                                                    </div>
+                                                    <div class="col-12 text-center" id="alertContacto">
+
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <button class="btn btn-info" onclick="addContactData()">Agregar Contacto</button>
