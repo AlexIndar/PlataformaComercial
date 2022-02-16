@@ -539,7 +539,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 
 
                                 // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
-                                $emails = ['alejandro.jimenez@indar.com.mx'];
+                                $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
                                 Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
 
                                  // check for failures
