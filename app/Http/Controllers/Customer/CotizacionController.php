@@ -36,25 +36,6 @@ class CotizacionController extends Controller
     public static function storePedido($token, $data){
         $json = json_decode($data);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
-            "idCotizacion" => 0,
-            "companyId" => $json->companyId,
-            "orderC" => $json->orderC,
-            "email" => $json->email,
-            "addressId" => $json->addressId,
-            "shippingWay" => $json->shippingWay,
-            "packageDelivery" => $json->packageDelivery,
-            "divide" => $json->divide,
-            "pickUp" => $json->pickUp,
-            "order" => $json->order,
-            "comments" => $json->comments,
-            "enviado" => $json->enviado
-        ]);
-        return $response;
-    }
-
-    public static function updatePedido($token, $data){
-        $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
             "idCotizacion" => $json->idCotizacion,
             "companyId" => $json->companyId,
             "orderC" => $json->orderC,
@@ -71,6 +52,25 @@ class CotizacionController extends Controller
         return $response;
     }
 
+    // public static function updatePedido($token, $data){
+    //     $json = json_decode($data);
+    //     $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
+    //         "idCotizacion" => $json->idCotizacion,
+    //         "companyId" => $json->companyId,
+    //         "orderC" => $json->orderC,
+    //         "email" => $json->email,
+    //         "addressId" => $json->addressId,
+    //         "shippingWay" => $json->shippingWay,
+    //         "packageDelivery" => $json->packageDelivery,
+    //         "divide" => $json->divide,
+    //         "pickUp" => $json->pickUp,
+    //         "order" => $json->order,
+    //         "comments" => $json->comments,
+    //         "enviado" => $json->enviado
+    //     ]);
+    //     return $response;
+    // }
+
     public static function deletePedido($token, $id){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/getBorrarCotizacionIdWeb?Id='.$id);
         $cotizacion = json_decode($response->body());
@@ -78,6 +78,10 @@ class CotizacionController extends Controller
     }
 
     public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){
+
+        $infoCustomer = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
+        $customerHeat = json_decode($infoCustomer->body());
+
         date_default_timezone_set('America/Mexico_City');
         $date = date('d/m/y');
         $date = explode('/', $date);
@@ -113,7 +117,7 @@ class CotizacionController extends Controller
         $plazoEvento['txt'] = $cotizacion->order[$index-1]->plazo;
 
         $json['internalId'] = 0;
-        $json['idCustomer'] = 'FALTA';
+        $json['idCustomer'] = $customerHeat[0]->internalID;
         $json['date'] = $date;
         $json['location'] = $cotizacion->order[$index-1]->marca == 'OUTLET' ? '36' : '1';
         $json['billingAddress'] = $billingAddress;

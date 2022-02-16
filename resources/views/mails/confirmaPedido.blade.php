@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación de Pedido</title>
+    @if($idCotizacion == 0)
+        <title>Nueva Cotización INDAR</title>
+    @else
+        <title>Nuevo Pedido INDAR</title>
+    @endif
 </head>
 <body>
-    <h4>Confirmación de pedido</h4>
+    @if($idCotizacion == 0)
+        <h4>Cotización de Pedido</h4>
+    @else
+        <h4>Cotización #{{$idCotizacion}}</h4>
+    @endif
                 <table style='border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-width: 1000px;' cellspacing='0'>
                     <!-- CABECERA DE TABLA -->
                     <tr style='background-color:#002868; color:white; padding: 2px; text-align: center;'>
@@ -39,7 +47,7 @@
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
-                                <th style='background-color:#fcbf49; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}}</th>
+                                <th style='background-color:#fcbf49; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}}</th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
@@ -48,7 +56,7 @@
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
-                                <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}}</th>
+                                <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}}</th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>

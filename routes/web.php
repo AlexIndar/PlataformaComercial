@@ -420,7 +420,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::updatePedido($token, json_encode($request->all()));
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), 2);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -507,8 +507,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/sendmail', function (Request $request) {
-                                ini_set('max_input_vars','5000' );
+                                ini_set('max_input_vars','10000' );
                                 $pedido = $request->pedido;
+                                $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
                                 $detallesPedido = [
                                     "subtotal" => 0,
@@ -538,10 +539,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 
 
                                 // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
-                                $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
-                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido));
-                                // Mail::to('rvelasco@indar.com.mx')->send(new ConfirmarPedido($pedido, $detallesPedido));
-
+                                $emails = ['alejandro.jimenez@indar.com.mx'];
+                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
 
                                  // check for failures
                                 if (Mail::failures()) {

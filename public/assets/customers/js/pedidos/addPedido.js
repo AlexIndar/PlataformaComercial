@@ -7,7 +7,7 @@ var promocionesCliente = []; //result getEventosCliente para cargar codigos de p
 var checkPromocionesCliente = true;
 var jsonItemsSeparar = "";
 var ignorarRegalos = [];
-var noCotizacionNS;
+var noCotizacionNS = 0;
 
 var indexFocus = []; //guardar el index de las filas editadas para que parpadeen después de crear nuevamente la tabla
 var intervalVar; //variable para asignar intervalo y hacer clear al intervalo después de x segundos+
@@ -1277,7 +1277,7 @@ function downloadPlantillaPedido(){
 }
 
 // FUNCIÓN GUARDAR PEDIDO WEB
-function save(){
+function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = ACTUALIZAR Y LEVANTAR PEDIDO
     if(pedido.length == 0){
         alert('Agrega artículos al pedido');
     }
@@ -1306,6 +1306,10 @@ function save(){
             shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
             packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
         }
+
+        var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === idCustomer.toUpperCase());
+        var internalId = info[indexCustomerInfo]['internalID'];
+        var listaPrecio = info[indexCustomerInfo]['priceList'];
     
         // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
         dividir2000 = 0;
@@ -1314,14 +1318,18 @@ function save(){
         ordenCompra = document.getElementById("ordenCompra").value;
         comentarios = document.getElementById("comments").value;
 
+
         pedidoJson = [];
         var itemsJson = [];
+        console.log(pedido);
 
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
             var marca = pedido[x]['marca'];
             var tipo = pedido[x]['tipo'];
+            var evento = pedido[x]['evento'];
+
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
                     prepareJsonSeparaPedidos();
@@ -1332,6 +1340,10 @@ function save(){
                     id: pedido[x]['items'][y]['id'],
                     itemid: pedido[x]['items'][y]['itemid'],
                     cantidad: pedido[x]['items'][y]['cantidad'],
+                    desneg: pedido[x]['items'][y]['desneg'],
+                    desgar: pedido[x]['items'][y]['desgar'],
+                    autorizaDesneg: pedido[x]['items'][y]['autorizaDesneg'],
+                    autorizaDesgar: pedido[x]['items'][y]['autorizaDesgar'],
                 };
                 itemsJson.push(item);
             }
@@ -1341,6 +1353,9 @@ function save(){
                 plazo: plazo,
                 marca: marca,
                 tipo: tipo,
+                evento: evento,
+                listPrice: listaPrecio,
+                idWeb: (x+1).toString(),
                 items: items,
             };
             pedidoJson.push(temp);
@@ -1348,7 +1363,9 @@ function save(){
         }
     
         var json = {
+            idCotizacion: type == 2 || type == 4 ? document.getElementById('idCotizacion').value : 0,
             companyId: idCustomer,
+            internalId: internalId,
             orderC: ordenCompra,
             email: correo,
             addressId: idSucursal,
@@ -1358,8 +1375,11 @@ function save(){
             pickUp: cteRecoge,
             order: pedidoJson,
             comments: comentarios,
-            enviado: 0,
+            enviado: type == 3 || type == 4 ? 1: 0, //solo es 1 si se envia a netsuite (levantar pedido)
+            type: type,
         };
+
+        console.log(JSON.stringify(json));
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
             
@@ -1375,7 +1395,17 @@ function save(){
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
-                        window.location.href = '/pedidos';
+                        if(type == 3){
+                            noCotizacionNS = data['idCotizacion']; //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
+                            saveNS();
+                        }
+                        else if (type == 4){ //se está editando el pedido, ya tengo el numero de cotización en el html 
+                            noCotizacionNS = document.getElementById('idCotizacion').value;
+                            saveNS();
+                        }
+                        else{
+                            window.location.href = '/pedidos';
+                        }
                 }, 
                 error: function(error){
                         window.location.href = '/pedidos';
@@ -1461,11 +1491,7 @@ function saveNS(){
         alert('Agrega artículos al pedido');
     }
     else{
-        var numCotizacion
-        if(window.location.href.includes('pedido/editar')) //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
-            numCotizacion = noCotizacionNS;
-        else
-            numCotizacion = noCotizacionNS['idCotizacion'];
+        var numCotizacion = noCotizacionNS;
         var idCustomer; //id
         var correo; //texto
         var ordenCompra; //texto
@@ -1717,7 +1743,7 @@ function saveAndGetIDCotizacion(){
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                'url': "storePedidoGetID",
+                'url': "storePedido",
                 'type': 'POST',
                 'dataType': 'json',
                 'data': json,
@@ -1853,7 +1879,9 @@ function updatePrecioIVA(input, itemid, precio){
 }
 
 function sendEmail(){
-    correo = document.getElementById("correo").value;
+    var correo = document.getElementById("correo").value;
+    var numCotizacion = noCotizacionNS;
+    console.log(pedido);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1861,7 +1889,7 @@ function sendEmail(){
         'url': "/sendmail",
         'type': 'POST',
         'dataType': 'json',
-        'data': {pedido: pedido, email: correo},
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion},
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){

@@ -12,7 +12,7 @@
 @section('body')
 
   <br><br>
-
+ 
 
   <div class="container-fluid">
     <div class="title bg-blue">
@@ -255,7 +255,7 @@
             <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
             <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
-            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save()"><i class="fas fa-save"></i> Guardar</button>
+            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i class="fas fa-save"></i> Guardar</button>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -267,7 +267,7 @@
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="saveAndGetIDCotizacion()"><i class="fas fa-check"></i> Levantar pedido</button>
+            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i class="fas fa-check"></i> Levantar pedido</button>
             <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
             <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
         </div>

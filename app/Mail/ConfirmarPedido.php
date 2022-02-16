@@ -14,10 +14,12 @@ class ConfirmarPedido extends Mailable
 
     public $pedido;
     public $detallesPedido;
-    public function __construct($pedido, $detallesPedido)
+    public $idCotizacion;
+    public function __construct($pedido, $detallesPedido, $idCotizacion)
     {   
         $this->pedido = $pedido;
         $this->detallesPedido = $detallesPedido;
+        $this->idCotizacion = $idCotizacion;
     }
 
     /**
@@ -29,7 +31,7 @@ class ConfirmarPedido extends Mailable
     {
         return $this->from('mailing@sndr.indar.com.mx', 'INDAR')
         ->replyTo('mailing@sndr.indar.com.mx', 'INDAR')
-        ->subject('Confirmación de Pedido ')
+        ->subject('Nueva Cotización INDAR')
         ->view('mails.confirmaPedido');
         // return $this->from('ing.alejandrodv@gmail.com', 'INDAR')
         // ->replyTo('ing.alejandrodv@gmail.com', 'INDAR')
