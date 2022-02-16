@@ -77,4 +77,71 @@ class CotizacionController extends Controller
         return $cotizacion;
     }
 
+    public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){
+        date_default_timezone_set('America/Mexico_City');
+        $date = date('d/m/y');
+        $date = explode('/', $date);
+        $date = $date[0]."/".$date[1]."/20".$date[2];
+
+        $billingAddress['id'] = 'XXXXXX';
+        $shippingAddress['id'] = $cotizacion->addressId;
+        $typeOrder['id'] = '1';
+        $typeOrder['txt'] = "";
+
+        $lineItems = [];
+        for($x = 0; $x < count($cotizacion->order[$index-1]->items); $x++){
+            $temp['itemid'] = $cotizacion->order[$index-1]->items[$x]->itemid;
+            $temp['quantity'] = $cotizacion->order[$index-1]->items[$x]->cantidad;
+            $temp['listprice'] = "FALTA";
+            array_push($lineItems, $temp);
+        }
+
+        $shippingWay['id'] = $cotizacion->shippingWay;
+        $shippingWay['txt'] = "";
+        $package['id'] = $cotizacion->packageDelivery;
+        $package['txt'] = "";
+        $typeSale['id'] = $cotizacion->order[$index-1]->tipo == 'BO' ? '6' : '5';
+        $typeSale['txt'] = "";
+        
+        $username = $_COOKIE["username"];
+
+        $methodPayment['id'] = "10";
+        $methodPayment['txt'] = "";
+        $events['id'] = "0";
+        $events['txt'] = "FALTA";
+        $plazoEvento['id'] = "0";
+        $plazoEvento['txt'] = $cotizacion->order[$index-1]->plazo;
+
+        $json['internalId'] = 0;
+        $json['idCustomer'] = 'FALTA';
+        $json['date'] = $date;
+        $json['location'] = $cotizacion->order[$index-1]->marca == 'OUTLET' ? '36' : '1';
+        $json['billingAddress'] = $billingAddress;
+        $json['shippingAddress'] = $shippingAddress;
+        $json['typeOrder'] = $typeOrder;
+        $json['idWeb'] = $idCotizacion.'-'.$index.'/'.$cantidad;
+        $json['noCotizacion'] = $idCotizacion;
+        $json['lineItems'] = $lineItems;
+        $json['shippingWay'] = $shippingWay;
+        $json['package'] = $package;
+        $json['typeSale'] = $typeSale;
+        $json['user'] = $username;
+        $json['methodPayment'] = $methodPayment;
+        $json['useCFDI'] = null;
+        $json['comments'] = $cotizacion->comments;
+        $json['events'] = $events;
+        $json['plazoEvento'] = $plazoEvento;
+        $json['eventSpecialDiscount'] = "FALTA";
+        $json['customerDiscountPP'] = intval($cotizacion->order[$index-1]->descuento);
+        $json['discountSpecial'] = "FALTA";
+        $json['specialAuthorization'] = "FALTA";
+        $json['numPurchase'] = $cotizacion->orderC;
+        $json['desneg'] = "FALTA";
+        $json['desgar'] = "FALTA";
+
+
+        
+        dd($json);
+    }
+
 }

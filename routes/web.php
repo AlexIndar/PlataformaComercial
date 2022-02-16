@@ -437,6 +437,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $json = $request->json; //json para guardar pedido en netsuite
+                                
                                 return $json;
 
                             }); 
@@ -568,6 +569,29 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 return view('customers.pedidos.forzarPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions]);
                             });
+
+                            Route::post('/pedido/forzarPedido', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $idCotizacion = explode('-', $request->cotizacion);
+                                $index = explode('/', $idCotizacion[1]);
+                                $idCotizacion = $idCotizacion[0];
+                                $cantidad = $index[1];
+                                $index = $index[0];
+                                $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
+                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                $rama1 = RamasController::getRama1();
+                                $rama2 = RamasController::getRama2();
+                                $rama3 = RamasController::getRama3();
+                                $level = "C";
+                                if(isset($_COOKIE["level"])){
+                                    $level = $_COOKIE["level"];
+                                }   
+                                // dd($response->body());
+                                return $response;
+                            }); 
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
 

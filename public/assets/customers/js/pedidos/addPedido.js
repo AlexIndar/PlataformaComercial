@@ -652,6 +652,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                 marca: json[x]['marca'],
                 tipo: json[x]['tipo'],
                 regalo: json[x]['regalo'],
+                evento: json[x]['evento'],
                 items: []
             };
             rowPedido['items'].push(item);
@@ -669,6 +670,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                     marca: json[x]['marca'],
                     tipo: json[x]['tipo'],
                     regalo: json[x]['regalo'],
+                    evento: json[x]['evento'],
                     items: []
                 };
                 rowPedido['items'].push(item);
@@ -903,7 +905,7 @@ function createTablePedido(){
         }
         subtotalPedido = subtotalPedido + subtotal;
         if(pedido[x]['regalo']==0){
-            addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], subtotal);
+            addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
         }
         for(var y = 0; y < pedido[x]['items'].length; y++){
             if(pedido[x]['items'][y]['regalo'] == 0){
@@ -1052,7 +1054,7 @@ function addRowPedido(item, fila, indexPedido) {
 
 }
 
-function addHeaderPedido(descuento, plazo, tipo, subtotal){
+function addHeaderPedido(descuento, plazo, tipo, evento, subtotal){
     var table = document.getElementById('tablaPedido');
     var row = table.insertRow(table.rows.length);
 
@@ -1074,7 +1076,7 @@ function addHeaderPedido(descuento, plazo, tipo, subtotal){
     cell1.innerHTML = "<th></th>";
     cell2.innerHTML = "<th></th>";
     cell3.innerHTML = "<th></th>";
-    cell4.innerHTML = "<th>Descuento: "+descuento+"% Plazo: "+plazo+" Tipo: "+tipo+" SUBTOTAL: "+sub+"</th>";
+    cell4.innerHTML = "<th>Descuento: "+descuento+"% Plazo: "+plazo+" Tipo: "+tipo+" SUBTOTAL: "+sub+" Evento: "+evento+"</th>";
     cell5.innerHTML = "<th></th>";
     cell6.innerHTML = "<th></th>";
     cell7.innerHTML = "<th></th>";
@@ -1243,7 +1245,6 @@ function decreaseItemCant(item, cant, index) {
         style: 'currency',
         currency: 'USD',
     });
-    if(cantidad - multiploVenta >= multiploVenta){
         var table = document.getElementById('tablaPedido');
         for(var x = 0; x < table.rows.length; x++){
             if(table.rows[x].cells[1].innerText.indexOf(item) >=0){
@@ -1259,7 +1260,6 @@ function decreaseItemCant(item, cant, index) {
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString(); 
         jsonItemsSeparar = JSON.stringify(jsonObj);
         separarPedidosPromo(jsonItemsSeparar);
-    }            
 }
 
 
