@@ -480,11 +480,7 @@
                 </p>
                 </a>
             </li>
-
-
-
-
-            <!-- <li class="nav-item">
+        <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
@@ -1076,7 +1072,7 @@
               <i class="nav-icon far fa-circle text-info"></i>
               <p>Informational</p>
             </a>
-          </li> -->
+        </li> -->
         </ul>
         </nav>
       </div>
@@ -1094,19 +1090,13 @@
             <div class="modal-body">
                 <div class="form-group" style="display:flex; flex-direction: row">
                     <div class="col-md-3 ">
-                        <label class="form-control-label">Gerencias:</label>
+                        <label class="form-control-label">Clientes:</label>
                     </div>
                     <div class=" col-md-9">
-                            <select id="gerencias" name="gerencias[]" class="form-control chosen" data-placeholder="Buscar" >
-                            </select>
-                    </div>
-                </div>
-                <div class="form-group" style="display:flex; flex-direction: row">
-                    <div class="col-md-3 text-center">
-                        <label class="form-control-label">Vendedores:</label>
-                    </div>
-                    <div class="col-md-9">
-                            <select id="vendedores" name="vendedores[]" class="form-control chosen" data-placeholder="Buscar" >
+                            <select id="clientes" name="clientes[]" class="form-control chosen selectpicker" data-placeholder="Buscar" >
+                                <option value="0">C1</option>
+                                <option value="1">C2</option>
+                                <option value="2">C3</option>
                             </select>
                     </div>
                 </div>

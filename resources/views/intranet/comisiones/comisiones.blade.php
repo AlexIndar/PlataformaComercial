@@ -1,6 +1,6 @@
-@extends('layouts.intranet.main', ['active' => 'CXC', 'permissions' => $permissions])
+@extends('layouts.intranet.main', ['active' =>'Comisiones', 'permissions' => $permissions])
 
-@section('title') Indar| Comisiones @endsection
+@section('title') Indar | Comisiones @endsection
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/intranet/css/')}}">
@@ -23,6 +23,11 @@
                 </ol>
              </div>
           </div>
+          <div class="row mb-2">
+            <div class="col-sm-6">
+               <h3 class="m-0">[Nombre del Cliente] | Detalle de la Cobranza</h3>
+            </div>
+         </div>
        </div>
     </div>
     <div class="content">
@@ -32,7 +37,7 @@
                 <div class="card">
                    <div class="card-header border-0">
                       <div class="d-flex justify-content-between">
-                         <h3 class="card-title">Comisiones</h3>
+                         <h3 class="card-title">Detalle de la Cobranza</h3>
                       </div>
                    </div>
                    <div class="card-body">
@@ -41,23 +46,29 @@
                            <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:90%">
                               <thead>
                                  <tr>
-                                    <th>NumDoc</th>
-                                    <th>Nota</th>
-                                    <th>Fecha</th>
-                                    <th>FechaRecibo</th>
-                                    <th>Terminos</th>
-                                    <th>Vencimiento</th>
-                                    <th>DescuentoFact</th>
-                                    <th>ImporteBruto</th>
-                                    <th>SaldoPendiente</th>
-                                    <th>Porcentaje</th>
-                                    <th>DescuentoTotal</th>
-                                    <th>APagar</th>
-                                    <th>DIFFECHA</th>
+                                    <th>Documento</th>
+                                    <th>Recibida en el Mes con IVA</th>
+                                    <th>Recibida en el Mes sin IVA</th>
+                                    <th>Pendiente Saldar Mes Anterior sin IVA</th>
+                                    <th>Pendiente Saldar Este Mes sin IVA</th>
+                                    <th>Saldada en el Mes sin IVA</th>
+                                    <th>Fecha Factura</th>
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Fecha Saldada</th>
+                                    <th>Días</th>
+                                    <th>Importe Factura</th>
+                                    <th>Saldo</th>
+                                    <th>Diferencia en Precio</th>
+                                    <th>Desc. Fuera de Tiempo</th>
+                                    <th>Incobrabilidad</th>
+                                    <th>Comisión Base</th>
                                  </tr>
                               </thead>
                               <tbody>
                                  <tr>
+                                    <td>Ejemplo</td>
+                                    <td>Ejemplo</td>
+                                    <td>Ejemplo</td>
                                     <td>Ejemplo</td>
                                     <td>Ejemplo</td>
                                     <td>Ejemplo</td>

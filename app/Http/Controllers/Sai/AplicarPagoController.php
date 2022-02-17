@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Sai;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Customer\TokenController;
 
 class AplicarPagoController extends Controller
 {
@@ -21,10 +22,19 @@ class AplicarPagoController extends Controller
     }
 
     public static function getRegresaPrimerosDatos($token, $id){
-        $id=6;
-        $getCotizacion = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/getInfoCotizacionIdWeb?id='.$id);
-        $cotizacion = json_decode($getCotizacion->body());
-        return $cotizacion;
+
+        $getProduct = Http::withToken($token)->post('http://192.168.70.107:64444/PaymentInvoiceApply/GetRegresaPortafolio', [
+            "idZona" => $id
+        ]);
+
+        $item = json_decode($getProduct->body());
+        /* foreach($bestSellers as $item){
+            $item->itemid = strtr($item->itemid, " ", "_");
+            // dd($item);
+        } */
+        $token = TokenController::getToken();
+        return view('customers.detallesProducto', ['id' => $id, 'token' => $token]);
+
     }
 
     public function getLlenaEmpleados($token){

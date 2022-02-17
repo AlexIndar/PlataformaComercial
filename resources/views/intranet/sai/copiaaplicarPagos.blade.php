@@ -144,7 +144,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {{-- <tr>
+                        <tr>
                             <td></td>
                             <td>NumDoc</td>
                             <td>Nota</td>
@@ -191,7 +191,7 @@
                             <td>DescuentoTotal3</td>
                             <td>13.03</td>
                             <td>DIFFECHA3</td>
-                        </tr> --}}
+                        </tr>
                       </tbody>
                     </table>
                     <hr>

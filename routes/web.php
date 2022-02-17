@@ -945,15 +945,14 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return view('intranet.sai.aplicarPagos',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
                 });
 
-                Route::post('AplicarPagos/getDetalle', function (Request $request){
-
-                    dd($request);
-                    /* $idGerencia = $request->IdGerencia;
-                    $typeS = $request->TypeS;
-                    $ini = $request->Ini;
-                    $end = $request->End;
-                    $data = EstadisticasClientesController::getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end);
-                    return  $data; */
+                Route::post('/AplicarPagos/getRegresaPrimerosDatos', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $id = $request->id;
+                    $response = AplicarPagoController::getRegresaPrimerosDatos($token,$id);
+                    return $request;
                 });
 
                 Route::get('/comisiones', function(){
