@@ -120,6 +120,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                         <h5>TIPO DE SOLICITUD</h5>
+                                        <button type="submit" class="btn btn-warning float-right" onclick="saveForm('{{$zone}}')">Guardar</button>
                                         <form>
                                             <label class="mr-3"><input type="radio" name="typeSoli" value="credit" onclick="valiteTypeForm()" id="creditRadio">Credito</label>
                                             <label class="mr-3"><input type="radio" name="typeSoli" value="creditAB" onclick="valiteTypeForm()" id="creditABRadio">AB</label>
@@ -291,15 +292,19 @@
                                                     <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()">
                                                     <span>Correo donde se enviará la factura</span>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <!-- <div class="col-md-4">
                                                     <button onclick="updateGeolocation()" class="btn btn-info">Actualizar Geolocalización</button>
-                                                </div>
+                                                </div> -->
                                             </div>
-                                            <div class="row mb-3 d-none" id="rowInputsGeo">
-                                                <div class="col-md-4">
+                                            <div class="row mb-3" id="rowInputsGeo">
+                                                <div class="col-md-4" id="colDFRow1">
                                                     <span>Colonia</span>
                                                     <select id="colDF" name="colDF" class="form-control selectpicker" data-live-search="true">
-                                                    </select>
+                                                    </select>                                                    
+                                                </div>
+                                                <div class="col-md-4 d-none" id="colDFRow2">
+                                                    <span>Colonia</span>
+                                                    <input type="text" name="auxColDF" id="auxColDF" placeholder="Ciudad" class="form-control" disabled>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <span>Ciudad</span>
@@ -514,7 +519,7 @@
                                                                 <th scope="col">Nombre</th>
                                                                 <th scope="col">Celular</th>
                                                                 <th scope="col">Tipo</th>
-                                                                <th scope="col">Eliminar</th>
+                                                                <th scope="col">Acciones</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
