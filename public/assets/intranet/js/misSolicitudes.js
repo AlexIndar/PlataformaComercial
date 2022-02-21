@@ -424,6 +424,7 @@ function clearForm() {
     document.getElementById('noExtInputShipping').value = "";
     document.getElementById('noIntInputShipping').value = "";
     document.getElementById('cpInputShipping').value = "";
+    document.getElementById('auxColDFShipping').value = "";
     document.getElementById('colDFShipping').value = "";
     document.getElementById('ciudadDFShipping').value = "";
     document.getElementById('estadoDFShipping').value = "";
@@ -516,9 +517,8 @@ function addAddress() {
         divShippingAddress.style.display = 'none';
         comprobanteDomicilioShipping = '';
         comprobanteDomicilioShippingBack = '';
-        $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
-        $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
-
+        // $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
+        // $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
     }
 }
 
@@ -1079,9 +1079,9 @@ function getDateTime() {
 // }
 
 function validateFullForm() {
-    let activoFijo = $('input[name="typeSoli"]:checked').val();
-    console.log(activoFijo);
+    let msgAlert = ``;
     var save = true;
+    //DatosGenerales
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
     var nombreComercial = document.getElementById('nameComeInput').value;
@@ -1089,6 +1089,7 @@ function validateFullForm() {
     var constanciaSituacionFiscal = document.getElementById('inputGroupFile01').value;
     var constanciaSituacionFiscalBack = document.getElementById('inputGroupFile02').value;
     var solicitud = document.getElementById('inputGroupFile03').value;
+    //Dirección Fiscal
     var calleFiscal = document.getElementById('calleInput').value;
     var noExtFiscal = document.getElementById('noExtInput').value;
     var noIntFiscal = document.getElementById('noIntInput').value;
@@ -1098,18 +1099,64 @@ function validateFullForm() {
     var comprobanteDomicilio = document.getElementById('inputGroupFile04').value;
     var comprobanteDomicilioBack = document.getElementById('inputGroupFile05').value;
 
+    //Negocio
+    let antiguedad = document.getElementById("antiguedad").value;
+    let negFrente = document.getElementById("inputGroupFile06").value;
+    let negIzq = document.getElementById("inputGroupFile07").value;
+    let negDer = document.getElementById("inputGroupFile08").value;
+
+    //DatosContacto
+    if (contactos.length <= 0) {
+        msgAlert += `<p>Agrega los contactos</p>`;
+    }
+
+    //Credito
+    let tipoLocal = $('input[name="localSoli"]:checked').val();
+    let tipoPersona = $('input[name="typePeople"]:checked').val();
+    let credPag = document.getElementById("inputGroupFile09").value;
+    let negIfeRe = document.getElementById("inputGroupFile10").value;
+    let negIfeRR = document.getElementById("inputGroupFile11").value;
+    let negIfeA = document.getElementById("inputGroupFile12").value;
+    let negIfeAR = document.getElementById("inputGroupFile13").value;
+
+    //Acta Constitutiva
+    // referenciasSol
+    //
     if (getTipoForm() != 0 && document.getElementById('creditoInput').value == '') {
-        alert('false');
-        save = false;
+        msgAlert += `<p>Ingresa el credito</p>`;
     }
     if (getTipoForm() != 0) {
         if (comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
-            save = false;
+            msgAlert += `<p>Ingresa los comprobantes de domicilio</p>`;
         }
     }
 
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+    if (rfc == '')
+        msgAlert += `<p>Ingresa el rfc de formulario</p>`;
+    if (razonSocial == '')
+        msgAlert += `<p>Ingresa la razon Social de formulario</p>`;
+    if (nombreComercial == '')
+        msgAlert += `<p>Ingresa el nombre Comercial de formulario</p>`;
+    if (prospecto == '')
+        msgAlert += `<p>Ingresa el prospecto de formulario</p>`;
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+
+    if (msgAlert != "") {
+        $('#alertModal').modal('show');
+        document.getElementById("alertInfoModal").innerHTML = msgAlert;
+        save = false;
+    } else {
+        document.getElementById("alertInfoModal").innerHTML = "";
+        save = true;
+    }
     if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || coloniaSelect == '') {
-        alert('false 2');
         save = false;
     }
 
@@ -1118,27 +1165,38 @@ function validateFullForm() {
 
 function validateSaveForm() {
     var save = true;
-
+    let msgAlert = ``;
+    let auxMsg = `<h5>La solicitud no se puede guardar sin los siguientes datos:</h5>`;
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
-    // var nombreComercial = document.getElementById('nameComeInput').value;
     var prospecto = document.getElementById('prospecto').value;
     var emailFac = document.getElementById('emailFac').value;
     var colDF = document.getElementById('colDF').value;
     var cpFiscal = document.getElementById('cpInput').value;
-    console.log(colDF);
-    // || nombreComercial == ''
-    console.log(tipoForm);
-    console.log(rfc);
-    console.log(razonSocial);
-    console.log(prospecto);
-    console.log(tipoNegocio);
-    console.log(emailFac);
-    console.log(cpFiscal);
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || prospecto == '' || tipoNegocio == '' || emailFac == '' || cpFiscal == '' || colDF == '') {
-        save = false;
-    }
+    if (tipoForm = "")
+        msgAlert += `<p>Ingresa el tipo de Solicitud</p>`;
+    if (rfc == "")
+        msgAlert += `<p>Ingresa el RFC</p>`;
+    if (razonSocial == "")
+        msgAlert += `<p>Nombre o Razón Social</p>`;
+    if (prospecto == "")
+        msgAlert += `<p>Número de Prospecto</p>`;
+    if (emailFac == "")
+        msgAlert += `<p>Email de facturacion</p>`;
+    if (colDF == "")
+        msgAlert += `<p>Colonia</p>`;
+    if (cpFiscal == "")
+        msgAlert += `<p>Codigo Postal</p>`;
+    if (tipoNegocio == "")
+        msgAlert += `<p>Ingresa el RFC</p>`;
 
+    if (msgAlert != "") {
+        $('#alertModal').modal('show');
+        document.getElementById("alertInfoModal").innerHTML = auxMsg + msgAlert;
+        save = false;
+    } else {
+        save = true;
+    }
     return save;
 }
 
@@ -1156,21 +1214,24 @@ function SendForm(zone) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
-                console.log(data);
-                $('#solicitudModal').modal('hide');
-                document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
-                // window.location.href = "/MisSolicitudes";
-                $('#respuestaForm').modal('show');
+                if (Number.isInteger(data)) {
+                    $('#solicitudModal').modal('hide');
+                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    $('#respuestaForm').modal('show');
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                }
             },
             error: function(error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-
-    } else {
-        alert('Error al intentar enviar la solicitud, verifique los datos');
     }
+    // else {
+    //     alert('Error al intentar enviar la solicitud, verifique los datos');
+    // }
 }
 
 function saveForm(zone) {
@@ -1202,9 +1263,10 @@ function saveForm(zone) {
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-    } else {
-        alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
     }
+    // else {
+    //     alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
+    // }
 }
 
 
@@ -1342,12 +1404,44 @@ function createJsonSolicitud(zone) {
 
     for (var x = 0; x < archivosType.length; x++) {
         var temp = {
-            id: 0,
-            fileStr: archivosBase64[x],
-            type: archivosType[x]['type'],
-            subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
+            Id: 0,
+            FileStr: archivosBase64[x],
+            Type: archivosType[x]['type'],
+            Subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
         };
         archivosData.push(temp);
+    }
+
+    if (archivosData.length > 0) {
+        for (let i = 1; i <= 13; i++) {
+            if (archivosData.filter(x => x.type == i).length == 0) {
+                var temp = {
+                    Id: 0,
+                    FileStr: "",
+                    Type: i,
+                    Subtype: null,
+                };
+                archivosData.push(temp);
+            }
+        }
+        if (archivosData.filter(x => x.type == 31).length == 0) {
+            var temp = {
+                Id: 0,
+                FileStr: "",
+                Type: 31,
+                Subtype: null,
+            };
+            archivosData.push(temp);
+        }
+        if (archivosData.filter(x => x.type == 81).length == 0) {
+            var temp = {
+                Id: 0,
+                FileStr: "",
+                Type: 81,
+                Subtype: null,
+            };
+            archivosData.push(temp);
+        }
     }
 
     if (document.getElementById('cpInput').value == '') {
@@ -1431,6 +1525,7 @@ function createJsonSolicitud(zone) {
     console.log(JSON.stringify(json));
     return json;
 }
+
 
 function detalleSol(item) {
     if (item != null) {
@@ -1969,6 +2064,8 @@ function validarCPS() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
+                document.getElementById('colDFRow3').classList.remove('d-none');
+                document.getElementById('colDFRow4').classList.add('d-none');
                 console.log(data['suburbs']);
                 auxColonias = data['suburbs'];
                 document.getElementById('ciudadDFShipping').value = data['town'];
@@ -2008,13 +2105,14 @@ function validaAnti() {
 
 function reSendFol(item) {
     $('#confirModal').modal('show');
-    document.getElementById("titleModalConfirm").innerHTML = "¿Desea reenviar la solicitud No. " + item + "?";
+    document.getElementById("titleModalConfirm").innerHTML = `¿Desea reenviar la solicitud No. ${item}?`;
     var buttons = `<button class="btn btn-success btn-circle" onclick="confirmReSend('` + item + `')"><i class="fas fa-paper-plane"></i> Si, Reenviar</button>`;
     buttons += `<button class="btn btn-danger btn-circle" onclick="cancelForm('` + item + `')" style="margin-left: 10px;"><i class="fas fa-times"></i> No, Cancelar</button>`;
     document.getElementById("bodyModalConfirm").innerHTML = buttons;
 }
 
 function confirmReSend(item) {
+    $('#confirModal').modal('hide');
     if (item != null) {
         let data = { Item: item };
         $.ajax({
@@ -2027,8 +2125,9 @@ function confirmReSend(item) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
-                alert("Enviado correctamente");
+            success: function(response) {
+                (response) ? alert("Enviado Correctamente"): alert("Error en el servidor");
+                location.reload();
             },
             error: function(error) {
                 alert(error + "Error");
@@ -2038,8 +2137,9 @@ function confirmReSend(item) {
 }
 
 function cancelForm(item) {
-    alert("Se cancelo el reenvio de la solicitud " + item);
-    $('#confirModal').modal('hide');
+    $('#confirModal').modal('show');
+    document.getElementById("titleModalConfirm").innerHTML = "Cancelación";
+    document.getElementById("bodyModalConfirm").innerHTML = `Se cancelo el reenvio de la solicitud No. ${item}`;
 }
 
 function continueForm(item) {
@@ -2097,10 +2197,10 @@ function continueForm(item) {
 }
 
 function manejoArchivos(archivos) {
-    console.log(archivos);
+    // console.log(archivos);
     if (archivos != null) {
         for (var i = 0; i < archivos.length; i++) {
-            console.log(archivos[i].type);
+            // console.log(archivos[i].type);
             switch (archivos[i].type) {
                 case 1:
                     if (archivos[i].fileStr != "") {
@@ -2236,20 +2336,41 @@ function continueModal(facturas, archivos, data) {
     document.getElementById('estadoDF').value = data.cliente.datosF.domicilio.estado;
     // document.getElementById('rowInputsGeo').classList.remove('d-none');
 
-    document.getElementById("checkAddAddress").checked = true;
-    // document.getElementById('shippingAddress').style.display = 'block';
-    document.getElementById('calleInputShipping').value = data.cliente.datosE.domicilio.calle;
-    document.getElementById('noExtInputShipping').value = data.cliente.datosE.domicilio.noExt;
-    document.getElementById('noIntInputShipping').value = data.cliente.datosE.domicilio.noInt;
-    document.getElementById('cpInputShipping').value = data.cliente.datosE.domicilio.cp;
-    document.getElementById('colDFShipping').value = data.cliente.datosE.domicilio.colonia;
-    document.getElementById('ciudadDFShipping').value = data.cliente.datosE.domicilio.ciudad;
-    document.getElementById('estadoDFShipping').value = data.cliente.datosE.domicilio.estado;
+    if (!compareDir(data.cliente.datosF.domicilio, data.cliente.datosE.domicilio)) {
+        document.getElementById('colDFRow3').classList.add('d-none');
+        document.getElementById('colDFRow4').classList.remove('d-none');
+        document.getElementById("checkAddAddress").checked = true;
+        addAddress();
+        document.getElementById('calleInputShipping').value = data.cliente.datosE.domicilio.calle;
+        document.getElementById('noExtInputShipping').value = data.cliente.datosE.domicilio.noExt;
+        document.getElementById('noIntInputShipping').value = data.cliente.datosE.domicilio.noInt;
+        document.getElementById('cpInputShipping').value = data.cliente.datosE.domicilio.cp;
+        document.getElementById('auxColDFShipping').value = data.cliente.datosE.domicilio.colonia;
+        document.getElementById('ciudadDFShipping').value = data.cliente.datosE.domicilio.ciudad;
+        document.getElementById('estadoDFShipping').value = data.cliente.datosE.domicilio.estado;
+    } else {
+        document.getElementById("checkAddAddress").checked = false;
+        document.getElementById('calleInputShipping').value = "";
+        document.getElementById('noExtInputShipping').value = "";
+        document.getElementById('noIntInputShipping').value = "";
+        document.getElementById('cpInputShipping').value = "";
+        document.getElementById('colDFShipping').value = "";
+        document.getElementById('ciudadDFShipping').value = "";
+        document.getElementById('estadoDFShipping').value = "";
+    }
+
 
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
+    if (data.cliente.contactos.length <= 1) {
+        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
+            addContactDataCon(data.cliente.contactos);
+            contactos = data.cliente.contactos;
+        }
+    } else {
+        addContactDataCon(data.cliente.contactos);
+        contactos = data.cliente.contactos;
+    }
 
-    addContactDataCon(data.cliente.contactos);
-    contactos = data.cliente.contactos;
 
     var idTypeP = data.cliente.tipoPersona == true ? "typeMoral" : "typeFisica";
     document.getElementById(idTypeP).checked = true;
@@ -2269,6 +2390,14 @@ function continueModal(facturas, archivos, data) {
     addFacturaDataR(facturas);
     facturasSol = facturas;
 
+}
+
+
+function compareDir(datosF, datosE) {
+    if (datosF.calle == datosE.calle && datosF.noInt == datosE.noInt && datosF.colonia == datosE.colonia && datosE.ciudad == datosF.ciudad && datosF.estado == datosE.estado && datosF.cp == datosE.cp)
+        return true;
+    else
+        return false;
 }
 
 function addContactDataCon(conCon) {
