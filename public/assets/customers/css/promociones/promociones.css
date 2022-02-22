@@ -28,6 +28,18 @@
   border: none !important;
 }
 
+.btn-group-buttons{
+  background-color: #002868 !important;
+  color: white !important;
+  border-color: #007bff !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+  
+.btn-group-buttons:hover{
+  background-color: #011d49 !important;
+  color: white !important;
+}
 
 /* PROMOS */
 
@@ -239,7 +251,7 @@
 .modal-body{
   padding: 50px !important;
   width: 100% !important;
-  background-color: white;
+  background-color: white; 
   height: 100%;
 }
 

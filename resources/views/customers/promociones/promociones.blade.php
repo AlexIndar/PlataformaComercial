@@ -13,8 +13,16 @@
 <div class="content-wrapper p-5">
     <div class="container">
         <br><br>
+        <div class="row">
+            <div class="col-lg-6 col-12 mt-3">
+                <button type="button" id="nuevaPromo" class="btn btn-group-buttons btn-default" onclick="addPromocion()"><i class="fas fa-file"></i> Nueva Promoción</button>
+            </div>
+            <div class="col-lg-6 col-12 mt-3">
+                <button type="button" id="nuevoPaquete" class="btn btn-group-buttons btn-default" onclick="addPaquete()"><i class="fas fa-object-group"></i> Nuevo Paquete</button>
+            </div>
+        </div>
+       
         <div>
-            <button class="bg-promo btn-primary" onclick="addPromocion()"> <i class="fas fa-file"></i> Nueva</button>
         </div>
         <br><br>
 
@@ -29,7 +37,7 @@
                             <button type="button" class="btn btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
                         </div>
                     </div> 
-                </div>
+                </div> 
                 <div class="cuerpo-promo">
                     <h5>Vigencia de <span class="fecha"><i class="fas fa-calendar"></i> {{$promo->fechaInicio}}</span> a <span class="fecha"><i class="fas fa-calendar"></i> {{$promo->fechaFin}}</span> </h5>
                     <h5>Estatus: 0</h5>

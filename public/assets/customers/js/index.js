@@ -152,7 +152,6 @@ $('document').ready(function(){
     $('#check').on('click', function (event){
       console.log('click');
       var icon = document.getElementsByClassName('navbar-mobile')[0];
-      console.log(icon.classList);
       if(icon.classList.contains('active')){
         icon.classList.remove('active');
       }

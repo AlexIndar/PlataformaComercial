@@ -324,6 +324,8 @@ class PromoController extends Controller
             "montoMinQty" => $json->montoMinQty,
             "fechaInicio" => $json->fechaInicio,
             "fechaFin" => $json->fechaFin,
+            "paquete" => $json->paquete,
+            "idPaquete" => $json->idPaquete,
             "pedidoPromoRulesD" => $json->pedidoPromoRulesD,
         ]);
 

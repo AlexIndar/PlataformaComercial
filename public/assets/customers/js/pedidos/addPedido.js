@@ -858,11 +858,10 @@ function cargarInventario() {
         }
         
 
-
         var inventarioTable = $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
-            scrollY: '70vh',
+            // scrollY: '70vh',
             scrollCollapse: true,
             pageLength : 5,
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'Todos']],
@@ -1358,7 +1357,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
                 idWeb: (x+1).toString(),
                 items: items,
             };
-            pedidoJson.push(temp);
+            pedidoJson.push(temp); 
             itemsJson = [];
         }
     

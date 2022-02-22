@@ -3,6 +3,11 @@ var endDate;
 var reglas = [];
 $('document').ready(function(){
 
+    // $('.modal-background').click(function() {
+    //     closeModal();
+    // });
+
+
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -40,7 +45,6 @@ $('document').ready(function(){
 			var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
 			var jsonObj = JSON.stringify(rowObj);
 			addTags(jsonObj, 'articulos');
-            input.val('');
 			})
 		};
 		reader.readAsBinaryString(input.files[0]);
@@ -422,6 +426,20 @@ function checkRules() {
         $('#articulos').trigger("chosen:updated");
         document.getElementById('articulos_chosen').style.width = '100%';
 
+        if(window.location.href.includes('promociones/paquete')){ //SI ES PAQUETE, AGREGAR REGALOS A SUBREGLAS
+            document.getElementById('regalosSub_chosen').style.display = "block";
+            document.getElementById('regalosSubLoading').style.display = "none";
+            var selectregalosSub = document.getElementById('regalosSub');
+            for(var x = 0; x<reglas[7].length; x++){
+                var option = document.createElement("option");
+                option.text = reglas[7][x];
+                option.value = (reglas[7][x].split(']'))[0].substring(1);
+                selectregalosSub.appendChild(option);
+            }
+            $('#regalosSub').trigger("chosen:updated");
+            document.getElementById('regalosSub_chosen').style.width = '100%';
+        }
+
         clearInterval(intervalRules);
     } 
     else{
@@ -446,6 +464,7 @@ function addTags(json, id){
         case 'proveedores': key = 'Proveedor'; break;
         case 'marcas': key = 'Marca'; break;
         case 'articulos': key = 'Codigo'; break;
+        case 'clientesCuotas': key = 'CompanyId'; break;
         default: break;
     }
     jsonObj.forEach(function(valor, indice, array){
@@ -465,7 +484,7 @@ function guardarPromocion(){
     }
     else{
         validarPromo();
-    }
+    } 
     
 }
 
@@ -528,15 +547,6 @@ function validarPromo(){
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
-        var pedidoPromoRuleD = {
-            idPedidoPromoD: 0,
-            idPedidoPromo: 0,
-            tipo: '',
-            valor: '',
-            incluye: false,
-            idPedidoPromoNavigation: ''
-        }
-
         var listaPedidoPromoRulesD = [];
 
        for(var x = 0; x < proveedores.length; x++){
@@ -550,7 +560,6 @@ function validarPromo(){
             });
         }
 
-        console.log(listaPedidoPromoRulesD);
 
         for(var x = 0; x < marcas.length; x++){
             listaPedidoPromoRulesD.push({
@@ -563,7 +572,6 @@ function validarPromo(){
             });
         }
 
-        console.log(listaPedidoPromoRulesD);
 
 
         for(var x = 0; x < articulos.length; x++){
@@ -596,10 +604,11 @@ function validarPromo(){
             montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
             fechaInicio: startTime,
             fechaFin: endTime,
+            paquete: false,
+            idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD
         }
 
-        // console.log(json);
 
         $.ajax({
             'headers': {
@@ -642,7 +651,11 @@ function clearSelection(id){
 }
 
 function closeModal(){
-    var activeModal = document.getElementsByClassName("active-modal")[0];
+    var activeModal = document.getElementsByClassName("active-modal");
+    if(activeModal.length>1)
+        activeModal = activeModal[1];
+    else
+        activeModal = activeModal[0];
     activeModal.style.opacity = 0;
     activeModal.style.zIndex = -1000;
     activeModal.classList.remove("active-modal");
@@ -654,3 +667,5 @@ function clearSelectionAccept(){
     $('#'+list).val('').trigger('chosen:updated');
     $('#'+list+"File").val('');
 }
+
+

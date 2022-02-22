@@ -11,6 +11,17 @@
     padding: 10px;
 }
 
+::-webkit-scrollbar {
+    width: 10px !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #313761 !important;
+    border-radius: 10px !important; 
+}
+
 .dashboard-cards h6{
     text-align: center; 
 }
@@ -33,16 +44,6 @@
     color: white !important;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-    background-color: transparent;
-    border: none;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #313761;
-    border-radius: 10px;
-}
 
 .nav{
     overflow: hidden;
