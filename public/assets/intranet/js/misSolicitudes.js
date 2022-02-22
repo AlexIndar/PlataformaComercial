@@ -273,6 +273,7 @@ $(document).ready(function() {
 
     $('#colDFShipping').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
+
         if (auxColonias[selected] == undefined) {
             document.getElementById('rowOtraColonia').classList.remove('d-none');
         } else {
@@ -379,9 +380,14 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
 function startForm() {
     clearForm();
     $('#solicitudModal').modal('show');
+    $('#creditRadio').prop('checked', true);
+    tipoForm = "credit";
+    valiteTypeForm();
 }
 
 function clearForm() {
+    document.getElementById("folioR").value = "";
+
     document.getElementById('creditoInput').value = "";
     document.getElementById('rfcInput').value = "";
     document.getElementById('rzInput').value = "";
@@ -403,9 +409,10 @@ function clearForm() {
     document.getElementById('cpInput').value = "";
     document.getElementById('emailFac').value = "";
     document.getElementById('colDF').value = "";
+    document.getElementById('auxColDF').value = "";
     document.getElementById('ciudadDF').value = "";
     document.getElementById('estadoDF').value = "";
-    document.getElementById('rowInputsGeo').classList.add('d-none');
+    // document.getElementById('rowInputsGeo').classList.add('d-none');
     document.getElementById('inputGroupFile04').value = "";
     document.getElementById('label-inputGroupFile04').innerHTML = "Seleccionar Archivo...";
     document.getElementById('inputGroupFile05').value = "";
@@ -419,6 +426,7 @@ function clearForm() {
     document.getElementById('noExtInputShipping').value = "";
     document.getElementById('noIntInputShipping').value = "";
     document.getElementById('cpInputShipping').value = "";
+    document.getElementById('auxColDFShipping').value = "";
     document.getElementById('colDFShipping').value = "";
     document.getElementById('ciudadDFShipping').value = "";
     document.getElementById('estadoDFShipping').value = "";
@@ -511,9 +519,8 @@ function addAddress() {
         divShippingAddress.style.display = 'none';
         comprobanteDomicilioShipping = '';
         comprobanteDomicilioShippingBack = '';
-        $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
-        $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
-
+        // $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
+        // $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
     }
 }
 
@@ -524,21 +531,29 @@ function updateGeolocation() {
         alert('Ingresa un código postal');
     } else {
         let data = { cp: cp };
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "/MisSolicitudes/getCPData",
-            'type': 'GET',
-            'dataType': 'json',
-            'data': data,
-            'enctype': 'multipart/form-data',
-            'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+        getCpCol(data);
+    }
+}
+
+function getCpCol(data) {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/MisSolicitudes/getCPData",
+        'type': 'GET',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            if (data.state != undefined) {
+                document.getElementById('colDFRow1').classList.remove('d-none');
+                document.getElementById('colDFRow2').classList.add('d-none');
                 colonias = data['suburbs'];
                 document.getElementById('ciudadDF').value = data['town'];
                 document.getElementById('estadoDF').value = data['state'];
-                document.getElementById('rowInputsGeo').classList.remove('d-none');
+                // document.getElementById('rowInputsGeo').classList.remove('d-none');
 
                 var itemSelectorOption = $('#colDF option');
                 itemSelectorOption.remove();
@@ -549,17 +564,17 @@ function updateGeolocation() {
                     $('#colDF').val(colonias[x]);
                     $('#colDF').selectpicker("refresh");
                 }
+                $('#cpInput').removeClass("warningText");
 
-                // $('#colDF').append('<option value="Otra">Otra</option>'); //Agregar Primera opción de colDF en Blanco
-                /*$('#colDF').val('0');
-                $('#colDF').selectpicker("refresh");*/
-
-            },
-            error: function(error) {
-                console.log(error + "Error");
+            } else {
+                alert("Error, codigo postal no registrado");
+                $('#cpInput').addClass("warningText");
             }
-        });
-    }
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
 }
 
 function addContactData() {
@@ -612,7 +627,7 @@ function addContactData() {
                 cell1.innerHTML = nombre;
                 cell2.innerHTML = celular;
                 cell3.innerHTML = tipo;
-                cell4.innerHTML = "<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i>";
+                cell4.innerHTML = "<i class='fas fa-pencil-alt' onclick='editContactRow(this)'></i>Editar /<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i> Eliminar";
                 cleanDatosContacto();
             }
         } else {
@@ -693,6 +708,19 @@ function deleteContactRow(t) {
     contactos.splice(index - 1, 1);
 }
 
+function editContactRow(t) {
+    var row = t.parentNode.parentNode;
+    var table = document.getElementById('contactData');
+    var index = row.rowIndex;
+    document.getElementById('nombreContacto').value = contactos[index - 1].nombre;
+    document.getElementById('telefonoContacto').value = contactos[index - 1].telefono;
+    document.getElementById('celularContacto').value = contactos[index - 1].celular;
+    document.getElementById('emailContacto').value = contactos[index - 1].email;
+    document.getElementById('tipoContacto').value = contactos[index - 1].tipo;
+    table.deleteRow(index);
+    contactos.splice(index - 1, 1);
+}
+
 function changeTipoLocal(tipo) {
     if (tipo == 'Propio') {
         local = 'Propio';
@@ -715,7 +743,6 @@ function changeTipoPersona(tipo) {
 
 
 function addActaConstData() {
-
     var typeConst = document.getElementById('inputGroupSelect14').value;
     if (typeConst != -1) {
         var file = document.getElementById('label-inputGroupFile14').innerHTML;
@@ -845,7 +872,7 @@ function addRefData() {
         cell2.innerHTML = contRef;
         cell3.innerHTML = cityRef;
         cell4.innerHTML = telRef;
-        cell5.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteRefRow(this)'></i>";
+        cell5.innerHTML = "<i class='fas fa-pencil-alt' onclick='editRefRow(this)'></i>/<i class='fas fa-trash-alt' onclick='deleteRefRow(this)'></i>";
         cleanDatosRefData();
     }
 }
@@ -854,6 +881,19 @@ function deleteRefRow(t) {
     var row = t.parentNode.parentNode;
     var table = document.getElementById('refData');
     var index = row.rowIndex;
+    table.deleteRow(index);
+    referenciasSol.splice(index - 1, 1);
+}
+
+
+function editRefRow(t) {
+    var row = t.parentNode.parentNode;
+    var table = document.getElementById('refData');
+    var index = row.rowIndex;
+    document.getElementById('razonSocialRef').value = referenciasSol[index - 1].rzRef;
+    document.getElementById('contactoRef').value = referenciasSol[index - 1].contRef;
+    document.getElementById('ciudadRef').value = referenciasSol[index - 1].cityRef;
+    document.getElementById('telefonoRef').value = referenciasSol[index - 1].telRef;
     table.deleteRow(index);
     referenciasSol.splice(index - 1, 1);
 }
@@ -1041,8 +1081,9 @@ function getDateTime() {
 // }
 
 function validateFullForm() {
+    let msgAlert = ``;
     var save = true;
-
+    //DatosGenerales
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
     var nombreComercial = document.getElementById('nameComeInput').value;
@@ -1050,27 +1091,74 @@ function validateFullForm() {
     var constanciaSituacionFiscal = document.getElementById('inputGroupFile01').value;
     var constanciaSituacionFiscalBack = document.getElementById('inputGroupFile02').value;
     var solicitud = document.getElementById('inputGroupFile03').value;
+    //Dirección Fiscal
     var calleFiscal = document.getElementById('calleInput').value;
     var noExtFiscal = document.getElementById('noExtInput').value;
     var noIntFiscal = document.getElementById('noIntInput').value;
     var cpFiscal = document.getElementById('cpInput').value;
     var emailFac = document.getElementById('emailFac').value;
-    var colDF = document.getElementById('colDF').value;
+    var colDF = document.getElementById('colDF').value != "" ? document.getElementById('colDF').value : document.getElementById('auxColDF').value;;
     var comprobanteDomicilio = document.getElementById('inputGroupFile04').value;
     var comprobanteDomicilioBack = document.getElementById('inputGroupFile05').value;
 
+    //Negocio
+    let antiguedad = document.getElementById("antiguedad").value;
+    let negFrente = document.getElementById("inputGroupFile06").value;
+    let negIzq = document.getElementById("inputGroupFile07").value;
+    let negDer = document.getElementById("inputGroupFile08").value;
+
+    //DatosContacto
+    if (contactos.length <= 0) {
+        msgAlert += `<p>Agrega los contactos</p>`;
+    }
+
+    //Credito
+    let tipoLocal = $('input[name="localSoli"]:checked').val();
+    let tipoPersona = $('input[name="typePeople"]:checked').val();
+    let credPag = document.getElementById("inputGroupFile09").value;
+    let negIfeRe = document.getElementById("inputGroupFile10").value;
+    let negIfeRR = document.getElementById("inputGroupFile11").value;
+    let negIfeA = document.getElementById("inputGroupFile12").value;
+    let negIfeAR = document.getElementById("inputGroupFile13").value;
+
+    //Acta Constitutiva
+    // referenciasSol
+    //
     if (getTipoForm() != 0 && document.getElementById('creditoInput').value == '') {
-        alert('false');
-        save = false;
+        msgAlert += `<p>Ingresa el credito</p>`;
     }
     if (getTipoForm() != 0) {
         if (comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
-            save = false;
+            msgAlert += `<p>Ingresa los comprobantes de domicilio</p>`;
         }
     }
 
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+    if (rfc == '')
+        msgAlert += `<p>Ingresa el rfc de formulario</p>`;
+    if (razonSocial == '')
+        msgAlert += `<p>Ingresa la razon Social de formulario</p>`;
+    if (nombreComercial == '')
+        msgAlert += `<p>Ingresa el nombre Comercial de formulario</p>`;
+    if (prospecto == '')
+        msgAlert += `<p>Ingresa el prospecto de formulario</p>`;
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+
+    if (msgAlert != "") {
+        $('#alertModal').modal('show');
+        document.getElementById("alertInfoModal").innerHTML = msgAlert;
+        save = false;
+    } else {
+        document.getElementById("alertInfoModal").innerHTML = "";
+        save = true;
+    }
     if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || coloniaSelect == '') {
-        alert('false 2');
         save = false;
     }
 
@@ -1079,19 +1167,38 @@ function validateFullForm() {
 
 function validateSaveForm() {
     var save = true;
-
+    let msgAlert = ``;
+    let auxMsg = `<h5>La solicitud no se puede guardar sin los siguientes datos:</h5>`;
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
-    // var nombreComercial = document.getElementById('nameComeInput').value;
     var prospecto = document.getElementById('prospecto').value;
     var emailFac = document.getElementById('emailFac').value;
     var colDF = document.getElementById('colDF').value;
     var cpFiscal = document.getElementById('cpInput').value;
-    // || nombreComercial == ''
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || prospecto == '' || tipoNegocio == '' || emailFac == '' || cpFiscal == '' || colDF == '') {
-        save = false;
-    }
+    if (tipoForm = "")
+        msgAlert += `<p>Ingresa el tipo de Solicitud</p>`;
+    if (rfc == "")
+        msgAlert += `<p>Ingresa el RFC</p>`;
+    if (razonSocial == "")
+        msgAlert += `<p>Nombre o Razón Social</p>`;
+    if (prospecto == "")
+        msgAlert += `<p>Número de Prospecto</p>`;
+    if (emailFac == "")
+        msgAlert += `<p>Email de facturacion</p>`;
+    if (colDF == "")
+        msgAlert += `<p>Colonia</p>`;
+    if (cpFiscal == "")
+        msgAlert += `<p>Codigo Postal</p>`;
+    if (tipoNegocio == "")
+        msgAlert += `<p>Ingresa el RFC</p>`;
 
+    if (msgAlert != "") {
+        $('#alertModal').modal('show');
+        document.getElementById("alertInfoModal").innerHTML = auxMsg + msgAlert;
+        save = false;
+    } else {
+        save = true;
+    }
     return save;
 }
 
@@ -1109,27 +1216,29 @@ function SendForm(zone) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
-                console.log(data);
-                $('#solicitudModal').modal('hide');
-                document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
-                // window.location.href = "/MisSolicitudes";
-                $('#respuestaForm').modal('show');
+                if (Number.isInteger(data)) {
+                    $('#solicitudModal').modal('hide');
+                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    $('#respuestaForm').modal('show');
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                }
             },
             error: function(error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-
-    } else {
-        alert('Error al intentar enviar la solicitud, verifique los datos');
     }
+    // else {
+    //     alert('Error al intentar enviar la solicitud, verifique los datos');
+    // }
 }
 
 function saveForm(zone) {
     if (validateSaveForm()) {
         var json = createJsonSolicitud(zone);
-        console.log(json);
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1155,9 +1264,10 @@ function saveForm(zone) {
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-    } else {
-        alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
     }
+    // else {
+    //     alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
+    // }
 }
 
 
@@ -1167,6 +1277,24 @@ function createJsonSolicitud(zone) {
     var referenciasData = [];
     var archivosData = [];
     var archivosNull = [{
+            "Id": 0,
+            "FileStr": "",
+            "Type": 1,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 11,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 13,
+            "SubType": null
+        },
+        {
             "Id": 0,
             "FileStr": "",
             "Type": 4,
@@ -1183,24 +1311,6 @@ function createJsonSolicitud(zone) {
             "FileStr": "",
             "Type": 6,
             "SubType": null
-        },
-        {
-            "Id": 0,
-            "FileStr": "",
-            "Type": 1,
-            "SubType": 1
-        },
-        {
-            "Id": 0,
-            "FileStr": "",
-            "Type": 11,
-            "SubType": 1
-        },
-        {
-            "Id": 0,
-            "FileStr": "",
-            "Type": 13,
-            "SubType": 1
         },
         {
             "Id": 0,
@@ -1237,6 +1347,24 @@ function createJsonSolicitud(zone) {
             "FileStr": "",
             "Type": 81,
             "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 9,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 10,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 12,
+            "SubType": null
         }
     ];
 
@@ -1246,7 +1374,7 @@ function createJsonSolicitud(zone) {
         "Nombre": "",
         "Email": "",
         "Celular": "",
-        "Phone": ""
+        "Phone": "0"
     }, ];
 
     for (var x = 0; x < contactos.length; x++) {
@@ -1277,10 +1405,10 @@ function createJsonSolicitud(zone) {
 
     for (var x = 0; x < archivosType.length; x++) {
         var temp = {
-            id: 0,
-            fileStr: archivosBase64[x],
-            type: archivosType[x]['type'],
-            subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
+            Id: 0,
+            FileStr: archivosBase64[x],
+            Type: archivosType[x]['type'],
+            Subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
         };
         archivosData.push(temp);
     }
@@ -1294,10 +1422,11 @@ function createJsonSolicitud(zone) {
     }
 
     var json = {
+        // folio: document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value;
         folio: -1,
         fecha: getDateTime(),
         tipo: getTipoForm(),
-        credito: getTipoForm() == 0 ? null : parseInt(document.getElementById('creditoInput').value),
+        credito: getTipoForm() == 0 ? null : document.getElementById('creditoInput').value == "" ? 0 : parseInt(document.getElementById('creditoInput').value),
         zona: JSON.parse(zone),
         cliente: {
             clave: document.getElementById('prospecto').value,
@@ -1317,11 +1446,11 @@ function createJsonSolicitud(zone) {
                     id: 0,
                     calle: document.getElementById('calleInput').value,
                     noInt: document.getElementById('noIntInput').value,
-                    colonia: coloniaSelect,
+                    colonia: coloniaSelect != "" ? coloniaSelect : document.getElementById("auxColDF").value,
                     ciudad: document.getElementById('ciudadDF').value,
                     estado: document.getElementById('estadoDF').value,
                     cp: document.getElementById('cpInput').value,
-                    noExt: document.getElementById('noExtInput').value,
+                    noExt: document.getElementById('noExtInput').value == "" ? "0" : document.getElementById('noExtInput').value,
                     longitude: 0,
                     latitude: 0,
                 }
@@ -1336,11 +1465,11 @@ function createJsonSolicitud(zone) {
                     id: 0,
                     calle: document.getElementById('calleInputShipping').value == '' ? document.getElementById('calleInput').value : document.getElementById('calleInputShipping').value,
                     noInt: document.getElementById('noIntInputShipping').value == '' ? document.getElementById('noIntInput').value : document.getElementById('noIntInputShipping').value,
-                    colonia: auxColoniaSelect == '' ? coloniaSelect : auxColoniaSelect,
+                    colonia: auxColoniaSelect != '' ? auxColoniaSelect : coloniaSelect != "" ? coloniaSelect : document.getElementById("auxColDF").value,
                     ciudad: document.getElementById('ciudadDFShipping').value == '' ? document.getElementById('ciudadDF').value : document.getElementById('ciudadDFShipping').value,
                     estado: document.getElementById('estadoDFShipping').value == '' ? document.getElementById('estadoDF').value : document.getElementById('estadoDFShipping').value,
                     cp: document.getElementById('cpInputShipping').value == '' ? document.getElementById('cpInput').value : document.getElementById('cpInputShipping').value,
-                    noExt: document.getElementById('noExtInputShipping').value == '' ? document.getElementById('noExtInput').value : document.getElementById('noExtInputShipping').value,
+                    noExt: document.getElementById('noExtInputShipping').value != '' ? document.getElementById('noExtInputShipping').value : document.getElementById('noExtInput').value == "" ? "0" : document.getElementById('noExtInput').value,
                     longitude: 0,
                     latitude: 0,
                 }
@@ -1350,13 +1479,6 @@ function createJsonSolicitud(zone) {
             noCuentaBanco: null,
         },
         referencias: $('input[name="refSoli"]:checked').val() == 'datos' ? referenciasData : null,
-        // historyForm: {
-        //     id: null,
-        //     folioSol: null,
-        //     fecha: null,
-        //     tipo: null, 
-        //     idTipo: null, 
-        // }, 
         archivos: archivosData.length > 0 ? archivosData : archivosNull,
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
@@ -1477,8 +1599,30 @@ function editText(item) {
     document.getElementById(item).disabled = false;
 }
 
+function editImage(item) {
+    let newId = "edit" + item;
+    let editImg = `<div class="input-group input-group-sm">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="` + newId + `" accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label" for="` + newId + `" id="label-` + newId + `">Seleccionar Archivo...</label>
+                        </div>
+                    </div>`;
+}
+
 function getButtons(dato, id) {
     var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editText('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
+    if (dato == null) {
+        buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
+    } else if (dato == true) {
+        buttons += `<button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>`;
+    } else {
+        buttons += `<button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>`;
+    }
+    return buttons;
+}
+
+function getButtonsFiles(dato, id) {
+    var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editImage('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
     if (dato == null) {
         buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
     } else if (dato == true) {
@@ -1500,40 +1644,46 @@ function showInfoModal(data, data2, valContac, filesList) {
     document.getElementById("cartSection").style.display = "none";
     if (data != null) {
         // console.log(data);
-        // console.log(data2);
+        console.log(data2);
         // console.log(valContac);
         // console.log(filesList);
         //DATOS HEADER
         document.getElementById("folioInf").innerHTML = "No. " + data.folio;
         //DATOS GENERALES
         document.getElementById("rfcEdit").value = data.cliente.datosF.rfc;
-        document.getElementById("rfcButtons").innerHTML = getButtons(data2.calleEntrega, "rfcEdit");
+        document.getElementById("rfcButtons").innerHTML = getButtons(data2.rfc, "rfcEdit");
 
         document.getElementById("rzEdit").value = data.cliente.datosF.razonSocial;
-        document.getElementById("rzButtons").innerHTML = getButtons(data2.calleEntrega, "rzEdit");
+        document.getElementById("rzButtons").innerHTML = getButtons(data2.razonSocial, "rzEdit");
 
         document.getElementById("nomComEdit").value = data.cliente.nombreComercial;
-        document.getElementById("nomComButtons").innerHTML = getButtons(data2.calleEntrega, "nomComEdit");
+        document.getElementById("nomComButtons").innerHTML = getButtons(data2.nombreComercial, "nomComEdit");
         getAlert("alertDG", data.observations.datosGenerales);
         //DIRECCION FISCAL
         document.getElementById("calleFEdit").value = data.cliente.datosF.domicilio.calle;
-        document.getElementById("callFEButtons").innerHTML = getButtons(data2.calleEntrega, "calleFEdit");
+        document.getElementById("callFEButtons").innerHTML = getButtons(data2.calle, "calleFEdit");
 
         document.getElementById("noFEdit").value = data.cliente.datosF.domicilio.noExt;
-        document.getElementById("noFEButtons").innerHTML = getButtons(data2.calleEntrega, "noFEdit");
+        document.getElementById("noFEButtons").innerHTML = getButtons(data2.numeroExterior, "noFEdit");
 
         document.getElementById("cityFEdit").value = data.cliente.datosF.domicilio.ciudad;
-        document.getElementById("cityFEButtons").innerHTML = getButtons(data2.calleEntrega, "cityFEdit");
+        document.getElementById("cityFEButtons").innerHTML = getButtons(data2.ciudad, "cityFEdit");
 
         document.getElementById("estadoFEdit").value = data.cliente.datosF.domicilio.estado;
-        document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.calleEntrega, "estadoFEdit");
+        document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.estado, "estadoFEdit");
 
         document.getElementById("coloniaFEdit").value = data.cliente.datosF.domicilio.colonia;
-        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.calleEntrega, "coloniaFEdit");
+        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.colonia, "coloniaFEdit");
 
         document.getElementById("cpFEdit").value = data.cliente.datosF.domicilio.cp;
-        document.getElementById("cpFEButtons").innerHTML = getButtons(data2.calleEntrega, "cpFEdit");
+        document.getElementById("cpFEButtons").innerHTML = getButtons(data2.cp, "cpFEdit");
 
+        if (data.tipo == 0) {
+            document.getElementById('datFisCD').classList.add('d-none');
+        } else {
+            document.getElementById('datFisCD').classList.remove('d-none');
+            getButtonsFiles(data2.comprobanteDomicilio, "imgCDButton");
+        }
         getAlert("alertDF", data.observations.direccionFiscal);
 
         //DIRECCION DE ENTREGA
@@ -1904,6 +2054,8 @@ function validarCPS() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
+                document.getElementById('colDFRow3').classList.remove('d-none');
+                document.getElementById('colDFRow4').classList.add('d-none');
                 console.log(data['suburbs']);
                 auxColonias = data['suburbs'];
                 document.getElementById('ciudadDFShipping').value = data['town'];
@@ -1943,13 +2095,14 @@ function validaAnti() {
 
 function reSendFol(item) {
     $('#confirModal').modal('show');
-    document.getElementById("titleModalConfirm").innerHTML = "¿Desea reenviar la solicitud No. " + item + "?";
+    document.getElementById("titleModalConfirm").innerHTML = `¿Desea reenviar la solicitud No. ${item}?`;
     var buttons = `<button class="btn btn-success btn-circle" onclick="confirmReSend('` + item + `')"><i class="fas fa-paper-plane"></i> Si, Reenviar</button>`;
     buttons += `<button class="btn btn-danger btn-circle" onclick="cancelForm('` + item + `')" style="margin-left: 10px;"><i class="fas fa-times"></i> No, Cancelar</button>`;
     document.getElementById("bodyModalConfirm").innerHTML = buttons;
 }
 
 function confirmReSend(item) {
+    $('#confirModal').modal('hide');
     if (item != null) {
         let data = { Item: item };
         $.ajax({
@@ -1962,8 +2115,9 @@ function confirmReSend(item) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
-                alert("Enviado correctamente");
+            success: function(response) {
+                (response) ? alert("Enviado Correctamente"): alert("Error en el servidor");
+                location.reload();
             },
             error: function(error) {
                 alert(error + "Error");
@@ -1973,8 +2127,9 @@ function confirmReSend(item) {
 }
 
 function cancelForm(item) {
-    alert("Se cancelo el reenvio de la solicitud " + item);
-    $('#confirModal').modal('hide');
+    $('#confirModal').modal('show');
+    document.getElementById("titleModalConfirm").innerHTML = "Cancelación";
+    document.getElementById("bodyModalConfirm").innerHTML = `Se cancelo el reenvio de la solicitud No. ${item}`;
 }
 
 function continueForm(item) {
@@ -2032,40 +2187,42 @@ function continueForm(item) {
 }
 
 function manejoArchivos(archivos) {
+    // console.log(archivos);
     if (archivos != null) {
         for (var i = 0; i < archivos.length; i++) {
+            // console.log(archivos[i].type);
             switch (archivos[i].type) {
                 case 1:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile01').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile01').value = "Archivo";
                         document.getElementById('label-inputGroupFile01').innerHTML = "ConstanciaSituacionFiscal.jpg";
                         constanciaSituacionFiscal = archivos[i].fileStr;
                     }
                     break;
                 case 2:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile04').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile04').value = "Archivo";
                         document.getElementById('label-inputGroupFile04').innerHTML = "ComprobanteDomicilio.jpg";
                         comprobanteDomicilio = archivos[i].fileStr;
                     }
                     break;
                 case 3:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile10').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile10').value = "Archivo";
                         document.getElementById('label-inputGroupFile10').innerHTML = "IFERepresentante.jpg";
                         ineRep = archivos[i].fileStr;
                     }
                     break;
                 case 4:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile06').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile06').value = "Archivo";
                         document.getElementById('label-inputGroupFile06').innerHTML = "FotoFrente.jpg";
                         negocioFrente = archivos[i].fileStr;
                     }
                     break;
                 case 5:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile07').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile07').value = "Archivo";
                         document.getElementById('label-inputGroupFile07').innerHTML = "FotoIzquierda.jpg";
                         negocioLeft = archivos[i].fileStr;
                     }
@@ -2073,14 +2230,14 @@ function manejoArchivos(archivos) {
                     break;
                 case 6:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile08').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile08').value = "Archivo";
                         document.getElementById('label-inputGroupFile08').innerHTML = "FotoDerecha.jpg";
                         negocioRight = archivos[i].fileStr;
                     }
                     break;
                 case 7:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile09').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile09').value = "Archivo";
                         document.getElementById('label-inputGroupFile09').innerHTML = "Pagare.jpg";
                         pagare = archivos[i].fileStr;
                     }
@@ -2088,7 +2245,7 @@ function manejoArchivos(archivos) {
                     break;
                 case 8:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile12').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile12').value = "Archivo";
                         document.getElementById('label-inputGroupFile12').innerHTML = "IFEAval.jpg";
                         ineAval = archivos[i].fileStr;
                     }
@@ -2096,42 +2253,43 @@ function manejoArchivos(archivos) {
                     break;
                 case 10:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile15').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile15').value = "Archivo";
                         document.getElementById('label-inputGroupFile15').innerHTML = "Caratula.jpg";
                         caratula = archivos[i].fileStr;
                     }
                     break;
                 case 11:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile02').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile02').value = "Archivo";
                         document.getElementById('label-inputGroupFile02').innerHTML = "ConstanciaSituacionFiscalReverso.jpg";
                         constanciaSituacionFiscalBack = archivos[i].fileStr;
                     }
                     break;
                 case 12:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile18').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile18').value = "Archivo";
                         document.getElementById('label-inputGroupFile18').innerHTML = "CartaResponsiva.jpg";
                         cartaResponsiva = archivos[i].fileStr;
                     }
                     break;
                 case 13:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile03').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile03').value = "Archivo";
+                        console.log(archivos[i].fileStr);
                         document.getElementById('label-inputGroupFile03').innerHTML = "FirmaSolicitud.jpg";
                         fotoSolicitud = archivos[i].fileStr;
                     }
                     break;
                 case 31:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile11').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile11').value = "Archivo";
                         document.getElementById('label-inputGroupFile11').innerHTML = "IFERepresentanteReverso.jpg";
                         ineRepBack = archivos[i].fileStr;
                     }
                     break;
                 case 81:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile13').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile13').value = "Archivo";
                         document.getElementById('label-inputGroupFile13').innerHTML = "IFEAvalReverso.jpg";
                         ineAvalBack = archivos[i].fileStr;
                     }
@@ -2144,7 +2302,8 @@ function manejoArchivos(archivos) {
 function continueModal(facturas, archivos, data) {
     // console.log(facturas);
     // console.log(archivos);
-    //console.log(data);
+    console.log(data);
+    document.getElementById("folioR").value = data.folio;
     $('#solicitudModal').modal('show');
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
@@ -2161,25 +2320,48 @@ function continueModal(facturas, archivos, data) {
     document.getElementById('noIntInput').value = data.cliente.datosF.domicilio.noInt;
     document.getElementById('cpInput').value = data.cliente.datosF.domicilio.cp;
     document.getElementById('emailFac').value = data.cliente.datosF.emailFacturacion;
-    document.getElementById('colDF').value = data.cliente.datosF.domicilio.colonia;
+    document.getElementById('colDFRow1').classList.add('d-none');
+    document.getElementById('colDFRow2').classList.remove('d-none');
+    document.getElementById('auxColDF').value = data.cliente.datosF.domicilio.colonia;
     document.getElementById('ciudadDF').value = data.cliente.datosF.domicilio.ciudad;
     document.getElementById('estadoDF').value = data.cliente.datosF.domicilio.estado;
-    document.getElementById('rowInputsGeo').classList.remove('d-none');
+    // document.getElementById('rowInputsGeo').classList.remove('d-none');
 
-    document.getElementById("checkAddAddress").checked = true;
-    // document.getElementById('shippingAddress').style.display = 'block';
-    document.getElementById('calleInputShipping').value = data.cliente.datosE.domicilio.calle;
-    document.getElementById('noExtInputShipping').value = data.cliente.datosE.domicilio.noExt;
-    document.getElementById('noIntInputShipping').value = data.cliente.datosE.domicilio.noInt;
-    document.getElementById('cpInputShipping').value = data.cliente.datosE.domicilio.cp;
-    document.getElementById('colDFShipping').value = data.cliente.datosE.domicilio.colonia;
-    document.getElementById('ciudadDFShipping').value = data.cliente.datosE.domicilio.ciudad;
-    document.getElementById('estadoDFShipping').value = data.cliente.datosE.domicilio.estado;
+    if (!compareDir(data.cliente.datosF.domicilio, data.cliente.datosE.domicilio)) {
+        document.getElementById('colDFRow3').classList.add('d-none');
+        document.getElementById('colDFRow4').classList.remove('d-none');
+        document.getElementById("checkAddAddress").checked = true;
+        addAddress();
+        document.getElementById('calleInputShipping').value = data.cliente.datosE.domicilio.calle;
+        document.getElementById('noExtInputShipping').value = data.cliente.datosE.domicilio.noExt;
+        document.getElementById('noIntInputShipping').value = data.cliente.datosE.domicilio.noInt;
+        document.getElementById('cpInputShipping').value = data.cliente.datosE.domicilio.cp;
+        document.getElementById('auxColDFShipping').value = data.cliente.datosE.domicilio.colonia;
+        document.getElementById('ciudadDFShipping').value = data.cliente.datosE.domicilio.ciudad;
+        document.getElementById('estadoDFShipping').value = data.cliente.datosE.domicilio.estado;
+    } else {
+        document.getElementById("checkAddAddress").checked = false;
+        document.getElementById('calleInputShipping').value = "";
+        document.getElementById('noExtInputShipping').value = "";
+        document.getElementById('noIntInputShipping').value = "";
+        document.getElementById('cpInputShipping').value = "";
+        document.getElementById('colDFShipping').value = "";
+        document.getElementById('ciudadDFShipping').value = "";
+        document.getElementById('estadoDFShipping').value = "";
+    }
+
 
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
+    if (data.cliente.contactos.length <= 1) {
+        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
+            addContactDataCon(data.cliente.contactos);
+            contactos = data.cliente.contactos;
+        }
+    } else {
+        addContactDataCon(data.cliente.contactos);
+        contactos = data.cliente.contactos;
+    }
 
-    addContactDataCon(data.cliente.contactos);
-    contactos = data.cliente.contactos;
 
     var idTypeP = data.cliente.tipoPersona == true ? "typeMoral" : "typeFisica";
     document.getElementById(idTypeP).checked = true;
@@ -2199,6 +2381,14 @@ function continueModal(facturas, archivos, data) {
     addFacturaDataR(facturas);
     facturasSol = facturas;
 
+}
+
+
+function compareDir(datosF, datosE) {
+    if (datosF.calle == datosE.calle && datosF.noInt == datosE.noInt && datosF.colonia == datosE.colonia && datosE.ciudad == datosF.ciudad && datosF.estado == datosE.estado && datosF.cp == datosE.cp)
+        return true;
+    else
+        return false;
 }
 
 function addContactDataCon(conCon) {

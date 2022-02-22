@@ -106,6 +106,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue" id="headerUNO">
+                <input type="text" id="folioR" value="" hidden>
                 <h3 class="text-center oswald title ml-auto">Solicitud para Alta de Cliente</h3>
                 <h4 class="ml-auto oswald">ZONA: {{$zone['description']}}</h4>
                 <button type="button" class="close text-warning" data-dismiss="modal" aria-label="Close">
@@ -120,6 +121,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                         <h5>TIPO DE SOLICITUD</h5>
+                                        <button type="submit" class="btn btn-warning float-right" onclick="saveForm('{{$zone}}')">Guardar</button>
                                         <form>
                                             <label class="mr-3"><input type="radio" name="typeSoli" value="credit" onclick="valiteTypeForm()" id="creditRadio">Credito</label>
                                             <label class="mr-3"><input type="radio" name="typeSoli" value="creditAB" onclick="valiteTypeForm()" id="creditABRadio">AB</label>
@@ -205,19 +207,19 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
 
-                                                    <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control" onfocusout="validaRFC()">
+                                                    <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control" onfocusout="validaRFC()" maxlength="13">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control" onfocusout="validaRZI()">
+                                                    <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control" onfocusout="validaRZI()" maxlength="99">
                                                     <span>Apellido Paterno - Materno - Nombres(s)</span>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control" onfocusout="validaNameC()">
+                                                    <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control" onfocusout="validaNameC()" maxlength="99">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control" onfocusout="validaProsP()">
+                                                    <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control" onfocusout="validaProsP()" maxlength="10">
                                                     <span>Capturar número de prospecto de la página web</span>
                                                 </div>
                                             </div>
@@ -274,13 +276,13 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control" onfocusout="validaCalle()">
+                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control" onfocusout="validaCalle()" maxlength="99">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()">
+                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()" maxlength="10">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()">
+                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()" maxlength="10">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
@@ -288,18 +290,22 @@
                                                     <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control" onfocusout="updateGeolocation()" maxlength="5">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()">
+                                                    <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()" maxlength="49">
                                                     <span>Correo donde se enviará la factura</span>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <!-- <div class="col-md-4">
                                                     <button onclick="updateGeolocation()" class="btn btn-info">Actualizar Geolocalización</button>
-                                                </div>
+                                                </div> -->
                                             </div>
-                                            <div class="row mb-3 d-none" id="rowInputsGeo">
-                                                <div class="col-md-4">
+                                            <div class="row mb-3" id="rowInputsGeo">
+                                                <div class="col-md-4" id="colDFRow1">
                                                     <span>Colonia</span>
                                                     <select id="colDF" name="colDF" class="form-control selectpicker" data-live-search="true">
                                                     </select>
+                                                </div>
+                                                <div class="col-md-4 d-none" id="colDFRow2">
+                                                    <span>Colonia</span>
+                                                    <input type="text" name="auxColDF" id="auxColDF" placeholder="Colonia" class="form-control" disabled>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <span>Ciudad</span>
@@ -352,13 +358,13 @@
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
                                                 <div class="row mb-3">
                                                     <div class="col-md-4">
-                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control" onfocusout="validaCalleS()">
+                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control" onfocusout="validaCalleS()" maxlength="99">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()">
+                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()" maxlength="10">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()">
+                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()" maxlength="10">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -378,10 +384,14 @@
                                                     </div>
                                                 </div> -->
                                                 <div class="row mb-3">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4" id="colDFRow3">
                                                         <span>Colonia</span>
                                                         <select id="colDFShipping" name="colDFShipping" class="form-control selectpicker" data-live-search="true">
                                                         </select>
+                                                    </div>
+                                                    <div class="col-md-4 d-none" id="colDFRow4">
+                                                        <span>Colonia</span>
+                                                        <input type="text" name="auxColDFShipping" id="auxColDFShipping" placeholder="Ciudad" class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span>Ciudad</span>
@@ -414,7 +424,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control" onfocusout="validaAnti()">
+                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control" onfocusout="validaAnti()" maxlength="4">
                                                 </div>
                                             </div>
                                             <div class="row mb-3 d-none" id="rowOtroGiro">
@@ -482,7 +492,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control" onfocusout="validateNameC()">
+                                                        <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control" onfocusout="validateNameC()" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <input type="text" name="telefonoContacto" id="telefonoContacto" placeholder="Telefono" class="form-control" maxlength="10">
@@ -491,7 +501,7 @@
                                                         <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">
+                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3 checkForm">
                                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
@@ -514,7 +524,7 @@
                                                                 <th scope="col">Nombre</th>
                                                                 <th scope="col">Celular</th>
                                                                 <th scope="col">Tipo</th>
-                                                                <th scope="col">Eliminar</th>
+                                                                <th scope="col">Acciones</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -723,13 +733,13 @@
                                             <div class="row" id="refGroup" style="display: none;">
                                                 <div class="col-md-4">
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="razonSocialRef" id="razonSocialRef" placeholder="Razón Social" class="form-control">
+                                                        <input type="text" name="razonSocialRef" id="razonSocialRef" placeholder="Razón Social" class="form-control" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="contactoRef" id="contactoRef" placeholder="Contacto" class="form-control">
+                                                        <input type="text" name="contactoRef" id="contactoRef" placeholder="Contacto" class="form-control" maxlength="20">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="ciudadRef" id="ciudadRef" placeholder="Ciudad" class="form-control">
+                                                        <input type="text" name="ciudadRef" id="ciudadRef" placeholder="Ciudad" class="form-control" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <input type="text" name="telefonoRef" id="telefonoRef" placeholder="Telefono" class="form-control" maxlength="10">
@@ -935,6 +945,19 @@
                             <div class="col-md-2" id="picSolButtons">
                             </div>
                         </div>
+                        <!-- <div class="row mb-3">
+                            <div class="col-md-4">Fotografia de Solicitud</div>
+                            <div class="col-md-6">
+                                <div class="input-group input-group-sm">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="editPictureSol" accept="image/x-png,image/gif,image/jpeg">
+                                        <label class="custom-file-label" for="editPictureSol" id="label-editPictureSol">Seleccionar Archivo...</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2" id="XXXX2">
+                            </div>
+                        </div> -->
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertDG">
                             </div>
@@ -982,7 +1005,7 @@
                             <div class="col-md-2" id="cpFEButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="datFisCD">
                             <div class="col-md-4">Comprobante Domicilio</div>
                             <div class="col-md-4" id="imgCDButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
                             <div class="col-md-4" id="comDFEButtons">
@@ -1300,6 +1323,21 @@
     </div>
 </div>
 
+
+<div class="modal" tabindex="-1" id="alertModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title" id="titleModalR"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Alerta del formulario <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="alertInfoModal">
+            </div>
+        </div>
+    </div>
+</div>
 <!-- VALIDATE DATA MODAL -->
 <!-- <div class="modal-background" id="validateModal">
     <div class="modal-header bg-indarBlue">
