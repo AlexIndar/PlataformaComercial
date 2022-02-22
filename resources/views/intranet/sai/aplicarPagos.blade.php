@@ -8,13 +8,12 @@
 @endsection
 
 @section('body')
-
 <div class="content-wrapper" style="min-height: 2128.12px;">
     <div class="content-header">
        <div class="container-fluid">
           <div class="row mb-2">
              <div class="col-sm-6">
-                <h1 class="m-0">Aplicar Pagos</h1>
+                <h6 class="m-0">Aplicar Pagos</h6>
              </div>
              <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -36,39 +35,40 @@
                       </div>
                    </div>
                    <div class="card-body">
-                    <div class="form-group">
-                    <form id="myForm">
-                    <div class="form-check form-check-inline form-group">
-                        <input class="form-check-input" type="radio" name="radiobtn" id="radioZona" value="zona"  checked>
-                        <label class="form-check-label" for="inlineRadio1">Zona</label>
-                     </div>
-                     <div class="form-check form-check-inline form-group">
-                        <input class="form-check-input" type="radio" name="radiobtn" id="radioCliente" value="cliente">
-                        <label class="form-check-label" for="inlineRadio2">Cliente</label>
-                     </div>
-                    </form>
-                        <div class="form-group zonas" style="display:flex; flex-direction: row">
+                      <div class="form-group">
+                         <form id="myForm">
+                            <div class="form-check form-check-inline form-group">
+                               <input class="form-check-input" type="radio" name="radiobtn" id="radioZona" value="zona"  checked>
+                               <label class="form-check-label" for="inlineRadio1">Zona</label>
+                            </div>
+                            <div class="form-check form-check-inline form-group">
+                               <input class="form-check-input" type="radio" name="radiobtn" id="radioCliente" value="cliente">
+                               <label class="form-check-label" for="inlineRadio2">Cliente</label>
+                            </div>
+                         </form>
+                         <div class="form-group zonas" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Zona: </label>
                             <select class="js-example-basic-single form-control" id="zonas" name="zonas"  data-live-search="true">
                             </select>
-                        </div>
-                        <div class="form-group cli" style="display:flex; flex-direction: row">
+                         </div>
+                         <div class="form-group cli" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Clientes: </label>
                             <select class="js-example-basic-single form-control" id="cli" name="cli"  data-live-search="true">
                             </select>
-                        </div>
-                   <div class="col-auto text-center">
-                    <button type="submit" class="btn btn-success mb-3"   onclick="consultar()" id="btnConsultar"> Consultar</button>
-                   </div>
-                </div>
-                   <hr>
-                   <div class="card-header border-0">
-                        <div class="d-flex justify-content-between">
+                         </div>
+                         <div class="col-auto text-center">
+                            <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
+                            <button type="submit" class="btn btn-success mb-3"  style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
+                         </div>
+                      </div>
+                      <hr>
+                      <div class="card-header border-0">
+                         <div class="d-flex justify-content-between">
                             <h3 class="card-title">Pagos</h3>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <table id="pagosTable" class="table table-striped table-bordered" style=" width:100%">
+                         </div>
+                      </div>
+                      <div class="form-group">
+                         <table id="pagosTable" class="display nowrap" style="width:100%;  font-size:13px">
                             <thead>
                                <tr>
                                   <th>Pago</th>
@@ -76,139 +76,99 @@
                                   <th>Cliente</th>
                                </tr>
                             </thead>
-                            <tbody>
-                               <tr>
-                                  <td>Ejemplo</td>
-                                  <td>Ejemplo</td>
-                                  <td>Ejemplo</td>
-                               </tr>
+                            <tbody id="tablePagos">
                             </tbody>
                          </table>
                          <div class="form-group" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Cliente: </label>
                             <input class="form-control form-control-sm" type="text" placeholder="Ingrese Nombre de Cliente" name="cliente"/>
-                        </div>
-                        <div class="form-group" style="display:flex; flex-direction: row">
+                         </div>
+                         <div class="form-group" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Cob: </label>
                             <input class="form-control form-control-sm" type="text"  name="cob"/>
                             <label class="form-control-sm">Ven: </label>
                             <input class="form-control form-control-sm" type="text" name="ven"/>
-                        </div>
-                        <div class="form-group" style="display:flex; flex-direction: row">
+                         </div>
+                         <div class="form-group" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Zona: </label>
                             <input class="form-control form-control-sm" type="text"name="zona"/>
                             <label class="form-control-sm">Limite: </label>
                             <input class="form-control form-control-sm" type="text" name="limite"/>
-                        </div>
-                        <div class="form-group" style="display:flex; flex-direction: row">
+                         </div>
+                         <div class="form-group" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">Pago: </label>
                             <input class="form-control form-control-sm" type="text"name="pago"/>
                             <label class="form-control-sm">Actual: </label>
                             <input class="form-control form-control-sm" type="text" value="0" id="actual" name="actual"/>
-                        </div>
-                        <div class="form-group" style="display:flex; flex-direction: row">
+                         </div>
+                         <div class="form-group" style="display:flex; flex-direction: row">
                             <label class="form-control-sm">SAT: </label>
                             <select class="form-control js-example-basic" id="select-sat" data-live-search="true">
-                                <option data-tokens="0">Seleccione Opción</option>
-                                <option data-tokens="1">Opcion2</option>
-                                <option data-tokens="2">Opcion3</option>
-                             </select>
-                        </div>
-                        <div class="col-auto text-center">
+                               <option data-tokens="0">Seleccione Opción</option>
+                               <option data-tokens="1">Opcion2</option>
+                               <option data-tokens="2">Opcion3</option>
+                            </select>
+                         </div>
+                         <div class="col-auto text-center">
                             <button type="btn" class="btn btn-success mb-3">Excel</button>
                             <button type="btn" class="btn btn-secondary mb-3">Netsuite</button>
                          </div>
-                    </div>
+                      </div>
+                   </div>
                 </div>
              </div>
-             </div>
              <div class="col-lg-8">
-                <div class="container">
-                    <table id="example" class="display nowrap" width="100%">
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th>NumDoc</th>
-                          <th>Nota</th>
-                          <th>Fecha</th>
-                          <th>FechaRecibo</th>
-                          <th>Terminos</th>
-                          <th>Vencimiento</th>
-                          <th>DescuentoFact</th>
-                          <th>ImporteBruto</th>
-                          <th>SaldoPendiente</th>
-                          <th>Porcentaje</th>
-                          <th>DescuentoTotal</th>
-                          <th>APagar</th>
-                          <th>DIFFECHA</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{-- <tr>
-                            <td></td>
-                            <td>NumDoc</td>
-                            <td>Nota</td>
-                            <td>Fecha</td>
-                            <td>FechaRecibo</td>
-                            <td>Terminos</td>
-                            <td>Vencimiento</td>
-                            <td>DescuentoFact</td>
-                            <td>ImporteBruto</td>
-                            <td>SaldoPendiente</td>
-                            <td>Porcentaje</td>
-                            <td>DescuentoTotal</td>
-                            <td>11</td>
-                            <td>DIFFECHA</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>NumDoc2</td>
-                            <td>Nota2</td>
-                            <td>Fecha2</td>
-                            <td>FechaRecibo2</td>
-                            <td>Terminos2</td>
-                            <td>Vencimiento2</td>
-                            <td>DescuentoFact2</td>
-                            <td>ImporteBruto2</td>
-                            <td>SaldoPendiente2</td>
-                            <td>Porcentaje2</td>
-                            <td>DescuentoTotal2</td>
-                            <td>12.02</td>
-                            <td>DIFFECHA2</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>NumDoc3</td>
-                            <td>Nota3</td>
-                            <td>Fecha3</td>
-                            <td>FechaRecibo3</td>
-                            <td>Terminos3</td>
-                            <td>Vencimiento3</td>
-                            <td>DescuentoFact3</td>
-                            <td>ImporteBruto3</td>
-                            <td>SaldoPendiente3</td>
-                            <td>Porcentaje3</td>
-                            <td>DescuentoTotal3</td>
-                            <td>13.03</td>
-                            <td>DIFFECHA3</td>
-                        </tr> --}}
-                      </tbody>
-                    </table>
-                    <hr>
-                    <table id="example2" class="display nowrap" width="100%">
-                      <thead>
-                        <tr>
-                            <th></th>
-                            <th>NumDoc</th>
-                            <th>ImporteBruto</th>
-                            <th>FacturaMonto</th>
-                            <th>Final</th>
-                            <th>NotaCredito</th>
-                        </tr>
-                      </thead>
-                    </table>
-                  </div>
-                <button class="btn btn-primary" name="refresh">Refresh</button>
+                <div class="card">
+                   <div class="card-header border-0">
+                   </div>
+                   <div class="container">
+                      <table id="example" class="display nowrap" style="display:none ; font-size:13px" width="100%">
+                         <thead>
+                            <tr>
+                               <th></th>
+                               <th>NumDoc</th>
+                               <th>Nota</th>
+                               <th>Fecha</th>
+                               <th>FechaRecibo</th>
+                               <th>Terminos</th>
+                               <th>Vencimiento</th>
+                               <th>DescuentoFact</th>
+                               <th>ImporteBruto</th>
+                               <th>SaldoPendiente</th>
+                               <th>Porcentaje</th>
+                               <th>DescuentoTotal</th>
+                               <th>APagar</th>
+                               <th>DIFFECHA</th>
+                            </tr>
+                         </thead>
+                         <tbody id="DataResult">
+
+                        </tbody>
+                      </table>
+                   </div>
+                </div>
+                <hr>
+                <div class="card">
+                   <div class="container">
+                      <table id="example2" class="display nowrap" width="100%">
+                         <thead>
+                            <tr>
+                               <th></th>
+                               <th>NumDoc</th>
+                               <th>ImporteBruto</th>
+                               <th>FacturaMonto</th>
+                               <th>Final</th>
+                               <th>NotaCredito</th>
+                            </tr>
+                         </thead>
+                         <tbody id="DataT2">
+
+                         </tbody>
+                      </table>
+                   </div>
+                   {{-- <button class="btn btn-primary" name="refresh">Refresh</button> --}}
+                </div>
+             </div>
           </div>
        </div>
     </div>
@@ -221,59 +181,94 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 <script>
 
+
 $(document).ready(function() {
-    //Tablas Dinamicas
-    var table = $('#example').DataTable({
-        dom: 't',
-        scrollX: true,
-        pagination: true,
-        columnDefs: [ {
-           targets: 0,
-           data: null,
-           defaultContent: "<input class='form-control' type='checkbox' name='checkTable' id='checkT' >"
-        } ]
-    } );
+
+    var tablepago = $('#pagosTable').DataTable({
+            dom : 'rtip',
+            scrollY: "250px",
+            scrollCollapse: true,
+            scrollX: true,
+            bPaginate: false,
+
+        } );
+
+        $('#tablePagos').on( 'click', 'tr', function () {
+
+        var datapago = tablepago.rows('.selected').data();
+        console.log( datapago);
 
 
-    $("input[name$='checkTable']").click(function() {
-        var data = table.row( $(this).parents('tr') ).data();
-       console.log(data);
-       var valor= document.getElementById("actual").value;
-       console.log(valor);
-       var suma = parseFloat(valor)+parseFloat(data[12]);
-       console.log(suma);
-       // Process the data to match the structure of the destination table.
-       document.getElementById("actual").value = suma;
-       table2.row.add({
-           0: '',
-        1:data[1],
-        2: data[8],
-        3:data[12],
-        4:data[12],
-        5:data[11]
-        }).draw();
-        $(this).toggleClass('selected').remove();
+        });
+    //Inica Ajax
+    $(document).ajaxStart(function() {
+    document.getElementById("btnSpinner").style.display = "block";
+    document.getElementById("btnConsultar").style.display = "none";
+    document.getElementById("example").style.display = "none";
+    });
+    //Func Termina Ajax
+    $(document).ajaxStop(function() {
+        document.getElementById("btnSpinner").style.display = "none";
+        document.getElementById("btnConsultar").style.display = "block";
+        document.getElementById("example").style.display = "block";
+        var table = $('#example').DataTable({
+            scrollY: "350px",
+            scrollCollapse: true,
+            scrollX: true,
+            pageLength: 6,
+            lengthMenu: [6, 10, 20, 50, 100, 200, 500],
+            columnDefs: [ {
+               targets: 0,
+               data: null,
+               defaultContent: "<input class='form-control' type='checkbox' name='checkTable' id='checkT' >",
+            } ]
 
-     } );
+        } );
 
+        $('#example tbody').on( 'click', 'tr', function () {
+
+        $(this).toggleClass('selected');
+        var data = table.rows('selected').data();
+        //console.log( data);
+        //console.log(JSON.parse(JSON.stringify(data)));
+
+        var html = '';
+            var i;
+            var actual ;
+            var suma=0;
+            for (i = 0; i < data.length; i++) {
+              html += '<tr>' +
+                '<td></td>' +
+                '<td>' + data[i][1]+ '</td>' +
+                '<td>' + data[i][8] + '</td>' +
+                '<td>' + data[i][12] + '</td>' +
+                '<td>' + data[i][12] + '</td>' +
+                '<td>' + data[i][11] + '</td>' +
+                '</tr>';
+             actual = data[i][12];
+             var newActual = actual.slice(1);
+             newActual = parseFloat(newActual);
+             console.log(newActual);
+            suma= suma + newActual;
+            console.log(suma);
+
+            }
+            $('#DataT2').html(html);
+            document.getElementById("actual").value = suma;
+
+        });
+    });
+    //Click en Columna
 
     var table2 = $('#example2').DataTable({
       dom: 't',
     });
 
-
-     //Refresh
-     $("button[name$='refresh']").click(function() {
-        table2.clear().draw();
-     });
-
     //$('#pagosTable').DataTable();
-
 
     //Recibe Json
     var zonas = JSON.parse({!! json_encode($zonas) !!});
     var clientes = JSON.parse({!! json_encode($clientes) !!});
-
 
     //Llena select zonas
     $('.js-example-basic-single').select2();
@@ -302,8 +297,11 @@ $(document).ready(function() {
     });
 
 });
+
 function consultar() {
 //var x = document.getElementById("zonas").value;
+$("#example").dataTable().fnDestroy();
+var response = [];
 var selectedRadio = $('input[name=radiobtn]:checked', '#myForm').val();
 var id = '';
 if(selectedRadio === 'zona'){
@@ -314,27 +312,64 @@ if(selectedRadio === 'zona'){
     id = 'C'+idCliente;
 
 }
+
 $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         'url': "/AplicarPagos/getRegresaPrimerosDatos",
-        'type': 'POST',
+        'type': 'GET',
         'dataType': 'json',
-        'data': id,
+        'data': {Id:id},
         'enctype': 'multipart/form-data',
-        'timeout': 2 * 60 * 60 * 1000,
-        success: function(){
-                alert("Ha sido ejecutada la acción."+id);
-            },
+        'timeout': 4 * 60 * 60 * 1000,
+        success: function(data){
+            var html = '';
+            var tablePagos = '';
+            var i;
+            for (i = 0; i < data.length; i++) {
+                var apagar = (data[i].saldoPendiente)-(data[i].descuentoTotal);
+                if(data[i].documento !== "CustPymt"){
+
+
+              html += '<tr>' +
+                '<td></td>' +
+                '<td>' + data[i].numDoc + '</td>' +
+                '<td>' + data[i].nota + '</td>' +
+                '<td>' + data[i].fecha + '</td>' +
+                '<td>' + data[i].fechaRecibo + '</td>' +
+                '<td>' + data[i].terminos + '</td>' +
+                '<td>' + data[i].vencimiento + '</td>' +
+                '<td>' + data[i].descuentoCliente + '</td>' +
+                '<td>$' + data[i].importeBruto + '</td>' +
+                '<td>$' + data[i].saldoPendiente + '</td>' +
+                '<td>' + data[i].porcentaje + '</td>' +
+                '<td>$' + data[i].descuentoTotal.toFixed(2) + '</td>' +
+                '<td>$' +   apagar.toFixed(2)+ '</td>' +
+                '<td>?</td>' +
+                '</tr>';
+                }else{
+                    tablePagos += '<tr>' +
+                    '<td>' + data[i].numDoc + '</td>' +
+                    '<td>' + data[i].saldoPendiente + '</td>' +
+                    '<td>' + data[i].cliente + '</td>' +
+                    '</tr>';
+                }
+            }
+            $('#DataResult').html(html);
+            $('#tablePagos').html(tablePagos);
+
+        },
         error: function() {
             console.log("Error");
-            console.log("No tiene zona");
+            alert('Tiempo de espera agotado');
         }
     });
+
+
+
 }
 
-//func GetRegresaProtafolio
 
 
 </script>

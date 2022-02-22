@@ -25,6 +25,10 @@ use App\Http\Controllers\Intranet\EstadisticasClientesController;
 
 //SAI----------------------------------------------------------------
 use App\Http\Controllers\Sai\AplicarPagoController;
+
+//COMISIONES----------------------------------------------------------------
+use App\Http\Controllers\Comisiones\ComisionesController;
+
 //-------------------------------------------------------------------
 use App\Http\Middleware\ValidateSession;
 use Illuminate\Http\Request;
@@ -936,23 +940,21 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    //$user = MisSolicitudesController::getUser($token);
                     $zonas = AplicarPagoController::getZonas($token);
-                    //$cliente = AplicarPagoController::getRegresaClientes($token);
                     $clientes = AplicarPagoController::getCargaListaClientes($token);
-                    //$empleados = AplicarPagoController::getLlenaEmpleados($token);
-                    //dd($clientes);
                     return view('intranet.sai.aplicarPagos',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
                 });
 
-                Route::post('/AplicarPagos/getRegresaPrimerosDatos', function (Request $request){
+                Route::get('/AplicarPagos/getRegresaPrimerosDatos', function (Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $id = $request->id;
-                    $response = AplicarPagoController::getRegresaPrimerosDatos($token,$id);
-                    return $request;
+                   $id = $request->Id;
+                   $data=AplicarPagoController::getRegresaPrimerosDatos($token,$id);
+                   $data= $data->resultados->documentos;
+                    return $data;
+
                 });
 
                 Route::get('/comisiones', function(){
@@ -961,9 +963,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
+                    $clientes = AplicarPagoController::getCargaListaClientes($token);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisiones',['token' => $token, 'permissions' => $permissions]);
+                    return view('intranet.comisiones.comisiones',['token' => $token, 'permissions' => $permissions, 'clientes' => $clientes]);
+                });
+
+                Route::get('/comisiones/getInfoCobranzaZonaWeb', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $referencia = $request->referencia;
+                   //dd($referencia);
+                   $data=ComisionesController::getInfoCobranzaZonaWeb($token,$referencia);
+                    return $data;
+
                 });
 
 });

@@ -470,9 +470,9 @@
               </li>
               <li class="nav-item">
                 @if($active == 'Comisiones')
-                <a href="#" class="nav-link active">
+                <a href="/comisiones" class="nav-link active">
                 @else
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#comisionesModal">
+                <a href="/comisiones" class="nav-link">
                 @endif
                 <i class="nav-icon fas fa-cash-register"></i>
                 <p>
@@ -1087,7 +1087,7 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
-            <div class="modal-body">
+            {{-- <div class="modal-body">
                 <div class="form-group" style="display:flex; flex-direction: row">
                     <div class="col-md-3 ">
                         <label class="form-control-label">Clientes:</label>
@@ -1106,7 +1106,7 @@
             <a href="/comisiones">
               <button type="button" class="btn btn-success">Consultar</button>
             </a>
-            </div>
+            </div> --}}
 
           </div>
         </div>

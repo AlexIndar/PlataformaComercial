@@ -22,19 +22,8 @@ class AplicarPagoController extends Controller
     }
 
     public static function getRegresaPrimerosDatos($token, $id){
-
-        $getProduct = Http::withToken($token)->post('http://192.168.70.107:64444/PaymentInvoiceApply/GetRegresaPortafolio', [
-            "idZona" => $id
-        ]);
-
-        $item = json_decode($getProduct->body());
-        /* foreach($bestSellers as $item){
-            $item->itemid = strtr($item->itemid, " ", "_");
-            // dd($item);
-        } */
-        $token = TokenController::getToken();
-        return view('customers.detallesProducto', ['id' => $id, 'token' => $token]);
-
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/PaymentInvoiceApply/GetRegresaPortafolio?idZona='.$id);
+        return json_decode($data->body());
     }
 
     public function getLlenaEmpleados($token){
