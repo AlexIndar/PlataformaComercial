@@ -594,11 +594,11 @@ function storeSubreglas(){
             'timeout': 2*60*60*1000,
             success: function(data){
                     console.log(data);
-                    document.getElementById(idRow).classList.add('success-sub');
+                    // document.getElementById(idRow).classList.add('success-sub');
             }, 
             error: function(error){
                     console.log(data);
-                    document.getElementById(idRow).classList.add('error-sub');
+                    // document.getElementById(idRow).classList.add('error-sub');
              }
         });
         
@@ -610,5 +610,5 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    // window.location.href = '/promociones';
+    window.location.href = '/promociones';
 }
