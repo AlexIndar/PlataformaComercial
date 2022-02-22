@@ -106,6 +106,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue" id="headerUNO">
+                <input type="text" id="folioR" value="" hidden>
                 <h3 class="text-center oswald title ml-auto">Solicitud para Alta de Cliente</h3>
                 <h4 class="ml-auto oswald">ZONA: {{$zone['description']}}</h4>
                 <button type="button" class="close text-warning" data-dismiss="modal" aria-label="Close">
@@ -944,7 +945,7 @@
                             <div class="col-md-2" id="picSolButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <div class="col-md-4">Fotografia de Solicitud</div>
                             <div class="col-md-6">
                                 <div class="input-group input-group-sm">
@@ -956,7 +957,7 @@
                             </div>
                             <div class="col-md-2" id="XXXX2">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertDG">
                             </div>
@@ -1004,7 +1005,7 @@
                             <div class="col-md-2" id="cpFEButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="datFisCD">
                             <div class="col-md-4">Comprobante Domicilio</div>
                             <div class="col-md-4" id="imgCDButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
                             <div class="col-md-4" id="comDFEButtons">

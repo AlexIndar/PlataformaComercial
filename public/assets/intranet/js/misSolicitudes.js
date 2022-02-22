@@ -386,6 +386,8 @@ function startForm() {
 }
 
 function clearForm() {
+    document.getElementById("folioR").value = "";
+
     document.getElementById('creditoInput').value = "";
     document.getElementById('rfcInput').value = "";
     document.getElementById('rzInput').value = "";
@@ -1237,7 +1239,6 @@ function SendForm(zone) {
 function saveForm(zone) {
     if (validateSaveForm()) {
         var json = createJsonSolicitud(zone);
-        console.log(json);
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1412,38 +1413,6 @@ function createJsonSolicitud(zone) {
         archivosData.push(temp);
     }
 
-    if (archivosData.length > 0) {
-        for (let i = 1; i <= 13; i++) {
-            if (archivosData.filter(x => x.type == i).length == 0) {
-                var temp = {
-                    Id: 0,
-                    FileStr: "",
-                    Type: i,
-                    Subtype: null,
-                };
-                archivosData.push(temp);
-            }
-        }
-        if (archivosData.filter(x => x.type == 31).length == 0) {
-            var temp = {
-                Id: 0,
-                FileStr: "",
-                Type: 31,
-                Subtype: null,
-            };
-            archivosData.push(temp);
-        }
-        if (archivosData.filter(x => x.type == 81).length == 0) {
-            var temp = {
-                Id: 0,
-                FileStr: "",
-                Type: 81,
-                Subtype: null,
-            };
-            archivosData.push(temp);
-        }
-    }
-
     if (document.getElementById('cpInput').value == '') {
         document.getElementById('cpInput').value = '0';
     }
@@ -1453,6 +1422,7 @@ function createJsonSolicitud(zone) {
     }
 
     var json = {
+        // folio: document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value;
         folio: -1,
         fecha: getDateTime(),
         tipo: getTipoForm(),
@@ -1509,13 +1479,6 @@ function createJsonSolicitud(zone) {
             noCuentaBanco: null,
         },
         referencias: $('input[name="refSoli"]:checked').val() == 'datos' ? referenciasData : null,
-        // historyForm: {
-        //     id: null,
-        //     folioSol: null,
-        //     fecha: null,
-        //     tipo: null, 
-        //     idTipo: null, 
-        // }, 
         archivos: archivosData.length > 0 ? archivosData : archivosNull,
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
@@ -1525,7 +1488,6 @@ function createJsonSolicitud(zone) {
     console.log(JSON.stringify(json));
     return json;
 }
-
 
 function detalleSol(item) {
     if (item != null) {
@@ -1637,8 +1599,30 @@ function editText(item) {
     document.getElementById(item).disabled = false;
 }
 
+function editImage(item) {
+    let newId = "edit" + item;
+    let editImg = `<div class="input-group input-group-sm">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="` + newId + `" accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label" for="` + newId + `" id="label-` + newId + `">Seleccionar Archivo...</label>
+                        </div>
+                    </div>`;
+}
+
 function getButtons(dato, id) {
     var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editText('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
+    if (dato == null) {
+        buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
+    } else if (dato == true) {
+        buttons += `<button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>`;
+    } else {
+        buttons += `<button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>`;
+    }
+    return buttons;
+}
+
+function getButtonsFiles(dato, id) {
+    var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editImage('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
     if (dato == null) {
         buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
     } else if (dato == true) {
@@ -1659,41 +1643,47 @@ function showInfoModal(data, data2, valContac, filesList) {
     document.getElementById("cRSection").style.display = "none";
     document.getElementById("cartSection").style.display = "none";
     if (data != null) {
-        console.log(data);
+        // console.log(data);
         console.log(data2);
-        console.log(valContac);
-        console.log(filesList);
+        // console.log(valContac);
+        // console.log(filesList);
         //DATOS HEADER
         document.getElementById("folioInf").innerHTML = "No. " + data.folio;
         //DATOS GENERALES
         document.getElementById("rfcEdit").value = data.cliente.datosF.rfc;
-        document.getElementById("rfcButtons").innerHTML = getButtons(data2.calleEntrega, "rfcEdit");
+        document.getElementById("rfcButtons").innerHTML = getButtons(data2.rfc, "rfcEdit");
 
         document.getElementById("rzEdit").value = data.cliente.datosF.razonSocial;
-        document.getElementById("rzButtons").innerHTML = getButtons(data2.calleEntrega, "rzEdit");
+        document.getElementById("rzButtons").innerHTML = getButtons(data2.razonSocial, "rzEdit");
 
         document.getElementById("nomComEdit").value = data.cliente.nombreComercial;
-        document.getElementById("nomComButtons").innerHTML = getButtons(data2.calleEntrega, "nomComEdit");
+        document.getElementById("nomComButtons").innerHTML = getButtons(data2.nombreComercial, "nomComEdit");
         getAlert("alertDG", data.observations.datosGenerales);
         //DIRECCION FISCAL
         document.getElementById("calleFEdit").value = data.cliente.datosF.domicilio.calle;
-        document.getElementById("callFEButtons").innerHTML = getButtons(data2.calleEntrega, "calleFEdit");
+        document.getElementById("callFEButtons").innerHTML = getButtons(data2.calle, "calleFEdit");
 
         document.getElementById("noFEdit").value = data.cliente.datosF.domicilio.noExt;
-        document.getElementById("noFEButtons").innerHTML = getButtons(data2.calleEntrega, "noFEdit");
+        document.getElementById("noFEButtons").innerHTML = getButtons(data2.numeroExterior, "noFEdit");
 
         document.getElementById("cityFEdit").value = data.cliente.datosF.domicilio.ciudad;
-        document.getElementById("cityFEButtons").innerHTML = getButtons(data2.calleEntrega, "cityFEdit");
+        document.getElementById("cityFEButtons").innerHTML = getButtons(data2.ciudad, "cityFEdit");
 
         document.getElementById("estadoFEdit").value = data.cliente.datosF.domicilio.estado;
-        document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.calleEntrega, "estadoFEdit");
+        document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.estado, "estadoFEdit");
 
         document.getElementById("coloniaFEdit").value = data.cliente.datosF.domicilio.colonia;
-        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.calleEntrega, "coloniaFEdit");
+        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.colonia, "coloniaFEdit");
 
         document.getElementById("cpFEdit").value = data.cliente.datosF.domicilio.cp;
-        document.getElementById("cpFEButtons").innerHTML = getButtons(data2.calleEntrega, "cpFEdit");
+        document.getElementById("cpFEButtons").innerHTML = getButtons(data2.cp, "cpFEdit");
 
+        if (data.tipo == 0) {
+            document.getElementById('datFisCD').classList.add('d-none');
+        } else {
+            document.getElementById('datFisCD').classList.remove('d-none');
+            getButtonsFiles(data2.comprobanteDomicilio, "imgCDButton");
+        }
         getAlert("alertDF", data.observations.direccionFiscal);
 
         //DIRECCION DE ENTREGA
@@ -2312,7 +2302,8 @@ function manejoArchivos(archivos) {
 function continueModal(facturas, archivos, data) {
     // console.log(facturas);
     // console.log(archivos);
-    //console.log(data);
+    console.log(data);
+    document.getElementById("folioR").value = data.folio;
     $('#solicitudModal').modal('show');
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
