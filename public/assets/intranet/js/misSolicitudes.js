@@ -1050,17 +1050,18 @@ function refresh() {
 
 function getTipoForm() {
     var tipo = null;
+    console.log(tipoForm);
     switch (tipoForm) {
-        case 'cash':
+        case "cash":
             tipo = 0;
             break;
-        case 'credit':
+        case "credit":
             tipo = 1;
             break;
-        case 'creditAB':
+        case "creditAB":
             tipo = 2;
             break;
-        case 'changeRS':
+        case "changeRS":
             tipo = null;
             break;
     }
