@@ -260,7 +260,10 @@ $('document').ready(function(){
                 'Diciembre'
             ]
         }
-      });
+      }, function(start, end, label) {
+        startDate = start.format('YYYY-MM-DD');
+        endDate = end.format('YYYY-MM-DD');
+    });
 
 
     $('#descuento').on('input', function() {

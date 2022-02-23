@@ -108,6 +108,8 @@ function addClientesCuotas(json, id){
 
 function validarPaquete(){
     document.getElementById('div-loading').style.opacity = '0';
+    console.log(startDate);
+
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -119,6 +121,7 @@ function validarPaquete(){
         document.getElementById('nombrePromo').classList.remove('invalid-input');
         document.getElementById('nombrePromo').classList.add('valid-input');
     }
+
 
     if(startDate == undefined || endDate == undefined){
         save = false;
@@ -161,7 +164,7 @@ function validarPaquete(){
         var articulos = $('#articulos').chosen().val();
     
         var regalos = $('#regalos').chosen().val();
-    
+
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
