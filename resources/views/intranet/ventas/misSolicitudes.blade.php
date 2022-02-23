@@ -898,7 +898,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Solicitud <span id="folioInf"></span></h3>
+                <h3 class="text-center title ml-auto">Detalle de Solicitud No. <span id="folioInf"></span></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -941,23 +941,10 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Fotografia de Solicitud</div>
-                            <div class="col-md-6" id="imgFSButton"></div>
+                            <div class="col-md-6" id="imgFSButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
                             <div class="col-md-2" id="picSolButtons">
                             </div>
                         </div>
-                        <!-- <div class="row mb-3">
-                            <div class="col-md-4">Fotografia de Solicitud</div>
-                            <div class="col-md-6">
-                                <div class="input-group input-group-sm">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="editPictureSol" accept="image/x-png,image/gif,image/jpeg">
-                                        <label class="custom-file-label" for="editPictureSol" id="label-editPictureSol">Seleccionar Archivo...</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2" id="XXXX2">
-                            </div>
-                        </div> -->
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertDG">
                             </div>
@@ -1323,6 +1310,36 @@
     </div>
 </div>
 
+
+<!--Edit Image-->
+<div class="modal" tabindex="-1" id="editImageModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalEdit">Editar Imagen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyEditImageModal" style="text-align: center;">
+                <div class="row">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="titlePictureEdit">Editar imagen</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile19" accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label" for="inputGroupFile19" id="label-inputGroupFile19">Fotografia a editar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" id="editConfirButtons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal" tabindex="-1" id="alertModal">
     <div class="modal-dialog">
