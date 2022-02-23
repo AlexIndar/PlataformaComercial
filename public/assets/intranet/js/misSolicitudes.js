@@ -1241,31 +1241,31 @@ function SendForm(zone) {
 function saveForm(zone) {
     if (validateSaveForm()) {
         var json = createJsonSolicitud(zone);
-        // $.ajax({
-        //     'headers': {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     },
-        //     'url': "/MisSolicitudes/saveSolicitud",
-        //     'type': 'POST',
-        //     'dataType': 'json',
-        //     'data': json,
-        //     'enctype': 'multipart/form-data',
-        //     'timeout': 2 * 60 * 60 * 1000,
-        //     success: function(data) {
-        //         if (Number.isInteger(data)) {
-        //             $('#solicitudModal').modal('hide');
-        //             document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
-        //             $('#respuestaForm').modal('show');
-        //         } else {
-        //             console.log(data);
-        //             alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-        //         }
-        //     },
-        //     error: function(error) {
-        //         console.log(error);
-        //         alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-        //     }
-        // });
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/saveSolicitud",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                if (Number.isInteger(data)) {
+                    $('#solicitudModal').modal('hide');
+                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    $('#respuestaForm').modal('show');
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            }
+        });
     }
     // else {
     //     alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
