@@ -337,4 +337,50 @@ class PromoController extends Controller
         return json_decode($events->body());
     }
     
+    public static function formatDate($promocion){
+        $startTime = explode('T', $promocion->fechaInicio)[0];
+        $endTime = explode('T', $promocion->fechaFin)[0];
+
+        $splitStartTime = explode('-', $startTime);
+        $splitEndTime = explode('-', $endTime);
+
+        $startYear = $splitStartTime[0];
+        $startMonth = $splitStartTime[1];
+        $startDay = $splitStartTime[2];
+
+        $endYear = $splitEndTime[0];
+        $endMonth = $splitEndTime[1];
+        $endDay = $splitEndTime[2];
+
+        $datePromo = $startMonth."/".$startDay."/".$startYear." - ".$endMonth."/".$endDay."/".$endYear;
+
+        return $datePromo;
+    }
+
+    public static function getStartTime($promocion){
+        $startTime = explode('T', $promocion->fechaInicio)[1];
+
+        $splitStartTime = explode(':', $startTime);
+
+        $startHours = $splitStartTime[0];
+        $startMinutes = $splitStartTime[1];
+
+        $startTime = $startHours.":".$startMinutes;
+
+        return $startTime;
+    }
+
+    public static function getEndTime($promocion){
+        $endTime = explode('T', $promocion->fechaFin)[1];
+
+        $splitEndTime = explode(':', $endTime);
+
+        $endHours = $splitEndTime[0];
+        $endMinutes = $splitEndTime[1];
+
+        $endTime = $endHours.":".$endMinutes;
+
+        return $endTime;
+    }
+
 }

@@ -621,7 +621,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
+                                $rama3 = RamasController::getRama3(); 
                                 $level = "C";
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
@@ -634,8 +634,14 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     }
                                 }
 
+                                // dd($promocion);
+                                $datePromo = PromoController::formatDate($promocion);
+                                $startTime = PromoController::getStartTime($promocion);
+                                $endTime = PromoController::getEndTime($promocion);
+                                // dd($datePromo);
+
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
+                                return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
                             });
 
                             Route::get('/promociones/nueva', function (){
