@@ -1077,9 +1077,6 @@ function validateFullForm() {
         if (auxTipoLocal == undefined || auxTipoPersona == undefined || negIfeRe == "" || negIfeRR == "") {
             msgAlert += `<p>Verifica los datos en Credito</p>`;
         }
-        if (antiguedad < 2 && negIfeA == "" || negIfeAR == "" || credPag == "") {
-            msgAlert += `<p>Ingresa las fotografias de la Ine del Aval y/o Pagare</p>`;
-        }
     }
     if (getTipoForm() != 0) {
         if (comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
