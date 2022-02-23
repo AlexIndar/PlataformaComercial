@@ -1,88 +1,3 @@
-// var items = [];
-// $(document).ready(function() {
-//     intervalInventario = window.setInterval(checkItems, 1000);
-
-//     function checkItems() {
-//         alert(items.length);
-//         if (items.length > 0) {
-//             clearInterval(intervalInventario);
-//             cargarInventario()
-//             console.log("aqui1");
-//         } else {
-//             console.log("aqui2");
-
-//         }
-//     }
-
-//     var zoneP = document.getElementById('zoneP').value;
-
-//     if (zoneP != "") {
-//         getItems(zoneP);
-//     }
-
-
-//     function getItems(zoneP) {
-//         let data = { zoneP: zoneP };
-//         console.log(data);
-//         console.log("INfo data");
-//         $.ajax({
-//             'headers': {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//             },
-//             'url': "misSolicitudes/getSolicitudes/All",
-//             'type': 'POST',
-//             'dataType': 'json',
-//             'data': data,
-//             'enctype': 'multipart/form-data',
-//             'timeout': 2 * 60 * 60 * 1000,
-//             success: function(data) {
-//                 items = data;
-//             },
-//             error: function(error) {
-//                 console.log(error + "D");
-//             }
-//         });
-//     }
-
-
-
-// });
-
-// function mensaje() {
-//     alert("hola");
-// }
-
-// function cargarInventario() {
-//     var dataset = [];
-//     for (var x = 0; x < items.length; x++) {
-//         var arr = [];
-
-//         arr.push(items[x]['claveP']);
-//         arr.push(items[x]['razonSocial']);
-//         arr.push(items[x]['fechaAlta']);
-//         arr.push(items[x]['status']);
-
-//         dataset.push(arr);
-//     }
-
-
-//     $("#example1").dataTable({
-//         "data": dataset,
-//         "scrollX": 900,
-//         "responsive": true,
-//         "lengthChange": true,
-//         "autoWidth": false,
-//         "paging": true,
-//         "searching": true,
-//         "ordering": true,
-//         "info": true,
-//         "orderCellsTop": true,
-//         "fixedHeader": true,
-//     });
-
-// }
-
-
 // ----------------------------------------------------------------- VARIABLES GLOBALES ------------------------------------------
 
 
@@ -151,6 +66,9 @@ var referenciasSol = [];
 var caratula = '';
 var facturasSol = [];
 var cartaResponsiva = '';
+
+var fileEdit = '';
+var editBase64 = [];
 
 
 $(document).ready(function() {
@@ -259,6 +177,12 @@ $(document).ready(function() {
         var fileName = e.target.files[0].name;
         cartaResponsiva = toBase64(e.target.files[0], 12, null);
         $('#label-inputGroupFile18').html(fileName);
+    });
+
+    $('#inputGroupFile19').change(function(e) {
+        var fileName = e.target.files[0].name;
+        fileEdit = toBase64Edit(e.target.files[0]);
+        $('#label-inputGroupFile19').html(fileName);
     });
 
     $('#colDF').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
@@ -376,6 +300,18 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
     archivosType.push(temp);
 }
 
+function toBase64Edit(file) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        fileEdit = reader.result.split(',')[1];
+        // fileEdit = result;
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
 
 function startForm() {
     clearForm();
@@ -386,6 +322,8 @@ function startForm() {
 }
 
 function clearForm() {
+    archivosType = [];
+    archivosBase64 = [];
     document.getElementById("folioR").value = "";
 
     document.getElementById('creditoInput').value = "";
@@ -1093,6 +1031,11 @@ function validateFullForm() {
     var constanciaSituacionFiscal = document.getElementById('inputGroupFile01').value;
     var constanciaSituacionFiscalBack = document.getElementById('inputGroupFile02').value;
     var solicitud = document.getElementById('inputGroupFile03').value;
+
+    if (rfc == "" || razonSocial == "" || nombreComercial == "" || prospecto == "" || constanciaSituacionFiscal == "" || constanciaSituacionFiscalBack == "" || solicitud == "") {
+        msgAlert += `<p>Verifica la información en Datos Generales</p>`;
+    }
+
     //Dirección Fiscal
     var calleFiscal = document.getElementById('calleInput').value;
     var noExtFiscal = document.getElementById('noExtInput').value;
@@ -1102,32 +1045,41 @@ function validateFullForm() {
     var colDF = document.getElementById('colDF').value != "" ? document.getElementById('colDF').value : document.getElementById('auxColDF').value;;
     var comprobanteDomicilio = document.getElementById('inputGroupFile04').value;
     var comprobanteDomicilioBack = document.getElementById('inputGroupFile05').value;
-
+    if (calleFiscal == "" || noExtFiscal == "" || cpFiscal == "" || emailFac == "" || colDF == "") {
+        msgAlert += `<p>Verifica la información en Dirección Fiscal</p>`;
+    }
     //Negocio
     let antiguedad = document.getElementById("antiguedad").value;
     let negFrente = document.getElementById("inputGroupFile06").value;
     let negIzq = document.getElementById("inputGroupFile07").value;
     let negDer = document.getElementById("inputGroupFile08").value;
+    if (antiguedad == "" || negFrente == "" || negIzq == "" || negDer == "") {
+        msgAlert += `<p>Verifica la información en Negocio</p>`;
+    }
 
     //DatosContacto
     if (contactos.length <= 0) {
         msgAlert += `<p>Agrega los contactos</p>`;
     }
 
-    //Credito
-    let tipoLocal = $('input[name="localSoli"]:checked').val();
-    let tipoPersona = $('input[name="typePeople"]:checked').val();
-    let credPag = document.getElementById("inputGroupFile09").value;
-    let negIfeRe = document.getElementById("inputGroupFile10").value;
-    let negIfeRR = document.getElementById("inputGroupFile11").value;
-    let negIfeA = document.getElementById("inputGroupFile12").value;
-    let negIfeAR = document.getElementById("inputGroupFile13").value;
+    if (getTipoForm() != 0) {
+        //Credito
+        let auxTipoLocal = $('input[name="localSoli"]:checked').val();
+        let auxTipoPersona = $('input[name="typePeople"]:checked').val();
+        let credPag = document.getElementById("inputGroupFile09").value;
+        let negIfeRe = document.getElementById("inputGroupFile10").value;
+        let negIfeRR = document.getElementById("inputGroupFile11").value;
+        let negIfeA = document.getElementById("inputGroupFile12").value;
+        let negIfeAR = document.getElementById("inputGroupFile13").value;
 
-    //Acta Constitutiva
-    // referenciasSol
-    //
-    if (getTipoForm() != 0 && document.getElementById('creditoInput').value == '') {
-        msgAlert += `<p>Ingresa el credito</p>`;
+        if (document.getElementById('creditoInput').value == '')
+            msgAlert += `<p>Ingresa el credito</p>`;
+        if (auxTipoLocal == undefined || auxTipoPersona == undefined || negIfeRe == "" || negIfeRR == "") {
+            msgAlert += `<p>Verifica los datos en Credito</p>`;
+        }
+        if (antiguedad < 2 && negIfeA == "" || negIfeAR == "" || credPag == "") {
+            msgAlert += `<p>Ingresa las fotografias de la Ine del Aval y/o Pagare</p>`;
+        }
     }
     if (getTipoForm() != 0) {
         if (comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
@@ -1135,20 +1087,6 @@ function validateFullForm() {
         }
     }
 
-    if (tipoForm == '')
-        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
-    if (rfc == '')
-        msgAlert += `<p>Ingresa el rfc de formulario</p>`;
-    if (razonSocial == '')
-        msgAlert += `<p>Ingresa la razon Social de formulario</p>`;
-    if (nombreComercial == '')
-        msgAlert += `<p>Ingresa el nombre Comercial de formulario</p>`;
-    if (prospecto == '')
-        msgAlert += `<p>Ingresa el prospecto de formulario</p>`;
-    if (tipoForm == '')
-        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
-    if (tipoForm == '')
-        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
     if (tipoForm == '')
         msgAlert += `<p>Ingresa el tipo de formulario</p>`;
 
@@ -1159,9 +1097,6 @@ function validateFullForm() {
     } else {
         document.getElementById("alertInfoModal").innerHTML = "";
         save = true;
-    }
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || coloniaSelect == '') {
-        save = false;
     }
 
     return save;
@@ -1233,9 +1168,6 @@ function SendForm(zone) {
             }
         });
     }
-    // else {
-    //     alert('Error al intentar enviar la solicitud, verifique los datos');
-    // }
 }
 
 function saveForm(zone) {
@@ -1267,9 +1199,6 @@ function saveForm(zone) {
             }
         });
     }
-    // else {
-    //     alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial, Número de Prospecto, Email de facturacion, Codigo Postal y Colonia Datos Fiscales');
-    // }
 }
 
 
@@ -1591,6 +1520,18 @@ function getTypeCont(id) {
         case 1:
             typeCont = "Principal";
             break;
+        case 2:
+            typeCont = "Pagos";
+            break;
+        case 3:
+            typeCont = "Compras";
+            break;
+        case 4:
+            typeCont = "Admon";
+            break;
+        case 5:
+            typeCont = "Emergencia";
+            break;
         default:
             typeCont = "ERROR";
     }
@@ -1601,14 +1542,62 @@ function editText(item) {
     document.getElementById(item).disabled = false;
 }
 
-function editImage(item) {
-    let newId = "edit" + item;
-    let editImg = `<div class="input-group input-group-sm">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="` + newId + `" accept="image/x-png,image/gif,image/jpeg">
-                            <label class="custom-file-label" for="` + newId + `" id="label-` + newId + `">Seleccionar Archivo...</label>
-                        </div>
-                    </div>`;
+function editImage(type) {
+    fileEdit = '';
+    $('#label-inputGroupFile19').html("Fotografia a editar");
+    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmEditImage('` + type + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
+    document.getElementById("editConfirButtons").innerHTML = buttons;
+    $('#editImageModal').modal('show');
+}
+
+function confirmEditImage(type) {
+    let folio = parseInt(document.getElementById("folioInf").innerHTML);
+    if (fileEdit != '') {
+        let json = {
+            Folio: folio,
+            File: {
+                Id: 0,
+                FileStr: fileEdit,
+                Type: type,
+                Subtype: null,
+            }
+        }
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "MisSolicitudes/UpdateFile",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                if (Number.isInteger(data)) {
+                    document.getElementById("editConfirButtons").innerHTML = "IMAGEN ACTUALIZADA";
+                    $('#infoModal').modal('hide');
+                    detalleSol(folio);
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            }
+        });
+        console.log(json);
+        console.log(JSON.stringify(json));
+    } else {
+        console.log(fileEdit);
+        alert("Seleccione un archivo");
+    }
+}
+
+function cancelEditForm() {
+    $('#editImageModal').modal('hide');
 }
 
 function getButtons(dato, id) {
@@ -1623,8 +1612,8 @@ function getButtons(dato, id) {
     return buttons;
 }
 
-function getButtonsFiles(dato, id) {
-    var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editImage('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
+function getButtonsFiles(dato, type) {
+    var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editImage('` + type + `')"><i class="fas fa-edit"></i></button>` : ``;
     if (dato == null) {
         buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
     } else if (dato == true) {
@@ -1645,12 +1634,12 @@ function showInfoModal(data, data2, valContac, filesList) {
     document.getElementById("cRSection").style.display = "none";
     document.getElementById("cartSection").style.display = "none";
     if (data != null) {
-        // console.log(data);
+        console.log(data);
         console.log(data2);
         // console.log(valContac);
         // console.log(filesList);
         //DATOS HEADER
-        document.getElementById("folioInf").innerHTML = "No. " + data.folio;
+        document.getElementById("folioInf").innerHTML = data.folio;
         //DATOS GENERALES
         document.getElementById("rfcEdit").value = data.cliente.datosF.rfc;
         document.getElementById("rfcButtons").innerHTML = getButtons(data2.rfc, "rfcEdit");
@@ -1660,6 +1649,11 @@ function showInfoModal(data, data2, valContac, filesList) {
 
         document.getElementById("nomComEdit").value = data.cliente.nombreComercial;
         document.getElementById("nomComButtons").innerHTML = getButtons(data2.nombreComercial, "nomComEdit");
+
+        document.getElementById("csfButtons1").innerHTML = getButtonsFiles(data2.constanciaSituacion, 1);
+        document.getElementById("csfButtons2").innerHTML = getButtonsFiles(data2.constanciaSituacionReverso, 11);
+        document.getElementById("picSolButtons").innerHTML = getButtonsFiles(data2.firmaSolicitud, 13);
+
         getAlert("alertDG", data.observations.datosGenerales);
         //DIRECCION FISCAL
         document.getElementById("calleFEdit").value = data.cliente.datosF.domicilio.calle;
@@ -1684,7 +1678,7 @@ function showInfoModal(data, data2, valContac, filesList) {
             document.getElementById('datFisCD').classList.add('d-none');
         } else {
             document.getElementById('datFisCD').classList.remove('d-none');
-            getButtonsFiles(data2.comprobanteDomicilio, "imgCDButton");
+            document.getElementById("comDFEButtons").innerHTML = getButtonsFiles(data2.comprobanteDomicilio, 2);
         }
         getAlert("alertDF", data.observations.direccionFiscal);
 
@@ -1717,6 +1711,10 @@ function showInfoModal(data, data2, valContac, filesList) {
 
         document.getElementById("antiguedadEdit").value = data.cliente.tiempoConst;
         document.getElementById("antiguedadButtons").innerHTML = getButtons(data2.cpEntrega, "antiguedadEdit");
+
+        document.getElementById("picNegFButtons").innerHTML = getButtonsFiles(data2.fotoFrente, 4);
+        document.getElementById("picNegIButtons").innerHTML = getButtonsFiles(data2.fotoIzq, 5);
+        document.getElementById("picNegDButtons").innerHTML = getButtonsFiles(data2.fotoDer, 6);
 
         getAlert("alertNegocio", data.observations.negocio);
         //DATOS CONTACTO
@@ -1769,14 +1767,19 @@ function showInfoModal(data, data2, valContac, filesList) {
 
             document.getElementById("typePEdit").value = data.cliente.tipoPersona == true ? "Moral" : "Fisica";
             document.getElementById("typePButtons").innerHTML = getButtons(data2.tipoPersona, "typePEdit");
+            document.getElementById("picIFERButtons").innerHTML = getButtonsFiles(data2.ineRepresentante, 3);
+            document.getElementById("picIFERRButtons").innerHTML = getButtonsFiles(data2.ineRepresentanteReverso, 31);
             getAlert("alertCredit", data.observations.credito);
 
             if (data.cliente.tiempoConst < 2) {
                 document.getElementById("pagareSection").style.display = "flex";
+                document.getElementById("picPagAButtons").innerHTML = getButtonsFiles(data2.pagare, 7);
             }
             if (data.cliente.tiempoConst < 2 || data.tipo == null) {
                 document.getElementById("ifeASection").style.display = "flex";
                 document.getElementById("ifeARSection").style.display = "flex";
+                document.getElementById("picIFEAButtons").innerHTML = getButtonsFiles(data2.ineAval, 8);
+                document.getElementById("picIFERAButtons").innerHTML = getButtonsFiles(data2.ineAvalReverso, 81);
             } // else {
             //     document.getElementById("pagareSection").style.display = "none";
             //     document.getElementById("ifeASection").style.display = "none";
