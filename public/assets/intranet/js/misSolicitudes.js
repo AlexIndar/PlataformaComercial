@@ -1138,6 +1138,7 @@ function validateSaveForm() {
 
 function SendForm(zone) {
     if (validateFullForm()) {
+        $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
         $.ajax({
             'headers': {
@@ -1151,12 +1152,14 @@ function SendForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
+                    $('#cargaModal').modal('hide');
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
                     $('#respuestaForm').modal('show');
                 } else {
                     console.log(data);
                     alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
                 }
             },
             error: function(error) {
@@ -1169,6 +1172,7 @@ function SendForm(zone) {
 
 function saveForm(zone) {
     if (validateSaveForm()) {
+        $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
         $.ajax({
             'headers': {
@@ -1182,12 +1186,14 @@ function saveForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
+                    $('#cargaModal').modal('hide');
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
                     $('#respuestaForm').modal('show');
                 } else {
                     console.log(data);
                     alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
                 }
             },
             error: function(error) {
@@ -1551,6 +1557,7 @@ function editImage(type) {
 function confirmEditImage(type) {
     let folio = parseInt(document.getElementById("folioInf").innerHTML);
     if (fileEdit != '') {
+        $('#cargaModal').modal('show');
         let json = {
             Folio: folio,
             File: {
@@ -1572,17 +1579,20 @@ function confirmEditImage(type) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
+                    $('#cargaModal').modal('hide');
                     document.getElementById("editConfirButtons").innerHTML = "IMAGEN ACTUALIZADA";
                     $('#infoModal').modal('hide');
                     detalleSol(folio);
                 } else {
                     console.log(data);
                     alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
                 }
             },
             error: function(error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
             }
         });
         console.log(json);
@@ -1804,7 +1814,7 @@ function showInfoModal(data, data2, valContac, filesList) {
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;
                 if (responsiveList != null) {
                     document.getElementById("cRSection").style.display = "flex";
-                    getAlert("alertActa", data.observations.actaConstitutiva);
+                    getAlert("alertAC", data.observations.actaConstitutiva);
                 }
             }
 
@@ -1821,6 +1831,7 @@ function showInfoModal(data, data2, valContac, filesList) {
                 }
                 document.getElementById("refList").innerHTML = fileRef;
                 getAlert("alertRef", data.observations.referencias);
+                console.log(data.observations.referencias);
             }
         }
         //CARGAR BOTONES CON IMAGENES
@@ -1891,6 +1902,7 @@ function getButtonImg(idBtn, file) {
 
 function getAlert(idAlert, msg) {
     if (msg != null && msg != "") {
+        console.log(msg);
         document.getElementById(idAlert).innerHTML = `<div class="alert alert-danger" role="alert" >` + msg + `</div>`;
     }
 }

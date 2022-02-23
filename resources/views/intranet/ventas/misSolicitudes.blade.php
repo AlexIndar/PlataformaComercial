@@ -1201,7 +1201,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-12 text-center" id="alertRef">
+                            <div class="col-12 text-center" id="alertCara">
                             </div>
                         </div>
                     </div>
@@ -1352,6 +1352,20 @@
             </div>
             <div class="modal-body text-center" id="alertInfoModal">
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="cargaModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="titleCargaModal"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Enviando información <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="bodyCargaModal"><i class="fa fa-spinner" aria-hidden="true"></i></div>
         </div>
     </div>
 </div>
