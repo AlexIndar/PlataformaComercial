@@ -80,6 +80,15 @@ class MisSolicitudesController extends Controller
         $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getBills?id='.$folio);
         return json_decode($valSol->body());
     }
+
+    public static function UpdateFile($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateFile', [
+            "Folio" => $json->Folio,
+            "File" => $json->File,
+        ]);
+        return $response;
+    }
     
     public static function getStatus($id)
     {

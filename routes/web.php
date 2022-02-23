@@ -888,6 +888,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
+                Route::post('/MisSolicitudes/UpdateFile', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request->all());
+                    $response = MisSolicitudesController::UpdateFile($token, json_encode($request->all()));
+                    return $response;
+                });
+
                 Route::get('/SolicitudesPendientes', function(){
                     return view('intranet.cyc.solicitudesPendientes');
                 });
