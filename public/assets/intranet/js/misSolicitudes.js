@@ -65,6 +65,8 @@ var subtype;
 var referenciasSol = [];
 var caratula = '';
 var facturasSol = [];
+var fileF = '';
+var fileFI = '';
 var cartaResponsiva = '';
 
 var fileEdit = '';
@@ -165,11 +167,13 @@ $(document).ready(function() {
 
     $('#inputGroupFile16').change(function(e) {
         var fileName = e.target.files[0].name;
+        facturaToBase64(e.target.files[0], 1);
         $('#label-inputGroupFile16').html(fileName);
     });
 
     $('#inputGroupFile17').change(function(e) {
         var fileName = e.target.files[0].name;
+        facturaToBase64(e.target.files[0], 2);
         $('#label-inputGroupFile17').html(fileName);
     });
 
@@ -298,6 +302,20 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
     }
 
     archivosType.push(temp);
+}
+
+function facturaToBase64(file, opc) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        if (opc == 1)
+            fileF = reader.result.split(',')[1];
+        else
+            fileFI = reader.result.split(',')[1];
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
 }
 
 function toBase64Edit(file) {
@@ -856,35 +874,39 @@ function validarDataDatosF(rz, cont, city, phone) {
 }
 
 function addFacturaData() {
-    var fact1 = document.getElementById('label-inputGroupFile16').innerHTML;
-    var fact2 = document.getElementById('label-inputGroupFile17').innerHTML;
-    var importFact = document.getElementById('importFactura').value;
+    if (fileF != '' && fileFI != '' && document.getElementById('importFactura').value != "") {
+        var fact1 = document.getElementById('label-inputGroupFile16').innerHTML;
+        var fact2 = document.getElementById('label-inputGroupFile17').innerHTML;
+        var importFact = parseInt(document.getElementById('importFactura').value);
 
-    var data = {
-        "fact1": fact1,
-        "fact2": fact2,
-        "impor": importFact
-    };
+        var data = {
+            Id: 0,
+            FileStr: fileF,
+            FileTwoStr: fileFI,
+            Importe: importFact
+        };
 
-    facturasSol.push(data);
+        facturasSol.push(data);
 
+        var table = document.getElementById('facturaData');
+        var row = table.insertRow(table.rows.length);
 
-    var table = document.getElementById('facturaData');
-    var row = table.insertRow(table.rows.length);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
 
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
+        cell1.innerHTML = fact1;
+        cell2.innerHTML = fact2;
+        cell3.innerHTML = importFact;
+        cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRow(this)'></i>";
 
-    cell1.innerHTML = fact1;
-    cell2.innerHTML = fact2;
-    cell3.innerHTML = importFact;
-    cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRow(this)'></i>";
-
-    document.getElementById('label-inputGroupFile16').innerHTML = "";
-    document.getElementById('label-inputGroupFile17').innerHTML = "";
-    document.getElementById('importFactura').value = "";
+        document.getElementById('label-inputGroupFile16').innerHTML = "Seleccionar archivo...";
+        document.getElementById('label-inputGroupFile17').innerHTML = "Seleccionar archivo...";
+        document.getElementById('importFactura').value = "";
+    } else {
+        alert("Ingresa importe y/o facturas");
+    }
 }
 
 function deleteFactRow(t) {
@@ -1475,7 +1497,23 @@ function getInfoDetalleSol(item) {
                                 'enctype': 'multipart/form-data',
                                 'timeout': 2 * 60 * 60 * 1000,
                                 success: function(filesList) {
-                                    showInfoModal(data, data2, valContac, filesList);
+                                    $.ajax({
+                                        'headers': {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        'url': "/MisSolicitudes/getBills",
+                                        'type': 'POST',
+                                        'dataType': 'json',
+                                        'data': info,
+                                        'enctype': 'multipart/form-data',
+                                        'timeout': 2 * 60 * 60 * 1000,
+                                        success: function(factList) {
+                                            showInfoModal(data, data2, valContac, filesList, factList);
+                                        },
+                                        error: function(error) {
+                                            console.log(error + "Error");
+                                        }
+                                    });
                                 },
                                 error: function(error) {
                                     console.log(error + "Error");
@@ -1631,7 +1669,7 @@ function getButtonsFiles(dato, type) {
     return buttons;
 }
 
-function showInfoModal(data, data2, valContac, filesList) {
+function showInfoModal(data, data2, valContac, filesList, factList) {
     document.getElementById("refSection").style.display = "none";
     document.getElementById("crediSection").style.display = "none";
     document.getElementById("pagareSection").style.display = "none";
@@ -1640,11 +1678,12 @@ function showInfoModal(data, data2, valContac, filesList) {
     document.getElementById("aCSection").style.display = "none";
     document.getElementById("cRSection").style.display = "none";
     document.getElementById("cartSection").style.display = "none";
+    document.getElementById("factSection").style.display = "none";
     if (data != null) {
         console.log(data);
         console.log(data2);
-        // console.log(valContac);
-        // console.log(filesList);
+        console.log(valContac);
+        console.log(filesList);
         //DATOS HEADER
         document.getElementById("folioInf").innerHTML = data.folio;
         //DATOS GENERALES
@@ -1801,7 +1840,7 @@ function showInfoModal(data, data2, valContac, filesList) {
                     document.getElementById("aCSection").style.display = "flex";
                     var fileActa = "";
                     for (var i = 0; i < actaList.length; i++) {
-                        fileActa = `<div class="row mb-3">
+                        fileActa += `<div class="row mb-3">
                             <div class="col-md-4">Acta Constitutiva ` + actaList[i].subType + `</div>
                             <div class="col-md-4" id="imgAC` + i + `"> <button class="btn btn-warning" onclick="showIMG('` + actaList[i].fileStr + `')"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4" id="ActCButtons` + i + `">
@@ -1830,9 +1869,28 @@ function showInfoModal(data, data2, valContac, filesList) {
                         </div>`;
                 }
                 document.getElementById("refList").innerHTML = fileRef;
-                getAlert("alertRef", data.observations.referencias);
                 console.log(data.observations.referencias);
             }
+
+            if (factList.length > 0) {
+                document.getElementById("factSection").style.display = "flex";
+                let objFactura = ``;
+                for (let i = 0; i < factList.length; i++) {
+                    objFactura += `<div class="row mb-3">
+                            <div class="col-md-3">No. ${(i + 1)} - Importe: ${factList[i].importe}</div>
+                            <div class="col-md-3">
+                            <button class="btn btn-warning" onclick="showIMG('` + factList[i].fileStr + `')"><i class="far fa-eye"></i> Ver Archivo</button>
+                            </div>
+                            <div class="col-md-3">
+                            <button class="btn btn-warning" onclick="showIMG('` + factList[i].fileTwoStr + `')"><i class="far fa-eye"></i> Ver Archivo</button>
+                            </div>
+                            <div class="col-md-3">                            
+                            </div>
+                        </div>`
+                }
+                document.getElementById("factList").innerHTML = objFactura;
+            }
+            getAlert("alertRef", data.observations.referencias);
         }
         //CARGAR BOTONES CON IMAGENES
         for (var i = 0; i < filesList.length; i++) {
@@ -1909,6 +1967,7 @@ function getAlert(idAlert, msg) {
 
 function showIMG(itemIMG) {
     $('#showIMGModal').modal('show');
+    console.log(itemIMG);
     var imgen = "data:image/jpg;base64," + itemIMG;
     var img = `<img src="` + imgen + `" alt="imagen muestra" class="imageModal">`
     document.getElementById("showIMGBody").innerHTML = img;
