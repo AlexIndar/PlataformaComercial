@@ -1184,10 +1184,6 @@
                             <div class="col-md-4" id="cartRButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-12 text-center" id="alertCR">
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row" id="cartSection" style="display: none;">
@@ -1200,10 +1196,6 @@
                             <div class="col-md-4" id="caraButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-12 text-center" id="alertCara">
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row" id="refSection" style="display: none;">
@@ -1212,6 +1204,22 @@
                         <hr class="hr-indarYellow">
                         <div class="acRow" id="refList">
 
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="factSection" style="display: none;">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Facturas</h3>
+                        <hr class="hr-indarYellow">
+                        <div class="acRow" id="factList">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">                        
+                        <hr class="hr-indarYellow">
+                        <div class="acRow">
                         </div>
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertRef">
