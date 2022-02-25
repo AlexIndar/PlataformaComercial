@@ -2,6 +2,7 @@ var cuotas = [];
 var subreglas = [];
 var packageHeader;
 var idPaquete = 0;
+var cuotasList = [];
 
 $('document').ready(function(){
     $( "#tipoCuota" ).change(function() {
@@ -84,6 +85,14 @@ function addClientesCuotas(json, id){
         arrCuotas.push(jsonObj[x]['P2'].trim());
         arrCuotas.push(jsonObj[x]['P3'].trim());
 
+        var cuotasObj = {
+            'customer': jsonObj[x]['CompanyId'].trim(),
+            'cuota': cuota,
+            'p1': jsonObj[x]['P1'].trim(),
+            'p2': jsonObj[x]['P2'].trim(),
+            'p3': jsonObj[x]['P3'].trim(),
+        };
+        cuotasList.push(cuotasObj);
         cuotas.push(arrCuotas);
         dataset.push(arr);
     }
@@ -104,6 +113,8 @@ function addClientesCuotas(json, id){
     [].forEach.call(elems, function(el) {
         el.classList.remove("d-none");
     });
+
+    console.log(cuotasList);
 }
 
 function validarPaquete(){
@@ -224,6 +235,7 @@ function validarPaquete(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+            cuotas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;

@@ -68,17 +68,20 @@
         <!------------------------------------------------------------------------------------ REGLAS -------------------------------------------------------------------->
     <div id="rules" id="rules">
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-12 text-center">
                 <h2>Reglas</h2>
             </div>
         </div>
 
-        <br><br>
+        <br><br> -->
 
         <div class="datos-generales">
-            <div class="title bg-indar">
+            <!-- <div class="title bg-indar">
                 <h4>Descuento paquete <span id="percent-disccount">: 1</span>% adicional sobre categoría del cliente</h4>
+            </div> -->
+            <div class="title bg-indar">
+                <h4>Reglas</h4>
             </div>
             <br>
 
