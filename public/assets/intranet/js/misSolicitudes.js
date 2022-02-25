@@ -33,7 +33,7 @@ var auxColoniaSelect = '';
 
 // NEGOCIO
 
-var tipoNegocio = 1;
+var tipoNegocio = -1;
 var giroSelect = '';
 var antiguedad = '';
 var negocioFrente = '';
@@ -214,9 +214,9 @@ $(document).ready(function() {
         var selected = clickedIndex + 1;
         if (businessLines.length < selected) {
             tipoNegocio = -1;
-            document.getElementById('rowOtroGiro').classList.remove('d-none');
+            // document.getElementById('rowOtroGiro').classList.remove('d-none');
         } else {
-            document.getElementById('rowOtroGiro').classList.add('d-none');
+            // document.getElementById('rowOtroGiro').classList.add('d-none');
             tipoNegocio = businessLines[clickedIndex]['id'];
         }
     });
@@ -248,20 +248,19 @@ $(document).ready(function() {
         'timeout': 2 * 60 * 60 * 1000,
         success: function(data) {
             businessLines = data;
-
-            var selectBusinessLines = $('#inputGroupSelect01 option');
-            selectBusinessLines.remove();
+            var itemSelectorOption = $('#inputGroupSelect01 option');
+            itemSelectorOption.remove();
             $('#inputGroupSelect01').selectpicker('refresh');
 
-            for (var x = 0; x < businessLines.length; x++) { //Agregar todas las inputGroupSelect01es del cliente seleccionado al select inputGroupSelect01
+            for (var x = 0; x < businessLines.length; x++) {
                 $('#inputGroupSelect01').append('<option value="' + businessLines[x]['id'] + '">' + businessLines[x]['description'] + '</option>');
                 $('#inputGroupSelect01').val(businessLines[x]['id']);
                 $('#inputGroupSelect01').selectpicker("refresh");
             }
 
-            /*$('#inputGroupSelect01').append('<option value="-1">Otro</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
-            $('#inputGroupSelect01').val('1');
-            $('#inputGroupSelect01').selectpicker("refresh");*/
+            $('#inputGroupSelect01').append('<option value="-1">Selecciona un opcion</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+            $('#inputGroupSelect01').val('-1');
+            $('#inputGroupSelect01').selectpicker("refresh");
 
         },
         error: function(error) {
@@ -759,6 +758,51 @@ function addActaConstData() {
     }
 }
 
+function addActaConstDataR(archivos) {
+    for (let i = 0; i < archivos.length; i++) {
+        if (archivos[i].type == 9) {
+            var nameTypeConst = "";
+            switch (archivos[i].subType) {
+                case 1:
+                    nameTypeConst = "RAZON SOCIAL";
+                    break;
+                case 2:
+                    nameTypeConst = "FECHA DE CONSTITUCION";
+                    break;
+                case 3:
+                    nameTypeConst = "GIRO DE LA EMPRESA";
+                    break;
+                case 4:
+                    nameTypeConst = "TRANSITORIOS";
+                    break;
+                case 5:
+                    nameTypeConst = "ACCIONISTAS";
+                    break
+                default:
+                    nameTypeConst = "ERROR";
+                    break;
+            }
+            let auxName = `${nameTypeConst}.jpg`;
+            var data = {
+                "tipo": archivos[i].subType,
+                "file": auxName,
+            };
+            docsActa.push(data);
+
+            var table = document.getElementById('actaConsData');
+            var row = table.insertRow(table.rows.length);
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            cell1.innerHTML = nameTypeConst;
+            cell2.innerHTML = auxName;
+            cell3.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteActaRow(this)'></i>";
+        }
+    }
+
+}
 
 
 function deleteActaRow(t) {
@@ -1071,10 +1115,13 @@ function validateFullForm() {
         msgAlert += `<p>Verifica la información en Dirección Fiscal</p>`;
     }
     //Negocio
+
     let antiguedad = document.getElementById("antiguedad").value;
     let negFrente = document.getElementById("inputGroupFile06").value;
     let negIzq = document.getElementById("inputGroupFile07").value;
     let negDer = document.getElementById("inputGroupFile08").value;
+    if (tipoNegocio == -1)
+        msgAlert += `<p>Ingresa el giro del negocio</p>`;
     if (antiguedad == "" || negFrente == "" || negIzq == "" || negDer == "") {
         msgAlert += `<p>Verifica la información en Negocio</p>`;
     }
@@ -1129,7 +1176,7 @@ function validateSaveForm() {
     var razonSocial = document.getElementById('rzInput').value;
     var prospecto = document.getElementById('prospecto').value;
     var emailFac = document.getElementById('emailFac').value;
-    var colDF = document.getElementById('colDF').value;
+    var colDF = document.getElementById('colDF').value == "" ? document.getElementById('auxColDF').value : document.getElementById('colDF').value;
     var cpFiscal = document.getElementById('cpInput').value;
     if (tipoForm == "")
         msgAlert += `<p>Ingresa el tipo de Solicitud</p>`;
@@ -1145,8 +1192,8 @@ function validateSaveForm() {
         msgAlert += `<p>Colonia</p>`;
     if (cpFiscal == "")
         msgAlert += `<p>Codigo Postal</p>`;
-    if (tipoNegocio == "")
-        msgAlert += `<p>Ingresa el RFC</p>`;
+    if (tipoNegocio == -1)
+        msgAlert += `<p>Ingresa el giro del negocio</p>`;
 
     if (msgAlert != "") {
         $('#alertModal').modal('show');
@@ -1388,7 +1435,7 @@ function createJsonSolicitud(zone) {
             clave: document.getElementById('prospecto').value,
             nombreComercial: document.getElementById('nameComeInput').value,
             tipoNegocio: tipoNegocio,
-            otroGiro: tipoNegocio == -1 ? document.getElementById('otroGiro').value : null,
+            otroGiro: null,
             tiempoConst: parseInt(document.getElementById('antiguedad').value),
             tipoLocal: local == 'Propio' ? true : false,
             tipoPersona: tipoPersona == 'Moral' ? true : false,
@@ -1539,20 +1586,8 @@ function getInfoDetalleSol(item) {
 
 
 function getGiro(id) {
-    businessLines;
-    var giro = "";
-    console.log(id);
-    switch (id) {
-        case 7:
-            giro = "FERRETERIA Y TLAPLALERIA";
-            break;
-        case 29:
-            giro = "FERRETERIA Y TLAPLALERIA";
-            break;
-        default:
-            giro = "INFO";
-    }
-    return giro;
+    let giro = businessLines.filter(x => x.id == id);
+    return giro.length > 0 ? giro[0].description : "Error en giro";
 }
 
 function getTypeCont(id) {
@@ -2206,6 +2241,9 @@ function cancelForm(item) {
 }
 
 function continueForm(item) {
+    archivosType = [];
+    archivosBase64 = [];
+    docsActa = [];
     clearForm();
     let info = { Item: item };
     $.ajax({
@@ -2373,15 +2411,13 @@ function manejoArchivos(archivos) {
 }
 
 function continueModal(facturas, archivos, data) {
-    // console.log(facturas);
-    // console.log(archivos);
-    console.log(data);
     document.getElementById("folioR").value = data.folio;
     $('#solicitudModal').modal('show');
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
     valiteTypeForm();
     manejoArchivos(archivos);
+    cargarArchivos(archivos);
     document.getElementById('creditoInput').value = data.credito;
     document.getElementById('rfcInput').value = data.cliente.datosF.rfc;
     document.getElementById('rzInput').value = data.cliente.datosF.razonSocial;
@@ -2423,7 +2459,9 @@ function continueModal(facturas, archivos, data) {
         document.getElementById('estadoDFShipping').value = "";
     }
 
-
+    tipoNegocio = data.cliente.tipoNegocio;
+    $('#inputGroupSelect01').val(data.cliente.tipoNegocio);
+    $('#inputGroupSelect01').selectpicker("refresh");
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
     if (data.cliente.contactos.length <= 1) {
         if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
@@ -2442,18 +2480,33 @@ function continueModal(facturas, archivos, data) {
     var idTypeL = data.cliente.tipoLocal == true ? "typePropio" : "typeRentado";
     document.getElementById(idTypeL).checked = true;
 
-    // document.getElementById('inputGroupSelect14').value = '-1';
-    // document.getElementById('inputGroupFile14').value = "";
-    // document.getElementById('label-inputGroupFile14').innerHTML = "Seleccionar Archivo...";
-    docsActa = [];
-    // clearTableDatos("actaConsData");
+    addActaConstDataR(archivos);
 
-    referenciasSol = data.referencias;
-    addRefDataR(data.referencias);
+    if (data.referencias.length > 0) {
+        referenciasSol = data.referencias;
+        addRefDataR(data.referencias);
+        document.getElementById("refSoliDatos").checked = true;
+    } else if (archivos.filter(x => x.type == 10).length > 0) {
+        document.getElementById("refSoliCaratula").checked = true;
+    } else if (facturas.length > 0) {
+        document.getElementById("refSoliFactura").checked = true;
+        facturasSol = facturas;
+        addFacturaDataR(facturas);
+    }
+    changeRef();
+}
 
-    addFacturaDataR(facturas);
-    facturasSol = facturas;
-
+function cargarArchivos(archivos) {
+    if (archivos.length > 0) {
+        for (let i = 0; i < archivos.length; i++) {
+            archivosBase64.push(archivos.fileStr);
+            var temp = {
+                type: archivos.type,
+                subtype: archivos.subType,
+            };
+            archivosType.push(temp);
+        }
+    }
 }
 
 
@@ -2474,21 +2527,22 @@ function addContactDataCon(conCon) {
                 "celular": conCon[i].celular,
                 "email": conCon[i].email
             };
+            let tipo = "";
 
             switch (conCon[i].tipo) {
-                case "1":
+                case 1:
                     tipo = "PRINCIPAL";
                     break;
-                case "2":
+                case 2:
                     tipo = "PAGOS";
                     break;
-                case "3":
+                case 3:
                     tipo = "COMPRAS";
                     break;
-                case "4":
+                case 4:
                     tipo = "ADMON";
                     break;
-                case "5":
+                case 5:
                     tipo = "EMERGENCIA";
                     break;
             }
@@ -2503,8 +2557,8 @@ function addContactDataCon(conCon) {
 
             cell1.innerHTML = conCon[i].nombre;
             cell2.innerHTML = conCon[i].celular;
-            cell3.innerHTML = conCon[i].tipo;
-            cell4.innerHTML = "<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i>";
+            cell3.innerHTML = tipo;
+            cell4.innerHTML = "<i class='fas fa-pencil-alt' onclick='editContactRow(this)'></i>Editar /<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i> Eliminar";
         }
     }
 }
@@ -2542,10 +2596,8 @@ function addRefDataR(dataRef) {
 
 
 function addFacturaDataR(dataFact) {
-
     if (dataFact != null) {
         for (var i = 0; i < dataFact.length; i++) {
-
             var table = document.getElementById('facturaData');
             var row = table.insertRow(table.rows.length);
 

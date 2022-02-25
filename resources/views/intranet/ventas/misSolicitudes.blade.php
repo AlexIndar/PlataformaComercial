@@ -420,19 +420,19 @@
                                                             <label class="input-group-text" for="inputGroupSelect01">Giro del negocio</label>
                                                         </div>
                                                         <select id="inputGroupSelect01" name="inputGroupSelect01" class="form-control selectpicker" data-live-search="true">
-                                                        </select>
+                                                        </select>                                                        
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control" onfocusout="validaAnti()" maxlength="4">
                                                 </div>
                                             </div>
-                                            <div class="row mb-3 d-none" id="rowOtroGiro">
+                                            <!-- <div class="row mb-3 d-none" id="rowOtroGiro">
                                                 <div class="col-md-4">
                                                     <span>Ingresa el giro del negocio</span>
                                                     <input type="text" name="otroGiro" id="otroGiro" placeholder="Giro" class="form-control">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="row">
                                                 <div class="input-group input-group-sm mb-3">
                                                     <div class="input-group-prepend">
@@ -1217,7 +1217,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">                        
+                    <div class="col-md-12">
                         <hr class="hr-indarYellow">
                         <div class="acRow">
                         </div>
