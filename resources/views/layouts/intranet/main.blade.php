@@ -470,9 +470,9 @@
               </li>
               <li class="nav-item">
                 @if($active == 'Comisiones')
-                <a href="/comisiones" class="nav-link active">
+                <a href="/comisionesPorCliente" class="nav-link active">
                 @else
-                <a href="/comisiones" class="nav-link">
+                <a href="/comisionesPorCliente" class="nav-link">
                 @endif
                 <i class="nav-icon fas fa-cash-register"></i>
                 <p>

@@ -8,13 +8,13 @@
 @endsection
 
 @section('body')
-<div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;">
+{{-- <div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;">
     <div class="content-header">
        <div class="container-fluid">
           <div class="row mb-2">
              <div class="col-sm-6">
                 <h5 class="m-0">Comisiones </h5>
-                <h6 class="m-0">Detalle de Cobranza </h6>
+                <h6 class="m-0">General</h6>
              </div>
              <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -53,13 +53,13 @@
           </div>
        </div>
     </div>
-</div>
+</div> --}}
 <div id = "show" class="content-wrapper" style="min-height: 2128.12px; display:none">
     <div class="content-header">
        <div class="container-fluid">
           <div class="row mb-2">
              <div class="col-sm-6">
-                <h3 class="m-0">Comisiones | Detalle de Cobranza </h3>
+                <h5 class="m-0">Comisiones | General </h5>
              </div>
              <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -69,7 +69,8 @@
           </div>
           <div class="row mb-2">
             <div class="col-sm-6">
-               <h5 id="companyname" class="m-0"></h5>
+               <h6 id="companyname" class="m-0"></h6>
+               <h6 id="companyid" class="m-0"></h6>
             </div>
          </div>
        </div>
@@ -87,8 +88,11 @@
                    <div class="card-body">
                     <div class="col-lg-12">
                         <div class="card-body table-responsive p-0">
-                           <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:90%">
-                              <thead>
+                           <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:70%">
+                              <thead style="background-color:#002868; color:white">
+                               <tr>
+                                    <th class="text-center" style="font-size:15px " colspan =16  > FEBRERO </th>
+                                </tr>
                                  <tr>
                                     <th>Documento</th>
                                     <th>Recibida en el Mes con IVA</th>
@@ -158,7 +162,11 @@ $(document).ready(function() {
         document.getElementById("btnConsultar").style.display = "block";
         document.getElementById("hidde").style.display = "none";
         document.getElementById("show").style.display = "block";
-        $('#comisionesTable').DataTable();
+        $('#comisionesTable').dataTable( {
+            dom: 't',
+            scrollY: 280,
+            scrollX: true
+        } );
 
     });
 
@@ -178,44 +186,52 @@ $.ajax({
         'enctype': 'multipart/form-data',
         'timeout': 4 * 60 * 60 * 1000,
         success: function(data){
+           console.log(data);
             var html = '';
             var i;
             for (i = 0; i < data.length; i++) {
-                var fechaFact = new Date(data[i].fechaFactura).toDateString();
-                var fechaDue = new Date( data[i].dueDate).toDateString();
+
+                var fechaFact = moment(new Date(data[i].fechaFactura)).format('DD/MM/YYYY');
+                var fechaDue = moment(new Date(data[i].dueDate)).format('DD/MM/YYYY');
+                var fechaSaldada = moment(new Date(data[i].fecha_saldada)).format('DD/MM/YYYY');
                 var recibo_mes_actual = data[i].recibo_mes_actual.toLocaleString('es-MX');
                 var recibo_mes_actual_siniva = data[i].recibo_mes_actual_siniva.toLocaleString('es-MX');
                 var pendiente_saldar_mes_anteriorl_siniva = data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX');
                 var saldada_mes_actual_siniva = data[i].saldada_mes_actual_siniva.toLocaleString('es-MX');
                 var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX');
+                var importe_factura = data[i].importe_factura.toLocaleString('es-MX');
 
               html += '<tr>' +
-                '<td>' + data[i].tranid+ '</td>' +
-                '<td>' +  recibo_mes_actual + '</td>' +
-                '<td>' +  recibo_mes_actual_siniva + '</td>' +
-                '<td>' + pendiente_saldar_mes_anteriorl_siniva + '</td>' +
-                '<td>' + saldada_mes_actual_siniva + '</td>' +
-                '<td>' + pendiente_saldar_mes_actual + '</td>' +
-                '<td>' + fechaFact + '</td>' +
-                '<td>' + fechaDue + '</td>' +
-                '<td>' + data[i].fecha_saldada + '</td>' +
-                '<td>' + data[i].diasDiferencia + '</td>' +
-                '<td>' + data[i].importe_factura + '</td>' +
-                '<td>' + data[i].saldo+ '</td>' +
-                '<td>' + data[i].diferencias_precio+ '</td>' +
-                '<td>' + data[i].descuento_fuera_tiempo+ '</td>' +
-                '<td>' + data[i].incobrabilidad+ '</td>' +
-                '<td>' + data[i].comision_base+ '</td>' +
+                '<td style="font-weight: bold">' + data[i].tranid+ '</td>' +
+                '<td style="font-weight: bold">' +  recibo_mes_actual + '</td>' +
+                '<td style="font-weight: bold">' +  recibo_mes_actual_siniva + '</td>' +
+                '<td style="font-weight: bold">' + pendiente_saldar_mes_anteriorl_siniva + '</td>' +
+                '<td style="font-weight: bold">' + saldada_mes_actual_siniva + '</td>' +
+                '<td style="font-weight: bold">' + pendiente_saldar_mes_actual + '</td>' +
+                '<td style="font-weight: bold">' + fechaFact + '</td>' +
+                '<td style="font-weight: bold">' + fechaDue + '</td>' +
+                '<td style="font-weight: bold">' + fechaSaldada + '</td>' +
+                '<td style="font-weight: bold">' + data[i].diasDiferencia + '</td>' +
+                '<td style="font-weight: bold">' + importe_factura + '</td>' +
+                '<td style="font-weight: bold">' + data[i].saldo+ '</td>' +
+                '<td style="font-weight: bold">' + data[i].diferencias_precio+ '</td>' +
+                '<td style="font-weight: bold">' + data[i].descuento_fuera_tiempo+ '</td>' +
+                '<td style="font-weight: bold">' + data[i].incobrabilidad+ '</td>' +
+                '<td style="font-weight: bold">' + data[i].comision_base+ '</td>' +
                 '</tr>';
             }
-            $('#llenaTable').html(html);
-            $('#companyname').text(data[0].companyname);
+            if(html !== ''){
+               $('#llenaTable').html(html);
+               $('#companyname').text(data[0].companyname);
+               $('#companyid').text(data[0].companyid);
+            }
+
 
 
         },
         error: function() {
             console.log("Error");
-            alert('Tiempo de espera agotado');
+            alert('Error, Tiempo de espera agotado');
         }
     });
 

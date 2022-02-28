@@ -957,7 +957,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
-                Route::get('/comisiones', function(){
+                Route::get('/comisionesPorCliente', function(){
                     $token = TokenController::refreshToken();
                     $permissions = LoginController::getPermissions();
                     if($token == 'error'){
@@ -966,9 +966,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $clientes = AplicarPagoController::getCargaListaClientes($token);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisiones',['token' => $token, 'permissions' => $permissions, 'clientes' => $clientes]);
+                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'clientes' => $clientes]);
                 });
 
+                Route::get('/comisionesDetalle', function(){
+                    $token = TokenController::refreshToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $clientes = AplicarPagoController::getCargaListaClientes($token);
+                    //$user = MisSolicitudesController::getUser($token);
+                    //$zone = MisSolicitudesController::getZone($token,$user->body());
+                    return view('intranet.comisiones.comisionesDetalle',['token' => $token, 'permissions' => $permissions, 'clientes' => $clientes]);
+                });
+
+                //Get primera informacion detalle
                 Route::get('/comisiones/getInfoCobranzaZonaWeb', function (Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error'){
