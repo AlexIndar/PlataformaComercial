@@ -194,7 +194,6 @@ $(document).ready(function() {
         var item = items[index];
         var cant = table.cell(index, 7).nodes().to$().find('input').val();
         if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
-            if (item['disponible'] == 0) {
                 var toast = Swal.mixin({
                     toast: true,
                     icon: 'success',
@@ -214,30 +213,6 @@ $(document).ready(function() {
                     title: 'Producto ' + item['itemid'] + ' Insuficiente',
                     icon: 'error'
                 });
-            } else {
-                selectedItemsFromInventory.push({item: item['itemid'].trim(), cant: cant});
-                console.log(selectedItemsFromInventory);
-                // addRowPedido(item, cant);
-                var toast = Swal.mixin({
-                    toast: true,
-                    icon: 'success',
-                    title: 'General Title',
-                    animation: true,
-                    position: 'top-start',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: false,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                });
-                toast.fire({
-                    animation: true,
-                    title: 'Producto ' + item['itemid'] + ' Agregado',
-                    icon: 'success'
-                });
-            }
         }
 
 
@@ -573,23 +548,23 @@ function cargarProductosExcel(json) {
 
 
 function prepareJsonSeparaPedidos(){
-    console.log(selectedItemsFromInventory);
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
-        console.log(selectedItemsFromInventory[x]['item']);
         var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
         getItemById(item);
     }
 }
 
 function separarPedidosPromo(json){  //envía json a back y recibe pedido separado
+    console.log(JSON.parse(json));
+    console.log(json);
+    console.log(document.getElementById('cupon').value);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
@@ -682,7 +657,6 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
 }
 
 function getItemById(item) {
-    console.log(item);
     console.clear();
     var entity = document.getElementById('entity').value;
     var data = { id: item['articulo'], entity: entity };
@@ -879,8 +853,6 @@ function cargarInventario() {
 }
 
 function createTablePedido(){
-
-
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -1320,7 +1292,6 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
         pedidoJson = [];
         var itemsJson = [];
-        console.log(pedido);
 
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
@@ -1378,7 +1349,6 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             type: type,
         };
 
-        console.log(JSON.stringify(json));
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
             
@@ -1632,9 +1602,6 @@ function saveNS(){
             lineItems = [];
         }
 
-        console.log('LISTA NETSUITE');
-        console.log(listNS);
-        console.log(JSON.stringify(listNS));
     
             $.ajax({
                 'headers': {
@@ -1880,7 +1847,6 @@ function updatePrecioIVA(input, itemid, precio){
 function sendEmail(){
     var correo = document.getElementById("correo").value;
     var numCotizacion = noCotizacionNS;
-    console.log(pedido);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1928,8 +1894,6 @@ function exportTableToExcel(tableID, filename = ''){
     var dataType = 'application/vnd.ms-excel';
     var tableSelect = document.getElementById(tableID);
     var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-    console.log(tableID);
-    console.log(tableHTML);
     
     // Specify file name
     filename = filename?filename+'.xls':'excel_data.xls';
@@ -1947,7 +1911,6 @@ function exportTableToExcel(tableID, filename = ''){
     }else{
         // Create a link to the file
         downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-        console.log(downloadLink.href);
         // Setting the file name
         downloadLink.download = filename;
         

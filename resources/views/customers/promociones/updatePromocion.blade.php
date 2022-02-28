@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <br><br>
         <!---------------------------------------------------------------------------------- DATOS GENERALES / ENCABEZADO PROMOCIONES ------------------------------------------------->
-        <input type="text" name="" id="" value="{{$promo->id}}" hidden>
+        <input type="text" name="idPromo" id="idPromo" value="{{$promo->id}}" hidden>
         <div class="datos-generales">
             <div class="title bg-indar">
                 <h4>Datos generales de la promoción</h4>

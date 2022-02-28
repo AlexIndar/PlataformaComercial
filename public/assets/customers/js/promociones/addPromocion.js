@@ -124,7 +124,7 @@ $('document').ready(function(){
 		var reader = new FileReader();
 		reader.onload = function(){
 			var fileData = reader.result;
-			var wb = XLSX.read(fileData, {type : 'binary'});
+			var wb = XLSX.read(fileData, {type : 'binary'}); 
 	
 			wb.SheetNames.forEach(function(sheetName){
 			var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
@@ -441,6 +441,23 @@ function checkRules() {
         }
 
         clearInterval(intervalRules);
+        if(window.location.href.includes('promociones/editar')){ //SI LA PROMOCION VA A SER ACTUALIZADA, CARGAR INFORMACIÓN DEL EVENTO
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "/promociones/getEventById/" + document.getElementById('idPromo').value,
+                'type': 'GET',
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        addPromoRules(data);
+                }, 
+                error: function(error){
+                 }
+            });
+        }
+        
     } 
     else{
         document.getElementById('regalos_chosen').style.display = "none";
@@ -666,6 +683,61 @@ function clearSelectionAccept(){
     closeModal();
     $('#'+list).val('').trigger('chosen:updated');
     $('#'+list+"File").val('');
+}
+
+function addPromoRules(rules){
+    var pedidoPromoRules = rules['pedidoPromoRulesD'];
+    var regalos = rules['regalosIndar'];
+    var clientes = rules['clientesId'];
+    var categorias = rules['categoriaClientes'];
+    var proveedores = [];
+    var marcas = [];
+    var articulos = [];
+
+    if(regalos != null){
+        regalos = regalos.split(',');
+        $('#regalos').val(regalos).trigger('chosen:updated');
+    }
+    if(clientes != null){
+        clientes = clientes.split(',');
+        $('#clientes').val(clientes).trigger('chosen:updated');
+    }
+    if(categorias != null){
+        categorias = categorias.split(',');
+        $('#categorias').val(categorias).trigger('chosen:updated');
+    }
+
+    for(var x = 0; x < pedidoPromoRules.length; x++){
+        if(pedidoPromoRules[x]['tipo'] == 'PROVEEDOR')
+            proveedores.push(pedidoPromoRules[x]['valor']);
+        if(pedidoPromoRules[x]['tipo'] == 'MARCA')
+            marcas.push(pedidoPromoRules[x]['valor']);
+        if(pedidoPromoRules[x]['tipo'] == 'ARTICULO')
+            articulos.push(pedidoPromoRules[x]['valor']);
+    }
+
+    if(proveedores.length > 0)
+        $('#proveedores').val(proveedores).trigger('chosen:updated');
+    if(articulos.length > 0)
+        $('#articulos').val(articulos).trigger('chosen:updated');
+    if(marcas.length > 0)
+        $('#marcas').val(marcas).trigger('chosen:updated');
+
+    
+    // switch(id){
+    //     case 'categorias': key = 'Categoria'; break;
+    //     case 'giros': key = 'Giro'; break;
+    //     case 'clientes': key = 'CompanyId'; break;
+    //     case 'proveedores': key = 'Proveedor'; break;
+    //     case 'marcas': key = 'Marca'; break;
+    //     case 'articulos': key = 'Codigo'; break;
+    //     case 'clientesCuotas': key = 'CompanyId'; break;
+    //     default: break;
+    // }
+    // jsonObj.forEach(function(valor, indice, array){
+    //     selectedOptions.push(valor[key]);
+    // });
+    // $('#'+id).val(selectedOptions).trigger('chosen:updated');
 }
 
 

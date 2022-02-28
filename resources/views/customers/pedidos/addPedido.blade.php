@@ -129,7 +129,11 @@
                     </div>
                     <br>
                     <div class="row d-flex flex-row justify-content-center align-items-center">
-                        <div class="col-lg-6 col-md-8 col-12 rowPedido">
+                        <div class="col-lg-2 col-md-3 col-12 rowPedido">
+                            <h5>Cupón</h5>
+                        </div>
+                        <div class="col-lg-4 col-md-9 col-12 rowPedido"><input type="text" class="inputPedido" id="cupon" name="cupon"></div>
+                        <div class="col-lg-6 col-md-12 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
                         </div>
                         <!-- <div class="col-lg-6 col-md-4 col-12 rowPedido">

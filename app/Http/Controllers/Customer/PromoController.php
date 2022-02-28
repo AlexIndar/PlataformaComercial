@@ -336,6 +336,11 @@ class PromoController extends Controller
         $events = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getAllEvents');
         return json_decode($events->body());
     }
+
+    public static function getEventById($token, $id){
+        $event = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getIdEvents?IdPromo='.$id);
+        return json_decode($event->body());
+    }
     
     public static function formatDate($promocion){
         $startTime = explode('T', $promocion->fechaInicio)[0];

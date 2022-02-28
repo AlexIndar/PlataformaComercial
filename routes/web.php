@@ -626,23 +626,33 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
                                 } 
-                                $promociones = PromoController::getAllEvents($token);
-                                $promocion = [];
-                                foreach($promociones as $key => $value){
-                                    if($value->id == $idPromo){
-                                        $promocion = $value;
-                                    }
-                                }
-
-                                // dd($promocion);
+                                $promocion = PromoController::getEventById($token, $idPromo);
+                                $promocion = $promocion[0];
                                 $datePromo = PromoController::formatDate($promocion);
                                 $startTime = PromoController::getStartTime($promocion);
                                 $endTime = PromoController::getEndTime($promocion);
-                                // dd($datePromo);
 
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
+
+                                if($promocion->paquete){
+                                    dd("TRABAJANDO EN EDITAR PAQUETES");
+                                    return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
+                                }
+                                else{
+                                    return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
+
+                                }
                             });
+
+                            Route::get('promociones/getEventById/{id}', function ($id){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                
+                                $promo = PromoController::getEventById($token, $id);
+                                return $promo[0];
+                            }); 
 
                             Route::get('/promociones/nueva', function (){
                                 $token = TokenController::getToken();
