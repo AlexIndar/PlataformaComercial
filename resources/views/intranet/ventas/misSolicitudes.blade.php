@@ -420,7 +420,7 @@
                                                             <label class="input-group-text" for="inputGroupSelect01">Giro del negocio</label>
                                                         </div>
                                                         <select id="inputGroupSelect01" name="inputGroupSelect01" class="form-control selectpicker" data-live-search="true">
-                                                        </select>                                                        
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -899,6 +899,7 @@
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
                 <h3 class="text-center title ml-auto">Detalle de Solicitud No. <span id="folioInf"></span></h3>
+                <input type="text" id="typeFormInf" value="" hidden>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -1163,7 +1164,7 @@
                 </div>
                 <div class="row" id="aCSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Acta Constitutiva</h3>
+                        <h3 class="text-center">Acta Constitutiva <button class="btn btn-warning float-right" onclick="editActaConst()"><i class="fas fa-pencil-alt"></i>Editar Acta Constitutiva</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="acRow" id="acRow">
 
@@ -1188,7 +1189,7 @@
                 </div>
                 <div class="row" id="cartSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Caratula</h3>
+                        <h3 class="text-center">Caratula <button class="btn btn-warning float-right" onclick="editReferences()"><i class="fas fa-pencil-alt"></i>Editar Caratula</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Caratula</div>
@@ -1200,16 +1201,15 @@
                 </div>
                 <div class="row" id="refSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Referencias</h3>
+                        <h3 class="text-center">Referencias <button class="btn btn-warning float-right" onclick="editReferences()"><i class="fas fa-pencil-alt"></i>Editar Referencias</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="acRow" id="refList">
-
                         </div>
                     </div>
                 </div>
                 <div class="row" id="factSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Facturas</h3>
+                        <h3 class="text-center">Facturas <button class="btn btn-warning float-right" onclick="editReferences()"><i class="fas fa-pencil-alt"></i>Editar Facturas</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="acRow" id="factList">
 
@@ -1343,6 +1343,211 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12" id="editConfirButtons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDIT REFERENCES -->
+<div class="modal" tabindex="-1" id="editReferences">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleEditRefrences">Actualizar Referencias</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyEditReferences">
+                <!-- <div class="content" role="tabpanel" aria-labelledby="information-part-trigger"> -->
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3>REFERENCIAS</h3>
+                        <button type="submit" class="btn btn-warning float-right" onclick="saveReferences()">Guardar</button>
+                    </div>
+                </div>
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <form>
+                            <label class="mr-3"><input type="radio" name="editRef" id="editRefDatos" value="datos" onclick="changeRefEdit()">Datos</label>
+                            <label class="mr-3"><input type="radio" name="editRef" id="editRefCaratula" value="caratula" onclick="changeRefEdit()">Caratula</label>
+                            <label class="mr-3"><input type="radio" name="editRef" id="editRefFactura" value="facturas" onclick="changeRefEdit()">Facturas</label>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" id="refGroupEdit" style="display: none;">
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <input type="text" name="razonSocialRefEdit" id="razonSocialRefEdit" placeholder="Razón Social" class="form-control" maxlength="49">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="contactoRefEdit" id="contactoRefEdit" placeholder="Contacto" class="form-control" maxlength="20">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="ciudadRefEdit" id="ciudadRefEdit" placeholder="Ciudad" class="form-control" maxlength="49">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="telefonoRefEdit" id="telefonoRefEdit" placeholder="Telefono" class="form-control" maxlength="10">
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addRefDataEdit()">Agregar Referencias</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-7">
+                        <table class="table" id="refDataEdit">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Razon Social</th>
+                                    <th scope="col">Contacto</th>
+                                    <th scope="col">Ciudad</th>
+                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" id="cartGroupEdit" style="display: none;">
+                    <div class="col-md-12 text-center">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Caratula</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="editCaratulaInput" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                <label class="custom-file-label" for="editCaratulaInput" id="label-editCaratulaInput">Archivo ...</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="factGroupEdit" style="display: none;">
+                    <div class="col-md-5">
+                        <p>Las facturas deben ser de la competencia, no mayores a 30 dias y la suma del importe de estas deben ser igual o mayor al doble del credito solicitado*</p>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Datos de Factura</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="editFacturaInput" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                <label class="custom-file-label" for="editFacturaInput" id="label-editFacturaInput">Factura</label>
+                            </div>
+                            <span>Ésta página debe mostrar RFC del interesado y de su proveedor*</span>
+                        </div>
+                        <div class="input-group input-group-sm mb-3" [formGroupName]="i">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Importe de factura</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="editFacturaInputImp" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                <label class="custom-file-label" for="editFacturaInputImp" id="label-editFacturaInputImp">Factura</label>
+                            </div>
+                            <span>Ésta página debe mostrar el importe total de la factura*</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span>Importe</span>
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" id="importFacturaEdit" style="text-align:right;">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addFacturaDataEdit()">Agregar Factura</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <table class="table" id="facturaDataEdit">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Datos Factura</th>
+                                    <th scope="col">Importe Factura</th>
+                                    <th scope="col">Importe</th>
+                                    <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit ActaConstitutiva-->
+<div class="modal" tabindex="-1" id="actaConstEditModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleActaConstModal">EDITAR ACTA CONSTITUTIVA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyEditActaConstModal" style="text-align: center;">
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12">
+                    <button type="submit" class="btn btn-warning float-right" onclick="saveActaConst()">Guardar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputTypeActa">Tipo Archivo</label>
+                            </div>
+                            <select class="custom-select" id="inputTypeActa">
+                                <option value="-1" selected>SELECCIONAR</option>
+                                <option value="2">FECHA DE CONSTITUCION</option>
+                                <option value="1">RAZON SOCIAL</option>
+                                <option value="3">GIRO DE LA EMPRESA</option>
+                                <option value="4">TRANSITORIOS</option>
+                                <option value="5">ACCIONISTAS</option>
+                            </select>
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="dropdown">
+                                <i class="fas fa-question"></i>
+                                <div class="dropdown-content">
+                                    <img src="{{asset('assets/intranet/images/fechaConstitucion.jpg')}}" alt="Acta constitutiva" width="147" height="225">
+                                    <div class="desc">Acta constitutiva</div>
+                                </div>
+                            </div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">ACTA CONSTITUTIVA</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputFileActaEdit" accept="image/x-png,image/gif,image/jpeg">
+                                <label class="custom-file-label" for="inputFileActaEdit" id="label-inputFileActaEdit">Acta</label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addActaConstDataEdit()">Agregar Documento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <table class="table" id="actaConsDataEdit">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Documento</th>
+                                    <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
