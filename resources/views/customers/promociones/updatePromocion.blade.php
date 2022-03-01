@@ -17,6 +17,7 @@
         <br><br>
         <!---------------------------------------------------------------------------------- DATOS GENERALES / ENCABEZADO PROMOCIONES ------------------------------------------------->
         <input type="text" name="idPromo" id="idPromo" value="{{$promo->id}}" hidden>
+        <input type="text" name="tipoPromo" id="tipoPromo" value="promocion" hidden>
         <div class="datos-generales">
             <div class="title bg-indar">
                 <h4>Datos generales de la promoción</h4>
@@ -421,7 +422,7 @@
             </div>
         </div>
 
-        <br><br><br><br>
+        <br><br><br><br> 
     </div>
 
 </div>

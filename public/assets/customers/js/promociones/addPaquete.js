@@ -181,38 +181,14 @@ function validarPaquete(){
 
         var listaPedidoPromoRulesD = [];
 
-       for(var x = 0; x < proveedores.length; x++){
             listaPedidoPromoRulesD.push({
                 idPedidoPromoD: 0,
                 idPedidoPromo: 0,
-                tipo: 'PROVEEDOR',
-                valor: proveedores[x],
-                incluye: true,
+                tipo: '',
+                valor: '',
+                incluye: false,
                 idPedidoPromoNavigation: ''
             });
-        }
-
-        for(var x = 0; x < marcas.length; x++){
-            listaPedidoPromoRulesD.push({
-                idPedidoPromoD: 0,
-                idPedidoPromo: 0,
-                tipo: 'MARCA',
-                valor: marcas[x],
-                incluye: true,
-                idPedidoPromoNavigation: ''
-            });
-        }
-
-        for(var x = 0; x < articulos.length; x++){
-            listaPedidoPromoRulesD.push({
-                idPedidoPromoD: 0,
-                idPedidoPromo: 0,
-                tipo: 'ARTICULO',
-                valor: articulos[x],
-                incluye: true,
-                idPedidoPromoNavigation: ''
-            });
-        }
     
         var json = {
             id: 0,

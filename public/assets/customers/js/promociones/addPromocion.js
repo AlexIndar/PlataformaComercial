@@ -426,7 +426,7 @@ function checkRules() {
         $('#articulos').trigger("chosen:updated");
         document.getElementById('articulos_chosen').style.width = '100%';
 
-        if(window.location.href.includes('promociones/paquete')){ //SI ES PAQUETE, AGREGAR REGALOS A SUBREGLAS
+        if(window.location.href.includes('promociones/paquete') || (window.location.href.includes('promociones/editar') && document.getElementById('tipoPromo').value == 'paquete')){ //SI ES PAQUETE, AGREGAR REGALOS A SUBREGLAS
             document.getElementById('regalosSub_chosen').style.display = "block";
             document.getElementById('regalosSubLoading').style.display = "none";
             var selectregalosSub = document.getElementById('regalosSub');
@@ -502,7 +502,6 @@ function guardarPromocion(){
     else{
         validarPromo();
     } 
-    
 }
 
 function validarPromo(){
@@ -602,9 +601,15 @@ function validarPromo(){
             });
         }
 
+        var idPromo;
+        if(window.location.href.includes('promociones/editar'))//SI LA PROMO SERÁ ACTUALIZADA, ENVIAR ID PROMO
+            idPromo = document.getElementById('idPromo').value;
+        else    
+            idPromo = 0;
+
     
         var json = {
-            id: 0,
+            id: idPromo,
             nombrePromo: document.getElementById('nombrePromo').value,
             descuento: parseInt(document.getElementById('descuento').value),
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
@@ -626,6 +631,8 @@ function validarPromo(){
             pedidoPromoRulesD: listaPedidoPromoRulesD
         }
 
+        console.log(json);
+        console.log(JSON.stringify(json));
 
         $.ajax({
             'headers': {
@@ -686,6 +693,9 @@ function clearSelectionAccept(){
 }
 
 function addPromoRules(rules){
+    console.log(rules);
+    startDate = rules['fechaInicio'].split('T')[0];
+    endDate = rules['fechaFin'].split('T')[0];
     var pedidoPromoRules = rules['pedidoPromoRulesD'];
     var regalos = rules['regalosIndar'];
     var clientes = rules['clientesId'];
@@ -722,22 +732,6 @@ function addPromoRules(rules){
         $('#articulos').val(articulos).trigger('chosen:updated');
     if(marcas.length > 0)
         $('#marcas').val(marcas).trigger('chosen:updated');
-
-    
-    // switch(id){
-    //     case 'categorias': key = 'Categoria'; break;
-    //     case 'giros': key = 'Giro'; break;
-    //     case 'clientes': key = 'CompanyId'; break;
-    //     case 'proveedores': key = 'Proveedor'; break;
-    //     case 'marcas': key = 'Marca'; break;
-    //     case 'articulos': key = 'Codigo'; break;
-    //     case 'clientesCuotas': key = 'CompanyId'; break;
-    //     default: break;
-    // }
-    // jsonObj.forEach(function(valor, indice, array){
-    //     selectedOptions.push(valor[key]);
-    // });
-    // $('#'+id).val(selectedOptions).trigger('chosen:updated');
 }
 
 

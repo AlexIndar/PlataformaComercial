@@ -76,7 +76,11 @@ $(document).ready(function() {
             
                 for (var x = 0; x < data['order'].length; x++) {
                     for(var y = 0; y < data['order'][x]['items'].length; y++){
-                        selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
+                        var art = selectedItemsFromInventory.find(o => o.item === data['order'][x]['items'][y]['itemid'].trim());
+                        if(art != undefined)
+                            art['cant'] = (parseInt(art['cant']) + parseInt(data['order'][x]['items'][y]['cantidad'])).toString();
+                        else
+                            selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
                         cantItemsPorCargar ++;
                     }
                 }
@@ -141,7 +145,7 @@ $(document).ready(function() {
             document.getElementById('loading').style.display = "none";
             document.getElementById('loading').classList.remove('d-flex');
             if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
-                prepareJsonSeparaPedidos();
+                prepareJsonSeparaPedidos(false);
             }
             clearInterval(intervalInventario);
         } else {
@@ -176,7 +180,7 @@ $(document).ready(function() {
     });
 
     $('#modalInventario').on('hidden.bs.modal', function () {
-        prepareJsonSeparaPedidos();
+        prepareJsonSeparaPedidos(false);
     })
 
 
@@ -449,6 +453,8 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
         pedido[index]['items'][indexItem]['addRegalo'] = 0; 
     }
     else{
+        console.log('Delete row Pedido');
+        console.log(pedido);
         pedido[index]['items'].splice(indexItem, 1);
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
         selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) - cantidad;
@@ -464,7 +470,7 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
         pedido.splice(index, 1);
     }
     
-    separarPedidosPromo(jsonItemsSeparar);
+    separarPedidosPromo(jsonItemsSeparar, false);
 
 }
 
@@ -514,8 +520,11 @@ function cargarProductosPorCodigo() {
     for (var x = 1; x <= rows.length; x++) {
         var inputCodigo = document.getElementById('input-codigo-' + x);
         var inputCantidad = document.getElementById('input-cantidad-' + x);
-        var item = { "articulo": inputCodigo.value, "cantidad": inputCantidad.value };
-        selectedItemsFromInventory.push({ item: (inputCodigo.value).trim(), cant: inputCantidad.value });
+        var art = selectedItemsFromInventory.find(o => o.item === (inputCodigo.value).trim());
+        if(art != undefined)
+            art['cant'] = (parseInt(art['cant']) + parseInt(inputCantidad.value)).toString();
+        else
+            selectedItemsFromInventory.push({ item: (inputCodigo.value).trim(), cant: inputCantidad.value });   
     }
 
     var table = document.getElementById('tableCargarPorCodigo');
@@ -530,7 +539,7 @@ function cargarProductosPorCodigo() {
     table.classList.add('inactive');
     document.getElementById('btnCargarPorCodigo').classList.add('d-none');
 
-    prepareJsonSeparaPedidos();
+    prepareJsonSeparaPedidos(false);
 }
 
 function cargarProductosExcel(json) {
@@ -538,52 +547,128 @@ function cargarProductosExcel(json) {
     
     cantItemsPorCargar = jsonObj.length;
     for (var x = 0; x < jsonObj.length; x++) {
-        selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
+        var art = selectedItemsFromInventory.find(o => o.item === jsonObj[x]['Codigos'].trim());
+        if(art != undefined)
+            art['cant'] = (parseInt(art['cant']) + parseInt(jsonObj[x]['Cantidad'])).toString();
+        else
+            selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
     }
 
-    prepareJsonSeparaPedidos();
+    prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
 }
 
 
-function prepareJsonSeparaPedidos(){
+function prepareJsonSeparaPedidos(separa){
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
         var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
-        getItemById(item);
+        getItemById(item, separa);
     }
 }
 
-function separarPedidosPromo(json){  //envía json a back y recibe pedido separado
-    console.log(JSON.parse(json));
-    console.log(json);
-    console.log(document.getElementById('cupon').value);
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
+    if(separar && json == null){
+        prepareJsonSeparaPedidos(true);
+    }
+    if(separar && json != null){
+        console.log(json);
+        
+        if(document.getElementById('cupon').value != ''){
+            alert('cupon');
+            json = JSON.parse(json);
+            for(var x = 0; x < json.length; x++){
+                json[x]['cupon'] = document.getElementById('cupon').value;
+            }
+            json = JSON.stringify(json);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "nuevo/SepararPedidosPaquete",
+                timeout: 2 * 60 * 60 * 1000,
+                contentType: "application/json",
+                data: JSON.stringify({key: json}),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function(data) {
+                    pedidoSeparado = data;
+                    separarFilas(data);
+                },
+                error: function(error) {}
+            });
         }
-    });
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "nuevo/SepararPedidosPromo",
-        timeout: 2 * 60 * 60 * 1000,
-        contentType: "application/json",
-        data: JSON.stringify({key: json}),
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        },
-        success: function(data) {
-            pedidoSeparado = data;
-            separarFilas(data);
-        },
-        error: function(error) {}
-    });
+        else{
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "nuevo/SepararPedidosPromo",
+                timeout: 2 * 60 * 60 * 1000,
+                contentType: "application/json",
+                data: JSON.stringify({key: json}),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function(data) {
+                    pedidoSeparado = data;
+                    separarFilas(data);
+                },
+                error: function(error) {}
+            });
+        }
+    }
+    if(!separar){
+        console.log('No separar, solo agregar fila');
+        json = JSON.parse(json);
+        console.log(json);
+        console.log(selectedItemsFromInventory);
+        console.log(pedido);
+        var arr = [];
+        for(var x = 0; x < json.length; x++){
+            var art = items.find(o => o.itemid === json[x]['itemID']);
+            var artArr = arr.find(o => o.itemID === json[x]['itemID'])
+            if(artArr != undefined){
+                artArr['quantity'] = (parseInt(json[x]['quantity']) + parseInt(artArr['quantity'])).toString();
+                console.log(artArr['quantity']);
+            }
+            else{
+                if(json[x]['quantity'] > 0){
+                    json[x]['descuento'] = 0;
+                    json[x]['plazo'] = 0;
+                    json[x]['marca'] = '';
+                    json[x]['evento'] = '';
+                    // json[x]['tipo'] = art['categoriaItem'];
+                    json[x]['tipo'] = '';
+                    json[x]['regalo'] = 0;
+                    json[x]['separa'] = 1;
+                    json[x]['disponible'] = art['disponible'];
+                    json[x]['promo'] = 0;
+                    arr.push(json[x]);
+                }
+            }
+            
+        }
+        separarFilas(arr);
+    }
+    
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
+    console.log('Separar filas');
+    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -656,7 +741,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
     createTablePedido();
 }
 
-function getItemById(item) {
+function getItemById(item, separa) {
     console.clear();
     var entity = document.getElementById('entity').value;
     var data = { id: item['articulo'], entity: entity };
@@ -693,7 +778,7 @@ function getItemById(item) {
                 
                 if(cantItemsCargados == cantItemsPorCargar){
                     jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
-                    separarPedidosPromo(jsonItemsSeparar);
+                    separarPedidosPromo(jsonItemsSeparar, separa);
                     cantItemsCargados = 0;
                     cantItemsPorCargar = 0;
                 }
@@ -705,7 +790,7 @@ function getItemById(item) {
                     var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
                     newJson = newJson + ']';
                     jsonItemsSeparar = newJson;
-                    separarPedidosPromo(newJson);
+                    separarPedidosPromo(newJson, separa);
                     cantItemsCargados = 0;
                     cantItemsPorCargar = 0;
             }
@@ -831,7 +916,6 @@ function cargarInventario() {
             dataset.push(arr);
         }
         
-
         var inventarioTable = $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
@@ -843,11 +927,6 @@ function cargarInventario() {
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
             },
         });
-
-
-        // document.getElementById('tablaInventario').columns.adjust().draw();
-
-
     }
 
 }
@@ -1193,13 +1272,12 @@ function addItemCant(item, cant, index) {
     
     
     var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
-    
     selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
     var jsonObj = JSON.parse(jsonItemsSeparar);
     var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
     jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) + multiploVenta).toString(); 
     jsonItemsSeparar = JSON.stringify(jsonObj);
-    separarPedidosPromo(jsonItemsSeparar);
+    separarPedidosPromo(jsonItemsSeparar, false);
 }
 
 function decreaseItemCant(item, cant, index) {
@@ -1230,7 +1308,7 @@ function decreaseItemCant(item, cant, index) {
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString(); 
         jsonItemsSeparar = JSON.stringify(jsonObj);
-        separarPedidosPromo(jsonItemsSeparar);
+        separarPedidosPromo(jsonItemsSeparar, false);
 }
 
 
@@ -1302,7 +1380,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos();
+                    prepareJsonSeparaPedidos(false);
                     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
                     update = true;
                 }
@@ -1668,7 +1746,7 @@ function saveAndGetIDCotizacion(){
                 var tipo = pedido[x]['tipo'];
                 for(var y = 0; y < pedido[x]['items'].length; y++){
                     if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                        prepareJsonSeparaPedidos();
+                        prepareJsonSeparaPedidos(false);
                         alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
                         update = true;
                     }
@@ -1768,7 +1846,7 @@ function update(action){
             var tipo = pedido[x]['tipo'];
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos();
+                    prepareJsonSeparaPedidos(false);
                     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
                     update = true;
                 }
