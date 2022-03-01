@@ -38,6 +38,7 @@ class VerifyCsrfToken extends Middleware
         '/MisSolicitudes/getBills',
         '/MisSolicitudes/reSendForm',
         '/MisSolicitudes/UpdateFile',
+        '/MisSolicitudes/UpdateReferences',
         '/EstadisticaCliente/getEmployeeReport',
         '/EstadisticaCliente/getGeneralReport',
         '/EstadisticaCliente/getGeneralReportByManagement',

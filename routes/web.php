@@ -914,6 +914,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $response;
                 });
 
+                Route::post('/MisSolicitudes/UpdateReferences', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request->all());
+                    $response = MisSolicitudesController::UpdateReferences($token, json_encode($request->all()));
+                    return $response;
+                });
+
+                Route::post('/MisSolicitudes/UpdateConstAct', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request->all());
+                    $response = MisSolicitudesController::UpdateConstAct($token, json_encode($request->all()));
+                    return $response;
+                });
+
                 Route::get('/SolicitudesPendientes', function(){
                     return view('intranet.cyc.solicitudesPendientes');
                 });
