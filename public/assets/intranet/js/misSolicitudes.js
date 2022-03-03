@@ -331,7 +331,7 @@ $(document).ready(function() {
         },
         error: function(error) {
             console.log(error);
-            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
         }
     });
 
