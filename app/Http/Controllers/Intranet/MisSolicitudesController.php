@@ -109,6 +109,11 @@ class MisSolicitudesController extends Controller
         ]);
         return $response;
     }
+
+    public static function GetEmails($token, $zona){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetEmails?zona='.$zona);
+        return json_decode($response->body());
+    }
     
     public static function getStatus($id)
     {

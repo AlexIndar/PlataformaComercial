@@ -81,8 +81,11 @@ var fileFE = '';
 var fileFIE = '';
 
 //Acta cons
-actaConstitutivaEdit = '';
-actaConstList = [];
+var actaConstitutivaEdit = '';
+var actaConstList = [];
+
+//emails
+var emailList = [];
 
 $(document).ready(function() {
     $('#inputGroupFile01').change(function(e) {
@@ -306,9 +309,33 @@ $(document).ready(function() {
         $('#label-inputFileActaEdit').html(fileName);
     });
 
+    let jsonZona = {
+        zona: document.getElementById("zoneP").value,
+    }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/MisSolicitudes/GetEmails",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': jsonZona,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(emailsL) {
+            if (emailsL != null) {
+                emailList = emailsL;
+            } else {
+                alert("Error");
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
+        }
+    });
+
 })
-
-
 
 function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARAMETRO Y LA RETORNA EN BASE 64
     var reader = new FileReader();
@@ -683,6 +710,8 @@ function addContactData() {
 function validateNameC() {
     if (!validacionTextOne("nombreContacto")) {
         getAlert("alertContacto", "El nombre no puede ser numeros o menor a cuatro caracteres")
+    } else {
+        document.getElementById("alertContacto").innerHTML = "";
     }
 }
 
@@ -1050,7 +1079,6 @@ function deleteFactRow(t) {
 function valiteTypeForm() {
     let activoFijo = $('input[name="typeSoli"]:checked').val();
     tipoForm = activoFijo;
-    console.log(tipoForm);
     if (activoFijo == "cash") {
         document.getElementById("amountSol").style.display = 'none';
         document.getElementById("credSol").style.display = 'none';
@@ -1141,7 +1169,6 @@ function refresh() {
 
 function getTipoForm() {
     var tipo = null;
-    console.log(tipoForm);
     switch (tipoForm) {
         case "cash":
             tipo = 0;
@@ -1291,6 +1318,7 @@ function validateSaveForm() {
     return save;
 }
 
+
 function SendForm(zone) {
     if (validateFullForm()) {
         $('#cargaModal').modal('show');
@@ -1307,6 +1335,7 @@ function SendForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
+                    sendMail(data, tp, json.cliente, 1);
                     $('#cargaModal').modal('hide');
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
@@ -1572,9 +1601,8 @@ function createJsonSolicitud(zone) {
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
     };
-
-    console.log(json);
-    console.log(JSON.stringify(json));
+    // console.log(json);
+    // console.log(JSON.stringify(json));
     return json;
 }
 
@@ -1800,6 +1828,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
     document.getElementById("cRSection").style.display = "none";
     document.getElementById("cartSection").style.display = "none";
     document.getElementById("factSection").style.display = "none";
+    cleanDetalleSol();
     if (data != null) {
         console.log(data);
         console.log(data2);
@@ -1830,6 +1859,9 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
         document.getElementById("noFEdit").value = data.cliente.datosF.domicilio.noExt;
         document.getElementById("noFEButtons").innerHTML = getButtons(data2.numeroExterior, "noFEdit");
 
+        document.getElementById("noIntFEdit").value = data.cliente.datosF.domicilio.noInt;
+        document.getElementById("noIntFEButtons").innerHTML = getButtons(data2.numeroExterior, "noIntFEdit");
+
         document.getElementById("cityFEdit").value = data.cliente.datosF.domicilio.ciudad;
         document.getElementById("cityFEButtons").innerHTML = getButtons(data2.ciudad, "cityFEdit");
 
@@ -1856,6 +1888,9 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
 
         document.getElementById("noEEdit").value = data.cliente.datosE.domicilio.noExt;
         document.getElementById("noEEButtons").innerHTML = getButtons(data2.numeroExteriorEntrega, "noEEdit");
+
+        document.getElementById("noIntEEdit").value = data.cliente.datosE.domicilio.noInt;
+        document.getElementById("noIntEButtons").innerHTML = getButtons(data2.numeroExteriorEntrega, "noIntEEdit");
 
         document.getElementById("cityEEdit").value = data.cliente.datosE.domicilio.ciudad;
         document.getElementById("cityEEButtons").innerHTML = getButtons(data2.ciudadEntrega, "cityEEdit");
@@ -1975,6 +2010,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;
                 if (responsiveList != null) {
                     document.getElementById("cRSection").style.display = "flex";
+                    document.getElementById("cartRButtons").innerHTML = getButtonsFiles(data2.cartaResponsiva, 12);
                     getAlert("alertAC", data.observations.actaConstitutiva);
                 }
             }
@@ -2588,6 +2624,17 @@ function continueModal(facturas, archivos, data) {
     changeRef();
 }
 
+const cleanDetalleSol = () => {
+    document.getElementById("alertDG").innerHTML = "";
+    document.getElementById("alertDF").innerHTML = "";
+    document.getElementById("alertDE").innerHTML = "";
+    document.getElementById("alertNegocio").innerHTML = "";
+    document.getElementById("alertCont").innerHTML = "";
+    document.getElementById("alertCredit").innerHTML = "";
+    document.getElementById("alertAC").innerHTML = "";
+    document.getElementById("alertRef").innerHTML = "";
+}
+
 function cargarArchivos(archivos) {
     if (archivos.length > 0) {
         for (let i = 0; i < archivos.length; i++) {
@@ -3048,4 +3095,56 @@ const getJsonActaConst = () => {
         alert("Error al crear las constancias");
         return null;
     }
+}
+
+const getTipoFormM = () => {
+    var tipo = "";
+    switch (tipoForm) {
+        case "cash":
+            tipo = "CONTADO";
+            break;
+        case "credit":
+            tipo = "CREDITO";
+            break;
+        case "creditAB":
+            tipo = "CREDITO AB";
+            break;
+        case "changeRS":
+            tipo = "CARTA RESPONSIVA";
+            break;
+    }
+    return tipo;
+}
+
+const sendMail = (fol, tps, cli, status) => {
+    let zona = document.getElementById("zoneP").value;
+    let mailJson = {
+        folio: fol,
+        tipoSol: tps,
+        cliente: cli.clave,
+        razonSocial: cli.datosF.razonSocial,
+        rfc: cli.datosF.rfc,
+        zona: zona,
+        emails: emailList,
+        status: status == 1 ? "Nueva solicitud" : "Reenvio de solicitud",
+    }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailSolicitud",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': mailJson,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            $('#cargaModal').modal('hide');
+        }
+    });
 }

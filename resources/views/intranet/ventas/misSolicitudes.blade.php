@@ -964,9 +964,15 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4">No. Exteriorl</div>
+                            <div class="col-md-4">No. Exterior</div>
                             <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control"></div>
                             <div class="col-md-2" id="noFEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">No. Interior</div>
+                            <div class="col-md-6"><input type="text" name="noIntFEdit" id="noIntFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="noIntFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1019,6 +1025,12 @@
                             <div class="col-md-4">No. Exterior</div>
                             <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control"></div>
                             <div class="col-md-2" id="noEEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">No. Interior</div>
+                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="noIntEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
