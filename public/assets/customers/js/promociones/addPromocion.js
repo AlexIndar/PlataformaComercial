@@ -612,6 +612,7 @@ function validarPromo(){
             id: idPromo,
             nombrePromo: document.getElementById('nombrePromo').value,
             descuento: parseInt(document.getElementById('descuento').value),
+            descuentoWeb: parseInt(document.getElementById('descuentoWeb').value),
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),

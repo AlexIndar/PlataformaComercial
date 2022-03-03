@@ -3,6 +3,7 @@ var subreglas = [];
 var packageHeader;
 var idPaquete = 0;
 var cuotasList = [];
+var categoriasDescuentos = [];
 
 $('document').ready(function(){
     $( "#tipoCuota" ).change(function() {
@@ -194,6 +195,7 @@ function validarPaquete(){
             id: 0,
             nombrePromo: document.getElementById('nombrePromo').value,
             descuento: 0,
+            descuentoWeb: 0,
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: document.getElementById('tipoCuota').value == 'General' ? parseInt( document.getElementById('plazos').value) : 0,
             regalosIndar: regalos.toString(),
@@ -246,8 +248,8 @@ function addRule(){
         else{
             var json = {
                 nombreSub: document.getElementById('nombreSubregla').value,
-                descuentoSub: document.getElementById('descuentoSubregla').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla').value),
-                descuentoWebSub: document.getElementById('descuentoWebSubregla').value == "" ? 0 : parseInt(document.getElementById('descuentoWebSubregla').value),
+                descuentoSub: document.getElementById('descuentoSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla1').value),
+                descuentoWebSub: document.getElementById('descuentoWebSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoWebSubregla1').value),
                 montoMinCash: document.getElementById('preciominSub').value == "" ? 0 : parseInt(document.getElementById('preciominSub').value),
                 montoMinQty: document.getElementById('cantidadminSub').value == "" ? 0 : parseInt(document.getElementById('cantidadminSub').value),
                 regalos: $('#regalosSub').chosen().val(),
@@ -280,21 +282,21 @@ function validarSubregla(){
     else{
         document.getElementById('nombreSubregla').classList.remove('invalid-input');
     }
-    if(document.getElementById('descuentoSubregla').value == ''){
+    if(document.getElementById('descuentoSubregla1').value == ''){
         save = false;
-        document.getElementById('descuentoSubregla').classList.add('invalid-input');
+        document.getElementById('descuentoSubregla1').classList.add('invalid-input');
         bodyValidations += '<h5>Ingresa un descuento para la subregla</h5>';
     }
     else{
-        document.getElementById('descuentoSubregla').classList.remove('invalid-input');
+        document.getElementById('descuentoSubregla1').classList.remove('invalid-input');
     }
-    if(document.getElementById('descuentoWebSubregla').value == ''){
+    if(document.getElementById('descuentoWebSubregla1').value == ''){
         save = false;
-        document.getElementById('descuentoWebSubregla').classList.add('invalid-input');
+        document.getElementById('descuentoWebSubregla1').classList.add('invalid-input');
         bodyValidations += '<h5>Ingresa un descuento web para la subregla</h5>';
     }
     else{
-        document.getElementById('descuentoWebSubregla').classList.remove('invalid-input');
+        document.getElementById('descuentoWebSubregla1').classList.remove('invalid-input');
     }
     if(document.getElementById('preciominSub').value == ''){
         save = false;
@@ -358,8 +360,8 @@ function editSubregla(id){
     var index = id - 1;
 
     document.getElementById('nombreSubregla').value = subreglas[index]['nombreSub'];
-    document.getElementById('descuentoSubregla').value = subreglas[index]['descuentoSub'];
-    document.getElementById('descuentoWebSubregla').value = subreglas[index]['descuentoWebSub'];
+    document.getElementById('descuentoSubregla1').value = subreglas[index]['descuentoSub'];
+    document.getElementById('descuentoWebSubregla1').value = subreglas[index]['descuentoWebSub'];
     document.getElementById('cantidadminSub').value = subreglas[index]['montoMinQty'];
     document.getElementById('preciominSub').value = subreglas[index]['montoMinCash'];
 
@@ -379,8 +381,8 @@ function editSubregla(id){
 function clearModalSubreglas(){
     document.getElementById('indexSubregla').value = '';
     document.getElementById('nombreSubregla').value = '';
-    document.getElementById('descuentoSubregla').value = 1;
-    document.getElementById('descuentoWebSubregla').value = 1;
+    document.getElementById('descuentoSubregla1').value = 1;
+    document.getElementById('descuentoWebSubregla1').value = 1;
     document.getElementById('cantidadminSub').value = 1;
     document.getElementById('preciominSub').value = 1;
 
@@ -413,8 +415,8 @@ function closeModalSubreglas(){
 function updateRule(){
     var index = document.getElementById('indexSubregla').value;
     subreglas[index]['nombreSub'] = document.getElementById('nombreSubregla').value;
-    subreglas[index]['descuentoSub'] = document.getElementById('descuentoSubregla').value;
-    subreglas[index]['descuentoWebSub'] = document.getElementById('descuentoWebSubregla').value;
+    subreglas[index]['descuentoSub'] = document.getElementById('descuentoSubregla1').value;
+    subreglas[index]['descuentoWebSub'] = document.getElementById('descuentoWebSubregla1').value;
     subreglas[index]['montoMinCash'] = document.getElementById('preciominSub').value;
     subreglas[index]['montoMinQty'] = document.getElementById('cantidadminSub').value;
     subreglas[index]['regalos'] = $('#regalosSub').chosen().val();
@@ -485,24 +487,7 @@ function createTableSubreglas(){
 }
 
 function storePaquete(){
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "storePromo",
-        'type': 'POST',
-        'dataType': 'json', 
-        'data': packageHeader,
-        'enctype': 'multipart/form-data',
-        'timeout': 2*60*60*1000,
-        success: function(data){
-                idPaquete = data;
-        }, 
-        error: function(error){
-                console.log(data);
-         }
-    });
-
+    storeHeader();
     document.getElementById('btn-guardar').classList.add('d-none');
     document.getElementById('btn-add-sub').classList.add('d-none');
     document.getElementById('div-loading').style.opacity = '1';
@@ -510,7 +495,6 @@ function storePaquete(){
 }
 
 function storeSubreglas(){
-    console.log(subreglas);
     for(var y = 0; y < subreglas.length; y++){
         var listaPedidoPromoRulesD = [];
 
@@ -550,7 +534,8 @@ function storeSubreglas(){
         var json = {
             id: 0,
             nombrePromo: subreglas[y]['nombreSub'],
-            descuento: packageHeader['descuento'],
+            descuento: parseInt(subreglas[y]['descuentoSub']),
+            descuentoWeb: parseInt(subreglas[y]['descuentoWebSub']),
             puntosIndar: packageHeader['puntosIndar'],
             plazosIndar: packageHeader['plazosIndar'],
             regalosIndar: subreglas[y]['regalos'].toString(),
@@ -572,7 +557,7 @@ function storeSubreglas(){
 
         console.log(json);
         console.log(JSON.stringify(json));
-        var idRow = 'row-subreglas-'+y;
+
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -602,4 +587,164 @@ function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
     window.location.href = '/promociones';
+}
+
+function storeHeader(){
+    var categorias = $('#categorias').chosen().val();
+        var giros = $('#giros').chosen().val();
+        var clientes = $('#clientes').chosen().val();
+        var proveedores = $('#proveedores').chosen().val();
+        var marcas = $('#marcas').chosen().val();
+        var articulos = $('#articulos').chosen().val();
+    
+        var regalos = $('#regalos').chosen().val();
+
+        var startTime = startDate+" "+document.getElementById('startTime').value+":00";
+        var endTime = endDate+" "+document.getElementById('endTime').value+":00";
+
+        var listaPedidoPromoRulesD = [];
+
+            listaPedidoPromoRulesD.push({
+                idPedidoPromoD: 0,
+                idPedidoPromo: 0,
+                tipo: '',
+                valor: '',
+                incluye: false,
+                idPedidoPromoNavigation: ''
+            });
+    
+        var json = {
+            id: 0,
+            nombrePromo: document.getElementById('nombrePromo').value,
+            descuento: 0,
+            descuentoWeb: 0,
+            puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
+            plazosIndar: document.getElementById('tipoCuota').value == 'General' ? parseInt( document.getElementById('plazos').value) : 0,
+            regalosIndar: regalos.toString(),
+            categoriaClientes: categorias.toString(),
+            categoriaClientesIncluye: 1,
+            gruposclientesIds: giros.toString(),
+            gruposclientesIncluye: true,
+            clientesId: clientes.toString(),
+            clientesIncluye: true,
+            plazo: '',
+            montoMinCash: document.getElementById('tipoCuota').value == 'General' ? parseInt(document.getElementById('preciomin').value) : 0,
+            montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
+            fechaInicio: startTime,
+            fechaFin: endTime,
+            paquete: true,
+            idPaquete: 0,
+            pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+            cuotas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+        }
+
+        packageHeader = json;
+        console.log(JSON.stringify(packageHeader));
+
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "storePromo",
+            'type': 'POST',
+            'dataType': 'json', 
+            'data': packageHeader,
+            'enctype': 'multipart/form-data',
+            'timeout': 2*60*60*1000,
+            success: function(data){
+                    idPaquete = data;
+            }, 
+            error: function(error){
+                    console.log(data);
+             }
+        });
+}
+
+function addRowCategoriaDescuento(id){
+    console.log('add row');
+    var container = document.getElementById('descuentosPorCategoria');
+    var div1 = document.createElement('div');
+    var div2 = document.createElement('div');
+    var div3 = document.createElement('div');
+    var div4 = document.createElement('div');
+    var div5 = document.createElement('div');
+    var div6 = document.createElement('div');
+
+    div1.classList.add('col-lg-3', 'col-md-3', 'col-12');
+
+    var select = document.createElement('select');
+
+    select.setAttribute('id','categoriaCliente'+(id+1));
+    select.setAttribute('class', 'form-control');
+
+    var opt1 = document.createElement('option');
+    opt1.value = 'master';
+    opt1.innerHTML = 'MASTER';
+
+    var opt2 = document.createElement('option');
+    opt2.value = 'd';
+    opt2.innerHTML = 'CLIENTE D';
+
+    var opt3 = document.createElement('option');
+    opt3.value = 'a';
+    opt3.innerHTML = 'CLIENTE A';
+
+    var opt4 = document.createElement('option');
+    opt4.value = 'a light';
+    opt4.innerHTML = 'CLIENTE A LIGHT';
+
+    select.appendChild(opt1);
+    select.appendChild(opt2);
+    select.appendChild(opt3);
+    select.appendChild(opt4);
+
+    div1.appendChild(select);
+
+    div2.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+    var h5div2 = document.createElement('h5');
+    h5div2.innerHTML = 'Descuento subregla:';
+    div2.appendChild(h5div2);
+
+    div3.setAttribute('class', 'col-lg-2 col-md-2 col-12');
+    var inputdiv3 = document.createElement('input');
+    inputdiv3.setAttribute('type', 'number');
+    inputdiv3.setAttribute('id', 'descuentoSubregla'+(id+1));
+    inputdiv3.setAttribute('class', 'input-promociones');
+    inputdiv3.setAttribute('value', '1');
+    inputdiv3.setAttribute('step', '.01');
+    inputdiv3.setAttribute('min', '0');
+    div3.appendChild(inputdiv3);
+
+    div4.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+    var h5div4 = document.createElement('h5');
+    h5div4.innerHTML = 'Descuento web:';
+    div4.appendChild(h5div4);
+
+    div5.setAttribute('class', 'col-lg-2 col-md-2 col-11');
+    var inputdiv5 = document.createElement('input');
+    inputdiv5.setAttribute('type', 'number');
+    inputdiv5.setAttribute('id', 'descuentoWebSubregla'+(id+1));
+    inputdiv5.setAttribute('class', 'input-promociones');
+    inputdiv5.setAttribute('value', '1');
+    inputdiv5.setAttribute('step', '.01');
+    inputdiv5.setAttribute('min', '0');
+    div5.appendChild(inputdiv5);
+
+    div6.setAttribute('class', 'col-1');
+    var icon = document.createElement('i');
+    icon.setAttribute('class', 'fas fa-plus-square btn-add-product fa-2x');
+    icon.setAttribute('id', 'iconoAgregarCategoriaDescuento'+(id+1));
+    icon.setAttribute('onclick', 'addRowCategoriaDescuento('+(id+1)+')');
+    div6.appendChild(icon);
+
+    document.getElementById('iconoAgregarCategoriaDescuento'+id).classList.add('d-none');
+
+    container.appendChild(div1);
+    container.appendChild(div2);
+    container.appendChild(div3);
+    container.appendChild(div4);
+    container.appendChild(div5);
+    container.appendChild(div6);
+
+
 }

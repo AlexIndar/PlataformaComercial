@@ -487,7 +487,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::post('/pedido/nuevo/SepararPedidosPromo', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
-                                    return redirect('/logout');
+                                    return redirect('/logout'); 
                                 }
                                 $json = $request->key;
                                 $data = SaleOrdersController::separarPedidosPromo($token, $json);

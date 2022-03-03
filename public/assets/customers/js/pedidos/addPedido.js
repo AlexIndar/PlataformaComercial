@@ -193,30 +193,34 @@ $(document).ready(function() {
 
     $('#tablaInventario tbody').on('click', 'tr', function() {
         table = $("#tablaInventario").DataTable();
-
         var index = table.row(this).index();
         var item = items[index];
         var cant = table.cell(index, 7).nodes().to$().find('input').val();
         if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
-                var toast = Swal.mixin({
-                    toast: true,
-                    icon: 'success',
-                    title: 'General Title',
-                    animation: true,
-                    position: 'top-start',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: false,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                });
-                toast.fire({
-                    animation: true,
-                    title: 'Producto ' + item['itemid'] + ' Insuficiente',
-                    icon: 'error'
-                });
+            var art = selectedItemsFromInventory.find(o => o.item === (item['itemid']).trim());
+            if(art != undefined)
+                art['cant'] = (parseInt(art['cant']) + parseInt(cant)).toString();
+            else
+                selectedItemsFromInventory.push({ item: item['itemid'].trim(), cant: cant });
+            var toast = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: false,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            toast.fire({
+                animation: true,
+                title: 'Producto ' + item['itemid'] + ' Agregado',
+                icon: 'success'
+            });
         }
 
 
@@ -328,43 +332,43 @@ $(document).ready(function() {
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
 
     $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        // var selected = clickedIndex - 1;
-        // indexCustomer = selected;
-        // addresses = info[selected]['addresses'];
-        // shippingWays = info[selected]['shippingWays'];
-        // packageDeliveries = info[selected]['packageDeliveries'];
+        var selected = clickedIndex - 1;
+        indexCustomer = selected;
+        addresses = info[selected]['addresses'];
+        shippingWays = info[selected]['shippingWays'];
+        packageDeliveries = info[selected]['packageDeliveries'];
 
-        // document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
+        document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
 
-        // document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
-        // document.getElementById('categoryCte').classList.remove('d-none');
+        document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
+        document.getElementById('categoryCte').classList.remove('d-none');
 
-        // items = [];
-        // intervalInventario = window.setInterval(checkItems, 1000);
-        // document.getElementById('entity').value = info[selected]["companyId"];
-        // entityCte = info[selected]["companyId"];
-        // getItems(info[selected]["companyId"]);
+        items = [];
+        intervalInventario = window.setInterval(checkItems, 1000);
+        document.getElementById('entity').value = info[selected]["companyId"];
+        entityCte = info[selected]["companyId"];
+        getItems(info[selected]["companyId"]);
 
-        // var itemSelectorOption = $('#sucursal option');
-        // itemSelectorOption.remove();
-        // $('#sucursal').selectpicker('refresh');
+        var itemSelectorOption = $('#sucursal option');
+        itemSelectorOption.remove();
+        $('#sucursal').selectpicker('refresh');
 
-        // $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-        // $('#sucursal').val('none');
-        // $('#sucursal').selectpicker("refresh");
+        $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
+        $('#sucursal').val('none');
+        $('#sucursal').selectpicker("refresh");
 
-        // for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-        //     $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-        //     $('#sucursal').val(addresses[x]['addressID']);
-        //     $('#sucursal').selectpicker("refresh");
-        // }
+        for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
+            $('#sucursal').val(addresses[x]['addressID']);
+            $('#sucursal').selectpicker("refresh");
+        }
 
-        // $('#sucursal').val('none'); //Seleccionar la primera opcion
-        // $('#sucursal').selectpicker('refresh');
+        $('#sucursal').val('none'); //Seleccionar la primera opcion
+        $('#sucursal').selectpicker('refresh');
 
-        // $('#envio').val(info[selected]['shippingWayF']);
-        // $('#fletera').val(info[selected]['packgeDeliveryF']);
-        // $('#correo').val(info[selected]['email']);
+        $('#envio').val(info[selected]['shippingWayF']);
+        $('#fletera').val(info[selected]['packgeDeliveryF']);
+        $('#correo').val(info[selected]['email']);
 
     });
 
@@ -578,7 +582,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
         console.log(json);
         
         if(document.getElementById('cupon').value != ''){
-            alert('cupon');
             json = JSON.parse(json);
             for(var x = 0; x < json.length; x++){
                 json[x]['cupon'] = document.getElementById('cupon').value;
@@ -877,8 +880,8 @@ function cargarInventario() {
             existenciaFormat = existenciaFormat.split('.')[0];
 
             var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
-            // arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' width='80px'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' width='80px'/>");
-            arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' width='80px'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='80px'/>");
+            //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
+            arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
             arr.push(items[x]['categoriaItem']);
             arr.push(items[x]['clavefabricante']);
             arr.push(items[x]['familia']);
@@ -926,6 +929,24 @@ function cargarInventario() {
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
             },
+            'columnDefs': [
+                {
+                    "targets": 1, // your case first column
+                    "className": "td-center",
+               },
+               {
+                    "targets": 2,
+                    "className": "td-center",
+               },
+               {
+                    "targets": 3,
+                    "className": "td-center",
+               },
+               {
+                    "targets": 4,
+                    "className": "td-center",
+               }
+             ]
         });
     }
 

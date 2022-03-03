@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
         '/pedido/nuevo/getItems/all',
         '/pedido/nuevo/getItemByID',
         '/pedido/nuevo/SepararPedidosPromo',
+        '/pedido/nuevo/SepararPedidosPaquete',
         '/pedido/editar', 
         '/pedido/nuevo',
         '/pedido/eliminar',

@@ -331,19 +331,28 @@
 
                 <br>
 
-                <div class="row reglas-row">
-                    <div class="col-lg-2 col-md-3 col-12 text-center">
+                <div class="row reglas-row" id="descuentosPorCategoria">
+                    <div class="col-lg-3 col-md-3 col-12">
+                        <select id="categoriaCliente1" name="categoriaCliente1" class="form-control" data-live-search="true">
+                            <option selected value="master">MASTER</option>
+                            <option value="d">CLIENTE D</option>
+                            <option value="a">CLIENTE A</option>
+                            <option value="a light">CLIENTE A LIGHT</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-12 text-center">
                         <h5>Descuento subregla:</h5>
                     </div>
-                    <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuentoSubregla" id="descuentoSubregla" value="1" step=".01" min="0">
+                    <div class="col-lg-2 col-md-2 col-12">
+                        <input class="input-promociones" type="number" name="descuentoSubregla1" id="descuentoSubregla1" value="1" step=".01" min="0">
                     </div>
-                    <div class="col-lg-2 col-md-3 col-12 text-center">
+                    <div class="col-lg-2 col-md-2 col-12 text-center">
                         <h5>Descuento web:</h5>
                     </div>
-                    <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuentoWebSubregla" id="descuentoWebSubregla" value="1" step=".01" min="0">
+                    <div class="col-lg-2 col-md-2 col-11">
+                        <input class="input-promociones" type="number" name="descuentoWebSubregla1" id="descuentoWebSubregla1" value="1" step=".01" min="0">
                     </div>
+                    <div class='col-1'><i class='fas fa-plus-square btn-add-product fa-2x' id="iconoAgregarCategoriaDescuento1" onclick="addRowCategoriaDescuento(1)"></i></div>
                 </div>
 
                 <br>
