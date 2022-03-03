@@ -34,6 +34,7 @@ use App\Exports\TemplateMarcas;
 use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
+use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
 
 /* 
@@ -941,6 +942,34 @@ Route::middleware([ValidateSession::class])->group(function(){
                     // dd($request->all());
                     $response = MisSolicitudesController::UpdateConstAct($token, json_encode($request->all()));
                     return $response;
+                });
+
+                Route::post('/MisSolicitudes/GetEmails', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zona = $request->zona;
+                    $data = MisSolicitudesController::GetEmails($token, $zona);
+                    return  $data;
+                });
+
+                Route::post('/sendmailSolicitud', function (Request $request) {
+                    $folio = $request->folio;
+                    $tipoSol = $request->tipoSol;
+                    $cliente = $request->cliente;
+                    $razonSocial = $request->razonSocial;
+                    $rfc = $request->rfc;
+                    $zona = $request->zona;
+                    $status = $request->status;
+                    Mail::to($request->emails)->send(new SolicitudClienteMail($folio, $tipoSol, $cliente, $razonSocial, $rfc, $zona, $status));
+                     // check for failures
+                    if (Mail::failures()) {
+                        return response()->json(['error' => 'Error al enviar email de Solicitud'], 404);
+                    }
+                    else{
+                        return response()->json(['success' => 'Emails Enviados'], 200);
+                    }
                 });
 
                 Route::get('/SolicitudesPendientes', function(){
