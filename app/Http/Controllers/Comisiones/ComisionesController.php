@@ -9,8 +9,8 @@ use App\Http\Controllers\Customer\TokenController;
 
 class ComisionesController extends Controller
 {
-    public static function getInfoCobranzaZonaWeb($token, $referencia){
-        $data = Http::withToken($token)->get('http://192.168.70.107:64444/CobranzaZona/getInfoCobranzaZonaWeb?referencia='.$referencia);
+    public static function getInfoCobranzaZonaWeb($token, $referencia,$fecha){
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/CobranzaZona/getInfoCobranzaZonaWeb?referencia='.$referencia.'&fecha='.$fecha);
         return json_decode($data->body());
     }
 }

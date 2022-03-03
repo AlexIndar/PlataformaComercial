@@ -87,8 +87,17 @@
                    </div>
                    <div class="card-body">
                     <div class="col-lg-12">
+                        <div class="row ">
+                            <div class="col-md-6">
+                                <input type="month" name="fecha" id="fecha" class="form-control" value="2022-02">
+                            </div>
+                            <div class="col-md-4">
+                                    <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
+                                    <button type="submit" class="btn btn-secondary mb-3"  style="display: block" id="btnConsultar">Consultar </button>
+                            </div>
+                         </div>
                         <div class="card-body table-responsive p-0">
-                           <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:67%">
+                           <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:65%">
                               <thead style="background-color:#002868; color:white">
                                <tr>
                                     <th class="text-center" style="font-size:15px " colspan =16  > FEBRERO </th>
@@ -169,6 +178,7 @@ $(document).ready(function() {
 
 function consultar() {
 var id = document.getElementById("cli").value;
+var date = '02-02-2022';
 $('#comisionesTable').dataTable({
             dom : 't',
             scrollY: 320,
@@ -186,7 +196,7 @@ $.ajax({
         'url': "/comisiones/getInfoCobranzaZonaWeb",
         'type': 'GET',
         'dataType': 'json',
-        'data': {referencia:id},
+        'data': {referencia:id, fecha: date},
         'enctype': 'multipart/form-data',
         'timeout': 4 * 60 * 60 * 1000,
         success: function(data){

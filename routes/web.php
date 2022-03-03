@@ -963,10 +963,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $clientes = AplicarPagoController::getCargaListaClientes($token);
+                    $zonas = AplicarPagoController::getZonas($token);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'clientes' => $clientes]);
+                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
                 });
 
                 Route::get('/comisionesDetalle', function(){
@@ -988,8 +988,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                    $referencia = $request->referencia;
+                   $fecha = $request->fecha;
                    //dd($referencia);
-                   $data=ComisionesController::getInfoCobranzaZonaWeb($token,$referencia);
+                   $data=ComisionesController::getInfoCobranzaZonaWeb($token,$referencia,$fecha);
                     return $data;
 
                 });
