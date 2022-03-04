@@ -925,6 +925,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
+                    // dd($request->all());
                     $response = MisSolicitudesController::Update($token, json_encode($request->all()));
                     return $response;
                 });

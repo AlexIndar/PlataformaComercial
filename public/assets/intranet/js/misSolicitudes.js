@@ -646,6 +646,7 @@ function getCpCol(data) {
                 document.getElementById('colDFRow1').classList.remove('d-none');
                 document.getElementById('colDFRow2').classList.add('d-none');
                 colonias = data['suburbs'];
+                console.log(colonias);
                 document.getElementById('ciudadDF').value = data['town'];
                 document.getElementById('estadoDF').value = data['state'];
                 // document.getElementById('rowInputsGeo').classList.remove('d-none');
@@ -2202,37 +2203,38 @@ function saveEdit() {
         }
         if (msgAlert == "") {
             let jsonEdit = getJsonEdit();
+            let folioSend = parseInt(document.getElementById("folioInf").innerHTML);
             console.log(jsonEdit);
             console.log(JSON.stringify(jsonEdit));
-            // $('#cargaModal').modal('show');
-            // let jsonEdit = getJsonEdit();
-            // $.ajax({
-            //     'headers': {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     },
-            //     'url': "MisSolicitudes/Update",
-            //     'type': 'POST',
-            //     'dataType': 'json',
-            //     'data': jsonEdit,
-            //     'enctype': 'multipart/form-data',
-            //     'timeout': 2 * 60 * 60 * 1000,
-            //     success: function(data) {
-            //         if (Number.isInteger(data)) {
-            //             $('#cargaModal').modal('hide');
-            //             $('#infoModal').modal('hide');
-            //             detalleSol(folio);
-            //         } else {
-            //             console.log(data);
-            //             alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-            //             $('#cargaModal').modal('hide');
-            //         }
-            //     },
-            //     error: function(error) {
-            //         console.log(error);
-            //         alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-            //         $('#cargaModal').modal('hide');
-            //     }
-            // });
+            $('#cargaModal').modal('show');
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "MisSolicitudes/Update",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': jsonEdit,
+                'enctype': 'multipart/form-data',
+                'timeout': 2 * 60 * 60 * 1000,
+                success: function(data) {
+                    if (Number.isInteger(data)) {
+                        $('#cargaModal').modal('hide');
+                        $('#infoModal').modal('hide');
+                        detalleSol(folioSend);
+                    } else {
+                        console.log(data);
+                        alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                        $('#cargaModal').modal('hide');
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
+                }
+            });
+
         } else {
             alert("Verifica todos los datos de la solicitud");
         }
@@ -2269,9 +2271,9 @@ const getJsonEdit = () => {
     //     typeP = document.getElementById("typePEdit").value == "Moral" ? true : false;
 
     let jsonEdit = {
-        folio: parseInt(document.getElementById("folioInf").innerHTML),
-        typeForm: document.getElementById("typeFormInf").value == "" ? null : document.getElementById("typeFormInf").value,
-        cliente: {
+        Folio: parseInt(document.getElementById("folioInf").innerHTML),
+        TypeForm: document.getElementById("typeFormInf").value == "" ? null : document.getElementById("typeFormInf").value,
+        Cliente: {
             NombreComercial: document.getElementById("nomComEdit").value.toUpperCase(),
             TipoNegocio: parseInt(document.getElementById("giroEdit").value),
             TiempoConst: parseInt(document.getElementById("antiguedadEdit").value),
@@ -2279,12 +2281,12 @@ const getJsonEdit = () => {
             TipoPersona: null,
             MetodoPago: "pd",
         },
-        datosF: {
+        DatosF: {
             RFC: document.getElementById("rfcEdit").value.toUpperCase(),
             RazonSocial: document.getElementById("rzEdit").value.toUpperCase(),
             EmailFacturacion: document.getElementById("emailFactE").value,
         },
-        domF: {
+        DomF: {
             Calle: document.getElementById("calleFEdit").value.toUpperCase(),
             NoInt: document.getElementById("noIntFEdit").value == "" ? null : document.getElementById("noIntFEdit").value.toUpperCase(),
             Colonia: document.getElementById("coloniaFEdit").value.toUpperCase(),
@@ -2293,7 +2295,7 @@ const getJsonEdit = () => {
             CP: document.getElementById("cpFEdit").value.toUpperCase(),
             NoExt: document.getElementById("noFEdit").value.toUpperCase(),
         },
-        domE: {
+        DomE: {
             Calle: document.getElementById("calleEEdit").value.toUpperCase(),
             NoInt: document.getElementById("noIntEEdit").value == "" ? null : document.getElementById("noIntEEdit").value.toUpperCase(),
             Colonia: document.getElementById("coloniaEEdit").value.toUpperCase(),
@@ -2302,10 +2304,10 @@ const getJsonEdit = () => {
             CP: document.getElementById("cpEEdit").value.toUpperCase(),
             NoExt: document.getElementById("noEEdit").value.toUpperCase(),
         },
-        clienteFlag: flagCliente,
-        datosFFlag: flagDatosF,
-        domFFlag: flagDomF,
-        domEFlag: flagDomE,
+        ClienteFlag: flagCliente,
+        DatosFFlag: flagDatosF,
+        DomFFlag: flagDomF,
+        DomEFlag: flagDomE,
     }
     return jsonEdit;
 }
