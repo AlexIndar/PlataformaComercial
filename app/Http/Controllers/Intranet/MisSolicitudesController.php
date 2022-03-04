@@ -81,6 +81,23 @@ class MisSolicitudesController extends Controller
         return json_decode($valSol->body());
     }
 
+    public static function Update($token, $data){
+        $json = json_decode($data);        
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Update', [
+            "Folio" => $json->Folio,
+            "TypeForm" => $json->TypeForm,
+            "Cliente" => $json->Cliente,
+            "DatosF" => $json->DatosF,
+            "DomF" => $json->DomF,
+            "DomE" => $json->DomE,
+            "ClienteFlag" => $json->ClienteFlag,
+            "DatosFFlag" => $json->DatosFFlag,
+            "DomFFlag" => $json->DomFFlag,
+            "DomEFlag" => $json->DomEFlag,
+        ]);
+        return $response;
+    }
+
     public static function UpdateFile($token, $data){
         $json = json_decode($data);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateFile', [
