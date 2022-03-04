@@ -5,9 +5,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>@yield('title')</title> 
+  <title>@yield('title')</title>
   <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
   <script src="{{asset('assets/js/scripts.js')}}"></script>
 
@@ -346,7 +350,7 @@
             </li> -->
             @if(in_array('MisSolicitudes', $permissions) || in_array('Estadistica Cliente', $permissions))
             <li class="nav-item">
-              @if($active == 'Intranet') 
+              @if($active == 'Intranet')
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -380,7 +384,7 @@
 
             @if(in_array('Promociones', $permissions) || in_array('Pedidos', $permissions))
             <li class="nav-item">
-              @if($active == 'Ventas') 
+              @if($active == 'Ventas')
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -422,7 +426,7 @@
 
             @if(in_array('Portal Viaticos', $permissions))
             <li class="nav-item">
-              @if($active == 'Viaticos') 
+              @if($active == 'Viaticos')
               <a href="#" class="nav-link active">
               @else
               <a href="#" class="nav-link">
@@ -444,8 +448,53 @@
             </li>
             @endif
 
+            @if(in_array('CXC', $permissions))
+            <li class="nav-item">
+                @if($active == 'CXC')
+                <a href="#" class="nav-link active">
+                @else
+                <a href="#" class="nav-link">
+                @endif
+                  <i class="nav-icon fas fa-file-invoice"></i>
+                  <p>
+                    Cuentas Por Cobrar
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <i class="fas fa-hand-holding-usd nav-icon"></i>
+                          <p>
+                            Pagos
+                            <i class="right fas fa-angle-left"></i>
+                          </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                              <a href="/AplicarPagos" class="nav-link">
+                                  <p>Aplicar Pagos</p>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+                </ul>
+              </li>
+              @endif
 
-            <!-- <li class="nav-item">
+              <li class="nav-item">
+                @if($active == 'Comisiones')
+                <a href="/comisionesPorCliente" class="nav-link active">
+                @else
+                <a href="/comisionesPorCliente" class="nav-link">
+                @endif
+                <i class="nav-icon fas fa-cash-register"></i>
+                <p>
+                Comisiones
+                </p>
+                </a>
+            </li>
+        <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
@@ -1037,16 +1086,19 @@
               <i class="nav-icon far fa-circle text-info"></i>
               <p>Informational</p>
             </a>
-          </li>
-        </ul> -->
+        </li> -->
+        </ul>
         </nav>
       </div>
     </aside>
+          </div>
+        </div>
+    </div>
 
 
     @yield('body')
 
-<!-- 
+<!--
     <footer class="main-footer">
       <strong>Copyright &copy; * 1987-2021 <a href="http://www.indar.com.mx/">Ferreteria Indar, S.A. de C.V.</a> *</strong>
       <div class="float-right d-none d-sm-inline-block">
@@ -1126,3 +1178,4 @@
 </body>
 
 </html>
+
