@@ -911,20 +911,26 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">RFC</div>
-                            <div class="col-md-6"><input type="text" name="rfcEdit" id="rfcEdit" class="form-control" disabled></div>
+                            <div class="col-md-6"><input type="text" name="rfcEdit" id="rfcEdit" class="form-control" disabled onfocusout="changeFlag(2)" maxlength="13"></div>
                             <div class="col-md-2" id="rfcButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Razon Social</div>
-                            <div class="col-md-6"><input type="text" name="rzEdit" id="rzEdit" class="form-control" disabled></div>
+                            <div class="col-md-6"><input type="text" name="rzEdit" id="rzEdit" class="form-control" disabled onfocusout="changeFlag(2)" maxlength="99"></div>
                             <div class="col-md-2" id="rzButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Nombre Comercial</div>
-                            <div class="col-md-6"><input type="text" name="nomComEdit" id="nomComEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="nomComEdit" id="nomComEdit" disabled class="form-control" onfocusout="changeFlag(1)" maxlength="99"></div>
                             <div class="col-md-2" id="nomComButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">Email Facturacion</div>
+                            <div class="col-md-6"><input type="text" name="emailFactE" id="emailFactE" disabled class="form-control"></div>
+                            <div class="col-md-2">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -959,43 +965,43 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Calle</div>
-                            <div class="col-md-6"><input type="text" name="calleFEdit" id="calleFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="calleFEdit" id="calleFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="99"></div>
                             <div class="col-md-2" id="callFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="10"></div>
                             <div class="col-md-2" id="noFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Interior</div>
-                            <div class="col-md-6"><input type="text" name="noIntFEdit" id="noIntFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="noIntFEdit" id="noIntFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="10"></div>
                             <div class="col-md-2" id="noIntFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Ciudad</div>
-                            <div class="col-md-6"><input type="text" name="cityFEdit" id="cityFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="cityFEdit" id="cityFEdit" disabled class="form-control" onfocusout="changeFlag(3)"></div>
                             <div class="col-md-2" id="cityFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Estado</div>
-                            <div class="col-md-6"><input type="text" name="estadoFEdit" id="estadoFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="estadoFEdit" id="estadoFEdit" disabled class="form-control" onfocusout="changeFlag(3)"></div>
                             <div class="col-md-2" id="estadoFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-6"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6" id="col1E"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled class="form-control" onfocusout="changeFlag(3)"></div>
                             <div class="col-md-2" id="coloniaFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">CP</div>
-                            <div class="col-md-6"><input type="text" name="cpFEdit" id="cpFEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="cpFEdit" id="cpFEdit" disabled class="form-control" onfocusout="validaCPEdit()" maxlength="5"></div>
                             <div class="col-md-2" id="cpFEButtons">
                             </div>
                         </div>
@@ -1017,43 +1023,43 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Calle</div>
-                            <div class="col-md-6"><input type="text" name="calleEEdit" id="calleEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="calleEEdit" id="calleEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="99"></div>
                             <div class="col-md-2" id="calleEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="10"></div>
                             <div class="col-md-2" id="noEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Interior</div>
-                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="10"></div>
                             <div class="col-md-2" id="noIntEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Ciudad</div>
-                            <div class="col-md-6"><input type="text" name="cityEEdit" id="cityEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="cityEEdit" id="cityEEdit" disabled class="form-control" onfocusout="changeFlag(4)"></div>
                             <div class="col-md-2" id="cityEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Estado</div>
-                            <div class="col-md-6"><input type="text" name="estadoEEdit" id="estadoEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="estadoEEdit" id="estadoEEdit" disabled class="form-control" onfocusout="changeFlag(4)"></div>
                             <div class="col-md-2" id="estadoEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-6"><input type="text" name="coloniaEEdit" id="coloniaEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="coloniaEEdit" id="coloniaEEdit" disabled class="form-control" onfocusout="changeFlag(4)"></div>
                             <div class="col-md-2" id="coloniaEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">C.P.</div>
-                            <div class="col-md-6"><input type="text" name="cpEEdit" id="cpEEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="cpEEdit" id="cpEEdit" disabled class="form-control" onfocusout="changeFlag(4)"></div>
                             <div class="col-md-2" id="cpEEButtons">
                             </div>
                         </div>
@@ -1074,15 +1080,28 @@
                             <div class="col-md-2" id="metPagoButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="giroEdit1">
                             <div class="col-md-4">Giro</div>
-                            <div class="col-md-6"><input type="text" name="giroEdit" id="giroEdit" disabled class="form-control"></div>
+                            <div class="col-md-6">
+                                <input type="text" name="giroEditV" id="giroEditV" disabled class="form-control" disabled>
+                                <!-- <select id="giroEdit" name="giroEdit" class="form-control selectpicker" data-live-search="true"></select> -->
+                            </div>
                             <div class="col-md-2" id="giroButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-none" id="giroEdit2">
+                            <div class="col-md-4">Giro</div>
+                            <div class="col-md-6">
+                                <select id="giroEdit" name="giroEdit" class="form-control selectpicker" data-live-search="true"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary btn-circle" onclick="alert('Ya está disponible la edición')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Antiguedad</div>
-                            <div class="col-md-6"><input type="text" name="antiguedadEdit" id="antiguedadEdit" disabled class="form-control"></div>
+                            <div class="col-md-6"><input type="text" name="antiguedadEdit" id="antiguedadEdit" disabled class="form-control" onfocusout="changeFlag(1)"></div>
                             <div class="col-md-2" id="antiguedadButtons">
                             </div>
                         </div>
@@ -1508,7 +1527,7 @@
                 <hr class="hr-indarYellow">
                 <div class="row">
                     <div class="col-md-12">
-                    <button type="submit" class="btn btn-warning float-right" onclick="saveActaConst()">Guardar</button>
+                        <button type="submit" class="btn btn-warning float-right" onclick="saveActaConst()">Guardar</button>
                     </div>
                 </div>
                 <div class="row">
@@ -1554,6 +1573,90 @@
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Documento</th>
                                     <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDITAR CONTACTOS MODAL -->
+<div class="modal" tabindex="-1" id="contactosEdit">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titlecontactosEdit">EDITAR CONTACTOS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodycontactosEdit" style="text-align: center;">
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-warning float-right" onclick="saveContactos()">Guardar</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3>DATOS DE CONTACTO</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tipo de contacto</label>
+                            </div>
+                            <select class="custom-select" id="tipoContacto">
+                                <option selected>SELECCIONAR</option>
+                                <option value="1">PRINCIPAL</option>
+                                <option value="2">PAGOS</option>
+                                <option value="3">COMPRAS</option>
+                                <option value="4">ADMON</option>
+                                <option value="5">EMERGENCIA</option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control" onfocusout="validateNameC()" maxlength="49">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="telefonoContacto" id="telefonoContacto" placeholder="Telefono" class="form-control" maxlength="10">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control" maxlength="10">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control" maxlength="49">
+                        </div>
+                        <div class="input-group mb-3 checkForm">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                ¿Desea recibir publicidad sobre nuestras promociones en este correo?
+                            </label>
+                        </div>
+                        <div class="col-12 text-center" id="alertContacto">
+
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addContactData()">Agregar Contacto</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-7">
+                        <table class="table" id="contactData">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Celular</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>

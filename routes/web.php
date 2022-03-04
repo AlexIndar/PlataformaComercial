@@ -920,6 +920,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
+                Route::post('/MisSolicitudes/Update', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $response = MisSolicitudesController::Update($token, json_encode($request->all()));
+                    return $response;
+                });
+
                 Route::post('/MisSolicitudes/UpdateFile', function (Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error'){
