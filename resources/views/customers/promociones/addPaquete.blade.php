@@ -261,16 +261,12 @@
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
-                        <th>Descuento</th>
-                        <th>Descuento Web</th>
                         <th>Monto mínimo</th>
                         <th>Cantidad mínima</th>
                         <th>Acciones</th>
                     </tr>
 
                     <tr>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -334,10 +330,17 @@
                 <div class="row reglas-row" id="descuentosPorCategoria">
                     <div class="col-lg-3 col-md-3 col-12">
                         <select id="categoriaCliente1" name="categoriaCliente1" class="form-control" data-live-search="true">
-                            <option selected value="master">MASTER</option>
-                            <option value="d">CLIENTE D</option>
-                            <option value="a">CLIENTE A</option>
-                            <option value="a light">CLIENTE A LIGHT</option>
+                            <option selected value="F2">F2</option>
+                            <option value="F5">F5</option>
+                            <option value="FX">FX</option>
+                            <option value="E">E</option>
+                            <option value="AA">AA</option>
+                            <option value="AB">AB</option>
+                            <option value="AC">AC</option>
+                            <option value="D">D</option>
+                            <option value="DC">DC</option>
+                            <option value="M">M</option>
+                            <option value="MC">MC</option>
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-2 col-12 text-center">
@@ -352,7 +355,7 @@
                     <div class="col-lg-2 col-md-2 col-11">
                         <input class="input-promociones" type="number" name="descuentoWebSubregla1" id="descuentoWebSubregla1" value="1" step=".01" min="0">
                     </div>
-                    <div class='col-1'><i class='fas fa-plus-square btn-add-product fa-2x' id="iconoAgregarCategoriaDescuento1" onclick="addRowCategoriaDescuento(1)"></i></div>
+                    <div class="col-1"><i class='fas fa-plus-square btn-add-product fa-2x' id="iconoAgregarCategoriaDescuento1" onclick="addRowCategoriaDescuento(1)"></i></div>
                 </div>
 
                 <br>

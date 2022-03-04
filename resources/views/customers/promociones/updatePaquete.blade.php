@@ -274,16 +274,12 @@
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
-                        <th>Descuento</th>
-                        <th>Descuento Web</th>
                         <th>Monto mínimo</th>
                         <th>Cantidad mínima</th>
                         <th>Acciones</th>
                     </tr>
 
                     <tr>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

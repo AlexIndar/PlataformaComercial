@@ -3,7 +3,6 @@ var subreglas = [];
 var packageHeader;
 var idPaquete = 0;
 var cuotasList = [];
-var categoriasDescuentos = [];
 
 $('document').ready(function(){
     $( "#tipoCuota" ).change(function() {
@@ -219,7 +218,7 @@ function validarPaquete(){
         packageHeader = json;
         console.log(JSON.stringify(packageHeader));
         
-        clearModalSubreglas();
+        // clearModalSubreglas();
 
         activateModalRulesPackage();
         document.getElementById("btn-add-sub").setAttribute( "onClick", "activateModalRulesPackage()" );
@@ -246,10 +245,23 @@ function addRule(){
             updateRule();
         }
         else{
+
+            let categoriasCount = document.getElementById('descuentosPorCategoria').children.length / 6;
+            var categoriasSubregla = [];
+            for(var x = 1; x<= categoriasCount; x++){
+                var categoriaDescuentos = {
+                    categoria: document.getElementById('categoriaCliente'+x).value,
+                    descuento: document.getElementById('descuentoSubregla'+x).value,
+                    descuentoWeb: document.getElementById('descuentoWebSubregla'+x).value,
+                }
+                categoriasSubregla.push(categoriaDescuentos);
+            }
+
             var json = {
                 nombreSub: document.getElementById('nombreSubregla').value,
                 descuentoSub: document.getElementById('descuentoSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla1').value),
                 descuentoWebSub: document.getElementById('descuentoWebSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoWebSubregla1').value),
+                descuentosCategorias: categoriasSubregla,
                 montoMinCash: document.getElementById('preciominSub').value == "" ? 0 : parseInt(document.getElementById('preciominSub').value),
                 montoMinQty: document.getElementById('cantidadminSub').value == "" ? 0 : parseInt(document.getElementById('cantidadminSub').value),
                 regalos: $('#regalosSub').chosen().val(),
@@ -259,6 +271,8 @@ function addRule(){
             };
         
             subreglas.push(json);
+
+            console.log(subreglas);
             
             createTableSubreglas();
            
@@ -356,7 +370,6 @@ function clearCuotas(){
 }
 
 function editSubregla(id){
-    console.log(subreglas);
     var index = id - 1;
 
     document.getElementById('nombreSubregla').value = subreglas[index]['nombreSub'];
@@ -364,6 +377,22 @@ function editSubregla(id){
     document.getElementById('descuentoWebSubregla1').value = subreglas[index]['descuentoWebSub'];
     document.getElementById('cantidadminSub').value = subreglas[index]['montoMinQty'];
     document.getElementById('preciominSub').value = subreglas[index]['montoMinCash'];
+
+    let childs = document.getElementById('descuentosPorCategoria').children.length;
+    var container = document.getElementById('descuentosPorCategoria');
+
+    for(var x = childs; x>0; x--){
+        container.removeChild(container.lastElementChild);
+    }
+
+    var descuentosCategorias = subreglas[index]['descuentosCategorias'];
+
+    for(x = 0; x < descuentosCategorias.length; x++){
+        addRowCategoriaDescuento(x);
+        $("#categoriaCliente"+(x+1)).val(descuentosCategorias[x]['categoria']);
+        document.getElementById('descuentoSubregla'+(x+1)).value = descuentosCategorias[x]['descuento'];
+        document.getElementById('descuentoWebSubregla'+(x+1)).value = descuentosCategorias[x]['descuentoWeb'];
+    }
 
     $('#regalosSub').val(subreglas[index]['regalos']).trigger('chosen:updated');
     $('#proveedores').val(subreglas[index]['proveedores']).trigger('chosen:updated');
@@ -385,6 +414,16 @@ function clearModalSubreglas(){
     document.getElementById('descuentoWebSubregla1').value = 1;
     document.getElementById('cantidadminSub').value = 1;
     document.getElementById('preciominSub').value = 1;
+    document.getElementById('iconoAgregarCategoriaDescuento1').classList.remove('d-none');
+
+    let childs = document.getElementById('descuentosPorCategoria').children.length;
+    var container = document.getElementById('descuentosPorCategoria');
+
+    for(var x = childs; x>0; x--){
+        container.removeChild(container.lastElementChild);
+    }
+
+    addRowCategoriaDescuento(0);
 
     $('#regalosSub').val('').trigger('chosen:updated');
 
@@ -409,6 +448,7 @@ function closeModalSubreglas(){
     activeModal.style.opacity = 0;
     activeModal.style.zIndex = -1000;
     activeModal.classList.remove("active-modal");
+
     clearModalSubreglas();
 }
 
@@ -423,6 +463,20 @@ function updateRule(){
     subreglas[index]['proveedores'] = $('#proveedores').chosen().val();
     subreglas[index]['marcas'] = $('#marcas').chosen().val();
     subreglas[index]['articulos'] = $('#articulos').chosen().val();
+
+    let categoriasCount = document.getElementById('descuentosPorCategoria').children.length / 6;
+    var categoriasSubregla = [];
+    for(var x = 1; x<= categoriasCount; x++){
+        var categoriaDescuentos = {
+            categoria: document.getElementById('categoriaCliente'+x).value,
+            descuento: document.getElementById('descuentoSubregla'+x).value,
+            descuentoWeb: document.getElementById('descuentoWebSubregla'+x).value,
+        }
+        categoriasSubregla.push(categoriaDescuentos);
+    }
+
+    subreglas[index]['descuentosCategorias'] = categoriasSubregla;
+
     createTableSubreglas();
 }
 
@@ -458,8 +512,6 @@ function createTableSubreglas(){
         var cell3 = row.insertCell(2);
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
-        var cell6 = row.insertCell(5);
-        var cell7 = row.insertCell(6);
     
         var montoFormat = (parseInt(subreglas[x]['montoMinCash'])).toLocaleString('en-US', {
             style: 'currency',
@@ -468,13 +520,11 @@ function createTableSubreglas(){
     
         cell1.innerHTML = "<h5 class='textoSubreglas'>" + (x+1) + "</h5>";
         cell2.innerHTML = "<h5 class='textoSubreglas'>" + subreglas[x]['nombreSub'] + "</h5>";
-        cell3.innerHTML = "<h5 class='textoSubreglas'>" + subreglas[x]['descuentoSub'] + "%</h5>";
-        cell4.innerHTML = "<h5 class='textoSubreglas'>" + subreglas[x]['descuentoWebSub'] + "%</h5>";
-        cell5.innerHTML = "<h5 class='textoSubreglas'>" + montoFormat + "</h5>";
-        cell6.innerHTML = "<h5 class='textoSubreglas'>" + subreglas[x]['montoMinQty'] + "</h5>";
-        cell7.innerHTML = "<a class='icons-subreglas' onclick='editSubregla("+(x+1)+")'><i class='fas fa-edit fa-lg'></i></a>&nbsp;<a class='icons-subreglas' onclick='deleteSubregla("+(x+1)+")'><i class='fas fa-trash fa-lg'></i></a>&nbsp;<a class='icons-subreglas d-none' onclick='deleteSubregla("+(x+1)+")'><i class='fas fa-trash fa-lg'></i></a>";
+        cell3.innerHTML = "<h5 class='textoSubreglas'>" + montoFormat + "</h5>";
+        cell4.innerHTML = "<h5 class='textoSubreglas'>" + subreglas[x]['montoMinQty'] + "</h5>";
+        cell5.innerHTML = "<a class='icons-subreglas' onclick='editSubregla("+(x+1)+")'><i class='fas fa-edit fa-lg'></i></a>&nbsp;<a class='icons-subreglas' onclick='deleteSubregla("+(x+1)+")'><i class='fas fa-trash fa-lg'></i></a>&nbsp;<a class='icons-subreglas d-none' onclick='deleteSubregla("+(x+1)+")'><i class='fas fa-trash fa-lg'></i></a>";
     
-        cell7.classList.add('actions-subreglas');
+        cell5.classList.add('actions-subreglas');
     
         clearModalSubreglas();
     
@@ -661,7 +711,6 @@ function storeHeader(){
 }
 
 function addRowCategoriaDescuento(id){
-    console.log('add row');
     var container = document.getElementById('descuentosPorCategoria');
     var div1 = document.createElement('div');
     var div2 = document.createElement('div');
@@ -678,25 +727,60 @@ function addRowCategoriaDescuento(id){
     select.setAttribute('class', 'form-control');
 
     var opt1 = document.createElement('option');
-    opt1.value = 'master';
-    opt1.innerHTML = 'MASTER';
+    opt1.value = 'F2';
+    opt1.innerHTML = 'F2';
 
     var opt2 = document.createElement('option');
-    opt2.value = 'd';
-    opt2.innerHTML = 'CLIENTE D';
+    opt2.value = 'F5';
+    opt2.innerHTML = 'F5';
 
     var opt3 = document.createElement('option');
-    opt3.value = 'a';
-    opt3.innerHTML = 'CLIENTE A';
+    opt3.value = 'FX';
+    opt3.innerHTML = 'FX';
 
     var opt4 = document.createElement('option');
-    opt4.value = 'a light';
-    opt4.innerHTML = 'CLIENTE A LIGHT';
+    opt4.value = 'E';
+    opt4.innerHTML = 'E';
+
+    var opt5 = document.createElement('option');
+    opt5.value = 'AA';
+    opt5.innerHTML = 'AA';
+
+    var opt6 = document.createElement('option');
+    opt6.value = 'AB';
+    opt6.innerHTML = 'AB';
+
+    var opt7 = document.createElement('option');
+    opt7.value = 'AC';
+    opt7.innerHTML = 'AC';
+
+    var opt8 = document.createElement('option');
+    opt8.value = 'D';
+    opt8.innerHTML = 'D';
+
+    var opt9 = document.createElement('option');
+    opt9.value = 'DC';
+    opt9.innerHTML = 'DC';
+
+    var opt10 = document.createElement('option');
+    opt10.value = 'M';
+    opt10.innerHTML = 'M';
+
+    var opt11 = document.createElement('option');
+    opt11.value = 'MC';
+    opt11.innerHTML = 'MC';
 
     select.appendChild(opt1);
     select.appendChild(opt2);
     select.appendChild(opt3);
     select.appendChild(opt4);
+    select.appendChild(opt5);
+    select.appendChild(opt6);
+    select.appendChild(opt7);
+    select.appendChild(opt8);
+    select.appendChild(opt9);
+    select.appendChild(opt10);
+    select.appendChild(opt11);
 
     div1.appendChild(select);
 
@@ -737,14 +821,15 @@ function addRowCategoriaDescuento(id){
     icon.setAttribute('onclick', 'addRowCategoriaDescuento('+(id+1)+')');
     div6.appendChild(icon);
 
-    document.getElementById('iconoAgregarCategoriaDescuento'+id).classList.add('d-none');
+    if(id>0)
+        document.getElementById('iconoAgregarCategoriaDescuento'+id).classList.add('d-none');
 
     container.appendChild(div1);
     container.appendChild(div2);
     container.appendChild(div3);
     container.appendChild(div4);
     container.appendChild(div5);
-    container.appendChild(div6);
-
-
+    if(id < 10){
+        container.appendChild(div6);
+    }
 }
