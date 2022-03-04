@@ -81,6 +81,15 @@ class MisSolicitudesController extends Controller
         return json_decode($valSol->body());
     }
 
+    public static function Update($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Update', [
+            "Folio" => $json->Folio,
+            "File" => $json->File,
+        ]);
+        return $response;
+    }
+
     public static function UpdateFile($token, $data){
         $json = json_decode($data);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateFile', [
@@ -104,8 +113,16 @@ class MisSolicitudesController extends Controller
     public static function UpdateConstAct($token, $data){
         $json = json_decode($data);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateConstAct', [
-            "Folio" => $json->Folio,
-            "ConsActs" => $json->ConsActs,
+            "folio" => $json->folio,
+            "typeForm" => $json->typeForm,
+            "cliente" => $json->cliente,
+            "datosF" => $json->datosF,
+            "domF" => $json->domF,
+            "domE" => $json->domE,
+            "clienteFlag" => $json->clienteFlag,
+            "datosFFlag" => $json->datosFFlag,
+            "domFFlag" => $json->domFFlag,
+            "domEFlag" => $json->domEFlag,
         ]);
         return $response;
     }
