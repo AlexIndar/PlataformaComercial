@@ -1,12 +1,12 @@
 @extends('layouts.intranet.main', ['active' => 'Ventas', 'permissions' => $permissions])
 
-@section('title') Ventas - Editar Promoción @endsection 
+@section('title') Ventas - Agregar Promoción @endsection 
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
 <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
 <script src="{{asset('assets/customers/js/promociones/addPromocion.js')}}"></script>
-<script src="{{asset('assets/customers/js/index.js')}}"></script>
+<!-- <script src="{{asset('assets/customers/js/index.js')}}"></script> -->
 
 @endsection
 
@@ -16,7 +16,8 @@
     <div class="container-fluid">
         <br><br>
         <!---------------------------------------------------------------------------------- DATOS GENERALES / ENCABEZADO PROMOCIONES ------------------------------------------------->
-
+        <input type="text" name="idPromo" id="idPromo" value="{{$promo->id}}" hidden>
+        <input type="text" name="tipoPromo" id="tipoPromo" value="promocion" hidden>
         <div class="datos-generales">
             <div class="title bg-indar">
                 <h4>Datos generales de la promoción</h4>
@@ -26,7 +27,7 @@
             <div class="content-datos-generales">
                 <div class="row text-center">
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Nombre:</h5></div>
-                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="nombrePromo" name="nombrePromo" required></div>
+                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="nombrePromo" name="nombrePromo" value="{{$promo->nombrePromo}}" required></div>
                 </div>
                 <br>
                 <div class="row text-center">
@@ -50,7 +51,7 @@
 
                 <div class="row text-center">
                     <div class="col-12">
-                        <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' value=""/>
+                        <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' value="{{$datePromo}}"/>
                     </div>
                 </div>
 
@@ -60,7 +61,7 @@
                         <div class="row text-center">
                             <div class="col-12"><h5>Hora de inicio (primer día)</h5></div>
                             <div class="col-12">
-                                <input type="time" id="startTime" class="form-control">
+                                <input type="time" id="startTime" class="form-control" value="{{$startTime}}">
                             </div>
                         </div>
                     </div>
@@ -68,7 +69,7 @@
                         <div class="row text-center">
                             <div class="col-12"><h5>Hora de término (último día)</h5></div>
                             <div class="col-12">
-                                <input type="time" id="endTime" class="form-control">
+                                <input type="time" id="endTime" class="form-control" value="{{$endTime}}">
                             </div>
                         </div>
                     </div>
@@ -105,14 +106,14 @@
                         <h5>Descuento promo:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuento" id="descuento" value="1" step=".01" min="0">
+                        <input class="input-promociones" type="number" name="descuento" id="descuento" value="{{$promo->descuento}}" step=".01" min="0">
                     </div>
 
                     <div class="col-lg-2 col-md-3 col-12 text-center">
                         <h5>Puntos:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="puntos" id="puntos" min="0">
+                        <input class="input-promociones" type="number" name="puntos" id="puntos" min="0" value="{{$promo->puntosIndar}}">
                     </div>
                 </div>
                 <div class="row reglas-row">
@@ -121,9 +122,21 @@
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
                         <select id="plazos" name="plazos" class="form-control selectpicker" data-live-search="true">
-                            <option selected value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                            @if($promo->plazosIndar == 1)
+                                <option selected value="1">1</option>
+                            @else
+                                <option value="1">1</option>
+                            @endIf
+                            @if($promo->plazosIndar == 2)
+                                <option selected value="2">2</option>
+                            @else
+                                <option value="2">2</option>
+                            @endif
+                            @if($promo->plazosIndar == 3)
+                                <option selected value="3">3</option>
+                            @else
+                                <option value="3">3</option>
+                            @endif
                         </select>
                     </div>
 
@@ -154,14 +167,14 @@
                         <h5>Monto mínimo:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="preciomin" id="preciomin" value="1" step=".01" min="0">
+                        <input class="input-promociones" type="number" name="preciomin" id="preciomin" value="{{$promo->montoMinCash}}" step=".01" min="0">
                     </div>
 
                     <div class="col-lg-2 col-md-3 col-12 text-center">
                         <h5>Cantidad mínima:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="cantidadmin" id="cantidadmin" value="1" step="1" min="0">
+                        <input class="input-promociones" type="number" name="cantidadmin" id="cantidadmin" value="{{$promo->montoMinQty}}" step="1" min="0">
                     </div>
                 </div>
 
@@ -409,7 +422,7 @@
             </div>
         </div>
 
-        <br><br><br><br>
+        <br><br><br><br> 
     </div>
 
 </div>

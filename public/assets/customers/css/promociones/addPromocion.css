@@ -9,6 +9,17 @@
     border-top-right-radius: 5px;
 }
 
+::-webkit-scrollbar {
+    width: 10px !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #313761 !important;
+    border-radius: 10px !important; 
+}
+
 .bg-blue{
     background-color: #002868 !important;
     color: white !important;
@@ -60,11 +71,11 @@ h5{
 .input-promociones{
     width: 100% !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    height: 30px;
-    border-radius: 2px;
+    height: 30px !important;
+    border-radius: 2px !important;
     background-color: white !important;
-    position: relative;
-    padding-left:12px ;
+    position: relative !important;
+    padding-left:12px !important;
 }
 
 /* MODAL */
@@ -93,6 +104,14 @@ h5{
     border-radius: 50% !important;
 }
 
+.modal-indar-reglas{
+    width: 60%;
+    height: 95vh;
+    overflow-y: auto;
+    background-color: #F4F6F9;
+    border-radius: 5px;
+}
+
 .modal-header{
     background-color: #002868 !important;
     color: white !important;
@@ -103,92 +122,10 @@ h5{
 .modal-body{
     padding: 50px !important;
     width: 100% !important;
-    background-color: white;
+    background-color: #F4F6F9;
     height: 100%;
 }
 
-.modal-inputs{
-    display: flex !important;
-    align-items: center;
-    flex-direction: row;
-}
-
-.modal-body label{
-    color: #555555;
-    font-size: 18px;
-    
-}
-
-.modal-body input{
-    width: 100%;
-    float: right;
-    height: 40px;
-    margin-left: auto;
-    background-color: #F5F8F8;
-    border-radius: 10px;
-    border:none;
-    text-indent: 10px;
-}
-
-.remember-login{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: #002868 !important;
-    font-weight: 500;
-}
-
-.checkbox{
-    width: 15px !important;
-    height: 15px !important;
-    margin-right: 10px;
-    margin-top: 3px;
-    cursor: pointer;
-}
-
-.login-buttons{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.login-btn{
-    width: 40%;
-    background-color: rgb(251, 198, 33) !important;
-    color: white !important;
-    font-size: 20px !important;
-    font-weight: 500 !important;
-    transition: all .5s ease;
-    cursor: pointer;
-}
-
-.login-btn:hover{
-    background-color: #002868 !important;
-}
-
-.login-buttons a{
-    text-decoration: none;
-    color: #878787;
-    font-weight: 500;
-    font-size: 15px;
-    margin-top: 10px;
-}
-
-.hr-indar{
-    border: 2px solid #002868 !important;
-    border-color: #002868 !important;
-    background-color: #002868 !important;
-    color: #002868 !important;
-}
-
-
-.modal-body a{
-    text-decoration: none;
-    font-size: 18px;
-    color: #002868;
-}
 
 /* ENCABEZADO PROMOCIONES / DATOS GENERALES -------------------------------------------------------------------------------------------------------- */
 
@@ -251,7 +188,7 @@ h5{
 	position: absolute; 
 	right:6px;
 	top:3px;
-	width: 8px;
+	width: 20px;
 	height: 8px;
 	content:'';
 	cursor:pointer;
@@ -301,7 +238,7 @@ h5{
 }
 
 .chosen-container-multi .chosen-choices li.search-field input[type=text]{
-    width: auto !important;
+    width: 600px !important;
 }
 
 .chosen-container .chosen-results li.highlighted{
@@ -323,6 +260,16 @@ h5{
 
 #div-loading{
     opacity: 0;
+}
+
+/* PAQUETES --------------------------------------------------------------------------------------------------- */
+
+.success-sub{
+    background-color: rgb(143, 207, 143) !important;
+}
+
+.error-sub{
+    background-color: rgb(226, 142, 142) !important;
 }
 
 /* RESPONSIVE ------------------------------------------------------------------------------------------------ */

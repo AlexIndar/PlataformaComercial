@@ -40,7 +40,10 @@
   <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
   <!-- SELECT -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- DATATABLES -->
+  <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.1/css/fixedHeader.dataTables.min.css"> -->
+
 
 </head>
 
@@ -409,6 +412,14 @@
                   </a>
                 </li>
                 @endif
+                @if(in_array('ForzarPedidos', $permissions))
+                <li class="nav-item">
+                  <a href="/forzarPedido" class="nav-link">
+                    <i class="fas fa-paper-plane nav-icon"></i>
+                    <p>Forzar Pedidos</p>
+                  </a>
+                </li>
+                @endif
               </ul>
             </li>
             @endif
@@ -437,6 +448,7 @@
             </li>
             @endif
 
+            @if(in_array('CXC', $permissions))
             <li class="nav-item">
                 @if($active == 'CXC')
                 <a href="#" class="nav-link active">
@@ -468,6 +480,8 @@
                   </li>
                 </ul>
               </li>
+              @endif
+
               <li class="nav-item">
                 @if($active == 'Comisiones')
                 <a href="/comisionesPorCliente" class="nav-link active">
@@ -1077,37 +1091,6 @@
         </nav>
       </div>
     </aside>
-    <!--Comisiones Modal-->
-    <div class="modal fade" id="comisionesModal">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Consultar Comisiones</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            {{-- <div class="modal-body">
-                <div class="form-group" style="display:flex; flex-direction: row">
-                    <div class="col-md-3 ">
-                        <label class="form-control-label">Clientes:</label>
-                    </div>
-                    <div class=" col-md-9">
-                            <select id="clientes" name="clientes[]" class="form-control chosen selectpicker" data-placeholder="Buscar" >
-                                <option value="0">C1</option>
-                                <option value="1">C2</option>
-                                <option value="2">C3</option>
-                            </select>
-                    </div>
-                </div>
-              </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-            <a href="/comisiones">
-              <button type="button" class="btn btn-success">Consultar</button>
-            </a>
-            </div> --}}
-
           </div>
         </div>
     </div>
@@ -1180,6 +1163,11 @@
         <!-- CHOSEN SELECT -->
         <script type="text/javascript" src="{{asset('plugins/chosen/chosen.jquery.js')}}"></script>
         <link rel="stylesheet" type="text/css" href="{{asset('plugins/chosen/chosen.min.css')}}" />
+
+         <!-- DataTables  & Plugins -->
+         <!-- <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script> -->
+        <!-- <script src="https://cdn.datatables.net/fixedheader/3.2.1/js/dataTables.fixedHeader.min.js"></script> -->
+        <!-- <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script> -->
 
         <!-- xlsx reader  -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>

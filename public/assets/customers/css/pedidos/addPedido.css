@@ -167,6 +167,12 @@ transition: opacity .5s ease-in-out;
 opacity: 1;
 }
 
+.tablaPedido tr{
+  transition: all .2s ease-in-out;
+  -moz-transition: all .2s ease-in-out;
+  -webkit-transition: all .2s ease-in-out;
+}
+
 .customHeader{
 background-color: #002868 !important;
 color: white !important;
@@ -177,13 +183,17 @@ width: auto !important;
 
 .tablaPedido th{
 background-color: #002868;
-color: white;
+color: white; 
 padding: 2px;
 text-align: center;
 }
 
 .fadeOut{
   opacity: 0;
+}
+
+.focusRow{
+  background-color: #e6f595 !important;
 }
 
 .tablaPedido tr{
@@ -328,6 +338,28 @@ font-weight: 700;
 
 thead input {
 width: 100%;
+}
+
+/* --------------------------------------------------------------------------------- SUBREGLAS TABLE --------------------------------------------------------------- */
+
+.textoSubreglas{
+  text-align: center !important;
+}
+
+.icons-subreglas{
+  cursor: pointer;
+  margin-right: 20px !important;
+  color: black !important;
+}
+
+.icons-subreglas:hover{
+  color: rgb(63, 63, 63) !important;
+}
+
+.actions-subreglas{
+  display: flex;
+  justify-content: center;
+  border: none !important;
 }
 
 /* ---------------------------------------------------------------------------------- LOADING ----------------------------------------------------------------- */

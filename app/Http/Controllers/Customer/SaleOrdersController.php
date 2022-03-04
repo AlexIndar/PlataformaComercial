@@ -143,6 +143,14 @@ class SaleOrdersController extends Controller
         return $info;
     }
 
+    public static function separarPedidosPaquete($token, $json){
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/SeparaPedidosPAQUETE', [
+            "articulos" => json_decode($json)
+        ]);
+        $info = json_decode($response->body());
+        return $info;
+    }
+
     public static function regresaEstadoPedido($token, $id){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/RegresaEstadoPedido?Id='.$id);
         $info = json_decode($response->body());

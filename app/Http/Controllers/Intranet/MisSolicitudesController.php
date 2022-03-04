@@ -80,6 +80,40 @@ class MisSolicitudesController extends Controller
         $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getBills?id='.$folio);
         return json_decode($valSol->body());
     }
+
+    public static function UpdateFile($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateFile', [
+            "Folio" => $json->Folio,
+            "File" => $json->File,
+        ]);
+        return $response;
+    }
+
+    public static function UpdateReferences($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateReferences', [
+            "Folio" => $json->Folio,
+            "Referencias" => $json->Referencias,
+            "Facturas" => $json->Facturas,
+            "Caratula" => $json->Caratula
+        ]);
+        return $response;
+    }
+
+    public static function UpdateConstAct($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateConstAct', [
+            "Folio" => $json->Folio,
+            "ConsActs" => $json->ConsActs,
+        ]);
+        return $response;
+    }
+
+    public static function GetEmails($token, $zona){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetEmails?zona='.$zona);
+        return json_decode($response->body());
+    }
     
     public static function getStatus($id)
     {

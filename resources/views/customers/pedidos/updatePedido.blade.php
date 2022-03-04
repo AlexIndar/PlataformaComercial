@@ -238,7 +238,7 @@
             <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
             <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
-            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="update('save')"><i class="fas fa-save"></i> Guardar</button>
+            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(2)"><i class="fas fa-save"></i> Guardar</button>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -249,10 +249,10 @@
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="update('saveNS')"><i class="fas fa-check"></i> Levantar pedido</button>
+            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(4)"><i class="fas fa-check"></i> Levantar pedido</button>
             <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
             <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
-        </div>
+        </div> 
 
         <!---------------------------------------------------------------------------------------------------- FIN PIE PEDIDO ---------------------------------------------------------------------------------------------->
 

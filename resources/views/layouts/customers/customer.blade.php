@@ -281,7 +281,7 @@
                             <a class="nav-link" href="contacto">Contacto</a>
                         </li>
                         <li class="nav-item">
-                        @if($level == ('E'))<h5><a class="nav-link" href="Intranet">Intranet</a></h5> @endif
+                        @if($level == ('E'))<h5><a class="nav-link" href="/Intranet">Intranet</a></h5> @endif
                         </li>
                     </ul>
                 </div>

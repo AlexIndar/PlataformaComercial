@@ -106,6 +106,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue" id="headerUNO">
+                <input type="text" id="folioR" value="" hidden>
                 <h3 class="text-center oswald title ml-auto">Solicitud para Alta de Cliente</h3>
                 <h4 class="ml-auto oswald">ZONA: {{$zone['description']}}</h4>
                 <button type="button" class="close text-warning" data-dismiss="modal" aria-label="Close">
@@ -120,6 +121,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                         <h5>TIPO DE SOLICITUD</h5>
+                                        <button type="submit" class="btn btn-warning float-right" onclick="saveForm('{{$zone}}')">Guardar</button>
                                         <form>
                                             <label class="mr-3"><input type="radio" name="typeSoli" value="credit" onclick="valiteTypeForm()" id="creditRadio">Credito</label>
                                             <label class="mr-3"><input type="radio" name="typeSoli" value="creditAB" onclick="valiteTypeForm()" id="creditABRadio">AB</label>
@@ -205,19 +207,19 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
 
-                                                    <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control" onfocusout="validaRFC()">
+                                                    <input type="text" name="RFC" id="rfcInput" placeholder="RFC" class="form-control" onfocusout="validaRFC()" maxlength="13">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control" onfocusout="validaRZI()">
+                                                    <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control" onfocusout="validaRZI()" maxlength="99">
                                                     <span>Apellido Paterno - Materno - Nombres(s)</span>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control" onfocusout="validaNameC()">
+                                                    <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control" onfocusout="validaNameC()" maxlength="99">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control" onfocusout="validaProsP()">
+                                                    <input type="text" name="numeroProspecto" id="prospecto" placeholder="Número de prospecto" class="form-control" onfocusout="validaProsP()" maxlength="10">
                                                     <span>Capturar número de prospecto de la página web</span>
                                                 </div>
                                             </div>
@@ -274,32 +276,36 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control" onfocusout="validaCalle()">
+                                                    <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control" onfocusout="validaCalle()" maxlength="99">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()">
+                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()" maxlength="10">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()">
+                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()" maxlength="10">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control" onfocusout="validarCP()" maxlength="5">
+                                                    <input type="text" name="codPos" id="cpInput" placeholder="C.P." class="form-control" onfocusout="updateGeolocation()" maxlength="5">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()">
+                                                    <input type="email" name="emailFacturacion" id="emailFac" placeholder="Correo@exmample.com" class="form-control" onfocusout="validaEmailF()" maxlength="49">
                                                     <span>Correo donde se enviará la factura</span>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <!-- <div class="col-md-4">
                                                     <button onclick="updateGeolocation()" class="btn btn-info">Actualizar Geolocalización</button>
-                                                </div>
+                                                </div> -->
                                             </div>
-                                            <div class="row mb-3 d-none" id="rowInputsGeo">
-                                                <div class="col-md-4">
+                                            <div class="row mb-3" id="rowInputsGeo">
+                                                <div class="col-md-4" id="colDFRow1">
                                                     <span>Colonia</span>
                                                     <select id="colDF" name="colDF" class="form-control selectpicker" data-live-search="true">
                                                     </select>
+                                                </div>
+                                                <div class="col-md-4 d-none" id="colDFRow2">
+                                                    <span>Colonia</span>
+                                                    <input type="text" name="auxColDF" id="auxColDF" placeholder="Colonia" class="form-control" disabled>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <span>Ciudad</span>
@@ -352,13 +358,13 @@
                                             <div class="shippingAddress" id="shippingAddress" style="display: none">
                                                 <div class="row mb-3">
                                                     <div class="col-md-4">
-                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control" onfocusout="validaCalleS()">
+                                                        <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control" onfocusout="validaCalleS()" maxlength="99">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()">
+                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()" maxlength="10">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()">
+                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()" maxlength="10">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -378,10 +384,14 @@
                                                     </div>
                                                 </div> -->
                                                 <div class="row mb-3">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4" id="colDFRow3">
                                                         <span>Colonia</span>
                                                         <select id="colDFShipping" name="colDFShipping" class="form-control selectpicker" data-live-search="true">
                                                         </select>
+                                                    </div>
+                                                    <div class="col-md-4 d-none" id="colDFRow4">
+                                                        <span>Colonia</span>
+                                                        <input type="text" name="auxColDFShipping" id="auxColDFShipping" placeholder="Ciudad" class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span>Ciudad</span>
@@ -414,15 +424,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control" onfocusout="validaAnti()">
+                                                    <input type="number" name="antiguedad" id="antiguedad" placeholder="Antigüedad" class="form-control" onfocusout="validaAnti()" maxlength="4">
                                                 </div>
                                             </div>
-                                            <div class="row mb-3 d-none" id="rowOtroGiro">
+                                            <!-- <div class="row mb-3 d-none" id="rowOtroGiro">
                                                 <div class="col-md-4">
                                                     <span>Ingresa el giro del negocio</span>
                                                     <input type="text" name="otroGiro" id="otroGiro" placeholder="Giro" class="form-control">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="row">
                                                 <div class="input-group input-group-sm mb-3">
                                                     <div class="input-group-prepend">
@@ -482,7 +492,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control">
+                                                        <input type="text" name="nombreContacto" id="nombreContacto" placeholder="Nombre" class="form-control" onfocusout="validateNameC()" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <input type="text" name="telefonoContacto" id="telefonoContacto" placeholder="Telefono" class="form-control" maxlength="10">
@@ -491,13 +501,16 @@
                                                         <input type="text" name="celularContacto" id="celularContacto" placeholder="Celular" class="form-control" maxlength="10">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control">                                                        
+                                                        <input type="email" name="emailContacto" id="emailContacto" placeholder="Correo" class="form-control" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3 checkForm">
                                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
                                                         <label class="form-check-label" for="flexCheckChecked">
                                                             ¿Desea recibir publicidad sobre nuestras promociones en este correo?
                                                         </label>
+                                                    </div>
+                                                    <div class="col-12 text-center" id="alertContacto">
+
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <button class="btn btn-info" onclick="addContactData()">Agregar Contacto</button>
@@ -511,7 +524,7 @@
                                                                 <th scope="col">Nombre</th>
                                                                 <th scope="col">Celular</th>
                                                                 <th scope="col">Tipo</th>
-                                                                <th scope="col">Eliminar</th>
+                                                                <th scope="col">Acciones</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -720,13 +733,13 @@
                                             <div class="row" id="refGroup" style="display: none;">
                                                 <div class="col-md-4">
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="razonSocialRef" id="razonSocialRef" placeholder="Razón Social" class="form-control">
+                                                        <input type="text" name="razonSocialRef" id="razonSocialRef" placeholder="Razón Social" class="form-control" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="contactoRef" id="contactoRef" placeholder="Contacto" class="form-control">
+                                                        <input type="text" name="contactoRef" id="contactoRef" placeholder="Contacto" class="form-control" maxlength="20">
                                                     </div>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="ciudadRef" id="ciudadRef" placeholder="Ciudad" class="form-control">
+                                                        <input type="text" name="ciudadRef" id="ciudadRef" placeholder="Ciudad" class="form-control" maxlength="49">
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <input type="text" name="telefonoRef" id="telefonoRef" placeholder="Telefono" class="form-control" maxlength="10">
@@ -885,7 +898,8 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Solicitud <span id="folioInf"></span></h3>
+                <h3 class="text-center title ml-auto">Detalle de Solicitud No. <span id="folioInf"></span></h3>
+                <input type="text" id="typeFormInf" value="" hidden>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -928,7 +942,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">Fotografia de Solicitud</div>
-                            <div class="col-md-6" id="imgFSButton"></div>
+                            <div class="col-md-6" id="imgFSButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
                             <div class="col-md-2" id="picSolButtons">
                             </div>
                         </div>
@@ -950,9 +964,15 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4">No. Exteriorl</div>
+                            <div class="col-md-4">No. Exterior</div>
                             <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control"></div>
                             <div class="col-md-2" id="noFEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">No. Interior</div>
+                            <div class="col-md-6"><input type="text" name="noIntFEdit" id="noIntFEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="noIntFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -979,7 +999,7 @@
                             <div class="col-md-2" id="cpFEButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="datFisCD">
                             <div class="col-md-4">Comprobante Domicilio</div>
                             <div class="col-md-4" id="imgCDButton"><button class="btn btn-danger"><i class="fas fa-exclamation"></i> SIN ARCHIVO</button></div>
                             <div class="col-md-4" id="comDFEButtons">
@@ -1005,6 +1025,12 @@
                             <div class="col-md-4">No. Exterior</div>
                             <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control"></div>
                             <div class="col-md-2" id="noEEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">No. Interior</div>
+                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control"></div>
+                            <div class="col-md-2" id="noIntEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1150,7 +1176,7 @@
                 </div>
                 <div class="row" id="aCSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Acta Constitutiva</h3>
+                        <h3 class="text-center">Acta Constitutiva <button class="btn btn-warning float-right" onclick="editActaConst()"><i class="fas fa-pencil-alt"></i>Editar Acta Constitutiva</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="acRow" id="acRow">
 
@@ -1171,15 +1197,11 @@
                             <div class="col-md-4" id="cartRButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-12 text-center" id="alertCR">
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row" id="cartSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Caratula</h3>
+                        <h3 class="text-center">Caratula <button class="btn btn-warning float-right" onclick="editReferences()"><i class="fas fa-pencil-alt"></i>Editar Caratula</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-md-4">Caratula</div>
@@ -1187,18 +1209,29 @@
                             <div class="col-md-4" id="caraButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-12 text-center" id="alertRef">
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row" id="refSection" style="display: none;">
                     <div class="col-md-12">
-                        <h3 class="text-center">Referencias</h3>
+                        <h3 class="text-center">Referencias <button class="btn btn-warning float-right" onclick="editReferences()"><i class="fas fa-pencil-alt"></i>Editar Referencias</button></h3>
                         <hr class="hr-indarYellow">
                         <div class="acRow" id="refList">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="factSection" style="display: none;">
+                    <div class="col-md-12">
+                        <h3 class="text-center">Facturas <button class="btn btn-warning float-right" onclick="editReferences()"><i class="fas fa-pencil-alt"></i>Editar Facturas</button></h3>
+                        <hr class="hr-indarYellow">
+                        <div class="acRow" id="factList">
 
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <hr class="hr-indarYellow">
+                        <div class="acRow">
                         </div>
                         <div class="row mb-3">
                             <div class="col-12 text-center" id="alertRef">
@@ -1297,6 +1330,270 @@
     </div>
 </div>
 
+
+<!--Edit Image-->
+<div class="modal" tabindex="-1" id="editImageModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleModalEdit">Editar Imagen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyEditImageModal" style="text-align: center;">
+                <div class="row">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="titlePictureEdit">Editar imagen</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile19" accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label" for="inputGroupFile19" id="label-inputGroupFile19">Fotografia a editar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" id="editConfirButtons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDIT REFERENCES -->
+<div class="modal" tabindex="-1" id="editReferences">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleEditRefrences">Actualizar Referencias</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyEditReferences">
+                <!-- <div class="content" role="tabpanel" aria-labelledby="information-part-trigger"> -->
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3>REFERENCIAS</h3>
+                        <button type="submit" class="btn btn-warning float-right" onclick="saveReferences()">Guardar</button>
+                    </div>
+                </div>
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <form>
+                            <label class="mr-3"><input type="radio" name="editRef" id="editRefDatos" value="datos" onclick="changeRefEdit()">Datos</label>
+                            <label class="mr-3"><input type="radio" name="editRef" id="editRefCaratula" value="caratula" onclick="changeRefEdit()">Caratula</label>
+                            <label class="mr-3"><input type="radio" name="editRef" id="editRefFactura" value="facturas" onclick="changeRefEdit()">Facturas</label>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" id="refGroupEdit" style="display: none;">
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <input type="text" name="razonSocialRefEdit" id="razonSocialRefEdit" placeholder="Razón Social" class="form-control" maxlength="49">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="contactoRefEdit" id="contactoRefEdit" placeholder="Contacto" class="form-control" maxlength="20">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="ciudadRefEdit" id="ciudadRefEdit" placeholder="Ciudad" class="form-control" maxlength="49">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="telefonoRefEdit" id="telefonoRefEdit" placeholder="Telefono" class="form-control" maxlength="10">
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addRefDataEdit()">Agregar Referencias</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-7">
+                        <table class="table" id="refDataEdit">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Razon Social</th>
+                                    <th scope="col">Contacto</th>
+                                    <th scope="col">Ciudad</th>
+                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" id="cartGroupEdit" style="display: none;">
+                    <div class="col-md-12 text-center">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Caratula</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="editCaratulaInput" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                <label class="custom-file-label" for="editCaratulaInput" id="label-editCaratulaInput">Archivo ...</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="factGroupEdit" style="display: none;">
+                    <div class="col-md-5">
+                        <p>Las facturas deben ser de la competencia, no mayores a 30 dias y la suma del importe de estas deben ser igual o mayor al doble del credito solicitado*</p>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Datos de Factura</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="editFacturaInput" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                <label class="custom-file-label" for="editFacturaInput" id="label-editFacturaInput">Factura</label>
+                            </div>
+                            <span>Ésta página debe mostrar RFC del interesado y de su proveedor*</span>
+                        </div>
+                        <div class="input-group input-group-sm mb-3" [formGroupName]="i">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Importe de factura</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="editFacturaInputImp" accept="image/x-png,image/gif,image/jpeg" formControlName="ActaConstitutiva">
+                                <label class="custom-file-label" for="editFacturaInputImp" id="label-editFacturaInputImp">Factura</label>
+                            </div>
+                            <span>Ésta página debe mostrar el importe total de la factura*</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span>Importe</span>
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" id="importFacturaEdit" style="text-align:right;">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addFacturaDataEdit()">Agregar Factura</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <table class="table" id="facturaDataEdit">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Datos Factura</th>
+                                    <th scope="col">Importe Factura</th>
+                                    <th scope="col">Importe</th>
+                                    <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit ActaConstitutiva-->
+<div class="modal" tabindex="-1" id="actaConstEditModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleActaConstModal">EDITAR ACTA CONSTITUTIVA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyEditActaConstModal" style="text-align: center;">
+                <hr class="hr-indarYellow">
+                <div class="row">
+                    <div class="col-md-12">
+                    <button type="submit" class="btn btn-warning float-right" onclick="saveActaConst()">Guardar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputTypeActa">Tipo Archivo</label>
+                            </div>
+                            <select class="custom-select" id="inputTypeActa">
+                                <option value="-1" selected>SELECCIONAR</option>
+                                <option value="2">FECHA DE CONSTITUCION</option>
+                                <option value="1">RAZON SOCIAL</option>
+                                <option value="3">GIRO DE LA EMPRESA</option>
+                                <option value="4">TRANSITORIOS</option>
+                                <option value="5">ACCIONISTAS</option>
+                            </select>
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="dropdown">
+                                <i class="fas fa-question"></i>
+                                <div class="dropdown-content">
+                                    <img src="{{asset('assets/intranet/images/fechaConstitucion.jpg')}}" alt="Acta constitutiva" width="147" height="225">
+                                    <div class="desc">Acta constitutiva</div>
+                                </div>
+                            </div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">ACTA CONSTITUTIVA</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputFileActaEdit" accept="image/x-png,image/gif,image/jpeg">
+                                <label class="custom-file-label" for="inputFileActaEdit" id="label-inputFileActaEdit">Acta</label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info" onclick="addActaConstDataEdit()">Agregar Documento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <table class="table" id="actaConsDataEdit">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Documento</th>
+                                    <th scope="col">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="alertModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title" id="titleModalR"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Alerta del formulario <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="alertInfoModal">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="cargaModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="titleCargaModal"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Enviando información <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="bodyCargaModal"><i class="fa fa-spinner" aria-hidden="true"></i></div>
+        </div>
+    </div>
+</div>
 <!-- VALIDATE DATA MODAL -->
 <!-- <div class="modal-background" id="validateModal">
     <div class="modal-header bg-indarBlue">

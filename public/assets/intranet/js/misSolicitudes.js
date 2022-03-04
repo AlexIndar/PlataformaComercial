@@ -1,88 +1,3 @@
-// var items = [];
-// $(document).ready(function() {
-//     intervalInventario = window.setInterval(checkItems, 1000);
-
-//     function checkItems() {
-//         alert(items.length);
-//         if (items.length > 0) {
-//             clearInterval(intervalInventario);
-//             cargarInventario()
-//             console.log("aqui1");
-//         } else {
-//             console.log("aqui2");
-
-//         }
-//     }
-
-//     var zoneP = document.getElementById('zoneP').value;
-
-//     if (zoneP != "") {
-//         getItems(zoneP);
-//     }
-
-
-//     function getItems(zoneP) {
-//         let data = { zoneP: zoneP };
-//         console.log(data);
-//         console.log("INfo data");
-//         $.ajax({
-//             'headers': {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//             },
-//             'url': "misSolicitudes/getSolicitudes/All",
-//             'type': 'POST',
-//             'dataType': 'json',
-//             'data': data,
-//             'enctype': 'multipart/form-data',
-//             'timeout': 2 * 60 * 60 * 1000,
-//             success: function(data) {
-//                 items = data;
-//             },
-//             error: function(error) {
-//                 console.log(error + "D");
-//             }
-//         });
-//     }
-
-
-
-// });
-
-// function mensaje() {
-//     alert("hola");
-// }
-
-// function cargarInventario() {
-//     var dataset = [];
-//     for (var x = 0; x < items.length; x++) {
-//         var arr = [];
-
-//         arr.push(items[x]['claveP']);
-//         arr.push(items[x]['razonSocial']);
-//         arr.push(items[x]['fechaAlta']);
-//         arr.push(items[x]['status']);
-
-//         dataset.push(arr);
-//     }
-
-
-//     $("#example1").dataTable({
-//         "data": dataset,
-//         "scrollX": 900,
-//         "responsive": true,
-//         "lengthChange": true,
-//         "autoWidth": false,
-//         "paging": true,
-//         "searching": true,
-//         "ordering": true,
-//         "info": true,
-//         "orderCellsTop": true,
-//         "fixedHeader": true,
-//     });
-
-// }
-
-
 // ----------------------------------------------------------------- VARIABLES GLOBALES ------------------------------------------
 
 
@@ -118,7 +33,7 @@ var auxColoniaSelect = '';
 
 // NEGOCIO
 
-var tipoNegocio = 1;
+var tipoNegocio = -1;
 var giroSelect = '';
 var antiguedad = '';
 var negocioFrente = '';
@@ -150,11 +65,29 @@ var subtype;
 var referenciasSol = [];
 var caratula = '';
 var facturasSol = [];
+var fileF = '';
+var fileFI = '';
 var cartaResponsiva = '';
 
+//Edit Picture
+var fileEdit = '';
+var editBase64 = [];
+
+// REFERENCIAS EDIT
+var referenciasSolE = [];
+var caratulaE = null;
+var facturasSolE = [];
+var fileFE = '';
+var fileFIE = '';
+
+//Acta cons
+var actaConstitutivaEdit = '';
+var actaConstList = [];
+
+//emails
+var emailList = [];
 
 $(document).ready(function() {
-
     $('#inputGroupFile01').change(function(e) {
         var fileName = e.target.files[0].name;
         constanciaSituacionFiscal = toBase64(e.target.files[0], 1, null);
@@ -247,11 +180,13 @@ $(document).ready(function() {
 
     $('#inputGroupFile16').change(function(e) {
         var fileName = e.target.files[0].name;
+        facturaToBase64(e.target.files[0], 1);
         $('#label-inputGroupFile16').html(fileName);
     });
 
     $('#inputGroupFile17').change(function(e) {
         var fileName = e.target.files[0].name;
+        facturaToBase64(e.target.files[0], 2);
         $('#label-inputGroupFile17').html(fileName);
     });
 
@@ -259,6 +194,12 @@ $(document).ready(function() {
         var fileName = e.target.files[0].name;
         cartaResponsiva = toBase64(e.target.files[0], 12, null);
         $('#label-inputGroupFile18').html(fileName);
+    });
+
+    $('#inputGroupFile19').change(function(e) {
+        var fileName = e.target.files[0].name;
+        fileEdit = toBase64Edit(e.target.files[0]);
+        $('#label-inputGroupFile19').html(fileName);
     });
 
     $('#colDF').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
@@ -273,6 +214,7 @@ $(document).ready(function() {
 
     $('#colDFShipping').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
+
         if (auxColonias[selected] == undefined) {
             document.getElementById('rowOtraColonia').classList.remove('d-none');
         } else {
@@ -285,9 +227,9 @@ $(document).ready(function() {
         var selected = clickedIndex + 1;
         if (businessLines.length < selected) {
             tipoNegocio = -1;
-            document.getElementById('rowOtroGiro').classList.remove('d-none');
+            // document.getElementById('rowOtroGiro').classList.remove('d-none');
         } else {
-            document.getElementById('rowOtroGiro').classList.add('d-none');
+            // document.getElementById('rowOtroGiro').classList.add('d-none');
             tipoNegocio = businessLines[clickedIndex]['id'];
         }
     });
@@ -319,20 +261,19 @@ $(document).ready(function() {
         'timeout': 2 * 60 * 60 * 1000,
         success: function(data) {
             businessLines = data;
-
-            var selectBusinessLines = $('#inputGroupSelect01 option');
-            selectBusinessLines.remove();
+            var itemSelectorOption = $('#inputGroupSelect01 option');
+            itemSelectorOption.remove();
             $('#inputGroupSelect01').selectpicker('refresh');
 
-            for (var x = 0; x < businessLines.length; x++) { //Agregar todas las inputGroupSelect01es del cliente seleccionado al select inputGroupSelect01
+            for (var x = 0; x < businessLines.length; x++) {
                 $('#inputGroupSelect01').append('<option value="' + businessLines[x]['id'] + '">' + businessLines[x]['description'] + '</option>');
                 $('#inputGroupSelect01').val(businessLines[x]['id']);
                 $('#inputGroupSelect01').selectpicker("refresh");
             }
 
-            /*$('#inputGroupSelect01').append('<option value="-1">Otro</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
-            $('#inputGroupSelect01').val('1');
-            $('#inputGroupSelect01').selectpicker("refresh");*/
+            $('#inputGroupSelect01').append('<option value="-1">Selecciona un opcion</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+            $('#inputGroupSelect01').val('-1');
+            $('#inputGroupSelect01').selectpicker("refresh");
 
         },
         error: function(error) {
@@ -344,9 +285,57 @@ $(document).ready(function() {
         location.reload();
     })
 
+    $('#editCaratulaInput').change(function(e) {
+        var fileName = e.target.files[0].name;
+        toBase64Caratula(e.target.files[0], 10, null);
+        $('#label-editCaratulaInput').html(fileName);
+    });
+
+    $('#editFacturaInput').change(function(e) {
+        var fileName = e.target.files[0].name;
+        facturaToBase64E(e.target.files[0], 1);
+        $('#label-editFacturaInput').html(fileName);
+    });
+
+    $('#editFacturaInputImp').change(function(e) {
+        var fileName = e.target.files[0].name;
+        facturaToBase64E(e.target.files[0], 2);
+        $('#label-editFacturaInputImp').html(fileName);
+    });
+
+    $('#inputFileActaEdit').change(function(e) {
+        var fileName = e.target.files[0].name;
+        actaConstitutivaEdit = e.target.files[0];
+        $('#label-inputFileActaEdit').html(fileName);
+    });
+
+    let jsonZona = {
+        zona: document.getElementById("zoneP").value,
+    }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/MisSolicitudes/GetEmails",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': jsonZona,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(emailsL) {
+            if (emailsL != null) {
+                emailList = emailsL;
+            } else {
+                alert("Error");
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+        }
+    });
+
 })
-
-
 
 function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARAMETRO Y LA RETORNA EN BASE 64
     var reader = new FileReader();
@@ -375,13 +364,98 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
     archivosType.push(temp);
 }
 
+function facturaToBase64(file, opc) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        if (opc == 1)
+            fileF = reader.result.split(',')[1];
+        else
+            fileFI = reader.result.split(',')[1];
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
+function toBase64Edit(file) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        fileEdit = reader.result.split(',')[1];
+        // fileEdit = result;
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
+function toBase64Caratula(file, type, subtype) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        var result = reader.result.split(',')[1];
+        base64 = result;
+        let FileModel = {
+            Id: 0,
+            FileStr: result,
+            Type: type,
+            SubType: null
+        }
+        caratulaE = FileModel;
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
+function facturaToBase64E(file, opc) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        if (opc == 1)
+            fileFE = reader.result.split(',')[1];
+        else
+            fileFIE = reader.result.split(',')[1];
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
+function toBase64ActaConst(file, type, auxSubtype) {
+    console.log(auxSubtype);
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(s) {
+        var result = reader.result.split(',')[1];
+        let FileModel = {
+            Id: 0,
+            FileStr: result,
+            Type: type,
+            SubType: auxSubtype
+        }
+        actaConstList.push(FileModel);
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
 
 function startForm() {
     clearForm();
     $('#solicitudModal').modal('show');
+    $('#creditRadio').prop('checked', true);
+    tipoForm = "credit";
+    valiteTypeForm();
 }
 
 function clearForm() {
+    archivosType = [];
+    archivosBase64 = [];
+    document.getElementById("folioR").value = "";
+
     document.getElementById('creditoInput').value = "";
     document.getElementById('rfcInput').value = "";
     document.getElementById('rzInput').value = "";
@@ -403,9 +477,10 @@ function clearForm() {
     document.getElementById('cpInput').value = "";
     document.getElementById('emailFac').value = "";
     document.getElementById('colDF').value = "";
+    document.getElementById('auxColDF').value = "";
     document.getElementById('ciudadDF').value = "";
     document.getElementById('estadoDF').value = "";
-    document.getElementById('rowInputsGeo').classList.add('d-none');
+    // document.getElementById('rowInputsGeo').classList.add('d-none');
     document.getElementById('inputGroupFile04').value = "";
     document.getElementById('label-inputGroupFile04').innerHTML = "Seleccionar Archivo...";
     document.getElementById('inputGroupFile05').value = "";
@@ -419,6 +494,7 @@ function clearForm() {
     document.getElementById('noExtInputShipping').value = "";
     document.getElementById('noIntInputShipping').value = "";
     document.getElementById('cpInputShipping').value = "";
+    document.getElementById('auxColDFShipping').value = "";
     document.getElementById('colDFShipping').value = "";
     document.getElementById('ciudadDFShipping').value = "";
     document.getElementById('estadoDFShipping').value = "";
@@ -511,33 +587,41 @@ function addAddress() {
         divShippingAddress.style.display = 'none';
         comprobanteDomicilioShipping = '';
         comprobanteDomicilioShippingBack = '';
-        $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
-        $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
-
+        // $('#label-inputGroupFile04-2').html('Seleccionar Archivo...');
+        // $('#label-inputGroupFile05-2').html('Seleccionar Archivo...');
     }
 }
 
 function updateGeolocation() {
+    validarCP();
     var cp = document.getElementById('cpInput').value;
     if (cp == "") {
         alert('Ingresa un código postal');
     } else {
         let data = { cp: cp };
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "/MisSolicitudes/getCPData",
-            'type': 'GET',
-            'dataType': 'json',
-            'data': data,
-            'enctype': 'multipart/form-data',
-            'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+        getCpCol(data);
+    }
+}
+
+function getCpCol(data) {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/MisSolicitudes/getCPData",
+        'type': 'GET',
+        'dataType': 'json',
+        'data': data,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            if (data.state != undefined) {
+                document.getElementById('colDFRow1').classList.remove('d-none');
+                document.getElementById('colDFRow2').classList.add('d-none');
                 colonias = data['suburbs'];
                 document.getElementById('ciudadDF').value = data['town'];
                 document.getElementById('estadoDF').value = data['state'];
-                document.getElementById('rowInputsGeo').classList.remove('d-none');
+                // document.getElementById('rowInputsGeo').classList.remove('d-none');
 
                 var itemSelectorOption = $('#colDF option');
                 itemSelectorOption.remove();
@@ -548,17 +632,17 @@ function updateGeolocation() {
                     $('#colDF').val(colonias[x]);
                     $('#colDF').selectpicker("refresh");
                 }
+                $('#cpInput').removeClass("warningText");
 
-                // $('#colDF').append('<option value="Otra">Otra</option>'); //Agregar Primera opción de colDF en Blanco
-                /*$('#colDF').val('0');
-                $('#colDF').selectpicker("refresh");*/
-
-            },
-            error: function(error) {
-                console.log(error + "Error");
+            } else {
+                alert("Error, codigo postal no registrado");
+                $('#cpInput').addClass("warningText");
             }
-        });
-    }
+        },
+        error: function(error) {
+            console.log(error + "Error");
+        }
+    });
 }
 
 function addContactData() {
@@ -611,7 +695,7 @@ function addContactData() {
                 cell1.innerHTML = nombre;
                 cell2.innerHTML = celular;
                 cell3.innerHTML = tipo;
-                cell4.innerHTML = "<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i>";
+                cell4.innerHTML = "<i class='fas fa-pencil-alt' onclick='editContactRow(this)'></i>Editar /<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i> Eliminar";
                 cleanDatosContacto();
             }
         } else {
@@ -621,6 +705,14 @@ function addContactData() {
         alert("Maximo de contactos agregado");
     }
 
+}
+
+function validateNameC() {
+    if (!validacionTextOne("nombreContacto")) {
+        getAlert("alertContacto", "El nombre no puede ser numeros o menor a cuatro caracteres")
+    } else {
+        document.getElementById("alertContacto").innerHTML = "";
+    }
 }
 
 function cleanDatosContacto() {
@@ -686,6 +778,19 @@ function deleteContactRow(t) {
     contactos.splice(index - 1, 1);
 }
 
+function editContactRow(t) {
+    var row = t.parentNode.parentNode;
+    var table = document.getElementById('contactData');
+    var index = row.rowIndex;
+    document.getElementById('nombreContacto').value = contactos[index - 1].nombre;
+    document.getElementById('telefonoContacto').value = contactos[index - 1].telefono;
+    document.getElementById('celularContacto').value = contactos[index - 1].celular;
+    document.getElementById('emailContacto').value = contactos[index - 1].email;
+    document.getElementById('tipoContacto').value = contactos[index - 1].tipo;
+    table.deleteRow(index);
+    contactos.splice(index - 1, 1);
+}
+
 function changeTipoLocal(tipo) {
     if (tipo == 'Propio') {
         local = 'Propio';
@@ -708,7 +813,6 @@ function changeTipoPersona(tipo) {
 
 
 function addActaConstData() {
-
     var typeConst = document.getElementById('inputGroupSelect14').value;
     if (typeConst != -1) {
         var file = document.getElementById('label-inputGroupFile14').innerHTML;
@@ -750,7 +854,7 @@ function addActaConstData() {
                 nameTypeConst = "GIRO DE LA EMPRESA";
                 break;
             case '4':
-                nameTypeConst = "DURACIÓN DE LA SOCIEDAD";
+                nameTypeConst = "TRANSITORIOS";
                 break;
             case '5':
                 nameTypeConst = "ACCIONISTAS";
@@ -769,6 +873,51 @@ function addActaConstData() {
     }
 }
 
+function addActaConstDataR(archivos) {
+    for (let i = 0; i < archivos.length; i++) {
+        if (archivos[i].type == 9) {
+            var nameTypeConst = "";
+            switch (archivos[i].subType) {
+                case 1:
+                    nameTypeConst = "RAZON SOCIAL";
+                    break;
+                case 2:
+                    nameTypeConst = "FECHA DE CONSTITUCION";
+                    break;
+                case 3:
+                    nameTypeConst = "GIRO DE LA EMPRESA";
+                    break;
+                case 4:
+                    nameTypeConst = "TRANSITORIOS";
+                    break;
+                case 5:
+                    nameTypeConst = "ACCIONISTAS";
+                    break
+                default:
+                    nameTypeConst = "ERROR";
+                    break;
+            }
+            let auxName = `${nameTypeConst}.jpg`;
+            var data = {
+                "tipo": archivos[i].subType,
+                "file": auxName,
+            };
+            docsActa.push(data);
+
+            var table = document.getElementById('actaConsData');
+            var row = table.insertRow(table.rows.length);
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            cell1.innerHTML = nameTypeConst;
+            cell2.innerHTML = auxName;
+            cell3.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteActaRow(this)'></i>";
+        }
+    }
+
+}
 
 
 function deleteActaRow(t) {
@@ -814,7 +963,7 @@ function addRefData() {
     var cityRef = document.getElementById('ciudadRef').value.toUpperCase();
     var telRef = document.getElementById('telefonoRef').value;
 
-    if (validarDataContact(rzRef, contRef, cityRef, telRef)) {
+    if (validarDataDatosF(rzRef, contRef, cityRef, telRef)) {
         var data = {
             "rzRef": rzRef,
             "contRef": contRef,
@@ -838,7 +987,7 @@ function addRefData() {
         cell2.innerHTML = contRef;
         cell3.innerHTML = cityRef;
         cell4.innerHTML = telRef;
-        cell5.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteRefRow(this)'></i>";
+        cell5.innerHTML = "<i class='fas fa-pencil-alt' onclick='editRefRow(this)'></i>/<i class='fas fa-trash-alt' onclick='deleteRefRow(this)'></i>";
         cleanDatosRefData();
     }
 }
@@ -851,6 +1000,19 @@ function deleteRefRow(t) {
     referenciasSol.splice(index - 1, 1);
 }
 
+
+function editRefRow(t) {
+    var row = t.parentNode.parentNode;
+    var table = document.getElementById('refData');
+    var index = row.rowIndex;
+    document.getElementById('razonSocialRef').value = referenciasSol[index - 1].rzRef;
+    document.getElementById('contactoRef').value = referenciasSol[index - 1].contRef;
+    document.getElementById('ciudadRef').value = referenciasSol[index - 1].cityRef;
+    document.getElementById('telefonoRef').value = referenciasSol[index - 1].telRef;
+    table.deleteRow(index);
+    referenciasSol.splice(index - 1, 1);
+}
+
 function cleanDatosRefData() {
     document.getElementById('razonSocialRef').value = "";
     document.getElementById('contactoRef').value = "";
@@ -858,7 +1020,7 @@ function cleanDatosRefData() {
     document.getElementById('telefonoRef').value = "";
 }
 
-function validarDataContact(rz, cont, city, phone) {
+function validarDataDatosF(rz, cont, city, phone) {
     var auxR = validacionText("#razonSocialRef", rz);
     var auxC = validacionText("#contactoRef", cont);
     var auxCt = validacionText("#ciudadRef", city);
@@ -871,35 +1033,39 @@ function validarDataContact(rz, cont, city, phone) {
 }
 
 function addFacturaData() {
-    var fact1 = document.getElementById('label-inputGroupFile16').innerHTML;
-    var fact2 = document.getElementById('label-inputGroupFile17').innerHTML;
-    var importFact = document.getElementById('importFactura').value;
+    if (fileF != '' && fileFI != '' && document.getElementById('importFactura').value != "") {
+        var fact1 = document.getElementById('label-inputGroupFile16').innerHTML;
+        var fact2 = document.getElementById('label-inputGroupFile17').innerHTML;
+        var importFact = parseInt(document.getElementById('importFactura').value);
 
-    var data = {
-        "fact1": fact1,
-        "fact2": fact2,
-        "impor": importFact
-    };
+        var data = {
+            Id: 0,
+            FileStr: fileF,
+            FileTwoStr: fileFI,
+            Importe: importFact
+        };
 
-    facturasSol.push(data);
+        facturasSol.push(data);
 
+        var table = document.getElementById('facturaData');
+        var row = table.insertRow(table.rows.length);
 
-    var table = document.getElementById('facturaData');
-    var row = table.insertRow(table.rows.length);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
 
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
+        cell1.innerHTML = fact1;
+        cell2.innerHTML = fact2;
+        cell3.innerHTML = importFact;
+        cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRow(this)'></i>";
 
-    cell1.innerHTML = fact1;
-    cell2.innerHTML = fact2;
-    cell3.innerHTML = importFact;
-    cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRow(this)'></i>";
-
-    document.getElementById('label-inputGroupFile16').innerHTML = "";
-    document.getElementById('label-inputGroupFile17').innerHTML = "";
-    document.getElementById('importFactura').value = "";
+        document.getElementById('label-inputGroupFile16').innerHTML = "Seleccionar archivo...";
+        document.getElementById('label-inputGroupFile17').innerHTML = "Seleccionar archivo...";
+        document.getElementById('importFactura').value = "";
+    } else {
+        alert("Ingresa importe y/o facturas");
+    }
 }
 
 function deleteFactRow(t) {
@@ -1004,16 +1170,16 @@ function refresh() {
 function getTipoForm() {
     var tipo = null;
     switch (tipoForm) {
-        case 'cash':
+        case "cash":
             tipo = 0;
             break;
-        case 'credit':
+        case "credit":
             tipo = 1;
             break;
-        case 'creditAB':
+        case "creditAB":
             tipo = 2;
             break;
-        case 'changeRS':
+        case "changeRS":
             tipo = null;
             break;
     }
@@ -1034,8 +1200,9 @@ function getDateTime() {
 // }
 
 function validateFullForm() {
+    let msgAlert = ``;
     var save = true;
-
+    //DatosGenerales
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
     var nombreComercial = document.getElementById('nameComeInput').value;
@@ -1043,28 +1210,72 @@ function validateFullForm() {
     var constanciaSituacionFiscal = document.getElementById('inputGroupFile01').value;
     var constanciaSituacionFiscalBack = document.getElementById('inputGroupFile02').value;
     var solicitud = document.getElementById('inputGroupFile03').value;
+
+    if (rfc == "" || razonSocial == "" || nombreComercial == "" || prospecto == "" || constanciaSituacionFiscal == "" || constanciaSituacionFiscalBack == "" || solicitud == "") {
+        msgAlert += `<p>Verifica la información en Datos Generales</p>`;
+    }
+
+    //Dirección Fiscal
     var calleFiscal = document.getElementById('calleInput').value;
     var noExtFiscal = document.getElementById('noExtInput').value;
     var noIntFiscal = document.getElementById('noIntInput').value;
     var cpFiscal = document.getElementById('cpInput').value;
     var emailFac = document.getElementById('emailFac').value;
-    var colDF = document.getElementById('colDF').value;
+    var colDF = document.getElementById('colDF').value != "" ? document.getElementById('colDF').value : document.getElementById('auxColDF').value;;
     var comprobanteDomicilio = document.getElementById('inputGroupFile04').value;
     var comprobanteDomicilioBack = document.getElementById('inputGroupFile05').value;
+    if (calleFiscal == "" || noExtFiscal == "" || cpFiscal == "" || emailFac == "" || colDF == "") {
+        msgAlert += `<p>Verifica la información en Dirección Fiscal</p>`;
+    }
+    //Negocio
 
-    if (getTipoForm() != 0 && document.getElementById('creditoInput').value == '') {
-        alert('false');
-        save = false;
+    let antiguedad = document.getElementById("antiguedad").value;
+    let negFrente = document.getElementById("inputGroupFile06").value;
+    let negIzq = document.getElementById("inputGroupFile07").value;
+    let negDer = document.getElementById("inputGroupFile08").value;
+    if (tipoNegocio == -1)
+        msgAlert += `<p>Ingresa el giro del negocio</p>`;
+    if (antiguedad == "" || negFrente == "" || negIzq == "" || negDer == "") {
+        msgAlert += `<p>Verifica la información en Negocio</p>`;
+    }
+
+    //DatosContacto
+    if (contactos.length <= 0) {
+        msgAlert += `<p>Agrega los contactos</p>`;
+    }
+
+    if (getTipoForm() != 0) {
+        //Credito
+        let auxTipoLocal = $('input[name="localSoli"]:checked').val();
+        let auxTipoPersona = $('input[name="typePeople"]:checked').val();
+        let credPag = document.getElementById("inputGroupFile09").value;
+        let negIfeRe = document.getElementById("inputGroupFile10").value;
+        let negIfeRR = document.getElementById("inputGroupFile11").value;
+        let negIfeA = document.getElementById("inputGroupFile12").value;
+        let negIfeAR = document.getElementById("inputGroupFile13").value;
+
+        if (document.getElementById('creditoInput').value == '')
+            msgAlert += `<p>Ingresa el credito</p>`;
+        if (auxTipoLocal == undefined || auxTipoPersona == undefined || negIfeRe == "" || negIfeRR == "") {
+            msgAlert += `<p>Verifica los datos en Credito</p>`;
+        }
     }
     if (getTipoForm() != 0) {
         if (comprobanteDomicilio == '' || comprobanteDomicilioBack == '') {
-            save = false;
+            msgAlert += `<p>Ingresa los comprobantes de domicilio</p>`;
         }
     }
 
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '' || constanciaSituacionFiscal == '' || constanciaSituacionFiscalBack == '' || solicitud == '' || calleFiscal == '' || noExtFiscal == '' || cpFiscal == '' || emailFac == '' || colDF == '' || coloniaSelect == '') {
-        alert('false 2');
+    if (tipoForm == '')
+        msgAlert += `<p>Ingresa el tipo de formulario</p>`;
+
+    if (msgAlert != "") {
+        $('#alertModal').modal('show');
+        document.getElementById("alertInfoModal").innerHTML = msgAlert;
         save = false;
+    } else {
+        document.getElementById("alertInfoModal").innerHTML = "";
+        save = true;
     }
 
     return save;
@@ -1072,21 +1283,45 @@ function validateFullForm() {
 
 function validateSaveForm() {
     var save = true;
-
+    let msgAlert = ``;
+    let auxMsg = `<h5>La solicitud no se puede guardar sin los siguientes datos:</h5>`;
     var rfc = document.getElementById('rfcInput').value;
     var razonSocial = document.getElementById('rzInput').value;
-    var nombreComercial = document.getElementById('nameComeInput').value;
     var prospecto = document.getElementById('prospecto').value;
+    var emailFac = document.getElementById('emailFac').value;
+    var colDF = document.getElementById('colDF').value == "" ? document.getElementById('auxColDF').value : document.getElementById('colDF').value;
+    var cpFiscal = document.getElementById('cpInput').value;
+    if (tipoForm == "")
+        msgAlert += `<p>Ingresa el tipo de Solicitud</p>`;
+    if (rfc == "")
+        msgAlert += `<p>Ingresa el RFC</p>`;
+    if (razonSocial == "")
+        msgAlert += `<p>Nombre o Razón Social</p>`;
+    if (prospecto == "")
+        msgAlert += `<p>Número de Prospecto</p>`;
+    if (emailFac == "")
+        msgAlert += `<p>Email de facturacion</p>`;
+    if (colDF == "")
+        msgAlert += `<p>Colonia</p>`;
+    if (cpFiscal == "")
+        msgAlert += `<p>Codigo Postal</p>`;
+    if (tipoNegocio == -1)
+        msgAlert += `<p>Ingresa el giro del negocio</p>`;
 
-    if (tipoForm == '' || rfc == '' || razonSocial == '' || nombreComercial == '' || prospecto == '') {
+    if (msgAlert != "") {
+        $('#alertModal').modal('show');
+        document.getElementById("alertInfoModal").innerHTML = auxMsg + msgAlert;
         save = false;
+    } else {
+        save = true;
     }
-
     return save;
 }
 
+
 function SendForm(zone) {
     if (validateFullForm()) {
+        $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
         $.ajax({
             'headers': {
@@ -1099,25 +1334,29 @@ function SendForm(zone) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
-                console.log(data);
-                $('#solicitudModal').modal('hide');
-                document.getElementById('infoModalR').innerHTML = 'Solicitud enviada correctamente';
-                // window.location.href = "/MisSolicitudes";
-                $('#respuestaForm').modal('show');
+                if (Number.isInteger(data)) {
+                    sendMail(data, tp, json.cliente, 1);
+                    $('#cargaModal').modal('hide');
+                    $('#solicitudModal').modal('hide');
+                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    $('#respuestaForm').modal('show');
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
+                }
             },
             error: function(error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-
-    } else {
-        alert('Error al intentar enviar la solicitud, verifique los datos');
     }
 }
 
 function saveForm(zone) {
     if (validateSaveForm()) {
+        $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
         $.ajax({
             'headers': {
@@ -1130,20 +1369,22 @@ function saveForm(zone) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
-                console.log("Guardo");
-                console.log(data);
+                if (Number.isInteger(data)) {
+                    $('#cargaModal').modal('hide');
+                    $('#solicitudModal').modal('hide');
+                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    $('#respuestaForm').modal('show');
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
+                }
             },
             error: function(error) {
                 console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
         });
-
-        $('#solicitudModal').modal('hide');
-        document.getElementById('infoModalR').innerHTML = 'Solicitud guardada correctamente';
-        $('#respuestaForm').modal('show');
-        // window.location.href = "/MisSolicitudes";
-    } else {
-        alert('La solicitud no se puede guardar sin los siguientes datos:\nTipo de Solicitud, RFC, Nombre o Razón Social, Nombre comercial y Número de Prospecto');
     }
 }
 
@@ -1154,6 +1395,24 @@ function createJsonSolicitud(zone) {
     var referenciasData = [];
     var archivosData = [];
     var archivosNull = [{
+            "Id": 0,
+            "FileStr": "",
+            "Type": 1,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 11,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 13,
+            "SubType": null
+        },
+        {
             "Id": 0,
             "FileStr": "",
             "Type": 4,
@@ -1170,24 +1429,6 @@ function createJsonSolicitud(zone) {
             "FileStr": "",
             "Type": 6,
             "SubType": null
-        },
-        {
-            "Id": 0,
-            "FileStr": "",
-            "Type": 1,
-            "SubType": 1
-        },
-        {
-            "Id": 0,
-            "FileStr": "",
-            "Type": 11,
-            "SubType": 1
-        },
-        {
-            "Id": 0,
-            "FileStr": "",
-            "Type": 13,
-            "SubType": 1
         },
         {
             "Id": 0,
@@ -1224,34 +1465,35 @@ function createJsonSolicitud(zone) {
             "FileStr": "",
             "Type": 81,
             "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 9,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 10,
+            "SubType": null
+        },
+        {
+            "Id": 0,
+            "FileStr": "",
+            "Type": 12,
+            "SubType": null
         }
     ];
 
     var contactosNull = [{
-            "Id": 0,
-            "Tipo": 1,
-            "Nombre": "",
-            "Email": "",
-            "Celular": "",
-            "Phone": ""
-        },
-        {
-            "Id": 0,
-            "Tipo": 0,
-            "Nombre": "",
-            "Email": "",
-            "Celular": "",
-            "Phone": ""
-        },
-        {
-            "Id": 0,
-            "Tipo": 0,
-            "Nombre": "",
-            "Email": "",
-            "Celular": "",
-            "Phone": ""
-        }
-    ];
+        "Id": 0,
+        "Tipo": 1,
+        "Nombre": "",
+        "Email": "",
+        "Celular": "",
+        "Phone": "0"
+    }, ];
 
     for (var x = 0; x < contactos.length; x++) {
         var temp = {
@@ -1281,10 +1523,10 @@ function createJsonSolicitud(zone) {
 
     for (var x = 0; x < archivosType.length; x++) {
         var temp = {
-            id: 0,
-            fileStr: archivosBase64[x],
-            type: archivosType[x]['type'],
-            subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
+            Id: 0,
+            FileStr: archivosBase64[x],
+            Type: archivosType[x]['type'],
+            Subtype: archivosType[x]['subtype'] != null ? parseInt(archivosType[x]['subtype']) : null,
         };
         archivosData.push(temp);
     }
@@ -1298,16 +1540,17 @@ function createJsonSolicitud(zone) {
     }
 
     var json = {
+        // folio: document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value;
         folio: -1,
         fecha: getDateTime(),
         tipo: getTipoForm(),
-        credito: getTipoForm() == 0 ? null : parseInt(document.getElementById('creditoInput').value),
+        credito: getTipoForm() == 0 ? null : document.getElementById('creditoInput').value == "" ? 0 : parseInt(document.getElementById('creditoInput').value),
         zona: JSON.parse(zone),
         cliente: {
             clave: document.getElementById('prospecto').value,
             nombreComercial: document.getElementById('nameComeInput').value,
             tipoNegocio: tipoNegocio,
-            otroGiro: tipoNegocio == -1 ? document.getElementById('otroGiro').value : null,
+            otroGiro: null,
             tiempoConst: parseInt(document.getElementById('antiguedad').value),
             tipoLocal: local == 'Propio' ? true : false,
             tipoPersona: tipoPersona == 'Moral' ? true : false,
@@ -1321,11 +1564,11 @@ function createJsonSolicitud(zone) {
                     id: 0,
                     calle: document.getElementById('calleInput').value,
                     noInt: document.getElementById('noIntInput').value,
-                    colonia: coloniaSelect,
+                    colonia: coloniaSelect != "" ? coloniaSelect : document.getElementById("auxColDF").value,
                     ciudad: document.getElementById('ciudadDF').value,
                     estado: document.getElementById('estadoDF').value,
                     cp: document.getElementById('cpInput').value,
-                    noExt: document.getElementById('noExtInput').value,
+                    noExt: document.getElementById('noExtInput').value == "" ? "0" : document.getElementById('noExtInput').value,
                     longitude: 0,
                     latitude: 0,
                 }
@@ -1340,11 +1583,11 @@ function createJsonSolicitud(zone) {
                     id: 0,
                     calle: document.getElementById('calleInputShipping').value == '' ? document.getElementById('calleInput').value : document.getElementById('calleInputShipping').value,
                     noInt: document.getElementById('noIntInputShipping').value == '' ? document.getElementById('noIntInput').value : document.getElementById('noIntInputShipping').value,
-                    colonia: auxColoniaSelect == '' ? coloniaSelect : auxColoniaSelect,
+                    colonia: auxColoniaSelect != '' ? auxColoniaSelect : coloniaSelect != "" ? coloniaSelect : document.getElementById("auxColDF").value,
                     ciudad: document.getElementById('ciudadDFShipping').value == '' ? document.getElementById('ciudadDF').value : document.getElementById('ciudadDFShipping').value,
                     estado: document.getElementById('estadoDFShipping').value == '' ? document.getElementById('estadoDF').value : document.getElementById('estadoDFShipping').value,
                     cp: document.getElementById('cpInputShipping').value == '' ? document.getElementById('cpInput').value : document.getElementById('cpInputShipping').value,
-                    noExt: document.getElementById('noExtInputShipping').value == '' ? document.getElementById('noExtInput').value : document.getElementById('noExtInputShipping').value,
+                    noExt: document.getElementById('noExtInputShipping').value != '' ? document.getElementById('noExtInputShipping').value : document.getElementById('noExtInput').value == "" ? "0" : document.getElementById('noExtInput').value,
                     longitude: 0,
                     latitude: 0,
                 }
@@ -1354,20 +1597,12 @@ function createJsonSolicitud(zone) {
             noCuentaBanco: null,
         },
         referencias: $('input[name="refSoli"]:checked').val() == 'datos' ? referenciasData : null,
-        // historyForm: {
-        //     id: null,
-        //     folioSol: null,
-        //     fecha: null,
-        //     tipo: null, 
-        //     idTipo: null, 
-        // }, 
         archivos: archivosData.length > 0 ? archivosData : archivosNull,
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
     };
-
-    console.log(json);
-    console.log(JSON.stringify(json));
+    // console.log(json);
+    // console.log(JSON.stringify(json));
     return json;
 }
 
@@ -1423,7 +1658,23 @@ function getInfoDetalleSol(item) {
                                 'enctype': 'multipart/form-data',
                                 'timeout': 2 * 60 * 60 * 1000,
                                 success: function(filesList) {
-                                    showInfoModal(data, data2, valContac, filesList);
+                                    $.ajax({
+                                        'headers': {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        'url': "/MisSolicitudes/getBills",
+                                        'type': 'POST',
+                                        'dataType': 'json',
+                                        'data': info,
+                                        'enctype': 'multipart/form-data',
+                                        'timeout': 2 * 60 * 60 * 1000,
+                                        success: function(factList) {
+                                            showInfoModal(data, data2, valContac, filesList, factList);
+                                        },
+                                        error: function(error) {
+                                            console.log(error + "Error");
+                                        }
+                                    });
                                 },
                                 error: function(error) {
                                     console.log(error + "Error");
@@ -1449,20 +1700,8 @@ function getInfoDetalleSol(item) {
 
 
 function getGiro(id) {
-    businessLines;
-    var giro = "";
-    console.log(id);
-    switch (id) {
-        case 7:
-            giro = "FERRETERIA Y TLAPLALERIA";
-            break;
-        case 29:
-            giro = "FERRETERIA Y TLAPLALERIA";
-            break;
-        default:
-            giro = "INFO";
-    }
-    return giro;
+    let giro = businessLines.filter(x => x.id == id);
+    return giro.length > 0 ? giro[0].description : "Error en giro";
 }
 
 function getTypeCont(id) {
@@ -1470,6 +1709,18 @@ function getTypeCont(id) {
     switch (id) {
         case 1:
             typeCont = "Principal";
+            break;
+        case 2:
+            typeCont = "Pagos";
+            break;
+        case 3:
+            typeCont = "Compras";
+            break;
+        case 4:
+            typeCont = "Admon";
+            break;
+        case 5:
+            typeCont = "Emergencia";
             break;
         default:
             typeCont = "ERROR";
@@ -1479,6 +1730,68 @@ function getTypeCont(id) {
 
 function editText(item) {
     document.getElementById(item).disabled = false;
+}
+
+function editImage(type) {
+    fileEdit = '';
+    $('#label-inputGroupFile19').html("Fotografia a editar");
+    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmEditImage('` + type + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
+    document.getElementById("editConfirButtons").innerHTML = buttons;
+    $('#editImageModal').modal('show');
+}
+
+function confirmEditImage(type) {
+    let folio = parseInt(document.getElementById("folioInf").innerHTML);
+    if (fileEdit != '') {
+        $('#cargaModal').modal('show');
+        let json = {
+            Folio: folio,
+            File: {
+                Id: 0,
+                FileStr: fileEdit,
+                Type: type,
+                Subtype: null,
+            }
+        }
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "MisSolicitudes/UpdateFile",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                if (Number.isInteger(data)) {
+                    $('#cargaModal').modal('hide');
+                    document.getElementById("editConfirButtons").innerHTML = "IMAGEN ACTUALIZADA";
+                    $('#infoModal').modal('hide');
+                    detalleSol(folio);
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
+            }
+        });
+        console.log(json);
+        console.log(JSON.stringify(json));
+    } else {
+        console.log(fileEdit);
+        alert("Seleccione un archivo");
+    }
+}
+
+function cancelEditForm() {
+    $('#editImageModal').modal('hide');
 }
 
 function getButtons(dato, id) {
@@ -1493,7 +1806,19 @@ function getButtons(dato, id) {
     return buttons;
 }
 
-function showInfoModal(data, data2, valContac, filesList) {
+function getButtonsFiles(dato, type) {
+    var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editImage('` + type + `')"><i class="fas fa-edit"></i></button>` : ``;
+    if (dato == null) {
+        buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
+    } else if (dato == true) {
+        buttons += `<button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>`;
+    } else {
+        buttons += `<button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>`;
+    }
+    return buttons;
+}
+
+function showInfoModal(data, data2, valContac, filesList, factList) {
     document.getElementById("refSection").style.display = "none";
     document.getElementById("crediSection").style.display = "none";
     document.getElementById("pagareSection").style.display = "none";
@@ -1502,42 +1827,59 @@ function showInfoModal(data, data2, valContac, filesList) {
     document.getElementById("aCSection").style.display = "none";
     document.getElementById("cRSection").style.display = "none";
     document.getElementById("cartSection").style.display = "none";
+    document.getElementById("factSection").style.display = "none";
+    cleanDetalleSol();
     if (data != null) {
-        // console.log(data);
-        // console.log(data2);
-        // console.log(valContac);
-        // console.log(filesList);
+        console.log(data);
+        console.log(data2);
+        console.log(valContac);
+        console.log(filesList);
         //DATOS HEADER
-        document.getElementById("folioInf").innerHTML = "No. " + data.folio;
+        document.getElementById("folioInf").innerHTML = data.folio;
+        document.getElementById("typeFormInf").innerHTML = data.tipo;
         //DATOS GENERALES
         document.getElementById("rfcEdit").value = data.cliente.datosF.rfc;
-        document.getElementById("rfcButtons").innerHTML = getButtons(data2.calleEntrega, "rfcEdit");
+        document.getElementById("rfcButtons").innerHTML = getButtons(data2.rfc, "rfcEdit");
 
         document.getElementById("rzEdit").value = data.cliente.datosF.razonSocial;
-        document.getElementById("rzButtons").innerHTML = getButtons(data2.calleEntrega, "rzEdit");
+        document.getElementById("rzButtons").innerHTML = getButtons(data2.razonSocial, "rzEdit");
 
         document.getElementById("nomComEdit").value = data.cliente.nombreComercial;
-        document.getElementById("nomComButtons").innerHTML = getButtons(data2.calleEntrega, "nomComEdit");
+        document.getElementById("nomComButtons").innerHTML = getButtons(data2.nombreComercial, "nomComEdit");
+
+        document.getElementById("csfButtons1").innerHTML = getButtonsFiles(data2.constanciaSituacion, 1);
+        document.getElementById("csfButtons2").innerHTML = getButtonsFiles(data2.constanciaSituacionReverso, 11);
+        document.getElementById("picSolButtons").innerHTML = getButtonsFiles(data2.firmaSolicitud, 13);
+
         getAlert("alertDG", data.observations.datosGenerales);
         //DIRECCION FISCAL
         document.getElementById("calleFEdit").value = data.cliente.datosF.domicilio.calle;
-        document.getElementById("callFEButtons").innerHTML = getButtons(data2.calleEntrega, "calleFEdit");
+        document.getElementById("callFEButtons").innerHTML = getButtons(data2.calle, "calleFEdit");
 
         document.getElementById("noFEdit").value = data.cliente.datosF.domicilio.noExt;
-        document.getElementById("noFEButtons").innerHTML = getButtons(data2.calleEntrega, "noFEdit");
+        document.getElementById("noFEButtons").innerHTML = getButtons(data2.numeroExterior, "noFEdit");
+
+        document.getElementById("noIntFEdit").value = data.cliente.datosF.domicilio.noInt;
+        document.getElementById("noIntFEButtons").innerHTML = getButtons(data2.numeroExterior, "noIntFEdit");
 
         document.getElementById("cityFEdit").value = data.cliente.datosF.domicilio.ciudad;
-        document.getElementById("cityFEButtons").innerHTML = getButtons(data2.calleEntrega, "cityFEdit");
+        document.getElementById("cityFEButtons").innerHTML = getButtons(data2.ciudad, "cityFEdit");
 
         document.getElementById("estadoFEdit").value = data.cliente.datosF.domicilio.estado;
-        document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.calleEntrega, "estadoFEdit");
+        document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.estado, "estadoFEdit");
 
         document.getElementById("coloniaFEdit").value = data.cliente.datosF.domicilio.colonia;
-        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.calleEntrega, "coloniaFEdit");
+        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.colonia, "coloniaFEdit");
 
         document.getElementById("cpFEdit").value = data.cliente.datosF.domicilio.cp;
-        document.getElementById("cpFEButtons").innerHTML = getButtons(data2.calleEntrega, "cpFEdit");
+        document.getElementById("cpFEButtons").innerHTML = getButtons(data2.cp, "cpFEdit");
 
+        if (data.tipo == 0) {
+            document.getElementById('datFisCD').classList.add('d-none');
+        } else {
+            document.getElementById('datFisCD').classList.remove('d-none');
+            document.getElementById("comDFEButtons").innerHTML = getButtonsFiles(data2.comprobanteDomicilio, 2);
+        }
         getAlert("alertDF", data.observations.direccionFiscal);
 
         //DIRECCION DE ENTREGA
@@ -1546,6 +1888,9 @@ function showInfoModal(data, data2, valContac, filesList) {
 
         document.getElementById("noEEdit").value = data.cliente.datosE.domicilio.noExt;
         document.getElementById("noEEButtons").innerHTML = getButtons(data2.numeroExteriorEntrega, "noEEdit");
+
+        document.getElementById("noIntEEdit").value = data.cliente.datosE.domicilio.noInt;
+        document.getElementById("noIntEButtons").innerHTML = getButtons(data2.numeroExteriorEntrega, "noIntEEdit");
 
         document.getElementById("cityEEdit").value = data.cliente.datosE.domicilio.ciudad;
         document.getElementById("cityEEButtons").innerHTML = getButtons(data2.ciudadEntrega, "cityEEdit");
@@ -1569,6 +1914,10 @@ function showInfoModal(data, data2, valContac, filesList) {
 
         document.getElementById("antiguedadEdit").value = data.cliente.tiempoConst;
         document.getElementById("antiguedadButtons").innerHTML = getButtons(data2.cpEntrega, "antiguedadEdit");
+
+        document.getElementById("picNegFButtons").innerHTML = getButtonsFiles(data2.fotoFrente, 4);
+        document.getElementById("picNegIButtons").innerHTML = getButtonsFiles(data2.fotoIzq, 5);
+        document.getElementById("picNegDButtons").innerHTML = getButtonsFiles(data2.fotoDer, 6);
 
         getAlert("alertNegocio", data.observations.negocio);
         //DATOS CONTACTO
@@ -1621,14 +1970,19 @@ function showInfoModal(data, data2, valContac, filesList) {
 
             document.getElementById("typePEdit").value = data.cliente.tipoPersona == true ? "Moral" : "Fisica";
             document.getElementById("typePButtons").innerHTML = getButtons(data2.tipoPersona, "typePEdit");
+            document.getElementById("picIFERButtons").innerHTML = getButtonsFiles(data2.ineRepresentante, 3);
+            document.getElementById("picIFERRButtons").innerHTML = getButtonsFiles(data2.ineRepresentanteReverso, 31);
             getAlert("alertCredit", data.observations.credito);
 
             if (data.cliente.tiempoConst < 2) {
                 document.getElementById("pagareSection").style.display = "flex";
+                document.getElementById("picPagAButtons").innerHTML = getButtonsFiles(data2.pagare, 7);
             }
             if (data.cliente.tiempoConst < 2 || data.tipo == null) {
                 document.getElementById("ifeASection").style.display = "flex";
                 document.getElementById("ifeARSection").style.display = "flex";
+                document.getElementById("picIFEAButtons").innerHTML = getButtonsFiles(data2.ineAval, 8);
+                document.getElementById("picIFERAButtons").innerHTML = getButtonsFiles(data2.ineAvalReverso, 81);
             } // else {
             //     document.getElementById("pagareSection").style.display = "none";
             //     document.getElementById("ifeASection").style.display = "none";
@@ -1643,7 +1997,7 @@ function showInfoModal(data, data2, valContac, filesList) {
                     document.getElementById("aCSection").style.display = "flex";
                     var fileActa = "";
                     for (var i = 0; i < actaList.length; i++) {
-                        fileActa = `<div class="row mb-3">
+                        fileActa += `<div class="row mb-3">
                             <div class="col-md-4">Acta Constitutiva ` + actaList[i].subType + `</div>
                             <div class="col-md-4" id="imgAC` + i + `"> <button class="btn btn-warning" onclick="showIMG('` + actaList[i].fileStr + `')"><i class="far fa-eye"></i> Ver Archivo</button></div>
                             <div class="col-md-4" id="ActCButtons` + i + `">
@@ -1656,7 +2010,8 @@ function showInfoModal(data, data2, valContac, filesList) {
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;
                 if (responsiveList != null) {
                     document.getElementById("cRSection").style.display = "flex";
-                    getAlert("alertActa", data.observations.actaConstitutiva);
+                    document.getElementById("cartRButtons").innerHTML = getButtonsFiles(data2.cartaResponsiva, 12);
+                    getAlert("alertAC", data.observations.actaConstitutiva);
                 }
             }
 
@@ -1672,8 +2027,28 @@ function showInfoModal(data, data2, valContac, filesList) {
                         </div>`;
                 }
                 document.getElementById("refList").innerHTML = fileRef;
-                getAlert("alertRef", data.observations.referencias);
+                console.log(data.observations.referencias);
             }
+
+            if (factList.length > 0) {
+                document.getElementById("factSection").style.display = "flex";
+                let objFactura = ``;
+                for (let i = 0; i < factList.length; i++) {
+                    objFactura += `<div class="row mb-3">
+                            <div class="col-md-3">No. ${(i + 1)} - Importe: ${factList[i].importe}</div>
+                            <div class="col-md-3">
+                            <button class="btn btn-warning" onclick="showIMG('` + factList[i].fileStr + `')"><i class="far fa-eye"></i> Ver Archivo</button>
+                            </div>
+                            <div class="col-md-3">
+                            <button class="btn btn-warning" onclick="showIMG('` + factList[i].fileTwoStr + `')"><i class="far fa-eye"></i> Ver Archivo</button>
+                            </div>
+                            <div class="col-md-3">                            
+                            </div>
+                        </div>`
+                }
+                document.getElementById("factList").innerHTML = objFactura;
+            }
+            getAlert("alertRef", data.observations.referencias);
         }
         //CARGAR BOTONES CON IMAGENES
         for (var i = 0; i < filesList.length; i++) {
@@ -1743,12 +2118,14 @@ function getButtonImg(idBtn, file) {
 
 function getAlert(idAlert, msg) {
     if (msg != null && msg != "") {
+        console.log(msg);
         document.getElementById(idAlert).innerHTML = `<div class="alert alert-danger" role="alert" >` + msg + `</div>`;
     }
 }
 
 function showIMG(itemIMG) {
     $('#showIMGModal').modal('show');
+    console.log(itemIMG);
     var imgen = "data:image/jpg;base64," + itemIMG;
     var img = `<img src="` + imgen + `" alt="imagen muestra" class="imageModal">`
     document.getElementById("showIMGBody").innerHTML = img;
@@ -1799,8 +2176,10 @@ function validacionTextOne(id) {
     document.getElementById(id).value = item.toUpperCase();
     if (item.length > 4 && item != "") {
         $('#' + id).removeClass("warningText");
+        return true;
     } else {
         $('#' + id).addClass("warningText");
+        return false;
     }
 }
 
@@ -1906,6 +2285,8 @@ function validarCPS() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
+                document.getElementById('colDFRow3').classList.remove('d-none');
+                document.getElementById('colDFRow4').classList.add('d-none');
                 console.log(data['suburbs']);
                 auxColonias = data['suburbs'];
                 document.getElementById('ciudadDFShipping').value = data['town'];
@@ -1945,13 +2326,14 @@ function validaAnti() {
 
 function reSendFol(item) {
     $('#confirModal').modal('show');
-    document.getElementById("titleModalConfirm").innerHTML = "¿Desea reenviar la solicitud No. " + item + "?";
+    document.getElementById("titleModalConfirm").innerHTML = `¿Desea reenviar la solicitud No. ${item}?`;
     var buttons = `<button class="btn btn-success btn-circle" onclick="confirmReSend('` + item + `')"><i class="fas fa-paper-plane"></i> Si, Reenviar</button>`;
     buttons += `<button class="btn btn-danger btn-circle" onclick="cancelForm('` + item + `')" style="margin-left: 10px;"><i class="fas fa-times"></i> No, Cancelar</button>`;
     document.getElementById("bodyModalConfirm").innerHTML = buttons;
 }
 
 function confirmReSend(item) {
+    $('#confirModal').modal('hide');
     if (item != null) {
         let data = { Item: item };
         $.ajax({
@@ -1964,8 +2346,14 @@ function confirmReSend(item) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
-                alert("Enviado correctamente");
+            success: function(response) {
+                if (response) {
+                    alert("Enviado Correctamente");
+                    location.reload();
+                } else {
+                    alert("Error en el servidor");
+                }
+
             },
             error: function(error) {
                 alert(error + "Error");
@@ -1975,11 +2363,15 @@ function confirmReSend(item) {
 }
 
 function cancelForm(item) {
-    alert("Se cancelo el reenvio de la solicitud " + item);
-    $('#confirModal').modal('hide');
+    $('#confirModal').modal('show');
+    document.getElementById("titleModalConfirm").innerHTML = "Cancelación";
+    document.getElementById("bodyModalConfirm").innerHTML = `Se cancelo el reenvio de la solicitud No. ${item}`;
 }
 
 function continueForm(item) {
+    archivosType = [];
+    archivosBase64 = [];
+    docsActa = [];
     clearForm();
     let info = { Item: item };
     $.ajax({
@@ -2034,40 +2426,42 @@ function continueForm(item) {
 }
 
 function manejoArchivos(archivos) {
+    // console.log(archivos);
     if (archivos != null) {
         for (var i = 0; i < archivos.length; i++) {
+            // console.log(archivos[i].type);
             switch (archivos[i].type) {
                 case 1:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile01').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile01').value = "Archivo";
                         document.getElementById('label-inputGroupFile01').innerHTML = "ConstanciaSituacionFiscal.jpg";
                         constanciaSituacionFiscal = archivos[i].fileStr;
                     }
                     break;
                 case 2:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile04').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile04').value = "Archivo";
                         document.getElementById('label-inputGroupFile04').innerHTML = "ComprobanteDomicilio.jpg";
                         comprobanteDomicilio = archivos[i].fileStr;
                     }
                     break;
                 case 3:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile10').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile10').value = "Archivo";
                         document.getElementById('label-inputGroupFile10').innerHTML = "IFERepresentante.jpg";
                         ineRep = archivos[i].fileStr;
                     }
                     break;
                 case 4:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile06').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile06').value = "Archivo";
                         document.getElementById('label-inputGroupFile06').innerHTML = "FotoFrente.jpg";
                         negocioFrente = archivos[i].fileStr;
                     }
                     break;
                 case 5:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile07').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile07').value = "Archivo";
                         document.getElementById('label-inputGroupFile07').innerHTML = "FotoIzquierda.jpg";
                         negocioLeft = archivos[i].fileStr;
                     }
@@ -2075,14 +2469,14 @@ function manejoArchivos(archivos) {
                     break;
                 case 6:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile08').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile08').value = "Archivo";
                         document.getElementById('label-inputGroupFile08').innerHTML = "FotoDerecha.jpg";
                         negocioRight = archivos[i].fileStr;
                     }
                     break;
                 case 7:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile09').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile09').value = "Archivo";
                         document.getElementById('label-inputGroupFile09').innerHTML = "Pagare.jpg";
                         pagare = archivos[i].fileStr;
                     }
@@ -2090,7 +2484,7 @@ function manejoArchivos(archivos) {
                     break;
                 case 8:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile12').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile12').value = "Archivo";
                         document.getElementById('label-inputGroupFile12').innerHTML = "IFEAval.jpg";
                         ineAval = archivos[i].fileStr;
                     }
@@ -2098,42 +2492,43 @@ function manejoArchivos(archivos) {
                     break;
                 case 10:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile15').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile15').value = "Archivo";
                         document.getElementById('label-inputGroupFile15').innerHTML = "Caratula.jpg";
                         caratula = archivos[i].fileStr;
                     }
                     break;
                 case 11:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile02').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile02').value = "Archivo";
                         document.getElementById('label-inputGroupFile02').innerHTML = "ConstanciaSituacionFiscalReverso.jpg";
                         constanciaSituacionFiscalBack = archivos[i].fileStr;
                     }
                     break;
                 case 12:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile18').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile18').value = "Archivo";
                         document.getElementById('label-inputGroupFile18').innerHTML = "CartaResponsiva.jpg";
                         cartaResponsiva = archivos[i].fileStr;
                     }
                     break;
                 case 13:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile03').value = archivos[i].fileStr;
+                        //document.getElementById('inputGroupFile03').value = "Archivo";
+                        console.log(archivos[i].fileStr);
                         document.getElementById('label-inputGroupFile03').innerHTML = "FirmaSolicitud.jpg";
                         fotoSolicitud = archivos[i].fileStr;
                     }
                     break;
                 case 31:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile11').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile11').value = "Archivo";
                         document.getElementById('label-inputGroupFile11').innerHTML = "IFERepresentanteReverso.jpg";
                         ineRepBack = archivos[i].fileStr;
                     }
                     break;
                 case 81:
                     if (archivos[i].fileStr != "") {
-                        document.getElementById('inputGroupFile13').value = archivos[i].fileStr;
+                        // document.getElementById('inputGroupFile13').value = "Archivo";
                         document.getElementById('label-inputGroupFile13').innerHTML = "IFEAvalReverso.jpg";
                         ineAvalBack = archivos[i].fileStr;
                     }
@@ -2144,14 +2539,13 @@ function manejoArchivos(archivos) {
 }
 
 function continueModal(facturas, archivos, data) {
-    // console.log(facturas);
-    // console.log(archivos);
-    //console.log(data);
+    document.getElementById("folioR").value = data.folio;
     $('#solicitudModal').modal('show');
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
     valiteTypeForm();
     manejoArchivos(archivos);
+    cargarArchivos(archivos);
     document.getElementById('creditoInput').value = data.credito;
     document.getElementById('rfcInput').value = data.cliente.datosF.rfc;
     document.getElementById('rzInput').value = data.cliente.datosF.razonSocial;
@@ -2163,25 +2557,50 @@ function continueModal(facturas, archivos, data) {
     document.getElementById('noIntInput').value = data.cliente.datosF.domicilio.noInt;
     document.getElementById('cpInput').value = data.cliente.datosF.domicilio.cp;
     document.getElementById('emailFac').value = data.cliente.datosF.emailFacturacion;
-    document.getElementById('colDF').value = data.cliente.datosF.domicilio.colonia;
+    document.getElementById('colDFRow1').classList.add('d-none');
+    document.getElementById('colDFRow2').classList.remove('d-none');
+    document.getElementById('auxColDF').value = data.cliente.datosF.domicilio.colonia;
     document.getElementById('ciudadDF').value = data.cliente.datosF.domicilio.ciudad;
     document.getElementById('estadoDF').value = data.cliente.datosF.domicilio.estado;
-    document.getElementById('rowInputsGeo').classList.remove('d-none');
+    // document.getElementById('rowInputsGeo').classList.remove('d-none');
 
-    document.getElementById("checkAddAddress").checked = true;
-    // document.getElementById('shippingAddress').style.display = 'block';
-    document.getElementById('calleInputShipping').value = data.cliente.datosE.domicilio.calle;
-    document.getElementById('noExtInputShipping').value = data.cliente.datosE.domicilio.noExt;
-    document.getElementById('noIntInputShipping').value = data.cliente.datosE.domicilio.noInt;
-    document.getElementById('cpInputShipping').value = data.cliente.datosE.domicilio.cp;
-    document.getElementById('colDFShipping').value = data.cliente.datosE.domicilio.colonia;
-    document.getElementById('ciudadDFShipping').value = data.cliente.datosE.domicilio.ciudad;
-    document.getElementById('estadoDFShipping').value = data.cliente.datosE.domicilio.estado;
+    if (!compareDir(data.cliente.datosF.domicilio, data.cliente.datosE.domicilio)) {
+        document.getElementById('colDFRow3').classList.add('d-none');
+        document.getElementById('colDFRow4').classList.remove('d-none');
+        document.getElementById("checkAddAddress").checked = true;
+        addAddress();
+        document.getElementById('calleInputShipping').value = data.cliente.datosE.domicilio.calle;
+        document.getElementById('noExtInputShipping').value = data.cliente.datosE.domicilio.noExt;
+        document.getElementById('noIntInputShipping').value = data.cliente.datosE.domicilio.noInt;
+        document.getElementById('cpInputShipping').value = data.cliente.datosE.domicilio.cp;
+        document.getElementById('auxColDFShipping').value = data.cliente.datosE.domicilio.colonia;
+        document.getElementById('ciudadDFShipping').value = data.cliente.datosE.domicilio.ciudad;
+        document.getElementById('estadoDFShipping').value = data.cliente.datosE.domicilio.estado;
+    } else {
+        document.getElementById("checkAddAddress").checked = false;
+        document.getElementById('calleInputShipping').value = "";
+        document.getElementById('noExtInputShipping').value = "";
+        document.getElementById('noIntInputShipping').value = "";
+        document.getElementById('cpInputShipping').value = "";
+        document.getElementById('colDFShipping').value = "";
+        document.getElementById('ciudadDFShipping').value = "";
+        document.getElementById('estadoDFShipping').value = "";
+    }
 
+    tipoNegocio = data.cliente.tipoNegocio;
+    $('#inputGroupSelect01').val(data.cliente.tipoNegocio);
+    $('#inputGroupSelect01').selectpicker("refresh");
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
+    if (data.cliente.contactos.length <= 1) {
+        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
+            addContactDataCon(data.cliente.contactos);
+            contactos = data.cliente.contactos;
+        }
+    } else {
+        addContactDataCon(data.cliente.contactos);
+        contactos = data.cliente.contactos;
+    }
 
-    addContactDataCon(data.cliente.contactos);
-    contactos = data.cliente.contactos;
 
     var idTypeP = data.cliente.tipoPersona == true ? "typeMoral" : "typeFisica";
     document.getElementById(idTypeP).checked = true;
@@ -2189,18 +2608,52 @@ function continueModal(facturas, archivos, data) {
     var idTypeL = data.cliente.tipoLocal == true ? "typePropio" : "typeRentado";
     document.getElementById(idTypeL).checked = true;
 
-    // document.getElementById('inputGroupSelect14').value = '-1';
-    // document.getElementById('inputGroupFile14').value = "";
-    // document.getElementById('label-inputGroupFile14').innerHTML = "Seleccionar Archivo...";
-    docsActa = [];
-    // clearTableDatos("actaConsData");
+    addActaConstDataR(archivos);
 
-    referenciasSol = data.referencias;
-    addRefDataR(data.referencias);
+    if (data.referencias.length > 0) {
+        referenciasSol = data.referencias;
+        addRefDataR(data.referencias);
+        document.getElementById("refSoliDatos").checked = true;
+    } else if (archivos.filter(x => x.type == 10).length > 0) {
+        document.getElementById("refSoliCaratula").checked = true;
+    } else if (facturas.length > 0) {
+        document.getElementById("refSoliFactura").checked = true;
+        facturasSol = facturas;
+        addFacturaDataR(facturas);
+    }
+    changeRef();
+}
 
-    addFacturaDataR(facturas);
-    facturasSol = facturas;
+const cleanDetalleSol = () => {
+    document.getElementById("alertDG").innerHTML = "";
+    document.getElementById("alertDF").innerHTML = "";
+    document.getElementById("alertDE").innerHTML = "";
+    document.getElementById("alertNegocio").innerHTML = "";
+    document.getElementById("alertCont").innerHTML = "";
+    document.getElementById("alertCredit").innerHTML = "";
+    document.getElementById("alertAC").innerHTML = "";
+    document.getElementById("alertRef").innerHTML = "";
+}
 
+function cargarArchivos(archivos) {
+    if (archivos.length > 0) {
+        for (let i = 0; i < archivos.length; i++) {
+            archivosBase64.push(archivos.fileStr);
+            var temp = {
+                type: archivos.type,
+                subtype: archivos.subType,
+            };
+            archivosType.push(temp);
+        }
+    }
+}
+
+
+function compareDir(datosF, datosE) {
+    if (datosF.calle == datosE.calle && datosF.noInt == datosE.noInt && datosF.colonia == datosE.colonia && datosE.ciudad == datosF.ciudad && datosF.estado == datosE.estado && datosF.cp == datosE.cp)
+        return true;
+    else
+        return false;
 }
 
 function addContactDataCon(conCon) {
@@ -2213,21 +2666,22 @@ function addContactDataCon(conCon) {
                 "celular": conCon[i].celular,
                 "email": conCon[i].email
             };
+            let tipo = "";
 
             switch (conCon[i].tipo) {
-                case "1":
+                case 1:
                     tipo = "PRINCIPAL";
                     break;
-                case "2":
+                case 2:
                     tipo = "PAGOS";
                     break;
-                case "3":
+                case 3:
                     tipo = "COMPRAS";
                     break;
-                case "4":
+                case 4:
                     tipo = "ADMON";
                     break;
-                case "5":
+                case 5:
                     tipo = "EMERGENCIA";
                     break;
             }
@@ -2242,8 +2696,8 @@ function addContactDataCon(conCon) {
 
             cell1.innerHTML = conCon[i].nombre;
             cell2.innerHTML = conCon[i].celular;
-            cell3.innerHTML = conCon[i].tipo;
-            cell4.innerHTML = "<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i>";
+            cell3.innerHTML = tipo;
+            cell4.innerHTML = "<i class='fas fa-pencil-alt' onclick='editContactRow(this)'></i>Editar /<i class='fas fa-user-times' onclick='deleteContactRow(this)'></i> Eliminar";
         }
     }
 }
@@ -2281,10 +2735,8 @@ function addRefDataR(dataRef) {
 
 
 function addFacturaDataR(dataFact) {
-
     if (dataFact != null) {
         for (var i = 0; i < dataFact.length; i++) {
-
             var table = document.getElementById('facturaData');
             var row = table.insertRow(table.rows.length);
 
@@ -2299,6 +2751,400 @@ function addFacturaDataR(dataFact) {
             cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRow(this)'></i>";
         }
     }
+}
 
 
+/*EDIT REFERENCES*/
+
+const editReferences = () => {
+    referenciasSolE = [];
+    caratulaE = null;
+    facturasSolE = [];
+    fileFE = '';
+    fileFIE = '';
+    $('#editRefDatos').prop('checked', true);
+    changeRefEdit();
+    cleanAllEditReferences();
+    $('#editReferences').modal('show');
+}
+
+const cleanAllEditReferences = () => {
+    clearInfoFacturasEdit();
+    cleanDatosRefDataEdit();
+    document.getElementById("label-editCaratulaInput").innerHTML = "Seleccionar archivo ...";
+}
+
+const changeRefEdit = () => {
+    let ref = $('input[name="editRef"]:checked').val();
+    if (ref == "datos") {
+        document.getElementById("refGroupEdit").style.display = 'flex';
+        document.getElementById("cartGroupEdit").style.display = 'none';
+        document.getElementById("factGroupEdit").style.display = 'none';
+        clearInfoFacturasEdit();
+        clearTableDatos("facturaDataEdit");
+        document.getElementById("label-editCaratulaInput").innerHTML = "Seleccionar archivo ...";
+        caratulaE = null;
+        facturasSolE = [];
+        fileFE = '';
+        fileFIE = '';
+    } else if (ref == "caratula") {
+        document.getElementById("refGroupEdit").style.display = 'none';
+        document.getElementById("cartGroupEdit").style.display = 'flex';
+        document.getElementById("factGroupEdit").style.display = 'none';
+        referenciasSolE = [];
+        facturasSolE = [];
+        fileFE = '';
+        fileFIE = '';
+        clearTableDatos("refDataEdit");
+        clearTableDatos("facturaDataEdit");
+    } else if (ref == "facturas") {
+        document.getElementById("refGroupEdit").style.display = 'none';
+        document.getElementById("cartGroupEdit").style.display = 'none';
+        document.getElementById("factGroupEdit").style.display = 'flex';
+        referenciasSolE = [];
+        caratulaE = null;
+        cleanDatosRefDataEdit();
+        clearTableDatos("refDataEdit");
+        document.getElementById("label-editCaratulaInput").innerHTML = "Seleccionar archivo ...";
+    }
+}
+
+const addRefDataEdit = () => {
+    let rzRef = document.getElementById('razonSocialRefEdit').value.toUpperCase();
+    let contRef = document.getElementById('contactoRefEdit').value.toUpperCase();
+    let cityRef = document.getElementById('ciudadRefEdit').value.toUpperCase();
+    let telRef = document.getElementById('telefonoRefEdit').value;
+    if (validarDataDatosFEdit(rzRef, contRef, cityRef, telRef)) {
+        let temp = {
+            id: 0,
+            tipo: 1,
+            nombre: rzRef,
+            email: null,
+            celular: contRef,
+            phone: telRef,
+            city: cityRef,
+        };
+
+        referenciasSolE.push(temp);
+
+        let table = document.getElementById('refDataEdit');
+        let row = table.insertRow(table.rows.length);
+
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        let cell3 = row.insertCell(2);
+        let cell4 = row.insertCell(3);
+        let cell5 = row.insertCell(4);
+
+        cell1.innerHTML = rzRef;
+        cell2.innerHTML = contRef;
+        cell3.innerHTML = cityRef;
+        cell4.innerHTML = telRef;
+        cell5.innerHTML = "<i class='fas fa-pencil-alt' onclick='editRefRowEdit(this)'></i>/<i class='fas fa-trash-alt' onclick='deleteRefRowEdit(this)'></i>";
+        cleanDatosRefDataEdit();
+    }
+}
+
+const deleteRefRowEdit = (t) => {
+    let row = t.parentNode.parentNode;
+    let table = document.getElementById('refDataEdit');
+    let index = row.rowIndex;
+    table.deleteRow(index);
+    referenciasSolE.splice(index - 1, 1);
+}
+
+
+const editRefRowEdit = (t) => {
+    let row = t.parentNode.parentNode;
+    let table = document.getElementById('refDataEdit');
+    let index = row.rowIndex;
+    document.getElementById('razonSocialRefEdit').value = referenciasSolE[index - 1].nombre;
+    document.getElementById('contactoRefEdit').value = referenciasSolE[index - 1].celular;
+    document.getElementById('ciudadRefEdit').value = referenciasSolE[index - 1].city;
+    document.getElementById('telefonoRefEdit').value = referenciasSolE[index - 1].phone;
+    table.deleteRow(index);
+    referenciasSolE.splice(index - 1, 1);
+}
+
+const cleanDatosRefDataEdit = () => {
+    document.getElementById('razonSocialRefEdit').value = "";
+    document.getElementById('contactoRefEdit').value = "";
+    document.getElementById('ciudadRefEdit').value = "";
+    document.getElementById('telefonoRefEdit').value = "";
+}
+
+const validarDataDatosFEdit = (rz, cont, city, phone) => {
+    let auxR = validacionText("#razonSocialRefEdit", rz);
+    let auxC = validacionText("#contactoRefEdit", cont);
+    let auxCt = validacionText("#ciudadRefEdit", city);
+    let auxT = validarPhoneCell("#telefonoRefEdit", phone);
+    if (auxR && auxC && auxCt && auxT) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const addFacturaDataEdit = () => {
+    if (fileFE != '' && fileFIE != '' && document.getElementById('importFacturaEdit').value != "") {
+        let fact1 = document.getElementById('label-editFacturaInput').innerHTML;
+        let fact2 = document.getElementById('label-editFacturaInputImp').innerHTML;
+        let importFact = parseInt(document.getElementById('importFacturaEdit').value);
+
+        let data = {
+            Id: 0,
+            FileStr: fileFE,
+            FileTwoStr: fileFIE,
+            Importe: importFact
+        };
+
+        facturasSolE.push(data);
+
+        let table = document.getElementById('facturaDataEdit');
+        let row = table.insertRow(table.rows.length);
+
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        let cell3 = row.insertCell(2);
+        let cell4 = row.insertCell(3);
+
+        cell1.innerHTML = fact1;
+        cell2.innerHTML = fact2;
+        cell3.innerHTML = importFact;
+        cell4.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteFactRowE(this)'></i>";
+        clearInfoFacturasEdit();
+    } else {
+        alert("Ingresa importe y/o facturas");
+    }
+}
+
+const deleteFactRowE = (t) => {
+    let row = t.parentNode.parentNode;
+    let table = document.getElementById('facturaDataEdit');
+    let index = row.rowIndex;
+    table.deleteRow(index);
+    facturasSolE.splice(index - 1, 1);
+}
+
+const clearInfoFacturasEdit = () => {
+    document.getElementById('label-editFacturaInput').innerHTML = "Seleccionar archivo...";
+    document.getElementById('label-editFacturaInputImp').innerHTML = "Seleccionar archivo...";
+    document.getElementById('importFacturaEdit').value = "";
+}
+
+const saveReferences = () => {
+    $('#cargaModal').modal('show');
+    let referencesJson = getJsonReferences();
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "MisSolicitudes/UpdateReferences",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': referencesJson,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            if (Number.isInteger(data)) {
+                $('#cargaModal').modal('hide');
+                $('#editReferences').modal('hide');
+                $('#infoModal').modal('hide');
+                detalleSol(referencesJson.Folio);
+            } else {
+                console.log(data);
+                alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            $('#cargaModal').modal('hide');
+        }
+    });
+}
+
+const getJsonReferences = () => {
+    let auxFol = document.getElementById('folioInf').innerHTML;
+    let referencesJson = {
+        Folio: auxFol,
+        Referencias: referenciasSolE.length > 0 ? referenciasSolE : null,
+        Facturas: facturasSolE.length > 0 ? facturasSolE : null,
+        Caratula: caratulaE
+    }
+    return referencesJson;
+}
+
+/*EDIT ACTA CONSTITUTIVA*/
+const editActaConst = () => {
+    $('#actaConstEditModal').modal('show');
+    clearActaConstEdit();
+    actaConstList = [];
+    actaConstitutivaEdit = '';
+    clearTableDatos("actaConsDataEdit");
+}
+
+const addActaConstDataEdit = () => {
+    let subTypeActa = parseInt(document.getElementById('inputTypeActa').value);
+    let nameFile = document.getElementById('label-inputFileActaEdit').innerHTML;
+    if (subTypeActa != -1 && actaConstitutivaEdit != '') {
+        toBase64ActaConst(actaConstitutivaEdit, 9, subTypeActa);
+
+        var table = document.getElementById('actaConsDataEdit');
+        var row = table.insertRow(table.rows.length);
+
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        let auxName = getTypeConst(subTypeActa);
+
+        cell1.innerHTML = auxName;
+        cell2.innerHTML = nameFile;
+        cell3.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteActaRowEdit(this)'></i>";
+        clearActaConstEdit();
+        $('#inputTypeActa').removeClass("warningText");
+    } else {
+        $('#inputTypeActa').addClass("warningText");
+    }
+}
+
+const clearActaConstEdit = () => {
+    document.getElementById('label-inputFileActaEdit').innerHTML = "Seleccionar Archivo ...";
+    document.getElementById('inputFileActaEdit').value = "";
+    document.getElementById('inputTypeActa').value = '-1';
+}
+
+const getTypeConst = (id) => {
+    let nameTC = "";
+    switch (id) {
+        case 1:
+            nameTC = "RAZON SOCIAL";
+            break;
+        case 2:
+            nameTC = "FECHA DE CONSTITUCION";
+            break;
+        case 3:
+            nameTC = "GIRO DE LA EMPRESA";
+            break;
+        case 4:
+            nameTC = "TRANSITORIOS";
+            break;
+        case 5:
+            nameTC = "ACCIONISTAS";
+            break
+        default:
+            nameTC = "ERROR";
+            break;
+    }
+    return nameTC;
+}
+
+const deleteActaRowEdit = (t) => {
+    var row = t.parentNode.parentNode;
+    var table = document.getElementById('actaConsDataEdit');
+    var index = row.rowIndex;
+    table.deleteRow(index);
+    actaConstList.splice(index - 1, 1);
+}
+
+const saveActaConst = () => {
+    $('#cargaModal').modal('show');
+    let actaConstJson = getJsonActaConst();
+    if (actaConstJson != null) {
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "MisSolicitudes/UpdateConstAct",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': actaConstJson,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                if (Number.isInteger(data)) {
+                    $('#cargaModal').modal('hide');
+                    $('#actaConstEditModal').modal('hide');
+                    $('#infoModal').modal('hide');
+                    detalleSol(actaConstJson.Folio);
+                } else {
+                    console.log(data);
+                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
+            }
+        });
+    }
+}
+
+const getJsonActaConst = () => {
+    let auxFol = document.getElementById('folioInf').innerHTML;
+    if (actaConstList.length > 0) {
+        let actaConstJson = {
+            Folio: auxFol,
+            ConsActs: actaConstList,
+        }
+        return actaConstJson;
+    } else {
+        alert("Error al crear las constancias");
+        return null;
+    }
+}
+
+const getTipoFormM = () => {
+    var tipo = "";
+    switch (tipoForm) {
+        case "cash":
+            tipo = "CONTADO";
+            break;
+        case "credit":
+            tipo = "CREDITO";
+            break;
+        case "creditAB":
+            tipo = "CREDITO AB";
+            break;
+        case "changeRS":
+            tipo = "CARTA RESPONSIVA";
+            break;
+    }
+    return tipo;
+}
+
+const sendMail = (fol, tps, cli, status) => {
+    let zona = document.getElementById("zoneP").value;
+    let mailJson = {
+        folio: fol,
+        tipoSol: tps,
+        cliente: cli.clave,
+        razonSocial: cli.datosF.razonSocial,
+        rfc: cli.datosF.rfc,
+        zona: zona,
+        emails: emailList,
+        status: status == 1 ? "Nueva solicitud" : "Reenvio de solicitud",
+    }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailSolicitud",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': mailJson,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            $('#cargaModal').modal('hide');
+        }
+    });
 }
