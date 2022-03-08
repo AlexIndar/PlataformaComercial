@@ -1240,10 +1240,18 @@ function validateFullForm() {
     var razonSocial = document.getElementById('rzInput').value;
     var nombreComercial = document.getElementById('nameComeInput').value;
     var prospecto = document.getElementById('prospecto').value;
+    console.log(archivosType.filter(x => x.type == 13));
     var constanciaSituacionFiscal = document.getElementById('inputGroupFile01').value;
     var constanciaSituacionFiscalBack = document.getElementById('inputGroupFile02').value;
     var solicitud = document.getElementById('inputGroupFile03').value;
 
+    console.log(rfc);
+    console.log(razonSocial);
+    console.log(nombreComercial);
+    console.log(prospecto);
+    console.log(constanciaSituacionFiscal);
+    console.log(constanciaSituacionFiscalBack);
+    console.log(solicitud);
     if (rfc == "" || razonSocial == "" || nombreComercial == "" || prospecto == "" || constanciaSituacionFiscal == "" || constanciaSituacionFiscalBack == "" || solicitud == "") {
         msgAlert += `<p>Verifica la información en Datos Generales</p>`;
     }
@@ -2715,7 +2723,7 @@ function manejoArchivos(archivos) {
                 case 13:
                     if (archivos[i].fileStr != "") {
                         //document.getElementById('inputGroupFile03').value = "Archivo";
-                        console.log(archivos[i].fileStr);
+                        // console.log(archivos[i].fileStr);
                         document.getElementById('label-inputGroupFile03').innerHTML = "FirmaSolicitud.jpg";
                         fotoSolicitud = archivos[i].fileStr;
                     }
@@ -2885,10 +2893,10 @@ const cleanInfoSol = () => {
 function cargarArchivos(archivos) {
     if (archivos.length > 0) {
         for (let i = 0; i < archivos.length; i++) {
-            archivosBase64.push(archivos.fileStr);
+            archivosBase64.push(archivos[i].fileStr);
             var temp = {
-                type: archivos.type,
-                subtype: archivos.subType,
+                type: archivos[i].type,
+                subtype: archivos[i].subType,
             };
             archivosType.push(temp);
         }
@@ -3361,6 +3369,23 @@ const getTipoFormM = () => {
             break;
     }
     return tipo;
+
+}
+
+const enviarMail = () => {
+    let codigo = prompt("Codigo");
+    if (codigo == 862479315) {
+        let status = parseInt(prompt("Status"));
+        let cliente = {
+            clave: "Ptest",
+            datosF: {
+                razonSocial: "PruebaMail",
+                rfc: "XAXX010101000",
+            }
+        }
+        sendMail(-1, 1, cliente, status);
+    }
+
 }
 
 const sendMail = (fol, tps, cli, status) => {
@@ -3375,6 +3400,7 @@ const sendMail = (fol, tps, cli, status) => {
         emails: emailList,
         status: status == 1 ? "Nueva solicitud" : "Reenvio de solicitud",
     }
+    console.log(mailJson);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
