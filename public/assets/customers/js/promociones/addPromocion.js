@@ -608,7 +608,7 @@ function validarPromo(){
             idPromo = 0;
 
     
-        var json = {
+        var json = { 
             id: idPromo,
             nombrePromo: document.getElementById('nombrePromo').value,
             descuento: parseInt(document.getElementById('descuento').value),

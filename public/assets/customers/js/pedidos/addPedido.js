@@ -579,14 +579,15 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
         prepareJsonSeparaPedidos(true);
     }
     if(separar && json != null){
-        console.log(json);
         
         if(document.getElementById('cupon').value != ''){
             json = JSON.parse(json);
             for(var x = 0; x < json.length; x++){
                 json[x]['cupon'] = document.getElementById('cupon').value;
             }
+            console.log(json);
             json = JSON.stringify(json);
+            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -604,12 +605,14 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
+                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
             });
         }
         else{
+            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

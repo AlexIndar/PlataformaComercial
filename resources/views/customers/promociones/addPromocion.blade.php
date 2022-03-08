@@ -131,7 +131,7 @@
                         <h5>Descuento Web:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuentoweb" id="descuentoweb" step=".01" min="0">
+                        <input class="input-promociones" type="number" name="descuentoWeb" id="descuentoWeb" step=".01" min="0">
                     </div>
                 </div>
                 <div class="row reglas-row">

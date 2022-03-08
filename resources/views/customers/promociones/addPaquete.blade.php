@@ -355,10 +355,10 @@
                     <div class="col-lg-2 col-md-2 col-11">
                         <input class="input-promociones" type="number" name="descuentoWebSubregla1" id="descuentoWebSubregla1" value="1" step=".01" min="0">
                     </div>
-                    <div class="col-1"><i class='fas fa-plus-square btn-add-product fa-2x' id="iconoAgregarCategoriaDescuento1" onclick="addRowCategoriaDescuento(1)"></i></div>
+                    <div class="col-1"><i class='fas fa-plus-square btn-add-category fa-2x' id="iconoAgregarCategoriaDescuento1" onclick="addRowCategoriaDescuento(1)"></i></div>
                 </div>
 
-                <br>
+                <br> 
 
                 <div class="row reglas-row">
                     <div class="col-lg-2 col-md-3 col-12 text-center">
