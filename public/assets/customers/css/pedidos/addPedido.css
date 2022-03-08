@@ -6,6 +6,12 @@
   text-align: center;
 }
 
+img.img-item {
+  width: 40% !important;
+  margin-left: 30% !important;
+  border: 1px solid #002868 !important;
+}
+
 .bg-bo{
   background-color: #fcbf49 !important;
   color: black !important;
@@ -291,6 +297,10 @@ height: 30px;
 #descripcion{
   font-size: 15px;
   /* text-align: left !important; */
+}
+
+.tablaInventatio td{
+  text-align: center !important;
 }
 
 .td-center{

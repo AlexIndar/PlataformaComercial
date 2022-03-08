@@ -11,9 +11,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script> -->
 
-  <script src="{{asset('assets/js/scripts.js')}}"></script>
 
 
   <!-- Custom Styles -->
@@ -157,7 +156,7 @@
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <span class="dropdown-item dropdown-header">Mi Cuenta</span>
             <div class="dropdown-divider"></div>
-            <a href="/logout" class="dropdown-item">
+            <a href="/logout" class="dropdown-item"> 
               Cerrar sesión <i class="fas fa-sign-out-alt mr-2 mt-1 float-right"></i>
             </a>
             <div class="dropdown-divider"></div>

@@ -274,16 +274,12 @@
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
-                        <th>Descuento</th>
-                        <th>Descuento Web</th>
                         <th>Monto mínimo</th>
                         <th>Cantidad mínima</th>
                         <th>Acciones</th>
                     </tr>
 
                     <tr>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -344,17 +340,17 @@
 
                 <br>
 
-                <div class="row reglas-row">
+                <div class="row reglas-row"> 
                     <div class="col-lg-2 col-md-3 col-12 text-center">
                         <h5>Descuento subregla:</h5>
                     </div>
-                    <div class="col-lg-4 col-md-3 col-12">
+                    <div class="col-lg-2 col-md-3 col-12">
                         <input class="input-promociones" type="number" name="descuentoSubregla" id="descuentoSubregla" value="1" step=".01" min="0">
                     </div>
                     <div class="col-lg-2 col-md-3 col-12 text-center">
                         <h5>Descuento web:</h5>
                     </div>
-                    <div class="col-lg-4 col-md-3 col-12">
+                    <div class="col-lg-2 col-md-3 col-12">
                         <input class="input-promociones" type="number" name="descuentoWebSubregla" id="descuentoWebSubregla" value="1" step=".01" min="0">
                     </div>
                 </div>

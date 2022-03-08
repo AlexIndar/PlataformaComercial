@@ -494,7 +494,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::post('/pedido/nuevo/SepararPedidosPromo', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
-                                    return redirect('/logout');
+                                    return redirect('/logout'); 
                                 }
                                 $json = $request->key;
                                 $data = SaleOrdersController::separarPedidosPromo($token, $json);
@@ -918,6 +918,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $fol = $request->Item;
                     $data = MisSolicitudesController::reSendForm($token, $fol);
                     return  $data;
+                });
+
+                Route::post('/MisSolicitudes/Update', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request->all());
+                    $response = MisSolicitudesController::Update($token, json_encode($request->all()));
+                    return $response;
                 });
 
                 Route::post('/MisSolicitudes/UpdateFile', function (Request $request){
