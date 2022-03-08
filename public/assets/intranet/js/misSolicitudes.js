@@ -2805,9 +2805,13 @@ function continueModal(facturas, archivos, data) {
 
     var idTypeP = data.cliente.tipoPersona == true ? "typeMoral" : "typeFisica";
     document.getElementById(idTypeP).checked = true;
+    let auxTypeP = idTypeP == "typeMoral" ? 'Moral' : 'Fisica';
+    changeTipoPersona(auxTypeP);
 
     var idTypeL = data.cliente.tipoLocal == true ? "typePropio" : "typeRentado";
     document.getElementById(idTypeL).checked = true;
+    let auxTypeL = idTypeL == "typePropio" ? 'Propio' : 'Rentado';
+    changeTipoLocal(auxTypeL);
 
     addActaConstDataR(archivos);
 
