@@ -20,6 +20,10 @@
                    <li class="breadcrumb-item"><a href="#">Comisiones</a></li>
                 </ol>
              </div>
+                <div class="col-sm-6">
+                   <h6 id="companyname" class="m-0"></h6>
+                   <h6 id="companyid" class="m-0"></h6>
+                </div>
           </div>
        </div>
     </div>
@@ -30,10 +34,10 @@
                 <div class="card">
                    <div class="card-header border-0">
                       <div class="d-flex justify-content-between">
-                         <h3 class="card-title">Seleccione una zona</h3>
+                         {{-- <h3 class="card-title">Seleccione una zona</h3> --}}
                       </div>
                    </div>
-                   <div class="card-body">
+                   <div  id="divFiltroCli" class="card-body">
                     <div class="col-lg-12">
                         <div class="row ">
                             <div class="col-sm-4">
@@ -49,10 +53,10 @@
                          </div>
                      </div>
                     </div>
-                    <div class="card-body">
+                    <div id="divClientes" style="display: block" class="card-body">
                         <div class="col-lg-12">
                             <div class="card-body table-responsive p-0">
-                               <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:70%">
+                               <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:67%">
                                   <thead style="background-color:#002868; color:white">
                                    <tr>
                                         <th class="text-center" style="font-size:15px " colspan =16  > FEBRERO </th>
@@ -77,6 +81,53 @@
                                   <tbody id="llenaTable">
 
                                   </tbody>
+                               </table>
+                            </div>
+                         </div>
+                    </div>
+                    <div id='divDetalle' style="display: none"  class="card-body">
+                        <div class="col-lg-12">
+                           <div class="row ">
+                            <div class="col-md-2">
+                                <button class="btn btn-success " onclick="regresar()">Regresar</button>
+                            </div>
+                               <div class="col-md-6">
+                                   <input type="month" name="fecha" id="fecha" class="form-control" value="2022-02">
+                               </div>
+                               <div class="col-md-4">
+                                       <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
+                                       <button type="submit" class="btn btn-secondary mb-3"  style="display: block" id="btnConsultar">Consultar </button>
+                               </div>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                               <table id="comisionesDetalle" class="table table-striped table-bordered" style="width:100% ; font-size:64%">
+                                  <thead style="background-color:#002868; color:white">
+                                   <tr>
+                                        <th class="text-center" style="font-size:15px " colspan =16  > FEBRERO </th>
+                                    </tr>
+                                     <tr>
+                                        <th>Documento</th>
+                                        <th>Recibida en el Mes con IVA</th>
+                                        <th>Recibida en el Mes sin IVA</th>
+                                        <th>Pendiente Saldar Mes Anterior sin IVA</th>
+                                        <th>Pendiente Saldar Este Mes sin IVA</th>
+                                        <th>Saldada en el Mes sin IVA</th>
+                                        <th>Fecha Factura</th>
+                                        <th>Fecha Vencimiento</th>
+                                        <th>Fecha Saldada</th>
+                                        <th>Días</th>
+                                        <th>Importe Factura</th>
+                                        <th>Saldo</th>
+                                        <th>Dif. en Precio</th>
+                                        <th>Desc. Fuera de Tiempo</th>
+                                        <th>Incob.</th>
+                                        <th>Comis. Base</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody id="llenaDetalle">
+
+                                  </tbody>
+
                                </table>
                             </div>
                          </div>
@@ -159,20 +210,19 @@ $.ajax({
                    groups[val].incobrabilidad += item.incobrabilidad;
                    groups[val].comision_base +=  Math.round(item.comision_base);
 
-
                    return groups;
                }, {});
             }
-            console.log(groupBy(rawtData,'companyname'));
+            //console.log(groupBy(rawtData,'companyname'));
             var resultData = Object.values(groupBy(rawtData,'companyid'));
-            console.log(resultData);
+            //console.log(resultData);
             var table = $('#comisionesTable').dataTable( {
                 fixedHeader:true,
                 scrollY:320,
                 data : resultData,
                 columns: [  //or different depending on the structure of the object
                 { "data": "companyname" },
-                { "data": "recibo_mes_actual" },
+                { "data": "recibo_mes_actual"},
                 { "data": "recibo_mes_actual_siniva" },
                 { "data": "pendiente_saldar_mes_anteriorl_siniva" },
                 { "data": "pendiente_saldar_mes_actual" },
@@ -192,9 +242,130 @@ $.ajax({
             });
 
             $('#comisionesTable tbody').on('click', 'tr', function () {
-                $(this).toggleClass('select');
+                //$(this).toggleClass('select');
                 var row = table.api().row(this).data();
-               console.log(row['companyid']);
+                console.log(row['companyid']);
+                var id = row['companyid'];
+                var date = '02-02-2022';
+               $.ajax({
+                    'headers': {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    'url': "/comisiones/getInfoCobranzaZonaWeb",
+                    'type': 'GET',
+                    'dataType': 'json',
+                    'data': {referencia:id, fecha: date},
+                    'enctype': 'multipart/form-data',
+                    'timeout': 4 * 60 * 60 * 1000,
+                    success: function(data){
+                        var html = '';
+                        var i;
+                        var sumaRMCI = 0;
+                        var sumaRMSI = 0;
+                        var sumaPSMASI = 0;
+                        var sumaPSEMSI = 0;
+                        var sumaSMSI = 0;
+                        var sumaIFac = 0;
+                        var sumaSaldo= 0;
+                        var sumaCB = 0;
+
+                        for (i = 0; i < data.length; i++) {
+
+                            sumaRMCI= sumaRMCI + data[i].recibo_mes_actual;
+                            sumaRMSI = sumaRMSI + data[i].recibo_mes_actual_siniva;
+                            sumaPSMASI = sumaPSMASI + data[i].pendiente_saldar_mes_anteriorl_siniva;
+                            sumaPSEMSI = sumaPSEMSI + data[i].pendiente_saldar_mes_actual;
+                            sumaSMSI = sumaSMSI + data[i].saldada_mes_actual_siniva;
+                            sumaIFac = sumaIFac + data[i].importe_factura;
+                            sumaSaldo = sumaSaldo + data[i].saldo;
+                            sumaCB = sumaCB + data[i].comision_base;
+
+                            var fechaFact = moment(new Date(data[i].fechaFactura)).format('DD/MM/YYYY');
+                            var fechaDue = moment(new Date(data[i].dueDate)).format('DD/MM/YYYY');
+                            var fechaSaldada = data[i].fecha_saldada.slice(0, 10);
+                            var recibo_mes_actual = data[i].recibo_mes_actual.toLocaleString('es-MX');
+                            var recibo_mes_actual_siniva = data[i].recibo_mes_actual_siniva.toLocaleString('es-MX');
+                            var pendiente_saldar_mes_anteriorl_siniva = data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX');
+                            var saldada_mes_actual_siniva = data[i].saldada_mes_actual_siniva.toLocaleString('es-MX');
+                            var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX');
+                            var importe_factura = data[i].importe_factura.toLocaleString('es-MX');
+                            var comisionBase = data[i].comision_base.toLocaleString('es-MX');
+                            if (data[i].saldo > 0 &&  comisionBase === 0){
+                                html += '<tr>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].tranid+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  recibo_mes_actual + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  recibo_mes_actual_siniva + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + pendiente_saldar_mes_anteriorl_siniva + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + saldada_mes_actual_siniva + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + pendiente_saldar_mes_actual + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + fechaFact + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + fechaDue + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + fechaSaldada + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].diasDiferencia + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + importe_factura + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].saldo+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].diferencias_precio+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].descuento_fuera_tiempo+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].incobrabilidad+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + comisionBase + '</td>' +
+                            '</tr>';
+                            }else{
+                            html += '<tr>' +
+                            '<td style="font-weight: bold">' + data[i].tranid+ '</td>' +
+                            '<td style="font-weight: bold">' +  recibo_mes_actual + '</td>' +
+                            '<td style="font-weight: bold">' +  recibo_mes_actual_siniva + '</td>' +
+                            '<td style="font-weight: bold">' + pendiente_saldar_mes_anteriorl_siniva + '</td>' +
+                            '<td style="font-weight: bold">' + saldada_mes_actual_siniva + '</td>' +
+                            '<td style="font-weight: bold">' + pendiente_saldar_mes_actual + '</td>' +
+                            '<td style="font-weight: bold">' + fechaFact + '</td>' +
+                            '<td style="font-weight: bold">' + fechaDue + '</td>' +
+                            '<td style="font-weight: bold">' + fechaSaldada + '</td>' +
+                            '<td style="font-weight: bold">' + data[i].diasDiferencia + '</td>' +
+                            '<td style="font-weight: bold">' + importe_factura + '</td>' +
+                            '<td style="font-weight: bold">' + data[i].saldo+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].diferencias_precio+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].descuento_fuera_tiempo+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].incobrabilidad+ '</td>' +
+                            '<td style="font-weight: bold">' + comisionBase + '</td>' +
+                            '</tr>';
+                            }
+                        }
+
+                        if(html !== ''){
+                            htmlfoot =
+                            '<td style="font-weight: bold; background-color:#7fffbf">Total</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMCI.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMSI.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSMASI.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSMSI.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSEMSI.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf"> </td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaIFac.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSaldo.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toFixed(2)+'</td>';
+                           $('#llenaDetalle').html(html);
+                           $('#llenaDetalle').append(htmlfoot);
+                           document.getElementById("divClientes").style.display = "none";
+                           document.getElementById("divDetalle").style.display = "block";
+                           document.getElementById("divFiltroCli").style.display = "none";
+
+                            $('#companyname').text(data[0].companyname);
+                           $('#companyid').text(data[0].companyid);
+                           //console.log(sumaRMSI);
+                        }
+
+                    },
+                    error: function() {
+                        console.log("Error ajax dentro");
+                    }
+                });
+
             } );
 
         },
@@ -203,6 +374,11 @@ $.ajax({
             alert('Error, Tiempo de espera agotado');
         }
     });
+}
+function regresar(){
+    document.getElementById("divClientes").style.display = "block";
+    document.getElementById("divDetalle").style.display = "none";
+    document.getElementById("divFiltroCli").style.display = "block";
 }
 </script>
 @endsection
