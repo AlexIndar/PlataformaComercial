@@ -397,11 +397,27 @@
 
                 <div class="row reglas-row text-center">
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Proveedores:</h4></div>
-                    <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+                    <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
+                    <div class="col-lg-6 col-md-4 col-sm-12 col-12">
+                        <select id="listaProveedores" name="listaProveedores" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="blanca">Blanca (inclusiva)</option>
+                            <option value="negra">Negra (exclusiva)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br><br>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h5 id="mensaje-proveedores" class="mensaje-proveedores mensaje green"> <strong>Sólo estos proveedores</strong> participan en la promoción</h5>
+                    </div>
+                </div>
+
+                <br>
+                <div class="col-12">
                             <select id="proveedores" name="proveedores[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>  
                             <h5 id="proveedoresLoading">Cargando proveedores ...</h5>
-                    </div>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -418,11 +434,27 @@
 
                 <div class="row reglas-row text-center">
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Marcas:</h4></div>
-                    <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+                    <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
+                    <div class="col-lg-6 col-md-4 col-sm-12 col-12">
+                        <select id="listaMarcas" name="listaMarcas" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="blanca">Blanca (inclusiva)</option>
+                            <option value="negra">Negra (exclusiva)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br><br>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h5 id="mensaje-marcas" class="mensaje-marcas mensaje green"> <strong>Sólo estas marcas</strong> participan en la promoción</h5>
+                    </div>
+                </div>
+
+                <br>
+                <div class="col-12">
                             <select id="marcas" name="marcas[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>  
                             <h5 id="marcasLoading">Cargando marcas ...</h5>
-                    </div>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -439,13 +471,28 @@
 
                 <div class="row reglas-row text-center">
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Artículos:</h4></div>
-                    <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+                    <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
+                    <div class="col-lg-6 col-md-4 col-sm-12 col-12">
+                        <select id="listaArticulos" name="listaArticulos" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="blanca">Blanca (inclusiva)</option>
+                            <option value="negra">Negra (exclusiva)</option>
+                        </select>
+                    </div>
+                </div> 
+
+                <br><br>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h5 id="mensaje-articulos" class="mensaje-articulos mensaje green"> <strong>Sólo estos artículos</strong> participan en la promoción</h5>
+                    </div>
+                </div>
+
+                <br>
+                <div class="col-12">
                             <select id="articulos" name="articulos[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>
                             <h5 id="articulosLoading">Cargando artículos ...</h5>
-                    </div>  
-                </div> 
-
+                </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">
                     <button class="btn btn-blue" id="excelArticulos" onclick="triggerInputFile('articulos')"><i class="fas fa-file-upload"></i> Desde archivo</button>
@@ -453,6 +500,8 @@
                     <button class="btn btn-blue" onclick="downloadTemplate('Articulos')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
                     <button class="btn btn-danger" onclick="clearSelection('Articulos')"><i class="fas fa-trash"></i> Eliminar todos</button>
                 </div>
+                
+
                 <br><br>
 
                 <div class="col">

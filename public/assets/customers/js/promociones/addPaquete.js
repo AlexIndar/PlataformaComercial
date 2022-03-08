@@ -88,7 +88,7 @@ function addClientesCuotas(json, id){
 
         var cuotasObj = {
             'customer': jsonObj[x]['CompanyId'].trim(),
-            'cuota': cuota,
+            'importeCuota': cuota,
             'p1': jsonObj[x]['P1'].trim(),
             'p2': jsonObj[x]['P2'].trim(),
             'p3': jsonObj[x]['P3'].trim(),
@@ -170,13 +170,8 @@ function validarPaquete(){
     if(save && !document.getElementById('btn-add-sub').classList.contains('d-none')){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
-        var clientes = $('#clientes').chosen().val();
-        var proveedores = $('#proveedores').chosen().val();
-        var marcas = $('#marcas').chosen().val();
-        var articulos = $('#articulos').chosen().val();
-    
+        var clientes = $('#clientes').chosen().val();    
         var regalos = $('#regalos').chosen().val();
-
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
@@ -213,7 +208,7 @@ function validarPaquete(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-            cuotas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            CuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;
@@ -258,6 +253,25 @@ function addRule(){
                 categoriasSubregla.push(categoriaDescuentos);
             }
 
+            var proveedores = $('#proveedores').chosen().val();
+            var marcas = $('#marcas').chosen().val();
+            var articulos = $('#articulos').chosen().val();
+
+            var listaProveedores = document.getElementById('listaProveedores').value;
+            if(listaProveedores == 'negra'){
+                proveedores = reglas[5].filter( x => !proveedores.includes(x) );
+            }
+
+            var listaMarcas = document.getElementById('listaMarcas').value;
+            if(listaMarcas == 'negra'){
+                marcas = reglas[6].filter( x => !marcas.includes(x) );
+            }
+
+            var listaArticulos = document.getElementById('listaArticulos').value;
+            if(listaArticulos == 'negra'){
+                articulos = reglas[7].filter( x => !articulos.includes(x) );
+            }
+
             var json = {
                 nombreSub: document.getElementById('nombreSubregla').value,
                 descuentoSub: document.getElementById('descuentoSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla1').value),
@@ -266,9 +280,9 @@ function addRule(){
                 montoMinCash: document.getElementById('preciominSub').value == "" ? 0 : parseInt(document.getElementById('preciominSub').value),
                 montoMinQty: document.getElementById('cantidadminSub').value == "" ? 0 : parseInt(document.getElementById('cantidadminSub').value),
                 regalos: $('#regalosSub').chosen().val(),
-                proveedores: $('#proveedores').chosen().val(),
-                marcas: $('#marcas').chosen().val(),
-                articulos: $('#articulos').chosen().val(),
+                proveedores: proveedores,
+                marcas: marcas,
+                articulos: articulos,
             };
         
             subreglas.push(json);
@@ -583,8 +597,6 @@ function storeSubreglas(){
             });
         }
 
-        console.log(subreglas);
-
         for(var x = 0; x < subreglas[y]['descuentosCategorias'].length; x++){
             var json = {
                 id: 0,
@@ -594,7 +606,7 @@ function storeSubreglas(){
                 puntosIndar: packageHeader['puntosIndar'],
                 plazosIndar: packageHeader['plazosIndar'],
                 regalosIndar: subreglas[y]['regalos'].toString(),
-                categoriaClientes: packageHeader['categoriaClientes'],
+                categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
                 categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
                 gruposclientesIds: packageHeader['gruposclientesIds'],
                 gruposclientesIncluye: packageHeader['gruposclientesIncluye'],
@@ -695,6 +707,9 @@ function storeHeader(){
 
         packageHeader = json;
         console.log(JSON.stringify(packageHeader));
+        console.log(cuotas);
+        console.log(cuotasList);
+        
 
         $.ajax({
             'headers': {
