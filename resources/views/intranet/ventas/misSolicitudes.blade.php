@@ -972,7 +972,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="20"></div>
                             <div class="col-md-2" id="noFEButtons">
                             </div>
                         </div>
@@ -1030,13 +1030,13 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="20"></div>
                             <div class="col-md-2" id="noEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Interior</div>
-                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="20"></div>
                             <div class="col-md-2" id="noIntEButtons">
                             </div>
                         </div>
