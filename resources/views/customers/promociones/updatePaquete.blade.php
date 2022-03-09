@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main', ['active' => 'Ventas', 'permissions' => $permissions])
 
-@section('title') Ventas - Agregar Paquete @endsection 
+@section('title') Ventas - Editar Paquete @endsection 
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">

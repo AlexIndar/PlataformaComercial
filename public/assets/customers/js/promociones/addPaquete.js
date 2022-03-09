@@ -567,7 +567,7 @@ function storePaquete(){
     document.getElementById('btn-guardar').classList.add('d-none');
     document.getElementById('btn-add-sub').classList.add('d-none');
     document.getElementById('div-loading').style.opacity = '1';
-    setTimeout(storeSubreglas, 2000);
+    setTimeout(storeSubreglas, 8000);
 }
 
 function storeSubreglas(){
@@ -607,6 +607,15 @@ function storeSubreglas(){
             });
         }
 
+        var listaVaciaCuotas = [];
+        var cuotasObj = {
+            'customer': '',
+            'importeCuota': 0,
+            'p1': '0',
+            'p2': '0',
+            'p3': '0',
+        };
+        listaVaciaCuotas.push(cuotasObj);
         for(var x = 0; x < subreglas[y]['descuentosCategorias'].length; x++){
             var json = {
                 id: 0,
@@ -630,7 +639,7 @@ function storeSubreglas(){
                 paquete: false,
                 idPaquete: idPaquete,
                 pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-                cuotasPersonalizadas: null,
+                cuotasPersonalizadas: listaVaciaCuotas,
             }
             console.log(JSON.stringify(json));
             $.ajax({
@@ -660,7 +669,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    // window.location.href = '/promociones';
+    window.location.href = '/promociones';
 }
 
 function storeHeader(){

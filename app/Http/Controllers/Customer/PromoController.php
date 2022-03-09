@@ -390,9 +390,9 @@ class PromoController extends Controller
         return $endTime;
     }
 
-    public static function getCuotasPersonalizadas($id){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/GetItemsForEvents?idPaquete='.$id);
-        dd($response);
+    public static function getCuotasPersonalizadas($token, $id){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getCuotaPersonalizada?Id='.$id);
+        return json_decode($response->body());
     }
 
 }
