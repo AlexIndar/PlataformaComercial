@@ -114,14 +114,10 @@ function addClientesCuotas(json, id){
     [].forEach.call(elems, function(el) {
         el.classList.remove("d-none");
     });
-
-    console.log(cuotasList);
 }
 
 function validarPaquete(){
     document.getElementById('div-loading').style.opacity = '0';
-    console.log(startDate);
-
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -207,15 +203,11 @@ function validarPaquete(){
             fechaFin: endTime,
             paquete: true,
             idPaquete: 0,
-            pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+            pedidoPromoRulesD: listaPedidoPromoRulesD,
             CuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;
-        console.log(JSON.stringify(packageHeader));
-        
-        // clearModalSubreglas();
-
         activateModalRulesPackage();
         document.getElementById("btn-add-sub").setAttribute( "onClick", "activateModalRulesPackage()" );
 
@@ -286,11 +278,7 @@ function addRule(){
             };
         
             subreglas.push(json);
-
-            console.log(subreglas);
-            
             createTableSubreglas();
-           
         }
         closeModalSubreglas();
     }
@@ -621,7 +609,7 @@ function storeSubreglas(){
                 idPaquete: idPaquete,
                 pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
             }
-            console.log(JSON.stringify(json));
+
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -633,21 +621,14 @@ function storeSubreglas(){
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
-                        console.log(data);
                         // document.getElementById(idRow).classList.add('success-sub');
                 }, 
                 error: function(error){
-                        console.log(data);
+                        alert('Error guardando subregla '+subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria']);
                         // document.getElementById(idRow).classList.add('error-sub');
                  }
             });
         }
-
-        
-        
-
-        
-        
     }
     setTimeout(redirectPromociones, 2000);
    
@@ -656,7 +637,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    // window.location.href = '/promociones';
+    window.location.href = '/promociones';
 }
 
 function storeHeader(){
@@ -706,10 +687,6 @@ function storeHeader(){
         }
 
         packageHeader = json;
-        console.log(JSON.stringify(packageHeader));
-        console.log(cuotas);
-        console.log(cuotasList);
-        
 
         $.ajax({
             'headers': {
@@ -722,10 +699,10 @@ function storeHeader(){
             'enctype': 'multipart/form-data',
             'timeout': 2*60*60*1000,
             success: function(data){
-                    idPaquete = data;
+                idPaquete = data;
             }, 
             error: function(error){
-                    console.log(data);
+                alert('Error al guardar encabezado de paquete');
              }
         });
 }
@@ -864,7 +841,6 @@ function addRowCategoriaDescuento(id){
     
         if(id>0){
             maxIndexRowDescuentos ++;
-            console.log(maxIndexRowDescuentos);
             document.getElementById('iconoAgregarCategoriaDescuento'+id).removeAttribute('class');
             document.getElementById('iconoAgregarCategoriaDescuento'+id).setAttribute('class','fas fa-minus-square btn-remove-category fa-2x');
         }    
