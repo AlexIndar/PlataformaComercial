@@ -670,6 +670,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return $promo[0];
                             });
 
+                            Route::get('promociones/getCuotasPersonalizadas/{idPaquete}', function ($id){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $cuotas = PromoController::getCuotasPersonalizadas($token, $id);
+                                return $cuotas;
+                            });
+
+
                             Route::get('/promociones/nueva', function (){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){

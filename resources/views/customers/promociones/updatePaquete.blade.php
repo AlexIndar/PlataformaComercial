@@ -138,8 +138,14 @@
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <select id="tipoCuota" name="tipoCuota" class="form-control selectpicker" data-live-search="true">
+                            @if($promo->plazosIndar == 0)
+                            <option value="General">General</option>
+                            <option selected value="Personalizada">Personalizada</option>
+                            @else
                             <option selected value="General">General</option>
                             <option value="Personalizada">Personalizada</option>
+                            @endif
+                            
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-2 col-12">
@@ -191,7 +197,11 @@
                 </div>
                 
                 <!-- CLIENTES -------------------------------------------------------------------------------------------------------------------------->
+                @if($promo->plazosIndar == 0)
+                <div class="clientesGeneral" style="display: none;">
+                @else
                 <div class="clientesGeneral">
+                @endif
                     <div class="row reglas-row text-center">
                         <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Clientes:</h4></div>
                         <div class="col-lg-8 col-md-7 col-sm-12 col-12">
@@ -211,10 +221,13 @@
                 </div>
                
                 <!-- CLIENTES CON CUOTAS (EN CASO DE QUE SELECCIONES CUOTA MINIMA PERSONALIZADA) -->
-
+                @if($promo->plazosIndar != 0)
                 <div class="clientesCuotas" style="display: none;">
+                @else
+                <div class="clientesCuotas">
+                @endif
                     <div class="row reglas-row text-center">
-                        <div class="col-12"><h4>Clientes con cuotas:</h4></div>
+                        <div class="col-12"><h4>Cuotas Personalizadas:</h4></div>
                         <div class="col-12">
                             <button class="btn btn-blue" onclick="triggerInputFile('clientesCuotas')"><i class="fas fa-file-upload"></i> Desde archivo</button>
                             <input type="file" name="clientesCuotasFile" id="clientesCuotasFile" accept=".csv, .xls, .xlsx" hidden>
@@ -222,6 +235,11 @@
                             <button class="btn btn-danger d-none confirmCuotas" onclick="clearSelectionCuotas()"><i class="fas fa-trash"></i> Eliminar cuotas</button>
                         </div>
                         <br><br>
+                        @if($promo->plazosIndar == 0)
+                        <div class="col-12">
+                            <h5 id="cuotasLoading">Cargando cuotas ...</h5>
+                        </div>
+                        @endif
                         <div class="col-12 mt-3 confirmCuotas d-none"><h5 class="mensaje-fechas mensaje green">¡Cuotas cargadas con éxito!</h5></div>
                         <div class="col-12 confirmCuotas d-none">
                             <button type="button" id="mostrarCuotas" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-eye"></i> Ver cuotas</button>

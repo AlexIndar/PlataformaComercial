@@ -4,8 +4,30 @@ var packageHeader;
 var idPaquete = 0;
 var cuotasList = [];
 var maxIndexRowDescuentos = 1;
+var update = false;
 
 $('document').ready(function(){
+
+    if(window.location.href.includes('promociones/editar')){ //EDITAR PAQUETE
+        update = true;
+        idPaquete = document.getElementById('idPromo').value;
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/promociones/getCuotasPersonalizadas/" + idPaquete,
+            'type': 'GET',
+            'enctype': 'multipart/form-data',
+            'timeout': 2*60*60*1000,
+            success: function(data){
+                console.log(data);
+            }, 
+            error: function(error){
+                console.log(error);
+             }
+        });
+    }
+
     $( "#tipoCuota" ).change(function() {
         var tipo = document.getElementById('tipoCuota').value;
         if(tipo == 'General'){
@@ -95,7 +117,7 @@ function addClientesCuotas(json, id){
         };
         cuotasList.push(cuotasObj);
         cuotas.push(arrCuotas);
-        dataset.push(arr);
+        dataset.push(arr); 
     }
     
     var cuotasTable = $("#tablaPreviewCuotas").DataTable({
@@ -637,7 +659,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    window.location.href = '/promociones';
+    // window.location.href = '/promociones';
 }
 
 function storeHeader(){

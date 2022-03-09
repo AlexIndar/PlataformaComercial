@@ -5,6 +5,7 @@
 
 @section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/addPedido.css')}}">
+<link rel="stylesheet" href="{{asset('assets/customers/css/animations/spinner.css')}}">
 <script src="{{asset('assets/customers/js/pedidos/addPedido.js')}}"></script>
 <link rel="stylesheet" href="{{asset('plugins/bs-stepper/css/bs-stepper.min.css')}}">
 @endsection
@@ -248,7 +249,7 @@
                     <h5><strong>TOTAL:</strong> <span style="float: right; text-align: right" id="totalPedido">$0.00</span></h5>
                 </fieldset>
                 
-            </div>
+            </div> 
 
         </div>
 
@@ -261,6 +262,7 @@
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
             <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i class="fas fa-save"></i> Guardar</button>
             <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
+            <img src="{{asset('assets/customers/gif/loading.gif')}}" id="loadingSeparar" width="20px" height='20px' style="margin-left: 10px; margin-top: 5px; opacity: 0;">
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -336,8 +338,6 @@
     </form>
 
     <!-- MODAL PARA CONFIRMAR ELIMINAR COTIZACIÓN -->
-
-    <!-- Modal -->
     <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
