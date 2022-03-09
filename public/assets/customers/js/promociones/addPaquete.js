@@ -630,8 +630,9 @@ function storeSubreglas(){
                 paquete: false,
                 idPaquete: idPaquete,
                 pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+                cuotasPersonalizadas: null,
             }
-
+            console.log(JSON.stringify(json));
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
