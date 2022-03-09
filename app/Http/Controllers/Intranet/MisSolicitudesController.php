@@ -197,35 +197,6 @@ class MisSolicitudesController extends Controller
 
     public static function saveSolicitud($token, $data){
         $json = json_decode($data);
-        ($json->credito == null) ? $json->credito = '' : $json->credito = $json->credito;
-        ($json->cliente->datosF->emailFacturacion == null) ? $json->cliente->datosF->emailFacturacion = '' : $json->cliente->datosF->emailFacturacion = $json->cliente->datosF->emailFacturacion;
-
-        ($json->cliente->datosF->domicilio->calle == null) ? $json->cliente->datosF->domicilio->calle = '' : $json->cliente->datosF->domicilio->calle = $json->cliente->datosF->domicilio->calle;
-        ($json->cliente->datosF->domicilio->noInt == null) ? $json->cliente->datosF->domicilio->noInt = '' : $json->cliente->datosF->domicilio->noInt = $json->cliente->datosF->domicilio->noInt;
-        ($json->cliente->datosF->domicilio->noExt == null) ? $json->cliente->datosF->domicilio->noExt = '' : $json->cliente->datosF->domicilio->noExt = $json->cliente->datosF->domicilio->noExt;
-        ($json->cliente->datosF->domicilio->colonia == null) ? $json->cliente->datosF->domicilio->colonia = '' : $json->cliente->datosF->domicilio->colonia = $json->cliente->datosF->domicilio->colonia;
-        ($json->cliente->datosF->domicilio->ciudad == null) ? $json->cliente->datosF->domicilio->ciudad = '' : $json->cliente->datosF->domicilio->ciudad = $json->cliente->datosF->domicilio->ciudad;
-        ($json->cliente->datosF->domicilio->estado == null) ? $json->cliente->datosF->domicilio->estado = '' : $json->cliente->datosF->domicilio->estado = $json->cliente->datosF->domicilio->estado;
-
-        ($json->cliente->datosE->domicilio->calle == null) ? $json->cliente->datosE->domicilio->calle = '' : $json->cliente->datosE->domicilio->calle = $json->cliente->datosE->domicilio->calle;
-        ($json->cliente->datosE->domicilio->noInt == null) ? $json->cliente->datosE->domicilio->noInt = '' : $json->cliente->datosE->domicilio->noInt = $json->cliente->datosE->domicilio->noInt;
-        ($json->cliente->datosE->domicilio->noExt == null) ? $json->cliente->datosE->domicilio->noExt = '' : $json->cliente->datosE->domicilio->noExt = $json->cliente->datosE->domicilio->noExt;
-        ($json->cliente->datosE->domicilio->colonia == null) ? $json->cliente->datosE->domicilio->colonia = '' : $json->cliente->datosE->domicilio->colonia = $json->cliente->datosE->domicilio->colonia;
-        ($json->cliente->datosE->domicilio->ciudad == null) ? $json->cliente->datosE->domicilio->ciudad = '' : $json->cliente->datosE->domicilio->ciudad = $json->cliente->datosE->domicilio->ciudad;
-        ($json->cliente->datosE->domicilio->estado == null) ? $json->cliente->datosE->domicilio->estado = '' : $json->cliente->datosE->domicilio->estado = $json->cliente->datosE->domicilio->estado;
-
-        foreach($json->cliente->contactos as $contacto){
-            ($contacto->Nombre == null) ? $contacto->Nombre = '' : $contacto->Nombre = $contacto->Nombre;
-            ($contacto->Email == null) ? $contacto->Email = '' : $contacto->Email = $contacto->Email;
-            ($contacto->Celular == null) ? $contacto->Celular = '' : $contacto->Celular = $contacto->Celular;
-            ($contacto->Phone == null) ? $contacto->Phone = '' : $contacto->Phone = $contacto->Phone;
-        }
-
-        foreach($json->archivos as $archivo){
-            ($archivo->FileStr == null) ? $archivo->FileStr = '' : $archivo->FileStr = $archivo->FileStr;
-        }
-
-        // dd($json);
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Save', [
             "folio" => $json->folio,
             "fecha" => $json->fecha,

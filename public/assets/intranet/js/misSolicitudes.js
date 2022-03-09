@@ -1399,6 +1399,7 @@ function SendForm(zone) {
             success: function(data) {
                 if (Number.isInteger(data)) {
                     //sendMail(data, tp, json.cliente, 1);
+                    console.log()
                     $('#cargaModal').modal('hide');
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
@@ -1421,6 +1422,14 @@ function saveForm(zone) {
     if (validateSaveForm()) {
         $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
+        let tp = getTipoForm();
+        let cliente = {
+            clave: document.getElementById('prospecto').value + "Test de Email",
+            datosF: {
+                rfc: document.getElementById('rfcInput').value,
+                razonSocial: document.getElementById('rzInput').value,
+            }
+        }
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1434,6 +1443,7 @@ function saveForm(zone) {
             success: function(data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
+                    //sendMail(data, tp, cliente, 3);
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
                     $('#respuestaForm').modal('show');
@@ -1664,8 +1674,8 @@ function createJsonSolicitud(zone) {
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
     };
-    // console.log(json);
-    // console.log(JSON.stringify(json));
+    console.log(json);
+    console.log(JSON.stringify(json));
     return json;
 }
 
@@ -3413,6 +3423,19 @@ const enviarMail = () => {
 
 const sendMail = (fol, tps, cli, status) => {
     let zona = document.getElementById("zoneP").value;
+    let auxStatus = "";
+    switch (status) {
+        case 1:
+            auxStatus = "Nueva Solicitud";
+            break;
+        case 2:
+            auxStatus = "Reenvio de solicitud";
+            break;
+        case 3:
+            auxStatus = "Guardado de Solicitud";
+            break;
+
+    }
     let mailJson = {
         folio: fol,
         tipoSol: tps,
@@ -3421,7 +3444,7 @@ const sendMail = (fol, tps, cli, status) => {
         rfc: cli.datosF.rfc,
         zona: zona,
         emails: emailList,
-        status: status == 1 ? "Nueva solicitud" : "Reenvio de solicitud",
+        status: auxStatus,
     }
     console.log(mailJson);
     $.ajax({
@@ -3439,8 +3462,11 @@ const sendMail = (fol, tps, cli, status) => {
         },
         error: function(error) {
             console.log(error);
-            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            alert("Solicitud Guardada, pero no se enviaron los correos...");
             $('#cargaModal').modal('hide');
+            $('#solicitudModal').modal('hide');
+            document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+            $('#respuestaForm').modal('show');
         }
     });
 }
