@@ -784,7 +784,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
 
-                 // INTRANET ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                /* ********************************************* INDARNET ************************************************ */
 
                  Route::get('/Intranet', function(){
                     $entity = "C002620";
@@ -792,6 +792,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions]);
                 });
 
+                //////// MIS SOLICITUDES /////
                 Route::get('/MisSolicitudes', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
@@ -816,7 +817,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    // dd($request->all());
                     $response = MisSolicitudesController::storeSolicitud($token, json_encode($request->all()));
                     return $response;
                 });
@@ -826,7 +826,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    // dd($request->all());
                     $response = MisSolicitudesController::saveSolicitud($token, json_encode($request->all()));
                     return $response;
                 });
@@ -925,7 +924,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    // dd($request->all());
                     $response = MisSolicitudesController::Update($token, json_encode($request->all()));
                     return $response;
                 });
@@ -944,8 +942,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
-                    }
-                    // dd($request->all());
+                    }                    
                     $response = MisSolicitudesController::UpdateReferences($token, json_encode($request->all()));
                     return $response;
                 });
@@ -955,7 +952,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    // dd($request->all());
                     $response = MisSolicitudesController::UpdateConstAct($token, json_encode($request->all()));
                     return $response;
                 });
@@ -988,10 +984,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                 });
 
-                Route::get('/SolicitudesPendientes', function(){
-                    return view('intranet.cyc.solicitudesPendientes');
-                });
-
+                //////// ESTADISTICA SOLICITUDES CLIENTES /////
                 Route::get('/EstadisticaSolicitudesClientes', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
@@ -999,7 +992,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $user = MisSolicitudesController::getUser($token);
-                    //$zone = MisSolicitudesController::getZone($token,$user->body());
                     return view('intranet.ventas.estadisticaCliente',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                 });
 
@@ -1030,13 +1022,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
-                    }
-                    // dd(json_encode($request->all()));
+                    }                    
                     $typeS = $request->TypeS;
                     $ini = $request->Ini;
                     $end = $request->End;
-                    $data = EstadisticasClientesController::getGeneralReport($token, $typeS, $ini, $end);
-                    // dd(json_encode($data));
+                    $data = EstadisticasClientesController::getGeneralReport($token, $typeS, $ini, $end);                    
                     return  $data;
                 });
 
@@ -1077,6 +1067,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $data = EstadisticasClientesController::getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end);
                     return  $data;
                 });
+
+                //////// SOLICITUDES PENDIENTES/////
+                Route::get('/SolicitudesPendientes', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUser($token);
+                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                });
+
+                /* ********************************************* END INDARNET ************************************************ */
 
                 //CXC
                 Route::get('/AplicarPagos', function(){
