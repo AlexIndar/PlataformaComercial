@@ -1,6 +1,6 @@
-@extends('layouts.intranet.main')
+@extends('layouts.intranet.main', ['active' => 'Intranet', 'permissions' => $permissions])
 
-@section('title') Indar @endsection
+@section('title') Indar - Solicitudes Pendientes @endsection
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
