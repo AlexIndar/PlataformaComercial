@@ -328,6 +328,7 @@ class PromoController extends Controller
             "paquete" => $json->paquete,
             "idPaquete" => $json->idPaquete,
             "pedidoPromoRulesD" => $json->pedidoPromoRulesD,
+            "cuotasPersonalizadas" => $json->cuotasPersonalizadas,
         ]);
 
         return $response;

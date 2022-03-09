@@ -226,7 +226,7 @@ function validarPaquete(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD,
-            CuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;
@@ -705,7 +705,7 @@ function storeHeader(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-            cuotas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;
