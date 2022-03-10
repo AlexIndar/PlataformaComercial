@@ -111,13 +111,17 @@
                     </div>
                     <br>
                     <div class="row d-flex flex-row justify-content-center align-items-center">
-                        <div class="col-lg-12 col-md-12 col-12 rowPedido">
+                        <div class="col-lg-2 col-md-3 col-12 rowPedido">
+                            <h5>Cupón</h5>
+                        </div>
+                        <div class="col-lg-4 col-md-9 col-12 rowPedido"><input type="text" class="inputPedido" id="cupon" name="cupon"></div>
+                        <div class="col-lg-6 col-md-12 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
                         </div>
                         <!-- <div class="col-lg-6 col-md-4 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="dividir"> <label for="dividir">Dividir 2000</label>
                         </div> -->
-                    </div>
+                    </div> 
                    <div class="row">
                         <div class="col-6 rowPedido">
                             @if(count($data)==1)    
@@ -126,7 +130,6 @@
                                 <label class="d-none" id="categoryCte"></label>
                             @endif
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -239,6 +242,8 @@
             <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
             <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(2)"><i class="fas fa-save"></i> Guardar</button>
+            <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
+            <img src="{{asset('assets/customers/gif/loading.gif')}}" id="loadingSeparar" width="20px" height='20px' style="margin-left: 10px; margin-top: 5px; opacity: 0;">
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">

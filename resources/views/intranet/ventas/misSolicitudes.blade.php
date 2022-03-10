@@ -37,6 +37,7 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Mis solicitudes</h3>
+                            <button onclick="enviarMail()"></button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -279,10 +280,10 @@
                                                     <input type="text" name="calle" id="calleInput" placeholder="Calle" class="form-control" onfocusout="validaCalle()" maxlength="99">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()" maxlength="10">
+                                                    <input type="text" name="noExt" id="noExtInput" placeholder="No. Ext" class="form-control" onfocusout="validaNoEx()" maxlength="20">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()" maxlength="10">
+                                                    <input type="text" name="noInt" id="noIntInput" placeholder="No. Int" class="form-control" onfocusout="validaNoIn()" maxlength="20">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
@@ -361,10 +362,10 @@
                                                         <input type="text" name="calle" id="calleInputShipping" placeholder="Calle" class="form-control" onfocusout="validaCalleS()" maxlength="99">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()" maxlength="10">
+                                                        <input type="text" name="noExt" id="noExtInputShipping" placeholder="No. Ext" class="form-control" onfocusout="validaNoExS()" maxlength="20">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()" maxlength="10">
+                                                        <input type="text" name="noInt" id="noIntInputShipping" placeholder="No. Int" class="form-control" onfocusout="validaNoInS()" maxlength="20">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -971,13 +972,13 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noFEdit" id="noFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="20"></div>
                             <div class="col-md-2" id="noFEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Interior</div>
-                            <div class="col-md-6"><input type="text" name="noIntFEdit" id="noIntFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noIntFEdit" id="noIntFEdit" disabled class="form-control" onfocusout="changeFlag(3)" maxlength="20"></div>
                             <div class="col-md-2" id="noIntFEButtons">
                             </div>
                         </div>
@@ -1029,13 +1030,13 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Exterior</div>
-                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noEEdit" id="noEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="20"></div>
                             <div class="col-md-2" id="noEEButtons">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">No. Interior</div>
-                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="10"></div>
+                            <div class="col-md-6"><input type="text" name="noIntEEdit" id="noIntEEdit" disabled class="form-control" onfocusout="changeFlag(4)" maxlength="20"></div>
                             <div class="col-md-2" id="noIntEButtons">
                             </div>
                         </div>

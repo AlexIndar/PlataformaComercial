@@ -3,8 +3,31 @@ var subreglas = [];
 var packageHeader;
 var idPaquete = 0;
 var cuotasList = [];
+var maxIndexRowDescuentos = 1;
+var update = false;
 
 $('document').ready(function(){
+
+    if(window.location.href.includes('promociones/editar')){ //EDITAR PAQUETE
+        update = true;
+        idPaquete = document.getElementById('idPromo').value;
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/promociones/getCuotasPersonalizadas/" + idPaquete,
+            'type': 'GET',
+            'enctype': 'multipart/form-data',
+            'timeout': 2*60*60*1000,
+            success: function(data){
+                console.log(data);
+            }, 
+            error: function(error){
+                console.log(error);
+             }
+        });
+    }
+
     $( "#tipoCuota" ).change(function() {
         var tipo = document.getElementById('tipoCuota').value;
         if(tipo == 'General'){
@@ -87,14 +110,14 @@ function addClientesCuotas(json, id){
 
         var cuotasObj = {
             'customer': jsonObj[x]['CompanyId'].trim(),
-            'cuota': cuota,
+            'importeCuota': cuota,
             'p1': jsonObj[x]['P1'].trim(),
             'p2': jsonObj[x]['P2'].trim(),
             'p3': jsonObj[x]['P3'].trim(),
         };
         cuotasList.push(cuotasObj);
         cuotas.push(arrCuotas);
-        dataset.push(arr);
+        dataset.push(arr); 
     }
     
     var cuotasTable = $("#tablaPreviewCuotas").DataTable({
@@ -113,14 +136,10 @@ function addClientesCuotas(json, id){
     [].forEach.call(elems, function(el) {
         el.classList.remove("d-none");
     });
-
-    console.log(cuotasList);
 }
 
 function validarPaquete(){
     document.getElementById('div-loading').style.opacity = '0';
-    console.log(startDate);
-
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -169,13 +188,8 @@ function validarPaquete(){
     if(save && !document.getElementById('btn-add-sub').classList.contains('d-none')){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
-        var clientes = $('#clientes').chosen().val();
-        var proveedores = $('#proveedores').chosen().val();
-        var marcas = $('#marcas').chosen().val();
-        var articulos = $('#articulos').chosen().val();
-    
+        var clientes = $('#clientes').chosen().val();    
         var regalos = $('#regalos').chosen().val();
-
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
@@ -211,15 +225,11 @@ function validarPaquete(){
             fechaFin: endTime,
             paquete: true,
             idPaquete: 0,
-            pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-            cuotas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            pedidoPromoRulesD: listaPedidoPromoRulesD,
+            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;
-        console.log(JSON.stringify(packageHeader));
-        
-        // clearModalSubreglas();
-
         activateModalRulesPackage();
         document.getElementById("btn-add-sub").setAttribute( "onClick", "activateModalRulesPackage()" );
 
@@ -257,6 +267,25 @@ function addRule(){
                 categoriasSubregla.push(categoriaDescuentos);
             }
 
+            var proveedores = $('#proveedores').chosen().val();
+            var marcas = $('#marcas').chosen().val();
+            var articulos = $('#articulos').chosen().val();
+
+            var listaProveedores = document.getElementById('listaProveedores').value;
+            if(listaProveedores == 'negra'){
+                proveedores = reglas[5].filter( x => !proveedores.includes(x) );
+            }
+
+            var listaMarcas = document.getElementById('listaMarcas').value;
+            if(listaMarcas == 'negra'){
+                marcas = reglas[6].filter( x => !marcas.includes(x) );
+            }
+
+            var listaArticulos = document.getElementById('listaArticulos').value;
+            if(listaArticulos == 'negra'){
+                articulos = reglas[7].filter( x => !articulos.includes(x) );
+            }
+
             var json = {
                 nombreSub: document.getElementById('nombreSubregla').value,
                 descuentoSub: document.getElementById('descuentoSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla1').value),
@@ -265,17 +294,13 @@ function addRule(){
                 montoMinCash: document.getElementById('preciominSub').value == "" ? 0 : parseInt(document.getElementById('preciominSub').value),
                 montoMinQty: document.getElementById('cantidadminSub').value == "" ? 0 : parseInt(document.getElementById('cantidadminSub').value),
                 regalos: $('#regalosSub').chosen().val(),
-                proveedores: $('#proveedores').chosen().val(),
-                marcas: $('#marcas').chosen().val(),
-                articulos: $('#articulos').chosen().val(),
+                proveedores: proveedores,
+                marcas: marcas,
+                articulos: articulos,
             };
         
             subreglas.push(json);
-
-            console.log(subreglas);
-            
             createTableSubreglas();
-           
         }
         closeModalSubreglas();
     }
@@ -437,6 +462,7 @@ function clearModalSubreglas(){
     $('#articulosFile').val('');
 
     document.getElementById('btn-guardarSub').innerHTML = '<i class="fas fa-plus"></i> Agregar';
+    maxIndexRowDescuentos = 1;
 }
 
 function closeModalSubreglas(){
@@ -540,8 +566,7 @@ function storePaquete(){
     storeHeader();
     document.getElementById('btn-guardar').classList.add('d-none');
     document.getElementById('btn-add-sub').classList.add('d-none');
-    document.getElementById('div-loading').style.opacity = '1';
-    setTimeout(storeSubreglas, 2000);
+    document.getElementById('div-loading').style.opacity = '1'
 }
 
 function storeSubreglas(){
@@ -581,53 +606,60 @@ function storeSubreglas(){
             });
         }
 
-        var json = {
-            id: 0,
-            nombrePromo: subreglas[y]['nombreSub'],
-            descuento: parseInt(subreglas[y]['descuentoSub']),
-            descuentoWeb: parseInt(subreglas[y]['descuentoWebSub']),
-            puntosIndar: packageHeader['puntosIndar'],
-            plazosIndar: packageHeader['plazosIndar'],
-            regalosIndar: subreglas[y]['regalos'].toString(),
-            categoriaClientes: packageHeader['categoriaClientes'],
-            categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
-            gruposclientesIds: packageHeader['gruposclientesIds'],
-            gruposclientesIncluye: packageHeader['gruposclientesIncluye'],
-            clientesId: packageHeader['clientesId'],
-            clientesIncluye: packageHeader['clientesIncluye'],
-            plazo: packageHeader['plazo'],
-            montoMinCash: parseInt(subreglas[y]['montoMinCash']),
-            montoMinQty: parseInt(subreglas[y]['montoMinQty']),
-            fechaInicio: packageHeader['fechaInicio'],
-            fechaFin: packageHeader['fechaFin'],
-            paquete: false,
-            idPaquete: idPaquete,
-            pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+        var listaVaciaCuotas = [];
+        var cuotasObj = {
+            'customer': '',
+            'importeCuota': 0,
+            'p1': '0',
+            'p2': '0',
+            'p3': '0',
+        };
+        listaVaciaCuotas.push(cuotasObj);
+        for(var x = 0; x < subreglas[y]['descuentosCategorias'].length; x++){
+            var json = {
+                id: 0,
+                nombrePromo: subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria'],
+                descuento: parseInt(subreglas[y]['descuentosCategorias'][x]['descuento']),
+                descuentoWeb: parseInt(subreglas[y]['descuentosCategorias'][x]['descuentoWeb']),
+                puntosIndar: packageHeader['puntosIndar'],
+                plazosIndar: packageHeader['plazosIndar'],
+                regalosIndar: subreglas[y]['regalos'].toString(),
+                categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
+                categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
+                gruposclientesIds: packageHeader['gruposclientesIds'],
+                gruposclientesIncluye: packageHeader['gruposclientesIncluye'],
+                clientesId: packageHeader['clientesId'],
+                clientesIncluye: packageHeader['clientesIncluye'],
+                plazo: packageHeader['plazo'],
+                montoMinCash: parseInt(subreglas[y]['montoMinCash']),
+                montoMinQty: parseInt(subreglas[y]['montoMinQty']),
+                fechaInicio: packageHeader['fechaInicio'],
+                fechaFin: packageHeader['fechaFin'],
+                paquete: false,
+                idPaquete: idPaquete,
+                pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+                cuotasPersonalizadas: listaVaciaCuotas,
+            }
+            console.log(JSON.stringify(json));
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "storePromo",
+                'type': 'POST',
+                'dataType': 'json', 
+                'data': json,
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        // document.getElementById(idRow).classList.add('success-sub');
+                }, 
+                error: function(error){
+                        alert('Error guardando subregla '+subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria']);
+                        // document.getElementById(idRow).classList.add('error-sub');
+                 }
+            });
         }
-
-        console.log(json);
-        console.log(JSON.stringify(json));
-
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "storePromo",
-            'type': 'POST',
-            'dataType': 'json', 
-            'data': json,
-            'enctype': 'multipart/form-data',
-            'timeout': 2*60*60*1000,
-            success: function(data){
-                    console.log(data);
-                    // document.getElementById(idRow).classList.add('success-sub');
-            }, 
-            error: function(error){
-                    console.log(data);
-                    // document.getElementById(idRow).classList.add('error-sub');
-             }
-        });
-        
     }
     setTimeout(redirectPromociones, 2000);
    
@@ -643,9 +675,6 @@ function storeHeader(){
     var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
-        var proveedores = $('#proveedores').chosen().val();
-        var marcas = $('#marcas').chosen().val();
-        var articulos = $('#articulos').chosen().val();
     
         var regalos = $('#regalos').chosen().val();
 
@@ -685,11 +714,10 @@ function storeHeader(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-            cuotas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
         }
 
         packageHeader = json;
-        console.log(JSON.stringify(packageHeader));
 
         $.ajax({
             'headers': {
@@ -702,134 +730,161 @@ function storeHeader(){
             'enctype': 'multipart/form-data',
             'timeout': 2*60*60*1000,
             success: function(data){
-                    idPaquete = data;
+                idPaquete = data;
+                console.log(data);
+                alert('Encabezado guardado correctamente. Guardando subreglas...');
+                setTimeout(storeSubreglas, 5000);
             }, 
             error: function(error){
-                    console.log(data);
+                alert('Error al guardar encabezado de paquete');
              }
         });
 }
 
 function addRowCategoriaDescuento(id){
-    var container = document.getElementById('descuentosPorCategoria');
-    var div1 = document.createElement('div');
-    var div2 = document.createElement('div');
-    var div3 = document.createElement('div');
-    var div4 = document.createElement('div');
-    var div5 = document.createElement('div');
-    var div6 = document.createElement('div');
+    var icono = document.getElementById('iconoAgregarCategoriaDescuento'+id);
+    if(id != 0 && icono.classList.contains('btn-remove-category')){ //removeRowCategoriaDescuento
+        var start = (id - 1) * 6;
+        var end = (id * 6);
+        var container = document.getElementById('descuentosPorCategoria');
+        for(var x = start; x<end; x++){
+            container.removeChild(container.children[start]);
+        }
+        var limitStart = id + 1;
+        var limitEnd = maxIndexRowDescuentos;
 
-    div1.classList.add('col-lg-3', 'col-md-3', 'col-12');
+        for(var x = limitStart; x <= limitEnd; x++){
+            document.getElementById('categoriaCliente'+x).setAttribute('id', 'categoriaCliente'+(x-1));
+            document.getElementById('descuentoSubregla'+x).setAttribute('id', 'descuentoSubregla'+(x-1));
+            document.getElementById('descuentoWebSubregla'+x).setAttribute('id', 'descuentoWebSubregla'+(x-1));
+            document.getElementById('iconoAgregarCategoriaDescuento'+x).setAttribute('onclick', 'addRowCategoriaDescuento('+(x-1)+');');
+            document.getElementById('iconoAgregarCategoriaDescuento'+x).setAttribute('id', 'iconoAgregarCategoriaDescuento'+(x-1));
+        }
 
-    var select = document.createElement('select');
-
-    select.setAttribute('id','categoriaCliente'+(id+1));
-    select.setAttribute('class', 'form-control');
-
-    var opt1 = document.createElement('option');
-    opt1.value = 'F2';
-    opt1.innerHTML = 'F2';
-
-    var opt2 = document.createElement('option');
-    opt2.value = 'F5';
-    opt2.innerHTML = 'F5';
-
-    var opt3 = document.createElement('option');
-    opt3.value = 'FX';
-    opt3.innerHTML = 'FX';
-
-    var opt4 = document.createElement('option');
-    opt4.value = 'E';
-    opt4.innerHTML = 'E';
-
-    var opt5 = document.createElement('option');
-    opt5.value = 'AA';
-    opt5.innerHTML = 'AA';
-
-    var opt6 = document.createElement('option');
-    opt6.value = 'AB';
-    opt6.innerHTML = 'AB';
-
-    var opt7 = document.createElement('option');
-    opt7.value = 'AC';
-    opt7.innerHTML = 'AC';
-
-    var opt8 = document.createElement('option');
-    opt8.value = 'D';
-    opt8.innerHTML = 'D';
-
-    var opt9 = document.createElement('option');
-    opt9.value = 'DC';
-    opt9.innerHTML = 'DC';
-
-    var opt10 = document.createElement('option');
-    opt10.value = 'M';
-    opt10.innerHTML = 'M';
-
-    var opt11 = document.createElement('option');
-    opt11.value = 'MC';
-    opt11.innerHTML = 'MC';
-
-    select.appendChild(opt1);
-    select.appendChild(opt2);
-    select.appendChild(opt3);
-    select.appendChild(opt4);
-    select.appendChild(opt5);
-    select.appendChild(opt6);
-    select.appendChild(opt7);
-    select.appendChild(opt8);
-    select.appendChild(opt9);
-    select.appendChild(opt10);
-    select.appendChild(opt11);
-
-    div1.appendChild(select);
-
-    div2.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
-    var h5div2 = document.createElement('h5');
-    h5div2.innerHTML = 'Descuento subregla:';
-    div2.appendChild(h5div2);
-
-    div3.setAttribute('class', 'col-lg-2 col-md-2 col-12');
-    var inputdiv3 = document.createElement('input');
-    inputdiv3.setAttribute('type', 'number');
-    inputdiv3.setAttribute('id', 'descuentoSubregla'+(id+1));
-    inputdiv3.setAttribute('class', 'input-promociones');
-    inputdiv3.setAttribute('value', '1');
-    inputdiv3.setAttribute('step', '.01');
-    inputdiv3.setAttribute('min', '0');
-    div3.appendChild(inputdiv3);
-
-    div4.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
-    var h5div4 = document.createElement('h5');
-    h5div4.innerHTML = 'Descuento web:';
-    div4.appendChild(h5div4);
-
-    div5.setAttribute('class', 'col-lg-2 col-md-2 col-11');
-    var inputdiv5 = document.createElement('input');
-    inputdiv5.setAttribute('type', 'number');
-    inputdiv5.setAttribute('id', 'descuentoWebSubregla'+(id+1));
-    inputdiv5.setAttribute('class', 'input-promociones');
-    inputdiv5.setAttribute('value', '1');
-    inputdiv5.setAttribute('step', '.01');
-    inputdiv5.setAttribute('min', '0');
-    div5.appendChild(inputdiv5);
-
-    div6.setAttribute('class', 'col-1');
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'fas fa-plus-square btn-add-product fa-2x');
-    icon.setAttribute('id', 'iconoAgregarCategoriaDescuento'+(id+1));
-    icon.setAttribute('onclick', 'addRowCategoriaDescuento('+(id+1)+')');
-    div6.appendChild(icon);
-
-    if(id>0)
-        document.getElementById('iconoAgregarCategoriaDescuento'+id).classList.add('d-none');
-
-    container.appendChild(div1);
-    container.appendChild(div2);
-    container.appendChild(div3);
-    container.appendChild(div4);
-    container.appendChild(div5);
-    if(id < 10){
-        container.appendChild(div6);
     }
+    else{
+        var container = document.getElementById('descuentosPorCategoria');
+        var div1 = document.createElement('div'); 
+        var div2 = document.createElement('div');
+        var div3 = document.createElement('div');
+        var div4 = document.createElement('div');
+        var div5 = document.createElement('div');
+        var div6 = document.createElement('div');
+    
+        div1.classList.add('col-lg-3', 'col-md-3', 'col-12');
+    
+        var select = document.createElement('select');
+    
+        select.setAttribute('id','categoriaCliente'+(id+1));
+        select.setAttribute('class', 'form-control');
+    
+        var opt1 = document.createElement('option');
+        opt1.value = 'F2';
+        opt1.innerHTML = 'F2';
+    
+        var opt2 = document.createElement('option');
+        opt2.value = 'F5';
+        opt2.innerHTML = 'F5';
+    
+        var opt3 = document.createElement('option');
+        opt3.value = 'FX';
+        opt3.innerHTML = 'FX';
+    
+        var opt4 = document.createElement('option');
+        opt4.value = 'E';
+        opt4.innerHTML = 'E';
+    
+        var opt5 = document.createElement('option');
+        opt5.value = 'AA';
+        opt5.innerHTML = 'AA';
+    
+        var opt6 = document.createElement('option');
+        opt6.value = 'AB';
+        opt6.innerHTML = 'AB';
+    
+        var opt7 = document.createElement('option');
+        opt7.value = 'AC';
+        opt7.innerHTML = 'AC';
+    
+        var opt8 = document.createElement('option');
+        opt8.value = 'D';
+        opt8.innerHTML = 'D';
+    
+        var opt9 = document.createElement('option');
+        opt9.value = 'DC';
+        opt9.innerHTML = 'DC';
+    
+        var opt10 = document.createElement('option');
+        opt10.value = 'M';
+        opt10.innerHTML = 'M';
+    
+        var opt11 = document.createElement('option');
+        opt11.value = 'MC';
+        opt11.innerHTML = 'MC';
+    
+        select.appendChild(opt1);
+        select.appendChild(opt2);
+        select.appendChild(opt3);
+        select.appendChild(opt4);
+        select.appendChild(opt5);
+        select.appendChild(opt6);
+        select.appendChild(opt7);
+        select.appendChild(opt8);
+        select.appendChild(opt9);
+        select.appendChild(opt10);
+        select.appendChild(opt11);
+    
+        div1.appendChild(select);
+    
+        div2.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+        var h5div2 = document.createElement('h5');
+        h5div2.innerHTML = 'Descuento subregla:';
+        div2.appendChild(h5div2);
+    
+        div3.setAttribute('class', 'col-lg-2 col-md-2 col-12');
+        var inputdiv3 = document.createElement('input');
+        inputdiv3.setAttribute('type', 'number');
+        inputdiv3.setAttribute('id', 'descuentoSubregla'+(id+1));
+        inputdiv3.setAttribute('class', 'input-promociones');
+        inputdiv3.setAttribute('value', '1');
+        inputdiv3.setAttribute('step', '.01');
+        inputdiv3.setAttribute('min', '0');
+        div3.appendChild(inputdiv3);
+    
+        div4.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+        var h5div4 = document.createElement('h5');
+        h5div4.innerHTML = 'Descuento web:';
+        div4.appendChild(h5div4);
+    
+        div5.setAttribute('class', 'col-lg-2 col-md-2 col-11');
+        var inputdiv5 = document.createElement('input');
+        inputdiv5.setAttribute('type', 'number');
+        inputdiv5.setAttribute('id', 'descuentoWebSubregla'+(id+1));
+        inputdiv5.setAttribute('class', 'input-promociones');
+        inputdiv5.setAttribute('value', '1');
+        inputdiv5.setAttribute('step', '.01');
+        inputdiv5.setAttribute('min', '0');
+        div5.appendChild(inputdiv5);
+    
+        div6.setAttribute('class', 'col-1');
+        var icon = document.createElement('i');
+        icon.setAttribute('class', 'fas fa-plus-square btn-add-category fa-2x');
+        icon.setAttribute('id', 'iconoAgregarCategoriaDescuento'+(id+1));
+        icon.setAttribute('onclick', 'addRowCategoriaDescuento('+(id+1)+')');
+        div6.appendChild(icon);
+    
+        if(id>0){
+            maxIndexRowDescuentos ++;
+            document.getElementById('iconoAgregarCategoriaDescuento'+id).removeAttribute('class');
+            document.getElementById('iconoAgregarCategoriaDescuento'+id).setAttribute('class','fas fa-minus-square btn-remove-category fa-2x');
+        }    
+        container.appendChild(div1);
+        container.appendChild(div2);
+        container.appendChild(div3);
+        container.appendChild(div4);
+        container.appendChild(div5);
+        if(id < 10){
+            container.appendChild(div6);
+        }
+    }    
 }

@@ -576,17 +576,19 @@ function prepareJsonSeparaPedidos(separa){
 
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
     if(separar && json == null){
-        prepareJsonSeparaPedidos(true);
+        document.getElementById('loadingSeparar').style.opacity = '1';
+        setTimeout(prepareJsonSeparaPedidos(true), 2000);
     }
     if(separar && json != null){
-        console.log(json);
         
         if(document.getElementById('cupon').value != ''){
             json = JSON.parse(json);
             for(var x = 0; x < json.length; x++){
                 json[x]['cupon'] = document.getElementById('cupon').value;
             }
+            console.log(json);
             json = JSON.stringify(json);
+            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -604,12 +606,14 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
+                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
             });
         }
         else{
+            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -680,53 +684,37 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
         }
     }
 
-    pedido = [];
-    for(var x=0; x<json.length; x++){
-        var art = items.find(o => o.itemid === json[x]['itemID']);
-        var item = {
-            categoriaItem: art['categoriaItem'],
-            clavefabricante: art['claveFabricante'],
-            familia: art['familia'],
-            grupoArticulo: art['grupoArticulo'],
-            tipoArticulo: json[x]['tipo'],
-            id: art['id'],
-            itemid: json[x]['itemID'],
-            purchasedescription: art['purchasedescription'],
-            multiploVenta: json[x]['multiplo'],
-            cantidad: json[x]['quantity'],
-            price: json[x]['punitario'],
-            unidad: art['unidad'],
-            promo: json[x]['promo'],
-            marca: json[x]['marca'],
-            plazo: json[x]['plazo'],
-            regalo: json[x]['regalo'],
-            addRegalo: ignorarRegalos.includes(json[x]['itemID']) ? 0 : 1,
-            separa: json[x]['separa'],
-            disponible: art['disponible'],
-            desneg: 0,
-            autorizaDesneg: "",
-            desgar: 0,
-            autorizaDesgar: "",
-        };
-        if(x==0){
-            var rowPedido = {
-                descuento: json[x]['descuento'],
-                plazo: json[x]['plazo'],
+
+    if(json.length>0){
+        pedido = [];
+        for(var x=0; x<json.length; x++){
+            var art = items.find(o => o.itemid === json[x]['itemID']);
+            var item = {
+                categoriaItem: art['categoriaItem'],
+                clavefabricante: art['claveFabricante'],
+                familia: art['familia'],
+                grupoArticulo: art['grupoArticulo'],
+                tipoArticulo: json[x]['tipo'],
+                id: art['id'],
+                itemid: json[x]['itemID'],
+                purchasedescription: art['purchasedescription'],
+                multiploVenta: json[x]['multiplo'],
+                cantidad: json[x]['quantity'],
+                price: json[x]['punitario'],
+                unidad: art['unidad'],
+                promo: json[x]['promo'],
                 marca: json[x]['marca'],
-                tipo: json[x]['tipo'],
+                plazo: json[x]['plazo'],
                 regalo: json[x]['regalo'],
-                evento: json[x]['evento'],
-                items: []
+                addRegalo: ignorarRegalos.includes(json[x]['itemID']) ? 0 : 1,
+                separa: json[x]['separa'],
+                disponible: art['disponible'],
+                desneg: 0,
+                autorizaDesneg: "",
+                desgar: 0,
+                autorizaDesgar: "",
             };
-            rowPedido['items'].push(item);
-            pedido.push(rowPedido);
-        }
-        else{
-            var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
-            if(header != undefined){
-                header['items'].push(item);
-            }
-            else{
+            if(x==0){
                 var rowPedido = {
                     descuento: json[x]['descuento'],
                     plazo: json[x]['plazo'],
@@ -739,7 +727,30 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                 rowPedido['items'].push(item);
                 pedido.push(rowPedido);
             }
-        }
+            else{
+                var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
+                if(header != undefined){
+                    header['items'].push(item);
+                }
+                else{
+                    var rowPedido = {
+                        descuento: json[x]['descuento'],
+                        plazo: json[x]['plazo'],
+                        marca: json[x]['marca'],
+                        tipo: json[x]['tipo'],
+                        regalo: json[x]['regalo'],
+                        evento: json[x]['evento'],
+                        items: []
+                    };
+                    rowPedido['items'].push(item);
+                    pedido.push(rowPedido);
+                }
+            }
+        }   
+    }
+    else{
+        console.log('SepararPedidosPromo retornó null, no hay promociones disponibles para separar pedido.');
+        console.log(pedido);
     }
     createTablePedido();
 }
@@ -845,7 +856,6 @@ function getItems(entity) {
 
 function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
-    // console.clear();
 }
 
 function cargarInventario() {
@@ -1040,6 +1050,9 @@ function createTablePedido(){
     if(filas == 1){
         document.getElementById('messageAddProducts').classList.remove('d-none');
     }
+
+    document.getElementById('loadingSeparar').style.opacity = '0';
+
 
 
 }

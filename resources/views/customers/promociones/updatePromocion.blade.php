@@ -1,13 +1,11 @@
 @extends('layouts.intranet.main', ['active' => 'Ventas', 'permissions' => $permissions])
 
-@section('title') Ventas - Agregar Promoción @endsection 
+@section('title') Ventas - Editar Promoción @endsection 
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
 <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
 <script src="{{asset('assets/customers/js/promociones/addPromocion.js')}}"></script>
-<!-- <script src="{{asset('assets/customers/js/index.js')}}"></script> -->
-
 @endsection
 
 @section('body')
@@ -144,7 +142,7 @@
                         <h5>Descuento Web:</h5>
                     </div>
                     <div class="col-lg-4 col-md-3 col-12">
-                        <input class="input-promociones" type="number" name="descuentoweb" id="descuentoweb" step=".01" min="0">
+                        <input class="input-promociones" type="number" name="descuentoWeb" id="descuentoWeb" step=".01" min="0" value="{{$promo->descuentoWeb}}">
                     </div>
                 </div>
                 <div class="row reglas-row">
