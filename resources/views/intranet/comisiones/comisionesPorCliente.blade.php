@@ -44,7 +44,7 @@
                                 <select name="zonas"  class="form-control js-example-basic-single" id="zonas"></select>
                             </div>
                             <div class="col-sm-4">
-                                <input type="month" name="fecha" id="fecha" class="form-control" value="2022-02">
+                                <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
                             </div>
                             <div class="col-md-4">
                                     <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
@@ -56,25 +56,26 @@
                     <div id="divClientes" style="display: block" class="card-body">
                         <div class="col-lg-12">
                             <div class="card-body table-responsive p-0">
-                               <table id="comisionesTable" class="table table-striped table-bordered" style="width:100% ; font-size:67%">
+                               <table id="comisionesTable" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:64% ;font-weight: bold ">
                                   <thead style="background-color:#002868; color:white">
                                    <tr>
-                                        <th class="text-center" style="font-size:15px " colspan =16  > FEBRERO </th>
+                                        <th id="headerMes" class="text-center" style="font-size:15px " colspan =16  >  </th>
                                     </tr>
-                                     <tr>
+                                     <tr >
+                                        <th>Id</th>
                                         <th>Cliente</th>
                                         <th>Recibida en el mes con IVA</th>
                                         <th>Recibida en el mes sin IVA</th>
                                         <th>Pendiente Saldar mes anterior sin IVA</th>
                                         <th>Pendiente de saldar este mes sin IVA</th>
-                                        <th>Saldada en el mes sin IVA</th>
+                                        <th>Sal dada en el mes sin IVA</th>
                                         <th>Cobranza de 0 a 30 dias</th>
                                         <th>Cobranza de 31 a 60 dias</th>
                                         <th>Cobranza de 61 a 90 dias</th>
-                                        <th>Cobranza a + de 90 dias</th>
-                                        <th>Diferencia en Precio (Neto a Des contar)</th>
+                                        <th>Cobranza + de 90 dias</th>
+                                        <th>Dif. en Precio (Neto a Des contar)</th>
                                         <th>Desc. Fuera de Tiempo (Neto a Des contar)</th>
-                                        <th>Incobr abilidad (Neto a Des contar)</th>
+                                        <th>Incobra bilidad (Neto a Des contar)</th>
                                         <th>Comisión Base</th>
                                      </tr>
                                   </thead>
@@ -91,19 +92,13 @@
                             <div class="col-md-2">
                                 <button class="btn btn-success " onclick="regresar()">Regresar</button>
                             </div>
-                               <div class="col-md-6">
-                                   <input type="month" name="fecha" id="fecha" class="form-control" value="2022-02">
-                               </div>
-                               <div class="col-md-4">
-                                       <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
-                                       <button type="submit" class="btn btn-secondary mb-3"  style="display: block" id="btnConsultar">Consultar </button>
-                               </div>
                             </div>
+                            <br>
                             <div class="card-body table-responsive p-0">
-                               <table id="comisionesDetalle" class="table table-striped table-bordered" style="width:100% ; font-size:64%">
+                               <table id="comisionesDetalle" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:64%">
                                   <thead style="background-color:#002868; color:white">
                                    <tr>
-                                        <th class="text-center" style="font-size:15px " colspan =16  > FEBRERO </th>
+                                        <th id="headerMesDetalle" class="text-center" style="font-size:15px " colspan =16  >  </th>
                                     </tr>
                                      <tr>
                                         <th>Documento</th>
@@ -148,9 +143,11 @@
 <script>
 $(document).ready(function() {
 
+    //Collapse sideBar
+    $("body").addClass("sidebar-collapse");
     //Recibe Json
     var zonas = JSON.parse({!! json_encode($zonas) !!});
-    console.log(zonas);
+    //console.log(zonas);
     //Llena select zonas
     $('.js-example-basic-single').select2();
 
@@ -178,7 +175,13 @@ $(document).ready(function() {
 function consultar() {
 $("#comisionesTable").dataTable().fnDestroy();
 var id = document.getElementById("zonas").value;
-var date = '02-02-2022';
+var pfecha = document.getElementById("fechaCliente").value;
+var mes = pfecha.slice(5,7);
+var año = pfecha.slice(0,4);
+var date = mes+'-01-'+año;
+var dateprueba = new Date(año, mes-1, 01);  // 2009-11-10
+var month = dateprueba.toLocaleString('default', { month: 'long' });
+document.getElementById("headerMes").innerHTML = month.toUpperCase()+' '+año;
 $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -217,16 +220,22 @@ $.ajax({
             var resultData = Object.values(groupBy(rawtData,'companyid'));
             //console.log(resultData);
             var table = $('#comisionesTable').dataTable( {
+                dom : 'Brt',
                 fixedHeader:true,
+                ordering: false,
                 scrollY:320,
+                scrollX: true,
+                scrollCollapse: true,
+                responsive: true,
                 data : resultData,
                 columns: [  //or different depending on the structure of the object
+                { "data": "companyid"},
                 { "data": "companyname" },
                 { "data": "recibo_mes_actual"},
                 { "data": "recibo_mes_actual_siniva" },
                 { "data": "pendiente_saldar_mes_anteriorl_siniva" },
+                { "data": "saldada_mes_actual_siniva"},
                 { "data": "pendiente_saldar_mes_actual" },
-                { "data": "saldada_mes_actual_siniva" },
                 { "data": "de0a30" },
                 { "data": "de31a60" },
                 { "data": "de61a90" },
@@ -236,17 +245,16 @@ $.ajax({
                 { "data": "incobrabilidad" },
                 { "data": "comision_base" }
                 ],
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-                },
+
             });
 
             $('#comisionesTable tbody').on('click', 'tr', function () {
                 //$(this).toggleClass('select');
                 var row = table.api().row(this).data();
-                console.log(row['companyid']);
+                //console.log(row['companyid']);
                 var id = row['companyid'];
-                var date = '02-02-2022';
+                console.log(date) ;
+                document.getElementById("headerMesDetalle").innerHTML = month.toUpperCase()+' '+año;
                $.ajax({
                     'headers': {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -290,7 +298,7 @@ $.ajax({
                             var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX');
                             var importe_factura = data[i].importe_factura.toLocaleString('es-MX');
                             var comisionBase = data[i].comision_base.toLocaleString('es-MX');
-                            if (data[i].saldo > 0 &&  comisionBase === 0){
+                            if (data[i].saldo > 0 &&  comisionBase == 0){
                                 html += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].tranid+ '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  recibo_mes_actual + '</td>' +
@@ -357,6 +365,8 @@ $.ajax({
 
                             $('#companyname').text(data[0].companyname);
                            $('#companyid').text(data[0].companyid);
+                           document.getElementById("companyname").style.display = "block";
+                           document.getElementById("companyid").style.display = "block";
                            //console.log(sumaRMSI);
                         }
 
@@ -379,6 +389,8 @@ function regresar(){
     document.getElementById("divClientes").style.display = "block";
     document.getElementById("divDetalle").style.display = "none";
     document.getElementById("divFiltroCli").style.display = "block";
+    document.getElementById("companyname").style.display = "none";
+    document.getElementById("companyid").style.display = "none";
 }
 </script>
 @endsection

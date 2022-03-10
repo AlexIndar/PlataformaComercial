@@ -156,7 +156,7 @@
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <span class="dropdown-item dropdown-header">Mi Cuenta</span>
             <div class="dropdown-divider"></div>
-            <a href="/logout" class="dropdown-item"> 
+            <a href="/logout" class="dropdown-item">
               Cerrar sesión <i class="fas fa-sign-out-alt mr-2 mt-1 float-right"></i>
             </a>
             <div class="dropdown-divider"></div>
@@ -176,7 +176,7 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-light-primary elevation-4">
+    <aside class="main-sidebar sidebar-light-primary elevation-4" >
       <!-- Brand Logo -->
       <a href="Intranet" class="brand-link">
         <img class="logo" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="200" style="padding:10px; margin-left: 10px;">
@@ -1177,4 +1177,3 @@
 </body>
 
 </html>
-
