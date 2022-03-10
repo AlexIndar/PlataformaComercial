@@ -682,10 +682,13 @@ function getCpCol(data) {
 
 function addContactData() {
     var nombre = document.getElementById('nombreContacto').value.toUpperCase();
-    var telefono = document.getElementById('telefonoContacto').value;
+    var phone = document.getElementById('telefonoContacto').value;
     var celular = document.getElementById('celularContacto').value;
     var email = document.getElementById('emailContacto').value;
     var tipo = document.getElementById('tipoContacto').value;
+    console.log("***VERIFICACIÓN");
+    console.log(contactos);
+    console.log("***CONTACTOS");
     if (contactos.length < maxContactos) {
         if (contactos.length == 0 && tipo != 1) {
             alert("Debes de agregar el primer contacto como principal");
@@ -693,16 +696,16 @@ function addContactData() {
         } else {
             if (tipo != "SELECCIONAR") {
                 $('#tipoContacto').removeClass("warningText");
-                if (validarDataContact(nombre, email, telefono, celular)) {
-                    var data = {
+                if (validarDataContact(nombre, email, phone, celular)) {
+                    let objContacto = {
                         "tipo": tipo,
                         "nombre": nombre,
-                        "telefono": telefono,
+                        "phone": phone,
                         "celular": celular,
                         "email": email
                     };
 
-                    contactos.push(data);
+                    contactos.push(objContacto);
 
                     switch (tipo) {
                         case "1":
@@ -764,10 +767,10 @@ function cleanDatosContacto() {
     document.getElementById('flexCheckChecked').checked = false;
 }
 
-function validarDataContact(nombre, email, telefono, celular) {
+function validarDataContact(nombre, email, phone, celular) {
     var auxN = validacionText("#nombreContacto", nombre);
     var auxE = validacionEmail("#emailContacto", email);
-    var auxP = validarPhoneCell("#telefonoContacto", telefono);
+    var auxP = validarPhoneCell("#telefonoContacto", phone);
     var auxC = validarPhoneCell("#celularContacto", celular);
     if (auxN && auxE && auxP && auxC) {
         return true;
@@ -823,7 +826,7 @@ function editContactRow(t) {
     var table = document.getElementById('contactData');
     var index = row.rowIndex;
     document.getElementById('nombreContacto').value = contactos[index - 1].nombre;
-    document.getElementById('telefonoContacto').value = contactos[index - 1].telefono;
+    document.getElementById('telefonoContacto').value = contactos[index - 1].phone;
     document.getElementById('celularContacto').value = contactos[index - 1].celular;
     document.getElementById('emailContacto').value = contactos[index - 1].email;
     document.getElementById('tipoContacto').value = contactos[index - 1].tipo;
@@ -1575,7 +1578,7 @@ function createJsonSolicitud(zone) {
             nombre: contactos[x]['nombre'],
             email: contactos[x]['email'],
             celular: contactos[x]['celular'],
-            phone: contactos[x]['telefono'],
+            phone: contactos[x]['phone'],
         };
         contactosData.push(temp);
     }
@@ -1613,8 +1616,8 @@ function createJsonSolicitud(zone) {
     }
 
     var json = {
-        // folio: document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value;
-        folio: -1,
+        folio: document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value,
+        //folio: -1,
         fecha: getDateTime(),
         tipo: getTipoForm(),
         credito: getTipoForm() == 0 ? null : document.getElementById('creditoInput').value == "" ? 0 : parseInt(document.getElementById('creditoInput').value),
@@ -2833,6 +2836,9 @@ function continueModal(facturas, archivos, data) {
     $('#inputGroupSelect01').selectpicker("refresh");
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
     changeAntiguedad();
+    console.log("****CARGA****");
+    console.log(data.cliente.contactos);
+    console.log("****END CARGA****");
     if (data.cliente.contactos.length <= 1) {
         if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
             addContactDataCon(data.cliente.contactos);
@@ -2945,12 +2951,13 @@ function compareDir(datosF, datosE) {
 }
 
 function addContactDataCon(conCon) {
+    // console.log(conCon);
     if (conCon != null) {
         for (var i = 0; i < conCon.length; i++) {
             var data = {
                 "tipo": conCon[i].tipo,
                 "nombre": conCon[i].nombre,
-                "telefono": conCon[i].telefono,
+                "phone": conCon[i].phone,
                 "celular": conCon[i].celular,
                 "email": conCon[i].email
             };
