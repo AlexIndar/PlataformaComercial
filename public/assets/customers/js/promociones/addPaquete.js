@@ -566,8 +566,7 @@ function storePaquete(){
     storeHeader();
     document.getElementById('btn-guardar').classList.add('d-none');
     document.getElementById('btn-add-sub').classList.add('d-none');
-    document.getElementById('div-loading').style.opacity = '1';
-    setTimeout(storeSubreglas, 8000);
+    document.getElementById('div-loading').style.opacity = '1'
 }
 
 function storeSubreglas(){
@@ -732,6 +731,9 @@ function storeHeader(){
             'timeout': 2*60*60*1000,
             success: function(data){
                 idPaquete = data;
+                console.log(data);
+                alert('Encabezado guardado correctamente. Guardando subreglas...');
+                setTimeout(storeSubreglas, 5000);
             }, 
             error: function(error){
                 alert('Error al guardar encabezado de paquete');
