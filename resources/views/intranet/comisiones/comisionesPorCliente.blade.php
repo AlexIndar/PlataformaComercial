@@ -48,7 +48,7 @@
                             </div>
                             <div class="col-md-4">
                                     <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
-                                    <button type="submit" class="btn btn-success mb-3"  style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
+                                    <button type="submit" class="btn btn-primary mb-3" style="background-color:#002868" style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
                             </div>
                          </div>
                      </div>
@@ -56,7 +56,7 @@
                     <div id="divClientes" style="display: block" class="card-body">
                         <div class="col-lg-12">
                             <div class="card-body table-responsive p-0">
-                               <table id="comisionesTable" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:64% ;font-weight: bold ">
+                               <table id="comisionesTable" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:63% ;font-weight: bold ">
                                   <thead style="background-color:#002868; color:white">
                                    <tr>
                                         <th id="headerMes" class="text-center" style="font-size:15px " colspan =16  >  </th>
@@ -90,20 +90,20 @@
                         <div class="col-lg-12">
                            <div class="row ">
                             <div class="col-md-2">
-                                <button class="btn btn-success " onclick="regresar()">Regresar</button>
+                              <button class="btn btn-primary " style="background-color:#002868" onclick="regresar()">  <i class="fas fa-arrow-left"></i></button>
                             </div>
                             </div>
                             <br>
                             <div class="card-body table-responsive p-0">
-                               <table id="comisionesDetalle" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:64%">
+                               <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:63%">
                                   <thead style="background-color:#002868; color:white">
                                    <tr>
                                         <th id="headerMesDetalle" class="text-center" style="font-size:15px " colspan =16  >  </th>
                                     </tr>
                                      <tr>
                                         <th>Documento</th>
-                                        <th>Recibida en el Mes con IVA</th>
-                                        <th>Recibida en el Mes sin IVA</th>
+                                        <th>Reci bida en el Mes con IVA</th>
+                                        <th>Reci bida en el Mes sin IVA</th>
                                         <th>Pendiente Saldar Mes Anterior sin IVA</th>
                                         <th>Pendiente Saldar Este Mes sin IVA</th>
                                         <th>Saldada en el Mes sin IVA</th>
@@ -140,6 +140,12 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+<!-- Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
 <script>
 $(document).ready(function() {
 
@@ -173,7 +179,10 @@ $(document).ready(function() {
 
 });
 function consultar() {
+    $.fn.dataTable.ext.errMode = 'none';
 $("#comisionesTable").dataTable().fnDestroy();
+$("#comisionesDetalle").dataTable().fnDestroy();
+
 var id = document.getElementById("zonas").value;
 var pfecha = document.getElementById("fechaCliente").value;
 var mes = pfecha.slice(5,7);
@@ -228,6 +237,25 @@ $.ajax({
                 scrollCollapse: true,
                 responsive: true,
                 data : resultData,
+                columnDefs: [
+                                {
+                                  targets: [2,3,4,5,6,7,8,9,10,11,12,13,14,],
+                                  render: $.fn.dataTable.render.number(',', '.', 0, '')
+                                }
+                ],
+                buttons: [
+                    {
+                extend:    'excel',
+                text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+                titleAttr: 'Descargar Excel'
+            }
+                ],
+                initComplete: function () {
+                var btns = $('.dt-button');
+                btns.addClass('btn btn-success ');
+                btns.removeClass('dt-button');
+
+                },
                 columns: [  //or different depending on the structure of the object
                 { "data": "companyid"},
                 { "data": "companyname" },
@@ -255,6 +283,7 @@ $.ajax({
                 var id = row['companyid'];
                 console.log(date) ;
                 document.getElementById("headerMesDetalle").innerHTML = month.toUpperCase()+' '+año;
+
                $.ajax({
                     'headers': {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -297,7 +326,8 @@ $.ajax({
                             var saldada_mes_actual_siniva = data[i].saldada_mes_actual_siniva.toLocaleString('es-MX');
                             var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX');
                             var importe_factura = data[i].importe_factura.toLocaleString('es-MX');
-                            var comisionBase = data[i].comision_base.toLocaleString('es-MX');
+                            var comisionBase = data[i].comision_base.toLocaleString('es-MX', {maximumFractionDigits: 2});
+
                             if (data[i].saldo > 0 &&  comisionBase == 0){
                                 html += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].tranid+ '</td>' +
@@ -340,7 +370,7 @@ $.ajax({
                         }
 
                         if(html !== ''){
-                            htmlfoot =
+                            html +=
                             '<td style="font-weight: bold; background-color:#7fffbf">Total</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMCI.toLocaleString('es-MX')+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMSI.toLocaleString('es-MX')+'</td>'+
@@ -356,9 +386,9 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toFixed(2)+'</td>';
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toLocaleString('es-MX')+'</td>';
                            $('#llenaDetalle').html(html);
-                           $('#llenaDetalle').append(htmlfoot);
+                           //console.log(html);
                            document.getElementById("divClientes").style.display = "none";
                            document.getElementById("divDetalle").style.display = "block";
                            document.getElementById("divFiltroCli").style.display = "none";
@@ -368,6 +398,30 @@ $.ajax({
                            document.getElementById("companyname").style.display = "block";
                            document.getElementById("companyid").style.display = "block";
                            //console.log(sumaRMSI);
+                           $('#comisionesDetalle').dataTable( {
+                                dom : 'Brtip',
+                                paging:false,
+                                fixedHeader:true,
+                                ordering: false,
+                                scrollY:320,
+                                scrollX: true,
+                                scrollCollapse: true,
+
+                                buttons: [
+                                    {
+                                        extend:    'excel',
+                                        text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+                                        titleAttr: 'Descargar Excel'
+                                    }
+                                ],
+                                initComplete: function () {
+                                var btns = $('.dt-button');
+                                btns.addClass('btn btn-success ');
+                                btns.removeClass('dt-button');
+
+                                },
+
+                            });
                         }
 
                     },
@@ -386,11 +440,13 @@ $.ajax({
     });
 }
 function regresar(){
+    $("#comisionesDetalle").dataTable().fnDestroy();
     document.getElementById("divClientes").style.display = "block";
     document.getElementById("divDetalle").style.display = "none";
     document.getElementById("divFiltroCli").style.display = "block";
     document.getElementById("companyname").style.display = "none";
     document.getElementById("companyid").style.display = "none";
 }
+
 </script>
 @endsection

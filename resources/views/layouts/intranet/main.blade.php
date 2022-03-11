@@ -12,6 +12,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script> -->
+
+
+
   <!-- Custom Styles -->
   @yield('styles')
   <!-- Google Font: Source Sans Pro -->
@@ -173,7 +176,7 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-light-primary elevation-4" >
+    <aside class="main-sidebar sidebar-light-primary elevation-4">
       <!-- Brand Logo -->
       <a href="Intranet" class="brand-link">
         <img class="logo" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="200" style="padding:10px; margin-left: 10px;">
@@ -1174,3 +1177,4 @@
 </body>
 
 </html>
+
