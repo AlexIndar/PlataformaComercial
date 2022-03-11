@@ -21,6 +21,20 @@ $('document').ready(function(){
             'timeout': 2*60*60*1000,
             success: function(data){
                 console.log(data);
+                var cuotasPromo = [];
+                toggleCuotas('Personalizada');
+                for(var x=0; x<data.length; x++){
+                    var json = {
+                        'CompanyId': data[x]['customer'],
+                        'Cuota': data[x]['cuota'].toString(),
+                        'P1': data[x]['p1'],
+                        'P2': data[x]['p2'],
+                        'P3': data[x]['p3'],
+                    };
+                    cuotasPromo.push(json);
+                }
+                document.getElementById('cuotasLoading').style.display = 'none';
+			    addClientesCuotas(JSON.stringify(cuotasPromo));
             }, 
             error: function(error){
                 console.log(error);
@@ -30,6 +44,10 @@ $('document').ready(function(){
 
     $( "#tipoCuota" ).change(function() {
         var tipo = document.getElementById('tipoCuota').value;
+        toggleCuotas(tipo);
+    });
+
+    function toggleCuotas(tipo){
         if(tipo == 'General'){
             $('#preciomin').prop('disabled', false);
             $('#preciomin').css('cursor', 'auto');
@@ -48,7 +66,7 @@ $('document').ready(function(){
             $('.clientesGeneral').hide();
             $('.clientesCuotas').show();
         }
-    });
+    }
 
     const fileClientesCuotas = document.getElementById('clientesCuotasFile');
 	fileClientesCuotas.addEventListener('change', (event) => {
@@ -57,10 +75,10 @@ $('document').ready(function(){
 		reader.onload = function(){
 			var fileData = reader.result;
 			var wb = XLSX.read(fileData, {type : 'binary'});
-	
 			wb.SheetNames.forEach(function(sheetName){
 			var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
 			var jsonObj = JSON.stringify(rowObj);
+            console.log(jsonObj);
 			addClientesCuotas(jsonObj);
 			})
 		};
