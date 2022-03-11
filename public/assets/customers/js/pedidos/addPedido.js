@@ -8,6 +8,8 @@ var checkPromocionesCliente = true;
 var jsonItemsSeparar = "";
 var ignorarRegalos = [];
 var noCotizacionNS = 0;
+var tipoActualizacion = 0; //variable para saber si se actualiza el pedido por: 1 - cargar por código ; 2 - cargar por excel ; 3 - cargar por inventario ; 4 - sumar o restar cantidad de producto
+var ofertasVolumen = "";
 
 var indexFocus = []; //guardar el index de las filas editadas para que parpadeen después de crear nuevamente la tabla
 var intervalVar; //variable para asignar intervalo y hacer clear al intervalo después de x segundos+
@@ -180,6 +182,7 @@ $(document).ready(function() {
     });
 
     $('#modalInventario').on('hidden.bs.modal', function () {
+        tipoActualizacion = 3;
         prepareJsonSeparaPedidos(false);
     })
 
@@ -222,9 +225,6 @@ $(document).ready(function() {
                 icon: 'success'
             });
         }
-
-
-
     });
 
 
@@ -232,12 +232,13 @@ $(document).ready(function() {
 
     // UPDATE ADDRESSES AND DEFAULT SHIPPING WAT / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
 
-    $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+    $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
         var selected = clickedIndex - 1;
         indexCustomer = selected;
-        addresses = info[selected]['addresses'];
-        shippingWays = info[selected]['shippingWays'];
-        packageDeliveries = info[selected]['packageDeliveries'];
+        //INFO es la lista de todos los clientes con su información correspondiente
+        addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
+        shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
+        packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
 
         document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
 
@@ -245,6 +246,10 @@ $(document).ready(function() {
         document.getElementById('categoryCte').classList.remove('d-none');
 
         items = [];
+        pedido = []; //vaciar pedido
+        selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
+        document.getElementById('cupon').value = ''; //limpiar campo cupon
+        createTablePedido(); //limpiar tabla pedido
         intervalInventario = window.setInterval(checkItems, 1000);
         checkPromocionesCliente = true;
         document.getElementById('entity').value = info[selected]["companyId"];
@@ -457,8 +462,6 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
         pedido[index]['items'][indexItem]['addRegalo'] = 0; 
     }
     else{
-        console.log('Delete row Pedido');
-        console.log(pedido);
         pedido[index]['items'].splice(indexItem, 1);
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
         selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) - cantidad;
@@ -542,7 +545,7 @@ function cargarProductosPorCodigo() {
     table.classList.remove('active');
     table.classList.add('inactive');
     document.getElementById('btnCargarPorCodigo').classList.add('d-none');
-
+    tipoActualizacion = 1;
     prepareJsonSeparaPedidos(false);
 }
 
@@ -558,6 +561,7 @@ function cargarProductosExcel(json) {
             selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
     }
 
+    tipoActualizacion = 2;
     prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
@@ -586,9 +590,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
             for(var x = 0; x < json.length; x++){
                 json[x]['cupon'] = document.getElementById('cupon').value;
             }
-            console.log(json);
             json = JSON.stringify(json);
-            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -613,7 +615,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
             });
         }
         else{
-            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -631,6 +632,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
+                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
@@ -638,18 +640,13 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
         }
     }
     if(!separar){
-        console.log('No separar, solo agregar fila');
         json = JSON.parse(json);
-        console.log(json);
-        console.log(selectedItemsFromInventory);
-        console.log(pedido);
         var arr = [];
         for(var x = 0; x < json.length; x++){
             var art = items.find(o => o.itemid === json[x]['itemID']);
             var artArr = arr.find(o => o.itemID === json[x]['itemID'])
             if(artArr != undefined){
                 artArr['quantity'] = (parseInt(json[x]['quantity']) + parseInt(artArr['quantity'])).toString();
-                console.log(artArr['quantity']);
             }
             else{
                 if(json[x]['quantity'] > 0){
@@ -674,8 +671,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
-    console.log('Separar filas');
-    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -689,6 +684,19 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
         pedido = [];
         for(var x=0; x<json.length; x++){
             var art = items.find(o => o.itemid === json[x]['itemID']);
+            ofertasVolumen = "";
+            if(art['promoART'] != null){
+                for(var i=0; i<art['promoART'].length; i++){
+                    if(json[x]['quantity']>=art['promoART'][i]['cantidad']){
+                        json[x]['promo'] = art['promoART'][i]['descuento'];
+                    }
+                    else if(i>0){
+                        ofertasVolumen += 'Compra '+art['promoART'][i]['cantidad']+' piezas de '+json[x]['itemID']+' y llévate un '+art['promoART'][i]['descuento']+'% de descuento.\n';
+                        console.log(ofertasVolumen);
+                    }
+                }
+            }
+            
             var item = {
                 categoriaItem: art['categoriaItem'],
                 clavefabricante: art['claveFabricante'],
@@ -749,7 +757,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
         }   
     }
     else{
-        console.log('SepararPedidosPromo retornó null, no hay promociones disponibles para separar pedido.');
+        console.log('No hay promociones disponibles para separar pedido.');
         console.log(pedido);
     }
     createTablePedido();
@@ -1311,6 +1319,7 @@ function addItemCant(item, cant, index) {
     var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
     jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) + multiploVenta).toString(); 
     jsonItemsSeparar = JSON.stringify(jsonObj);
+    tipoActualizacion = 4;
     separarPedidosPromo(jsonItemsSeparar, false);
 }
 
@@ -1342,6 +1351,7 @@ function decreaseItemCant(item, cant, index) {
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString(); 
         jsonItemsSeparar = JSON.stringify(jsonObj);
+        tipoActualizacion = 4;
         separarPedidosPromo(jsonItemsSeparar, false);
 }
 
