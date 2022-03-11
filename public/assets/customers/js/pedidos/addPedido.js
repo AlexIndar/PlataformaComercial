@@ -232,12 +232,13 @@ $(document).ready(function() {
 
     // UPDATE ADDRESSES AND DEFAULT SHIPPING WAT / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
 
-    $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+    $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
         var selected = clickedIndex - 1;
         indexCustomer = selected;
-        addresses = info[selected]['addresses'];
-        shippingWays = info[selected]['shippingWays'];
-        packageDeliveries = info[selected]['packageDeliveries'];
+        //INFO es la lista de todos los clientes con su información correspondiente
+        addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
+        shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
+        packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
 
         document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
 
@@ -245,6 +246,10 @@ $(document).ready(function() {
         document.getElementById('categoryCte').classList.remove('d-none');
 
         items = [];
+        pedido = []; //vaciar pedido
+        selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
+        document.getElementById('cupon').value = ''; //limpiar campo cupon
+        createTablePedido(); //limpiar tabla pedido
         intervalInventario = window.setInterval(checkItems, 1000);
         checkPromocionesCliente = true;
         document.getElementById('entity').value = info[selected]["companyId"];
@@ -603,6 +608,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
+                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
@@ -626,6 +632,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
+                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
