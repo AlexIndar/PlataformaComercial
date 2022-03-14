@@ -21,25 +21,104 @@ $('document').ready(function(){
             'timeout': 2*60*60*1000,
             success: function(data){
                 console.log(data);
-                var cuotasPromo = [];
-                toggleCuotas('Personalizada');
-                for(var x=0; x<data.length; x++){
-                    var json = {
-                        'CompanyId': data[x]['customer'],
-                        'Cuota': data[x]['cuota'].toString(),
-                        'P1': data[x]['p1'],
-                        'P2': data[x]['p2'],
-                        'P3': data[x]['p3'],
-                    };
-                    cuotasPromo.push(json);
+                if(data.length > 0){
+                    var cuotasPromo = [];
+                    toggleCuotas('Personalizada');
+                    for(var x=0; x<data.length; x++){
+                        var json = {
+                            'CompanyId': data[x]['customer'],
+                            'Cuota': data[x]['cuota'].toString(),
+                            'P1': data[x]['p1'],
+                            'P2': data[x]['p2'],
+                            'P3': data[x]['p3'],
+                        };
+                        cuotasPromo.push(json);
+                    }
+                    document.getElementById('cuotasLoading').style.display = 'none';
+                    addClientesCuotas(JSON.stringify(cuotasPromo));
                 }
-                document.getElementById('cuotasLoading').style.display = 'none';
-			    addClientesCuotas(JSON.stringify(cuotasPromo));
+                
             }, 
             error: function(error){
                 console.log(error);
              }
         });
+
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/promociones/getReglasPaquete/" + idPaquete,
+            'type': 'GET',
+            'enctype': 'multipart/form-data',
+            'timeout': 2*60*60*1000,
+            success: function(data){
+                console.log(data);
+                for(var x=0; x<data.length; x++){
+                    var nombreSub = data[x]['nombrePromo'].split('-')[0].trim();
+                    var sub = subreglas.find(o => o.nombreSub === nombreSub);
+                    if(sub == undefined){
+                        var categoriasSubregla = [];
+                        var proveedores = [];
+                        var marcas = [];
+                        var articulos = [];
+
+                        var categoriaDescuentos = {
+                            categoria: data[x]['categoriaClientes'],
+                            descuento: data[x]['descuento'],
+                            descuentoWeb: data[x]['descuentoWeb'],
+                        }
+                        categoriasSubregla.push(categoriaDescuentos);
+
+                        for(var y = 0; y < data[x]['pedidoPromoRulesD'].length; y++){
+                            if(data[x]['pedidoPromoRulesD'][y]['tipo'] == 'PROVEEDOR')
+                                proveedores.push(data[x]['pedidoPromoRulesD'][y]['valor']);
+                            if(data[x]['pedidoPromoRulesD'][y]['tipo'] == 'MARCA')
+                                marcas.push(data[x]['pedidoPromoRulesD'][y]['valor']);
+                            if(data[x]['pedidoPromoRulesD'][y]['tipo'] == 'ARTICULO')
+                                articulos.push(data[x]['pedidoPromoRulesD'][y]['valor']);
+                        }
+
+                        var json = {
+                            nombreSub: nombreSub,
+                            descuentoSub: 0,
+                            descuentoWebSub: 0,
+                            descuentosCategorias: categoriasSubregla,
+                            montoMinCash: data[x]['montoMinCash'],
+                            montoMinQty: data[x]['montoMinQty'],
+                            regalos: data[x]['regalosIndar'],
+                            proveedores: proveedores,
+                            marcas: marcas,
+                            articulos: articulos,
+                        };
+
+                        subreglas.push(json);
+                    }
+                    else{
+                        var categoriaDescuentos = {
+                            categoria: data[x]['categoriaClientes'],
+                            descuento: data[x]['descuento'],
+                            descuentoWeb: data[x]['descuentoWeb'],
+                        }
+                        sub['descuentosCategorias'].push(categoriaDescuentos);
+                    }  
+                }
+                console.log(subreglas);
+                for(var x=0; x<subreglas.length; x++){
+                    subreglas[x]['descuentosCategorias'] = subreglas[x]['descuentosCategorias'].sort((a,b) => b.descuento - a.descuento);
+                }
+                console.log(subreglas);
+                createTableSubreglas();
+                document.getElementById('subreglasTitle').classList.remove('d-none');
+                document.getElementById('subreglasTable').classList.remove('d-none');
+                document.getElementById('btn-guardar').classList.remove('d-none');
+            }, 
+            error: function(error){
+                console.log(error);
+             }
+        });
+
+
     }
 
     $( "#tipoCuota" ).change(function() {
@@ -250,7 +329,6 @@ function validarPaquete(){
         packageHeader = json;
         activateModalRulesPackage();
         document.getElementById("btn-add-sub").setAttribute( "onClick", "activateModalRulesPackage()" );
-
     }
 
     if(!save){
@@ -318,6 +396,7 @@ function addRule(){
             };
         
             subreglas.push(json);
+            console.log(subreglas);
             createTableSubreglas();
         }
         closeModalSubreglas();
@@ -710,8 +789,14 @@ function storeHeader(){
                 idPedidoPromoNavigation: ''
             });
     
+        var idPromo;
+        if(window.location.href.includes('promociones/editar'))//SI EL PAQUETE SERÁ ACTUALIZADO, ENVIAR ID PAQUETE
+            idPromo = document.getElementById('idPromo').value;
+        else    
+            idPromo = 0;
+
         var json = {
-            id: 0,
+            id: idPromo,
             nombrePromo: document.getElementById('nombrePromo').value,
             descuento: 0,
             descuentoWeb: 0,

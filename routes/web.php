@@ -652,7 +652,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $permissions = LoginController::getPermissions();
 
                                 if($promocion->paquete){
-                                    return view('customers.promociones.updatePaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
+                                    $cuotas = PromoController::getCuotasPersonalizadas($token, $idPromo);
+                                    return view('customers.promociones.updatePaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'cuotas' => $cuotas, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
                                 }
                                 else{
                                     return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
@@ -676,6 +677,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $cuotas = PromoController::getCuotasPersonalizadas($token, $id);
+                                return $cuotas;
+                            });
+
+                            Route::get('promociones/getReglasPaquete/{idPaquete}', function ($id){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $cuotas = PromoController::getReglasPaquete($token, $id);
                                 return $cuotas;
                             });
 

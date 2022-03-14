@@ -395,4 +395,9 @@ class PromoController extends Controller
         return json_decode($response->body());
     }
 
+    public static function getReglasPaquete($token, $id){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getIdPaquete?IdPaquete='.$id);
+        return json_decode($response->body());
+    }
+
 }
