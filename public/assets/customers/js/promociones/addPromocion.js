@@ -601,7 +601,7 @@ function validarPromo(){
             });
         }
 
-        var cuotasList;
+        var cuotasList = [];
         var cuotasObj = {
             'customer': '',
             'importeCuota': 0,
@@ -621,8 +621,8 @@ function validarPromo(){
         var json = { 
             id: idPromo,
             nombrePromo: document.getElementById('nombrePromo').value,
-            descuento: parseInt(document.getElementById('descuento').value),
-            descuentoWeb: parseInt(document.getElementById('descuentoWeb').value),
+            descuento: document.getElementById('descuento').value = "" ? 0 : parseInt(document.getElementById('descuento').value),
+            descuentoWeb: document.getElementById('descuentoWeb').value = "" ? 0 : parseInt(document.getElementById('descuentoWeb').value),
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),
@@ -657,10 +657,10 @@ function validarPromo(){
             'enctype': 'multipart/form-data',
             'timeout': 2*60*60*1000,
             success: function(data){
-                    window.location.href = '/promociones';
+                    // window.location.href = '/promociones';
             }, 
             error: function(error){
-                    window.location.href = '/promociones';
+                    // window.location.href = '/promociones';
              }
         });
     }
