@@ -661,6 +661,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                             });
 
+                            Route::post('/promociones/eliminar', function (Request $request){
+                                $token = TokenController::getToken();
+
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+
+                                $response = PromoController::deletePromo($token, $request->idPromo);
+                                
+                                return redirect('/promociones');
+                            });
+
                             Route::get('promociones/getEventById/{id}', function ($id){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){

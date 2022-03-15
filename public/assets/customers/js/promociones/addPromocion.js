@@ -657,10 +657,10 @@ function validarPromo(){
             'enctype': 'multipart/form-data',
             'timeout': 2*60*60*1000,
             success: function(data){
-                    // window.location.href = '/promociones';
+                    window.location.href = '/promociones';
             }, 
             error: function(error){
-                    // window.location.href = '/promociones';
+                    window.location.href = '/promociones';
              }
         });
     }

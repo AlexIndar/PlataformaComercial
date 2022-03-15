@@ -17,7 +17,7 @@
             <button class="bg-promo btn-primary" onclick="addPedido()"> <i class="fas fa-file"></i> Nuevo Pedido</button>
         </div>
         <br><br>
-
+ 
         @foreach($pedidos as $pedido)
             <div class="promo">
                 <div class="promo-header">

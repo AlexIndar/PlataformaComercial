@@ -591,6 +591,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 json[x]['cupon'] = document.getElementById('cupon').value;
             }
             json = JSON.stringify(json);
+            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1104,6 +1105,11 @@ function addRowPedido(item, fila, indexPedido) {
         currency: 'USD',
     });
 
+    var cantidadItems = (parseFloat(cantidad)).toLocaleString('en-US', {
+        style: 'decimal',
+        currency: 'USD',
+    });
+
     existenciaFormat = existenciaFormat.slice(1, -1);
     existenciaFormat = existenciaFormat.split('.')[0];
     
@@ -1118,7 +1124,7 @@ function addRowPedido(item, fila, indexPedido) {
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
-    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
+    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "' title='"+cantidadItems+"'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
         cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
@@ -1165,38 +1171,40 @@ function addHeaderPedido(descuento, plazo, tipo, evento, subtotal){
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
 
-    cell1.innerHTML = "<th></th>";
+    cell1.innerHTML = "<th>Descuento: "+descuento+"% Plazo: "+plazo+" Tipo: "+tipo+" SUBTOTAL: "+sub+" Evento: "+evento+"</th>";
     cell2.innerHTML = "<th></th>";
     cell3.innerHTML = "<th></th>";
-    cell4.innerHTML = "<th>Descuento: "+descuento+"% Plazo: "+plazo+" Tipo: "+tipo+" SUBTOTAL: "+sub+" Evento: "+evento+"</th>";
+    cell4.innerHTML = "<th></th>";
     cell5.innerHTML = "<th></th>";
     cell6.innerHTML = "<th></th>";
     cell7.innerHTML = "<th></th>";
     cell8.innerHTML = "<th></th>";
     cell9.innerHTML = "<th></th>";
 
+    cell1.colSpan = '9';
+
     if(tipo == 'BO'){
         cell1.classList.add('bg-bo');
-        cell2.classList.add('bg-bo');
-        cell3.classList.add('bg-bo');
-        cell4.classList.add('bg-bo');
-        cell5.classList.add('bg-bo');
-        cell6.classList.add('bg-bo');
-        cell7.classList.add('bg-bo');
-        cell8.classList.add('bg-bo');
-        cell9.classList.add('bg-bo');
+        cell2.classList.add('bg-bo', 'hidden');
+        cell3.classList.add('bg-bo', 'hidden');
+        cell4.classList.add('bg-bo', 'hidden');
+        cell5.classList.add('bg-bo', 'hidden');
+        cell6.classList.add('bg-bo', 'hidden');
+        cell7.classList.add('bg-bo', 'hidden');
+        cell8.classList.add('bg-bo', 'hidden');
+        cell9.classList.add('bg-bo', 'hidden');
     
     }
     else{
         cell1.classList.add('bg-blue');
-        cell2.classList.add('bg-blue');
-        cell3.classList.add('bg-blue');
-        cell4.classList.add('bg-blue');
-        cell5.classList.add('bg-blue');
-        cell6.classList.add('bg-blue');
-        cell7.classList.add('bg-blue');
-        cell8.classList.add('bg-blue');
-        cell9.classList.add('bg-blue');
+        cell2.classList.add('bg-blue', 'hidden');
+        cell3.classList.add('bg-blue', 'hidden');
+        cell4.classList.add('bg-blue', 'hidden');
+        cell5.classList.add('bg-blue', 'hidden');
+        cell6.classList.add('bg-blue', 'hidden');
+        cell7.classList.add('bg-blue', 'hidden');
+        cell8.classList.add('bg-blue', 'hidden');
+        cell9.classList.add('bg-blue', 'hidden');
     
     }  
 }
