@@ -21,6 +21,8 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
+var dataset = []; //arreglo cargado en inventario
+
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
 
@@ -197,14 +199,15 @@ $(document).ready(function() {
     $('#tablaInventario tbody').on('click', 'tr', function() {
         table = $("#tablaInventario").DataTable();
         var index = table.row(this).index();
-        var item = items[index];
+        console.log(dataset);
+        var item = dataset[index];
         var cant = table.cell(index, 7).nodes().to$().find('input').val();
         if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
-            var art = selectedItemsFromInventory.find(o => o.item === (item['itemid']).trim());
+            var art = selectedItemsFromInventory.find(o => o.item === (item[4]).trim());
             if(art != undefined)
                 art['cant'] = (parseInt(art['cant']) + parseInt(cant)).toString();
             else
-                selectedItemsFromInventory.push({ item: item['itemid'].trim(), cant: cant });
+                selectedItemsFromInventory.push({ item: item[4].trim(), cant: cant });
             var toast = Swal.mixin({
                 toast: true,
                 icon: 'success',
@@ -221,7 +224,7 @@ $(document).ready(function() {
             });
             toast.fire({
                 animation: true,
-                title: 'Producto ' + item['itemid'] + ' Agregado',
+                title: 'Producto ' + item[4] + ' Agregado',
                 icon: 'success'
             });
         }
@@ -868,74 +871,72 @@ function noDisponible(img) {
 }
 
 function cargarInventario() {
-    // var dataset = {"data":items};
     var empty = document.getElementById('empty').value;
 
     if (empty == "yes") { //si la tabla está vacía, inicializarla
 
         document.getElementById('empty').value = 'No';
-        var dataset = [];
 
         for (var x = 0; x < items.length; x++) {
             var arr = [];
-            // arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
-
-            var precio = (items[x]['price']).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-
-            var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-
-            var existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-        
-            existenciaFormat = existenciaFormat.slice(1, -1);
-            existenciaFormat = existenciaFormat.split('.')[0];
-
-            var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
-            //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
-            arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
-            arr.push(items[x]['categoriaItem']);
-            arr.push(items[x]['clavefabricante']);
-            arr.push(items[x]['familia']);
-            arr.push(items[x]['itemid']);
-            arr.push(items[x]['purchasedescription']);
+            if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
+                var precio = (items[x]['price']).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+    
+                var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+    
+                var existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
             
-            var detalles = "";
-            detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>"+items[x]['minVenta']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>"+items[x]['inner']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>"+items[x]['master']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>"+items[x]['multiploVenta']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>"+items[x]['unidad']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
-
-            arr.push(detalles);
-            arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
-            arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
-            if(items[x]['promoART'] == null){
-                arr.push("<p>Sin promoción</p>");
-            }
-            else{
-                var promociones = "";
-                for(var y=0; y < items[x]['promoART'].length; y++){
-                    if(items[x]['promoART'][y]['cantidad'] == 1)
-                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
-                    else
-                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
-                    promociones = promociones + temp;
+                existenciaFormat = existenciaFormat.slice(1, -1);
+                existenciaFormat = existenciaFormat.split('.')[0];
+    
+                var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
+                //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
+                arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
+                arr.push(items[x]['categoriaItem']);
+                arr.push(items[x]['clavefabricante']);
+                arr.push(items[x]['familia']);
+                arr.push(items[x]['itemid']);
+                arr.push(items[x]['purchasedescription']);
+                
+                var detalles = "";
+                detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>"+items[x]['minVenta']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>"+items[x]['inner']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>"+items[x]['master']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>"+items[x]['multiploVenta']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>"+items[x]['unidad']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
+    
+                arr.push(detalles);
+                arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
+                arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
+                if(items[x]['promoART'] == null){
+                    arr.push("<p>Sin promoción</p>");
                 }
-                arr.push(promociones)
+                else{
+                    var promociones = "";
+                    for(var y=0; y < items[x]['promoART'].length; y++){
+                        if(items[x]['promoART'][y]['cantidad'] == 1)
+                            var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                        else
+                            var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                        promociones = promociones + temp;
+                    }
+                    arr.push(promociones)
+                }
+                arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
+    
+                dataset.push(arr);
             }
-            arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
-
-            dataset.push(arr);
         }
         
         var inventarioTable = $("#tablaInventario").DataTable({
@@ -1068,6 +1069,7 @@ function createTablePedido(){
 
 
 function addRowPedido(item, fila, indexPedido) {
+    console.log(item);
     var table = document.getElementById('tablaPedido');
     var row = table.insertRow(table.rows.length);
 
