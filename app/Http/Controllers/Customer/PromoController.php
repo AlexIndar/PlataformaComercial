@@ -318,7 +318,7 @@ class PromoController extends Controller
             "categoriaClientesIncluye" => $json->categoriaClientesIncluye,
             "gruposclientesIds" => $json->gruposclientesIds,
             "gruposclientesIncluye" => $json->gruposclientesIncluye,
-            "clientesId" => $json->clientesId,
+            "clientesId" => $json->clientesId, 
             "clientesIncluye" => $json->clientesIncluye,
             "plazo" => $json->plazo,
             "montoMinCash" => $json->montoMinCash,
@@ -332,6 +332,12 @@ class PromoController extends Controller
         ]);
 
         return $response;
+    }
+
+    public static function deletePromo($token, $id){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getDeleteEvents?IdDelete='.$id);
+        $promo = json_decode($response->body());
+        return $promo;
     }
 
     public static function getAllEvents($token){
@@ -392,6 +398,11 @@ class PromoController extends Controller
 
     public static function getCuotasPersonalizadas($token, $id){
         $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getCuotaPersonalizada?Id='.$id);
+        return json_decode($response->body());
+    }
+
+    public static function getReglasPaquete($token, $id){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getIdPaquete?IdPaquete='.$id);
         return json_decode($response->body());
     }
 

@@ -46,7 +46,7 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
                                         <button type="button" class="btn btn-info" title="Editar" onclick="editarPromo('{{$promo->id}}')"><i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                        <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$promo->id}}', 'promo')"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </div> 
                             </div> 
@@ -76,7 +76,7 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
                                         <button type="button" class="btn btn-info" title="Editar" onclick="editarPromo('{{$promo->id}}')"><i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                        <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$promo->id}}', 'paquete')"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </div> 
                             </div> 
@@ -97,37 +97,41 @@
                 @endforeach
             </div>
         </div>
-
-                
-
-
-
-        
-
-        <!-- <div class="promo">
-            <div class="promo-header">
-                <h4>[id] Nombre Promo</h4>
-                <div class="actions">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
-                        <button type="button" class="btn btn-info" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button type="button" class="btn btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="cuerpo-promo">
-                <h5>Vigencia de <span class="fecha"><i class="fas fa-calendar"></i> 01/12/2020 05:30:00</span> a <span class="fecha"><i class="fas fa-calendar"></i> 23/12/2021 05:30:00</span> </h5>
-                <h5>Estatus: 0</h5>
-                <input type="checkbox" id="switch" /><label for="switch">Toggle</label>
-            </div>
-        </div> -->
-
     </div>
 
+    <!-- FORM PARA EDITAR -->
     <form style="display: none" action="/promociones/editar" method="POST" id="form">
             @csrf
             <input type="hidden" id="id" name="id" value=""/>
-        </form>
+    </form>
+
+    <!-- FORM OCULTO PARA ELIMINAR COTIZACIÓN GUARDADA-->
+  
+    <form style="display: none" action="/promociones/eliminar" method="POST" id="formDelete">
+                @csrf
+                <input type="text" id="idPromo" name="idPromo" value="" hidden>
+    </form>
+
+         <!-- MODAL PARA CONFIRMAR ELIMINAR COTIZACIÓN -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="h4-modalEliminar">Eliminar Promoción</h4>
+                    <i style="cursor:pointer;" class="fas fa-times" onclick="closeModalDelete()"></i>
+                </div>
+                <div class="modal-body">
+                    <h5 id="h5-modalEliminar">¿Desea eliminar esta promoción?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModalDelete()">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarPromo()">Eliminar</button>
+                </div>
+                </div>
+            </div>
+        </div>
     
 </div>
 @endsection

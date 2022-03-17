@@ -42,6 +42,7 @@ use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
+use PHPUnit\Framework\Constraint\Count;
 
 /*
 |--------------------------------------------------------------------------
@@ -652,12 +653,25 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $permissions = LoginController::getPermissions();
 
                                 if($promocion->paquete){
-                                    return view('customers.promociones.updatePaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
+                                    $cuotas = PromoController::getCuotasPersonalizadas($token, $idPromo);
+                                    return view('customers.promociones.updatePaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'cuotas' => $cuotas, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
                                 }
                                 else{
                                     return view('customers.promociones.updatePromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'promo' => $promocion, 'datePromo' => $datePromo, 'startTime' => $startTime, 'endTime' => $endTime]);
 
                                 }
+                            });
+
+                            Route::post('/promociones/eliminar', function (Request $request){
+                                $token = TokenController::getToken();
+
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+
+                                $response = PromoController::deletePromo($token, $request->idPromo);
+                                
+                                return redirect('/promociones');
                             });
 
                             Route::get('promociones/getEventById/{id}', function ($id){
@@ -676,6 +690,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $cuotas = PromoController::getCuotasPersonalizadas($token, $id);
+                                return $cuotas;
+                            });
+
+                            Route::get('promociones/getReglasPaquete/{idPaquete}', function ($id){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $cuotas = PromoController::getReglasPaquete($token, $id);
                                 return $cuotas;
                             });
 
@@ -811,8 +834,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $user = MisSolicitudesController::getUser($token);
                     $zone = MisSolicitudesController::getZone($token,$user->body());
+                    // dd($zone->body());
                     if($zone->getStatusCode()== 400){
-                        return redirect('/Intranet');
+                        // return redirect('/Intranet');
+                        return redirect('/MisSolicitudesAdmin');
                     }
                     $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
                     function getStatus($id){
@@ -1087,6 +1112,45 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $user = MisSolicitudesController::getUser($token);
                     return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                });
+
+                //////////Prueba MisSolicitudes Admin-Gerente ////
+                Route::get('/MisSolicitudesAdmin', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    function getStatusM($id){
+                        return MisSolicitudesController::getStatus($id);
+                    }
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "VENDEDOR" || $userRol[1] == "APOYOVENTA"){
+                        $zone = MisSolicitudesController::getZone($token,$userRol[0]);
+                        if($zone->getStatusCode()== 400){
+                            return redirect('/Intranet');
+                        }                        
+                        $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
+                    }else if($userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA" || $userRol[1] == "CYC" || $userRol[1] == "GERENTECYC"){
+                        $zone = "";
+                        $listSol = MisSolicitudesController::getTableViewManager($token, $userRol[0]);
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                    // dd($listSol);
+                    return view('intranet.ventas.misSolicitudesAdmin',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol]);
+                });
+
+                Route::post('/GetTableView', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zona = $request->zona;
+                    $listSol = MisSolicitudesController::getTableViewManager($token, $zona);                    
+                    return  $listSol;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */

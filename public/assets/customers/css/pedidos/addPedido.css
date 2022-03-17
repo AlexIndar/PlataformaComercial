@@ -471,5 +471,9 @@ border-radius: 3px;
 cursor: pointer;
 }
 
+.hidden{
+  display: none !important;
+}
+
 
 

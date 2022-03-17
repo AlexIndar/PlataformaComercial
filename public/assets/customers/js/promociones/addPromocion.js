@@ -601,6 +601,16 @@ function validarPromo(){
             });
         }
 
+        var cuotasList = [];
+        var cuotasObj = {
+            'customer': '',
+            'importeCuota': 0,
+            'p1': '0',
+            'p2': '0',
+            'p3': '0',
+        };
+        cuotasList.push(cuotasObj);
+
         var idPromo;
         if(window.location.href.includes('promociones/editar'))//SI LA PROMO SERÁ ACTUALIZADA, ENVIAR ID PROMO
             idPromo = document.getElementById('idPromo').value;
@@ -609,10 +619,10 @@ function validarPromo(){
 
     
         var json = { 
-            id: idPromo,
+            id: idPromo, 
             nombrePromo: document.getElementById('nombrePromo').value,
-            descuento: parseInt(document.getElementById('descuento').value),
-            descuentoWeb: parseInt(document.getElementById('descuentoWeb').value),
+            descuento: document.getElementById('descuento').value = "" ? 0 : parseInt(document.getElementById('descuento').value),
+            descuentoWeb: document.getElementById('descuentoWeb').value = "" ? 0 : parseInt(document.getElementById('descuentoWeb').value),
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),
@@ -629,7 +639,8 @@ function validarPromo(){
             fechaFin: endTime,
             paquete: false,
             idPaquete: 0,
-            pedidoPromoRulesD: listaPedidoPromoRulesD
+            pedidoPromoRulesD: listaPedidoPromoRulesD,
+            cuotasPersonalizadas: cuotasList,
         }
 
         console.log(json);
@@ -733,6 +744,9 @@ function addPromoRules(rules){
         $('#articulos').val(articulos).trigger('chosen:updated');
     if(marcas.length > 0)
         $('#marcas').val(marcas).trigger('chosen:updated');
+
+    if(rules['paquete'])
+        validarPaquete();
 }
 
 

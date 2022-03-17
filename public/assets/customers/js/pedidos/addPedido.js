@@ -21,6 +21,8 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
+var dataset = []; //arreglo cargado en inventario
+
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
 
@@ -197,14 +199,14 @@ $(document).ready(function() {
     $('#tablaInventario tbody').on('click', 'tr', function() {
         table = $("#tablaInventario").DataTable();
         var index = table.row(this).index();
-        var item = items[index];
+        var item = dataset[index];
         var cant = table.cell(index, 7).nodes().to$().find('input').val();
         if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
-            var art = selectedItemsFromInventory.find(o => o.item === (item['itemid']).trim());
+            var art = selectedItemsFromInventory.find(o => o.item === (item[4]).trim());
             if(art != undefined)
                 art['cant'] = (parseInt(art['cant']) + parseInt(cant)).toString();
             else
-                selectedItemsFromInventory.push({ item: item['itemid'].trim(), cant: cant });
+                selectedItemsFromInventory.push({ item: item[4].trim(), cant: cant });
             var toast = Swal.mixin({
                 toast: true,
                 icon: 'success',
@@ -221,7 +223,7 @@ $(document).ready(function() {
             });
             toast.fire({
                 animation: true,
-                title: 'Producto ' + item['itemid'] + ' Agregado',
+                title: 'Producto ' + item[4] + ' Agregado',
                 icon: 'success'
             });
         }
@@ -591,6 +593,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 json[x]['cupon'] = document.getElementById('cupon').value;
             }
             json = JSON.stringify(json);
+            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -867,74 +870,72 @@ function noDisponible(img) {
 }
 
 function cargarInventario() {
-    // var dataset = {"data":items};
     var empty = document.getElementById('empty').value;
 
     if (empty == "yes") { //si la tabla está vacía, inicializarla
 
         document.getElementById('empty').value = 'No';
-        var dataset = [];
 
         for (var x = 0; x < items.length; x++) {
             var arr = [];
-            // arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' width='100px'/>");
-
-            var precio = (items[x]['price']).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-
-            var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-
-            var existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-        
-            existenciaFormat = existenciaFormat.slice(1, -1);
-            existenciaFormat = existenciaFormat.split('.')[0];
-
-            var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
-            //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
-            arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
-            arr.push(items[x]['categoriaItem']);
-            arr.push(items[x]['clavefabricante']);
-            arr.push(items[x]['familia']);
-            arr.push(items[x]['itemid']);
-            arr.push(items[x]['purchasedescription']);
+            if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
+                var precio = (items[x]['price']).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+    
+                var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+    
+                var existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
             
-            var detalles = "";
-            detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>"+items[x]['minVenta']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>"+items[x]['inner']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>"+items[x]['master']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>"+items[x]['multiploVenta']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>"+items[x]['unidad']+"</span></p>";
-            detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
-
-            arr.push(detalles);
-            arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
-            arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
-            if(items[x]['promoART'] == null){
-                arr.push("<p>Sin promoción</p>");
-            }
-            else{
-                var promociones = "";
-                for(var y=0; y < items[x]['promoART'].length; y++){
-                    if(items[x]['promoART'][y]['cantidad'] == 1)
-                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
-                    else
-                        var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
-                    promociones = promociones + temp;
+                existenciaFormat = existenciaFormat.slice(1, -1);
+                existenciaFormat = existenciaFormat.split('.')[0];
+    
+                var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
+                //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
+                arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
+                arr.push(items[x]['categoriaItem']);
+                arr.push(items[x]['clavefabricante']);
+                arr.push(items[x]['familia']);
+                arr.push(items[x]['itemid']);
+                arr.push(items[x]['purchasedescription']);
+                
+                var detalles = "";
+                detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>"+items[x]['minVenta']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>"+items[x]['inner']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>"+items[x]['master']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>"+items[x]['multiploVenta']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>"+items[x]['unidad']+"</span></p>";
+                detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
+    
+                arr.push(detalles);
+                arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
+                arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
+                if(items[x]['promoART'] == null){
+                    arr.push("<p>Sin promoción</p>");
                 }
-                arr.push(promociones)
+                else{
+                    var promociones = "";
+                    for(var y=0; y < items[x]['promoART'].length; y++){
+                        if(items[x]['promoART'][y]['cantidad'] == 1)
+                            var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                        else
+                            var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                        promociones = promociones + temp;
+                    }
+                    arr.push(promociones)
+                }
+                arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
+    
+                dataset.push(arr);
             }
-            arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
-
-            dataset.push(arr);
         }
         
         var inventarioTable = $("#tablaInventario").DataTable({
@@ -1067,6 +1068,7 @@ function createTablePedido(){
 
 
 function addRowPedido(item, fila, indexPedido) {
+    console.log(item);
     var table = document.getElementById('tablaPedido');
     var row = table.insertRow(table.rows.length);
 
@@ -1104,21 +1106,29 @@ function addRowPedido(item, fila, indexPedido) {
         currency: 'USD',
     });
 
+    var cantidadItems = (parseFloat(cantidad)).toLocaleString('en-US', {
+        style: 'decimal',
+        currency: 'USD',
+    });
+
     existenciaFormat = existenciaFormat.slice(1, -1);
     existenciaFormat = existenciaFormat.split('.')[0];
-    
-
     cell1.innerHTML = "<h4>" + fila + "</h4>";
-    if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0)
+    var marca = "";
+    if(item['marca'] != null)
+        marca = item['marca'];
+    else
+        marca = 'marca';
+    if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0 && !marca.includes('MBajo'))
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
-    else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0)
+    else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0 && !item['marca'].includes('MBajo'))
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
-    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
+    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "' title='"+cantidadItems+"'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
         cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
@@ -1165,38 +1175,40 @@ function addHeaderPedido(descuento, plazo, tipo, evento, subtotal){
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
 
-    cell1.innerHTML = "<th></th>";
+    cell1.innerHTML = "<th>Descuento: "+descuento+"% Plazo: "+plazo+" Tipo: "+tipo+" SUBTOTAL: "+sub+" Evento: "+evento+"</th>";
     cell2.innerHTML = "<th></th>";
     cell3.innerHTML = "<th></th>";
-    cell4.innerHTML = "<th>Descuento: "+descuento+"% Plazo: "+plazo+" Tipo: "+tipo+" SUBTOTAL: "+sub+" Evento: "+evento+"</th>";
+    cell4.innerHTML = "<th></th>";
     cell5.innerHTML = "<th></th>";
     cell6.innerHTML = "<th></th>";
     cell7.innerHTML = "<th></th>";
     cell8.innerHTML = "<th></th>";
     cell9.innerHTML = "<th></th>";
 
+    cell1.colSpan = '9';
+
     if(tipo == 'BO'){
         cell1.classList.add('bg-bo');
-        cell2.classList.add('bg-bo');
-        cell3.classList.add('bg-bo');
-        cell4.classList.add('bg-bo');
-        cell5.classList.add('bg-bo');
-        cell6.classList.add('bg-bo');
-        cell7.classList.add('bg-bo');
-        cell8.classList.add('bg-bo');
-        cell9.classList.add('bg-bo');
+        cell2.classList.add('bg-bo', 'hidden');
+        cell3.classList.add('bg-bo', 'hidden');
+        cell4.classList.add('bg-bo', 'hidden');
+        cell5.classList.add('bg-bo', 'hidden');
+        cell6.classList.add('bg-bo', 'hidden');
+        cell7.classList.add('bg-bo', 'hidden');
+        cell8.classList.add('bg-bo', 'hidden');
+        cell9.classList.add('bg-bo', 'hidden');
     
     }
     else{
         cell1.classList.add('bg-blue');
-        cell2.classList.add('bg-blue');
-        cell3.classList.add('bg-blue');
-        cell4.classList.add('bg-blue');
-        cell5.classList.add('bg-blue');
-        cell6.classList.add('bg-blue');
-        cell7.classList.add('bg-blue');
-        cell8.classList.add('bg-blue');
-        cell9.classList.add('bg-blue');
+        cell2.classList.add('bg-blue', 'hidden');
+        cell3.classList.add('bg-blue', 'hidden');
+        cell4.classList.add('bg-blue', 'hidden');
+        cell5.classList.add('bg-blue', 'hidden');
+        cell6.classList.add('bg-blue', 'hidden');
+        cell7.classList.add('bg-blue', 'hidden');
+        cell8.classList.add('bg-blue', 'hidden');
+        cell9.classList.add('bg-blue', 'hidden');
     
     }  
 }
