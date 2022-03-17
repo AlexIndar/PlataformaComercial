@@ -315,31 +315,33 @@ $(document).ready(function() {
         $('#label-inputFileActaEdit').html(fileName);
     });
 
-    let jsonZona = {
-        zona: document.getElementById("zoneP").value,
-    }
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "/MisSolicitudes/GetEmails",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': jsonZona,
-        'enctype': 'multipart/form-data',
-        'timeout': 2 * 60 * 60 * 1000,
-        success: function(emailsL) {
-            if (emailsL != null) {
-                emailList = emailsL;
-            } else {
-                alert("Error");
-            }
-        },
-        error: function(error) {
-            console.log(error);
-            alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
+    if (document.getElementById("zoneP").value != "") {
+        let jsonZona = {
+            zona: document.getElementById("zoneP").value,
         }
-    });
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/GetEmails",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': jsonZona,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(emailsL) {
+                if (emailsL != null) {
+                    emailList = emailsL;
+                } else {
+                    alert("Error");
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
+            }
+        });
+    }
 
     $('#giroEdit').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex + 1;
@@ -1364,9 +1366,9 @@ function validateSaveForm() {
         msgAlert += `<p>Codigo Postal</p>`;
     if (tipoNegocio == -1) {
         // msgAlert += `<p>Ingresa el giro del negocio</p>`;
-        $('#inputGroupSelect01').val(23);
+        $('#inputGroupSelect01').val(29);
         $('#inputGroupSelect01').selectpicker("refresh");
-        tipoNegocio = 23;
+        tipoNegocio = 29;
     }
     if (noExt == "") {
         document.getElementById('noExtInput').value = 1;
@@ -1484,7 +1486,7 @@ function createJsonSolicitud(zone) {
         "Email": "",
         "Celular": "",
         "Phone": "0"
-    }, ];
+    }];
 
     for (var x = 0; x < contactos.length; x++) {
         var temp = {
@@ -2752,11 +2754,13 @@ function continueModal(facturas, archivos, data) {
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
     changeAntiguedad();
     if (data.cliente.contactos.length <= 1) {
-        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
+        console.log(data.cliente.contactos);
+        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "0") {
             addContactDataCon(data.cliente.contactos);
             contactos = data.cliente.contactos;
         }
-    } // else {
+    }
+    // else {
     //     addContactDataCon(data.cliente.contactos);
     //     contactos = data.cliente.contactos;
     // }
@@ -3366,28 +3370,30 @@ const sendMail = (fol, tps, cli, status) => {
         status: auxStatus,
     }
     console.log(mailJson);
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "/sendmailSolicitud",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': mailJson,
-        'enctype': 'multipart/form-data',
-        'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
-            console.log(data);
-        },
-        error: function(error) {
-            console.log(error);
-            alert("Solicitud Guardada, pero no se enviaron los correos...");
-            $('#cargaModal').modal('hide');
-            $('#solicitudModal').modal('hide');
-            document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
-            $('#respuestaForm').modal('show');
-        }
-    });
+    if (emailList.length > 0) {
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/sendmailSolicitud",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': mailJson,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(error) {
+                console.log(error);
+                alert("Solicitud Guardada, pero no se enviaron los correos...");
+                $('#cargaModal').modal('hide');
+                $('#solicitudModal').modal('hide');
+                document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                $('#respuestaForm').modal('show');
+            }
+        });
+    }
 }
 
 

@@ -24,6 +24,11 @@ class MisSolicitudesController extends Controller
         $getUSer = Http::withToken($token)->get('http://192.168.70.107:64444/Login/getUserby?token='.$token);
         return $getUSer;
     }
+
+    public static function getUserRol($token){
+        $getUserRol = Http::withToken($token)->get('http://192.168.70.107:64444/Login/getUserRol?token='.$token);
+        return $getUserRol;
+    }
     
     public static function getZone($token, $user){
         $getZone = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getZone?userName='.$user);
@@ -33,6 +38,16 @@ class MisSolicitudesController extends Controller
     public static function getTableView($token, $zone){
         $zDescription = $zone->description;
         $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zDescription);
+        return json_decode($solicitudes->body());
+    }
+
+    public static function getTableViewA($token, $zone){        
+        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zone);
+        return json_decode($solicitudes->body());
+    }
+
+    public static function getTableViewManager($token, $user){
+        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetTableViewManager?username='.$user);
         return json_decode($solicitudes->body());
     }
 
@@ -201,7 +216,7 @@ class MisSolicitudesController extends Controller
             "folio" => $json->folio,
             "fecha" => $json->fecha,
             "tipo" => $json->tipo,
-            "credito" => ($json->credito == null) ? '' : $json->credito,
+            "credito" => $json->credito,
             "zona" => $json->zona,
             "cliente" => $json->cliente,
             "referencias" => $json->referencias,
