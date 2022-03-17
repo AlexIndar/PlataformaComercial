@@ -1389,6 +1389,14 @@ function SendForm(zone) {
     if (validateFullForm()) {
         $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
+        let tp = getTipoForm();
+        let cliente = {
+            clave: document.getElementById('prospecto').value + "Test de Email",
+            datosF: {
+                rfc: document.getElementById('rfcInput').value,
+                razonSocial: document.getElementById('rzInput').value,
+            }
+        }
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1401,9 +1409,8 @@ function SendForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
-                    //sendMail(data, tp, json.cliente, 1);
-                    console.log()
                     $('#cargaModal').modal('hide');
+                    sendMail(data, tp, cliente, 3);
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
                     $('#respuestaForm').modal('show');
