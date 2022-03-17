@@ -42,6 +42,7 @@ use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
+use PHPUnit\Framework\Constraint\Count;
 
 /*
 |--------------------------------------------------------------------------
@@ -811,8 +812,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $user = MisSolicitudesController::getUser($token);
                     $zone = MisSolicitudesController::getZone($token,$user->body());
+                    // dd($zone->body());
                     if($zone->getStatusCode()== 400){
-                        return redirect('/Intranet');
+                        // return redirect('/Intranet');
+                        return redirect('/MisSolicitudesAdmin');
                     }
                     $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
                     function getStatus($id){
@@ -1087,6 +1090,45 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $user = MisSolicitudesController::getUser($token);
                     return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                });
+
+                //////////Prueba MisSolicitudes Admin-Gerente ////
+                Route::get('/MisSolicitudesAdmin', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    function getStatusM($id){
+                        return MisSolicitudesController::getStatus($id);
+                    }
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "VENDEDOR" || $userRol[1] == "APOYOVENTA"){
+                        $zone = MisSolicitudesController::getZone($token,$userRol[0]);
+                        if($zone->getStatusCode()== 400){
+                            return redirect('/Intranet');
+                        }                        
+                        $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
+                    }else if($userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA" || $userRol[1] == "CYC" || $userRol[1] == "GERENTECYC"){
+                        $zone = "";
+                        $listSol = MisSolicitudesController::getTableViewManager($token, $userRol[0]);
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                    // dd($listSol);
+                    return view('intranet.ventas.misSolicitudesAdmin',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol]);
+                });
+
+                Route::post('/GetTableView', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zona = $request->zona;
+                    $listSol = MisSolicitudesController::getTableViewManager($token, $zona);                    
+                    return  $listSol;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
