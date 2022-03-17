@@ -765,7 +765,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    window.location.href = '/promociones';
+    // window.location.href = '/promociones';
 }
 
 function storeHeader(){
@@ -821,6 +821,7 @@ function storeHeader(){
         }
 
         packageHeader = json;
+        console.log(JSON.stringify(packageHeader));
 
         $.ajax({
             'headers': {
