@@ -1446,7 +1446,7 @@ function saveForm(zone) {
             success: function(data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
-                    //sendMail(data, tp, cliente, 3);
+                    sendMail(data, tp, cliente, 3);
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
                     $('#respuestaForm').modal('show');
