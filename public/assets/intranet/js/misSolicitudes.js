@@ -1412,7 +1412,7 @@ function SendForm(zone) {
                     $('#cargaModal').modal('hide');
                     sendMail(data, tp, cliente, 3);
                     $('#solicitudModal').modal('hide');
-                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    document.getElementById('infoModalR').innerHTML = `Solicitud enviada correctamente No. ${data}, espera a envio de correo`;
                     $('#respuestaForm').modal('show');
                 } else {
                     console.log(data);
@@ -3350,6 +3350,7 @@ const enviarMail = () => {
 const sendMail = (fol, tps, cli, status) => {
     let zona = document.getElementById("zoneP").value;
     let auxStatus = "";
+    let auxTps = "";
     switch (status) {
         case 1:
             auxStatus = "Nueva Solicitud";
@@ -3362,9 +3363,24 @@ const sendMail = (fol, tps, cli, status) => {
             break;
 
     }
+
+    switch (tps) {
+        case null:
+            auxTps = "CARTA RESPONSIVA";
+            break;
+        case 0:
+            auxTps = "CONTADO";
+            break;
+        case 1:
+            auxTps = "CREDITO";
+            break;
+        case 2:
+            auxTps = "CREDITO AB";
+            break;
+    }
     let mailJson = {
         folio: fol,
-        tipoSol: tps,
+        tipoSol: auxTps,
         cliente: cli.clave,
         razonSocial: cli.datosF.razonSocial,
         rfc: cli.datosF.rfc,
@@ -3385,6 +3401,7 @@ const sendMail = (fol, tps, cli, status) => {
         'timeout': 2 * 60 * 60 * 1000,
         success: function(data) {
             console.log(data);
+            alert(data.success);
         },
         error: function(error) {
             console.log(error);
