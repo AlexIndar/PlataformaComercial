@@ -199,7 +199,6 @@ $(document).ready(function() {
     $('#tablaInventario tbody').on('click', 'tr', function() {
         table = $("#tablaInventario").DataTable();
         var index = table.row(this).index();
-        console.log(dataset);
         var item = dataset[index];
         var cant = table.cell(index, 7).nodes().to$().find('input').val();
         if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
