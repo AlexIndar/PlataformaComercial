@@ -21,7 +21,7 @@ $('document').ready(function(){
             'timeout': 2*60*60*1000,
             success: function(data){
                 console.log(data);
-                if(data.length > 0){
+                if(data.length > 0 && data[0]['customer']!= null){
                     var cuotasPromo = [];
                     toggleCuotas('Personalizada');
                     for(var x=0; x<data.length; x++){
@@ -290,6 +290,16 @@ function validarPaquete(){
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
+        var listaVaciaCuotas = [];
+        var cuotasObj = {
+            'customer': '',
+            'importeCuota': 0,
+            'p1': '0',
+            'p2': '0',
+            'p3': '0',
+        };
+        listaVaciaCuotas.push(cuotasObj);
+
         var listaPedidoPromoRulesD = [];
 
             listaPedidoPromoRulesD.push({
@@ -323,7 +333,7 @@ function validarPaquete(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD,
-            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? listaVaciaCuotas : cuotasList,
         }
 
         packageHeader = json;
@@ -765,7 +775,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    // window.location.href = '/promociones';
+    window.location.href = '/promociones';
 }
 
 function storeHeader(){
@@ -788,12 +798,24 @@ function storeHeader(){
                 incluye: false,
                 idPedidoPromoNavigation: ''
             });
+
+        var listaVaciaCuotas = [];
+        var cuotasObj = {
+            'customer': '',
+            'importeCuota': 0,
+            'p1': '0',
+            'p2': '0',
+            'p3': '0',
+        };
+        listaVaciaCuotas.push(cuotasObj);
     
         var idPromo;
         if(window.location.href.includes('promociones/editar'))//SI EL PAQUETE SERÁ ACTUALIZADO, ENVIAR ID PAQUETE
             idPromo = document.getElementById('idPromo').value;
         else    
             idPromo = 0;
+
+        
 
         var json = {
             id: idPromo,
@@ -817,7 +839,7 @@ function storeHeader(){
             paquete: true,
             idPaquete: 0,
             pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? null : cuotasList,
+            cuotasPersonalizadas: document.getElementById('tipoCuota').value == 'General' ? listaVaciaCuotas : cuotasList,
         }
 
         packageHeader = json;

@@ -138,7 +138,7 @@
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <select id="tipoCuota" name="tipoCuota" class="form-control selectpicker" data-live-search="true">
-                            @if(count($cuotas) > 0)
+                            @if(count($cuotas) > 0 && $cuotas[0]->customer != null)
                             <option value="General">General</option>
                             <option selected value="Personalizada">Personalizada</option>
                             @else
