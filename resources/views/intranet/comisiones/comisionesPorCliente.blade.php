@@ -8,7 +8,7 @@
 @endsection
 
 @section('body')
-<div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;">
+<div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;"> 
     <div class="content-header">
        <div class="container-fluid">
           <div class="row mb-2">

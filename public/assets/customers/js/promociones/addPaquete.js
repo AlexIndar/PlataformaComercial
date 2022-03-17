@@ -609,6 +609,7 @@ function updateRule(){
     }
 
     subreglas[index]['descuentosCategorias'] = categoriasSubregla;
+    console.log(subreglas);
 
     createTableSubreglas();
 }
@@ -722,15 +723,16 @@ function storeSubreglas(){
             'p3': '0',
         };
         listaVaciaCuotas.push(cuotasObj);
+        console.log(subreglas);
         for(var x = 0; x < subreglas[y]['descuentosCategorias'].length; x++){
             var json = {
                 id: 0,
                 nombrePromo: subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria'],
-                descuento: parseInt(subreglas[y]['descuentosCategorias'][x]['descuento']),
-                descuentoWeb: parseInt(subreglas[y]['descuentosCategorias'][x]['descuentoWeb']),
+                descuento: parseFloat(subreglas[y]['descuentosCategorias'][x]['descuento']),
+                descuentoWeb: parseFloat(subreglas[y]['descuentosCategorias'][x]['descuentoWeb']),
                 puntosIndar: packageHeader['puntosIndar'],
                 plazosIndar: packageHeader['plazosIndar'],
-                regalosIndar: subreglas[y]['regalos'].toString(),
+                regalosIndar: subreglas[y]['regalos'] == null ? "" : subreglas[y]['regalos'].toString(),
                 categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
                 categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
                 gruposclientesIds: packageHeader['gruposclientesIds'],
@@ -738,7 +740,7 @@ function storeSubreglas(){
                 clientesId: packageHeader['clientesId'],
                 clientesIncluye: packageHeader['clientesIncluye'],
                 plazo: packageHeader['plazo'],
-                montoMinCash: parseInt(subreglas[y]['montoMinCash']),
+                montoMinCash: parseFloat(subreglas[y]['montoMinCash']),
                 montoMinQty: parseInt(subreglas[y]['montoMinQty']),
                 fechaInicio: packageHeader['fechaInicio'],
                 fechaFin: packageHeader['fechaFin'],

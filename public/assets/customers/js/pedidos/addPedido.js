@@ -582,7 +582,8 @@ function prepareJsonSeparaPedidos(separa){
 
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
     if(separar && json == null){
-        document.getElementById('loadingSeparar').style.opacity = '1';
+        document.getElementById("btnSpinner").style.display = "block";
+
         setTimeout(prepareJsonSeparaPedidos(true), 2000);
     }
     if(separar && json != null){
@@ -879,6 +880,12 @@ function cargarInventario() {
         for (var x = 0; x < items.length; x++) {
             var arr = [];
             if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
+
+
+                if(items[x]['promoART'] != null){
+                    
+                }
+
                 var precio = (items[x]['price']).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',
@@ -1060,7 +1067,8 @@ function createTablePedido(){
         document.getElementById('messageAddProducts').classList.remove('d-none');
     }
 
-    document.getElementById('loadingSeparar').style.opacity = '0';
+    document.getElementById("btnSpinner").style.display = "none";
+
 
 
 
@@ -1589,6 +1597,7 @@ function updatePedidoDesneg(itemid, select, index){
 // FUNCIÓN ENVIAR A NETSUITE
 
 function saveNS(){
+    levantandoPedidoLoading();
 
     if(pedido.length == 0){
         alert('Agrega artículos al pedido');
@@ -1647,17 +1656,18 @@ function saveNS(){
             var desgar = 0;
             var specialAuthorization = "";
             var indexItemSeparado;
-            if(pedido[x]['items'][0]['desneg'] != 0){
+            if(pedido[x]['items'][0]['desneg'] != 0 && pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
-            else if(pedido[x]['items'][0]['desgar'] != 0){
+            else if(pedido[x]['items'][0]['desgar'] != 0 && pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desgar']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
-            else{
+            else if(pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
             
-            var evento = pedidoSeparado[indexItemSeparado]['evento'];
+            var evento;
+            pedidoSeparado.length>0 ? pedidoSeparado[indexItemSeparado]['evento'] : "";
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 
@@ -1718,7 +1728,7 @@ function saveNS(){
                 comments: comentarios,
                 events: {
                     id: "0", 
-                    txt: evento
+                    txt: evento == undefined ? "" : evento
                 },
                 plazoEvento: {
                     id: "0",
@@ -1734,30 +1744,31 @@ function saveNS(){
             };
             listNS.push(temp);
             lineItems = [];
-        }
+        } 
 
+        console.log(listNS);
     
-            $.ajax({
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                'url': "storePedidoNS",
-                'type': 'POST',
-                'dataType': 'json',
-                'data': {json: listNS},
-                'enctype': 'multipart/form-data',
-                'timeout': 2*60*60*1000,
-                success: function(data){
-                        // alert('success');
-                        sendEmail();
-                        // window.location.href = '/pedidos';
-                }, 
-                error: function(error){
-                        alert('error');
-                        sendEmail();
-                        // window.location.href = '/pedidos';
-                 }
-            });
+            // $.ajax({
+            //     'headers': {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     },
+            //     'url': "storePedidoNS",
+            //     'type': 'POST',
+            //     'dataType': 'json',
+            //     'data': {json: listNS},
+            //     'enctype': 'multipart/form-data',
+            //     'timeout': 2*60*60*1000,
+            //     success: function(data){
+            //             // alert('success');
+            //             sendEmail();
+            //             // window.location.href = '/pedidos';
+            //     }, 
+            //     error: function(error){
+            //             alert('error');
+            //             sendEmail();
+            //             // window.location.href = '/pedidos';
+            //      }
+            // });
     }    
 }
 
@@ -2051,4 +2062,72 @@ function exportTableToExcel(tableID, filename = ''){
         //triggering the function
         downloadLink.click();
     }
+}
+
+function levantandoPedidoLoading(){
+    var pedidosLoading = '';
+    console.log(pedido);
+    var container = document.getElementById('container-netsuite-loading');
+    for(var x=0; x < pedido.length; x++){
+        var row = document.createElement('div'); 
+        row.setAttribute('class', 'row mt-2');
+        
+        var div1 = document.createElement('div'); 
+        div1.setAttribute('class', 'col-lg-1 col-md-1 col-12 text-center');
+        var index = document.createElement('h5');
+        index.innerHTML = x+1;
+        div1.appendChild(index);
+
+        var div2 = document.createElement('div'); 
+        div2.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+        var descuento = document.createElement('h5');
+        descuento.innerHTML = 'Descuento: '+pedido[x]['descuento']+'%';
+        div2.appendChild(descuento);
+
+        var div3 = document.createElement('div'); 
+        div3.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+        var plazo = document.createElement('h5');
+        plazo.innerHTML = 'Plazo: '+pedido[x]['plazo'];
+        div3.appendChild(plazo);
+
+        var div4 = document.createElement('div'); 
+        div4.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+        var tipo = document.createElement('h5');
+        tipo.innerHTML = 'Tipo: '+pedido[x]['tipo'];
+        div4.appendChild(tipo);
+
+        var div5 = document.createElement('div'); 
+        div5.setAttribute('class', 'col-lg-3 col-md-3 col-12 text-center');
+        var evento = document.createElement('h5');
+        evento.innerHTML = 'Evento: $'+pedido[x]['evento'];
+        div5.appendChild(evento);
+
+        var div6 = document.createElement('div'); 
+        div6.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+        div6.setAttribute('id', 'spinner-'+x);
+        var spinner = document.createElement('div');
+        spinner.setAttribute('class', 'spinner-border text-secondary')
+        spinner.setAttribute('style', 'width: 20px; height: 20px;')
+        div6.appendChild(spinner);
+
+        var div7 = document.createElement('div'); 
+        div7.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center d-none');
+        div7.setAttribute('id', 'check-'+x);
+        var check = document.createElement('img');
+        check.src = '/assets/customers/img/png/check.png';
+        check.setAttribute('style', 'width: 20px; height: 20px;')
+        div7.appendChild(check);
+
+        row.appendChild(div1);
+        row.appendChild(div2);
+        row.appendChild(div3);
+        row.appendChild(div4);
+        row.appendChild(div5);
+        row.appendChild(div6);
+        row.appendChild(div7);
+
+        container.appendChild(row);
+
+    }
+    $('#modalNetsuiteLoading').modal('show');
 }

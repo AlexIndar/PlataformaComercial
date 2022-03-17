@@ -165,7 +165,7 @@ padding: 10px 0 10px 0;
 .tablaPedido{
 border: 1px solid rgba(0, 0, 0, 0.1) !important;
 width: 100%;
-min-width: 900px;
+min-width: 1200px;
 overflow-x: scroll;
 transition: opacity .5s ease-in-out;
 -moz-transition: opacity .5s ease-in-out;
