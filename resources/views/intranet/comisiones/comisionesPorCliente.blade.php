@@ -47,7 +47,7 @@
                                 <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
                             </div>
                             <div class="col-md-4">
-                                    <div class="spinner-border text-success" style="display:none" id="btnSpinner" ></div>
+                                    <div class="spinner-border text-secondary" style="display:none" id="btnSpinner" ></div>
                                     <button type="submit" class="btn btn-primary mb-3" style="background-color:#002868" style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
                             </div>
                          </div>
@@ -56,7 +56,7 @@
                     <div id="divClientes" style="display: block" class="card-body">
                         <div class="col-lg-12">
                             <div class="card-body table-responsive p-0">
-                               <table id="comisionesTable" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:63% ;font-weight: bold ">
+                               <table id="comisionesTable" class="table table-striped table-bordered table-hover" style="width:100% ; font-size:60% ;font-weight: bold ">
                                   <thead style="background-color:#002868; color:white">
                                    <tr>
                                         <th id="headerMes" class="text-center" style="font-size:15px " colspan =16  >  </th>
@@ -65,7 +65,7 @@
                                         <th>Id</th>
                                         <th>Cliente</th>
                                         <th>Recibida en el mes con IVA</th>
-                                        <th>Recibida en el mes sin IVA</th>
+                                        <th>Pagada en el mes sin IVA</th>
                                         <th>Pendiente Saldar mes anterior sin IVA</th>
                                         <th>Pendiente de saldar este mes sin IVA</th>
                                         <th>Sal dada en el mes sin IVA</th>
@@ -73,14 +73,13 @@
                                         <th>Cobranza de 31 a 60 dias</th>
                                         <th>Cobranza de 61 a 90 dias</th>
                                         <th>Cobranza + de 90 dias</th>
-                                        <th>Dif. en Precio (Neto a Des contar)</th>
+                                        <th>Desc Neg</th>
                                         <th>Desc. Fuera de Tiempo (Neto a Des contar)</th>
                                         <th>Incobra bilidad (Neto a Des contar)</th>
                                         <th>Comisión Base</th>
                                      </tr>
                                   </thead>
                                   <tbody id="llenaTable">
-
                                   </tbody>
                                </table>
                             </div>
@@ -103,7 +102,7 @@
                                      <tr>
                                         <th>Documento</th>
                                         <th>Reci bida en el Mes con IVA</th>
-                                        <th>Reci bida en el Mes sin IVA</th>
+                                        <th>Pagada en el Mes sin IVA</th>
                                         <th>Pendiente Saldar Mes Anterior sin IVA</th>
                                         <th>Pendiente Saldar Este Mes sin IVA</th>
                                         <th>Saldada en el Mes sin IVA</th>
@@ -207,7 +206,7 @@ $.ajax({
             var groupBy = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
                    var val = item[prop];
-                   groups[val] = groups[val] || {companyid: item.companyid, companyname: item.companyname,recibo_mes_actual: 0,recibo_mes_actual_siniva: 0,pendiente_saldar_mes_anteriorl_siniva: 0,pendiente_saldar_mes_actual: 0,saldada_mes_actual_siniva: 0,de0a30: 0,de31a60: 0,de61a90: 0,de91oMayor: 0,diferencias_precio: 0,descuento_fuera_tiempo: 0,incobrabilidad: 0,comision_base: 0};
+                   groups[val] = groups[val] || {companyid: item.companyid, companyname: item.companyname,recibo_mes_actual: 0,recibo_mes_actual_siniva: 0,pendiente_saldar_mes_anteriorl_siniva: 0,pendiente_saldar_mes_actual: 0,saldada_mes_actual_siniva: 0,de0a30: 0,de31a60: 0,de61a90: 0,de91oMayor: 0,diferencias_precio: 0,descuento_fuera_tiempo: 0,incobrabilidad: 0, descneg: 0, comision_base: 0};
                    groups[val].recibo_mes_actual += item.recibo_mes_actual;
                    groups[val].recibo_mes_actual_siniva += item.recibo_mes_actual_siniva;
                    groups[val].pendiente_saldar_mes_anteriorl_siniva += item.pendiente_saldar_mes_anteriorl_siniva;
@@ -220,7 +219,8 @@ $.ajax({
                    groups[val].diferencias_precio += item.diferencias_precio;
                    groups[val].descuento_fuera_tiempo += item.descuento_fuera_tiempo;
                    groups[val].incobrabilidad += item.incobrabilidad;
-                   groups[val].comision_base +=  Math.round(item.comision_base);
+                   groups[val].descneg += item.descneg;
+                   groups[val].comision_base +=  item.comision_base;
 
                    return groups;
                }, {});
@@ -229,10 +229,10 @@ $.ajax({
             var resultData = Object.values(groupBy(rawtData,'companyid'));
             //console.log(resultData);
             var table = $('#comisionesTable').dataTable( {
-                dom : 'Brt',
+                dom : 'Brtip',
+                paging: false,
                 fixedHeader:true,
-                ordering: false,
-                scrollY:320,
+                scrollY:500,
                 scrollX: true,
                 scrollCollapse: true,
                 responsive: true,
@@ -240,9 +240,14 @@ $.ajax({
                 columnDefs: [
                                 {
                                   targets: [2,3,4,5,6,7,8,9,10,11,12,13,14,],
-                                  render: $.fn.dataTable.render.number(',', '.', 0, '')
-                                }
+                                  render:$.fn.dataTable.render.number(',', '.', 2)
+                                },
+                                {
+                                  targets: [0,2,3,4,5,6,7,8,9,10,11,12,13,14,],
+                                  orderable: false,
+                                },
                 ],
+                order: [[1,'asc']],
                 buttons: [
                     {
                 extend:    'excel',
@@ -263,12 +268,12 @@ $.ajax({
                 { "data": "recibo_mes_actual_siniva" },
                 { "data": "pendiente_saldar_mes_anteriorl_siniva" },
                 { "data": "saldada_mes_actual_siniva"},
-                { "data": "pendiente_saldar_mes_actual" },
+                { "data": "recibo_mes_actual_siniva" },
                 { "data": "de0a30" },
                 { "data": "de31a60" },
                 { "data": "de61a90" },
                 { "data": "de91oMayor" },
-                { "data": "diferencias_precio" },
+                { "data" : "descneg" },
                 { "data": "descuento_fuera_tiempo" },
                 { "data": "incobrabilidad" },
                 { "data": "comision_base" }
@@ -305,6 +310,7 @@ $.ajax({
                         var sumaIFac = 0;
                         var sumaSaldo= 0;
                         var sumaCB = 0;
+                        var sumaInc =0;
 
                         for (i = 0; i < data.length; i++) {
 
@@ -316,6 +322,7 @@ $.ajax({
                             sumaIFac = sumaIFac + data[i].importe_factura;
                             sumaSaldo = sumaSaldo + data[i].saldo;
                             sumaCB = sumaCB + data[i].comision_base;
+                            sumaInc = sumaInc + data[i].incobrabilidad;
 
                             var fechaFact = moment(new Date(data[i].fechaFactura)).format('DD/MM/YYYY');
                             var fechaDue = moment(new Date(data[i].dueDate)).format('DD/MM/YYYY');
@@ -326,6 +333,7 @@ $.ajax({
                             var saldada_mes_actual_siniva = data[i].saldada_mes_actual_siniva.toLocaleString('es-MX');
                             var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX');
                             var importe_factura = data[i].importe_factura.toLocaleString('es-MX');
+                            var incobrabilidad = data[i].incobrabilidad.toLocaleString('es-MX');
                             var comisionBase = data[i].comision_base.toLocaleString('es-MX', {maximumFractionDigits: 2});
 
                             if (data[i].saldo > 0 &&  comisionBase == 0){
@@ -363,7 +371,7 @@ $.ajax({
                             '<td style="font-weight: bold">' + data[i].saldo+ '</td>' +
                             '<td style="font-weight: bold">' + data[i].diferencias_precio+ '</td>' +
                             '<td style="font-weight: bold">' + data[i].descuento_fuera_tiempo+ '</td>' +
-                            '<td style="font-weight: bold">' + data[i].incobrabilidad+ '</td>' +
+                            '<td style="font-weight: bold">' + incobrabilidad+ '</td>' +
                             '<td style="font-weight: bold">' + comisionBase + '</td>' +
                             '</tr>';
                             }
@@ -385,7 +393,7 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSaldo.toLocaleString('es-MX')+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+ sumaInc.toLocaleString('es-MX') +'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toLocaleString('es-MX')+'</td>';
                            $('#llenaDetalle').html(html);
                            //console.log(html);
