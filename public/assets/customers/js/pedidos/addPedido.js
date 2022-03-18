@@ -881,17 +881,25 @@ function cargarInventario() {
             var arr = [];
             if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
 
-
+                var precioCliente = 0;
                 if(items[x]['promoART'] != null){
-                    
+                    for(var y=0; y < items[x]['promoART'].length; y++){
+                        if(items[x]['multiploVenta'] >= items[x]['promoART'][y]['cantidad']){
+                            precioCliente = ((100 - items[x]['promoART'][y]['descuento']) / 100) * items[x]['price'];
+                        }
+                    }
+                    if(precioCliente == 0)
+                        precioCliente = ((100 - items[x]['promoART'][0]['descuento']) / 100) * items[x]['price'];
                 }
+                else
+                    precioCliente = items[x]['price'];
 
-                var precio = (items[x]['price']).toLocaleString('en-US', {
+                var precio = (precioCliente).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',
                 });
     
-                var precioIVA = ((items[x]['price']*((100-4)/100)*1.16)).toLocaleString('en-US', {
+                var precioIVA = ((precioCliente*((100-4)/100)*1.16)).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',
                 });
@@ -923,8 +931,8 @@ function cargarInventario() {
                 detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
     
                 arr.push(detalles);
-                arr.push("<input type='number' value=" + items[x]['multiploVenta'] + "><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='descuentoInventario' name='descuentoInventario' value='4' onkeyup='updatePrecioIVA(this,\"" + items[x]['itemid'] + "\", \""+items[x]['price']+"\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
-                arr.push("<p class='text-inventario'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
+                arr.push("<input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
+                arr.push("<p class='text-inventario' id='precioCliente-"+items[x]['itemid']+"'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
                 if(items[x]['promoART'] == null){
                     arr.push("<p>Sin promoción</p>");
                 }
@@ -1563,7 +1571,6 @@ function updatePedidoDesneg(itemid, select, index){
     
     pedido[index]['items'].splice(indexItem, 1);
     if(pedido[index]['items'].length == 0){
-        pedido.splice(index, 1);
         var rowPedido = {
             descuento: newDesc,
             plazo: pedido[index]['plazo'],
@@ -1573,7 +1580,7 @@ function updatePedidoDesneg(itemid, select, index){
             items: []
         };
         rowPedido['items'].push(item);
-    
+        pedido.splice(index, 1);
         pedido.splice(index, 0, rowPedido);
     }
     else{
@@ -1979,14 +1986,54 @@ function update(action){
         }
 }
 
-function updatePrecioIVA(input, itemid, precio){
-    var desc = input.value;
-    var precioIVA = ((precio*((100-desc)/100)*1.16)).toLocaleString('en-US', {
+function updatePrecioIVA(itemid){
+    var desc = document.getElementById('inputDescuentoInventario-'+itemid).value;    
+    var precioClienteActual = parseFloat(getPrecioClientePromo(itemid).substring(1));
+    var precioIVA = ((precioClienteActual*((100-desc)/100)*1.16)).toLocaleString('en-US', {
         style: 'currency',
         currency: 'USD',
     });
 
     document.getElementById('precioIVA-'+itemid).innerHTML = "<strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído";
+}
+
+function updatePrecioCliente(itemid){
+    var precio = getPrecioClientePromo(itemid);
+    document.getElementById('precioCliente-'+itemid).innerHTML = "<strong>"+precio+"</strong> <br> + IVA"; 
+    updatePrecioIVA(itemid);  
+}
+
+function getPrecioClientePromo(itemid){
+    var cant = document.getElementById('inputPrecioCliente-'+itemid).value;
+    var precio;
+    if(cant != '' && cant != '0'){
+        var art = items.find(o => o.itemid === itemid);
+        var promos = art['promoART'];
+        var precioCliente = 0;
+        if(promos != null){
+            for(var y=0; y < promos.length; y++){
+                if(cant >= promos[y]['cantidad']){
+                    precioCliente = ((100 - promos[y]['descuento']) / 100) * art['price'];
+                }
+            }
+            if(precioCliente == 0)
+                precioCliente = ((100 - promos[0]['descuento']) / 100) * art['price'];
+        }
+
+        precio = (precioCliente).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+    }
+    else{
+        var art = items.find(o => o.itemid === itemid);
+        precio = (art['price']).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+    }
+
+    return precio;
 }
 
 function sendEmail(){
@@ -2065,7 +2112,6 @@ function exportTableToExcel(tableID, filename = ''){
 }
 
 function levantandoPedidoLoading(){
-    var pedidosLoading = '';
     console.log(pedido);
     var container = document.getElementById('container-netsuite-loading');
     for(var x=0; x < pedido.length; x++){
@@ -2099,7 +2145,7 @@ function levantandoPedidoLoading(){
         var div5 = document.createElement('div'); 
         div5.setAttribute('class', 'col-lg-3 col-md-3 col-12 text-center');
         var evento = document.createElement('h5');
-        evento.innerHTML = 'Evento: $'+pedido[x]['evento'];
+        evento.innerHTML = 'Evento: '+pedido[x]['evento'];
         div5.appendChild(evento);
 
         var div6 = document.createElement('div'); 
