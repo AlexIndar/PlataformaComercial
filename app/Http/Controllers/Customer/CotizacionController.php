@@ -52,25 +52,6 @@ class CotizacionController extends Controller
         return $response;
     }
 
-    // public static function updatePedido($token, $data){
-    //     $json = json_decode($data);
-    //     $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
-    //         "idCotizacion" => $json->idCotizacion,
-    //         "companyId" => $json->companyId,
-    //         "orderC" => $json->orderC,
-    //         "email" => $json->email,
-    //         "addressId" => $json->addressId,
-    //         "shippingWay" => $json->shippingWay,
-    //         "packageDelivery" => $json->packageDelivery,
-    //         "divide" => $json->divide,
-    //         "pickUp" => $json->pickUp,
-    //         "order" => $json->order,
-    //         "comments" => $json->comments,
-    //         "enviado" => $json->enviado
-    //     ]);
-    //     return $response;
-    // }
-
     public static function deletePedido($token, $id){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/getBorrarCotizacionIdWeb?Id='.$id);
         $cotizacion = json_decode($response->body());

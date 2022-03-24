@@ -594,7 +594,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 json[x]['cupon'] = document.getElementById('cupon').value;
             }
             json = JSON.stringify(json);
-            console.log(json);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -612,7 +611,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
-                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
@@ -636,7 +634,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 },
                 success: function(data) {
                     pedidoSeparado = data;
-                    console.log(data);
                     separarFilas(data);
                 },
                 error: function(error) {}
@@ -682,24 +679,24 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
             }
         }
     }
-
-
     if(json.length>0){
         pedido = [];
         for(var x=0; x<json.length; x++){
-            var art = items.find(o => o.itemid === json[x]['itemID']);
-            ofertasVolumen = "";
-            if(art['promoART'] != null){
-                for(var i=0; i<art['promoART'].length; i++){
-                    if(json[x]['quantity']>=art['promoART'][i]['cantidad']){
-                        json[x]['promo'] = art['promoART'][i]['descuento'];
-                    }
-                    else if(i>0){
-                        ofertasVolumen += 'Compra '+art['promoART'][i]['cantidad']+' piezas de '+json[x]['itemID']+' y llévate un '+art['promoART'][i]['descuento']+'% de descuento.\n';
-                        console.log(ofertasVolumen);
+            if(json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined){
+                var art = items.find(o => o.itemid === json[x]['itemID']);
+                ofertasVolumen = "";
+                if(art['promoART'] != null){
+                    for(var i=0; i<art['promoART'].length; i++){
+                        if(json[x]['quantity']>=art['promoART'][i]['cantidad']){
+                            json[x]['promo'] = art['promoART'][i]['descuento'];
+                        }
+                        else if(i>0){
+                            ofertasVolumen += 'Compra '+art['promoART'][i]['cantidad']+' piezas de '+json[x]['itemID']+' y llévate un '+art['promoART'][i]['descuento']+'% de descuento.\n';
+                        }
                     }
                 }
             }
+           
             
             var item = {
                 categoriaItem: art['categoriaItem'],
@@ -762,7 +759,6 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
     }
     else{
         console.log('No hay promociones disponibles para separar pedido.');
-        console.log(pedido);
     }
     createTablePedido();
 }
@@ -860,6 +856,9 @@ function getItems(entity) {
 		'timeout': 2*60*60*1000,
 		success: function(data){
 				items = data;
+                var empty = document.getElementById('empty').value;
+                if(empty == 'no')
+                    reloadInventario();
 		}, 
 		error: function(error){
 		 }
@@ -872,11 +871,13 @@ function noDisponible(img) {
 
 function cargarInventario() {
     var empty = document.getElementById('empty').value;
+    
 
     if (empty == "yes") { //si la tabla está vacía, inicializarla
 
-        document.getElementById('empty').value = 'No';
-
+        document.getElementById('empty').value = 'no';
+        document.getElementById('mostrarInventario').removeAttribute('onclick');
+        dataset = [];
         for (var x = 0; x < items.length; x++) {
             var arr = [];
             if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
@@ -952,8 +953,8 @@ function cargarInventario() {
                 dataset.push(arr);
             }
         }
-        
-        var inventarioTable = $("#tablaInventario").DataTable({
+
+        $("#tablaInventario").DataTable({
             data: dataset,
             autoWidth: false, // might need this
             // scrollY: '70vh',
@@ -983,7 +984,14 @@ function cargarInventario() {
              ]
         });
     }
+}
 
+function reloadInventario(){
+    document.getElementById('empty').value = 'yes';
+    $("#tablaInventario").dataTable().fnClearTable();
+    $("#tablaInventario").dataTable().fnDraw();
+    $("#tablaInventario").dataTable().fnDestroy();
+    document.getElementById('mostrarInventario').setAttribute('onclick', 'cargarInventario()');
 }
 
 function createTablePedido(){
@@ -1084,7 +1092,6 @@ function createTablePedido(){
 
 
 function addRowPedido(item, fila, indexPedido) {
-    console.log(item);
     var table = document.getElementById('tablaPedido');
     var row = table.insertRow(table.rows.length);
 
@@ -1754,28 +1761,45 @@ function saveNS(){
         } 
 
         console.log(listNS);
-    
-            // $.ajax({
-            //     'headers': {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     },
-            //     'url': "storePedidoNS",
-            //     'type': 'POST',
-            //     'dataType': 'json',
-            //     'data': {json: listNS},
-            //     'enctype': 'multipart/form-data',
-            //     'timeout': 2*60*60*1000,
-            //     success: function(data){
-            //             // alert('success');
-            //             sendEmail();
-            //             // window.location.href = '/pedidos';
-            //     }, 
-            //     error: function(error){
-            //             alert('error');
-            //             sendEmail();
-            //             // window.location.href = '/pedidos';
-            //      }
-            // });
+        console.log(JSON.stringify(listNS));
+
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "storePedidoNS",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': {json: listNS},
+                'enctype': 'multipart/form-data',
+                'timeout': 2*60*60*1000,
+                success: function(data){
+                        // alert('success');
+                        console.log(data);
+                        console.log(JSON.stringify(data));
+                        var error = 0;
+                        for(var x = 0; x < data.length; x++){
+                            // console.log(JSON.parse(data[x]['json']));
+                            if(data[x]['status']=='OK'){
+                                document.getElementById('spinner-'+x).classList.add('d-none');
+                                document.getElementById('check-'+x).classList.remove('d-none');
+                            }
+                            else{
+                                document.getElementById('spinner-'+x).classList.add('d-none');
+                                document.getElementById('cross-'+x).classList.remove('d-none');
+                                error ++;
+                            }
+                        }
+                        if(error > 0)
+                            sendEmailErrorPedido(data);
+                        // window.location.href = '/pedidos';
+                }, 
+                error: function(error){
+                        alert('error');
+                        // sendEmail();
+                        // window.location.href = '/pedidos';
+                 }
+            });
     }    
 }
 
@@ -2058,6 +2082,28 @@ function sendEmail(){
     });
 }
 
+function sendEmailErrorPedido(data){
+    var correo = document.getElementById("correo").value;
+    var numCotizacion = noCotizacionNS;
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailErrorNS",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, responseNS: data},
+        'enctype': 'multipart/form-data',
+        'timeout': 2*60*60*1000,
+        success: function(data){
+                alert(data['success']);
+        }, 
+        error: function(data){
+                alert(data['error']);
+         }
+    });
+}
+
 function nuevaCotizacion(){
     $("#formNuevo").submit();
 }
@@ -2112,7 +2158,6 @@ function exportTableToExcel(tableID, filename = ''){
 }
 
 function levantandoPedidoLoading(){
-    console.log(pedido);
     var container = document.getElementById('container-netsuite-loading');
     for(var x=0; x < pedido.length; x++){
         var row = document.createElement('div'); 
@@ -2164,6 +2209,14 @@ function levantandoPedidoLoading(){
         check.setAttribute('style', 'width: 20px; height: 20px;')
         div7.appendChild(check);
 
+        var div8 = document.createElement('div'); 
+        div8.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center d-none');
+        div8.setAttribute('id', 'cross-'+x);
+        var check = document.createElement('img');
+        check.src = '/assets/customers/img/png/cross.png';
+        check.setAttribute('style', 'width: 20px; height: 20px;')
+        div8.appendChild(check);
+
         row.appendChild(div1);
         row.appendChild(div2);
         row.appendChild(div3);
@@ -2171,6 +2224,7 @@ function levantandoPedidoLoading(){
         row.appendChild(div5);
         row.appendChild(div6);
         row.appendChild(div7);
+        row.appendChild(div8);
 
         container.appendChild(row);
 

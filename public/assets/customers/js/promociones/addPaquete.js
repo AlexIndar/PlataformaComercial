@@ -725,49 +725,51 @@ function storeSubreglas(){
         listaVaciaCuotas.push(cuotasObj);
         console.log(subreglas);
         for(var x = 0; x < subreglas[y]['descuentosCategorias'].length; x++){
-            var json = {
-                id: 0,
-                nombrePromo: subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria'],
-                descuento: parseFloat(subreglas[y]['descuentosCategorias'][x]['descuento']),
-                descuentoWeb: parseFloat(subreglas[y]['descuentosCategorias'][x]['descuentoWeb']),
-                puntosIndar: packageHeader['puntosIndar'],
-                plazosIndar: packageHeader['plazosIndar'],
-                regalosIndar: subreglas[y]['regalos'] == null ? "" : subreglas[y]['regalos'].toString(),
-                categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
-                categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
-                gruposclientesIds: packageHeader['gruposclientesIds'],
-                gruposclientesIncluye: packageHeader['gruposclientesIncluye'],
-                clientesId: packageHeader['clientesId'],
-                clientesIncluye: packageHeader['clientesIncluye'],
-                plazo: packageHeader['plazo'],
-                montoMinCash: parseFloat(subreglas[y]['montoMinCash']),
-                montoMinQty: parseInt(subreglas[y]['montoMinQty']),
-                fechaInicio: packageHeader['fechaInicio'],
-                fechaFin: packageHeader['fechaFin'],
-                paquete: false,
-                idPaquete: idPaquete,
-                pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
-                cuotasPersonalizadas: listaVaciaCuotas,
-            }
-            console.log(JSON.stringify(json));
-            $.ajax({
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                'url': "storePromo",
-                'type': 'POST',
-                'dataType': 'json', 
-                'data': json,
-                'enctype': 'multipart/form-data',
-                'timeout': 2*60*60*1000,
-                success: function(data){
-                        // document.getElementById(idRow).classList.add('success-sub');
-                }, 
-                error: function(error){
-                        alert('Error guardando subregla '+subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria']);
-                        // document.getElementById(idRow).classList.add('error-sub');
-                 }
-            });
+            setTimeout(function(){
+                var json = {
+                    id: 0,
+                    nombrePromo: subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria'],
+                    descuento: parseFloat(subreglas[y]['descuentosCategorias'][x]['descuento']),
+                    descuentoWeb: parseFloat(subreglas[y]['descuentosCategorias'][x]['descuentoWeb']),
+                    puntosIndar: packageHeader['puntosIndar'],
+                    plazosIndar: packageHeader['plazosIndar'],
+                    regalosIndar: subreglas[y]['regalos'] == null ? "" : subreglas[y]['regalos'].toString(),
+                    categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
+                    categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
+                    gruposclientesIds: packageHeader['gruposclientesIds'],
+                    gruposclientesIncluye: packageHeader['gruposclientesIncluye'],
+                    clientesId: packageHeader['clientesId'],
+                    clientesIncluye: packageHeader['clientesIncluye'],
+                    plazo: packageHeader['plazo'],
+                    montoMinCash: parseFloat(subreglas[y]['montoMinCash']),
+                    montoMinQty: parseInt(subreglas[y]['montoMinQty']),
+                    fechaInicio: packageHeader['fechaInicio'],
+                    fechaFin: packageHeader['fechaFin'],
+                    paquete: false,
+                    idPaquete: idPaquete,
+                    pedidoPromoRulesD: listaPedidoPromoRulesD.length >= 1 ? listaPedidoPromoRulesD : null,
+                    cuotasPersonalizadas: listaVaciaCuotas,
+                }
+                console.log(JSON.stringify(json));
+                $.ajax({
+                    'headers': {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    'url': "storePromo",
+                    'type': 'POST',
+                    'dataType': 'json', 
+                    'data': json,
+                    'enctype': 'multipart/form-data',
+                    'timeout': 2*60*60*1000,
+                    success: function(data){
+                            // document.getElementById(idRow).classList.add('success-sub');
+                    }, 
+                    error: function(error){
+                            alert('Error guardando subregla '+subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria']);
+                            // document.getElementById(idRow).classList.add('error-sub');
+                     }
+                });
+            }, 2000);   
         }
     }
     setTimeout(redirectPromociones, 2000);
@@ -781,7 +783,7 @@ function redirectPromociones(){
 }
 
 function storeHeader(){
-    var categorias = $('#categorias').chosen().val();
+        var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
     
