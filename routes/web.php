@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Mail\ConfirmarPedido;
+use App\Mail\ErrorNetsuite;
 // -----------------------------------------------------------------------------------------
 
 // INTRANET --------------------------------------------------------------------------------
@@ -556,7 +557,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
 
-                                // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
                                 $emails = ['alejandro.jimenez@indar.com.mx'];
                                 Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
 
@@ -565,55 +565,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return response()->json(['error' => 'Error al enviar cotización'], 404);
                                 }
                                 else{
-                                    return response()->json(['success' => 'Cotización enviada correctamente a '.$correo], 200);
+                                    return response()->json(['success' => 'Cotización enviada correctamente'], 200);
                                 }
+                                
 
                              });
 
                              Route::post('/sendmailErrorNS', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
-                                $pedido = $request->pedido;
-                                $idCotizacion = $request->idCotizacion;
-                                $correo = $request->email;
+                                
                                 $responseNS = $request->responseNS; 
-                                dd($responseNS);    
-                                $detallesPedido = [
-                                    "subtotal" => 0,
-                                    "iva" => 0,
-                                    "total" => 0,
-                                ];
-                                for($x = 0; $x < count($pedido); $x++){
-                                    $subtotal = 0;
-                                    for($y = 0; $y < count($pedido[$x]['items']); $y++){
-                                        $precioUnitario = round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2);
-                                        $importe = (round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2)) * $pedido[$x]['items'][$y]['cantidad'];
-                                        $subtotal = $subtotal + $importe;
-                                        $precioUnitario = number_format($precioUnitario, 2, '.', ',');
-                                        $importe = number_format($importe, 2, '.', ',');
-                                        $pedido[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
-                                        $pedido[$x]['items'][$y]['importe'] = $importe;
-                                    }
-                                    $detallesPedido['subtotal'] = $detallesPedido['subtotal'] + $subtotal;
-                                    $subtotal = number_format($subtotal, 2, '.', ',');
-                                    $pedido[$x]['subtotal'] = $subtotal;
-                                }
-                                $detallesPedido['iva'] = $detallesPedido['subtotal'] * 0.16;
-                                $detallesPedido['total'] = $detallesPedido['subtotal'] + $detallesPedido['iva'];
-                                $detallesPedido['subtotal'] = number_format($detallesPedido['subtotal'], 2, '.', ',');
-                                $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
-                                $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
-
-
-                                // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
+                                $correo = $request->email;
                                 $emails = ['alejandro.jimenez@indar.com.mx'];
-                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
+                                Mail::to($emails)->send(new ErrorNetsuite($responseNS));
 
                                  // check for failures
                                 if (Mail::failures()) {
-                                    return response()->json(['error' => 'Error al enviar cotización'], 404);
+                                    return response()->json(['error' => 'Se detectaron errores al enviar pedidos. No pudimos notificar al equipo de soporte para forzar los pedidos con error.'], 404);
                                 }
                                 else{
-                                    return response()->json(['success' => 'Cotización enviada correctamente a '.$correo], 200);
+                                    return response()->json(['success' => 'Se detectaron errores al enviar pedidos. Hemos notificado al equipo de soporte para forzar los pedidos con error.'], 200);
                                 }
 
                              });

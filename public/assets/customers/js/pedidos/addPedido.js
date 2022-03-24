@@ -1779,14 +1779,17 @@ function saveNS(){
                         console.log(JSON.stringify(data));
                         var error = 0;
                         for(var x = 0; x < data.length; x++){
-                            // console.log(JSON.parse(data[x]['json']));
+                            
                             if(data[x]['status']=='OK'){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('check-'+x).classList.remove('d-none');
+                                document.getElementById('tranId-'+x).innerText = data[x]['tranId'];
                             }
                             else{
+                                var json = JSON.parse(data[x]['json']);
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('cross-'+x).classList.remove('d-none');
+                                document.getElementById('idWebError-'+x).innerText = json['idWeb'];
                                 error ++;
                             }
                         }
@@ -2204,18 +2207,27 @@ function levantandoPedidoLoading(){
         var div7 = document.createElement('div'); 
         div7.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center d-none');
         div7.setAttribute('id', 'check-'+x);
+        div7.setAttribute('style', 'display: flex; justify-content: space-between;')
         var check = document.createElement('img');
         check.src = '/assets/customers/img/png/check.png';
         check.setAttribute('style', 'width: 20px; height: 20px;')
+        var tranId = document.createElement('p');
+        tranId.setAttribute('id', 'tranId-'+x);
         div7.appendChild(check);
+        div7.appendChild(tranId);
 
         var div8 = document.createElement('div'); 
         div8.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center d-none');
         div8.setAttribute('id', 'cross-'+x);
+        div8.setAttribute('style', 'display: flex; justify-content: space-between;')
         var check = document.createElement('img');
         check.src = '/assets/customers/img/png/cross.png';
         check.setAttribute('style', 'width: 20px; height: 20px;')
+        var idWebError = document.createElement('p');
+        idWebError.setAttribute('id', 'idWebError-'+x);
+
         div8.appendChild(check);
+        div8.appendChild(idWebError);
 
         row.appendChild(div1);
         row.appendChild(div2);

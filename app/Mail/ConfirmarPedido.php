@@ -13,7 +13,7 @@ class ConfirmarPedido extends Mailable
 
 
     public $pedido;
-    public $detallesPedido;
+    public $detallesPedido; 
     public $idCotizacion;
     public function __construct($pedido, $detallesPedido, $idCotizacion)
     {   

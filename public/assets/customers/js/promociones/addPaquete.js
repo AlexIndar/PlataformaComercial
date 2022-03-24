@@ -725,7 +725,6 @@ function storeSubreglas(){
         listaVaciaCuotas.push(cuotasObj);
         console.log(subreglas);
         for(var x = 0; x < subreglas[y]['descuentosCategorias'].length; x++){
-            setTimeout(function(){
                 var json = {
                     id: 0,
                     nombrePromo: subreglas[y]['nombreSub'] + " - "+subreglas[y]['descuentosCategorias'][x]['categoria'],
@@ -757,6 +756,7 @@ function storeSubreglas(){
                     },
                     'url': "storePromo",
                     'type': 'POST',
+                    'async': false,
                     'dataType': 'json', 
                     'data': json,
                     'enctype': 'multipart/form-data',
@@ -769,7 +769,6 @@ function storeSubreglas(){
                             // document.getElementById(idRow).classList.add('error-sub');
                      }
                 });
-            }, 2000);   
         }
     }
     setTimeout(redirectPromociones, 2000);
@@ -779,7 +778,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    window.location.href = '/promociones';
+    // window.location.href = '/promociones';
 }
 
 function storeHeader(){
