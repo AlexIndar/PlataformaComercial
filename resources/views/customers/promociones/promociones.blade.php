@@ -155,7 +155,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModalDuplicar()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="duplicarPromo()">Duplicar</button>
+                    <button type="button" class="btn btn-primary" onclick="duplicarPromo(false)">Duplicar</button>
+                    <button type="button" class="btn btn-info" onclick="duplicarPromo(true)">Duplicar y Editar</button>
                 </div>
                 </div>
             </div>

@@ -495,7 +495,7 @@ function downloadTemplate(template){
 }
 
 function guardarPromocion(){   
-    if(document.getElementById('btn-guardar').innerHTML == 'Validar'){
+    if(document.getElementById('btn-guardar').disabled){
         document.getElementById('div-loading').style.opacity = '1';
         setTimeout(validarPromo, 2000);
     }
@@ -550,7 +550,7 @@ function validarPromo(){
 
     
 
-    if(save && document.getElementById('btn-guardar').innerHTML == 'Guardar'){
+    if(save && !document.getElementById('btn-guardar').disabled){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
@@ -678,8 +678,8 @@ function validarPromo(){
         modal.classList.add("active-modal");
     }
 
-    if(save && document.getElementById('btn-guardar').innerHTML == 'Validar'){
-        document.getElementById('btn-guardar').innerText = 'Guardar';
+    if(save && document.getElementById('btn-guardar').disabled){
+        document.getElementById('btn-guardar').disabled = false;
     }
 }
 

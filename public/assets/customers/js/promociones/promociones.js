@@ -49,7 +49,7 @@ function eliminarPromo(){
     $("#formDelete").submit();
 } 
 
-function duplicarPromo(){
+function duplicarPromo(editar){
     var nombre = document.getElementById('nombrePromoDuplicar').value;
     var id = document.getElementById('idDuplicar').value;
     if(nombre!=''){
@@ -93,7 +93,13 @@ function duplicarPromo(){
                         'enctype': 'multipart/form-data',
                         'timeout': 2*60*60*1000,
                         success: function(data){
-                                window.location.href = '/promociones';
+                                if(editar){
+                                    $("#id").val(data);
+                                    $("#form").submit();
+                                }
+                                else{
+                                    window.location.href = '/promociones';
+                                } 
                         }, 
                         error: function(error){
                                 window.location.href = '/promociones';
