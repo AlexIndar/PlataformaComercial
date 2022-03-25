@@ -251,8 +251,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 Route::get('/detallesProducto/{id}',function ($id) {
                                     $token = TokenController::getToken();
                                     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+                                        return redirect('/logout');
+                                    }
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
@@ -617,7 +617,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad); 
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();

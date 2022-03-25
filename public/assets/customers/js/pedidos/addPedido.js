@@ -1683,6 +1683,8 @@ function saveNS(){
             var evento;
             pedidoSeparado.length>0 ? pedidoSeparado[indexItemSeparado]['evento'] : "";
 
+            var username = getCookie('username');
+
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
@@ -1733,7 +1735,7 @@ function saveNS(){
                     id: pedido[x]['tipo'] == 'BO' ? "6" : "5",
                     txt: ""
                 },
-                user: "USUARIO",
+                user: username,
                 methodPayment: {
                     id: "10",
                     txt: ""
@@ -2014,8 +2016,17 @@ function update(action){
 }
 
 function updatePrecioIVA(itemid){
-    var desc = document.getElementById('inputDescuentoInventario-'+itemid).value;    
-    var precioClienteActual = parseFloat(getPrecioClientePromo(itemid).substring(1));
+    var desc = document.getElementById('inputDescuentoInventario-'+itemid).value;   
+    var cant = document.getElementById('inputPrecioCliente-'+itemid).value;
+    var art = items.find(o => o.itemid === itemid);
+    var precioClienteActual = 0
+    if(cant != '' && cant != '0'){
+        precioClienteActual = parseFloat(getPrecioClientePromo(itemid).substring(1));
+    }
+    else{
+        precioClienteActual = art['price'];
+    }
+
     var precioIVA = ((precioClienteActual*((100-desc)/100)*1.16)).toLocaleString('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -2026,7 +2037,7 @@ function updatePrecioIVA(itemid){
 
 function updatePrecioCliente(itemid){
     var precio = getPrecioClientePromo(itemid);
-    document.getElementById('precioCliente-'+itemid).innerHTML = "<strong>"+precio+"</strong> <br> + IVA"; 
+    document.getElementById('precioCliente-'+itemid).innerHTML = "<strong>"+precio+" + IVA</strong>"; 
     updatePrecioIVA(itemid);  
 }
 
@@ -2042,19 +2053,26 @@ function getPrecioClientePromo(itemid){
                 if(cant >= promos[y]['cantidad']){
                     precioCliente = ((100 - promos[y]['descuento']) / 100) * art['price'];
                 }
+                if(precioCliente == 0)
+                    precioCliente = ((100 - promos[0]['descuento']) / 100) * art['price'];
             }
-            if(precioCliente == 0)
-                precioCliente = ((100 - promos[0]['descuento']) / 100) * art['price'];
         }
 
+        if(precioCliente == 0)
+                precioCliente = art['price'];
+
+        
         precio = (precioCliente).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
         });
+
+
     }
     else{
         var art = items.find(o => o.itemid === itemid);
-        precio = (art['price']).toLocaleString('en-US', {
+        precioCliente = art['price'];
+        precio = (precioCliente).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
         });
@@ -2242,4 +2260,17 @@ function levantandoPedidoLoading(){
 
     }
     $('#modalNetsuiteLoading').modal('show');
+}
+
+function getCookie(name){
+    var cookies = document.cookie.split(';');
+    var returnValue = '';
+    for(var x = 0; x < cookies.length; x++){
+        var keyValue = cookies[x].split('=');
+        var key = keyValue[0];
+        var value = keyValue[1];
+        if(key.trim() == name.trim())
+            returnValue = value;
+    }
+    return returnValue;
 }

@@ -43,6 +43,7 @@ class ItemsController extends Controller
 
     public static function getProduct($id, $token){
         $id = strtr($id, "_", " ");
+        dd($id);
         $getProduct = Http::withToken($token)->post('http://192.168.70.107:64444/item/GetItemsWhere', [
             "columns" => "itemid",
             "values" => $id
