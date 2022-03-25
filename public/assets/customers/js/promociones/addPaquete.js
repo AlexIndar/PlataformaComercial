@@ -854,6 +854,7 @@ function storeHeader(){
             },
             'url': "storePromo",
             'type': 'POST',
+            'async': false,
             'dataType': 'json', 
             'data': packageHeader,
             'enctype': 'multipart/form-data',
@@ -862,7 +863,7 @@ function storeHeader(){
                 idPaquete = data;
                 console.log(data);
                 alert('Encabezado guardado correctamente. Guardando subreglas...');
-                setTimeout(storeSubreglas, 5000);
+                setTimeout(storeSubreglas, 2000);
             }, 
             error: function(error){
                 alert('Error al guardar encabezado de paquete');

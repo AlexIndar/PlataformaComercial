@@ -109,6 +109,7 @@
     <form style="display: none" action="/promociones/duplicar" method="POST" id="form">
             @csrf
             <input type="hidden" id="idDuplicar" name="idDuplicar" value=""/>
+            <input type="hidden" id="tipoDuplicar" name="tipoDuplicar" value=""/>
     </form>
 
     <!-- FORM OCULTO PARA ELIMINAR COTIZACIÓN GUARDADA-->
@@ -154,6 +155,7 @@
                     <input type="text" id="nombrePromoDuplicar" name="nombrePromoDuplicar" class="input-promociones" style="border: 1px solid black !important;">
                 </div>
                 <div class="modal-footer">
+                    <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
                     <button type="button" class="btn btn-secondary" onclick="closeModalDuplicar()">Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="duplicarPromo(false)">Duplicar</button>
                     <button type="button" class="btn btn-info" onclick="duplicarPromo(true)">Duplicar y Editar</button>
