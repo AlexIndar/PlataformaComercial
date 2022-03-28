@@ -278,7 +278,6 @@ $(document).ready(function() {
         $('#envio').val(info[selected]['shippingWayF']);
         $('#fletera').val(info[selected]['packgeDeliveryF']);
         $('#correo').val(info[selected]['email']);
-
     });
 
     // UPDATE DEFAULT SHIPPING WAT / PACKAGING WHEN ADDRESS IS CHANGED -------------------------------------------------------------------------------------
@@ -583,7 +582,6 @@ function prepareJsonSeparaPedidos(separa){
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
     if(separar && json == null){
         document.getElementById("btnSpinner").style.display = "block";
-
         setTimeout(prepareJsonSeparaPedidos(true), 2000);
     }
     if(separar && json != null){
@@ -871,7 +869,6 @@ function noDisponible(img) {
 
 function cargarInventario() {
     var empty = document.getElementById('empty').value;
-    
 
     if (empty == "yes") { //si la tabla está vacía, inicializarla
 
@@ -896,6 +893,11 @@ function cargarInventario() {
                     precioCliente = items[x]['price'];
 
                 var precio = (precioCliente).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+
+                var precioLista = (items[x]['price']).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',
                 });
@@ -934,19 +936,37 @@ function cargarInventario() {
                 arr.push(detalles);
                 arr.push("<input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
                 arr.push("<p class='text-inventario' id='precioCliente-"+items[x]['itemid']+"'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
+                var precioSugerido;
                 if(items[x]['promoART'] == null){
+                    arr.push("<p>Sin descuentos</p>");
                     arr.push("<p>Sin promoción</p>");
+                    precioSugerido = items[x]['price'] / 0.65;
                 }
                 else{
+                    precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
                     var promociones = "";
-                    for(var y=0; y < items[x]['promoART'].length; y++){
+                    var descuentos = "<p class='detalles-item'>Precio lista: <span class='detalles-item-right'>"+precioLista+" + IVA</span></p>";
+                    for(var y=0; y < items[x]['promoART'].length; y++){ 
                         if(items[x]['promoART'][y]['cantidad'] == 1)
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
                         else
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
                         promociones = promociones + temp;
+                        var precioClienteDescuento = ((100 - items[x]['promoART'][y]['descuento']) * items[x]['price']) / 100;
+                        precioClienteDescuento = (precioClienteDescuento).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                        });
+                        descuentos = descuentos + "<p class='detalles-item'>Precio cliente: <span class='text-red'> (-"+items[x]['promoART'][y]['descuento']+"%) </span> <span class='detalles-item-right' style='width: auto !important'> <span class='text-blue'>"+precioClienteDescuento+"</span> + IVA</span></p>"
                     }
-                    arr.push(promociones)
+                    precioSugerido = (precioSugerido).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                    });
+                    descuentos = descuentos + "<p class='detalles-item'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
+
+                    arr.push(descuentos);
+                    arr.push(promociones);
                 }
                 arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
     
@@ -954,12 +974,18 @@ function cargarInventario() {
             }
         }
 
-        $("#tablaInventario").DataTable({
+         // Setup - add a text input to each footer cell
+        $('#tablaInventario thead tr:eq(1) th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="Buscar '+title+'" class="column_search" />' );
+        } );
+    
+        var table = $("#tablaInventario").DataTable({
             data: dataset,
-            autoWidth: false, // might need this
-            // scrollY: '70vh',
-            scrollCollapse: true,
             pageLength : 5,
+            orderCellsTop: true,
+            fixedHeader: true,
+            deferRender: true,
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'Todos']],
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
@@ -983,6 +1009,14 @@ function cargarInventario() {
                }
              ]
         });
+
+         // Apply the search
+         $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
+            table
+                .column( $(this).parent().index() )
+                .search( this.value )
+                .draw();
+        } );
     }
 }
 

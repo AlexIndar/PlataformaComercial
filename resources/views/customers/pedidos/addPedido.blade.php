@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{asset('assets/customers/css/animations/spinner.css')}}">
 <script src="{{asset('assets/customers/js/pedidos/addPedido.js')}}"></script>
 <link rel="stylesheet" href="{{asset('plugins/bs-stepper/css/bs-stepper.min.css')}}">
+
 @endsection
 
 @section('body')
@@ -300,26 +301,45 @@
                                             <th class="customHeader">Detalles</th>
                                             <th class="customHeader">Cantidad</th>
                                             <th class="customHeader">Precio</th>
+                                            <th class="customHeader">Descuentos</th>
                                             <th class="customHeader">Promo</th>
                                             <th class="customHeader">Acciones</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Img</th>
+                                            <th>Categoría</th>
+                                            <th>Fab</th>
+                                            <th>Fam</th>
+                                            <th>Cod Art</th>
+                                            <th>Descripción</th>
+                                            <th>Detalles</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio</th>
+                                            <th>Descuentos</th>
+                                            <th>Promo</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
+
                                     <tfoot>
-                                    <tr>
-                                            <th class="customHeader">Img</th>
-                                            <th class="customHeader">Categoría</th>
-                                            <th class="customHeader">Fab</th>
-                                            <th class="customHeader">Fam</th>
-                                            <th class="customHeader">Cod Art</th>
-                                            <th class="customHeader">Descripción</th>
-                                            <th class="customHeader">Detalles</th>
-                                            <th class="customHeader">Cantidad</th>
-                                            <th class="customHeader">Precio</th>
-                                            <th class="customHeader">Promo</th>
-                                            <th class="customHeader">Acciones</th>
+                                        <tr>
+                                            <th>Img</th>
+                                            <th>Categoría</th>
+                                            <th>Fab</th>
+                                            <th>Fam</th>
+                                            <th>Cod Art</th>
+                                            <th>Descripción</th>
+                                            <th>Detalles</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio</th>
+                                            <th>Descuentos</th>
+                                            <th>Promo</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </tfoot>
+
+                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
+                                   
                                 </table>
             </div>
         </div>
