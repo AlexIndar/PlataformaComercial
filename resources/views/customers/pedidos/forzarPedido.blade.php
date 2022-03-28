@@ -25,8 +25,8 @@
                 <div class="col-6">
                     <div class="input-group mb-3">
                         <span class="input-group-text">ID PEDIDO</span>
-                        <input type="text" class="form-control" id="idCotizacion" value="4055-2/4">
-                        <button type="button" class="btn btn-group-buttons" onclick="enviar()">ENVIAR</button>
+                        <input type="text" class="form-control" id="idCotizacion" value="4147-1/17">
+                        <button type="button" class="btn btn-group-buttons" onclick="enviar()">ENVIAR</button> 
                     </div>
                 </div>
             </div>

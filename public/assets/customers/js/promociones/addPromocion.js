@@ -495,7 +495,7 @@ function downloadTemplate(template){
 }
 
 function guardarPromocion(){   
-    if(document.getElementById('btn-guardar').innerHTML == 'Validar'){
+    if(document.getElementById('btn-guardar').disabled){
         document.getElementById('div-loading').style.opacity = '1';
         setTimeout(validarPromo, 2000);
     }
@@ -550,7 +550,7 @@ function validarPromo(){
 
     
 
-    if(save && document.getElementById('btn-guardar').innerHTML == 'Guardar'){
+    if(save && !document.getElementById('btn-guardar').disabled){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
@@ -621,8 +621,8 @@ function validarPromo(){
         var json = { 
             id: idPromo, 
             nombrePromo: document.getElementById('nombrePromo').value,
-            descuento: document.getElementById('descuento').value = "" ? 0 : parseInt(document.getElementById('descuento').value),
-            descuentoWeb: document.getElementById('descuentoWeb').value = "" ? 0 : parseInt(document.getElementById('descuentoWeb').value),
+            descuento: document.getElementById('descuento').value = "" ? 0 : parseFloat(document.getElementById('descuento').value),
+            descuentoWeb: document.getElementById('descuentoWeb').value = "" ? 0 : parseFloat(document.getElementById('descuentoWeb').value),
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),
@@ -633,7 +633,7 @@ function validarPromo(){
             clientesId: clientes.toString(),
             clientesIncluye: document.getElementById('listaClientes').value == 'blanca' ? true:false,
             plazo: '',
-            montoMinCash: document.getElementById('preciomin').value == "" ? 0 : parseInt(document.getElementById('preciomin').value),
+            montoMinCash: document.getElementById('preciomin').value == "" ? 0 : parseFloat(document.getElementById('preciomin').value),
             montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
             fechaInicio: startTime,
             fechaFin: endTime,
@@ -657,10 +657,15 @@ function validarPromo(){
             'enctype': 'multipart/form-data',
             'timeout': 2*60*60*1000,
             success: function(data){
+                if(data['status'] != undefined){
+                    alert(Object.entries(data['errors']));
+                }
+                else{
                     window.location.href = '/promociones';
+                }
             }, 
             error: function(error){
-                    window.location.href = '/promociones';
+                    // window.location.href = '/promociones';
              }
         });
     }
@@ -673,8 +678,8 @@ function validarPromo(){
         modal.classList.add("active-modal");
     }
 
-    if(save && document.getElementById('btn-guardar').innerHTML == 'Validar'){
-        document.getElementById('btn-guardar').innerText = 'Guardar';
+    if(save && document.getElementById('btn-guardar').disabled){
+        document.getElementById('btn-guardar').disabled = false;
     }
 }
 

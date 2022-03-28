@@ -686,9 +686,6 @@ function addContactData() {
     var celular = document.getElementById('celularContacto').value;
     var email = document.getElementById('emailContacto').value;
     var tipo = document.getElementById('tipoContacto').value;
-    console.log("***VERIFICACIÓN");
-    console.log(contactos);
-    console.log("***CONTACTOS");
     if (contactos.length < maxContactos) {
         if (contactos.length == 0 && tipo != 1) {
             alert("Debes de agregar el primer contacto como principal");
@@ -1389,6 +1386,14 @@ function SendForm(zone) {
     if (validateFullForm()) {
         $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
+        let tp = getTipoForm();
+        let cliente = {
+            clave: document.getElementById('prospecto').value,
+            datosF: {
+                rfc: document.getElementById('rfcInput').value,
+                razonSocial: document.getElementById('rzInput').value,
+            }
+        }
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1401,11 +1406,10 @@ function SendForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
-                    //sendMail(data, tp, json.cliente, 1);
-                    console.log()
                     $('#cargaModal').modal('hide');
+                    sendMail(data, tp, cliente, 1);
                     $('#solicitudModal').modal('hide');
-                    document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
+                    document.getElementById('infoModalR').innerHTML = `Solicitud enviada correctamente No. ${data}, espera a envio de correo`;
                     $('#respuestaForm').modal('show');
                 } else {
                     console.log(data);
@@ -1427,7 +1431,7 @@ function saveForm(zone) {
         var json = createJsonSolicitud(zone);
         let tp = getTipoForm();
         let cliente = {
-            clave: document.getElementById('prospecto').value + "Test de Email",
+            clave: document.getElementById('prospecto').value,
             datosF: {
                 rfc: document.getElementById('rfcInput').value,
                 razonSocial: document.getElementById('rzInput').value,
@@ -1446,7 +1450,7 @@ function saveForm(zone) {
             success: function(data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
-                    //sendMail(data, tp, cliente, 3);
+                    sendMail(data, tp, cliente, 3);
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;
                     $('#respuestaForm').modal('show');
@@ -1592,9 +1596,21 @@ function createJsonSolicitud(zone) {
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
     };
-    console.log(json);
-    console.log(JSON.stringify(json));
+    // console.log(json);
+    // console.log(JSON.stringify(json));
+    calLengthMB(json);
     return json;
+}
+
+const calLengthMB = (json) => {
+    let auxJson = JSON.stringify(json).length;
+    auxJson = (auxJson / 1024).toFixed(2);
+    if (auxJson > 1024) {
+        auxJson = (auxJson / 1024).toFixed(2);
+        console.log(`${auxJson} Mb`);
+    } else {
+        console.log(`${auxJson} Kb`);
+    }
 }
 
 function detalleSol(item) {
@@ -3343,6 +3359,7 @@ const enviarMail = () => {
 const sendMail = (fol, tps, cli, status) => {
     let zona = document.getElementById("zoneP").value;
     let auxStatus = "";
+    let auxTps = "";
     switch (status) {
         case 1:
             auxStatus = "Nueva Solicitud";
@@ -3355,9 +3372,24 @@ const sendMail = (fol, tps, cli, status) => {
             break;
 
     }
+
+    switch (tps) {
+        case null:
+            auxTps = "CARTA RESPONSIVA";
+            break;
+        case 0:
+            auxTps = "CONTADO";
+            break;
+        case 1:
+            auxTps = "CREDITO";
+            break;
+        case 2:
+            auxTps = "CREDITO AB";
+            break;
+    }
     let mailJson = {
         folio: fol,
-        tipoSol: tps,
+        tipoSol: auxTps,
         cliente: cli.clave,
         razonSocial: cli.datosF.razonSocial,
         rfc: cli.datosF.rfc,
@@ -3378,6 +3410,7 @@ const sendMail = (fol, tps, cli, status) => {
         'timeout': 2 * 60 * 60 * 1000,
         success: function(data) {
             console.log(data);
+            alert(data.success);
         },
         error: function(error) {
             console.log(error);

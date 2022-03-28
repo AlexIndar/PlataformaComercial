@@ -401,11 +401,12 @@
 
         <div class="col">
             <div class="row-12 d-flex justify-content-center align-items-center d-column" id="div-loading">
-                <img src="{{asset('assets/customers/gif/loading.gif')}}" id="loading" width="30px">
+                <div class="spinner-border text-secondary" id="btnSpinner" ></div>
             </div>
             <br>
             <div class="row-12">
-                <button class="btn btn-blue w-100" id="btn-guardar" onclick="guardarPromocion()">Validar</button>
+                <button class="btn btn-blue w-100" id="btn-validar" onclick="guardarPromocion()">Validar</button>
+                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="guardarPromocion()" disabled>Guardar</button>
             </div>
         </div>
 

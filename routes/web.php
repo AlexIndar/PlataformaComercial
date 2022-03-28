@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Mail\ConfirmarPedido;
+use App\Mail\ErrorNetsuite;
 // -----------------------------------------------------------------------------------------
 
 // INTRANET --------------------------------------------------------------------------------
@@ -250,8 +251,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 Route::get('/detallesProducto/{id}',function ($id) {
                                     $token = TokenController::getToken();
                                     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+                                        return redirect('/logout');
+                                    }
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
@@ -429,7 +430,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()), 2);
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -446,9 +447,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $json = $request->json; //json para guardar pedido en netsuite
-
-                                return $json;
-
+                                $response = SaleOrdersController::storePedidoNS($token, $json);
+                                return $response;
                             });
 
                             Route::get('pedido/nuevo/getInfoHeatWeb/{customer}', function ($customer){
@@ -526,7 +526,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/sendmail', function (Request $request) {
-                                ini_set('max_input_vars','10000' );
+                                ini_set('max_input_vars','100000' );
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
@@ -557,8 +557,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
 
-                                // Mail::to($correo)->send(new ConfirmarPedido($pedido, $detallesPedido));
-                                $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
+                                $emails = ['alejandro.jimenez@indar.com.mx'];
                                 Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
 
                                  // check for failures
@@ -566,7 +565,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return response()->json(['error' => 'Error al enviar cotización'], 404);
                                 }
                                 else{
-                                    return response()->json(['success' => 'Cotización enviada correctamente a '.$correo], 200);
+                                    return response()->json(['success' => 'Cotización enviada correctamente'], 200);
+                                }
+                                
+
+                             });
+
+                             Route::post('/sendmailErrorNS', function (Request $request) {
+                                ini_set('max_input_vars','100000' );
+                                
+                                $responseNS = $request->responseNS; 
+                                $correo = $request->email;
+                                $emails = ['alejandro.jimenez@indar.com.mx'];
+                                Mail::to($emails)->send(new ErrorNetsuite($responseNS));
+
+                                 // check for failures
+                                if (Mail::failures()) {
+                                    return response()->json(['error' => 'Se detectaron errores al enviar pedidos. No pudimos notificar al equipo de soporte para forzar los pedidos con error.'], 404);
+                                }
+                                else{
+                                    return response()->json(['success' => 'Se detectaron errores al enviar pedidos. Hemos notificado al equipo de soporte para forzar los pedidos con error.'], 200);
                                 }
 
                              });
@@ -599,7 +617,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad); 
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();

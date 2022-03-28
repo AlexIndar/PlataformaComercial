@@ -52,25 +52,6 @@ class CotizacionController extends Controller
         return $response;
     }
 
-    // public static function updatePedido($token, $data){
-    //     $json = json_decode($data);
-    //     $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
-    //         "idCotizacion" => $json->idCotizacion,
-    //         "companyId" => $json->companyId,
-    //         "orderC" => $json->orderC,
-    //         "email" => $json->email,
-    //         "addressId" => $json->addressId,
-    //         "shippingWay" => $json->shippingWay,
-    //         "packageDelivery" => $json->packageDelivery,
-    //         "divide" => $json->divide,
-    //         "pickUp" => $json->pickUp,
-    //         "order" => $json->order,
-    //         "comments" => $json->comments,
-    //         "enviado" => $json->enviado
-    //     ]);
-    //     return $response;
-    // }
-
     public static function deletePedido($token, $id){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/getBorrarCotizacionIdWeb?Id='.$id);
         $cotizacion = json_decode($response->body());
@@ -78,16 +59,14 @@ class CotizacionController extends Controller
     }
 
     public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){
-
         $infoCustomer = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
         $customerHeat = json_decode($infoCustomer->body());
-
         date_default_timezone_set('America/Mexico_City');
         $date = date('d/m/y');
         $date = explode('/', $date);
         $date = $date[0]."/".$date[1]."/20".$date[2];
 
-        $billingAddress['id'] = 'XXXXXX';
+        $billingAddress['id'] = 'XXXXXX'; //se llena en el back
         $shippingAddress['id'] = $cotizacion->addressId;
         $typeOrder['id'] = '1';
         $typeOrder['txt'] = "";
@@ -96,14 +75,14 @@ class CotizacionController extends Controller
         for($x = 0; $x < count($cotizacion->order[$index-1]->items); $x++){
             $temp['itemid'] = $cotizacion->order[$index-1]->items[$x]->itemid;
             $temp['quantity'] = $cotizacion->order[$index-1]->items[$x]->cantidad;
-            $temp['listprice'] = "FALTA";
+            $temp['listprice'] = $customerHeat[0]->priceList;
             array_push($lineItems, $temp);
         }
 
-        $shippingWay['id'] = $cotizacion->shippingWay;
-        $shippingWay['txt'] = "";
-        $package['id'] = $cotizacion->packageDelivery;
-        $package['txt'] = "";
+        $shippingWay['id'] = 0;
+        $shippingWay['txt'] = $cotizacion->shippingWay;
+        $package['id'] = 0;
+        $package['txt'] = $cotizacion->packageDelivery;
         $typeSale['id'] = $cotizacion->order[$index-1]->tipo == 'BO' ? '6' : '5';
         $typeSale['txt'] = "";
         
@@ -142,9 +121,6 @@ class CotizacionController extends Controller
         $json['numPurchase'] = $cotizacion->orderC;
         $json['desneg'] = "FALTA";
         $json['desgar'] = "FALTA";
-
-
-        
         dd($json);
     }
 

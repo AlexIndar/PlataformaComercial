@@ -7,8 +7,7 @@
 }
 
 img.img-item {
-  width: 40% !important;
-  margin-left: 30% !important;
+  width: 70px !important;
   border: 1px solid #002868 !important;
 }
 
@@ -165,7 +164,7 @@ padding: 10px 0 10px 0;
 .tablaPedido{
 border: 1px solid rgba(0, 0, 0, 0.1) !important;
 width: 100%;
-min-width: 900px;
+min-width: 1200px;
 overflow-x: scroll;
 transition: opacity .5s ease-in-out;
 -moz-transition: opacity .5s ease-in-out;
@@ -213,21 +212,26 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .text-inventario{
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 400 !important;
   white-space: nowrap !important;
   text-align: center !important;
 }
 
 .text-promo{
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
   text-align: center !important;
 }
 
 .text-red{
-  color: #C82333;
-  font-weight: 600 !important;
+  color: #F00 !important;
+  font-weight: 700 !important;
+}
+
+.text-blue{
+  color: #0579c6 !important;
+  font-weight: 700 !important;
 }
 
 .detalles-item-right{
@@ -237,7 +241,7 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .detalles-item{
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
   min-width: 250px !important;
   white-space: nowrap !important;
@@ -265,7 +269,7 @@ margin-top: -2px;
 .input-cantidad{
 background-color: #F2F2F2 !important;
 text-align: center !important;
-font-size: 18px !important;
+font-size: 14px !important;
 font-weight: 500 !important;
 height: 30px;
 }
@@ -295,7 +299,7 @@ height: 30px;
 }
 
 #descripcion{
-  font-size: 15px;
+  font-size: 14px;
   /* text-align: left !important; */
 }
 
@@ -458,11 +462,11 @@ min-width: 95% !important;
 }
 
 table.dataTable td, table.dataTable tr {
-font-size: 14px !important;
+font-size: 13px !important;
 }
 
 table.dataTable tr.dtrg-level-0 td {
-font-size: 14px !important;
+font-size: 13px !important;
 }
 
 .btn-add-product{

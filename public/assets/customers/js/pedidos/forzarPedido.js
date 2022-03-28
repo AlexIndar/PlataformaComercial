@@ -18,4 +18,4 @@ function enviar(){
 				alert('error');
 		 }
 	});
-}
+} 

@@ -44,7 +44,7 @@
                                 <h4>[{{$promo->id}}] {{$promo->nombrePromo}}</h4>
                                 <div class="actions">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Duplicar" onclick="activarDuplicarModal('{{$promo->id}}', 'promo')"><i class="fas fa-clone"></i></button>
                                         <button type="button" class="btn btn-info" title="Editar" onclick="editarPromo('{{$promo->id}}')"><i class="fas fa-edit"></i></button>
                                         <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$promo->id}}', 'promo')"><i class="fas fa-trash"></i></button>
                                     </div>
@@ -74,7 +74,7 @@
                                 <h4>[{{$promo->id}}] {{$promo->nombrePromo}}</h4>
                                 <div class="actions">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button>
+                                        <button type="button" class="btn btn-primary" title="Duplicar" onclick="activarDuplicarModal('{{$promo->id}}', 'paquete')"><i class="fas fa-clone"></i></button>
                                         <button type="button" class="btn btn-info" title="Editar" onclick="editarPromo('{{$promo->id}}')"><i class="fas fa-edit"></i></button>
                                         <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$promo->id}}', 'paquete')"><i class="fas fa-trash"></i></button>
                                     </div>
@@ -105,6 +105,13 @@
             <input type="hidden" id="id" name="id" value=""/>
     </form>
 
+    <!-- FORM PARA DUPLICAR -->
+    <form style="display: none" action="/promociones/duplicar" method="POST" id="form">
+            @csrf
+            <input type="hidden" id="idDuplicar" name="idDuplicar" value=""/>
+            <input type="hidden" id="tipoDuplicar" name="tipoDuplicar" value=""/>
+    </form>
+
     <!-- FORM OCULTO PARA ELIMINAR COTIZACIÓN GUARDADA-->
   
     <form style="display: none" action="/promociones/eliminar" method="POST" id="formDelete">
@@ -112,7 +119,7 @@
                 <input type="text" id="idPromo" name="idPromo" value="" hidden>
     </form>
 
-         <!-- MODAL PARA CONFIRMAR ELIMINAR COTIZACIÓN -->
+         <!-- MODAL PARA CONFIRMAR ELIMINAR PROMOCION -->
 
         <!-- Modal -->
         <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -128,6 +135,30 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModalDelete()">Cancelar</button>
                     <button type="button" class="btn btn-danger" onclick="eliminarPromo()">Eliminar</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- MODAL PARA DAR NOMBRE A PROMOCION DUPLICADA -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="confirmDuplicarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="h4-modalDuplicar">Duplicar Promoción</h4>
+                    <i style="cursor:pointer;" class="fas fa-times" onclick="closeModalDuplicar()"></i>
+                </div>
+                <div class="modal-body">
+                    <h5 id="h5-modalDuplicar">Indique un nombre para la nueva promoción</h5>
+                    <input type="text" id="nombrePromoDuplicar" name="nombrePromoDuplicar" class="input-promociones" style="border: 1px solid black !important;">
+                </div>
+                <div class="modal-footer">
+                    <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
+                    <button type="button" class="btn btn-secondary" onclick="closeModalDuplicar()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="duplicarPromo(false)">Duplicar</button>
+                    <button type="button" class="btn btn-info" onclick="duplicarPromo(true)">Duplicar y Editar</button>
                 </div>
                 </div>
             </div>

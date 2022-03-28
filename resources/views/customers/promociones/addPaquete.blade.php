@@ -506,7 +506,7 @@
 
                 <div class="col">
                     <div class="row-12 d-flex justify-content-center align-items-center d-column" id="div-loading">
-                        <img src="{{asset('assets/customers/gif/loading.gif')}}" id="loading" width="30px">
+                        <div class="spinner-border text-secondary" id="btnSpinner" ></div>
                     </div>
                     <br>
                     <div class="row-12">
