@@ -694,7 +694,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
 
                                 $response = PromoController::deletePromo($token, $request->idPromo);
-                                
+
                                 return redirect('/promociones');
                             });
 
@@ -1155,7 +1155,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         $zone = MisSolicitudesController::getZone($token,$userRol[0]);
                         if($zone->getStatusCode()== 400){
                             return redirect('/Intranet');
-                        }                        
+                        }
                         $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
                     }else if($userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA" || $userRol[1] == "CYC" || $userRol[1] == "GERENTECYC"){
                         $zone = "";
@@ -1173,7 +1173,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $zona = $request->zona;
-                    $listSol = MisSolicitudesController::getTableViewManager($token, $zona);                    
+                    $listSol = MisSolicitudesController::getTableViewManager($token, $zona);
                     return  $listSol;
                 });
 
@@ -1308,7 +1308,29 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::get('/clientes/info', function(){
+                    $token = TokenController::getToken();
 
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zonas = AplicarPagoController::getZonas($token);
+                    $clientes = AplicarPagoController::getCargaListaClientes($token);
+                    return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
+                });
+
+                Route::get('/clientes/pagoEnLinea', function(){
+                    $token = TokenController::getToken();
+
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zonas = AplicarPagoController::getZonas($token);
+                    $clientes = AplicarPagoController::getCargaListaClientes($token);
+                    return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
+                });
 
 
 });
