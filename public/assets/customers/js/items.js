@@ -11,7 +11,7 @@ $(document).ready(function(){
 		{
 		
 			var image_object = new Image();
-			image_object.src = $(".small").attr("src");
+			image_object.src = $(".small").attr("src"); 
 			
 		
 			native_width = image_object.width;
@@ -31,7 +31,7 @@ $(document).ready(function(){
 			}
 			else
 			{
-				$(".large").fadeOut(100);
+				// $(".large").fadeOut(100);
 			}
 			if($(".large").is(":visible"))
 			{

@@ -248,7 +248,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 });
 
 
-                                Route::get('/detallesProducto/{id}',function ($id) {
+                                Route::get('/detallesProducto',function () {
                                     $token = TokenController::getToken();
                                     if($token == 'error'){
                                         return redirect('/logout');
@@ -256,7 +256,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
-                                    $item = ItemsController::getProduct($id, $token);
+                                    $level = "C";
+                                    if(isset($_COOKIE["level"])){
+
+                                    $level = $_COOKIE["level"];     }
+                                    
+                                    return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
+
                                 });
 
 

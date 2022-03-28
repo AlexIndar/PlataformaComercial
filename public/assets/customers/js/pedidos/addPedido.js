@@ -378,6 +378,54 @@ $(document).ready(function() {
 
     });
 
+    var native_width = 0;
+	var native_height = 0;
+
+	$(".magnify").mousemove(function(e){
+		if(!native_width && !native_height)
+		{
+		
+			var image_object = new Image();
+			image_object.src = $(".small").attr("src");
+           
+		
+			native_width = image_object.width;
+			native_height = image_object.height;
+		}
+		else
+		{
+            var src = $(".small").attr("src");
+            console.log(src);
+            document.getElementById('zoom').style.background = "url('"+src+"') no-repeat";
+
+			var magnify_offset = $(this).offset();
+		
+			var mx = e.pageX - magnify_offset.left;
+			var my = e.pageY - magnify_offset.top;
+		
+			if(mx < $(this).width() && my < $(this).height() && mx > 0 && my > 0)
+			{
+				$(".large").fadeIn(100);
+			}
+			else
+			{
+				$(".large").fadeOut(100);
+			}
+			if($(".large").is(":visible"))
+			{
+
+				var rx = Math.round(mx/$(".small").width()*native_width - $(".large").width()/2)*-1;
+				var ry = Math.round(my/$(".small").height()*native_height - $(".large").height()/2)*-1;
+				var bgp = rx + "px " + ry + "px";
+				
+				var px = mx - $(".large").width()/2;
+				var py = my - $(".large").height()/2;
+			
+				$(".large").css({left: px, top: py, backgroundPosition: bgp});
+			}
+		}
+	});
+
 });
 
 
@@ -917,7 +965,8 @@ function cargarInventario() {
     
                 var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
                 //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
-                arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
+                //arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
+                arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' onclick='verImagenProducto(\"" + items[x]['itemid'] + "\")' class='img-item'/><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
                 arr.push(items[x]['categoriaItem']);
                 arr.push(items[x]['clavefabricante']);
                 arr.push(items[x]['familia']);
@@ -2307,4 +2356,14 @@ function getCookie(name){
             returnValue = value;
     }
     return returnValue;
+}
+
+function verImagenProducto(itemid){
+    var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg";
+    document.getElementById('containerImgProduct').style.display = 'flex';
+    document.getElementById('imgProductMD').src = src;
+}
+
+function closeImgProductMD(){
+    document.getElementById('containerImgProduct').style.display = 'none';
 }

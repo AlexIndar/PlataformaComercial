@@ -392,4 +392,16 @@
 
   <br><br>
 
+
+  <!-- DIV PARA MOSTRAR IMAGEN DEL PRODUCTO AMPLIADA -->
+
+<div class="containerImgProduct" id="containerImgProduct">
+    <div class="magnify">
+        <div class="large" id="zoom"></div>
+        <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">
+    </div>
+    
+    <i class="fa-solid fa-xmark closeImgProductMDIcon" id="closeImgProductMDIcon" onclick="closeImgProductMD()"></i>
+</div>
+
 @endsection
