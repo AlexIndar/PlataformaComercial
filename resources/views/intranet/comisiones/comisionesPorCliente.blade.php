@@ -75,6 +75,7 @@
                                         <th>Cobranza + de 90 dias</th>
                                         <th>Desc Neg</th>
                                         <th>Desc. Fuera de Tiempo (Neto a Des contar)</th>
+                                        <th>Nota de Credito por Incobra bilidad</th>
                                         <th>Incobra bilidad (Neto a Des contar)</th>
                                         <th>Comisión Base</th>
                                      </tr>
@@ -199,14 +200,14 @@ $.ajax({
         'dataType': 'json',
         'data': {referencia:id, fecha : date},
         'enctype': 'multipart/form-data',
-        'timeout': 4 * 60 * 60 * 1000,
+        'timeout': 8 * 60 * 60 * 1000,
         success: function(data){
             //var o= JSON.parse(data);
             var rawtData = data;
             var groupBy = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
                    var val = item[prop];
-                   groups[val] = groups[val] || {companyid: item.companyid, companyname: item.companyname,recibo_mes_actual: 0,recibo_mes_actual_siniva: 0,pendiente_saldar_mes_anteriorl_siniva: 0,pendiente_saldar_mes_actual: 0,saldada_mes_actual_siniva: 0,de0a30: 0,de31a60: 0,de61a90: 0,de91oMayor: 0,diferencias_precio: 0,descuento_fuera_tiempo: 0,incobrabilidad: 0, descneg: 0, comision_base: 0};
+                   groups[val] = groups[val] || {companyid: item.companyid, companyname: item.companyname,recibo_mes_actual: 0,recibo_mes_actual_siniva: 0,pendiente_saldar_mes_anteriorl_siniva: 0,pendiente_saldar_mes_actual: 0,saldada_mes_actual_siniva: 0,de0a30: 0,de31a60: 0,de61a90: 0,de91oMayor: 0,diferencias_precio: 0,descuento_fuera_tiempo: 0,incobrabilidad: 0, incobrabilidadADescontar: 0, descneg: 0, comision_base: 0};
                    groups[val].recibo_mes_actual += item.recibo_mes_actual;
                    groups[val].recibo_mes_actual_siniva += item.recibo_mes_actual_siniva;
                    groups[val].pendiente_saldar_mes_anteriorl_siniva += item.pendiente_saldar_mes_anteriorl_siniva;
@@ -218,6 +219,7 @@ $.ajax({
                    groups[val].de91oMayor += item.de91oMayor;
                    groups[val].diferencias_precio += item.diferencias_precio;
                    groups[val].descuento_fuera_tiempo += item.descuento_fuera_tiempo;
+                   groups[val].incobrabilidadADescontar += item.incobrabilidadADescontar;
                    groups[val].incobrabilidad += item.incobrabilidad;
                    groups[val].descneg += item.descneg;
                    groups[val].comision_base +=  item.comision_base;
@@ -227,7 +229,7 @@ $.ajax({
             }
             //console.log(groupBy(rawtData,'companyname'));
             var resultData = Object.values(groupBy(rawtData,'companyid'));
-            //console.log(resultData);
+            console.log(resultData);
             var table = $('#comisionesTable').dataTable( {
                 dom : 'Brtip',
                 paging: false,
@@ -239,11 +241,11 @@ $.ajax({
                 data : resultData,
                 columnDefs: [
                                 {
-                                  targets: [2,3,4,5,6,7,8,9,10,11,12,13,14,],
+                                  targets: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,],
                                   render:$.fn.dataTable.render.number(',', '.', 2)
                                 },
                                 {
-                                  targets: [0,2,3,4,5,6,7,8,9,10,11,12,13,14,],
+                                  targets: [0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,],
                                   orderable: false,
                                 },
                 ],
@@ -267,7 +269,7 @@ $.ajax({
                 { "data": "recibo_mes_actual"},
                 { "data": "recibo_mes_actual_siniva" },
                 { "data": "pendiente_saldar_mes_anteriorl_siniva" },
-                { "data": "saldada_mes_actual_siniva"},
+                { "data": "pendiente_saldar_mes_anteriorl_siniva" },/* "saldada_mes_actual_siniva" */
                 { "data": "recibo_mes_actual_siniva" },
                 { "data": "de0a30" },
                 { "data": "de31a60" },
@@ -275,6 +277,7 @@ $.ajax({
                 { "data": "de91oMayor" },
                 { "data" : "descneg" },
                 { "data": "descuento_fuera_tiempo" },
+                { "data": "incobrabilidadADescontar" },
                 { "data": "incobrabilidad" },
                 { "data": "comision_base" }
                 ],
