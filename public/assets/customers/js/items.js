@@ -31,7 +31,7 @@ $(document).ready(function(){
 			}
 			else
 			{
-				// $(".large").fadeOut(100);
+				$(".large").fadeOut(100);
 			}
 			if($(".large").is(":visible"))
 			{

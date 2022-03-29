@@ -467,11 +467,9 @@ display: none;
   width: auto;
   max-width: 90%;
   position: relative;
-}
-
-.imgProductMD{
-  width: 80%;
-  height: auto;
+  display: flex;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .closeImgProductMDIcon{
@@ -500,8 +498,8 @@ display: none;
 .bigImageProduct{
   object-fit: cover;
   border: 1px solid rgba(0, 0, 0, 0.165);
-  width: 90%;
-  height: 500px;
+  width: auto;
+  height: 50vh;
 }
 
 

@@ -1035,7 +1035,7 @@ function cargarInventario() {
             orderCellsTop: true,
             fixedHeader: true,
             deferRender: true,
-            lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'Todos']],
+            lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
             },
