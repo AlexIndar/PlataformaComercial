@@ -177,6 +177,35 @@ $(document).ready(function() {
         },
         success: function(data) {
             info = data;
+            var skeleton = document.getElementsByClassName('skeleton-input');
+            for(var x=0; x < skeleton.length; x++){
+                skeleton[x].classList.add('d-none');
+            }
+
+            var dropdown = document.getElementsByClassName('dropdown');
+            for(var x=0; x < dropdown.length; x++){
+                dropdown[x].classList.remove('d-none');
+            }
+
+            document.getElementById('cliente_recogeSkeleton').classList.add('d-none');
+            document.getElementById('cliente_recogeLabel').classList.remove('d-none');
+            document.getElementById('customerID').classList.remove('d-none');
+            document.getElementById('customerIDLabel').classList.remove('d-none');
+            document.getElementById('ordenCompra').classList.remove('d-none');
+            document.getElementById('ordenCompraLabel').classList.remove('d-none');
+            document.getElementById('correo').classList.remove('d-none');
+            document.getElementById('correoLabel').classList.remove('d-none');
+            document.getElementById('sucursal').classList.remove('d-none');
+            document.getElementById('sucursalLabel').classList.remove('d-none');
+            document.getElementById('envio').classList.remove('d-none');
+            document.getElementById('envioLabel').classList.remove('d-none');
+            document.getElementById('fletera').classList.remove('d-none');
+            document.getElementById('fleteraLabel').classList.remove('d-none');
+            document.getElementById('tags-promo').classList.remove('d-none');
+            document.getElementById('tags-promoLabel').classList.remove('d-none');
+            document.getElementById('cupon').classList.remove('d-none');
+            document.getElementById('cuponLabel').classList.remove('d-none');
+
         },
         error: function(error) {
             
