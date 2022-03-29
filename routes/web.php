@@ -739,18 +739,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
                                 }
-                                // $customersInfo = PromoController::getCustomersInfo($token);
-
-                                // $categories = PromoController::getCategories($customersInfo);
-                                // $giros = PromoController::getGiros($customersInfo);
-                                // $customers = PromoController::getCustomers($customersInfo);
-
-                                // $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                                // dd($infoArticulos);
-                                // $proveedores = PromoController::getProveedores($infoArticulos);
-                                // $marcas = PromoController::getMarcas($infoArticulos);
-                                // $articulos = PromoController::getArticulos($infoArticulos);
-
+                                
                                 $permissions = LoginController::getPermissions();
 
                                 return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
@@ -791,7 +780,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $marcas = $dataArticulos['marcas'];
                                 $articulos = $dataArticulos['articulos'];
 
-                                $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos);
+                                $promociones = PromoController::getAllEvents($token);
+
+
+                                $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos, $promociones);
                                 return $info;
                             });
 

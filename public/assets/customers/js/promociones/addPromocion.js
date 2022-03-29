@@ -365,6 +365,20 @@ function checkRules() {
         $('#regalos').trigger("chosen:updated");
         document.getElementById('regalos_chosen').style.width = '100%';
 
+        document.getElementById('reemplaza_chosen').style.display = "block";
+        document.getElementById('reemplazaLoading').style.display = "none";
+        var selectReemplaza = document.getElementById('reemplaza');
+        for(var x = 0; x<reglas[8].length; x++){
+            if(!reglas[8][x]['paquete'] && reglas[8][x]['idPaquete'] == 0){
+                var option = document.createElement("option");
+                option.text = reglas[8][x]['nombrePromo'];
+                option.value = reglas[8][x]['id'];
+                selectReemplaza.appendChild(option);
+            }
+        }
+        $('#reemplaza').trigger("chosen:updated");
+        document.getElementById('reemplaza_chosen').style.width = '100%';
+
         document.getElementById('categorias_chosen').style.display = "block";
         document.getElementById('categoriasLoading').style.display = "none";
         var selectCategorias = document.getElementById('categorias');
@@ -424,7 +438,7 @@ function checkRules() {
             selectArticulos.appendChild(option);
         }
         $('#articulos').trigger("chosen:updated");
-        document.getElementById('articulos_chosen').style.width = '100%';
+        document.getElementById('articulos_chosen').style.width = '100%'; 
 
         if(window.location.href.includes('promociones/paquete') || (window.location.href.includes('promociones/editar') && document.getElementById('tipoPromo').value == 'paquete')){ //SI ES PAQUETE, AGREGAR REGALOS A SUBREGLAS
             document.getElementById('regalosSub_chosen').style.display = "block";
@@ -461,6 +475,7 @@ function checkRules() {
     } 
     else{
         document.getElementById('regalos_chosen').style.display = "none";
+        document.getElementById('reemplaza_chosen').style.display = "none";
         document.getElementById('giros_chosen').style.display = "none";
         document.getElementById('marcas_chosen').style.display = "none";
         document.getElementById('proveedores_chosen').style.display = "none";
@@ -559,6 +574,7 @@ function validarPromo(){
         var articulos = $('#articulos').chosen().val();
     
         var regalos = $('#regalos').chosen().val();
+        var reemplaza = $('#reemplaza').chosen().val();
     
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
@@ -617,7 +633,8 @@ function validarPromo(){
         else    
             idPromo = 0;
 
-    
+        
+
         var json = { 
             id: idPromo, 
             nombrePromo: document.getElementById('nombrePromo').value,
@@ -626,6 +643,7 @@ function validarPromo(){
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),
+            reemplazaRegalo: reemplaza.toString() != '' ? parseInt(reemplaza.toString()) : 0,
             categoriaClientes: categorias.toString(),
             categoriaClientesIncluye: document.getElementById('listaCategoriaClientes').value == 'blanca' ? parseInt('1'): parseInt('0'),
             gruposclientesIds: giros.toString(),
@@ -646,28 +664,28 @@ function validarPromo(){
         console.log(json);
         console.log(JSON.stringify(json));
 
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "storePromo",
-            'type': 'POST',
-            'dataType': 'json', 
-            'data': json,
-            'enctype': 'multipart/form-data',
-            'timeout': 2*60*60*1000,
-            success: function(data){
-                if(data['status'] != undefined){
-                    alert(Object.entries(data['errors']));
-                }
-                else{
-                    window.location.href = '/promociones';
-                }
-            }, 
-            error: function(error){
-                    // window.location.href = '/promociones';
-             }
-        });
+        // $.ajax({
+        //     'headers': {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     },
+        //     'url': "storePromo",
+        //     'type': 'POST',
+        //     'dataType': 'json', 
+        //     'data': json,
+        //     'enctype': 'multipart/form-data',
+        //     'timeout': 2*60*60*1000,
+        //     success: function(data){
+        //         if(data['status'] != undefined){
+        //             alert(Object.entries(data['errors']));
+        //         }
+        //         else{
+        //             window.location.href = '/promociones';
+        //         }
+        //     }, 
+        //     error: function(error){
+        //             // window.location.href = '/promociones';
+        //      }
+        // });
     }
 
     if(!save){

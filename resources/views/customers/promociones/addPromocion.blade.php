@@ -144,6 +144,16 @@
                             <h5 id="regalosLoading">Cargando regalos ...</h5>
                     </div>
                 </div> 
+                <div class="row reglas-row">
+                    <div class="col-lg-2 col-md-3 col-12 text-center">
+                        <h5>Reemplaza:</h5>
+                    </div>
+                    <div class="col-lg-10 col-md-9 col-12">
+                            <select id="reemplaza" name="reemplaza[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none">
+                            </select>
+                            <h5 id="reemplazaLoading">Cargando promociones ...</h5>
+                    </div>
+                </div> 
 
                 <br><br>
                 <hr>
@@ -406,7 +416,7 @@
             <br>
             <div class="row-12">
                 <button class="btn btn-blue w-100" id="btn-validar" onclick="guardarPromocion()">Validar</button>
-                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="guardarPromocion()" disabled>Guardar</button>
+                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="guardarPromocion()" disabled>Guardar</button> 
             </div>
         </div>
 
