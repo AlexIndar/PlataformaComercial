@@ -7,6 +7,7 @@ var maxIndexRowDescuentos = 1;
 var update = false;
 
 $('document').ready(function(){
+    $("body").addClass("sidebar-collapse");
 
     if(window.location.href.includes('promociones/editar')){ //EDITAR PAQUETE
         update = true;
@@ -733,6 +734,7 @@ function storeSubreglas(){
                     puntosIndar: packageHeader['puntosIndar'],
                     plazosIndar: packageHeader['plazosIndar'],
                     regalosIndar: subreglas[y]['regalos'] == null ? "" : subreglas[y]['regalos'].toString(),
+                    reemplazaRegalo: 0,
                     categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
                     categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
                     gruposclientesIds: packageHeader['gruposclientesIds'],
@@ -828,6 +830,7 @@ function storeHeader(){
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: document.getElementById('tipoCuota').value == 'General' ? parseInt( document.getElementById('plazos').value) : 0,
             regalosIndar: regalos.toString(),
+            reemplazaRegalo: 0,
             categoriaClientes: categorias.toString(),
             categoriaClientesIncluye: 1,
             gruposclientesIds: giros.toString(),

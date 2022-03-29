@@ -2,6 +2,7 @@ var startDate;
 var endDate;
 var reglas = [];
 $('document').ready(function(){
+    $("body").addClass("sidebar-collapse");
 
     // $('.modal-background').click(function() {
     //     closeModal();
@@ -664,28 +665,28 @@ function validarPromo(){
         console.log(json);
         console.log(JSON.stringify(json));
 
-        // $.ajax({
-        //     'headers': {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     },
-        //     'url': "storePromo",
-        //     'type': 'POST',
-        //     'dataType': 'json', 
-        //     'data': json,
-        //     'enctype': 'multipart/form-data',
-        //     'timeout': 2*60*60*1000,
-        //     success: function(data){
-        //         if(data['status'] != undefined){
-        //             alert(Object.entries(data['errors']));
-        //         }
-        //         else{
-        //             window.location.href = '/promociones';
-        //         }
-        //     }, 
-        //     error: function(error){
-        //             // window.location.href = '/promociones';
-        //      }
-        // });
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "storePromo",
+            'type': 'POST',
+            'dataType': 'json', 
+            'data': json,
+            'enctype': 'multipart/form-data',
+            'timeout': 2*60*60*1000,
+            success: function(data){
+                if(data['status'] != undefined){
+                    alert(Object.entries(data['errors']));
+                }
+                else{
+                    window.location.href = '/promociones';
+                }
+            }, 
+            error: function(error){
+                    // window.location.href = '/promociones';
+            }
+        });
     }
 
     if(!save){
@@ -728,11 +729,11 @@ function clearSelectionAccept(){
 }
 
 function addPromoRules(rules){
-    console.log(rules);
     startDate = rules['fechaInicio'].split('T')[0];
     endDate = rules['fechaFin'].split('T')[0];
     var pedidoPromoRules = rules['pedidoPromoRulesD'];
     var regalos = rules['regalosIndar'];
+    var reemplazaRegalo = rules['reemplazaRegalo'];
     var clientes = rules['clientesId'];
     var categorias = rules['categoriaClientes'];
     var proveedores = [];
@@ -742,6 +743,9 @@ function addPromoRules(rules){
     if(regalos != null){
         regalos = regalos.split(',');
         $('#regalos').val(regalos).trigger('chosen:updated');
+    }
+    if(reemplazaRegalo != 0){
+        $('#regalos').val(reemplazaRegalo).trigger('chosen:updated');
     }
     if(clientes != null){
         clientes = clientes.split(',');
