@@ -284,12 +284,12 @@
         
         <div class="col">
             <div class="row-12 d-flex justify-content-center align-items-center d-column" id="div-loading">
-                <img src="{{asset('assets/customers/gif/loading.gif')}}" id="loading" width="30px">
+                <div class="spinner-border text-secondary" id="btnSpinner" ></div>
             </div>
             <br>
             <div class="row-12">
-                <button class="btn btn-blue w-100" id="btn-validar" onclick="validarPaquete()">Validar Paquete</button>
-                <button class="btn btn-blue w-100 d-none" id="btn-add-sub" onclick="validarPaquete()"><i class="fas fa-plus"></i> Agregar subregla</button>
+                <button class="btn btn-blue btnActions w-100" id="btn-validar" onclick="validarPaquete()">Validar Paquete</button>
+                <button class="btn btn-blue w-100 mt-3" id="btn-add-sub" onclick="validarPaquete()" disabled><i class="fas fa-plus"></i> Agregar subregla</button>
                 <button class="btn btn-blue w-100 mt-3 d-none" id="btn-guardar" onclick="storePaquete()"><i class="fas fa-save"></i> Guardar Paquete</button>
             </div>
         </div>

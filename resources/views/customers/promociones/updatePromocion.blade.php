@@ -426,8 +426,8 @@
             </div>
             <br>
             <div class="row-12">
-                <button class="btn btn-blue w-100" id="btn-validar" onclick="guardarPromocion()">Validar</button>
-                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="guardarPromocion()" disabled>Guardar</button>
+                <button class="btn btn-blue btnActions w-100" id="btn-validar" onclick="validarPromo()">Validar</button>
+                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="validarPromo()" disabled>Guardar</button> 
             </div>
         </div>
 

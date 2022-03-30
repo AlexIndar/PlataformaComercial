@@ -314,6 +314,7 @@ class PromoController extends Controller
             "puntosIndar" => $json->puntosIndar,
             "plazosIndar" => $json->plazosIndar,
             "regalosIndar" => $json->regalosIndar,
+            "reemplazaRegalo" => $json->reemplazaRegalo,
             "categoriaClientes" => $json->categoriaClientes,
             "categoriaClientesIncluye" => $json->categoriaClientesIncluye,
             "gruposclientesIds" => $json->gruposclientesIds,

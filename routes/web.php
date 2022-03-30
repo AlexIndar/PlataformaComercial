@@ -631,7 +631,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
                                 }
-                                // dd($response->body());
                                 return $response;
                             });
 

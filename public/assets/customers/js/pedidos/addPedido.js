@@ -39,6 +39,25 @@ var entityCte;
 
 $(document).ready(function() {
 
+    //Inicia Ajax
+    $(document).ajaxStart(function() {
+        document.getElementById("btnSpinner").style.display = "block";
+        var btnActions = document.getElementsByClassName('btn-group-buttons');
+        for(var x=0; x < btnActions.length; x++){
+            btnActions[x].disabled = true;
+        }
+    });
+
+    //Func Termina Ajax
+    $(document).ajaxStop(function() {
+        //Esconde y muestra DIVISORES
+        document.getElementById("btnSpinner").style.display = "none";
+        var btnActions = document.getElementsByClassName('btn-group-buttons');
+        for(var x=0; x < btnActions.length; x++){
+            btnActions[x].disabled = false;
+        }
+    } );
+
     entity = document.getElementById('entity').value;
     entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
@@ -658,7 +677,7 @@ function prepareJsonSeparaPedidos(separa){
 
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
     if(separar && json == null){
-        document.getElementById("btnSpinner").style.display = "block";
+        // document.getElementById("btnSpinner").style.display = "block";
         setTimeout(prepareJsonSeparaPedidos(true), 2000);
     }
     if(separar && json != null){
@@ -1195,7 +1214,7 @@ function createTablePedido(){
         document.getElementById('messageAddProducts').classList.remove('d-none');
     }
 
-    document.getElementById("btnSpinner").style.display = "none";
+    // document.getElementById("btnSpinner").style.display = "none";
 
 
 
@@ -1816,7 +1835,7 @@ function saveNS(){
                     specialAuthorization = pedido[x]['items'][y]['autorizaDesgar'];
                 }
                 lineItems.push(item);
-            }
+            } 
             var temp = {
                 internalId: 0,
                 idCustomer: internalId,
@@ -1862,7 +1881,7 @@ function saveNS(){
                     id: "0",
                     txt: plazo
                 },
-                eventSpecialDiscount: descuento - desneg, //descuento original del subpedido
+                eventSpecialDiscount: desneg != 0 ? descuento - desneg : descuento - desgar, //descuento original del subpedido
                 customerDiscountPP: descuento, //total de descuento cabecera con desneg o desgar
                 discountSpecial: desneg != 0 ? desneg : desgar, //desneg o desgar
                 specialAuthorization: specialAuthorization,

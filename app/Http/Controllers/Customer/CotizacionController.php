@@ -71,12 +71,25 @@ class CotizacionController extends Controller
         $typeOrder['id'] = '1';
         $typeOrder['txt'] = "";
 
+        $desneg = 0;
+        $desgar = 0;
+        $descuento = intval($cotizacion->order[$index-1]->descuento);
+        $specialAuthorization = "";
+
         $lineItems = [];
         for($x = 0; $x < count($cotizacion->order[$index-1]->items); $x++){
             $temp['itemid'] = $cotizacion->order[$index-1]->items[$x]->itemid;
             $temp['quantity'] = $cotizacion->order[$index-1]->items[$x]->cantidad;
             $temp['listprice'] = $customerHeat[0]->priceList;
             array_push($lineItems, $temp);
+            if($cotizacion->order[$index-1]->items[$x]->desneg != 0){
+                $desneg = $cotizacion->order[$index-1]->items[$x]->desneg;
+                $specialAuthorization = $cotizacion->order[$index-1]->items[$x]->autorizaDesneg;
+            }
+            if($cotizacion->order[$index-1]->items[$x]->desgar != 0){
+                $desgar = $cotizacion->order[$index-1]->items[$x]->desgar;
+                $specialAuthorization = $cotizacion->order[$index-1]->items[$x]->autorizaDesgar;
+            }
         }
 
         $shippingWay['id'] = 0;
@@ -91,9 +104,12 @@ class CotizacionController extends Controller
         $methodPayment['id'] = "10";
         $methodPayment['txt'] = "";
         $events['id'] = "0";
-        $events['txt'] = "FALTA";
+        $events['txt'] = $cotizacion->order[$index-1]->evento == null ? "" : $cotizacion->order[$index-1]->evento;
         $plazoEvento['id'] = "0";
         $plazoEvento['txt'] = $cotizacion->order[$index-1]->plazo;
+
+        $listNS = [];
+       
 
         $json['internalId'] = 0;
         $json['idCustomer'] = $customerHeat[0]->internalID;
@@ -111,17 +127,23 @@ class CotizacionController extends Controller
         $json['user'] = $username;
         $json['methodPayment'] = $methodPayment;
         $json['useCFDI'] = null;
-        $json['comments'] = $cotizacion->comments;
+        $json['comments'] = $cotizacion->comments == null ? "" : $cotizacion->comments;
         $json['events'] = $events;
         $json['plazoEvento'] = $plazoEvento;
-        $json['eventSpecialDiscount'] = "FALTA";
-        $json['customerDiscountPP'] = intval($cotizacion->order[$index-1]->descuento);
-        $json['discountSpecial'] = "FALTA";
-        $json['specialAuthorization'] = "FALTA";
-        $json['numPurchase'] = $cotizacion->orderC;
-        $json['desneg'] = "FALTA";
-        $json['desgar'] = "FALTA";
-        dd($json);
+        $json['eventSpecialDiscount'] = $desneg != 0 ? $descuento - $desneg : $descuento - $desgar;
+        $json['customerDiscountPP'] = $descuento;
+        $json['discountSpecial'] = $desneg != 0 ? $desneg : $desgar;
+        $json['specialAuthorization'] = $specialAuthorization;
+        $json['numPurchase'] = $cotizacion->orderC == null ? "" : $cotizacion->orderC;
+        $json['desneg'] = $desneg != 0 ? 1 : 0;
+        $json['desgar'] = $desgar != 0 ? 1 : 0;
+
+        array_push($listNS, $json);
+        $storeNS = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EnviarPedidosNetsuite', [
+            "prePedido" => $listNS
+        ]);
+        $response = json_decode($storeNS->body());
+        return $response;
     }
 
 }

@@ -311,8 +311,8 @@
             </div>
             <br>
             <div class="row-12">
-                <button class="btn btn-blue w-100" id="btn-validar" onclick="validarPaquete()">Validar Paquete</button>
-                <button class="btn btn-blue w-100 d-none" id="btn-add-sub" onclick="validarPaquete()"><i class="fas fa-plus"></i> Agregar subregla</button>
+                <button class="btn btn-blue btnActions w-100" id="btn-validar" onclick="validarPaquete()">Validar Paquete</button>
+                <button class="btn btn-blue w-100 mt-3" id="btn-add-sub" onclick="validarPaquete()" disabled><i class="fas fa-plus"></i> Agregar subregla</button>
                 <button class="btn btn-blue w-100 mt-3 d-none" id="btn-guardar" onclick="storePaquete()"><i class="fas fa-save"></i> Guardar Paquete</button>
             </div>
         </div>

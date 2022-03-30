@@ -4,6 +4,25 @@ var reglas = [];
 $('document').ready(function(){
     $("body").addClass("sidebar-collapse");
 
+    //Inicia Ajax
+    $(document).ajaxStart(function() {
+        document.getElementById('div-loading').style.opacity = '1';
+        var btnActions = document.getElementsByClassName('btnActions');
+        for(var x=0; x < btnActions.length; x++){
+            btnActions[x].disabled = true;
+        }
+    });
+
+    //Func Termina Ajax
+    $(document).ajaxStop(function() {
+        //Esconde y muestra DIVISORES
+        document.getElementById('div-loading').style.opacity = '0';
+        var btnActions = document.getElementsByClassName('btnActions');
+        for(var x=0; x < btnActions.length; x++){
+            btnActions[x].disabled = false;
+        }
+    } );
+
     // $('.modal-background').click(function() {
     //     closeModal();
     // });
@@ -366,19 +385,22 @@ function checkRules() {
         $('#regalos').trigger("chosen:updated");
         document.getElementById('regalos_chosen').style.width = '100%';
 
-        document.getElementById('reemplaza_chosen').style.display = "block";
-        document.getElementById('reemplazaLoading').style.display = "none";
-        var selectReemplaza = document.getElementById('reemplaza');
-        for(var x = 0; x<reglas[8].length; x++){
-            if(!reglas[8][x]['paquete'] && reglas[8][x]['idPaquete'] == 0){
-                var option = document.createElement("option");
-                option.text = reglas[8][x]['nombrePromo'];
-                option.value = reglas[8][x]['id'];
-                selectReemplaza.appendChild(option);
+        if(document.getElementById('reemplaza_chosen') != undefined){
+            document.getElementById('reemplaza_chosen').style.display = "block";
+            document.getElementById('reemplazaLoading').style.display = "none";
+            var selectReemplaza = document.getElementById('reemplaza');
+            for(var x = 0; x<reglas[8].length; x++){
+                if(!reglas[8][x]['paquete'] && reglas[8][x]['idPaquete'] == 0){
+                    var option = document.createElement("option");
+                    option.text = reglas[8][x]['nombrePromo'];
+                    option.value = reglas[8][x]['id'];
+                    selectReemplaza.appendChild(option);
+                }
             }
+            $('#reemplaza').trigger("chosen:updated");
+            document.getElementById('reemplaza_chosen').style.width = '100%';
         }
-        $('#reemplaza').trigger("chosen:updated");
-        document.getElementById('reemplaza_chosen').style.width = '100%';
+       
 
         document.getElementById('categorias_chosen').style.display = "block";
         document.getElementById('categoriasLoading').style.display = "none";
@@ -476,7 +498,8 @@ function checkRules() {
     } 
     else{
         document.getElementById('regalos_chosen').style.display = "none";
-        document.getElementById('reemplaza_chosen').style.display = "none";
+        if(document.getElementById('reemplaza_chosen') != undefined)
+            document.getElementById('reemplaza_chosen').style.display = "none";
         document.getElementById('giros_chosen').style.display = "none";
         document.getElementById('marcas_chosen').style.display = "none";
         document.getElementById('proveedores_chosen').style.display = "none";
@@ -510,18 +533,7 @@ function downloadTemplate(template){
     window.location.href = '/downloadTemplate'+template;
 }
 
-function guardarPromocion(){   
-    if(document.getElementById('btn-guardar').disabled){
-        document.getElementById('div-loading').style.opacity = '1';
-        setTimeout(validarPromo, 2000);
-    }
-    else{
-        validarPromo();
-    } 
-}
-
 function validarPromo(){
-    document.getElementById('div-loading').style.opacity = '0';
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -662,8 +674,6 @@ function validarPromo(){
             cuotasPersonalizadas: cuotasList,
         }
 
-        console.log(json);
-        console.log(JSON.stringify(json));
 
         $.ajax({
             'headers': {
@@ -699,6 +709,7 @@ function validarPromo(){
 
     if(save && document.getElementById('btn-guardar').disabled){
         document.getElementById('btn-guardar').disabled = false;
+        document.getElementById('btn-guardar').classList.add('btnActions');
     }
 }
 
@@ -745,7 +756,7 @@ function addPromoRules(rules){
         $('#regalos').val(regalos).trigger('chosen:updated');
     }
     if(reemplazaRegalo != 0){
-        $('#regalos').val(reemplazaRegalo).trigger('chosen:updated');
+        $('#reemplaza').val(reemplazaRegalo).trigger('chosen:updated');
     }
     if(clientes != null){
         clientes = clientes.split(',');

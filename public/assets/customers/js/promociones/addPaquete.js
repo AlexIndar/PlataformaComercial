@@ -108,7 +108,6 @@ $('document').ready(function(){
                 for(var x=0; x<subreglas.length; x++){
                     subreglas[x]['descuentosCategorias'] = subreglas[x]['descuentosCategorias'].sort((a,b) => b.descuento - a.descuento);
                 }
-                console.log(subreglas);
                 createTableSubreglas();
                 document.getElementById('subreglasTitle').classList.remove('d-none');
                 document.getElementById('subreglasTable').classList.remove('d-none');
@@ -237,7 +236,6 @@ function addClientesCuotas(json, id){
 }
 
 function validarPaquete(){
-    document.getElementById('div-loading').style.opacity = '0';
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -283,7 +281,7 @@ function validarPaquete(){
 
     
 
-    if(save && !document.getElementById('btn-add-sub').classList.contains('d-none')){
+    if(save && !document.getElementById('btn-add-sub').disabled){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();    
@@ -350,8 +348,9 @@ function validarPaquete(){
         modal.classList.add("active-modal");
     }
 
-    if(save && document.getElementById('btn-add-sub').classList.contains('d-none')){
-        document.getElementById('btn-add-sub').classList.remove('d-none');
+    if(save && document.getElementById('btn-add-sub').disabled){
+        document.getElementById('btn-add-sub').disabled = false;
+        document.getElementById('btn-add-sub').classList.add('btnActions');
         document.getElementById('btn-validar').classList.add('d-none');
     }
 }
@@ -780,7 +779,7 @@ function storeSubreglas(){
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    // window.location.href = '/promociones';
+    window.location.href = '/promociones';
 }
 
 function storeHeader(){
