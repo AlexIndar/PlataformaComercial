@@ -677,7 +677,6 @@ function prepareJsonSeparaPedidos(separa){
 
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
     if(separar && json == null){
-        // document.getElementById("btnSpinner").style.display = "block";
         setTimeout(prepareJsonSeparaPedidos(true), 2000);
     }
     if(separar && json != null){
@@ -736,6 +735,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
     }
     if(!separar){
         json = JSON.parse(json);
+        console.log(json);
         var arr = [];
         for(var x = 0; x < json.length; x++){
             var art = items.find(o => o.itemid === json[x]['itemID']);
@@ -766,6 +766,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
+    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -776,8 +777,10 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
     if(json.length>0){
         pedido = [];
         for(var x=0; x<json.length; x++){
+            var art;
             if(json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined){
-                var art = items.find(o => o.itemid === json[x]['itemID']);
+                art = items.find(o => o.itemid === json[x]['itemID']);
+                console.log(art);
                 ofertasVolumen = "";
                 if(art['promoART'] != null){
                     for(var i=0; i<art['promoART'].length; i++){
@@ -789,6 +792,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                         }
                     }
                 }
+
             }
            
             
@@ -803,7 +807,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                 purchasedescription: art['purchasedescription'],
                 multiploVenta: json[x]['multiplo'],
                 cantidad: json[x]['quantity'],
-                price: json[x]['punitario'],
+                price: art['price'],
                 unidad: art['unidad'],
                 promo: json[x]['promo'],
                 marca: json[x]['marca'],
@@ -858,7 +862,6 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
 }
 
 function getItemById(item, separa) {
-    console.clear();
     var entity = document.getElementById('entity').value;
     var data = { id: item['articulo'], entity: entity };
     var cantidad = item['cantidad'];
@@ -866,7 +869,7 @@ function getItemById(item, separa) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    });
+    }); 
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
@@ -880,11 +883,13 @@ function getItemById(item, separa) {
             cantItemsCargados ++;
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
+                console.log(data);
                 var itemSeparar = {
                     itemID: data[0]['itemid'],
                     codCustomer: entity,
                     quantity: validarMultiplo(data[0]['multiploVenta'], cantidad),
-                    punitario: data[0]['price'],
+                    plista: data[0]['price'],
+                    punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
                     multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
                     regalo: 0,
                     existencia: art['disponible']
@@ -1126,6 +1131,7 @@ function reloadInventario(){
 }
 
 function createTablePedido(){
+    console.clear();
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -1140,6 +1146,7 @@ function createTablePedido(){
 
     var fila = 1;
     for(var x = 0; x < pedido.length; x++){
+        console.log(pedido);
         var subtotal = 0;
         for(var y = 0; y < pedido[x]['items'].length; y++){
             var cantidad = validarMultiplo(pedido[x]['items'][y]['multiploVenta'], pedido[x]['items'][y]['cantidad']);
