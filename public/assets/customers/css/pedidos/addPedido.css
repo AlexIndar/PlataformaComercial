@@ -244,9 +244,12 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 .detalles-item{
   font-size: 13px !important;
   font-weight: 500 !important;
+  min-width: 180px;
+  line-height: 3px !important;
+}
+
+.detalles-item-descuentos{
   min-width: 250px !important;
-  white-space: nowrap !important;
-  line-height: 5px !important;
 }
 
 .table-actions{
@@ -256,6 +259,7 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
 .detalles-green{
   color: #139966 !important;
+  margin-top: 5px !important;
 }
 
 .quantityBtn{

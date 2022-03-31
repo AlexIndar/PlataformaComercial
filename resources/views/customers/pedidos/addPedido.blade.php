@@ -324,42 +324,36 @@
                                             <th class="customHeader">Cod Art</th>
                                             <th class="customHeader">Descripción</th>
                                             <th class="customHeader">Detalles</th>
-                                            <th class="customHeader">Cantidad</th>
-                                            <th class="customHeader">Precio</th>
                                             <th class="customHeader">Descuentos</th>
-                                            <th class="customHeader">Promo</th>
+                                            <th class="customHeader">Promo Vol</th>
                                             <th class="customHeader">Acciones</th>
                                         </tr>
                                         <tr>
                                             <th>Img</th>
                                             <th>Categoría</th>
-                                            <th>Fab</th>
-                                            <th>Fam</th>
-                                            <th>Cod Art</th>
+                                            <th>Fabricante</th>
+                                            <th>Familia</th>
+                                            <th>Artículo</th>
                                             <th>Descripción</th>
                                             <th>Detalles</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
                                             <th>Descuentos</th>
-                                            <th>Promo</th>
+                                            <th>Promo Vol</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
 
                                     <tfoot>
                                         <tr>
-                                            <th>Img</th>
-                                            <th>Categoría</th>
-                                            <th>Fab</th>
-                                            <th>Fam</th>
-                                            <th>Cod Art</th>
-                                            <th>Descripción</th>
-                                            <th>Detalles</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Descuentos</th>
-                                            <th>Promo</th>
-                                            <th>Acciones</th>
+                                            <th class="customHeader">Img</th>
+                                            <th class="customHeader">Categoría</th>
+                                            <th class="customHeader">Fab</th>
+                                            <th class="customHeader">Fam</th>
+                                            <th class="customHeader">Cod Art</th>
+                                            <th class="customHeader">Descripción</th>
+                                            <th class="customHeader">Detalles</th>
+                                            <th class="customHeader">Descuentos</th>
+                                            <th class="customHeader">Promo Vol</th>
+                                            <th class="customHeader">Acciones</th>
                                         </tr>
                                     </tfoot>
 

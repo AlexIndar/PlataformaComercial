@@ -1036,24 +1036,22 @@ function cargarInventario() {
                 detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>"+items[x]['clasificacionArt']+"</span></p>";
     
                 arr.push(detalles);
-                arr.push("<input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>")
-                arr.push("<p class='text-inventario' id='precioCliente-"+items[x]['itemid']+"'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
+
                 var precioSugerido;
+                var descuentos = "<p class='detalles-item detalles-item-descuentos'>Precio lista: <span class='detalles-item-right'>"+precioLista+" + IVA</span></p>";
+                var promociones = "";
                 if(items[x]['promoART'] == null){
                     precioSugerido = items[x]['price'] / 0.65;
                     precioSugerido = (precioSugerido).toLocaleString('en-US', {
                         style: 'currency',
                         currency: 'USD',
                     });
-                    var descuentos = "<p class='detalles-item'>Precio lista: <span class='detalles-item-right'>"+precioLista+" + IVA</span></p>";
-                    descuentos = descuentos + "<p class='detalles-item'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
-                    arr.push(descuentos);
-                    arr.push("<p>Sin promoción</p>");
+                    
+                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
+                    promociones = "<p>Sin promoción</p>";
                 }
                 else{
                     precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
-                    var promociones = "";
-                    var descuentos = "<p class='detalles-item'>Precio lista: <span class='detalles-item-right'>"+precioLista+" + IVA</span></p>";
                     for(var y=0; y < items[x]['promoART'].length; y++){ 
                         if(items[x]['promoART'][y]['cantidad'] == 1)
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
@@ -1065,19 +1063,19 @@ function cargarInventario() {
                             style: 'currency',
                             currency: 'USD',
                         });
-                        descuentos = descuentos + "<p class='detalles-item'>Precio cliente: <span class='text-red'> (-"+items[x]['promoART'][y]['descuento']+"%) </span> <span class='detalles-item-right' style='width: auto !important'> <span class='text-blue'>"+precioClienteDescuento+"</span> + IVA</span></p>"
+                        descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Precio cliente: <span class='text-red'> (-"+items[x]['promoART'][y]['descuento']+"%) </span> <span class='detalles-item-right' style='width: auto !important'> <span class='text-blue'>"+precioClienteDescuento+"</span> + IVA</span></p>"
                     }
                     precioSugerido = (precioSugerido).toLocaleString('en-US', {
                         style: 'currency',
                         currency: 'USD',
                     });
-                    descuentos = descuentos + "<p class='detalles-item'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
-
-                    arr.push(descuentos);
-                    arr.push(promociones);
+                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>";
                 }
-                arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>");
-    
+                descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>P. Pago IVA incluído: <span class='detalles-item-right' id='precioIVA-"+items[x]['itemid']+"' style='width: auto !important'>"+precioIVA+"</span></p>"
+                descuentos = descuentos + "<div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>";
+                arr.push(descuentos);
+                arr.push(promociones);
+                arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2'></i></div>");
                 dataset.push(arr);
             }
         }
@@ -1085,36 +1083,33 @@ function cargarInventario() {
          // Setup - add a text input to each footer cell
         $('#tablaInventario thead tr:eq(1) th').each( function () {
             var title = $(this).text();
-            $(this).html( '<input type="text" placeholder="Buscar '+title+'" class="column_search" />' );
+            $(this).html( '<input type="text" placeholder="'+title+'" class="column_search" />' );
         } );
     
         var table = $("#tablaInventario").DataTable({
+            // dom : 'Bfrtip',
             data: dataset,
             pageLength : 5,
             orderCellsTop: true,
             fixedHeader: true,
             deferRender: true,
             lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
+            // buttons: [
+            //     {
+            //         extend:    'excel',
+            //         text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+            //         titleAttr: 'Descargar Excel'
+            //     }
+            // ],
             "initComplete": function (settings, json) {  
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
             },
             'columnDefs': [
-                {
-                    "targets": 1, // your case first column
-                    "className": "td-center",
-               },
-               {
-                    "targets": 2,
-                    "className": "td-center",
-               },
-               {
-                    "targets": 3,
-                    "className": "td-center",
-               },
-               {
-                    "targets": 4,
-                    "className": "td-center",
-               }
+                {"targets": 0,"className": "td-center"},
+                {"targets": 1,"className": "td-center"},
+                {"targets": 2,"className": "td-center"},
+                {"targets": 3,"className": "td-center"},
+                {"targets": 4,"className": "td-center"}
              ]
         });
 
@@ -2180,17 +2175,18 @@ function updatePrecioIVA(itemid){
         currency: 'USD',
     });
 
-    document.getElementById('precioIVA-'+itemid).innerHTML = "<strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído";
+    document.getElementById('precioIVA-'+itemid).innerHTML = precioIVA;
 }
 
 function updatePrecioCliente(itemid){
     var precio = getPrecioClientePromo(itemid);
-    document.getElementById('precioCliente-'+itemid).innerHTML = "<strong>"+precio+" + IVA</strong>"; 
     updatePrecioIVA(itemid);  
 }
 
 function getPrecioClientePromo(itemid){
+    console.log("Item: "+ itemid);
     var cant = document.getElementById('inputPrecioCliente-'+itemid).value;
+    console.log("Cantidad: "+ cant);
     var precio;
     if(cant != '' && cant != '0'){
         var art = items.find(o => o.itemid === itemid);
@@ -2225,6 +2221,9 @@ function getPrecioClientePromo(itemid){
             currency: 'USD',
         });
     }
+
+    console.log("Precio: "+ precio);
+
 
     return precio;
 }
