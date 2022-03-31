@@ -1596,8 +1596,8 @@ function createJsonSolicitud(zone) {
         factura: $('input[name="refSoli"]:checked').val() == 'facturas' ? facturasSol : null,
         observations: null
     };
-    // console.log(json);
-    // console.log(JSON.stringify(json));
+    //console.log(json);
+    //console.log(JSON.stringify(json));
     calLengthMB(json);
     return json;
 }
@@ -2617,6 +2617,7 @@ function manejoArchivos(archivos) {
                     if (archivos[i].fileStr != "") {
                         // document.getElementById('inputGroupFile04').value = "Archivo";
                         document.getElementById('label-inputGroupFile04').innerHTML = "ComprobanteDomicilio.jpg";
+                        document.getElementById('label-inputGroupFile05').innerHTML = "ComprobanteDomicilioReversa.jpg";
                         comprobanteDomicilio = archivos[i].fileStr;
                     }
                     break;
@@ -2719,6 +2720,7 @@ function continueModal(facturas, archivos, data) {
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
     valiteTypeForm();
+    console.log(document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value);
     manejoArchivos(archivos);
     cargarArchivos(archivos);
     document.getElementById('creditoInput').value = data.credito;
@@ -2767,8 +2769,8 @@ function continueModal(facturas, archivos, data) {
     $('#inputGroupSelect01').selectpicker("refresh");
     document.getElementById('antiguedad').value = data.cliente.tiempoConst;
     changeAntiguedad();
-    if (data.cliente.contactos.length <= 1) {
-        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "") {
+    if (data.cliente.contactos.length >= 1) {
+        if (data.cliente.contactos[0].nombre != "" && data.cliente.contactos[0].phone != "0") {
             addContactDataCon(data.cliente.contactos);
             contactos = data.cliente.contactos;
         }
@@ -3370,7 +3372,6 @@ const sendMail = (fol, tps, cli, status) => {
         case 3:
             auxStatus = "Guardado de Solicitud";
             break;
-
     }
 
     switch (tps) {
@@ -3396,8 +3397,8 @@ const sendMail = (fol, tps, cli, status) => {
         zona: zona,
         emails: emailList,
         status: auxStatus,
-    }
-    console.log(mailJson);
+    };
+    // console.log(mailJson);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
