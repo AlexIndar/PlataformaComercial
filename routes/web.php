@@ -485,7 +485,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $entity = $request->entity;
                                 $data = SaleOrdersController::getEventosCliente($token, $entity);
                                 return  $data;
-                            });
+                            }); 
 
                             Route::post('/pedido/nuevo/getItemByID', function (Request $request){
                                 $token = TokenController::getToken();

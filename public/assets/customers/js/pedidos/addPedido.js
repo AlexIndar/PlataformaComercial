@@ -1163,9 +1163,9 @@ function createTablePedido(){
                 addRowPedido(pedido[x]['items'][y], fila, x);
             }
             else if(pedido[x]['items'][y]['addRegalo'] == 1){
+                pedido[x]['items'][y]['price'] = 0.01;
                 addRowRegalo(pedido[x]['items'][y], fila, x);
             }
-            
             fila ++;
         }
     }
