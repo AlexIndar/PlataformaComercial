@@ -96,8 +96,14 @@ $(document).ready(function() {
     // editarContactos();
     $('#inputGroupFile01').change(function(e) {
         var fileName = e.target.files[0].name;
-        constanciaSituacionFiscal = toBase64(e.target.files[0], 1, null);
-        $('#label-inputGroupFile01').html(fileName);
+        if (validarImg(e.target.files[0])) {
+            let blob = comprimirImagen(e.target.files[0], 40);
+            // console.log(blob);
+            toBase64(blob, 1, null);
+            $('#label-inputGroupFile01').html(fileName);
+        }
+        // constanciaSituacionFiscal = toBase64(e.target.files[0], 1, null);
+        // $('#label-inputGroupFile01').html(fileName);
     });
 
     $('#inputGroupFile02').change(function(e) {
@@ -360,6 +366,7 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
     reader.onload = function(subtype) {
         var result = reader.result.split(',')[1];
         base64 = result;
+        console.log(result);
         archivosBase64.push(base64);
     };
     reader.onerror = function(error) {
@@ -2012,6 +2019,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
                 var actaList = filesList.filter(r => r.type == 9 && r.subType != -1).length > 0 ? filesList.filter(r => r.type == 9 && r.subType != -1) : null;
                 /*console.log("Entra");
                 console.log(actaList);*/
+
                 if (actaList != null) {
                     document.getElementById("aCSection").style.display = "flex";
                     var fileActa = "";
@@ -2024,6 +2032,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
                         </div>`;
                     }
                     document.getElementById("acRow").innerHTML = fileActa;
+                    getAlert("alertAC", data.observations.actaConstitutiva);
                 }
 
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;
@@ -2031,7 +2040,9 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
                     document.getElementById("cRSection").style.display = "flex";
                     document.getElementById("cartRButtons").innerHTML = getButtonsFiles(data2.cartaResponsiva, 12);
                     getAlert("alertAC", data.observations.actaConstitutiva);
+
                 }
+
             }
 
             if (data.referencias.length > 0) {
@@ -3412,3 +3423,60 @@ const validaCPEdit = () => {
 const editarContactos = () => {
     $('#contactosEdit').modal('show');
 }
+
+
+const validarImg = (image) => {
+    console.log("si entro aqui");
+    if (image.size > 5242880) {
+        alert(`Imagen pesada ${image.size}`);
+        return false;
+    } else {
+        if (image.type != "image/jpeg") {
+            alert("Rechazada por formato");
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+/*
+const $imagen = document.querySelector("#inputGroupFile01");
+
+document.querySelector("#inputGroupFile01").addEventListener("click", async() => {
+    console.log($imagen);
+    var fileName = e.target.files[0].name;
+    if (validarImg(e.target.files[0])) {
+        let blob = comprimirImagen(e.target.files[0], 40);
+        // console.log(blob);
+        toBase64(blob, 1, null);
+        $('#label-inputGroupFile01').html(fileName);
+    }
+    // constanciaSituacionFiscal = toBase64(e.target.files[0], 1, null);
+    // $('#label-inputGroupFile01').html(fileName);
+});
+
+
+const comprimirImagen = (image, porcentajeCalidad) => {
+    return new Promise((resolve, reject) => {
+        const $canvas = document.createElement("canvas");
+        const imagen = new Image();
+        imagen.onload = () => {
+            $canvas.width = imagen.width;
+            $canvas.height = imagen.height;
+            $canvas.getContext("2d").drawImage(imagen, 0, 0);
+            $canvas.toBlob(
+                (blob) => {
+                    if (blob === null) {
+                        return reject(blob);
+                    } else {
+                        resolve(blob);
+                    }
+                },
+                "image/jpeg",
+                porcentajeCalidad / 100
+            );
+        };
+        imagen.src = URL.createObjectURL(image);
+    });
+};*/
