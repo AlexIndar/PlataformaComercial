@@ -1040,9 +1040,15 @@ function cargarInventario() {
                 arr.push("<p class='text-inventario' id='precioCliente-"+items[x]['itemid']+"'><strong>"+precio + " + IVA </strong></p><p class='text-inventario' id='precioIVA-"+items[x]['itemid']+"'><strong>"+precioIVA+"</strong> <br> P. Pago IVA incluído</p>");
                 var precioSugerido;
                 if(items[x]['promoART'] == null){
-                    arr.push("<p>Sin descuentos</p>");
-                    arr.push("<p>Sin promoción</p>");
                     precioSugerido = items[x]['price'] / 0.65;
+                    precioSugerido = (precioSugerido).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                    });
+                    var descuentos = "<p class='detalles-item'>Precio lista: <span class='detalles-item-right'>"+precioLista+" + IVA</span></p>";
+                    descuentos = descuentos + "<p class='detalles-item'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
+                    arr.push(descuentos);
+                    arr.push("<p>Sin promoción</p>");
                 }
                 else{
                     precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
@@ -1221,7 +1227,11 @@ function createTablePedido(){
         document.getElementById('messageAddProducts').classList.remove('d-none');
     }
 
-    // document.getElementById("btnSpinner").style.display = "none";
+    document.getElementById("btnSpinner").style.display = "none";
+    var btnActions = document.getElementsByClassName('btn-group-buttons');
+    for(var x=0; x < btnActions.length; x++){
+        btnActions[x].disabled = false;
+    }
 
 
 

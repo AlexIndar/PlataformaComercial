@@ -235,7 +235,7 @@
 
 
         <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
-
+ 
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fab fa-searchengin"></i> Buscar</button>
             <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
@@ -243,7 +243,7 @@
             <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
             <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(2)"><i class="fas fa-save"></i> Guardar</button>
             <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
-            <img src="{{asset('assets/customers/gif/loading.gif')}}" id="loadingSeparar" width="20px" height='20px' style="margin-left: 10px; margin-top: 5px; opacity: 0;">
+            <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
         </div>
         <br><br>
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
