@@ -288,6 +288,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions]);
                             });
 
+                            Route::get('/getPedidos', function (){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $entity = 'ALL';
+                                $pedidos = CotizacionController::getCotizaciones($token, $entity);
+                                return $pedidos;
+                            });
+
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
