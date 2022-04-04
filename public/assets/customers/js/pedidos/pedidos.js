@@ -10,7 +10,6 @@ $(document).ready(function(){
             },
             success: function(data){
                     cotizaciones = data;
-                    console.log(cotizaciones);
             }, 
             error: function(error){
                   console.log(error);
@@ -109,7 +108,7 @@ function filtrar(){
         hbody2.innerHTML = filtered[x]['addressName'];
         var hbody3 = document.createElement('h5');
         hbody3.innerHTML = filtered[x]['comments'];
-        
+
         div2.appendChild(hbody1);
         div2.appendChild(hbody2);
         div2.appendChild(hbody3);

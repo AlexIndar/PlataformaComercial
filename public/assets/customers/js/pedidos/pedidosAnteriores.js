@@ -1,6 +1,4 @@
 var saleOrders= [];
-var filteredSaleOrders = [];
-
 
 $(document).ready(function(){
     var companyId = document.getElementById('companyId').value;
@@ -36,7 +34,6 @@ $(document).ready(function(){
     // FILTRO POR COTIZACIÓN ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     $('#findCotizacion').keyup(function(){
-        filteredSaleOrders = [];
         document.getElementById('findMonth').options[0].selected = 'selected';
         var cotizacion = this.value;
         var row = document.getElementById('rowCotizaciones');
@@ -52,10 +49,9 @@ $(document).ready(function(){
         else{ //----------------------------------------------------------------------------------------------- MOSTRAR UNICAMENTE LO QUE COINCIDA CON LA COTIZACION --------------------------------------------------------------------------------------------------------------------------------
             for(var x = 0; x < saleOrders.length; x++){
                 if(saleOrders[x].cotizacion.startsWith(cotizacion)){
-                    filteredSaleOrders.push(saleOrders[x]['numPedido']);
                     var div = document.createElement('div');
                     div.classList = "col-lg-1 col-md-2 col-sm-3 col-6 box"; 
-                    div.id = 'target-'+saleOrders[x]['numPedido'];
+                    div.setAttribute('onclick', "openDetail(\""+saleOrders[x]['numPedido']+"\")");
                     var inner = document.createElement('div');
                     if(saleOrders[x]['numFactura'] != null){
                         inner.classList = "inner inner-green";
@@ -119,14 +115,12 @@ $(document).ready(function(){
                 }
             }
         }
-        addOnclick();
     });
 
 
     // FILTRO POR MES ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     $('#findMonth').on('change', function() {
-        filteredSaleOrders = [];
         var mes = this.value;
         // var mesText = this.options[mes].text;
         var row = document.getElementById('rowCotizaciones');
@@ -146,11 +140,10 @@ $(document).ready(function(){
             var cont = 0;
             for(var x = 0; x < saleOrders.length; x++){
                 if(saleOrders[x].trandate.split('/')[1]==mes && saleOrders[x].trandate.split('/')[2].startsWith(year)){
-                    filteredSaleOrders.push(saleOrders[x]['numPedido']);
                     cont ++;
                     var div = document.createElement('div');
                     div.classList = "col-lg-1 col-md-2 col-sm-3 col-6 box";
-                    div.id = 'target-'+saleOrders[x]['numPedido'];
+                    div.setAttribute('onclick', "openDetail(\""+saleOrders[x]['numPedido']+"\")");
                     var inner = document.createElement('div');
                     if(saleOrders[x]['numFactura'] != null){
                         inner.classList = "inner inner-green";
@@ -227,14 +220,12 @@ $(document).ready(function(){
                 row.appendChild(div);
             }
         }
-        addOnclick();
     });
 
     
     // FILTRO POR AÑO ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     $('#findYear').on('change', function() {
-        filteredSaleOrders = [];
         var year = this.value;
         var row = document.getElementById('rowCotizaciones');
         var month = document.getElementById('findMonth').value;
@@ -250,13 +241,11 @@ $(document).ready(function(){
         else{ //----------------------------------------------------------------------------------------------- MOSTRAR UNICAMENTE LO QUE COINCIDA CON EL AÑO FILTRADO --------------------------------------------------------------------------------------------------------------------------------
             var cont = 0;
             for(var x = 0; x < saleOrders.length; x++){
-                console.log(saleOrders[x].trandate);
                 if(saleOrders[x].trandate.split('/')[2]==year && saleOrders[x].trandate.split('/')[1].startsWith(month)){
-                    filteredSaleOrders.push(saleOrders[x]['numPedido']);
                     cont ++;
                     var div = document.createElement('div');
                     div.classList = "col-lg-1 col-md-2 col-sm-3 col-6 box";
-                    div.id = 'target-'+saleOrders[x]['numPedido'];
+                    div.setAttribute('onclick', "openDetail(\""+saleOrders[x]['numPedido']+"\")");
                     var inner = document.createElement('div');
                     if(saleOrders[x]['numFactura'] != null){
                         inner.classList = "inner inner-green";
@@ -335,7 +324,6 @@ $(document).ready(function(){
                 row.appendChild(div);
             }
         }
-        addOnclick();
     });
 
     $( ".fa-refresh" ).on( "click", function( e ) {
@@ -405,7 +393,6 @@ function getCookie(name) { //saber si una cookie existe
 
 
 function formatCurrency(number){
-    // console.log(number);
     const options = { style: 'currency', currency: 'USD' };
     const numberFormat = new Intl.NumberFormat('en-US', options);
     var format = numberFormat.format(number);
@@ -414,7 +401,6 @@ function formatCurrency(number){
 }
 
 function showAll(){
-    filteredSaleOrders = [];
     var row = document.getElementById('rowCotizaciones');
     document.getElementById('findMonth').options[0].selected = 'selected';
     document.getElementById('findCotizacion').value = "";
@@ -425,10 +411,9 @@ function showAll(){
     }
 
     for(var x = 0; x < saleOrders.length; x++){
-        filteredSaleOrders.push(saleOrders[x]['numPedido']);
         var div = document.createElement('div');
         div.classList = "col-lg-1 col-md-2 col-sm-3 col-6 box";
-        div.id = 'target-'+saleOrders[x]['numPedido'];
+        div.setAttribute('onclick', "openDetail(\""+saleOrders[x]['numPedido']+"\")");
         var inner = document.createElement('div');
         if(saleOrders[x]['numFactura'] != null){
             inner.classList = "inner inner-green";
@@ -488,11 +473,9 @@ function showAll(){
         div.appendChild(inner);
         row.appendChild(div);
     }
-    addOnclick();
 }
 
 function openDetail(numPedido){
-    console.log(numPedido);
     $('#modalDetail').modal('show');
     document.getElementById('titleModalDetail').innerHTML = '<h3>Estatus Pedido: '+numPedido+'</h3>';
     $.ajax({
@@ -506,89 +489,6 @@ function openDetail(numPedido){
 		'enctype': 'multipart/form-data',
 		'timeout': 2*60*60*1000,
 		success: function(data){
-                console.log(data);
-                if(data.length == 0){
-                    document.getElementById("labelWMS").innerHTML = 'WMS';
-                    document.getElementById("labelWMS").classList.remove('active');
-                    document.getElementById("labelFactura").innerHTML = 'FACTURA';
-                    document.getElementById("labelFactura").classList.remove('active');
-                    document.getElementById("labelEmbarque").innerHTML = 'EMBARQUE';
-                    document.getElementById("labelEmbarque").classList.remove('active');
-                }
-                else{
-
-                    if(data[0]['wms'] != null){
-                        var statusWMS = '';
-                        switch(data[0]['wms']){
-                            case 0: statusWMS = 'Ingresado'; break;
-                            case 1: statusWMS = 'Liberado'; break;
-                            case 2: statusWMS = 'Pausado'; break;
-                            case 3: statusWMS = 'Cancelado'; break;
-                            case 4: statusWMS = 'En Proceso'; break;
-                            case 5: statusWMS = 'Surtido'; break;
-                            case 6: statusWMS = 'Empacado'; break;
-                        }
-                        document.getElementById("labelWMS").innerHTML = 'EN ALMACÉN: '+statusWMS;
-                        document.getElementById("labelWMS").classList.add('active');
-                    }
-                    else{
-                        document.getElementById("labelWMS").innerHTML = 'WMS';
-                        document.getElementById("labelWMS").classList.remove('active');
-                    }
-                    if(data[0]['factura'] != null && data[0]['factura'] != ''){
-                        document.getElementById("labelFactura").innerHTML = 'FACTURADO';
-                        document.getElementById("labelFactura").classList.add('active');
-                    }
-                    else{
-                        document.getElementById("labelFactura").innerHTML = 'FACTURA';
-                        document.getElementById("labelFactura").classList.remove('active');
-                    }
-                    if(data[0]['embarque'] != null && data[0]['embarque'] != ''){
-                        document.getElementById("labelEmbarque").innerHTML = 'EN EMBARQUE: '+data[0]['embarque'];
-                        document.getElementById("labelEmbarque").classList.add('active');
-                    }
-                    else{
-                        document.getElementById("labelEmbarque").innerHTML = 'EMBARQUE';
-                        document.getElementById("labelEmbarque").classList.remove('active');
-                    }
-                }
-				
-		}, 
-		error: function(error){
-			//   console.log(error);
-		 }
-	});
-}
-
-
-function addOnclick(){
-    var targets = document.getElementsByClassName('box');
-    console.log(filteredSaleOrders);
-    for(var x = 0; x < targets.length; x++){
-        targets[x].addEventListener("click", function(){
-            openDetailFiltered(this);
-        });  
-    }
-    console.log(targets);
-}
-
-function openDetailFiltered(target){
-    console.log(target);
-    var numPedido = target.id.split('-')[1];
-    $('#modalDetail').modal('show');
-    document.getElementById('titleModalDetail').innerHTML = '<h3>Estatus Pedido: '+numPedido+'</h3>';
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "RegresaEstadoPedido",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': {id: numPedido},
-		'enctype': 'multipart/form-data',
-		'timeout': 2*60*60*1000,
-		success: function(data){
-                console.log(data);
                 if(data.length == 0){
                     document.getElementById("labelWMS").innerHTML = 'WMS';
                     document.getElementById("labelWMS").classList.remove('active');

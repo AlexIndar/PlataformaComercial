@@ -239,43 +239,22 @@ $(document).ready(function() {
 
 
     // INVENTARIO ON CLICK ADD ROW TO ORDER
-    $('#tablaInventario tbody').on('click', 'td', function() {
-        table = $("#tablaInventario").DataTable();
-        cell_clicked = table.cell(this).data();
-    });
+    // $('#tablaInventario tbody').on('click', 'td', function() {
+    //     table = $("#tablaInventario").DataTable();
+    //     cell_clicked = table.cell(this).data();
+    // });
 
-    $('#tablaInventario tbody').on('click', 'tr', function() {
-        table = $("#tablaInventario").DataTable();
-        var index = table.row(this).index();
-        var item = dataset[index];
-        var cant = table.cell(index, 7).nodes().to$().find('input').val();
-        if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
-            var art = selectedItemsFromInventory.find(o => o.item === (item[4]).trim());
-            if(art != undefined)
-                art['cant'] = (parseInt(art['cant']) + parseInt(cant)).toString();
-            else
-                selectedItemsFromInventory.push({ item: item[4].trim(), cant: cant });
-            var toast = Swal.mixin({
-                toast: true,
-                icon: 'success',
-                title: 'General Title',
-                animation: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: false,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-            toast.fire({
-                animation: true,
-                title: 'Producto ' + item[4] + ' Agregado',
-                icon: 'success'
-            });
-        }
-    });
+
+
+    // $('#tablaInventario tbody').on('click', 'tr', function() {
+    //     table = $("#tablaInventario").DataTable();
+    //     var index = table.row(this).index();
+    //     var item = dataset[index];
+    //     var cant = table.cell(index, 7).nodes().to$().find('input').val();
+    //     if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
+            
+    //     }
+    // });
 
 
 
@@ -443,7 +422,6 @@ $(document).ready(function() {
 		else
 		{
             var src = $(".small").attr("src");
-            console.log(src);
             document.getElementById('zoom').style.background = "url('"+src+"') no-repeat";
 
 			var magnify_offset = $(this).offset();
@@ -735,7 +713,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
     }
     if(!separar){
         json = JSON.parse(json);
-        console.log(json);
         var arr = [];
         for(var x = 0; x < json.length; x++){
             var art = items.find(o => o.itemid === json[x]['itemID']);
@@ -766,7 +743,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
-    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -780,7 +756,6 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
             var art;
             if(json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined){
                 art = items.find(o => o.itemid === json[x]['itemID']);
-                console.log(art);
                 ofertasVolumen = "";
                 if(art['promoART'] != null){
                     for(var i=0; i<art['promoART'].length; i++){
@@ -883,7 +858,6 @@ function getItemById(item, separa) {
             cantItemsCargados ++;
             if(data.length>0){
                 var art = items.find(o => o.itemid === data[0]['itemid']);
-                console.log(data);
                 var itemSeparar = {
                     itemID: data[0]['itemid'],
                     codCustomer: entity,
@@ -1075,7 +1049,7 @@ function cargarInventario() {
                 descuentos = descuentos + "<div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>";
                 arr.push(descuentos);
                 arr.push(promociones);
-                arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2'></i></div>");
+                arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
                 dataset.push(arr);
             }
         }
@@ -1147,7 +1121,6 @@ function createTablePedido(){
 
     var fila = 1;
     for(var x = 0; x < pedido.length; x++){
-        console.log(pedido);
         var subtotal = 0;
         for(var y = 0; y < pedido[x]['items'].length; y++){
             var cantidad = validarMultiplo(pedido[x]['items'][y]['multiploVenta'], pedido[x]['items'][y]['cantidad']);
@@ -1905,8 +1878,6 @@ function saveNS(){
             lineItems = [];
         } 
 
-        console.log(listNS);
-        console.log(JSON.stringify(listNS));
 
             $.ajax({
                 'headers': {
@@ -1919,9 +1890,6 @@ function saveNS(){
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
-                        // alert('success');
-                        console.log(data);
-                        console.log(JSON.stringify(data));
                         var error = 0;
                         for(var x = 0; x < data.length; x++){
                             
@@ -2184,9 +2152,7 @@ function updatePrecioCliente(itemid){
 }
 
 function getPrecioClientePromo(itemid){
-    console.log("Item: "+ itemid);
     var cant = document.getElementById('inputPrecioCliente-'+itemid).value;
-    console.log("Cantidad: "+ cant);
     var precio;
     if(cant != '' && cant != '0'){
         var art = items.find(o => o.itemid === itemid);
@@ -2221,9 +2187,6 @@ function getPrecioClientePromo(itemid){
             currency: 'USD',
         });
     }
-
-    console.log("Precio: "+ precio);
-
 
     return precio;
 }
@@ -2430,4 +2393,32 @@ function verImagenProducto(itemid){
 
 function closeImgProductMD(){
     document.getElementById('containerImgProduct').style.display = 'none';
+}
+
+function addItemInventory(item){
+    var cant = document.getElementById('inputPrecioCliente-'+item).value;
+    var art = selectedItemsFromInventory.find(o => o.item === item.trim());
+    if(art != undefined)
+        art['cant'] = (parseInt(art['cant']) + parseInt(cant)).toString();
+    else
+        selectedItemsFromInventory.push({ item: item.trim(), cant: cant });
+    var toast = Swal.mixin({
+        toast: true,
+        icon: 'success',
+        title: 'General Title',
+        animation: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: false,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+    toast.fire({
+        animation: true,
+        title: 'Producto ' + item + ' Agregado',
+        icon: 'success'
+    });
 }
