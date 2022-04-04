@@ -55,7 +55,7 @@ class CotizacionController extends Controller
     public static function deletePedido($token, $id){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/getBorrarCotizacionIdWeb?Id='.$id);
         $cotizacion = json_decode($response->body());
-        return $cotizacion;
+        return $cotizacion;     
     }
 
     public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){

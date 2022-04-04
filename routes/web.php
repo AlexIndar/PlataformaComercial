@@ -782,6 +782,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $categories = $dataCustomers['categories'];
                                 $giros = $dataCustomers['giros'];
                                 $customers = $dataCustomers['customers'];
+                        
 
                                 $dataArticulos = PromoController::getItems($token);
                                 $infoArticulos = $dataArticulos['items'];

@@ -356,7 +356,7 @@ $(document).ready(function(){
         var today = new Date();
         var hour =  today.getHours();
         var suffix = hour >= 12 ? "PM":"AM";
-        var hours = ("0"+(hour + 11) % 12 + 1).slice(-2) +":"+("0"+today.getMinutes()).slice(-2)+" " + suffix;
+        var hours = (hour+":"+today.getMinutes()+" " + suffix);
         var date = ("0"+today.getDate()).slice(-2) + "/" + ("0"+(today.getMonth()+1)).slice(-2) + "/" + today.getFullYear() + " - "+hours;
 
         document.getElementById('hora').innerHTML = date;

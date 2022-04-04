@@ -29,10 +29,10 @@
                 </select>
             </div>
             <div class="col-3">
-                <input type="text" class="inputPedido" id="filterValue" name="filterValue" style="height: 40px !important; background-color: white !important;">
+                <input type="text" class="inputPedido" id="filterValue" name="filterValue" style="height: 40px !important; background-color: white !important;" disabled>
             </div>
             <div class="col-2">
-                    <button type="button" id="filtrarPedidos" class="btn btn-info" style="height: 40px !important;" onclick="filtrar()"><i class="fas fa-search"></i> Buscar</button>
+                    <button type="button" id="filtrarPedidos" class="btn btn-info" style="height: 40px !important;" onclick="filtrar()" disabled><i class="fas fa-search"></i> Buscar</button>
             </div>
             <div class="col-1">
                 <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>

@@ -15,11 +15,16 @@ $(document).ready(function(){
                   console.log(error);
              }
     
-        }); 
+        });  
+
+        $('#filterKey').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+            $('#filterValue').removeAttr('disabled');
+            $('#filtrarPedidos').removeAttr('disabled');
+        });
 });
 
 function addPedido(){
-    $("#formNuevo").submit();
+    $("#formNuevo").submit(); 
 }
 
 function editarPedido(id, companyId){
