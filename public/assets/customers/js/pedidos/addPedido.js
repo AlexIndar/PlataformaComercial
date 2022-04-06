@@ -21,7 +21,7 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
-var dataset = []; //arreglo cargado en inventario
+var dataset = []; //arreglo cargado en inventario 
 
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
@@ -31,8 +31,6 @@ indexCustomer = 0;
 indexAddress = 0;
 // VARIABLE PARA DETECTAR CUANDO EL INVENTARIO ESTÁ CARGADO
 var intervalInventario;
-// VARIABLE PARA VALIDAR QUE EL CLICK EN LA TABLA HAYA SIDO EN EL BOTÓN DE AGREGAR
-var cell_clicked;
 // CODIGO DE CLIENTE
 var entity;
 var entityCte;
@@ -237,28 +235,6 @@ $(document).ready(function() {
     })
 
 
-
-    // INVENTARIO ON CLICK ADD ROW TO ORDER
-    // $('#tablaInventario tbody').on('click', 'td', function() {
-    //     table = $("#tablaInventario").DataTable();
-    //     cell_clicked = table.cell(this).data();
-    // });
-
-
-
-    // $('#tablaInventario tbody').on('click', 'tr', function() {
-    //     table = $("#tablaInventario").DataTable();
-    //     var index = table.row(this).index();
-    //     var item = dataset[index];
-    //     var cant = table.cell(index, 7).nodes().to$().find('input').val();
-    //     if (cell_clicked == "<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x'></i></div>") {
-            
-    //     }
-    // });
-
-
-
-
     // UPDATE ADDRESSES AND DEFAULT SHIPPING WAT / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
 
     $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
@@ -334,7 +310,7 @@ $(document).ready(function() {
                 $('#fletera').val('');
                 document.getElementById('envio').classList.add('d-none');
                 document.getElementById('containerSelectEnvio').classList.remove('d-none');
-                shippingWays = info[indexCustomer]['shippingWays'];
+                shippingWays = info[indexCustomer]['shippingWays']; 
                 var itemSelectorOption = $('#selectEnvio option');
                 itemSelectorOption.remove();
                 $('#selectEnvio').selectpicker('refresh');
@@ -414,8 +390,6 @@ $(document).ready(function() {
 		
 			var image_object = new Image();
 			image_object.src = $(".small").attr("src");
-           
-		
 			native_width = image_object.width;
 			native_height = image_object.height;
 		}

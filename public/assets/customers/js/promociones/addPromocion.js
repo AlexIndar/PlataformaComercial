@@ -696,7 +696,7 @@ function validarPromo(){
             error: function(error){
                     // window.location.href = '/promociones';
             }
-        });
+        }); 
     }
 
     if(!save){
@@ -742,6 +742,8 @@ function clearSelectionAccept(){
 function addPromoRules(rules){
     startDate = rules['fechaInicio'].split('T')[0];
     endDate = rules['fechaFin'].split('T')[0];
+    document.getElementById('rangoFechas').style.display = "block";
+    document.getElementById('fechasLoading').style.display = "none";
     var pedidoPromoRules = rules['pedidoPromoRulesD'];
     var regalos = rules['regalosIndar'];
     var reemplazaRegalo = rules['reemplazaRegalo'];

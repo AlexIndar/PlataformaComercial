@@ -772,7 +772,7 @@ function storeSubreglas(){
                 });
         }
     }
-    setTimeout(redirectPromociones, 2000);
+    setTimeout(redirectPromociones, 500);
    
 }
 
@@ -865,7 +865,7 @@ function storeHeader(){
                 idPaquete = data;
                 console.log(data);
                 alert('Encabezado guardado correctamente. Guardando subreglas...');
-                setTimeout(storeSubreglas, 2000);
+                setTimeout(storeSubreglas, 500);
             }, 
             error: function(error){
                 alert('Error al guardar encabezado de paquete');

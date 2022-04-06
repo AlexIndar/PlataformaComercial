@@ -12,7 +12,7 @@
 
 
 
-<table style="width:100%; border: hidden;">
+<table style="width:100%; border: hidden;"> 
         <tr style="vertical-align:top;">
             <td width="25%">
                 <table cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; font-size:10px; line-height: 0.9; border-collapse:collapse;">

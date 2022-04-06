@@ -15,7 +15,7 @@ $(document).ready(function(){
                   console.log(error);
              }
     
-        });  
+        });   
 
         $('#filterKey').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
             $('#filterValue').removeAttr('disabled');
