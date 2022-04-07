@@ -72,7 +72,7 @@
                 <option style="height: 30px !important;" value="12">Diciembre</option>
             </select>
         </div>
-    </div>
+    </div> 
 
     <div class="row">
         <div class="d-flex align-items-center justify-content-center"  style="width: 100%;">

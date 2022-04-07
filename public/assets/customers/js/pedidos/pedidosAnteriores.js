@@ -489,7 +489,7 @@ function openDetail(numPedido){
 		'enctype': 'multipart/form-data',
 		'timeout': 2*60*60*1000,
 		success: function(data){
-                if(data.length == 0){
+                if(data==null){
                     document.getElementById("labelWMS").innerHTML = 'WMS';
                     document.getElementById("labelWMS").classList.remove('active');
                     document.getElementById("labelFactura").innerHTML = 'FACTURA';
@@ -498,7 +498,6 @@ function openDetail(numPedido){
                     document.getElementById("labelEmbarque").classList.remove('active');
                 }
                 else{
-
                     if(data[0]['wms'] != null){
                         var statusWMS = '';
                         switch(data[0]['wms']){
@@ -537,7 +536,7 @@ function openDetail(numPedido){
 				
 		}, 
 		error: function(error){
-			//   console.log(error);
+			alert('error');
 		 }
 	});
 }
