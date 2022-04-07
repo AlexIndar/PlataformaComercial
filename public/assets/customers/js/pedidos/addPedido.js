@@ -1001,10 +1001,13 @@ function cargarInventario() {
                 else{
                     precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
                     for(var y=0; y < items[x]['promoART'].length; y++){ 
-                        if(items[x]['promoART'][y]['cantidad'] == 1)
+                        if(items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] ==1)
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+                        else if(items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] > 1)
+                            var temp = "<p class='text-promo'>Compra "+items[x]['multiploVenta']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
                         else
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
+
                         promociones = promociones + temp;
                         var precioClienteDescuento = ((100 - items[x]['promoART'][y]['descuento']) * items[x]['price']) / 100;
                         precioClienteDescuento = (precioClienteDescuento).toLocaleString('en-US', {
@@ -1023,7 +1026,7 @@ function cargarInventario() {
                 descuentos = descuentos + "<div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>";
                 arr.push(descuentos);
                 arr.push(promociones);
-                arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
+                arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " min="+ items[x]['multiploVenta'] +" step="+ items[x]['multiploVenta'] +" onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
                 dataset.push(arr);
             }
         }
