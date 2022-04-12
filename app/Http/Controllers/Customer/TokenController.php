@@ -33,13 +33,20 @@ class TokenController extends Controller
     }
 
     public static function refreshToken(){
+        if(!isset($_COOKIE['username'])){
+            setcookie("laravel-token", "", time()-60*60*24, '/');
+            setcookie("refresh", "", time()- 60*60*24, '/');
+            setcookie("access", "", time()- 60*60*24, '/');
+            setcookie("username", "", time()- 60*60*24, '/');
+            setcookie("level", "", time()- 60*60*24, '/');
+            return redirect('/');
+        }
         if(isset($_COOKIE["refresh"])){
             $old = $_COOKIE["refresh"];
-            $username = session('username');
+            $username = $_COOKIE["username"];
             $typeUser = Http::withToken($old)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
             $permissions = (json_decode(json_decode($typeUser->body())->permissions));
             $response = Http::withToken($old)->post('http://192.168.70.107:64444/Login/RefreshToken');
-            
             if($response->getStatusCode() == 200){ 
                     $token = $response->body();
                     setcookie("laravel-token", "", time()-60*60*24, '/');
@@ -48,8 +55,8 @@ class TokenController extends Controller
                     setcookie("refresh", $token, time()+ 60*60*24, '/');
                     setcookie("access", "", time()- 60*60*24, '/');
                     setcookie("access", json_encode($permissions), time()+60*60*24, '/');
-                    session(['username' => $username]);
-                    session(['access' => json_encode($permissions)]);
+                    setcookie('username', "", time()-60*60*24*30, '/');
+                    setcookie('username', $username, time()+60*60*24*30, '/');
                     return $token;
             }
             else{

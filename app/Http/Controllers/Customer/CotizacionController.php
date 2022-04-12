@@ -38,7 +38,7 @@ class CotizacionController extends Controller
         $json = json_decode($data);
         $dateTime = date("Y-m-d H:i:s");
         $dateTime = str_replace(" ", "T", $dateTime);
-        $username = session('username');
+        $username = $_COOKIE['username'];
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
             "idCotizacion" => $json->idCotizacion,
             "companyId" => $json->companyId,
@@ -105,7 +105,7 @@ class CotizacionController extends Controller
         $typeSale['id'] = $cotizacion->order[$index-1]->tipo == 'BO' ? '6' : '5';
         $typeSale['txt'] = "";
         
-        $username = session('username');
+        $username = $_COOKIE['username'];
 
         $methodPayment['id'] = "10";
         $methodPayment['txt'] = "";

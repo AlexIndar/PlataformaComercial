@@ -158,7 +158,7 @@ class SaleOrdersController extends Controller
     }
 
     public static function storePedidoNS($token, $data){
-        $username = session('username');
+        $username = $_COOKIE['username'];
         $data[0]['user'] = $username;
         $storeNS = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EnviarPedidosNetsuite', [
             "prePedido" => $data 

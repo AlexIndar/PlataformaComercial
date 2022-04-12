@@ -73,8 +73,8 @@ Route::get('/', function () {
 
 
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -105,8 +105,8 @@ Route::get('/faq', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.faq', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -130,8 +130,8 @@ Route::get('/bladeInvoice', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.invoice', ['customer' => $customer, 'total' => $total, 'level' => $level]);
@@ -147,8 +147,8 @@ Route::get('/about', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.about', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -163,8 +163,8 @@ Route::get('/centros', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.centros', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -179,8 +179,8 @@ Route::get('/postventa', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.postventa', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -195,8 +195,8 @@ Route::get('/contacto', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.contacto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -211,8 +211,8 @@ Route::get('/descontinuados', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(session()->has('level')){
-        $level = session('level');
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
     }
 
     return view('customers.descontinuados', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
@@ -238,9 +238,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
                                     $level = "C";
-                                    if(session()->has('level')){
+                                    if(isset($_COOKIE['level'])){
 
-                                    $level = session('level');     }
+                                    $level = $_COOKIE['level'];     }
 
                                     return view('customers.catalogo', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
                                 });
@@ -255,9 +255,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
                                     $level = "C";
-                                    if(session()->has('level')){
+                                    if(isset($_COOKIE['level'])){
 
-                                    $level = session('level');     }
+                                    $level = $_COOKIE['level'];     }
                                     
                                     return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
 
@@ -276,8 +276,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 $entity = 'ALL';
                                 $pedidos = CotizacionController::getCotizaciones($token, $entity);
@@ -305,8 +305,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 $saleOrders = SaleOrdersController::getSaleOrders($token, $customer);
                                 return view('customers.pedidos.pedidosAnteriores', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'saleOrders' => $saleOrders, 'customer' => $customer]);
@@ -416,8 +416,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 return $response;
                             });
@@ -432,8 +432,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 // dd($response->body());
                                 return $response;
@@ -449,8 +449,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 return $response;
                             });
@@ -612,8 +612,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 $permissions = LoginController::getPermissions();
 
@@ -636,8 +636,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 return $response;
                             });
@@ -654,8 +654,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 $promociones = PromoController::getAllEvents($token);
                                 $permissions = LoginController::getPermissions();
@@ -672,8 +672,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 $promocion = PromoController::getEventById($token, $idPromo);
                                 $promocion = $promocion[0];
@@ -743,8 +743,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 
                                 $permissions = LoginController::getPermissions();
@@ -761,8 +761,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
 
                                 $permissions = LoginController::getPermissions();
@@ -833,8 +833,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $level = "C";
-                                if(session()->has('level')){
-                                    $level = session('level');
+                                if(isset($_COOKIE['level'])){
+                                    $level = $_COOKIE['level'];
                                 }
                                 return $response;
 
