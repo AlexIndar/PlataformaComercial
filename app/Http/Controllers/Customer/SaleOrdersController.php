@@ -159,7 +159,7 @@ class SaleOrdersController extends Controller
 
     public static function storePedidoNS($token, $data){
         $storeNS = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EnviarPedidosNetsuite', [
-            "prePedido" => $data
+            "prePedido" => $data 
         ]);
         $response = json_decode($storeNS->body());
         return $response;

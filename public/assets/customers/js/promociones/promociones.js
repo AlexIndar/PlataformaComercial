@@ -145,7 +145,6 @@ function duplicarPromo(editar){
                         cuotasList.push(cuotasObj);
 
                         json['cuotasPersonalizadas'] = cuotasList;
-                        alert('No es paquete');
                         $.ajax({
                             'headers': {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

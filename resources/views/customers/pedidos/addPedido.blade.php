@@ -29,13 +29,15 @@
         <div class="header">
             <div class="row  text-start">
                 <div class="col-lg-1 col-md-1 col-12 rowPedido">
-                    <h5>Cliente</h5>
+                    <div class="skeleton-input"></div>
+                    <h5 class="d-none" id="customerIDLabel">Cliente</h5>
                 </div>
                 @if(count($data)==1)
                     <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}}" disabled></div>
                 @else
                     <div class="col-lg-5 col-md-5 col-12 rowPedido">
-                        <select id="customerID" name="customerID" class="form-control selectpicker" data-live-search="true">
+                        <div class="skeleton-input"></div>
+                        <select id="customerID" name="customerID" class="form-control selectpicker d-none" data-live-search="true">
                             <option selected value="none">Selecciona un cliente</option>
                             @for($x=0; $x < (count($data)); $x++)
                                 <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}}</option>
@@ -44,29 +46,40 @@
                     </div>
                 @endif
                 <div class="col-lg-2 col-md-3 col-12 rowPedido">
-                    <h5>Orden de compra</h5>
+                    <div class="skeleton-input"></div>
+                    <h5 class="d-none" id="ordenCompraLabel">Orden de compra</h5>
                 </div>
-                <div class="col-lg-4 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra"></div>
+                <div class="col-lg-4 col-md-3 col-12 rowPedido">
+                    <div class="skeleton-input"></div>
+                    <input type="text" class="inputPedido d-none" id="ordenCompra" name="ordenCompra">
+                </div>
             </div>
             <div class="row  text-start">
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Correo</h5>
+                            <div class="skeleton-input"></div>
+                            <h5 class="d-none" id="correoLabel">Correo</h5>
                         </div>
                         @if(count($data)==1)
                             <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo" value="{{$data[0]['email']}}"></div>
                         @else
-                            <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo"></div>
+                            <div class="col-lg-10 col-md-10 col-12 rowPedido">
+                                <div class="skeleton-input"></div>
+                                <input type="text" class="inputPedido d-none" id="correo" name="correo">
+                            </div>
                         @endif
                         
                     </div>
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Sucursal</h5>
+                            <div class="skeleton-input"></div>
+                            <h5 class="d-none" id="sucursalLabel">Sucursal</h5>
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                            <select id="sucursal" name="sucursal" class="form-control selectpicker" data-live-search="true">
+                            <div class="skeleton-input"></div>
+                            <select id="sucursal" name="sucursal" class="form-control selectpicker d-none" data-live-search="true">
+                                <option selected value="none">Selecciona una sucursal</option>
                                 @if(count($data)==1)
                                     <option style="height: 30px !important;" value="none">Selecciona una sucursal</option>
                                     @for($x=0; $x < (count($data[0]['addresses'])); $x++)
@@ -79,13 +92,15 @@
 
                     <div class="row">
                             <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                                <h5>Form. Envío</h5>
+                                <div class="skeleton-input"></div>  
+                                <h5 class="d-none" id="envioLabel">Form. Envío</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
                                 @if(count($data)==1)
                                     <input type="text" class="inputPedido" id="envio" name="envio" value="{{$data[0]['shippingWayF']}}" disabled>
                                 @else
-                                    <input type="text" class="inputPedido" id="envio" name="envio" value="" disabled>
+                                    <div class="skeleton-input"></div>  
+                                    <input type="text" class="inputPedido d-none" id="envio" name="envio" value="" disabled>
                                 @endif
                                 <div id="containerSelectEnvio" class="d-none">
                                     <select id="selectEnvio" name="selectEnvio" class="form-control selectpicker" data-live-search="true">
@@ -103,13 +118,15 @@
 
                     <div class="row">
                             <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                                <h5>Fletera</h5>
+                                <div class="skeleton-input"></div>  
+                                <h5 class="d-none" id="fleteraLabel">Fletera</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
                                 @if(count($data)==1)
                                     <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
                                 @else
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="" disabled>
+                                    <div class="skeleton-input"></div>  
+                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" disabled>
                                 @endif
                             </div>
                     </div>
@@ -119,24 +136,29 @@
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Promo</h5>
+                            <div class="skeleton-input"></div>  
+                            <h5 class="d-none" id="tags-promoLabel">Promo</h5>
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                            <ul class="tags-input" id="tags-promo">
-                                <!-- <li class="tags-new">
-                                    <input type="text" placeholder="Buscar"> 
-                                </li> -->
-                            </ul>  
+                            <div class="skeleton-input"></div>  
+                            <ul class="tags-input d-none" id="tags-promo"></ul>  
                         </div>
                     </div>
                     <br>
                     <div class="row d-flex flex-row justify-content-center align-items-center">
                         <div class="col-lg-2 col-md-3 col-12 rowPedido">
-                            <h5>Cupón</h5>
+                            <div class="skeleton-input"></div>  
+                            <h5 class="d-none" id="cuponLabel">Cupón</h5>
                         </div>
-                        <div class="col-lg-4 col-md-9 col-12 rowPedido"><input type="text" class="inputPedido" id="cupon" name="cupon"></div>
-                        <div class="col-lg-6 col-md-12 col-12 rowPedido">
-                            <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
+                        <div class="col-lg-4 col-md-9 col-12 rowPedido">
+                            <div class="skeleton-input"></div>  
+                            <input type="text" class="inputPedido d-none" id="cupon" name="cupon">
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12 rowPedido d-none" id="cliente_recogeLabel">
+                            <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label class="cliente_recogeLabel" for="cliente_recoge">Cliente recoge en sucursal</label>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12 rowPedido" id="cliente_recogeSkeleton">
+                            <div class="skeleton-input"></div>  
                         </div>
                         <!-- <div class="col-lg-6 col-md-4 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="dividir"> <label for="dividir">Dividir 2000</label>
@@ -255,30 +277,33 @@
         </div>
 
              <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
+        <div id="divActions">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fab fa-searchengin"></i> Buscar</button>
+                <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
+                <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
+                <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
+                <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
+                <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
+            </div>
+            <br><br>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons" onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
+                <button type="button" id="borrarCotizacion" class="btn btn-group-buttons" onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
+                <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i class="fas fa-share-square"></i> Enviar cotización</button>
+                <!-- <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacionExcel')"><i class="fas fa-file-download"></i> Descargar cotización</button> -->
+            </div>
+            <br><br>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
+                <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)" data-toggle="modal" data-target=".bd-example-modal-xl-ns"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
+                <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
+                <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+            </div> 
+        </div>
 
-        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-            <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fab fa-searchengin"></i> Buscar</button>
-            <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
-            <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
-            <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
-            <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i class="fas fa-save"></i> Guardar</button>
-            <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
-            <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
-        </div>
-        <br><br>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-            <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons" onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
-            <button type="button" id="borrarCotizacion" class="btn btn-group-buttons" onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
-            <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i class="fas fa-share-square"></i> Enviar cotización</button>
-            <!-- <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacionExcel')"><i class="fas fa-file-download"></i> Descargar cotización</button> -->
-        </div>
-        <br><br>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-            <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-            <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)" data-toggle="modal" data-target=".bd-example-modal-xl-ns"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
-            <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
-        </div> 
+
 
         <!---------------------------------------------------------------------------------------------------- FIN PIE PEDIDO ---------------------------------------------------------------------------------------------->
 
@@ -299,42 +324,36 @@
                                             <th class="customHeader">Cod Art</th>
                                             <th class="customHeader">Descripción</th>
                                             <th class="customHeader">Detalles</th>
-                                            <th class="customHeader">Cantidad</th>
-                                            <th class="customHeader">Precio</th>
                                             <th class="customHeader">Descuentos</th>
-                                            <th class="customHeader">Promo</th>
+                                            <th class="customHeader">Promo Vol</th>
                                             <th class="customHeader">Acciones</th>
                                         </tr>
                                         <tr>
                                             <th>Img</th>
                                             <th>Categoría</th>
-                                            <th>Fab</th>
-                                            <th>Fam</th>
-                                            <th>Cod Art</th>
+                                            <th>Fabricante</th>
+                                            <th>Familia</th>
+                                            <th>Artículo</th>
                                             <th>Descripción</th>
                                             <th>Detalles</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
                                             <th>Descuentos</th>
-                                            <th>Promo</th>
+                                            <th>Promo Vol</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
 
                                     <tfoot>
                                         <tr>
-                                            <th>Img</th>
-                                            <th>Categoría</th>
-                                            <th>Fab</th>
-                                            <th>Fam</th>
-                                            <th>Cod Art</th>
-                                            <th>Descripción</th>
-                                            <th>Detalles</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Descuentos</th>
-                                            <th>Promo</th>
-                                            <th>Acciones</th>
+                                            <th class="customHeader">Img</th>
+                                            <th class="customHeader">Categoría</th>
+                                            <th class="customHeader">Fab</th>
+                                            <th class="customHeader">Fam</th>
+                                            <th class="customHeader">Cod Art</th>
+                                            <th class="customHeader">Descripción</th>
+                                            <th class="customHeader">Detalles</th>
+                                            <th class="customHeader">Descuentos</th>
+                                            <th class="customHeader">Promo Vol</th>
+                                            <th class="customHeader">Acciones</th>
                                         </tr>
                                     </tfoot>
 
@@ -391,5 +410,17 @@
     </div>
 
   <br><br>
+
+
+  <!-- DIV PARA MOSTRAR IMAGEN DEL PRODUCTO AMPLIADA -->
+
+<div class="containerImgProduct" id="containerImgProduct">
+    <div class="magnify">
+        <div class="large" id="zoom"></div>
+        <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">
+    </div>
+    
+    <i class="fa-solid fa-xmark closeImgProductMDIcon" id="closeImgProductMDIcon" onclick="closeImgProductMD()"></i>
+</div>
 
 @endsection

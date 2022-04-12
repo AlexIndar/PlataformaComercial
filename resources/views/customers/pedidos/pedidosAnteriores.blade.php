@@ -29,7 +29,7 @@
 <div style="overflow-x: hidden !important; padding: 0px 30px 0px 30px !important;">
 
     <input type="text" value="{{$customer}}" id="companyId" hidden>
-
+ 
     <div class="row">
         <div class="col-12 text-center">
             <h3><strong>Pedidos Anteriores</strong></h3>
@@ -45,11 +45,13 @@
         <div class="col-lg-4 col-6 text-center flex flex-row" style="margin-top:10px;">
             <h4>Año</h4> 
             <select id="findYear" style="border: 1px solid black !important; height: 30px !important; width: 100%; background-color: #F7F5FF !important;">
-                <option style="height: 30px !important;" value="2021">2021</option>
+                <option style="height: 30px !important;" value="all">Todos</option>
                 <option style="height: 30px !important;" value="2017">2017</option>
                 <option style="height: 30px !important;" value="2018">2018</option>
                 <option style="height: 30px !important;" value="2019">2019</option>
                 <option style="height: 30px !important;" value="2020">2020</option>
+                <option style="height: 30px !important;" value="2021">2021</option>
+                <option style="height: 30px !important;" value="2022">2022</option>
             </select>
         </div>
         <div class="col-lg-4 col-6 text-center flex flex-row" style="margin-top:10px;">
@@ -70,7 +72,7 @@
                 <option style="height: 30px !important;" value="12">Diciembre</option>
             </select>
         </div>
-    </div>
+    </div> 
 
     <div class="row">
         <div class="d-flex align-items-center justify-content-center"  style="width: 100%;">

@@ -11,7 +11,7 @@ body, html{
 
 .quantity-counter{
     width: 150px;
-    border: 1px solid black;
+    border: 1px solid black; 
     height: 50px;
     margin-left: 20px;
     justify-content: space-between !important;
@@ -31,7 +31,7 @@ body, html{
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.165);
     margin-right: 20px;
-}
+} 
 
 .bigImageProduct{
     object-fit: cover;

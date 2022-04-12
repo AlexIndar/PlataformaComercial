@@ -7,6 +7,7 @@ var maxIndexRowDescuentos = 1;
 var update = false;
 
 $('document').ready(function(){
+    $("body").addClass("sidebar-collapse");
 
     if(window.location.href.includes('promociones/editar')){ //EDITAR PAQUETE
         update = true;
@@ -107,7 +108,6 @@ $('document').ready(function(){
                 for(var x=0; x<subreglas.length; x++){
                     subreglas[x]['descuentosCategorias'] = subreglas[x]['descuentosCategorias'].sort((a,b) => b.descuento - a.descuento);
                 }
-                console.log(subreglas);
                 createTableSubreglas();
                 document.getElementById('subreglasTitle').classList.remove('d-none');
                 document.getElementById('subreglasTable').classList.remove('d-none');
@@ -236,7 +236,6 @@ function addClientesCuotas(json, id){
 }
 
 function validarPaquete(){
-    document.getElementById('div-loading').style.opacity = '0';
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -282,7 +281,7 @@ function validarPaquete(){
 
     
 
-    if(save && !document.getElementById('btn-add-sub').classList.contains('d-none')){
+    if(save && !document.getElementById('btn-add-sub').disabled){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();    
@@ -349,8 +348,9 @@ function validarPaquete(){
         modal.classList.add("active-modal");
     }
 
-    if(save && document.getElementById('btn-add-sub').classList.contains('d-none')){
-        document.getElementById('btn-add-sub').classList.remove('d-none');
+    if(save && document.getElementById('btn-add-sub').disabled){
+        document.getElementById('btn-add-sub').disabled = false;
+        document.getElementById('btn-add-sub').classList.add('btnActions');
         document.getElementById('btn-validar').classList.add('d-none');
     }
 }
@@ -733,6 +733,7 @@ function storeSubreglas(){
                     puntosIndar: packageHeader['puntosIndar'],
                     plazosIndar: packageHeader['plazosIndar'],
                     regalosIndar: subreglas[y]['regalos'] == null ? "" : subreglas[y]['regalos'].toString(),
+                    reemplazaRegalo: 0,
                     categoriaClientes: subreglas[y]['descuentosCategorias'][x]['categoria'],
                     categoriaClientesIncluye: packageHeader['categoriaClientesIncluye'],
                     gruposclientesIds: packageHeader['gruposclientesIds'],
@@ -771,14 +772,14 @@ function storeSubreglas(){
                 });
         }
     }
-    setTimeout(redirectPromociones, 2000);
+    setTimeout(redirectPromociones, 500);
    
 }
 
 function redirectPromociones(){
     document.getElementById('div-loading').style.opacity = '0';
     alert('Paquete guardado correctamente');
-    // window.location.href = '/promociones';
+    window.location.href = '/promociones';
 }
 
 function storeHeader(){
@@ -828,6 +829,7 @@ function storeHeader(){
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: document.getElementById('tipoCuota').value == 'General' ? parseInt( document.getElementById('plazos').value) : 0,
             regalosIndar: regalos.toString(),
+            reemplazaRegalo: 0,
             categoriaClientes: categorias.toString(),
             categoriaClientesIncluye: 1,
             gruposclientesIds: giros.toString(),
@@ -863,7 +865,7 @@ function storeHeader(){
                 idPaquete = data;
                 console.log(data);
                 alert('Encabezado guardado correctamente. Guardando subreglas...');
-                setTimeout(storeSubreglas, 2000);
+                setTimeout(storeSubreglas, 500);
             }, 
             error: function(error){
                 alert('Error al guardar encabezado de paquete');

@@ -4,6 +4,7 @@
 
 @section('styles') 
 <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/promociones.css')}}">
+<link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/addPedido.css')}}">
 <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
 <script src="{{asset('assets/customers/js/pedidos/pedidos.js')}}"></script>
 @endsection
@@ -17,28 +18,50 @@
             <button class="bg-promo btn-primary" onclick="addPedido()"> <i class="fas fa-file"></i> Nuevo Pedido</button>
         </div>
         <br><br>
- 
-        @foreach($pedidos as $pedido)
-            <div class="promo">
-                <div class="promo-header">
-                    <h4>[#{{$pedido->idCotizacion}} - {{strtoupper($pedido->companyId)}}] {{$pedido->orderC}}</h4>
-                    <div class="actions">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <!-- <button type="button" class="btn btn-primary" title="Duplicar"><i class="fas fa-clone"></i></button> -->
-                            <button type="button" class="btn btn-info" title="Editar" onclick="editarPedido('{{$pedido->idCotizacion}}', '{{$pedido->companyId}}')"><i class="fas fa-edit"></i></button>
-                            <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$pedido->idCotizacion}}')"><i class="fas fa-trash"></i></button>
+        <div class="row">
+            <div class="col-6">
+                <select id="filterKey" name="filterKey" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="none">Filtrar por:</option>             
+                            <option value="idCotizacion">ID Cotización</option>             
+                            <option value="companyId">Código Cliente</option>             
+                            <option value="orderC">Orden Compra</option>             
+                            <option value="email">Email</option>             
+                </select>
+            </div>
+            <div class="col-3">
+                <input type="text" class="inputPedido" id="filterValue" name="filterValue" style="height: 40px !important; background-color: white !important;" disabled>
+            </div>
+            <div class="col-2">
+                    <button type="button" id="filtrarPedidos" class="btn btn-info" style="height: 40px !important;" onclick="filtrar()" disabled><i class="fas fa-search"></i> Buscar</button>
+            </div>
+            <div class="col-1">
+                <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
+            </div>
+        </div>
+      
+        <br><br>
+        <div id="rowPedidos">
+            @foreach($pedidos as $pedido)
+                <div class="promo">
+                    <div class="promo-header">
+                        <h4>[#{{$pedido->idCotizacion}} - {{strtoupper($pedido->companyId)}}] {{$pedido->orderC}}</h4>
+                        <div class="actions">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-info" title="Editar" onclick="editarPedido('{{$pedido->idCotizacion}}', '{{$pedido->companyId}}')"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$pedido->idCotizacion}}')"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
+                    <div class="cuerpo-promo">
+                        <h5>Forma Envío <span class="fecha"><i class="fas fa-truck-loading"></i> {{$pedido->shippingWay}}</span> Fletera <span class="fecha"><i class="fas fa-shipping-fast"></i> {{$pedido->packageDelivery}}</span> </h5>
+                        <h5>{{$pedido->addressName}}</h5>
+                        <h5>{{$pedido->comments}}</h5>
+                    </div>
                 </div>
-                <div class="cuerpo-promo">
-                    <h5>Forma Envío <span class="fecha"><i class="fas fa-truck-loading"></i> {{$pedido->shippingWay}}</span> Fletera <span class="fecha"><i class="fas fa-shipping-fast"></i> {{$pedido->packageDelivery}}</span> </h5>
-                    <h5>{{$pedido->addressName}}</h5>
-                    <h5>{{$pedido->comments}}</h5>
-                    
-                </div>
-            </div>
 
-        @endforeach
+            @endforeach
+        </div>
+       
 
         <form style="display: none" action="/pedido/editar" method="POST" id="formEditar">
             @csrf

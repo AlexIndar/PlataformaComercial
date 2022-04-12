@@ -248,7 +248,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 });
 
 
-                                Route::get('/detallesProducto/{id}',function ($id) {
+                                Route::get('/detallesProducto',function () {
                                     $token = TokenController::getToken();
                                     if($token == 'error'){
                                         return redirect('/logout');
@@ -256,7 +256,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
-                                    $item = ItemsController::getProduct($id, $token);
+                                    $level = "C";
+                                    if(isset($_COOKIE["level"])){
+
+                                    $level = $_COOKIE["level"];     }
+                                    
+                                    return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
+
                                 });
 
 
@@ -280,6 +286,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $permissions = LoginController::getPermissions();
 
                                 return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions]);
+                            });
+
+                            Route::get('/getPedidos', function (){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $entity = 'ALL';
+                                $pedidos = CotizacionController::getCotizaciones($token, $entity);
+                                return $pedidos;
                             });
 
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
@@ -479,7 +495,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $entity = $request->entity;
                                 $data = SaleOrdersController::getEventosCliente($token, $entity);
                                 return  $data;
-                            });
+                            }); 
 
                             Route::post('/pedido/nuevo/getItemByID', function (Request $request){
                                 $token = TokenController::getToken();
@@ -625,7 +641,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
                                 }
-                                // dd($response->body());
                                 return $response;
                             });
 
@@ -733,18 +748,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE["level"])){
                                     $level = $_COOKIE["level"];
                                 }
-                                // $customersInfo = PromoController::getCustomersInfo($token);
-
-                                // $categories = PromoController::getCategories($customersInfo);
-                                // $giros = PromoController::getGiros($customersInfo);
-                                // $customers = PromoController::getCustomers($customersInfo);
-
-                                // $infoArticulos = SaleOrdersController::getItems($token, 'C002620');
-                                // dd($infoArticulos);
-                                // $proveedores = PromoController::getProveedores($infoArticulos);
-                                // $marcas = PromoController::getMarcas($infoArticulos);
-                                // $articulos = PromoController::getArticulos($infoArticulos);
-
+                                
                                 $permissions = LoginController::getPermissions();
 
                                 return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
@@ -777,7 +781,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $customersInfo = $dataCustomers['customersInfo'];
                                 $categories = $dataCustomers['categories'];
                                 $giros = $dataCustomers['giros'];
-                                $customers = $dataCustomers['customers'];
+                                $customers = $dataCustomers['customers']; 
+                        
 
                                 $dataArticulos = PromoController::getItems($token);
                                 $infoArticulos = $dataArticulos['items'];
@@ -785,7 +790,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $marcas = $dataArticulos['marcas'];
                                 $articulos = $dataArticulos['articulos'];
 
-                                $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos);
+                                $promociones = PromoController::getAllEvents($token);
+
+
+                                $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos, $promociones);
                                 return $info;
                             });
 

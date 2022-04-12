@@ -49,7 +49,8 @@
 
                 <div class="row text-center">
                     <div class="col-12">
-                        <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' value="{{$datePromo}}"/>
+                        <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' style="display:none" value="{{$datePromo}}"/>
+                        <h5 id="fechasLoading">Cargando fechas ...</h5>
                     </div>
                 </div>
 
@@ -153,6 +154,16 @@
                             <select id="regalos" name="regalos[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none">
                             </select>
                             <h5 id="regalosLoading">Cargando regalos ...</h5>
+                    </div>
+                </div> 
+                <div class="row reglas-row">
+                    <div class="col-lg-2 col-md-3 col-12 text-center">
+                        <h5>Reemplaza:</h5>
+                    </div>
+                    <div class="col-lg-10 col-md-9 col-12">
+                            <select id="reemplaza" name="reemplaza[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none">
+                            </select>
+                            <h5 id="reemplazaLoading">Cargando promociones ...</h5>
                     </div>
                 </div> 
 
@@ -416,8 +427,8 @@
             </div>
             <br>
             <div class="row-12">
-                <button class="btn btn-blue w-100" id="btn-validar" onclick="guardarPromocion()">Validar</button>
-                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="guardarPromocion()" disabled>Guardar</button>
+                <button class="btn btn-blue btnActions w-100" id="btn-validar" onclick="validarPromo()">Validar</button>
+                <button class="btn btn-blue w-100 mt-3" id="btn-guardar" onclick="validarPromo()" disabled>Guardar</button> 
             </div>
         </div>
 

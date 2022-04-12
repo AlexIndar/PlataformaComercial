@@ -154,37 +154,37 @@ class MisSolicitudesController extends Controller
                 $descripcion = 'Solicitud Guardada';
                 break;
             case '2':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Solicitud Enviada';
                 break;
             case '3':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Validacion Guardada';
                 break;
             case '4':
                 $descripcion = 'Aceptada Contado';
                 break;
             case '5':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Aceptada Contado (Pendiente Credito)';
                 break;
             case '6':
                 $descripcion = 'Aceptada Credito';
                 break;
             case '7':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Rechazada';
                 break;
             case '8':
                 $descripcion = 'Rechazada Credito (Aceptada Contado)';
                 break;
             case '9':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Solicitud Reenviada';
                 break;
             case '10':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Solicitud Cancelada';
                 break;
             case '11':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Revision Referencias';
                 break;
             case '12':
-                $descripcion = 'Solicitud Guardada';
+                $descripcion = 'Proceso Autorizacion';
                 break;
             default:
                 $descripcion = 'Sin estado';

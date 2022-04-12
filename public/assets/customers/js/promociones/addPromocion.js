@@ -2,6 +2,26 @@ var startDate;
 var endDate;
 var reglas = [];
 $('document').ready(function(){
+    $("body").addClass("sidebar-collapse");
+
+    //Inicia Ajax
+    $(document).ajaxStart(function() {
+        document.getElementById('div-loading').style.opacity = '1';
+        var btnActions = document.getElementsByClassName('btnActions');
+        for(var x=0; x < btnActions.length; x++){
+            btnActions[x].disabled = true;
+        }
+    });
+
+    //Func Termina Ajax
+    $(document).ajaxStop(function() {
+        //Esconde y muestra DIVISORES
+        document.getElementById('div-loading').style.opacity = '0';
+        var btnActions = document.getElementsByClassName('btnActions');
+        for(var x=0; x < btnActions.length; x++){
+            btnActions[x].disabled = false;
+        }
+    } );
 
     // $('.modal-background').click(function() {
     //     closeModal();
@@ -365,6 +385,23 @@ function checkRules() {
         $('#regalos').trigger("chosen:updated");
         document.getElementById('regalos_chosen').style.width = '100%';
 
+        if(document.getElementById('reemplaza_chosen') != undefined){
+            document.getElementById('reemplaza_chosen').style.display = "block";
+            document.getElementById('reemplazaLoading').style.display = "none";
+            var selectReemplaza = document.getElementById('reemplaza');
+            for(var x = 0; x<reglas[8].length; x++){
+                if(!reglas[8][x]['paquete'] && reglas[8][x]['idPaquete'] == 0){
+                    var option = document.createElement("option");
+                    option.text = reglas[8][x]['nombrePromo'];
+                    option.value = reglas[8][x]['id'];
+                    selectReemplaza.appendChild(option);
+                }
+            }
+            $('#reemplaza').trigger("chosen:updated");
+            document.getElementById('reemplaza_chosen').style.width = '100%';
+        }
+       
+
         document.getElementById('categorias_chosen').style.display = "block";
         document.getElementById('categoriasLoading').style.display = "none";
         var selectCategorias = document.getElementById('categorias');
@@ -424,7 +461,7 @@ function checkRules() {
             selectArticulos.appendChild(option);
         }
         $('#articulos').trigger("chosen:updated");
-        document.getElementById('articulos_chosen').style.width = '100%';
+        document.getElementById('articulos_chosen').style.width = '100%'; 
 
         if(window.location.href.includes('promociones/paquete') || (window.location.href.includes('promociones/editar') && document.getElementById('tipoPromo').value == 'paquete')){ //SI ES PAQUETE, AGREGAR REGALOS A SUBREGLAS
             document.getElementById('regalosSub_chosen').style.display = "block";
@@ -461,6 +498,8 @@ function checkRules() {
     } 
     else{
         document.getElementById('regalos_chosen').style.display = "none";
+        if(document.getElementById('reemplaza_chosen') != undefined)
+            document.getElementById('reemplaza_chosen').style.display = "none";
         document.getElementById('giros_chosen').style.display = "none";
         document.getElementById('marcas_chosen').style.display = "none";
         document.getElementById('proveedores_chosen').style.display = "none";
@@ -494,18 +533,7 @@ function downloadTemplate(template){
     window.location.href = '/downloadTemplate'+template;
 }
 
-function guardarPromocion(){   
-    if(document.getElementById('btn-guardar').disabled){
-        document.getElementById('div-loading').style.opacity = '1';
-        setTimeout(validarPromo, 2000);
-    }
-    else{
-        validarPromo();
-    } 
-}
-
 function validarPromo(){
-    document.getElementById('div-loading').style.opacity = '0';
     var bodyValidations = '';
     var save = true;
     if(document.getElementById('nombrePromo').value == ''){
@@ -559,6 +587,7 @@ function validarPromo(){
         var articulos = $('#articulos').chosen().val();
     
         var regalos = $('#regalos').chosen().val();
+        var reemplaza = $('#reemplaza').chosen().val();
     
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
@@ -617,7 +646,8 @@ function validarPromo(){
         else    
             idPromo = 0;
 
-    
+        
+
         var json = { 
             id: idPromo, 
             nombrePromo: document.getElementById('nombrePromo').value,
@@ -626,6 +656,7 @@ function validarPromo(){
             puntosIndar: document.getElementById('puntos').value == "" ? 0 : parseInt( document.getElementById('puntos').value),
             plazosIndar: parseInt( document.getElementById('plazos').value),
             regalosIndar: regalos.toString(),
+            reemplazaRegalo: reemplaza.toString() != '' ? parseInt(reemplaza.toString()) : 0,
             categoriaClientes: categorias.toString(),
             categoriaClientesIncluye: document.getElementById('listaCategoriaClientes').value == 'blanca' ? parseInt('1'): parseInt('0'),
             gruposclientesIds: giros.toString(),
@@ -643,8 +674,6 @@ function validarPromo(){
             cuotasPersonalizadas: cuotasList,
         }
 
-        console.log(json);
-        console.log(JSON.stringify(json));
 
         $.ajax({
             'headers': {
@@ -666,8 +695,8 @@ function validarPromo(){
             }, 
             error: function(error){
                     // window.location.href = '/promociones';
-             }
-        });
+            }
+        }); 
     }
 
     if(!save){
@@ -680,6 +709,7 @@ function validarPromo(){
 
     if(save && document.getElementById('btn-guardar').disabled){
         document.getElementById('btn-guardar').disabled = false;
+        document.getElementById('btn-guardar').classList.add('btnActions');
     }
 }
 
@@ -710,11 +740,13 @@ function clearSelectionAccept(){
 }
 
 function addPromoRules(rules){
-    console.log(rules);
     startDate = rules['fechaInicio'].split('T')[0];
     endDate = rules['fechaFin'].split('T')[0];
+    document.getElementById('rangoFechas').style.display = "block";
+    document.getElementById('fechasLoading').style.display = "none";
     var pedidoPromoRules = rules['pedidoPromoRulesD'];
     var regalos = rules['regalosIndar'];
+    var reemplazaRegalo = rules['reemplazaRegalo'];
     var clientes = rules['clientesId'];
     var categorias = rules['categoriaClientes'];
     var proveedores = [];
@@ -724,6 +756,9 @@ function addPromoRules(rules){
     if(regalos != null){
         regalos = regalos.split(',');
         $('#regalos').val(regalos).trigger('chosen:updated');
+    }
+    if(reemplazaRegalo != 0){
+        $('#reemplaza').val(reemplazaRegalo).trigger('chosen:updated');
     }
     if(clientes != null){
         clientes = clientes.split(',');
