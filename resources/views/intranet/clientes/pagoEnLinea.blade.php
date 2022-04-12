@@ -50,6 +50,7 @@
                     <table id="example" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
                         <thead>
                            <tr>
+                            <th></th>
                             <th>Documento</th>
                             <th>No.</th>
                             <th>Monto</th>
@@ -59,35 +60,45 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
-                                    <img src="../../dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2">
-                                    Factura
-                                 </td>
+                                <td> <img src="/dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                                <td>Factura</td>
                                   <td> <a href="#" class="text-muted">98875</a></td>
-                                  <td>$877.00</td>
+                                  <td>877.00</td>
                                   <td>11/07/2022</td>
                                   <td><a href="#" class="text-muted">I-60073</a></td>
                             </tr>
+                            <tr>
+                                <td><img src="/dist/img/nota.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                                <td> Nota de Crédito</td>
+                                  <td> <a href="#" class="text-muted">208</a></td>
+                                  <td>177.00</td>
+                                  <td>12/03/2022</td>
+                                  <td><a href="#" class="text-muted">N. C. </a></td>
+                            </tr>
                            <tr>
-                            <td>
-                                <img src="../../dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2">
-                                Factura
-                             </td>
+                               <td> <img src="/dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                            <td>Factura</td>
                               <td> <a href="#" class="text-muted">75009</a></td>
-                              <td>$1,890.00</td>
+                              <td>890.00</td>
                               <td>01/12/2022</td>
                               <td><a href="#" class="text-muted">I-7322</a></td>
                            </tr>
                            <tr>
-                            <td>
-                                <img src="../../dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2">
-                                Factura
-                             </td>
+                               <td><img src="/dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                            <td>Factura</td>
                               <td> <a href="#" class="text-muted">88722</a></td>
-                              <td>$303.00</td>
+                              <td>303.00</td>
                               <td>08/04/2022</td>
                               <td><a href="#" class="text-muted">I-3821</a></td>
                            </tr>
+                           <tr>
+                            <td><img src="/dist/img/nota.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                            <td> Nota de Crédito</td>
+                              <td> <a href="#" class="text-muted">345</a></td>
+                              <td>99.00</td>
+                              <td>22/06/2023</td>
+                              <td><a href="#" class="text-muted">N. C. </a></td>
+                        </tr>
                         </tbody>
                      </table>
                    </div>
@@ -96,6 +107,7 @@
                     <table id="example2" class="table table-hover" style="font-size:90% ;font-weight: bold ">
                         <thead>
                            <tr>
+                              <th></th>
                               <th>Documento</th>
                               <th>No.</th>
                               <th>Monto</th>
@@ -113,10 +125,10 @@
                 <div class="row">
                    <div class="col-6">
                       <p class="lead">Metodos de Pago:</p>
-                      <img src="../../dist/img/credit/visa.png" alt="Visa">
-                      <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-                      <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                      <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+                      <img src="/dist/img/credit/visa.png" alt="Visa">
+                      <img src="/dist/img/credit/mastercard.png" alt="Mastercard">
+                      <img src="/dist/img/credit/american-express.png" alt="American Express">
+                      <img src="/dist/img/credit/paypal2.png" alt="Paypal">
                       <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
                          Nota : solo se puede pagar ......
                       </p>
@@ -127,15 +139,15 @@
                             <tbody>
                                <tr>
                                   <th style="width:50%">Subtotal:</th>
-                                  <td>$250.30</td>
+                                  <td id="subtotal"></td>
                                </tr>
                                <tr>
                                   <th>Descuentos </th>
-                                  <td>$10.00</td>
+                                  <td id="descuento"></td>
                                </tr>
                                <tr>
                                   <th>Total:</th>
-                                  <td>$240.30</td>
+                                  <td id="total"></td>
                                </tr>
                             </tbody>
                          </table>
@@ -145,7 +157,7 @@
                 <div class="row no-print">
                    <div class="col-12">
                       <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                      <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Generar Ficha de Pago
+                      <button type="button" class="btn btn-success float-right" onclick="window.print();"><i class="far fa-credit-card"></i> Generar Ficha de Pago
                       </button>
                       <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
                       <i class="fas fa-download"></i> Descargar PDF
@@ -156,9 +168,13 @@
           </div>
        </div>
     </div>
+
  </section>
 </div>
+        {{--  MODAL PAGO  --}}
+
 @endsection
+
 
 @section('js')
 
@@ -168,6 +184,8 @@
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 $(document).ready(function() {
+
+$("body").addClass("sidebar-collapse");
 
 var table = $('#example').DataTable({
         dom : 'Brt',
@@ -180,17 +198,31 @@ var t = $('#example2').DataTable({
                 $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
         }
 } );
-
+var subTotal = 0;
+var descuento = 0;
+var total = 0;
  $('#example tbody').on('click', 'tr', function () {
     jQuery(this).toggle("scale");
      var data = table.row( this ).data();
-    console.log(data);
+if(data[1]=='Factura'){
+    subTotal += parseFloat(data[3]);
+    $('#subtotal').text('$' + subTotal);
+}
+else{
+    descuento += parseFloat(data[3]);
+    $('#descuento').text('$' + descuento);
+}
+
+total = subTotal - descuento;
+$('#total').text('$' + total);
+
     t.row.add( [
        data[0],
        data[1],
         data[2],
         data[3],
-        data[4]
+        data[4],
+        data[5]
 
     ] ).draw();
  } );
@@ -198,13 +230,24 @@ var t = $('#example2').DataTable({
  $('#example2 tbody').on('click', 'tr', function () {
     jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
      var data = t.row( this ).data();
-    console.log(data);
+    if(data[1]=='Factura'){
+        subTotal -=  parseFloat(data[3]);
+        $('#subtotal').text('$' + subTotal);
+    }else{
+        descuento -= parseFloat(data[3]);
+        $('#descuento').text('$' + descuento);
+    }
+
+    total = subTotal - descuento;
+    $('#total').text('$' + total);
+
     table.row.add( [
        data[0],
        data[1],
         data[2],
         data[3],
-        data[4]
+        data[4],
+        data[5]
 
     ], ).draw();
  } );
