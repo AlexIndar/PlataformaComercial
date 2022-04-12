@@ -52,10 +52,10 @@
                         </div>
                      </div>
                   </div>
-                  <div id="divClientes" style="display: block" class="card-body">
-                     <div class="col-lg-12">
+                  <div  class="card-body">
+                     <div   class="col-lg-12">
                         <div class="card-body table-responsive p-0">
-                           <table id="comisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                           <table id="comisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
                                  <tr>
                                     <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >  </th>
@@ -143,8 +143,15 @@
                         </div>
                      </div>
                   </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
   <!-- Modal Detalle Dias no laborados -->
-<div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+  <div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">
@@ -181,12 +188,53 @@
         </div>
     </div>
 </div>
-               </div>
+
+  <!-- Modal Detalle Descuentos -->
+  <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-indarBlue">Descuentos</h3>
+                <h6 id ="vendedor" class="text-center title ml-auto"></h6>
+                <input type="text" id="typeFormInf" value="" hidden>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-         </div>
-      </div>
-   </div>
+            <div class="modal-body text-indarBlue" id="modal2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-body table-responsive p-0">
+                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:70% ;font-weight: bold ">
+                               <thead style="background-color:#002868; color:white">
+                                <tr >
+                                    <th>Id</th>
+                                    <th>Cliente</th>
+                                    <th>Recibida en el mes con IVA</th>
+                                    <th>Cobrado en el mes sin IVA</th>
+                                    <th>Pendiente Saldar mes anterior sin IVA</th>
+                                    <th>Pendiente de saldar este mes sin IVA</th>
+                                    <th>Sal dada en el mes sin IVA</th>
+                                    <th>Desc Neg</th>
+                                    <th>Desc. Fuera de Tiempo </th>
+                                    <th>Nota de Credito por Incobra bilidad</th>
+                                    <th>Incobra bilidad </th>
+                                    <th>Comisión Base</th>
+                                 </tr>
+                               </thead>
+                               <tbody id="llenaDescModal">
+                               </tbody>
+                            </table>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 @endsection
 @section('js')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -385,21 +433,21 @@
                    '<td id ="totalComision" style="font-weight: bold">' + sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>';
 
-                   htmldescComi += '<tr onClick="detalleDesc(1);" style="cursor: pointer">' +
+                   htmldescComi += '<tr onClick="detalleDesc(1);" style="cursor: pointer" data-toggle="modal" data-target="#descModal">' +
                    '<td style="font-weight: bold" colspan="3"> DESNEG </td>' +
                    '<td style="font-weight: bold">' + sumaImpD.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
-                   '<tr  onClick="detalleDesc(2);" style="cursor: pointer">' +
+                   '<tr  onClick="detalleDesc(2);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">' +
                    '<td style="font-weight: bold" colspan="3"> Descuento Fuera de Tiempo </td>' +
                    '<td style="font-weight: bold">' + sumaImpF.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
-                   '<tr  onClick="detalleDesc(3);" style="cursor: pointer">' +
+                   '<tr  onClick="detalleDesc(3);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">' +
                    '<td style="font-weight: bold" colspan="3" > Incobrabilidad </td>' +
                    '<td style="font-weight: bold">' + sumaImpI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
@@ -451,7 +499,9 @@
 //
 
         function myCallback(response) {
-         var comisionTotal = response;
+
+
+         var comisionTot = response.replace(',','');
 
           //AJAX Detalle Días
           $.ajax({
@@ -465,20 +515,20 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function(data){
-            console.log(data.diasLaborados);
-            console.log(comisionTotal);
+            //console.log(data.diasLaborados);
+           // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
             var htmlModal = '';
-            var importePunt = (comisionTotal * data.porcAlcanzado)/100;
-            var comisionInt = parseFloat(comisionTotal) + parseFloat(importePunt) + parseFloat(comisionTotal*0.10);
+            var importePunt = (comisionTot * data.porcAlcanzado)/100;
+            console.log( comisionTot );
+            var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
             var vendedor = data.vendedor + ' | ' + data.zona;
             var dataDetalle = data.detalle;
             var i ;
-            console.log (data.diasNoLAborados);
 
             for (i = 0; i < dataDetalle.length; i++) {
 
-                console.log(dataDetalle[i].formulario);
+                //console.log(dataDetalle[i].formulario);
                 htmlModal += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + dataDetalle[i].formulario + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].numVisitas + '</td>' +
@@ -528,7 +578,7 @@
     }else{
         id= 'I'+id
     }
-    console.log(id);
+    //console.log(id);
         // AJAX Detalle Descuentos
         $.ajax({
            'headers': {
@@ -541,17 +591,27 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function(data){
-            console.log(data);
-            /* for (i = 0; i < dataDetalle.length; i++) {
+            htmlModalDesc = '';
+            for (i = 0; i < data.length; i++) {
 
-                console.log(dataDetalle[i].formulario);
-                htmlModal += '<tr>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + dataDetalle[i].formulario + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].numVisitas + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].codigo + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].fecha + '</td>' +
+                //console.log(data[i].companyname);
+                htmlModalDesc += '<tr>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].companyid.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].companyname.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].descneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].descuento_fuera_tiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].incobrabilidadADescontar.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].comision_base.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                             '</tr>';
-            } */
+            }
+            $('#llenaDescModal').html(htmlModalDesc);
+
 
 
 
