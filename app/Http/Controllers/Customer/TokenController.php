@@ -35,7 +35,7 @@ class TokenController extends Controller
     public static function refreshToken(){
         if(isset($_COOKIE["refresh"])){
             $old = $_COOKIE["refresh"];
-            $username = $_COOKIE["username"];
+            $username = session('username');
             $typeUser = Http::withToken($old)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
             $permissions = (json_decode(json_decode($typeUser->body())->permissions));
             $response = Http::withToken($old)->post('http://192.168.70.107:64444/Login/RefreshToken');
@@ -46,10 +46,8 @@ class TokenController extends Controller
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", "", time()- 60*60*24, '/');
                     setcookie("refresh", $token, time()+ 60*60*24, '/');
-                    setcookie('access', "", time()-60*60*24*30, '/');
-                    setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
-                    setcookie('username', "", time()-60*60*24*30, '/');
-                    setcookie('username', $username, time()+60*60*24*30, '/');
+                    session(['username' => $username]);
+                    session(['access' => json_encode($permissions)]);
                     return $token;
             }
             else{

@@ -39,37 +39,37 @@ class LoginController extends Controller
                 if(json_decode($typeUser->body())->typeUser == "C"){
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", $token, time()+60*60*24, '/');
-                    setcookie("level", "C", time()+60*60*24, '/');
-                    setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
-                    setcookie('username', $username, time()+60*60*24*30, '/');
+                    session(['username' => $username]);
+                    session(['access' => json_encode($permissions)]);
+                    session(['level' => 'C']);
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", $token, time()+60*60*24, '/');
-                    setcookie("level", "E", time()+60*60*24, '/');
-                    setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
-                    setcookie('username', $username, time()+60*60*24*30, '/');
+                    session(['username' => $username]);
+                    session(['access' => json_encode($permissions)]);
+                    session(['level' => 'E']);
                     return redirect('/Intranet');
                 }
         } 
         else{
             setcookie("laravel-token", "error", time()+900, '/');
-            return redirect('/');
+            return redirect('/'); 
         }
     }
 
     public function logout(){
         setcookie("laravel-token", "", time()-60*60*24, '/');
-        setcookie("level", "", time()- 60*60*24, '/');
         setcookie("refresh", "", time()- 60*60*24, '/');
-        setcookie("access", "", time()- 60*60*24*30, '/');
-        setcookie("username", "", time()- 60*60*24*30, '/');
+        session()->forget('username');
+        session()->forget('access');
+        session()->forget('level');
         return redirect('/');
     }
 
     public static function getPermissions(){
-        $permissions = json_decode($_COOKIE["access"]);
+        $permissions = json_decode(session('access'));
         return $permissions;
     }
 

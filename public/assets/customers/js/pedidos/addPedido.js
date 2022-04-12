@@ -1627,7 +1627,8 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
                         }
                 }, 
                 error: function(error){
-                        window.location.href = '/pedidos';
+                    alert('error');
+                        // window.location.href = '/pedidos';
                  }
             });
         }
@@ -1776,7 +1777,7 @@ function saveNS(){
             var evento;
             pedidoSeparado.length>0 ? pedidoSeparado[indexItemSeparado]['evento'] : "";
 
-            var username = getCookie('username');
+            var username = "USERNAME";
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 
@@ -2107,9 +2108,11 @@ function updatePrecioIVA(itemid){
     var desc = document.getElementById('inputDescuentoInventario-'+itemid).value;   
     var cant = document.getElementById('inputPrecioCliente-'+itemid).value;
     var art = items.find(o => o.itemid === itemid);
-    var precioClienteActual = 0
+    var precioClienteActual = 0;
     if(cant != '' && cant != '0'){
-        precioClienteActual = parseFloat(getPrecioClientePromo(itemid).substring(1));
+        var precio = getPrecioClientePromo(itemid).replace('$', '');
+        var precio = precio.replace(',', '');
+        precioClienteActual = parseFloat(precio);
     }
     else{
         precioClienteActual = art['price'];
@@ -2349,18 +2352,6 @@ function levantandoPedidoLoading(){
     $('#modalNetsuiteLoading').modal('show');
 }
 
-function getCookie(name){
-    var cookies = document.cookie.split(';');
-    var returnValue = '';
-    for(var x = 0; x < cookies.length; x++){
-        var keyValue = cookies[x].split('=');
-        var key = keyValue[0];
-        var value = keyValue[1];
-        if(key.trim() == name.trim())
-            returnValue = value;
-    }
-    return returnValue;
-}
 
 function verImagenProducto(itemid){
     var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg";

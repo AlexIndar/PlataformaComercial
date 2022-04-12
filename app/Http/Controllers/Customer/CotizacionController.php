@@ -34,7 +34,11 @@ class CotizacionController extends Controller
     }
 
     public static function storePedido($token, $data){
+        date_default_timezone_set('America/Mexico_City');
         $json = json_decode($data);
+        $dateTime = date("Y-m-d H:i:s");
+        $dateTime = str_replace(" ", "T", $dateTime);
+        $username = session('username');
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
             "idCotizacion" => $json->idCotizacion,
             "companyId" => $json->companyId,
@@ -47,7 +51,9 @@ class CotizacionController extends Controller
             "pickUp" => $json->pickUp,
             "order" => $json->order,
             "comments" => $json->comments,
-            "enviado" => $json->enviado
+            "enviado" => $json->enviado,
+            "usuario" => $username,
+            "fecha" => $dateTime,
         ]);
         return $response;
     }
@@ -99,7 +105,7 @@ class CotizacionController extends Controller
         $typeSale['id'] = $cotizacion->order[$index-1]->tipo == 'BO' ? '6' : '5';
         $typeSale['txt'] = "";
         
-        $username = $_COOKIE["username"];
+        $username = session('username');
 
         $methodPayment['id'] = "10";
         $methodPayment['txt'] = "";
