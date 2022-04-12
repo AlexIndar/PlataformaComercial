@@ -8,7 +8,7 @@
 @endsection
 
 @section('body')
-<div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;"> 
+<div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;">
     <div class="content-header">
        <div class="container-fluid">
           <div class="row mb-2">
@@ -47,8 +47,8 @@
                                 <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
                             </div>
                             <div class="col-md-4">
-                                    <div class="spinner-border text-secondary" style="display:none" id="btnSpinner" ></div>
-                                    <button type="submit" class="btn btn-primary mb-3" style="background-color:#002868" style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
+                                <div class="spinner-border text-secondary" style="display:none" id="btnSpinner" ></div>
+                                <button type="submit" class="btn btn-primary mb-3" style="background-color:#002868" style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
                             </div>
                          </div>
                      </div>
@@ -65,7 +65,7 @@
                                         <th>Id</th>
                                         <th>Cliente</th>
                                         <th>Recibida en el mes con IVA</th>
-                                        <th>Pagada en el mes sin IVA</th>
+                                        <th>Cobrado en el mes sin IVA</th>
                                         <th>Pendiente Saldar mes anterior sin IVA</th>
                                         <th>Pendiente de saldar este mes sin IVA</th>
                                         <th>Sal dada en el mes sin IVA</th>
@@ -103,7 +103,7 @@
                                      <tr>
                                         <th>Documento</th>
                                         <th>Reci bida en el Mes con IVA</th>
-                                        <th>Pagada en el Mes sin IVA</th>
+                                        <th>Cobrado en el Mes sin IVA</th>
                                         <th>Pendiente Saldar Mes Anterior sin IVA</th>
                                         <th>Pendiente Saldar Este Mes sin IVA</th>
                                         <th>Saldada en el Mes sin IVA</th>
@@ -205,7 +205,7 @@ $.ajax({
             //var o= JSON.parse(data);
             var rawtData = data;
             var groupBy = function (miarray, prop) {
-               return miarray.reduce(function(groups, item) {
+                return miarray.reduce(function(groups, item) {
                    var val = item[prop];
                    groups[val] = groups[val] || {companyid: item.companyid, companyname: item.companyname,recibo_mes_actual: 0,recibo_mes_actual_siniva: 0,pendiente_saldar_mes_anteriorl_siniva: 0,pendiente_saldar_mes_actual: 0,saldada_mes_actual_siniva: 0,de0a30: 0,de31a60: 0,de61a90: 0,de91oMayor: 0,diferencias_precio: 0,descuento_fuera_tiempo: 0,incobrabilidad: 0, incobrabilidadADescontar: 0, descneg: 0, comision_base: 0};
                    groups[val].recibo_mes_actual += item.recibo_mes_actual;
@@ -330,13 +330,13 @@ $.ajax({
                             var fechaFact = moment(new Date(data[i].fechaFactura)).format('DD/MM/YYYY');
                             var fechaDue = moment(new Date(data[i].dueDate)).format('DD/MM/YYYY');
                             var fechaSaldada = data[i].fecha_saldada.slice(0, 10);
-                            var recibo_mes_actual = data[i].recibo_mes_actual.toLocaleString('es-MX');
-                            var recibo_mes_actual_siniva = data[i].recibo_mes_actual_siniva.toLocaleString('es-MX');
-                            var pendiente_saldar_mes_anteriorl_siniva = data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX');
-                            var saldada_mes_actual_siniva = data[i].saldada_mes_actual_siniva.toLocaleString('es-MX');
-                            var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX');
-                            var importe_factura = data[i].importe_factura.toLocaleString('es-MX');
-                            var incobrabilidad = data[i].incobrabilidad.toLocaleString('es-MX');
+                            var recibo_mes_actual = data[i].recibo_mes_actual.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            var recibo_mes_actual_siniva = data[i].recibo_mes_actual_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            var pendiente_saldar_mes_anteriorl_siniva = data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            var saldada_mes_actual_siniva = data[i].saldada_mes_actual_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            var pendiente_saldar_mes_actual = data[i].pendiente_saldar_mes_actual.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            var importe_factura = data[i].importe_factura.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            var incobrabilidad = data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
                             var comisionBase = data[i].comision_base.toLocaleString('es-MX', {maximumFractionDigits: 2});
 
                             if (data[i].saldo > 0 &&  comisionBase == 0){
@@ -383,28 +383,28 @@ $.ajax({
                         if(html !== ''){
                             html +=
                             '<td style="font-weight: bold; background-color:#7fffbf">Total</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMCI.toLocaleString('es-MX')+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMSI.toLocaleString('es-MX')+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSMASI.toLocaleString('es-MX')+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSMSI.toLocaleString('es-MX')+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSEMSI.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSMASI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSEMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf"> </td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaIFac.toLocaleString('es-MX')+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSaldo.toLocaleString('es-MX')+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaIFac.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSaldo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+ sumaInc.toLocaleString('es-MX') +'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toLocaleString('es-MX')+'</td>';
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+ sumaInc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>';
                            $('#llenaDetalle').html(html);
                            //console.log(html);
                            document.getElementById("divClientes").style.display = "none";
                            document.getElementById("divDetalle").style.display = "block";
                            document.getElementById("divFiltroCli").style.display = "none";
 
-                            $('#companyname').text(data[0].companyname);
+                           $('#companyname').text(data[0].companyname);
                            $('#companyid').text(data[0].companyid);
                            document.getElementById("companyname").style.display = "block";
                            document.getElementById("companyid").style.display = "block";

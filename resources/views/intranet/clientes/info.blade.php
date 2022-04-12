@@ -23,54 +23,318 @@
                 <div class="row">
                    <div class="col-12">
                     <h4>
-                        <i class="fas fa-globe"></i> Clientes | Información General<a href="/clientes/pagoEnLinea" target="_blank">&nbsp;<button  class="btn btn-primary mb-3"  id="btnConsultar">Estado de Cuenta </button></a>
+                        <i class="fas fa-globe"></i> Clientes | Información General
                         <small class="float-right"><?php echo "Fecha :  " . date("d/m/Y") . "<br>"; ?></small>
                     </h4>
                    </div>
                 </div>
                 <br>
                 <div class="row invoice-info">
-                   <div class="col-sm-6 invoice-col">
-                      Info del Cliente
+                   <div class="col-sm-4 invoice-col">
+                    <strong>Info del Cliente</strong>
                       <address>
-                         <strong>Nombre De Cliente </strong><br>
+                         Nombre De Cliente <br>
                         Gerencia : ----  <br>
                         Sucursal : ----- <br>
                         Tipo de Cliente:-----<br>
                         Antiguedad: 22/12/2019
                       </address>
                    </div>
-                   <div class="col-sm-6 invoice-col">
-                      <strong>Linea de Crédito</strong><br>
-                      Saldo Total: $ 400.00 a Pagar Antes del : 02/04/2022 <br>
-                      Disponible: $ 600.00<br>
-                      <b> Limite de Crédito:</b> $ 1,000.00  <br>
-                   </div>
+                   <div class="col-sm-4 invoice-col">
+                   <br>
+                    RFC: XXXXXXXXX <br>
+                    Dirección: ---------------<br>
+                    Telefono: 33-33-33-33<br>
+                    Estatus :Alto <br>
+                    <b> Calificación Actual:</b> M <br>
+                 </div>
+                </div>
+                <hr>
+                <div class="row invoice-info">
+                    <div class="col-sm-12 invoice-col ">
+                        <p class="lead "> <b> Cuentas Por Pagar y Crédito </b></p>
+                    </div>
+                    <div class="col-sm-5 invoice-col">
+                        <strong>Saldo</strong><br>
+                        Total : $1,000.00 Por Vencer : $ 600.00<br>
+                        Vencido: $ 400.00 a Pagar Antes del : 02/04/2022 <br>
+                        Plazo en Días: 30<br>
+                        Notas de Crédito Pendientes de Aplicar : $100.00 <br>
+                        <b> Limite de Crédito:</b> $ 2,000.00  <br>
+                     </div>
+                    <div class="col-sm-7 invoice-col">
+                    <strong>Estado de Cuenta </strong><br><br>
+                    Seleccione Un Rango de Fechas: <br>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                        </span>
+                        <input type="text" class="form-control float-right" id="edoCuenta">
+                        <a href="/clientes/pagoEnLinea" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>&nbsp;
+                        <a href="/clientes/pagoEnLinea" target="_blank"><button  class="btn btn-success"  id="btnConsultar">Ir a Pagar </button></a>
+                    </div>
+                  </div>
+                 </div>
+                 <hr>
+                <div class="row">
+                    <div class="col-sm-12 invoice-col ">
+                        <p class="lead "> <b> Contacto INDAR </b></p>
+                    </div>
+                    <div class="col-md-12 card-body table-responsive p-0">
+                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:76%">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th>Área</th>
+                                 <th>Nombre</th>
+                                 <th>Telefono</th>
+                                 <th>E-mail</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+                            <tr>
+                                <td>Vendedor</td>
+                                <td>Nombre ----</td>
+                                <td>331255431</td>
+                                <td>indar@indar.com.mx</td>
+                            </tr>
+                            <tr>
+                                <td>Gerente</td>
+                                <td>Nombre ----</td>
+                                <td>331255431</td>
+                                <td>indar@indar.com.mx</td>
+                            </tr>
+                            <tr>
+                                <td>Crédito y Cobranza</td>
+                                <td>Nombre ----</td>
+                                <td>331255431</td>
+                                <td>indar@indar.com.mx</td>
+                            </tr>
+                            <tr>
+                                <td>Post Venta</td>
+                                <td>Nombre ----</td>
+                                <td>331255431</td>
+                                <td>indar@indar.com.mx</td>
+                            </tr>
+                           </tbody>
+
+                        </table>
+                     </div>
+
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-12 invoice-col text-center">
-                        <p class="lead text-center">Contacto INDAR</p>
+                    <div class="col-sm-12 invoice-col ">
+                        <p class="lead "> <b> Cuentas Bancarias para Depósito </b></p>
                     </div>
-                    <div class="col-sm-6 invoice-col text-center">
+                    <div class="card-body col-md-6 table-responsive p-0">
+                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:76%">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th>Banco</th>
+                                 <th>Cuenta</th>
+                                 <th>CLABE</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+                            <tr>
+                                <td>BBVA</td>
+                                <td>Convenio CIE: 806161</td>
+                                <td>012 320 00133687449 9</td>
+
+                            </tr>
+                            <tr>
+                                <td>BANORTE</td>
+                                <td>Convenio CEP: 51928</td>
+                                <td>072 320 00020039981 8</td>
+
+                            </tr>
+                            <tr>
+                                <td>Santander</td>
+                                <td>65-500776517</td>
+                                <td>014 320 65500776517 1</td>
+
+                            </tr>
+                           </tbody>
+                        </table>
+                     </div>
+
+                    <div class="card-body col-md-6  table-responsive p-0">
+                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:79%">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th>Banco</th>
+                                 <th>Cuenta</th>
+                                 <th>CLABE</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+                            <tr>
+                                <td>HSBC</td>
+                                <td>Cuenta RAP: 2290</td>
+                                <td>021 320 04050561075 3</td>
+
+                            </tr>
+                            <tr>
+                                <td>BANAMEX</td>
+                                <td>110-1613905</td>
+                                <td>002 320 01101613905 6</td>
+
+                            </tr>
+                           </tbody>
+
+                        </table>
+                     </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 invoice-col ">
+                        <p class="lead "> <b>Estatus de Compras </b></p>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th>Movimiento</th>
+                                 <th>Fecha </th>
+                                 <th>Pedidos Pendientes</th>
+                                 <th>WMS Ingresado</th>
+                                 <th>WMS Surtido</th>
+                                 <th>WMS Consolidado</th>
+                                 <th>Compras de Hoy </th>
+                                 <th>Embarques Por Enviar</th>
+                                 <th>Embarques en Transito</th>
+                                 <th>Embarques por Conformar</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+
+                           </tbody>
+
+                        </table>
+                     </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 invoice-col ">
+                        <p class="lead "> <b> Nivel de Servicio </b></p>
+                    </div>
+                    <div class="col-md-12 card-body table-responsive p-0">
+                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:76%">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th>Concepto </th>
+                                 <th>Abril 2022</th>
+                                 <th>Marzo 2022</th>
+                                 <th>Febrero 2022</th>
+                                 <th>Enero 2022</th>
+                                <th>Diciembre 2021</th>
+                                <th>Noviembre 2021</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+                            <tr>
+                                <td>Nivel de Servicio a Primera Factura</td>
+                                <td>%%</td>
+                                <td>%%</td>
+                                <td>%%</td>
+                                <td>%%</td>
+                                <td>%%</td>
+                                <td>%%</td>
+                            </tr>
+                            <tr>
+                                <td>Tiempo de Entrega entre captura y recepción</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                            </tr>
+                            <tr>
+                                <td>Tiempo de Solución en Folios de Calidad</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                                <td>00</td>
+                            </tr>
+
+                           </tbody>
+
+                        </table>
+                     </div>
+
+                </div>
+                <hr>
+                <div class="row">
+                    <p class="lead text-center"><b>Histórico de Compras</b></p>
+                    <div class="card-body table-responsive p-0">
+                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
+                           <thead style="background-color:#002868; color:white">
+                            <tr  style="background-color:#002868; color:white">
+                            <th style="background-color:#002868; color:white" colspan="6">Ejercicio Anterior 2021</th>
+                            <th style="background-color:#002868; color:white" colspan="12">Ejercicio Actual 2022</th>
+                            </tr>
+                              <tr>
+                                 <th>Mes</th>
+                                 <th>Trim Feb-Abr </th>
+                                 <th>Trim May-Jul</th>
+                                 <th>Trim Ago-Oct</th>
+                                 <th>Trim Nov-Ene</th>
+                                 <th>Total</th>
+                                 <th>Trim Feb-Abr </th>
+                                 <th>% Crec. </th>
+                                 <th>Trim May-Jul</th>
+                                 <th>% Crec. </th>
+                                 <th>Trim Ago-Oct</th>
+                                 <th>% Crec. </th>
+                                 <th>Trim Nov-Ene</th>
+                                 <th>% Crec. </th>
+                                 <th>Acumu lado</th>
+                                 <th>% Crec</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+
+                           </tbody>
+
+                        </table>
+                     </div>
+                </div>
+                {{-- <div class="row">
+                    <div class="col-sm-12 invoice-col ">
+                        <p class="lead "> <b> Cuentas Bancarias para Depósito </b></p>
+                    </div>
+                    <div class="col-sm-3 invoice-col ">
                         <address>
                            <strong>Nombre del Vendedor </strong><br>
                            Email : indar@indar.com <br>
                            Telefono: (012) 539-1037 <br>
                         </address>
                      </div>
-                     <div class="col-sm-6 invoice-col text-center">
+                     <div class="col-sm-3 invoice-col ">
                         <address>
                            <strong>Nombre del Gerente </strong><br>
                            Email : indar@indar.com <br>
                            Telefono: (012) 539-1037 <br>
                         </address>
                      </div>
-                </div>
-                <br>
-                <div class="row">
-
-                </div>
+                     <div class="col-sm-3 invoice-col ">
+                        <address>
+                           <strong>Credito y cobranza </strong><br>
+                           Email : indar@indar.com <br>
+                           Telefono: (012) 539-1037 <br>
+                        </address>
+                     </div>
+                     <div class="col-sm-3 invoice-col ">
+                        <address>
+                           <strong>Post Venta </strong><br>
+                           Email : indar@indar.com <br>
+                           Telefono: (012) 539-1037 <br>
+                        </address>
+                     </div>
+                </div> --}}
              </div>
           </div>
        </div>
@@ -87,6 +351,8 @@
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 $(document).ready(function() {
+
+$('#edoCuenta').daterangepicker();
 
 var table = $('#example').DataTable({
         dom : 'Brt',

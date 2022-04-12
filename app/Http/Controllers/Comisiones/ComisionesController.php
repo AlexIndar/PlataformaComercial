@@ -14,6 +14,11 @@ class ComisionesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function getDiasNoHabiles($token, $zona,$fecha){
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/CobranzaZona/getDiasNoHabiles?zona='.$zona.'&fecha='.$fecha);
+        return json_decode($data->body());
+    }
+
     public static function getHistoricoCobranzaZonaList($token,$fecha){
         $data = Http::withToken($token)->get('http://192.168.70.107:64444/CobranzaZona/getHistoricoCobranzaZonaList?fecha='.$fecha);
         return json_decode($data->body());

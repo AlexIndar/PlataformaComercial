@@ -581,14 +581,14 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 else{
                                     return response()->json(['success' => 'Cotización enviada correctamente'], 200);
                                 }
-                                
+
 
                              });
 
                              Route::post('/sendmailErrorNS', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
-                                
-                                $responseNS = $request->responseNS; 
+
+                                $responseNS = $request->responseNS;
                                 $correo = $request->email;
                                 $emails = ['alejandro.jimenez@indar.com.mx'];
                                 Mail::to($emails)->send(new ErrorNetsuite($responseNS));
@@ -631,7 +631,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad); 
+                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -1245,6 +1245,20 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::get('/comisiones/getDiasNoHabiles', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $zona = $request->zona;
+                   $fecha = $request->fecha;
+
+                   $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
+                   //dd($data);
+                    return $data;
+
+                });
+
                 Route::get('/comisiones/getDetalle', function (Request $request){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
@@ -1307,6 +1321,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                    return $data;
 
                 });
+
+
+                // ******************       Pago en Linea *************************
 
                 Route::get('/clientes/info', function(){
                     $token = TokenController::getToken();
