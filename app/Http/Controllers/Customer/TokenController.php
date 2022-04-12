@@ -46,6 +46,8 @@ class TokenController extends Controller
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", "", time()- 60*60*24, '/');
                     setcookie("refresh", $token, time()+ 60*60*24, '/');
+                    setcookie("access", "", time()- 60*60*24, '/');
+                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
                     session(['username' => $username]);
                     session(['access' => json_encode($permissions)]);
                     return $token;

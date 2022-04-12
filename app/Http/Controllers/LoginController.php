@@ -40,6 +40,7 @@ class LoginController extends Controller
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", $token, time()+60*60*24, '/');
                     session(['username' => $username]);
+                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
                     session(['access' => json_encode($permissions)]);
                     session(['level' => 'C']);
                     return redirect('/');
@@ -48,6 +49,7 @@ class LoginController extends Controller
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", $token, time()+60*60*24, '/');
                     session(['username' => $username]);
+                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
                     session(['access' => json_encode($permissions)]);
                     session(['level' => 'E']);
                     return redirect('/Intranet');
@@ -62,6 +64,7 @@ class LoginController extends Controller
     public function logout(){
         setcookie("laravel-token", "", time()-60*60*24, '/');
         setcookie("refresh", "", time()- 60*60*24, '/');
+        setcookie("access", "", time()- 60*60*24, '/');
         session()->forget('username');
         session()->forget('access');
         session()->forget('level');
@@ -69,7 +72,7 @@ class LoginController extends Controller
     }
 
     public static function getPermissions(){
-        $permissions = json_decode(session('access'));
+        $permissions = json_decode($_COOKIE["access"]);
         return $permissions;
     }
 
