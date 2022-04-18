@@ -520,7 +520,7 @@ function showAll(){
 
 function openDetail(numPedido){
     var bodyDetail = document.getElementById('saleOrderDetail');
-    // bodyDetail.innerHTML = '';
+    bodyDetail.innerHTML = '';
     $('#modalDetail').modal('show');
     document.getElementById('titleModalDetail').innerHTML = '<h3>Estatus Pedido: '+numPedido+'</h3>';
     $.ajax({
@@ -604,41 +604,41 @@ function getDetalleFacturado(numPedido){
 		'enctype': 'multipart/form-data',
 		'timeout': 2*60*60*1000,
 		success: function(data){
-                // var body = document.getElementById('saleOrderDetail');
-                // body.innerHTML = '';
-                // if(data != null){
-                //     for(var x = 0; x < data.length; x++){
-                //         var row = document.createElement('div');
-                //         row.setAttribute('class', 'row d-flex align-items-center');
-                //         row.setAttribute('style', 'height: 80px; margin-bottom: 0 !important;');
-                //         var div = document.createElement('div');
-                //         div.setAttribute('class', 'col-4 d-flex align-items-center h-100');
-                //         div.setAttribute('style', 'border-right: 1px solid #0000005e;');
-                //         var div2 = document.createElement('div');
-                //         div2.setAttribute('class', 'col-8 d-flex justify-content-start align-items-center h-100');
-                //         var innerItem = "<br><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + data[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' height='auto' onclick='verImagenProducto(\"" + data[x]['itemid'] + "\")' class='img-item' onerror='noDisponible(this)'/><p style='display: inline;'>"+data[x]['itemid']+"</p>";
-                //         var innerDetail = '';
-                //         innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-shopping-bag" style="margin-right: 10px; color:#002868;"></i><strong>Pedido: </strong>'+data[0]['cantPedido']+'</p>'
-                //         innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-shipping-fast" style="margin-right: 10px; color:#002868;"></i><strong>Empacado: </strong>'+data[0]['cantEmpacada']+'</p>'
-                //         data[0]['cantFacturada'] != '' ? innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-file-invoice" style="margin-right: 10px; color:#002868;"></i><strong>Facturado: </strong>'+data[0]['cantFacturada']+'</p>' : innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-times" style="margin-right: 10px; color: red;"></i><strong>Sin Factura </strong></p>' ;
-                //         div.innerHTML = innerItem;
-                //         div2.innerHTML = innerDetail;
-                //         row.appendChild(div);
-                //         row.appendChild(div2);
-                //         body.appendChild(row);
-                //     }  
-                // }
-                // else{
-                //     var row = document.createElement('div');
-                //     row.setAttribute('class', 'row d-flex align-items-center justify-content-center');
-                //     row.setAttribute('style', 'height: 80px; margin-bottom: 0 !important;');
-                //     var div = document.createElement('div');
-                //     div.setAttribute('class', 'col-12 d-flex align-items-center justify-content-center h-100');
-                //     var innerDetail = "<h3 style='display: inline;'>Sin Detalle</h3>";
-                //     div.innerHTML = innerDetail;
-                //     row.appendChild(div);
-                //     body.appendChild(row);
-                // }
+                var body = document.getElementById('saleOrderDetail');
+                body.innerHTML = '';
+                if(data != null){
+                    for(var x = 0; x < data.length; x++){
+                        var row = document.createElement('div');
+                        row.setAttribute('class', 'row d-flex align-items-center');
+                        row.setAttribute('style', 'height: 80px; margin-bottom: 0 !important;');
+                        var div = document.createElement('div');
+                        div.setAttribute('class', 'col-4 d-flex align-items-center h-100');
+                        div.setAttribute('style', 'border-right: 1px solid #0000005e;');
+                        var div2 = document.createElement('div');
+                        div2.setAttribute('class', 'col-8 d-flex justify-content-start align-items-center h-100');
+                        var innerItem = "<br><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + data[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' height='auto' onclick='verImagenProducto(\"" + data[x]['itemid'] + "\")' class='img-item' onerror='noDisponible(this)'/><p style='display: inline;'>"+data[x]['itemid']+"</p>";
+                        var innerDetail = '';
+                        innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-shopping-bag" style="margin-right: 10px; color:#002868;"></i><strong>Pedido: </strong>'+data[0]['cantPedido']+'</p>'
+                        innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-shipping-fast" style="margin-right: 10px; color:#002868;"></i><strong>Empacado: </strong>'+data[0]['cantEmpacada']+'</p>'
+                        data[0]['cantFacturada'] != '' ? innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-file-invoice" style="margin-right: 10px; color:#002868;"></i><strong>Facturado: </strong>'+data[0]['cantFacturada']+'</p>' : innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-times" style="margin-right: 10px; color: red;"></i><strong>Sin Factura </strong></p>' ;
+                        div.innerHTML = innerItem;
+                        div2.innerHTML = innerDetail;
+                        row.appendChild(div);
+                        row.appendChild(div2);
+                        body.appendChild(row);
+                    }  
+                }
+                else{
+                    var row = document.createElement('div');
+                    row.setAttribute('class', 'row d-flex align-items-center justify-content-center');
+                    row.setAttribute('style', 'height: 80px; margin-bottom: 0 !important;');
+                    var div = document.createElement('div');
+                    div.setAttribute('class', 'col-12 d-flex align-items-center justify-content-center h-100');
+                    var innerDetail = "<h3 style='display: inline;'>Sin Detalle</h3>";
+                    div.innerHTML = innerDetail;
+                    row.appendChild(div);
+                    body.appendChild(row);
+                }
                 
                 
 
