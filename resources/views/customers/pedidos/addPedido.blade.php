@@ -1,4 +1,4 @@
-
+ 
 @extends('layouts.customers.customer')
 
 @section('title') Indar - Agregar Pedido @endsection

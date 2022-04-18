@@ -12,8 +12,8 @@
         <script src="{{asset('assets/libraries/blazy/blazy.min.js')}}"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+        <script src="https://kit.fontawesome.com/c5238cc839.js" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -129,11 +129,34 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="bodyModalDetail">
-            <div class="process flat">
+            <!-- <div class="process flat">
                 <a href="#" class="active">PEDIDO LEVANTADO</a>
                 <a href="#" id="labelWMS">WMS</a>
                 <a href="#" id="labelFactura">FACTURA</a>
                 <a href="#" id="labelEmbarque">EMBARQUE</a>
+            </div> -->
+
+            <ul id="progressbar">
+                <li class="active">PEDIDO LEVANTADO</li>  
+                <li id="labelWMS">WMS</li>
+                <li id="labelFactura">FACTURA</li>
+                <li id="labelEmbarque">EMBARQUE</li>
+            </ul>
+            <div class="saleOrderDetail mt-5" id='saleOrderDetail'>
+            <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="customHeader">Img</th>
+                                            <th class="customHeader">Cod Art</th>
+                                            <th class="customHeader">Pedido</th>
+                                            <th class="customHeader">Empacado</th>
+                                            <th class="customHeader">Facturado</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
+                                   
+                                </table>
             </div>
       </div>
       <div class="modal-footer">
@@ -142,6 +165,15 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="containerImgProduct" id="containerImgProduct">
+    <div class="magnify">
+        <div class="large" id="zoom"></div>
+        <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">
+    </div>
+    
+    <i class="fas fa-times closeImgProductMDIcon" id="closeImgProductMDIcon" onclick="closeImgProductMD()"></i>
 </div>
 
 

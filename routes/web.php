@@ -211,7 +211,7 @@ Route::get('/descontinuados', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
     $level = "C";
-    if(isset($_COOKIE['level'])){
+    if(isset($_COOKIE['level'])){ 
         $level = $_COOKIE['level'];
     }
 
@@ -279,10 +279,12 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-                                $entity = 'ALL';
-                                $pedidos = CotizacionController::getCotizaciones($token, $entity);
+                                $entity = '';
+                                $username = $_COOKIE['username'];
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
+                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                                $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 $permissions = LoginController::getPermissions();
-
                                 return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions]);
                             });
 
@@ -291,8 +293,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $entity = 'ALL';
-                                $pedidos = CotizacionController::getCotizaciones($token, $entity);
+                                $entity = '';
+                                $username = $_COOKIE['username'];
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
+                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                                $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 return $pedidos;
                             });
 
@@ -532,6 +537,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $data = SaleOrdersController::regresaEstadoPedido($token, $request->id);
+                                return  $data;
+                            });
+
+                            Route::post('/pedidosAnteriores/getDetalleFacturado', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::getDetalleFacturado($token, $request->id);
                                 return  $data;
                             });
 

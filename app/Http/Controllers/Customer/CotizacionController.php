@@ -27,6 +27,12 @@ class CotizacionController extends Controller
         return $cotizaciones;
     } 
 
+    public static function getCotizacionesByUser($token, $entity){
+        $getCotizaciones = Http::withToken($token)->get('http://192.168.70.107:64444/Cotizacion/getInfoUsuarioCotizacionWeb?entity='.$entity);
+        $cotizaciones = json_decode($getCotizaciones->body());
+        return $cotizaciones;
+    } 
+
     public static function getCotizacionIdWeb($token, $id){
         $getCotizacion = Http::withToken($token)->get('http://192.168.70.107:64444/Cotizacion/getInfoCotizacionIdWeb?id='.$id);
         $cotizacion = json_decode($getCotizacion->body());
