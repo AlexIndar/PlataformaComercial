@@ -37,6 +37,7 @@ class MisSolicitudesController extends Controller
 
     public static function getTableView($token, $zone){
         $zDescription = $zone->description;
+        // $zDescription = "Z652";
         $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zDescription);
         return json_decode($solicitudes->body());
     }
