@@ -1856,7 +1856,7 @@ function saveNS(){
             lineItems = [];
         } 
 
-
+            console.log(JSON.stringify({"prePedido": listNS}));
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

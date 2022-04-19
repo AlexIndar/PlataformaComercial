@@ -646,13 +646,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
                                 $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
-                                $level = "C";
-                                if(isset($_COOKIE['level'])){
-                                    $level = $_COOKIE['level'];
-                                }
                                 return $response;
                             });
 

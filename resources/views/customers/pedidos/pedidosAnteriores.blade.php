@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <link rel="icon" type="image/png" href="../assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/pedidosAnteriores.css')}}">
+        <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"></script>   
         <script src="{{asset('assets/customers/js/pedidos/pedidosAnteriores.js')}}"></script>
@@ -18,6 +19,8 @@
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script src="https://unpkg.com/scrollreveal"></script>
+        <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script>
         <title>Pedidos anteriores</title>
        
 </head>
@@ -143,7 +146,7 @@
                 <li id="labelEmbarque">EMBARQUE</li>
             </ul>
             <div class="saleOrderDetail mt-5" id='saleOrderDetail'>
-            <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
+            <table id="tablaDetalle" class="table-striped table-bordered table-hover compact display" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="customHeader">Img</th>
@@ -157,6 +160,9 @@
                                     <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
                                    
                                 </table>
+            </div>
+            <div class="sinDetalle" id="sinDetalle">
+
             </div>
       </div>
       <div class="modal-footer">

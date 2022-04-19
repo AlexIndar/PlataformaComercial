@@ -364,7 +364,32 @@ p{
 	color: white;
 }
 
+/* TABLA DETALLE PEDIDO */
+	
+.customHeader{
+	background-color: #002868 !important;
+	color: white !important;
+	width: auto !important;
+	text-align: center !important;
+}
 
+.td-center{
+	text-align: center !important;
+}
+
+.saleOrderDetail {
+	height: 95vh;
+	overflow-y: scroll;
+	border: 0;
+	border-radius: 5px;
+	padding: 20px;
+	width: 100% !important;
+	min-width: 95% !important;
+}
+
+.dataTables_wrapper .dataTables_filter input{
+	margin-bottom: 30px !important;
+}
 
 
 
