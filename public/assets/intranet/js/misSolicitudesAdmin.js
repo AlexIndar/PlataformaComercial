@@ -1410,8 +1410,7 @@ function SendForm(zone) {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(data) {
                 if (Number.isInteger(data)) {
-                    //sendMail(data, tp, json.cliente, 1);
-                    console.log()
+                    sendMail(data, tp, json.cliente, 1);
                     $('#cargaModal').modal('hide');
                     $('#solicitudModal').modal('hide');
                     document.getElementById('infoModalR').innerHTML = `Solicitud guardada correctamente No. ${data}`;

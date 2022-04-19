@@ -9,30 +9,26 @@
 
 @section('body')
 
-<div class="content-wrapper"> 
+<div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid text-indarBlue">
             <div class="row mb-2">
                 <div class="col-md-4">
+                    @if($user['permissions'] != "CYC")
                     <div class="input-group mb-3">
-                        <div class="input-group-prepend bg-indarBlue">
+                        <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Cobrador</label>
                         </div>
-                        <select class="custom-select" id="inputGroupSelect01">
-                            <option selected>SELECCIONAR</option>
-                            <option value="2">E1260 | Monica Cecilia Luna</option>
-                            <option value="3">E152 | Fernando Mancinas</option>
-                            <option value="4">E980 | Michelle Alejandro Martinez</option>
-                            <option value="5">E1080 | Cinthya Vanessa Rubio</option>
-                            <option value="1">E765 | Bertha Alicia Garibay</option>
-                            <option value="6">E1182 | Alberto Octavio Plascencia</option>
-                            <option value="7">E1414 | Edgar Leonel Hermosillo</option>
-
+                        <select id="inputGroupSelect01" name="inputGroupSelect01" class="form-control selectpicker" data-live-search="true">
                         </select>
                     </div>
+                    @endif
                 </div>
                 <div class="col-md-8 text-center">
                     <h2>Solicitudes Pendientes</h2>
+                    <button onclick="getSolicitudesPendientes()">asd</button>
+                    <input type="text" id="userName" value="{{$user['typeUser']}}">
+                    <input type="text" id="userP" value="{{$user['permissions']}}">
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -57,54 +53,7 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>P028888</td>
-                                        <td>MANUEL GOMEZ BARBOZA</td>
-                                        <td>13 Hrs 5 min</td>
-                                        <td>Z225</td>
-                                        <td>
-                                            <div class="btn btn-success btn-circle" id="btnInfo" matTooltip="Detalle" data-toggle="modal" data-target="#infoModal">
-                                                <i class="fas fa-check"></i>
-                                            </div>
-                                            <div class="btn btn-info btn-circle" data-toggle="modal" data-target="#historialModal">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P028835</td>
-                                        <td>FERRETERIA NAVARRETE HERMANOS SA DE CV</td>
-                                        <td>141 Hrs 19 min</td>
-                                        <td>Z675</td>
-                                        <td>
-                                            <div class="btn btn-success btn-circle" id="btnInfo" matTooltip="Detalle" data-toggle="modal" data-target="#infoModal">
-                                                <i class="fas fa-check"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Aceptar Credito"><i class="fas fa-dollar-sign"></i></div>
-                                            <div class="btn btn-info btn-circle" data-toggle="modal" data-target="#historialModal">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                            <div class="btn btn-secondary btn-circle" matTooltip="Regresar solicitud"><i class="fas fa-redo-alt"></i></div>
-                                            <div class="btn btn-light btn-circle text-green" matTooltip="Descargar contactos"><i class="fas fa-download"></i></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>P027744</td>
-                                        <td>IZUMI SHIBATA ALEJANDRO</td>
-                                        <td>18 Hrs 1 min</td>
-                                        <td>Z543</td>
-                                        <td>
-                                            <div class="btn btn-success btn-circle" id="btnInfo" matTooltip="Detalle" data-toggle="modal" data-target="#validarInfoModal">
-                                                <i class="fas fa-check"></i>
-                                            </div>
-                                            <div class="btn btn-warning btn-circle" matTooltip="Aceptar Credito"><i class="fas fa-dollar-sign"></i></div>
-                                            <div class="btn btn-info btn-circle" data-toggle="modal" data-target="#historialModal">
-                                                <i class="far fa-clock"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
                                 <tfoot>
                                     <tr>
                                         <th>No. Prospecto</th>
@@ -153,42 +102,42 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-sm-4">RFC</div>
-                            <div class="col-sm-4">HURA850521718</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="rfcData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="rfcData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="rfcInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="rfcData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="rfcData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Razon Social</div>
-                            <div class="col-sm-4">HURTADO ROMO ADAIR JOSUE</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="razData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="razData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="rzInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="razData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="razData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Constancia de Situacion Fiscal</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="constData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="constData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgCSFInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="constData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="constData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Constancia de Situacion Fiscal (2da Pagina)</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="const2Data" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="const2Data" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgCSFRInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="const2Data" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="const2Data" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Fotografia de Solicitud</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="picSolData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="picSolData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgSolInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="picSolData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="picSolData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -206,58 +155,58 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-sm-4">Calle</div>
-                            <div class="col-sm-4">rio juchipila</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirCalleData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirCalleData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="calleFInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirCalleData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirCalleData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-4">No. Exteriorl</div>
-                            <div class="col-sm-4">1173</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirNoData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirNoData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-4">No. Exterior</div>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="noEFInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirNoData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirNoData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Ciudad</div>
-                            <div class="col-sm-4">Guadalajara</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirCityData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirCityData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="cityFInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirCityData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirCityData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Estado</div>
-                            <div class="col-sm-4">Jalisco</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirEstData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirEstData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="estadoFInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirEstData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirEstData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Colonia</div>
-                            <div class="col-sm-4">Quinta Velarde</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirColData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirColData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="colFIndo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirColData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirColData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">CP</div>
-                            <div class="col-sm-4">44430</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirCpData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirCpData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="cpFInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirCpData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirCpData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Comprobante Domicilio</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirDomData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirDomData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgCdInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirDomData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirDomData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -274,50 +223,50 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-sm-4">Calle</div>
-                            <div class="col-sm-4">carr. al castillo</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirEntData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirEntData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="calleEInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirEntData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirEntData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">No. Exterior</div>
-                            <div class="col-sm-4">37a</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="dirEntNoData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="dirEntNoData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="noExtEInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="dirEntNoData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="dirEntNoData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Ciudad</div>
-                            <div class="col-sm-4">El salto</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="entCityData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="entCityData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="cityEInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="entCityData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="entCityData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Estado</div>
-                            <div class="col-sm-4">Jalisco</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="entEstData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="entEstData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="estadoEInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="entEstData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="entEstData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Colonia</div>
-                            <div class="col-sm-4">San Jode Del Castillo</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="entColData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="entColData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="colEInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="entColData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="entColData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">C.P.</div>
-                            <div class="col-sm-4">45685</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="entCpData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="entCpData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="cpEInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="entCpData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="entCpData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -335,50 +284,50 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-sm-4">Metodo de pago</div>
-                            <div class="col-sm-4">Por Definir</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="negPagData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="negPagData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="mpInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="negPagData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="negPagData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Giro</div>
-                            <div class="col-sm-4">Ferreteria y Tlapaleria</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="negiroData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="negiroData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="giroInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="negiroData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="negiroData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Antiguedad</div>
-                            <div class="col-sm-4">31</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="negAntData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="negAntData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="antiguedadInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="negAntData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="negAntData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Foto Frente</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="negFotData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="negFotData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgFFInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="negFotData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="negFotData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Foto Izquierda</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="negIzqData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="negIzqData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgFIInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="negIzqData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="negIzqData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Foto Derecha</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="negDerData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="negDerData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgFDInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="negDerData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="negDerData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -399,26 +348,26 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Nombre</div>
-                            <div class="col-sm-4">adair josue hurtado romo</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="contNameData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="contNameData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="contNameData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="contNameData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Telefono</div>
-                            <div class="col-sm-4">3336881130</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="contTelData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="contTelData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="contTelData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="contTelData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Celular</div>
-                            <div class="col-sm-4">3336881130</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="contCelData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="contCelData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="contCelData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="contCelData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -435,50 +384,50 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-sm-4">Tipo Local</div>
-                            <div class="col-sm-4">Propio</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="credLocData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="credLocData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="tlInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="credLocData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="credLocData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">Tipo Persona</div>
-                            <div class="col-sm-4">Fisica</div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="credTypeData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="credTypeData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="tpInfo" disabled></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="credTypeData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="credTypeData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">IFE/INE Aval</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="credIneData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="credIneData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgIneAInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="credIneData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="credIneData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">IFE/INE Aval (Reverso)</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="credRevData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="credRevData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgIneARInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="credRevData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="credRevData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">IFE/INE Representante</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="credRepData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="credRepData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgIneRInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="credRepData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="credRepData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">IFE/INE Representante (Reverso)</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="credRepRevData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="credRepRevData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6" id="imgIneRRInfo"><button class="btn btn-danger"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="credRepRevData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="credRepRevData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -495,10 +444,10 @@
                         <hr class="hr-indarYellow">
                         <div class="row mb-3">
                             <div class="col-sm-4">Carta Responsiva</div>
-                            <div class="col-sm-4"> <button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
-                            <div class="col-sm-4">
-                                <label class="mr-3 text-green"><input type="radio" name="cartResponData" value="Aceptado">Aceptar</label>
-                                <label class="mr-3 text-red"><input type="radio" name="cartResponData" value="Rechazado">Rechazar</label>
+                            <div class="col-sm-6"><button class="btn btn-warning"><i class="far fa-eye"></i> Ver Archivo</button></div>
+                            <div class="col-sm-2">
+                                <label class="mr-3 text-green"><input type="radio" name="cartResponData" value="Aceptado">SI</label>
+                                <label class="mr-3 text-red"><input type="radio" name="cartResponData" value="Rechazado">NO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -558,7 +507,7 @@
 @endsection
 
 @section('js')
-<script src="{{asset('asset/js/misSolicitudes.js')}}"></script>
+<script src="{{asset('assets/intranet/js/solicitudesPendientes.js')}}"></script>
 <!-- DataTables  & Plugins -->
 <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
@@ -580,20 +529,6 @@
 <!-- Page specific script -->
 
 <script>
-    $(function() {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": true,
-            "autoWidth": false,
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-            },
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
 
     // BS-Stepper Init
     document.addEventListener('DOMContentLoaded', function() {
