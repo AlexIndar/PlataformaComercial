@@ -1042,6 +1042,8 @@ function deleteRefRow(t) {
 
 
 function editRefRow(t) {
+    console.log(t);
+    console.log(referenciasSol);
     var row = t.parentNode.parentNode;
     var table = document.getElementById('refData');
     var index = row.rowIndex;
@@ -2333,7 +2335,6 @@ function getTransactionHistory(item) {
 
 function showHistoryModal(data) {
     if (data != null) {
-        console.log(data);
         document.getElementById("titleHistory").innerHTML = "Historial de transacciones de la solicitud " + data[0].folioSol;
         var historyList = "";
         for (var i = 0; i < data.length; i++) {
@@ -2720,7 +2721,6 @@ function continueModal(facturas, archivos, data) {
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
     valiteTypeForm();
-    console.log(document.getElementById("folioR").value == "" ? -1 : document.getElementById("folioR").value);
     manejoArchivos(archivos);
     cargarArchivos(archivos);
     document.getElementById('creditoInput').value = data.credito;
@@ -2793,7 +2793,7 @@ function continueModal(facturas, archivos, data) {
     addActaConstDataR(archivos);
 
     if (data.referencias.length > 0) {
-        referenciasSol = data.referencias;
+        //referenciasSol = data.referencias;
         addRefDataR(data.referencias);
         document.getElementById("refSoliDatos").checked = true;
     } else if (archivos.filter(x => x.type == 10).length > 0) {
@@ -2929,15 +2929,16 @@ function addContactDataCon(conCon) {
 
 
 function addRefDataR(dataRef) {
-
     if (dataRef != null) {
         for (var i = 0; i < dataRef.length; i++) {
             var data = {
                 "rzRef": dataRef[i].nombre,
-                "contRef": dataRef[i].nombre,
+                "contRef": dataRef[i].celular,
                 "cityRef": dataRef[i].city,
                 "telRef": dataRef[i].phone
             };
+
+            referenciasSol.push(data);
 
             var table = document.getElementById('refData');
             var row = table.insertRow(table.rows.length);
@@ -2949,10 +2950,10 @@ function addRefDataR(dataRef) {
             var cell5 = row.insertCell(4);
 
             cell1.innerHTML = dataRef[i].nombre;
-            cell2.innerHTML = dataRef[i].nombre;
+            cell2.innerHTML = dataRef[i].celular;
             cell3.innerHTML = dataRef[i].city;
             cell4.innerHTML = dataRef[i].phone;
-            cell5.innerHTML = "<i class='fas fa-trash-alt' onclick='deleteRefRow(this)'></i>";
+            cell5.innerHTML = "<i class='fas fa-pencil-alt' onclick='editRefRow(this)'></i>/<i class='fas fa-trash-alt' onclick='deleteRefRow(this)'></i>";
         }
     }
 

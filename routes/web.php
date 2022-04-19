@@ -41,6 +41,7 @@ use App\Exports\TemplateMarcas;
 use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
+use App\Http\Controllers\Intranet\SolicitudesPendientesController;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
 use PHPUnit\Framework\Constraint\Count;
@@ -1136,8 +1137,43 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $user = MisSolicitudesController::getUser($token);
-                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    $user = MisSolicitudesController::getUserRol($token);
+                    //$auxUser = json_decode($user->body());
+                    //$userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    $testUSer = "bgaribay";
+                    $listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
+                    function getTime($time){
+                        return $time;
+                    }
+                    // dd($user);
+                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'listSol' => $listSol]);
+                });
+
+                Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }                    
+                    $listSol = SolicitudesPendientesController::getCycTableView($token, $request->User);
+                    return $listSol;
+                });
+
+                Route::get('/SolicitudesPendientes/GetCobUsernames', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = SolicitudesPendientesController::getCobUsernames($token);
+                    return  $data;
+                });
+
+                Route::get('/SolicitudesPendientes/GetCustomerCatalogs', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = SolicitudesPendientesController::getCustomerCatalogs($token);
+                    return $data;
                 });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////
