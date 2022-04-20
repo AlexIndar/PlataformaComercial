@@ -94,7 +94,7 @@ $(document).ready(function(){
                         var hestatusDesc = document.createElement('h5');
                         hestatusDesc.innerHTML = "POR APROBAR";
                         var indicador = document.createElement('div');
-                        indicador.classList = "indicador red";
+                        indicador.classList = "indicador orange";
                     }
                     else {
                         var hestatusDesc = document.createElement('h5');
@@ -192,7 +192,7 @@ $(document).ready(function(){
                         var hestatusDesc = document.createElement('h5');
                         hestatusDesc.innerHTML = "POR APROBAR";
                         var indicador = document.createElement('div');
-                        indicador.classList = "indicador red";
+                        indicador.classList = "indicador orange";
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
@@ -346,7 +346,7 @@ $(document).ready(function(){
                         var hestatusDesc = document.createElement('h5');
                         hestatusDesc.innerHTML = "POR APROBAR";
                         var indicador = document.createElement('div');
-                        indicador.classList = "indicador red";
+                        indicador.classList = "indicador orange";
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
@@ -517,7 +517,7 @@ function showAll(){
             var hestatusDesc = document.createElement('h5');
             hestatusDesc.innerHTML = "POR APROBAR";
             var indicador = document.createElement('div');
-            indicador.classList = "indicador red";
+            indicador.classList = "indicador orange";
         }
         else{
             var hestatusDesc = document.createElement('h5');

@@ -38,6 +38,10 @@ body{
     background-color: rgba(250, 91, 91, 1);
 }
 
+.orange {
+    background-color: #f7a84e;
+}
+
 .indicador{
     width: 0%;
     height: 10px;

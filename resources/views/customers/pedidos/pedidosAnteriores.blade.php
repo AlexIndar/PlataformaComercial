@@ -111,7 +111,7 @@
                         @else
                             @if($order->status == 'Pending Approval')
                             <h5>POR APROBAR</h5>
-                            <div class="indicador red"></div>
+                            <div class="indicador orange"></div>
                             @else
                             <h5>PENDIENTE</h5>
                             <div class="indicador red"></div>
