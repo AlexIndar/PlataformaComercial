@@ -588,7 +588,6 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 $emails = ['alejandro.jimenez@indar.com.mx'];
                                 Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
-
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar cotización'], 404);
@@ -602,7 +601,6 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                              Route::post('/sendmailErrorNS', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
-
                                 $responseNS = $request->responseNS;
                                 $correo = $request->email;
                                 $emails = ['alejandro.jimenez@indar.com.mx'];
