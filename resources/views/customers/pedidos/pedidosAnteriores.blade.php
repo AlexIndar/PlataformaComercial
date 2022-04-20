@@ -109,8 +109,13 @@
                         <h5>FACTURADO</h5>
                         <div class="indicador green"></div>
                         @else
-                        <h5>PENDIENTE</h5>
-                        <div class="indicador red"></div>
+                            @if($order->status == 'Pending Approval')
+                            <h5>POR APROBAR</h5>
+                            <div class="indicador red"></div>
+                            @else
+                            <h5>PENDIENTE</h5>
+                            <div class="indicador red"></div>
+                            @endif
                         @endif
                     </div>
                 </div>

@@ -90,7 +90,13 @@ $(document).ready(function(){
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador green";
                     }
-                    else{
+                    else if(saleOrders[x]['status'] == "Pending Approval"){
+                        var hestatusDesc = document.createElement('h5');
+                        hestatusDesc.innerHTML = "POR APROBAR";
+                        var indicador = document.createElement('div');
+                        indicador.classList = "indicador red";
+                    }
+                    else {
                         var hestatusDesc = document.createElement('h5');
                         hestatusDesc.innerHTML = "PENDIENTE";
                         var indicador = document.createElement('div');
@@ -181,6 +187,12 @@ $(document).ready(function(){
                         hestatusDesc.innerHTML = "FACTURADO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador green";
+                    }
+                    else if(saleOrders[x]['status'] == "Pending Approval"){
+                        var hestatusDesc = document.createElement('h5');
+                        hestatusDesc.innerHTML = "POR APROBAR";
+                        var indicador = document.createElement('div');
+                        indicador.classList = "indicador red";
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
@@ -329,6 +341,12 @@ $(document).ready(function(){
                         hestatusDesc.innerHTML = "FACTURADO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador green";
+                    }
+                    else if(saleOrders[x]['status'] == "Pending Approval"){
+                        var hestatusDesc = document.createElement('h5');
+                        hestatusDesc.innerHTML = "POR APROBAR";
+                        var indicador = document.createElement('div');
+                        indicador.classList = "indicador red";
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
@@ -494,6 +512,12 @@ function showAll(){
             hestatusDesc.innerHTML = "FACTURADO";
             var indicador = document.createElement('div');
             indicador.classList = "indicador green";
+        }
+        else if(saleOrders[x]['status'] == "Pending Approval"){
+            var hestatusDesc = document.createElement('h5');
+            hestatusDesc.innerHTML = "POR APROBAR";
+            var indicador = document.createElement('div');
+            indicador.classList = "indicador red";
         }
         else{
             var hestatusDesc = document.createElement('h5');

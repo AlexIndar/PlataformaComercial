@@ -574,7 +574,7 @@ function addInputsCodigo(table) {
     var cell3 = row.insertCell(2);
 
     cell1.innerHTML = "<input class='input-codigo' id='input-codigo-" + (table.rows.length - 1) + "' type='text'>";
-    cell2.innerHTML = "<input id='input-cantidad-" + (table.rows.length - 1) + "' type='text' onkeyup ='validateEnter(event)'>"; 
+    cell2.innerHTML = "<input id='input-cantidad-" + (table.rows.length - 1) + "' type='text' onkeyup ='validateEnter(event)' onkeydown ='validateTab(event)'>"; 
     cell3.innerHTML = "<i class='fas fa-minus-square fa-xl fa-delete' onclick='deleteRowCodigo(this)'></i>";
 
     document.getElementById('btnCargarPorCodigo').classList.remove('d-none');
@@ -627,13 +627,18 @@ function cargarProductosExcel(json) {
 }
 
 function validateEnter(e){
-    console.log(e);
     var keycode = e.keyCode || e.which;
-            if (keycode == 13) {
-                cargarProductosPorCodigo();
-            }
+    if (keycode == 13) {
+        cargarProductosPorCodigo();
+    }
 }
 
+function validateTab(e){
+    var keycode = e.keyCode || e.which;
+    if (keycode == 9) {
+        addRowCargarPorCodigo();
+    }
+}
 function prepareJsonSeparaPedidos(separa){
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
@@ -2313,6 +2318,7 @@ function exportTableToExcel(tableID, filename = ''){
 
 function clearNetsuiteModal(){
     $('#container-netsuite-loading').empty();
+    document.getElementById('levantarPedido').disabled = false;
 }
 
 function levantandoPedidoLoading(){
