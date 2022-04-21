@@ -1,6 +1,7 @@
 var info = []; //result getInfoHeatWeb
-var addresses = [];
+var addresses = []; //Sucursales del cliente seleccionado
 var shippingWays = [];
+var shippingWaysList = [];
 var packageDeliveries = [];
 var items = []; //result inventario getItems/All
 var promocionesCliente = []; //result getEventosCliente para cargar codigos de promociones activas para el cliente
@@ -136,20 +137,6 @@ $(document).ready(function() {
 
     intervalInventario = window.setInterval(checkItems, 1000);
 
-    // var bLazy = new Blazy({
-    //     selector: '.b-lazy',
-    //     offset: 180, // Loads images 180px before they're visible
-    //     success: function(element) {
-    
-    //         setTimeout(function() {
-    //             var parent = element.parentNode;
-    //             parent.className = parent.className.replace(/\bloading\b/, '');
-    //         }, 200);
-    //     },
-    //     error: function(element, message) {
-    
-    //     }
-    // });
 
     function checkItems() {
         if(promocionesCliente.length > 0 && checkPromocionesCliente){
@@ -280,6 +267,9 @@ $(document).ready(function() {
         $('#sucursal').val('none'); //Seleccionar la primera opcion
         $('#sucursal').selectpicker('refresh');
 
+        document.getElementById('envio').classList.remove('d-none');
+        document.getElementById('containerSelectEnvio').classList.add('d-none');
+
         $('#envio').val(info[selected]['shippingWayF']);
         $('#fletera').val(info[selected]['packgeDeliveryF']);
         $('#correo').val(info[selected]['email']);
@@ -308,28 +298,7 @@ $(document).ready(function() {
             }
         } else {
             if (clickedIndex == 0) {
-                indexAddress = 0;
-                $('#fletera').val('');
-                document.getElementById('envio').classList.add('d-none');
-                document.getElementById('containerSelectEnvio').classList.remove('d-none');
-                shippingWays = info[indexCustomer]['shippingWays']; 
-                var itemSelectorOption = $('#selectEnvio option');
-                itemSelectorOption.remove();
-                $('#selectEnvio').selectpicker('refresh');
-        
-                $('#selectEnvio').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-                $('#selectEnvio').val('none');
-                $('#selectEnvio').selectpicker("refresh");
-                for (var x = 0; x < shippingWays.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-                    $('#selectEnvio').append('<option value="' + x + '">' + shippingWays[x] + '</option>');
-                    $('#selectEnvio').val(shippingWays[x]);
-                    $('#selectEnvio').selectpicker("refresh");
-                }
-        
-                $('#sucursal').val('none'); //Seleccionar la primera opcion
-                $('#sucursal').selectpicker('refresh');
-        
-                
+               fillShippingWaysList();                
             } else {
                 indexAddress = selected;
                 $('#envio').val(shippingWays[selected]);
@@ -339,56 +308,13 @@ $(document).ready(function() {
             }
         }
 
-        // $(".input-cantidad").bind('change', function (e) {
-        //     var keycode = e.keyCode || e.which;
-        //     if (keycode == 13) {
-        //         alert("Enter cantidad!");
-        //     }
-        // });
-
     });
 
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
 
     $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex - 1;
-        indexCustomer = selected;
-        addresses = info[selected]['addresses'];
-        shippingWays = info[selected]['shippingWays'];
-        packageDeliveries = info[selected]['packageDeliveries'];
-
-        document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
-
-        document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
-        document.getElementById('categoryCte').classList.remove('d-none');
-
-        items = [];
-        intervalInventario = window.setInterval(checkItems, 1000);
-        document.getElementById('entity').value = info[selected]["companyId"];
-        entityCte = info[selected]["companyId"];
-        getItems(info[selected]["companyId"]);
-
-        var itemSelectorOption = $('#sucursal option');
-        itemSelectorOption.remove();
-        $('#sucursal').selectpicker('refresh');
-
-        $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-        $('#sucursal').val('none');
-        $('#sucursal').selectpicker("refresh");
-
-        for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            $('#sucursal').val(addresses[x]['addressID']);
-            $('#sucursal').selectpicker("refresh");
-        }
-
-        $('#sucursal').val('none'); //Seleccionar la primera opcion
-        $('#sucursal').selectpicker('refresh');
-
-        $('#envio').val(info[selected]['shippingWayF']);
-        $('#fletera').val(info[selected]['packgeDeliveryF']);
-        $('#correo').val(info[selected]['email']);
-
+        $('#fletera').val(shippingWaysList[selected]['paqueteria']);
     });
 
     var native_width = 0;
@@ -1143,6 +1069,8 @@ function createTablePedido(){
         }
     }
 
+    document.getElementById('totalFilasCant').innerText = fila - 1;
+
     ivaPedido = subtotalPedido * .16;
     totalPedido = subtotalPedido + ivaPedido;
 
@@ -1545,14 +1473,14 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
             idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[0]['shippingWays'][indexAddress];
-            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery =  $("#fletera").val();
         }
         else{
             idCustomer = entityCte;
             idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery = $("#fletera").val();
         }
 
         var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === idCustomer.toUpperCase());
@@ -1628,8 +1556,6 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
-            
-
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1754,18 +1680,17 @@ function saveNS(){
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
 
-    
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
             idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[0]['shippingWays'][indexAddress];
-            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery =  $("#fletera").val();
         }
         else{
             idCustomer = entityCte;
             idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery = $("#fletera").val();
         }
     
 
@@ -1904,12 +1829,7 @@ function saveNS(){
                 success: function(data){
                         var error = 0;
                         for(var x = 0; x < data.length; x++){
-
-                            var typeDes = listNS[0]['desneg'] != 0 ? 'Desneg' : 'Desgar';
-                            var autoriza = listNS[0]['specialAuthorization'];
-                            var descuento = listNS[0]['discountSpecial'];
-                            alert('ENVIAR CORREO A : ' + autoriza + " POR " +typeDes+" DEL "+descuento+"%");
-                            
+                           
                             if(data[x]['status']=='OK'){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('check-'+x).classList.remove('d-none');
@@ -1918,7 +1838,7 @@ function saveNS(){
                                     var typeDes = listNS[0]['desneg'] != 0 ? 'Desneg' : 'Desgar';
                                     var autoriza = listNS[0]['specialAuthorization'];
                                     var descuento = listNS[0]['discountSpecial'];
-                                    alert('ENVIAR CORREO A : ' + autoriza + " POR " +typeDes+" DEL "+descuento+"%");
+                                    console.log('ENVIAR CORREO A : ' + autoriza + " POR " +typeDes+" DEL "+descuento+"%");
                                 }
                                 document.getElementById('levantarPedido').disabled = true;
                             }
@@ -1957,16 +1877,16 @@ function saveAndGetIDCotizacion(){
             if (!entity.startsWith("Z") && !entity.startsWith("A")) {
                 idCustomer = entity;
                 idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-                shippingWay = info[0]['shippingWays'][indexAddress];
-                packageDelivery = info[0]['packageDeliveries'][indexAddress];
+                shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+                packageDelivery =  $("#fletera").val();
             }
             else{
                 idCustomer = entityCte;
                 idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-                shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-                packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+                shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+                packageDelivery = $("#fletera").val();
             }
-        
+
             // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
             dividir2000 = 0;
             cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
@@ -2220,6 +2140,8 @@ function getPrecioClientePromo(itemid){
 function sendEmail(){
     var correo = document.getElementById("correo").value;
     var numCotizacion = noCotizacionNS;
+    ordenCompra = document.getElementById("ordenCompra").value;
+    comentarios = document.getElementById("comments").value;
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2442,4 +2364,36 @@ function addItemInventory(item){
         title: 'Producto ' + item + ' Agregado',
         icon: 'success'
     });
+}
+
+function fillShippingWaysList(){
+    $('#fletera').val('');
+    $.ajax({
+        type: "GET",
+        enctype: 'multipart/form-data', 
+        url: "/pedido/getformaEnvioFletera/",
+        data: FormData,
+        'async': false,
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data) {
+            shippingWaysList = data;
+        },
+        error: function(error) {
+            alert('Error obteniendo formas de envio');
+        }
+    });
+
+    document.getElementById('envio').classList.add('d-none');
+    document.getElementById('containerSelectEnvio').classList.remove('d-none');
+    var itemSelectorOption = $('#selectEnvio option');
+    itemSelectorOption.remove();
+    $('#selectEnvio').selectpicker('refresh');
+    $('#selectEnvio').append('<option value="none"></option>'); //Agregar Primera opción de Form. Envío en Blanco
+    for (var x = 0; x < shippingWaysList.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+        $('#selectEnvio').append('<option value="' + x + '">' + shippingWaysList[x]['fletera'] + '</option>');
+    }
+    $('#selectEnvio').val('none'); //Seleccionar la primera opcion
+    $('#selectEnvio').selectpicker('refresh');
 }

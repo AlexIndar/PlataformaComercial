@@ -501,6 +501,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             }); 
 
+                            Route::get('/pedido/getformaEnvioFletera', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::getformaEnvioFletera($token);
+                                return  $data;
+                            }); 
+
                             Route::post('/pedido/nuevo/getItemByID', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
@@ -564,6 +573,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     "iva" => 0,
                                     "total" => 0,
                                 ];
+
                                 for($x = 0; $x < count($pedido); $x++){
                                     $subtotal = 0;
                                     for($y = 0; $y < count($pedido[$x]['items']); $y++){

@@ -173,4 +173,10 @@ class SaleOrdersController extends Controller
         return $info;
     }
 
+    public static function getformaEnvioFletera($token){
+        $getShippingWays = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/formaEnvioFletera');
+        $shippingWays = json_decode($getShippingWays->body());
+        return $shippingWays;
+    } 
+
 }

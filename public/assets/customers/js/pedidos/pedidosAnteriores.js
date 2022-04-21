@@ -706,6 +706,8 @@ function verImagenProducto(itemid){
     var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg";
     document.getElementById('containerImgProduct').style.display = 'flex';
     document.getElementById('imgProductMD').src = src;
+    document.getElementById('imgProductMD').setAttribute('onerror', "onerror='noDisponible(this)'");
+
 }
 
 function closeImgProductMD(){

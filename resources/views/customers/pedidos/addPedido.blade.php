@@ -189,8 +189,12 @@
     </div>
 
 
+
     <div id="pedido" style="display:none;">
 
+        <div class="totalFilas">
+            <h5>Total filas: <span class="totalFilasCant" id="totalFilasCant">0</span></h5>
+        </div>
         <!-- TABLA ARTICULOS PEDIDO -->
 
         <div class="cuerpoPedido row">
