@@ -1808,13 +1808,11 @@ function saveNS(){
                 'type': 'POST',
                 'dataType': 'json',
                 'data': {json: listNS},
-                'async': false,
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
                         var error = 0;
                         for(var x = 0; x < data.length; x++){
-                           
                             if(data[x]['status']=='OK'){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('check-'+x).classList.remove('d-none');
