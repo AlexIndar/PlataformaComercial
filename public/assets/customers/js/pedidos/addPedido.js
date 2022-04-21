@@ -254,23 +254,20 @@ $(document).ready(function() {
         itemSelectorOption.remove();
         $('#sucursal').selectpicker('refresh');
 
-        $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-        $('#sucursal').val('none');
-        $('#sucursal').selectpicker("refresh");
-
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
             $('#sucursal').val(addresses[x]['addressID']);
             $('#sucursal').selectpicker("refresh");
         }
 
-        $('#sucursal').val('none'); //Seleccionar la primera opcion
+        $('#sucursal').val(addresses[0]['addressID']); //Seleccionar la primera opcion
         $('#sucursal').selectpicker('refresh');
 
-        document.getElementById('envio').classList.remove('d-none');
-        document.getElementById('containerSelectEnvio').classList.add('d-none');
+        fillShippingWaysList();
 
-        $('#envio').val(info[selected]['shippingWayF']);
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === info[selected]['shippingWayF']);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+        $('#selectEnvio').selectpicker('refresh');
         $('#fletera').val(info[selected]['packgeDeliveryF']);
         $('#correo').val(info[selected]['email']);
     });
@@ -278,15 +275,8 @@ $(document).ready(function() {
     // UPDATE DEFAULT SHIPPING WAT / PACKAGING WHEN ADDRESS IS CHANGED -------------------------------------------------------------------------------------
 
     $('#sucursal').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        var selected = clickedIndex - 1;
+        var selected = clickedIndex;
         if (info.length == 1) {
-            if (clickedIndex == 0) {
-                indexAddress = 0;
-                $('#envio').val(info[0]['shippingWayF']);
-                $('#fletera').val(info[0]['packgeDeliveryF']);
-                document.getElementById('envio').classList.add('d-none');
-                document.getElementById('containerSelectEnvio').classList.remove('d-none');
-            } else {
                 indexAddress = selected;
                 addresses = info[0]['addresses'];
                 shippingWays = info[0]['shippingWays'];
@@ -295,17 +285,12 @@ $(document).ready(function() {
                 $('#fletera').val(packageDeliveries[selected]);
                 document.getElementById('envio').classList.remove('d-none');
                 document.getElementById('containerSelectEnvio').classList.add('d-none');
-            }
         } else {
-            if (clickedIndex == 0) {
-               fillShippingWaysList();                
-            } else {
                 indexAddress = selected;
-                $('#envio').val(shippingWays[selected]);
+                var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[selected]);
+                $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+                $('#selectEnvio').selectpicker('refresh');
                 $('#fletera').val(packageDeliveries[selected]);
-                document.getElementById('envio').classList.remove('d-none');
-                document.getElementById('containerSelectEnvio').classList.add('d-none');
-            }
         }
 
     });
@@ -313,7 +298,7 @@ $(document).ready(function() {
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
 
     $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        var selected = clickedIndex - 1;
+        var selected = clickedIndex;
         $('#fletera').val(shippingWaysList[selected]['paqueteria']);
     });
 
@@ -2389,11 +2374,9 @@ function fillShippingWaysList(){
     document.getElementById('containerSelectEnvio').classList.remove('d-none');
     var itemSelectorOption = $('#selectEnvio option');
     itemSelectorOption.remove();
-    $('#selectEnvio').selectpicker('refresh');
-    $('#selectEnvio').append('<option value="none"></option>'); //Agregar Primera opción de Form. Envío en Blanco
     for (var x = 0; x < shippingWaysList.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
         $('#selectEnvio').append('<option value="' + x + '">' + shippingWaysList[x]['fletera'] + '</option>');
     }
-    $('#selectEnvio').val('none'); //Seleccionar la primera opcion
+    $('#selectEnvio').val(0); //Seleccionar la primera opcion
     $('#selectEnvio').selectpicker('refresh');
 }
