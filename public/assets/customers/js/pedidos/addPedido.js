@@ -22,8 +22,8 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
-var tranIds = [];
-var dataset = []; //arreglo cargado en inventario 
+var tranIds = []; //arreglo con transids que retorna netsuite para indicarlos en correo
+var dataset = []; //arreglo cargado en datatable de inventario 
 
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
@@ -1833,11 +1833,11 @@ function saveNS(){
                                 document.getElementById('check-'+x).classList.remove('d-none');
                                 document.getElementById('tranId-'+x).innerText = data[x]['tranId'];
                                 tranIds.push(data[x]['tranId']);
-                                if (listNS[0]['specialAuthorization'] != ""){
-                                    var typeDes = listNS[0]['desneg'] != 0 ? 'Desneg' : 'Desgar';
-                                    var autoriza = listNS[0]['specialAuthorization'];
-                                    var descuento = listNS[0]['discountSpecial'];
-                                    sendEmailDesneg(typeDes, autoriza, descuento, date);
+                                if (listNS[x]['specialAuthorization'] != ""){
+                                    var typeDes = listNS[x]['desneg'] != 0 ? 'Desneg' : 'Desgar';
+                                    var autoriza = listNS[x]['specialAuthorization'];
+                                    var descuento = listNS[x]['discountSpecial'];
+                                    sendEmailDesneg(typeDes, autoriza, descuento, date, x);
                                 }
                                 document.getElementById('levantarPedido').disabled = true;
                             }
@@ -2187,7 +2187,7 @@ function sendEmailErrorPedido(data){
     });
 }
 
-function sendEmailDesneg(type, autoriza, descuento, date){
+function sendEmailDesneg(type, autoriza, descuento, date, indexPedido){
     var correo = document.getElementById("correo").value;
     var numCotizacion = noCotizacionNS;
     var ordenCompra = document.getElementById("ordenCompra").value;
@@ -2202,7 +2202,7 @@ function sendEmailDesneg(type, autoriza, descuento, date){
         'url': "/sendmailDesneg",
         'type': 'POST',
         'dataType': 'json',
-        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tipoDescuento: type, autoriza: autoriza, descuento: descuento, fecha: date},
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tipoDescuento: type, autoriza: autoriza, descuento: descuento, fecha: date, indexPedido: indexPedido},
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){

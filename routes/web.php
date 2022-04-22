@@ -628,7 +628,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 ini_set('max_input_vars','100000' );
                                 $responseNS = $request->responseNS;
                                 $correo = $request->email;
-                                $emails = ['alejandro.jimenez@indar.com.mx'];
+                                $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
                                 Mail::to($emails)->send(new ErrorNetsuite($responseNS));
 
                                  // check for failures
@@ -654,6 +654,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $autoriza = $request->autoriza;
                                 $descuento = $request->descuento;
                                 $tipoDescuento = $request->tipoDescuento;
+                                $indexPedido = $request->indexPedido;
                                 $fecha = $request->fecha;
                                 $username = $_COOKIE['username'];
                                 $asunto = "Nuevo pedido con ".$tipoDescuento;
@@ -662,21 +663,24 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     "iva" => 0,
                                     "total" => 0,
                                 ];
+                                $pedidoDesneg = [];
+                                array_push($pedidoDesneg, $pedido[$indexPedido]);
+                              
 
-                                for($x = 0; $x < count($pedido); $x++){
+                                for($x = 0; $x < count($pedidoDesneg); $x++){
                                     $subtotal = 0;
-                                    for($y = 0; $y < count($pedido[$x]['items']); $y++){
-                                        $precioUnitario = round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2);
-                                        $importe = (round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2)) * $pedido[$x]['items'][$y]['cantidad'];
+                                    for($y = 0; $y < count($pedidoDesneg[$x]['items']); $y++){
+                                        $precioUnitario = round(((100 - $pedidoDesneg[$x]['items'][$y]['promo']) * $pedidoDesneg[$x]['items'][$y]['price']) / 100, 2);
+                                        $importe = (round(((100 - $pedidoDesneg[$x]['items'][$y]['promo']) * $pedidoDesneg[$x]['items'][$y]['price']) / 100, 2)) * $pedidoDesneg[$x]['items'][$y]['cantidad'];
                                         $subtotal = $subtotal + $importe;
                                         $precioUnitario = number_format($precioUnitario, 2, '.', ',');
                                         $importe = number_format($importe, 2, '.', ',');
-                                        $pedido[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
-                                        $pedido[$x]['items'][$y]['importe'] = $importe;
+                                        $pedidoDesneg[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
+                                        $pedidoDesneg[$x]['items'][$y]['importe'] = $importe;
                                     }
                                     $detallesPedido['subtotal'] = $detallesPedido['subtotal'] + $subtotal;
                                     $subtotal = number_format($subtotal, 2, '.', ',');
-                                    $pedido[$x]['subtotal'] = $subtotal;
+                                    $pedidoDesneg[$x]['subtotal'] = $subtotal;
                                 }
                                 $detallesPedido['iva'] = $detallesPedido['subtotal'] * 0.16;
                                 $detallesPedido['total'] = $detallesPedido['subtotal'] + $detallesPedido['iva'];
@@ -684,8 +688,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
-                                $emails = ['alejandro.jimenez@indar.com.mx'];
-                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
+                                $emails = [];
+
+                                if ($autoriza == 'JMGA') {array_push($emails, 'juanmgomez@indar.com.mx');}
+                                if ($autoriza == 'EOEGA') {array_push($emails, 'eortiz@indar.com.mx');}
+                                if ($autoriza == 'JSB') {array_push($emails, 'jsamaue@indar.com.mx');}
+
+                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedidoDesneg, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar correo desneg'], 404);
