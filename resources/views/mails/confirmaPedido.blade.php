@@ -58,7 +58,11 @@
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
-                                <th style='background-color:#fcbf49; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}}</th>
+                                @if(count($tranIds) > 0)
+                                    <th style='background-color:#fcbf49; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}} TranID: {{$tranIds[$x]}}</th>
+                                @else
+                                    <th style='background-color:#fcbf49; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}}</th>
+                                @endif
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#fcbf49; padding: 2px; text-align: center;'></th>
@@ -67,7 +71,11 @@
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
-                                <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}}</th>
+                                @if($tranIds != null)
+                                    <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}} TranID: {{$tranIds[$x]}}</th>
+                                @else
+                                    <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'>Descuento: {{$pedido[$x]['descuento']}}% Plazo: {{$pedido[$x]['plazo']}} Tipo: {{$pedido[$x]['tipo']}} Subtotal: ${{$pedido[$x]['subtotal']}} Evento: {{$pedido[$x]['evento']}}</th>
+                                @endif
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>

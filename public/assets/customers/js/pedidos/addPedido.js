@@ -22,6 +22,7 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
+var tranIds = [];
 var dataset = []; //arreglo cargado en inventario 
 
 
@@ -1701,7 +1702,6 @@ function saveNS(){
 
         var lineItems = [];
         var listNS = [];
-        var tranIds = [];
 
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -1826,12 +1826,13 @@ function saveNS(){
                 'timeout': 2*60*60*1000,
                 success: function(data){
                         var error = 0;
+                        var desneg = false;
                         for(var x = 0; x < data.length; x++){
                             if(data[x]['status']=='OK'){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('check-'+x).classList.remove('d-none');
                                 document.getElementById('tranId-'+x).innerText = data[x]['tranId'];
-                                sendEmail();
+                                tranIds.push(data[x]['tranId']);
                                 if (listNS[0]['specialAuthorization'] != ""){
                                     var typeDes = listNS[0]['desneg'] != 0 ? 'Desneg' : 'Desgar';
                                     var autoriza = listNS[0]['specialAuthorization'];
@@ -1848,6 +1849,7 @@ function saveNS(){
                                 error ++;
                             }
                         }
+                        sendEmail();
                         if(error > 0)
                             sendEmailErrorPedido(data);
                         // window.location.href = '/pedidos';
@@ -2150,7 +2152,7 @@ function sendEmail(){
         'url': "/sendmail",
         'type': 'POST',
         'dataType': 'json',
-        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera},
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tranIds: tranIds},
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){

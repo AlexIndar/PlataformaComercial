@@ -20,8 +20,9 @@ class ConfirmarPedido extends Mailable
     public $ordenCompra;
     public $formaEnvio;
     public $fletera;
+    public $tranIds;
     public $asunto;
-    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto)
+    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds)
     {   
         $this->pedido = $pedido;
         $this->detallesPedido = $detallesPedido;
@@ -32,6 +33,7 @@ class ConfirmarPedido extends Mailable
         $this->formaEnvio = $formaEnvio;
         $this->fletera = $fletera;
         $this->asunto = $asunto;
+        $this->tranIds = $tranIds;
     }
 
     public function build()

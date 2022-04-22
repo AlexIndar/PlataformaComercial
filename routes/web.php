@@ -566,6 +566,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::post('/sendmail', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $username = $_COOKIE['username'];
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
@@ -574,6 +575,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $comentarios = $request->comentarios;
                                 $formaEnvio = $request->formaEnvio;
                                 $fletera = $request->fletera;
+                                $tranIds = $request->tranIds;
                                 $idCotizacion == 0 ? $asunto = "Nueva Cotización INDAR" : $asunto = "Nuevo Pedido INDAR";
                                 $detallesPedido = [
                                     "subtotal" => 0,
@@ -603,8 +605,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
 
-                                $emails = ['alejandro.jimenez@indar.com.mx'];
-                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto));
+
+                                $emails = [];
+                                $correo != "" ? array_push($emails, $correo) : $correo = "";
+                                array_push($emails, $username."@indar.com.mx");
+                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds));
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar cotización'], 404);
