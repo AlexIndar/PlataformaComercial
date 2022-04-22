@@ -650,6 +650,8 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
+    console.log('SEPARAR FILAS');
+    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -675,8 +677,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                     }
                 }
 
-            }
-           
+            } 
             
             var item = {
                 categoriaItem: art['categoriaItem'],
@@ -717,7 +718,9 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                 pedido.push(rowPedido);
             }
             else{
+                console.log(json[x]);
                 var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
+                console.log(header);
                 if(header != undefined){
                     header['items'].push(item);
                 }
@@ -1016,7 +1019,7 @@ function reloadInventario(){
 }
 
 function createTablePedido(){
-    console.clear();
+    console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -1483,6 +1486,8 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         pedidoJson = [];
         var itemsJson = [];
 
+        console.log(pedido);
+
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
@@ -1491,11 +1496,11 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             var evento = pedido[x]['evento'];
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
-                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos(false);
-                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                    update = true;
-                }
+                // if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                //     prepareJsonSeparaPedidos(false);
+                //     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                //     update = true;
+                // }
                 var item = {
                     id: pedido[x]['items'][y]['id'],
                     itemid: pedido[x]['items'][y]['itemid'],
@@ -1541,6 +1546,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
+            console.log(json);
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1697,6 +1703,8 @@ function saveNS(){
         var mm = String(today.getMonth() + 1).padStart(2, '0');
         var yyyy = today.getFullYear();
 
+        var date = dd + "/" + mm + "/" + yyyy;
+
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
@@ -1706,6 +1714,7 @@ function saveNS(){
             var desgar = 0;
             var specialAuthorization = "";
             var indexItemSeparado;
+
             if(pedido[x]['items'][0]['desneg'] != 0 && pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
@@ -1744,7 +1753,7 @@ function saveNS(){
             var temp = {
                 internalId: 0,
                 idCustomer: internalId,
-                date: dd + "/" + mm + "/" + yyyy,
+                date: date,
                 location: marca == 'OUTLET' ? "36" : "1",
                 billingAddress: {
                     id: "XXXXXX" //se llena en el back
@@ -1817,11 +1826,12 @@ function saveNS(){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('check-'+x).classList.remove('d-none');
                                 document.getElementById('tranId-'+x).innerText = data[x]['tranId'];
+                                sendEmail();
                                 if (listNS[0]['specialAuthorization'] != ""){
                                     var typeDes = listNS[0]['desneg'] != 0 ? 'Desneg' : 'Desgar';
                                     var autoriza = listNS[0]['specialAuthorization'];
                                     var descuento = listNS[0]['discountSpecial'];
-                                    console.log('ENVIAR CORREO A : ' + autoriza + " POR " +typeDes+" DEL "+descuento+"%");
+                                    sendEmailDesneg(typeDes, autoriza, descuento, date);
                                 }
                                 document.getElementById('levantarPedido').disabled = true;
                             }
@@ -1886,11 +1896,11 @@ function saveAndGetIDCotizacion(){
                 var marca = pedido[x]['marca'];
                 var tipo = pedido[x]['tipo'];
                 for(var y = 0; y < pedido[x]['items'].length; y++){
-                    if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                        prepareJsonSeparaPedidos(false);
-                        alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                        update = true;
-                    }
+                    // if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                    //     prepareJsonSeparaPedidos(false);
+                    //     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                    //     update = true;
+                    // }
                     var item = {
                         id: pedido[x]['items'][y]['id'],
                         itemid: pedido[x]['items'][y]['itemid'],
@@ -1986,11 +1996,11 @@ function update(action){
             var marca = pedido[x]['marca'];
             var tipo = pedido[x]['tipo'];
             for(var y = 0; y < pedido[x]['items'].length; y++){
-                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos(false);
-                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                    update = true;
-                }
+                // if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                //     prepareJsonSeparaPedidos(false);
+                //     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                //     update = true;
+                // }
                 var item = {
                     id: pedido[x]['items'][y]['id'],
                     itemid: pedido[x]['items'][y]['itemid'],
@@ -2123,8 +2133,11 @@ function getPrecioClientePromo(itemid){
 function sendEmail(){
     var correo = document.getElementById("correo").value;
     var numCotizacion = noCotizacionNS;
-    ordenCompra = document.getElementById("ordenCompra").value;
-    comentarios = document.getElementById("comments").value;
+    var ordenCompra = document.getElementById("ordenCompra").value;
+    var comentarios = document.getElementById("comments").value;
+    var cte = $('#customerID option:selected').text();
+    var formaEnvio = $('#selectEnvio option:selected').text();
+    var fletera = $("#fletera").val();
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2132,12 +2145,11 @@ function sendEmail(){
         'url': "/sendmail",
         'type': 'POST',
         'dataType': 'json',
-        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion},
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera},
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){
                 alert(data['success']);
-                console.log(data);
         }, 
         error: function(data){
                 alert('Error al enviar correo de cotización');
@@ -2164,6 +2176,34 @@ function sendEmailErrorPedido(data){
         }, 
         error: function(data){
                 alert('Error al enviar correo de pedido');
+         }
+    });
+}
+
+function sendEmailDesneg(type, autoriza, descuento, date){
+    var correo = document.getElementById("correo").value;
+    var numCotizacion = noCotizacionNS;
+    var ordenCompra = document.getElementById("ordenCompra").value;
+    var comentarios = document.getElementById("comments").value;
+    var cte = $('#customerID option:selected').text();
+    var formaEnvio = $('#selectEnvio option:selected').text();
+    var fletera = $("#fletera").val();
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailDesneg",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tipoDescuento: type, autoriza: autoriza, descuento: descuento, fecha: date},
+        'enctype': 'multipart/form-data',
+        'timeout': 2*60*60*1000,
+        success: function(data){
+                alert(data['success']);
+        }, 
+        error: function(data){
+                alert('Error al enviar correo de autorización de descuento negociado');
+                console.log(data);
          }
     });
 }

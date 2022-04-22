@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Mail\ConfirmarPedido;
+use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
 // -----------------------------------------------------------------------------------------
 
@@ -568,6 +569,12 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
+                                $ordenCompra = $request->ordenCompra;
+                                $cliente = $request->cliente;
+                                $comentarios = $request->comentarios;
+                                $formaEnvio = $request->formaEnvio;
+                                $fletera = $request->fletera;
+                                $idCotizacion == 0 ? $asunto = "Nueva Cotización INDAR" : $asunto = "Nuevo Pedido INDAR";
                                 $detallesPedido = [
                                     "subtotal" => 0,
                                     "iva" => 0,
@@ -597,13 +604,16 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                                 $emails = ['alejandro.jimenez@indar.com.mx'];
-                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
+                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto));
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar cotización'], 404);
                                 }
                                 else{
-                                    return response()->json(['success' => 'Cotización enviada correctamente'], 200);
+                                    if($idCotizacion == 0)
+                                        return response()->json(['success' => 'Cotización enviada correctamente'], 200);
+                                    else
+                                        return response()->json(['success' => 'Pedido enviado por correo correctamente'], 200);
                                 }
 
 
@@ -623,6 +633,62 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 else{
                                     return response()->json(['success' => 'Se detectaron errores al enviar pedidos. Hemos notificado al equipo de soporte para forzar los pedidos con error.'], 200);
                                 }
+
+                             });
+
+                             Route::post('/sendmailDesneg', function (Request $request) {
+                                ini_set('max_input_vars','100000' );
+                                $pedido = $request->pedido;
+                                $idCotizacion = $request->idCotizacion;
+                                $correo = $request->email;
+                                $ordenCompra = $request->ordenCompra;
+                                $cliente = $request->cliente;
+                                $comentarios = $request->comentarios;
+                                $formaEnvio = $request->formaEnvio;
+                                $fletera = $request->fletera;
+                                $autoriza = $request->autoriza;
+                                $descuento = $request->descuento;
+                                $tipoDescuento = $request->tipoDescuento;
+                                $fecha = $request->fecha;
+                                $username = $_COOKIE['username'];
+                                $asunto = "Nuevo pedido con ".$tipoDescuento;
+                                $detallesPedido = [
+                                    "subtotal" => 0,
+                                    "iva" => 0,
+                                    "total" => 0,
+                                ];
+
+                                for($x = 0; $x < count($pedido); $x++){
+                                    $subtotal = 0;
+                                    for($y = 0; $y < count($pedido[$x]['items']); $y++){
+                                        $precioUnitario = round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2);
+                                        $importe = (round(((100 - $pedido[$x]['items'][$y]['promo']) * $pedido[$x]['items'][$y]['price']) / 100, 2)) * $pedido[$x]['items'][$y]['cantidad'];
+                                        $subtotal = $subtotal + $importe;
+                                        $precioUnitario = number_format($precioUnitario, 2, '.', ',');
+                                        $importe = number_format($importe, 2, '.', ',');
+                                        $pedido[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
+                                        $pedido[$x]['items'][$y]['importe'] = $importe;
+                                    }
+                                    $detallesPedido['subtotal'] = $detallesPedido['subtotal'] + $subtotal;
+                                    $subtotal = number_format($subtotal, 2, '.', ',');
+                                    $pedido[$x]['subtotal'] = $subtotal;
+                                }
+                                $detallesPedido['iva'] = $detallesPedido['subtotal'] * 0.16;
+                                $detallesPedido['total'] = $detallesPedido['subtotal'] + $detallesPedido['iva'];
+                                $detallesPedido['subtotal'] = number_format($detallesPedido['subtotal'], 2, '.', ',');
+                                $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
+                                $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
+
+                                $emails = ['alejandro.jimenez@indar.com.mx'];
+                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
+                                 // check for failures
+                                if (Mail::failures()) {
+                                    return response()->json(['error' => 'Error al enviar correo desneg'], 404);
+                                }
+                                else{
+                                    return response()->json(['success' => 'Correo enviado correctamente a '.$autoriza], 200);
+                                }
+
 
                              });
 

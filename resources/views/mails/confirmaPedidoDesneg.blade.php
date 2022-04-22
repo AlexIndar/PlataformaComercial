@@ -12,11 +12,7 @@
     </style>
 </head>
 <body>
-    @if($idCotizacion == 0)
-        <h4 style="line-height: 10px;">Cotización de Pedido</h4>
-    @else
-        <h4 style="line-height: 10px;">Pedido Web #{{$idCotizacion}}</h4>
-    @endif
+    <h4 style="line-height: 10px;">El usuario {{$username}} ingresó un nuevo pedido con {{$tipoDescuento}} del {{$descuento}}% autorizado por {{$autoriza}}</h4>
 
     <hr>
 
@@ -25,6 +21,8 @@
     <h4 style="line-height: 10px;">Fletera: {{$fletera}}</h4>
     <h4 style="line-height: 10px;">Orden de compra: {{$ordenCompra}}</h4>
     <h4 style="line-height: 10px;">Comentarios: {{$comentarios}}</h4>
+    <h4 style="line-height: 10px;">Pedido Web: {{$idCotizacion}}</h4>
+    <h4 style="line-height: 10px;">Fecha: {{$fecha}}</h4>
 
 
                 <table style='border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-width: 1000px;' cellspacing='0'>

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ConfirmarPedido extends Mailable
+class ConfirmarPedidoDesneg extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,7 +21,12 @@ class ConfirmarPedido extends Mailable
     public $formaEnvio;
     public $fletera;
     public $asunto;
-    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto)
+    public $autoriza;
+    public $tipoDescuento;
+    public $descuento;
+    public $username;
+    public $fecha;
+    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha)
     {   
         $this->pedido = $pedido;
         $this->detallesPedido = $detallesPedido;
@@ -32,6 +37,11 @@ class ConfirmarPedido extends Mailable
         $this->formaEnvio = $formaEnvio;
         $this->fletera = $fletera;
         $this->asunto = $asunto;
+        $this->autoriza = $autoriza;
+        $this->tipoDescuento = $tipoDescuento;
+        $this->descuento = $descuento;
+        $this->username = $username;
+        $this->fecha = $fecha;
     }
 
     public function build()
@@ -39,6 +49,6 @@ class ConfirmarPedido extends Mailable
         return $this->from('mailing@sndr.indar.com.mx', 'INDAR')
         ->replyTo('mailing@sndr.indar.com.mx', 'INDAR')
         ->subject($this->asunto)
-        ->view('mails.confirmaPedido');
+        ->view('mails.confirmaPedidoDesneg');
     }
 }
