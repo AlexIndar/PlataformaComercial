@@ -1445,6 +1445,10 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
     if(pedido.length == 0){
         alert('Agrega artículos al pedido');
     }
+    else if(type == 3 && pedido.length == 1 && pedido[0]['descuento'] == 0 && pedido[0]['marca'] == "" && pedido[0]['evento'] == "" && pedido[0]['plazo'] == 0 && pedido[0]['tipo'] == ""){ //si va a levantar pedido y no está separado
+        alert('Separa Pedido');
+        $('#modalNetsuiteLoading').modal('hide');
+    }
     else{
         var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
 
@@ -1697,6 +1701,7 @@ function saveNS(){
 
         var lineItems = [];
         var listNS = [];
+        var tranIds = [];
 
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -2263,7 +2268,6 @@ function exportTableToExcel(tableID, filename = ''){
 
 function clearNetsuiteModal(){
     $('#container-netsuite-loading').empty();
-    document.getElementById('levantarPedido').disabled = false;
 }
 
 function levantandoPedidoLoading(){

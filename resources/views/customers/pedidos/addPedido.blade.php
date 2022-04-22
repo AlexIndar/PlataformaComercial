@@ -301,7 +301,7 @@
             <br><br>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                 <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-                <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)" data-toggle="modal" data-target=".bd-example-modal-xl-ns"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
+                <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
                 <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
                 <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
             </div> 
