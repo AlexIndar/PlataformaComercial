@@ -41,6 +41,7 @@ use App\Exports\TemplateMarcas;
 use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
+use App\Http\Controllers\Clientes\ClientesController;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
 use PHPUnit\Framework\Constraint\Count;
@@ -258,7 +259,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     if(isset($_COOKIE['level'])){
 
                                     $level = $_COOKIE['level'];     }
-                                    
+
                                     return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
 
                                 });
@@ -493,7 +494,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $entity = $request->entity;
                                 $data = SaleOrdersController::getEventosCliente($token, $entity);
                                 return  $data;
-                            }); 
+                            });
 
                             Route::post('/pedido/nuevo/getItemByID', function (Request $request){
                                 $token = TokenController::getToken();
@@ -746,7 +747,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-                                
+
                                 $permissions = LoginController::getPermissions();
 
                                 return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
@@ -779,8 +780,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $customersInfo = $dataCustomers['customersInfo'];
                                 $categories = $dataCustomers['categories'];
                                 $giros = $dataCustomers['giros'];
-                                $customers = $dataCustomers['customers']; 
-                        
+                                $customers = $dataCustomers['customers'];
+
 
                                 $dataArticulos = PromoController::getItems($token);
                                 $infoArticulos = $dataArticulos['items'];
@@ -1323,7 +1324,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
 
-                // ******************       Pago en Linea *************************
+                // ******************  Pago en Linea *************************
 
                 Route::get('/clientes/info', function(){
                     $token = TokenController::getToken();
@@ -1332,9 +1333,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $zonas = AplicarPagoController::getZonas($token);
-                    $clientes = AplicarPagoController::getCargaListaClientes($token);
-                    return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
+                    $cliente= 'C015423';
+                    $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
+                    $general = $general[0];
+                    //dd($general);
+                    return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general]);
                 });
 
                 Route::get('/clientes/pagoEnLinea', function(){

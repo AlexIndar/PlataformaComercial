@@ -471,23 +471,6 @@
                    $('#llenaSubtotal').html(htmlsubtotal);
                    $('#llenadesComi').html(htmldescComi);
                    $('#llenaDespensa').html(htmlDespensa);
-
-                   $('#comisionesTable').dataTable( {
-                        dom : 'Brt',
-                        ordering: false,
-                        buttons: [
-                            {
-                                extend:    'excel',
-                                text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-                                titleAttr: 'Descargar Excel'
-                            }
-                        ],
-                        initComplete: function () {
-                        var btns = $('.dt-button');
-                        btns.addClass('btn btn-success ');
-                        btns.removeClass('dt-button');
-                        },
-                       });
                 }
                 myCallback(sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
            },

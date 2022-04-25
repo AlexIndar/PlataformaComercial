@@ -31,22 +31,22 @@
                 <br>
                 <div class="row invoice-info">
                    <div class="col-sm-4 invoice-col">
-                    <strong>Info del Cliente</strong>
+                    <strong>Info del Cliente </strong>
                       <address>
-                         Nombre De Cliente <br>
-                        Gerencia : ----  <br>
-                        Sucursal : ----- <br>
-                        Tipo de Cliente:-----<br>
-                        Antiguedad: 22/12/2019
+                        {{ $general->companyname }} <br>
+                        Código : {{ $general->companyid }}  <br>
+                        Zona : {{ $general->zona }} <br>
+                        Antiguedad : {{ substr($general->antiguedad,-19,10)}} <br>
+                        CP : {{ $general->zipCode }}
                       </address>
                    </div>
                    <div class="col-sm-4 invoice-col">
                    <br>
-                    RFC: XXXXXXXXX <br>
-                    Dirección: ---------------<br>
-                    Telefono: 33-33-33-33<br>
-                    Estatus :Alto <br>
-                    <b> Calificación Actual:</b> M <br>
+                    RFC : {{ $general->rfc }} <br>
+                    Dirección : {{ $general->address }} , {{ $general->estado }} <br>
+                    Ciudad : {{ $general->ciudad }}  <br>
+                    Telefono : {{ $general->phone }}<br>
+                    <b> Categoría :</b> {{ $general->clasificacionActual }} <br>
                  </div>
                 </div>
                 <hr>
@@ -54,15 +54,41 @@
                     <div class="col-sm-12 invoice-col ">
                         <p class="lead "> <b> Cuentas Por Pagar y Crédito </b></p>
                     </div>
-                    <div class="col-sm-5 invoice-col">
+                    <div class="col-sm-6 invoice-col">
                         <strong>Saldo</strong><br>
-                        Total : $1,000.00 Por Vencer : $ 600.00<br>
-                        Vencido: $ 400.00 a Pagar Antes del : 02/04/2022 <br>
-                        Plazo en Días: 30<br>
-                        Notas de Crédito Pendientes de Aplicar : $100.00 <br>
-                        <b> Limite de Crédito:</b> $ 2,000.00  <br>
+                        <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : </b><br>
+                        <table id="creditTable" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th>Credito Usado</th>
+                                 <th>Vencido 1-30 Días</th>
+                                 <th>Vencido 31-60 Días</th>
+                                 <th>Vencido 61-90 Días</th>
+                                 <th>Vencido Más de 90 Días</th>
+                              </tr>
+                           </thead>
+                           <tbody id="">
+                            <tr>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->saldo,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
+                            </tr>
+                           </tbody>
+
+                        </table>
+
+                       {{--  @if( $general->saldo <= 0)
+                        Total : <span style="font-size: 15px" class="badge badge-danger">$ {{   number_format(str_replace("-","",$general->saldo),2) }}</span><br>
+                        @else
+                        Total : <span style="font-size: 15px" class="badge badge-primary">$ {{  number_format($general->saldo,2) }}</span><br>
+                        @endif --}}
+                        Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->saldo,2) }}</span><br>
+                        Referencia Bancaria: ------ <br>
+
                      </div>
-                    <div class="col-sm-7 invoice-col">
+                    <div class="col-sm-6   invoice-col">
                     <strong>Estado de Cuenta </strong><br><br>
                     Seleccione Un Rango de Fechas: <br>
                     <div class="input-group">
@@ -115,6 +141,12 @@
                                 <td>331255431</td>
                                 <td>indar@indar.com.mx</td>
                             </tr>
+                            <tr>
+                                <td>Apoyo de Ventas</td>
+                                <td>Nombre ----</td>
+                                <td>331255431</td>
+                                <td>indar@indar.com.mx</td>
+                            </tr>
                            </tbody>
 
                         </table>
@@ -126,9 +158,14 @@
                     <div class="col-sm-12 invoice-col ">
                         <p class="lead "> <b> Cuentas Bancarias para Depósito </b></p>
                     </div>
-                    <div class="card-body col-md-6 table-responsive p-0">
+                    <div class="card-body col-md-12 table-responsive p-0">
                         <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:76%">
                            <thead style="background-color:#002868; color:white">
+                            <tr>
+                                <th  style="background-color:#073d92c5; font-size : 17px " class="text-center" colspan="3">
+                                    Referencia :
+                                </th>
+                            </tr>
                               <tr>
                                  <th>Banco</th>
                                  <th>Cuenta</th>
@@ -154,20 +191,6 @@
                                 <td>014 320 65500776517 1</td>
 
                             </tr>
-                           </tbody>
-                        </table>
-                     </div>
-
-                    <div class="card-body col-md-6  table-responsive p-0">
-                        <table id="comisionesDetalle" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:79%">
-                           <thead style="background-color:#002868; color:white">
-                              <tr>
-                                 <th>Banco</th>
-                                 <th>Cuenta</th>
-                                 <th>CLABE</th>
-                              </tr>
-                           </thead>
-                           <tbody id="">
                             <tr>
                                 <td>HSBC</td>
                                 <td>Cuenta RAP: 2290</td>
@@ -181,7 +204,6 @@
 
                             </tr>
                            </tbody>
-
                         </table>
                      </div>
                 </div>
@@ -203,7 +225,7 @@
                                  <th>Compras de Hoy </th>
                                  <th>Embarques Por Enviar</th>
                                  <th>Embarques en Transito</th>
-                                 <th>Embarques por Conformar</th>
+                                 <th>Embarques por Confirmar</th>
                               </tr>
                            </thead>
                            <tbody id="">
