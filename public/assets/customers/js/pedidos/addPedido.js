@@ -29,8 +29,12 @@ var dataset = []; //arreglo cargado en datatable de inventario
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
 
 // VARIABLES GLOBALES PARA CAMBIAR DE FLETERA Y FORMA DE ENVÍO CUANDO CAMBIA CLIENTE O SUCURSAL
-indexCustomer = 0;
-indexAddress = 0;
+var indexCustomer = 0;
+var indexAddress = 0;
+var priceList = ''; //guardar lista de precio para no refrescar el invenrario al cambiar cliente, si la lista es la misma al cliente anterior
+var lastRefreshInventory = ''; //datetime de ultimo refresh de inventario. Si pasó más de 1 hora refrescar aunque la lista sea la misma. 
+var oneHour = 60 * 60 * 1000; /* ms */
+
 // VARIABLE PARA DETECTAR CUANDO EL INVENTARIO ESTÁ CARGADO
 var intervalInventario;
 // CODIGO DE CLIENTE
@@ -61,6 +65,7 @@ $(document).ready(function() {
     entity = document.getElementById('entity').value;
     entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
+        getEventosCliente(entity);
         getItems(entity);
     }
     else{ //si es zona o all (vendedor o apoyo)
@@ -229,30 +234,43 @@ $(document).ready(function() {
     $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
         var selected = clickedIndex - 1;
         indexCustomer = selected;
+        var refrescaInventario = false;
         //INFO es la lista de todos los clientes con su información correspondiente
         addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
         shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
         packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
+        document.getElementById('entity').value = info[selected]["companyId"];
+        entityCte = info[selected]["companyId"];
+
+        if(priceList != '' && priceList != info[selected]['priceList']) { refrescaInventario = true; } //si ya existe una lista de precio cargada y es diferente a a del nuevo cliente seleccionado
+        if(priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
+        if(((new Date) - lastRefreshInventory) > oneHour){ refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
 
         document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
 
         document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
+
         document.getElementById('categoryCte').classList.remove('d-none');
 
-        items = [];
-        pedido = []; //vaciar pedido
         selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
+        pedido = []; //vaciar pedido
         document.getElementById('cupon').value = ''; //limpiar campo cupon
         createTablePedido(); //limpiar tabla pedido
-        clearNetsuiteModal();
-        intervalInventario = window.setInterval(checkItems, 1000);
-        checkPromocionesCliente = true;
-        document.getElementById('entity').value = info[selected]["companyId"];
-        entityCte = info[selected]["companyId"];
-        getItems(info[selected]["companyId"]);
+        clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
 
-        var itemSelectorOption = $('#sucursal option');
-        itemSelectorOption.remove();
+        checkPromocionesCliente = true;
+        intervalInventario = window.setInterval(checkItems, 1000);
+        getEventosCliente(entityCte);
+
+        if(refrescaInventario){
+            lastRefreshInventory = new Date;
+            priceList = info[selected]['priceList'];
+            items = [];
+            getItems(entityCte);
+        }
+
+        var selectSucursales = $('#sucursal option');
+        selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
@@ -816,22 +834,6 @@ function getItems(entity) {
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        'url': "/pedido/getEventosCliente",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': data,
-		'enctype': 'multipart/form-data',
-		'timeout': 2*60*60*1000,
-		success: function(data){
-				promocionesCliente = data;
-		}, 
-		error: function(error){
-		 }
-	});
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
         'url': "nuevo/getItems/all",
         'type': 'POST',
         'dataType': 'json',
@@ -843,6 +845,26 @@ function getItems(entity) {
                 var empty = document.getElementById('empty').value;
                 if(empty == 'no')
                     reloadInventario();
+		}, 
+		error: function(error){
+		 }
+	});
+}
+
+function getEventosCliente(entity){
+    let data = { entity: entity };
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/pedido/getEventosCliente",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+				promocionesCliente = data;
 		}, 
 		error: function(error){
 		 }
