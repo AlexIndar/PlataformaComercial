@@ -167,4 +167,16 @@ class SaleOrdersController extends Controller
         return $response;
     }
 
+    public static function getDetalleFacturado($token, $id){
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/SaleOrderDetalleFacturado?factura='.$id);
+        $info = json_decode($response->body());
+        return $info;
+    }
+
+    public static function getformaEnvioFletera($token){
+        $getShippingWays = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/formaEnvioFletera');
+        $shippingWays = json_decode($getShippingWays->body());
+        return $shippingWays;
+    } 
+
 }

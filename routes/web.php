@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Mail\ConfirmarPedido;
+use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
 // -----------------------------------------------------------------------------------------
 
@@ -42,6 +43,7 @@ use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
 use App\Http\Controllers\Clientes\ClientesController;
+use App\Http\Controllers\Intranet\SolicitudesPendientesController;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
 use PHPUnit\Framework\Constraint\Count;
@@ -280,10 +282,12 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-                                $entity = 'ALL';
-                                $pedidos = CotizacionController::getCotizaciones($token, $entity);
+                                $entity = '';
+                                $username = $_COOKIE['username'];
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
+                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                                $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 $permissions = LoginController::getPermissions();
-
                                 return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions]);
                             });
 
@@ -292,8 +296,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $entity = 'ALL';
-                                $pedidos = CotizacionController::getCotizaciones($token, $entity);
+                                $entity = '';
+                                $username = $_COOKIE['username'];
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
+                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                                $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 return $pedidos;
                             });
 
@@ -496,6 +503,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                            Route::get('/pedido/getformaEnvioFletera', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::getformaEnvioFletera($token);
+                                return  $data;
+                            });
+
                             Route::post('/pedido/nuevo/getItemByID', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
@@ -536,20 +552,38 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                            Route::post('/pedidosAnteriores/getDetalleFacturado', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::getDetalleFacturado($token, $request->id);
+                                return  $data;
+                            });
+
                             Route::get('/downloadTemplatePedido', function (){
                                 return Excel::download(new TemplatePedido,'Pedido.xlsx');
                             });
 
                             Route::post('/sendmail', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $username = $_COOKIE['username'];
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
+                                $ordenCompra = $request->ordenCompra;
+                                $cliente = $request->cliente;
+                                $comentarios = $request->comentarios;
+                                $formaEnvio = $request->formaEnvio;
+                                $fletera = $request->fletera;
+                                $tranIds = $request->tranIds;
+                                $idCotizacion == 0 ? $asunto = "Nueva Cotización INDAR" : $asunto = "Nuevo Pedido INDAR";
                                 $detallesPedido = [
                                     "subtotal" => 0,
                                     "iva" => 0,
                                     "total" => 0,
                                 ];
+
                                 for($x = 0; $x < count($pedido); $x++){
                                     $subtotal = 0;
                                     for($y = 0; $y < count($pedido[$x]['items']); $y++){
@@ -572,15 +606,20 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
 
-                                $emails = ['alejandro.jimenez@indar.com.mx'];
-                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion));
 
+                                $emails = [];
+                                $correo != "" ? array_push($emails, $correo) : $correo = "";
+                                array_push($emails, $username."@indar.com.mx");
+                                Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds));
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar cotización'], 404);
                                 }
                                 else{
-                                    return response()->json(['success' => 'Cotización enviada correctamente'], 200);
+                                    if($idCotizacion == 0)
+                                        return response()->json(['success' => 'Cotización enviada correctamente'], 200);
+                                    else
+                                        return response()->json(['success' => 'Pedido enviado por correo correctamente'], 200);
                                 }
 
 
@@ -588,10 +627,9 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                              Route::post('/sendmailErrorNS', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
-
                                 $responseNS = $request->responseNS;
                                 $correo = $request->email;
-                                $emails = ['alejandro.jimenez@indar.com.mx'];
+                                $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
                                 Mail::to($emails)->send(new ErrorNetsuite($responseNS));
 
                                  // check for failures
@@ -601,6 +639,71 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 else{
                                     return response()->json(['success' => 'Se detectaron errores al enviar pedidos. Hemos notificado al equipo de soporte para forzar los pedidos con error.'], 200);
                                 }
+
+                             });
+
+                             Route::post('/sendmailDesneg', function (Request $request) {
+                                ini_set('max_input_vars','100000' );
+                                $pedido = $request->pedido;
+                                $idCotizacion = $request->idCotizacion;
+                                $correo = $request->email;
+                                $ordenCompra = $request->ordenCompra;
+                                $cliente = $request->cliente;
+                                $comentarios = $request->comentarios;
+                                $formaEnvio = $request->formaEnvio;
+                                $fletera = $request->fletera;
+                                $autoriza = $request->autoriza;
+                                $descuento = $request->descuento;
+                                $tipoDescuento = $request->tipoDescuento;
+                                $indexPedido = $request->indexPedido;
+                                $fecha = $request->fecha;
+                                $username = $_COOKIE['username'];
+                                $asunto = "Nuevo pedido con ".$tipoDescuento;
+                                $detallesPedido = [
+                                    "subtotal" => 0,
+                                    "iva" => 0,
+                                    "total" => 0,
+                                ];
+                                $pedidoDesneg = [];
+                                array_push($pedidoDesneg, $pedido[$indexPedido]);
+
+
+                                for($x = 0; $x < count($pedidoDesneg); $x++){
+                                    $subtotal = 0;
+                                    for($y = 0; $y < count($pedidoDesneg[$x]['items']); $y++){
+                                        $precioUnitario = round(((100 - $pedidoDesneg[$x]['items'][$y]['promo']) * $pedidoDesneg[$x]['items'][$y]['price']) / 100, 2);
+                                        $importe = (round(((100 - $pedidoDesneg[$x]['items'][$y]['promo']) * $pedidoDesneg[$x]['items'][$y]['price']) / 100, 2)) * $pedidoDesneg[$x]['items'][$y]['cantidad'];
+                                        $subtotal = $subtotal + $importe;
+                                        $precioUnitario = number_format($precioUnitario, 2, '.', ',');
+                                        $importe = number_format($importe, 2, '.', ',');
+                                        $pedidoDesneg[$x]['items'][$y]['precioUnitario'] = $precioUnitario;
+                                        $pedidoDesneg[$x]['items'][$y]['importe'] = $importe;
+                                    }
+                                    $detallesPedido['subtotal'] = $detallesPedido['subtotal'] + $subtotal;
+                                    $subtotal = number_format($subtotal, 2, '.', ',');
+                                    $pedidoDesneg[$x]['subtotal'] = $subtotal;
+                                }
+                                $detallesPedido['iva'] = $detallesPedido['subtotal'] * 0.16;
+                                $detallesPedido['total'] = $detallesPedido['subtotal'] + $detallesPedido['iva'];
+                                $detallesPedido['subtotal'] = number_format($detallesPedido['subtotal'], 2, '.', ',');
+                                $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
+                                $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
+
+                                $emails = [];
+
+                                if ($autoriza == 'JMGA') {array_push($emails, 'juanmgomez@indar.com.mx');}
+                                if ($autoriza == 'EOEGA') {array_push($emails, 'eortiz@indar.com.mx');}
+                                if ($autoriza == 'JSB') {array_push($emails, 'jsamaue@indar.com.mx');}
+
+                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedidoDesneg, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
+                                 // check for failures
+                                if (Mail::failures()) {
+                                    return response()->json(['error' => 'Error al enviar correo desneg'], 404);
+                                }
+                                else{
+                                    return response()->json(['success' => 'Correo enviado correctamente a '.$autoriza], 200);
+                                }
+
 
                              });
 
@@ -633,13 +736,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
                                 $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
-                                $level = "C";
-                                if(isset($_COOKIE['level'])){
-                                    $level = $_COOKIE['level'];
-                                }
                                 return $response;
                             });
 
@@ -1135,8 +1231,43 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $user = MisSolicitudesController::getUser($token);
-                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    $user = MisSolicitudesController::getUserRol($token);
+                    //$auxUser = json_decode($user->body());
+                    //$userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    $testUSer = "bgaribay";
+                    $listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
+                    function getTime($time){
+                        return $time;
+                    }
+                    // dd($user);
+                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'listSol' => $listSol]);
+                });
+
+                Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $listSol = SolicitudesPendientesController::getCycTableView($token, $request->User);
+                    return $listSol;
+                });
+
+                Route::get('/SolicitudesPendientes/GetCobUsernames', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = SolicitudesPendientesController::getCobUsernames($token);
+                    return  $data;
+                });
+
+                Route::get('/SolicitudesPendientes/GetCustomerCatalogs', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = SolicitudesPendientesController::getCustomerCatalogs($token);
+                    return $data;
                 });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////

@@ -1,6 +1,7 @@
 var info = []; //result getInfoHeatWeb
-var addresses = [];
+var addresses = []; //Sucursales del cliente seleccionado
 var shippingWays = [];
+var shippingWaysList = [];
 var packageDeliveries = [];
 var items = []; //result inventario getItems/All
 var promocionesCliente = []; //result getEventosCliente para cargar codigos de promociones activas para el cliente
@@ -21,14 +22,19 @@ var cantItemsCargados = 0;
 
 var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
-var dataset = []; //arreglo cargado en inventario 
+var tranIds = []; //arreglo con transids que retorna netsuite para indicarlos en correo
+var dataset = []; //arreglo cargado en datatable de inventario 
 
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
 
 // VARIABLES GLOBALES PARA CAMBIAR DE FLETERA Y FORMA DE ENVÍO CUANDO CAMBIA CLIENTE O SUCURSAL
-indexCustomer = 0;
-indexAddress = 0;
+var indexCustomer = 0;
+var indexAddress = 0;
+var priceList = ''; //guardar lista de precio para no refrescar el invenrario al cambiar cliente, si la lista es la misma al cliente anterior
+var lastRefreshInventory = ''; //datetime de ultimo refresh de inventario. Si pasó más de 1 hora refrescar aunque la lista sea la misma. 
+var oneHour = 60 * 60 * 1000; /* ms */
+
 // VARIABLE PARA DETECTAR CUANDO EL INVENTARIO ESTÁ CARGADO
 var intervalInventario;
 // CODIGO DE CLIENTE
@@ -59,6 +65,7 @@ $(document).ready(function() {
     entity = document.getElementById('entity').value;
     entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
+        getEventosCliente(entity);
         getItems(entity);
     }
     else{ //si es zona o all (vendedor o apoyo)
@@ -79,6 +86,7 @@ $(document).ready(function() {
             enctype: 'multipart/form-data', 
             url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
             data: FormData,
+            'async': false,
             headers: {
                 'X-CSRF-Token': '{{ csrf_token() }}',
             },
@@ -135,20 +143,6 @@ $(document).ready(function() {
 
     intervalInventario = window.setInterval(checkItems, 1000);
 
-    // var bLazy = new Blazy({
-    //     selector: '.b-lazy',
-    //     offset: 180, // Loads images 180px before they're visible
-    //     success: function(element) {
-    
-    //         setTimeout(function() {
-    //             var parent = element.parentNode;
-    //             parent.className = parent.className.replace(/\bloading\b/, '');
-    //         }, 200);
-    //     },
-    //     error: function(element, message) {
-    
-    //     }
-    // });
 
     function checkItems() {
         if(promocionesCliente.length > 0 && checkPromocionesCliente){
@@ -240,34 +234,44 @@ $(document).ready(function() {
     $('#customerID').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
         var selected = clickedIndex - 1;
         indexCustomer = selected;
+        var refrescaInventario = false;
         //INFO es la lista de todos los clientes con su información correspondiente
         addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
         shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
         packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
+        document.getElementById('entity').value = info[selected]["companyId"];
+        entityCte = info[selected]["companyId"];
+
+        if(priceList != '' && priceList != info[selected]['priceList']) { refrescaInventario = true; } //si ya existe una lista de precio cargada y es diferente a a del nuevo cliente seleccionado
+        if(priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
+        if(((new Date) - lastRefreshInventory) > oneHour){ refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
 
         document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
 
         document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
+
         document.getElementById('categoryCte').classList.remove('d-none');
 
-        items = [];
-        pedido = []; //vaciar pedido
         selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
+        pedido = []; //vaciar pedido
         document.getElementById('cupon').value = ''; //limpiar campo cupon
         createTablePedido(); //limpiar tabla pedido
-        intervalInventario = window.setInterval(checkItems, 1000);
+        clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
+
         checkPromocionesCliente = true;
-        document.getElementById('entity').value = info[selected]["companyId"];
-        entityCte = info[selected]["companyId"];
-        getItems(info[selected]["companyId"]);
+        intervalInventario = window.setInterval(checkItems, 1000);
+        getEventosCliente(entityCte);
 
-        var itemSelectorOption = $('#sucursal option');
-        itemSelectorOption.remove();
+        if(refrescaInventario){
+            lastRefreshInventory = new Date;
+            priceList = info[selected]['priceList'];
+            items = [];
+            getItems(entityCte);
+        }
+
+        var selectSucursales = $('#sucursal option');
+        selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
-
-        $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-        $('#sucursal').val('none');
-        $('#sucursal').selectpicker("refresh");
 
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
@@ -275,10 +279,14 @@ $(document).ready(function() {
             $('#sucursal').selectpicker("refresh");
         }
 
-        $('#sucursal').val('none'); //Seleccionar la primera opcion
+        $('#sucursal').val(addresses[0]['addressID']); //Seleccionar la primera opcion
         $('#sucursal').selectpicker('refresh');
 
-        $('#envio').val(info[selected]['shippingWayF']);
+        fillShippingWaysList();
+
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === info[selected]['shippingWayF']);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+        $('#selectEnvio').selectpicker('refresh');
         $('#fletera').val(info[selected]['packgeDeliveryF']);
         $('#correo').val(info[selected]['email']);
     });
@@ -286,15 +294,8 @@ $(document).ready(function() {
     // UPDATE DEFAULT SHIPPING WAT / PACKAGING WHEN ADDRESS IS CHANGED -------------------------------------------------------------------------------------
 
     $('#sucursal').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        var selected = clickedIndex - 1;
+        var selected = clickedIndex;
         if (info.length == 1) {
-            if (clickedIndex == 0) {
-                indexAddress = 0;
-                $('#envio').val(info[0]['shippingWayF']);
-                $('#fletera').val(info[0]['packgeDeliveryF']);
-                document.getElementById('envio').classList.add('d-none');
-                document.getElementById('containerSelectEnvio').classList.remove('d-none');
-            } else {
                 indexAddress = selected;
                 addresses = info[0]['addresses'];
                 shippingWays = info[0]['shippingWays'];
@@ -303,82 +304,21 @@ $(document).ready(function() {
                 $('#fletera').val(packageDeliveries[selected]);
                 document.getElementById('envio').classList.remove('d-none');
                 document.getElementById('containerSelectEnvio').classList.add('d-none');
-            }
         } else {
-            if (clickedIndex == 0) {
-                indexAddress = 0;
-                $('#fletera').val('');
-                document.getElementById('envio').classList.add('d-none');
-                document.getElementById('containerSelectEnvio').classList.remove('d-none');
-                shippingWays = info[indexCustomer]['shippingWays']; 
-                var itemSelectorOption = $('#selectEnvio option');
-                itemSelectorOption.remove();
-                $('#selectEnvio').selectpicker('refresh');
-        
-                $('#selectEnvio').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-                $('#selectEnvio').val('none');
-                $('#selectEnvio').selectpicker("refresh");
-                for (var x = 0; x < shippingWays.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-                    $('#selectEnvio').append('<option value="' + x + '">' + shippingWays[x] + '</option>');
-                    $('#selectEnvio').val(shippingWays[x]);
-                    $('#selectEnvio').selectpicker("refresh");
-                }
-        
-                $('#sucursal').val('none'); //Seleccionar la primera opcion
-                $('#sucursal').selectpicker('refresh');
-        
-                
-            } else {
                 indexAddress = selected;
-                $('#envio').val(shippingWays[selected]);
+                var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[selected]);
+                $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+                $('#selectEnvio').selectpicker('refresh');
                 $('#fletera').val(packageDeliveries[selected]);
-                document.getElementById('envio').classList.remove('d-none');
-                document.getElementById('containerSelectEnvio').classList.add('d-none');
-            }
         }
+
     });
 
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
 
     $('#selectEnvio').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-        var selected = clickedIndex - 1;
-        indexCustomer = selected;
-        addresses = info[selected]['addresses'];
-        shippingWays = info[selected]['shippingWays'];
-        packageDeliveries = info[selected]['packageDeliveries'];
-
-        document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
-
-        document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: '+info[selected]['category'];
-        document.getElementById('categoryCte').classList.remove('d-none');
-
-        items = [];
-        intervalInventario = window.setInterval(checkItems, 1000);
-        document.getElementById('entity').value = info[selected]["companyId"];
-        entityCte = info[selected]["companyId"];
-        getItems(info[selected]["companyId"]);
-
-        var itemSelectorOption = $('#sucursal option');
-        itemSelectorOption.remove();
-        $('#sucursal').selectpicker('refresh');
-
-        $('#sucursal').append('<option value="none"></option>'); //Agregar Primera opción de Sucursal en Blanco
-        $('#sucursal').val('none');
-        $('#sucursal').selectpicker("refresh");
-
-        for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            $('#sucursal').val(addresses[x]['addressID']);
-            $('#sucursal').selectpicker("refresh");
-        }
-
-        $('#sucursal').val('none'); //Seleccionar la primera opcion
-        $('#sucursal').selectpicker('refresh');
-
-        $('#envio').val(info[selected]['shippingWayF']);
-        $('#fletera').val(info[selected]['packgeDeliveryF']);
-        $('#correo').val(info[selected]['email']);
-
+        var selected = clickedIndex;
+        $('#fletera').val(shippingWaysList[selected]['paqueteria']);
     });
 
     var native_width = 0;
@@ -564,7 +504,7 @@ function addInputsCodigo(table) {
     var cell3 = row.insertCell(2);
 
     cell1.innerHTML = "<input class='input-codigo' id='input-codigo-" + (table.rows.length - 1) + "' type='text'>";
-    cell2.innerHTML = "<input id='input-cantidad-" + (table.rows.length - 1) + "' type='text'>";
+    cell2.innerHTML = "<input id='input-cantidad-" + (table.rows.length - 1) + "' type='text' onkeyup ='validateEnter(event)' onkeydown ='validateTab(event)'>"; 
     cell3.innerHTML = "<i class='fas fa-minus-square fa-xl fa-delete' onclick='deleteRowCodigo(this)'></i>";
 
     document.getElementById('btnCargarPorCodigo').classList.remove('d-none');
@@ -616,7 +556,19 @@ function cargarProductosExcel(json) {
     document.getElementById("excelCodes").value = "";
 }
 
+function validateEnter(e){
+    var keycode = e.keyCode || e.which;
+    if (keycode == 13) {
+        cargarProductosPorCodigo();
+    }
+}
 
+function validateTab(e){
+    var keycode = e.keyCode || e.which;
+    if (keycode == 9) {
+        addRowCargarPorCodigo();
+    }
+}
 function prepareJsonSeparaPedidos(separa){
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
@@ -717,6 +669,8 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
+    console.log('SEPARAR FILAS');
+    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -742,8 +696,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                     }
                 }
 
-            }
-           
+            } 
             
             var item = {
                 categoriaItem: art['categoriaItem'],
@@ -784,7 +737,9 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                 pedido.push(rowPedido);
             }
             else{
+                console.log(json[x]);
                 var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
+                console.log(header);
                 if(header != undefined){
                     header['items'].push(item);
                 }
@@ -879,22 +834,6 @@ function getItems(entity) {
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        'url': "/pedido/getEventosCliente",
-        'type': 'POST',
-        'dataType': 'json',
-        'data': data,
-		'enctype': 'multipart/form-data',
-		'timeout': 2*60*60*1000,
-		success: function(data){
-				promocionesCliente = data;
-		}, 
-		error: function(error){
-		 }
-	});
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
         'url': "nuevo/getItems/all",
         'type': 'POST',
         'dataType': 'json',
@@ -906,6 +845,26 @@ function getItems(entity) {
                 var empty = document.getElementById('empty').value;
                 if(empty == 'no')
                     reloadInventario();
+		}, 
+		error: function(error){
+		 }
+	});
+}
+
+function getEventosCliente(entity){
+    let data = { entity: entity };
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/pedido/getEventosCliente",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': data,
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+				promocionesCliente = data;
 		}, 
 		error: function(error){
 		 }
@@ -1083,7 +1042,7 @@ function reloadInventario(){
 }
 
 function createTablePedido(){
-    console.clear();
+    console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     
@@ -1120,6 +1079,8 @@ function createTablePedido(){
             fila ++;
         }
     }
+
+    document.getElementById('totalFilasCant').innerText = fila - 1;
 
     ivaPedido = subtotalPedido * .16;
     totalPedido = subtotalPedido + ivaPedido;
@@ -1235,11 +1196,14 @@ function addRowPedido(item, fila, indexPedido) {
         marca = item['marca'];
     else
         marca = 'marca';
-    if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0 && !marca.includes('MBajo'))
+    if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0 && item['desgar'] == 0 && !marca.includes('MBajo'))
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0 && !item['marca'].includes('MBajo'))
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
+    
+    else if (item["categoriaItem"] == "LINEA" && item['desgar'] != 0 && !item['marca'].includes('MBajo'))
+        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option value='desneg'>DesNeg</option><option selected value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desgar']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
@@ -1269,6 +1233,8 @@ function addRowPedido(item, fila, indexPedido) {
 
     if(item['desneg'] != 0)
         document.getElementById("autoriza-desneg-"+item['itemid']+"-"+indexPedido).value = item['autorizaDesneg'];
+    if(item['desgar'] != 0)
+        document.getElementById("autoriza-desneg-"+item['itemid']+"-"+indexPedido).value = item['autorizaDesgar'];
 
 }
 
@@ -1502,6 +1468,10 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
     if(pedido.length == 0){
         alert('Agrega artículos al pedido');
     }
+    else if(type == 3 && pedido.length == 1 && pedido[0]['descuento'] == 0 && pedido[0]['marca'] == "" && pedido[0]['evento'] == "" && pedido[0]['plazo'] == 0 && pedido[0]['tipo'] == ""){ //si va a levantar pedido y no está separado
+        alert('Separa Pedido');
+        $('#modalNetsuiteLoading').modal('hide');
+    }
     else{
         var update = false; // indica si el pedido se debe modificar, en caso de haber agregado cantidad de algún artículo y este sobrepase la existencia, teniendo que hacer un bo
 
@@ -1518,14 +1488,14 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
             idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[0]['shippingWays'][indexAddress];
-            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery =  $("#fletera").val();
         }
         else{
             idCustomer = entityCte;
             idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery = $("#fletera").val();
         }
 
         var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === idCustomer.toUpperCase());
@@ -1543,6 +1513,8 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         pedidoJson = [];
         var itemsJson = [];
 
+        console.log(pedido);
+
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
@@ -1551,11 +1523,11 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             var evento = pedido[x]['evento'];
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
-                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos(false);
-                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                    update = true;
-                }
+                // if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                //     prepareJsonSeparaPedidos(false);
+                //     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                //     update = true;
+                // }
                 var item = {
                     id: pedido[x]['items'][y]['id'],
                     itemid: pedido[x]['items'][y]['itemid'],
@@ -1601,8 +1573,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
-            
-
+            console.log(json);
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1660,6 +1631,8 @@ function updatePedidoDesneg(itemid, select, index){
         item = pedido[index]['items'][indexItem];
         item['desneg'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
         item['autorizaDesneg'] = autorizaDesneg;
+        item['desgar'] = 0;
+        item['autorizaDesgar'] = "";
     }
     if(tipoDesc == 'desgar'){
         var desgar = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value) + pedido[index]['descuento'];
@@ -1668,8 +1641,9 @@ function updatePedidoDesneg(itemid, select, index){
         item = pedido[index]['items'][indexItem];
         item['desgar'] = parseInt(document.getElementById('cantDesneg-'+itemid+'-'+index).value);
         item['autorizaDesgar'] = autorizaDesgar;
+        item['desneg'] = 0;
+        item['autorizaDesneg'] = "";
     }
-    
     pedido[index]['items'].splice(indexItem, 1);
     if(pedido[index]['items'].length == 0){
         var rowPedido = {
@@ -1678,6 +1652,7 @@ function updatePedidoDesneg(itemid, select, index){
             marca: pedido[index]['marca'],
             tipo: pedido[index]['tipo'],
             regalo: pedido[index]['regalo'],
+            evento: pedido[index]['evento'],
             items: []
         };
         rowPedido['items'].push(item);
@@ -1691,6 +1666,7 @@ function updatePedidoDesneg(itemid, select, index){
             marca: pedido[index]['marca'],
             tipo: pedido[index]['tipo'],
             regalo: pedido[index]['regalo'],
+            evento: pedido[index]['evento'],
             items: []
         };
         rowPedido['items'].push(item);
@@ -1722,18 +1698,17 @@ function saveNS(){
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
 
-    
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
             idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[0]['shippingWays'][indexAddress];
-            packageDelivery = info[0]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery =  $("#fletera").val();
         }
         else{
             idCustomer = entityCte;
             idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-            shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-            packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+            shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+            packageDelivery = $("#fletera").val();
         }
     
 
@@ -1755,6 +1730,8 @@ function saveNS(){
         var mm = String(today.getMonth() + 1).padStart(2, '0');
         var yyyy = today.getFullYear();
 
+        var date = dd + "/" + mm + "/" + yyyy;
+
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
@@ -1764,6 +1741,7 @@ function saveNS(){
             var desgar = 0;
             var specialAuthorization = "";
             var indexItemSeparado;
+
             if(pedido[x]['items'][0]['desneg'] != 0 && pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
@@ -1802,7 +1780,7 @@ function saveNS(){
             var temp = {
                 internalId: 0,
                 idCustomer: internalId,
-                date: dd + "/" + mm + "/" + yyyy,
+                date: date,
                 location: marca == 'OUTLET' ? "36" : "1",
                 billingAddress: {
                     id: "XXXXXX" //se llena en el back
@@ -1855,8 +1833,9 @@ function saveNS(){
             listNS.push(temp);
             lineItems = [];
         } 
-
-
+            console.log(JSON.stringify(listNS));
+            console.log(listNS);
+            
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1869,12 +1848,20 @@ function saveNS(){
                 'timeout': 2*60*60*1000,
                 success: function(data){
                         var error = 0;
+                        var desneg = false;
                         for(var x = 0; x < data.length; x++){
-                            
                             if(data[x]['status']=='OK'){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
                                 document.getElementById('check-'+x).classList.remove('d-none');
                                 document.getElementById('tranId-'+x).innerText = data[x]['tranId'];
+                                tranIds.push(data[x]['tranId']);
+                                if (listNS[x]['specialAuthorization'] != ""){
+                                    var typeDes = listNS[x]['desneg'] != 0 ? 'Desneg' : 'Desgar';
+                                    var autoriza = listNS[x]['specialAuthorization'];
+                                    var descuento = listNS[x]['discountSpecial'];
+                                    sendEmailDesneg(typeDes, autoriza, descuento, date, x);
+                                }
+                                document.getElementById('levantarPedido').disabled = true;
                             }
                             else{
                                 var json = JSON.parse(data[x]['json']);
@@ -1884,6 +1871,7 @@ function saveNS(){
                                 error ++;
                             }
                         }
+                        sendEmail();
                         if(error > 0)
                             sendEmailErrorPedido(data);
                         // window.location.href = '/pedidos';
@@ -1911,16 +1899,16 @@ function saveAndGetIDCotizacion(){
             if (!entity.startsWith("Z") && !entity.startsWith("A")) {
                 idCustomer = entity;
                 idSucursal = info[0]['addresses'][indexAddress]["addressID"];
-                shippingWay = info[0]['shippingWays'][indexAddress];
-                packageDelivery = info[0]['packageDeliveries'][indexAddress];
+                shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+                packageDelivery =  $("#fletera").val();
             }
             else{
                 idCustomer = entityCte;
                 idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
-                shippingWay = info[indexCustomer]['shippingWays'][indexAddress];
-                packageDelivery = info[indexCustomer]['packageDeliveries'][indexAddress];
+                shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
+                packageDelivery = $("#fletera").val();
             }
-        
+
             // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
             dividir2000 = 0;
             cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
@@ -1937,11 +1925,11 @@ function saveAndGetIDCotizacion(){
                 var marca = pedido[x]['marca'];
                 var tipo = pedido[x]['tipo'];
                 for(var y = 0; y < pedido[x]['items'].length; y++){
-                    if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                        prepareJsonSeparaPedidos(false);
-                        alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                        update = true;
-                    }
+                    // if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                    //     prepareJsonSeparaPedidos(false);
+                    //     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                    //     update = true;
+                    // }
                     var item = {
                         id: pedido[x]['items'][y]['id'],
                         itemid: pedido[x]['items'][y]['itemid'],
@@ -2037,11 +2025,11 @@ function update(action){
             var marca = pedido[x]['marca'];
             var tipo = pedido[x]['tipo'];
             for(var y = 0; y < pedido[x]['items'].length; y++){
-                if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
-                    prepareJsonSeparaPedidos(false);
-                    alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
-                    update = true;
-                }
+                // if(pedido[x]['items'][y]['cantidad'] > pedido[x]['items'][y]['disponible'] && pedido[x]['tipo'] != 'BO'){
+                //     prepareJsonSeparaPedidos(false);
+                //     alert('El pedido se modificará, debido a que un artículo pasó a Back Order. Favor de revisarlo y guardar / enviar nuevamente.');
+                //     update = true;
+                // }
                 var item = {
                     id: pedido[x]['items'][y]['id'],
                     itemid: pedido[x]['items'][y]['itemid'],
@@ -2174,6 +2162,11 @@ function getPrecioClientePromo(itemid){
 function sendEmail(){
     var correo = document.getElementById("correo").value;
     var numCotizacion = noCotizacionNS;
+    var ordenCompra = document.getElementById("ordenCompra").value;
+    var comentarios = document.getElementById("comments").value;
+    var cte = $('#customerID option:selected').text();
+    var formaEnvio = $('#selectEnvio option:selected').text();
+    var fletera = $("#fletera").val();
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2181,14 +2174,15 @@ function sendEmail(){
         'url': "/sendmail",
         'type': 'POST',
         'dataType': 'json',
-        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion},
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tranIds: tranIds},
         'enctype': 'multipart/form-data',
         'timeout': 2*60*60*1000,
         success: function(data){
                 alert(data['success']);
         }, 
         error: function(data){
-                alert(data['error']);
+                alert('Error al enviar correo de cotización');
+                console.log(data);
          }
     });
 }
@@ -2210,7 +2204,35 @@ function sendEmailErrorPedido(data){
                 alert(data['success']);
         }, 
         error: function(data){
-                alert(data['error']);
+                alert('Error al enviar correo de pedido');
+         }
+    });
+}
+
+function sendEmailDesneg(type, autoriza, descuento, date, indexPedido){
+    var correo = document.getElementById("correo").value;
+    var numCotizacion = noCotizacionNS;
+    var ordenCompra = document.getElementById("ordenCompra").value;
+    var comentarios = document.getElementById("comments").value;
+    var cte = $('#customerID option:selected').text();
+    var formaEnvio = $('#selectEnvio option:selected').text();
+    var fletera = $("#fletera").val();
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailDesneg",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tipoDescuento: type, autoriza: autoriza, descuento: descuento, fecha: date, indexPedido: indexPedido},
+        'enctype': 'multipart/form-data',
+        'timeout': 2*60*60*1000,
+        success: function(data){
+                alert(data['success']);
+        }, 
+        error: function(data){
+                alert('Error al enviar correo de autorización de descuento negociado');
+                console.log(data);
          }
     });
 }
@@ -2266,6 +2288,10 @@ function exportTableToExcel(tableID, filename = ''){
         //triggering the function
         downloadLink.click();
     }
+}
+
+function clearNetsuiteModal(){
+    $('#container-netsuite-loading').empty();
 }
 
 function levantandoPedidoLoading(){
@@ -2389,4 +2415,34 @@ function addItemInventory(item){
         title: 'Producto ' + item + ' Agregado',
         icon: 'success'
     });
+}
+
+function fillShippingWaysList(){
+    $('#fletera').val('');
+    $.ajax({
+        type: "GET",
+        enctype: 'multipart/form-data', 
+        url: "/pedido/getformaEnvioFletera/",
+        data: FormData,
+        'async': false,
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data) {
+            shippingWaysList = data;
+        },
+        error: function(error) {
+            alert('Error obteniendo formas de envio');
+        }
+    });
+
+    document.getElementById('envio').classList.add('d-none');
+    document.getElementById('containerSelectEnvio').classList.remove('d-none');
+    var itemSelectorOption = $('#selectEnvio option');
+    itemSelectorOption.remove();
+    for (var x = 0; x < shippingWaysList.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+        $('#selectEnvio').append('<option value="' + x + '">' + shippingWaysList[x]['fletera'] + '</option>');
+    }
+    $('#selectEnvio').val(0); //Seleccionar la primera opcion
+    $('#selectEnvio').selectpicker('refresh');
 }

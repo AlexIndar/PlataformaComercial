@@ -28,13 +28,15 @@
         <div class="header">
             <div class="row  text-start">
                 <div class="col-lg-1 col-md-1 col-12 rowPedido">
-                    <h5>Cliente</h5>
+                    <div class="skeleton-input"></div>
+                    <h5 class="d-none" id="customerIDLabel">Cliente</h5>
                 </div>
                 @if(count($data)==1)
                     <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}}" disabled></div>
                 @else
                     <div class="col-lg-5 col-md-5 col-12 rowPedido">
-                        <select id="customerID" name="customerID" class="form-control selectpicker" data-live-search="true">
+                        <div class="skeleton-input"></div>
+                        <select id="customerID" name="customerID" class="form-control selectpicker d-none" data-live-search="true">
                             <option selected value="none">Selecciona un cliente</option>
                             @for($x=0; $x < (count($data)); $x++)
                                 <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}}</option>
@@ -43,29 +45,39 @@
                     </div>
                 @endif
                 <div class="col-lg-2 col-md-3 col-12 rowPedido">
-                    <h5>Orden de compra</h5>
+                    <div class="skeleton-input"></div>
+                    <h5 class="d-none" id="ordenCompraLabel">Orden de compra</h5>
                 </div>
-                <div class="col-lg-4 col-md-3 col-12 rowPedido"><input type="text" class="inputPedido" id="ordenCompra" name="ordenCompra" value="{{$cotizacion->orderC}}"></div>
+                <div class="col-lg-4 col-md-3 col-12 rowPedido">
+                    <div class="skeleton-input"></div>
+                    <input type="text" class="inputPedido d-none" id="ordenCompra" name="ordenCompra">
+                </div>
             </div>
             <div class="row  text-start">
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Correo</h5>
+                            <div class="skeleton-input"></div>
+                            <h5 class="d-none" id="correoLabel">Correo</h5>
                         </div>
                         @if(count($data)==1)
                             <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo" value="{{$cotizacion->email}}"></div>
                         @else
-                            <div class="col-lg-10 col-md-10 col-12 rowPedido"><input type="text" class="inputPedido" id="correo" name="correo"></div>
+                            <div class="col-lg-10 col-md-10 col-12 rowPedido">
+                                <div class="skeleton-input"></div>
+                                <input type="text" class="inputPedido d-none" id="correo" name="correo">
+                            </div>
                         @endif
                         
                     </div>
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Sucursal</h5>
+                            <div class="skeleton-input"></div>
+                            <h5 class="d-none" id="sucursalLabel">Sucursal</h5>
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                            <select id="sucursal" name="sucursal" class="form-control selectpicker" data-live-search="true">
+                            <div class="skeleton-input"></div>
+                            <select id="sucursal" name="sucursal" class="form-control selectpicker d-none" data-live-search="true">
                                 @if(count($data)==1)
                                     <option style="height: 30px !important;" value="none">Selecciona una sucursal</option>
                                     @for($x=0; $x < (count($data[0]['addresses'])); $x++)
@@ -78,19 +90,41 @@
 
                     <div class="row">
                             <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                                <h5>Form. Envío</h5>
+                                <div class="skeleton-input"></div>  
+                                <h5 class="d-none" id="envioLabel">Form. Envío</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                <input type="text" class="inputPedido" id="envio" name="envio" value="{{$cotizacion->shippingWay}}" disabled>
+                                @if(count($data)==1)
+                                    <input type="text" class="inputPedido" id="envio" name="envio" value="{{$data[0]['shippingWayF']}}" disabled>
+                                @else
+                                    <div class="skeleton-input"></div>  
+                                    <input type="text" class="inputPedido d-none" id="envio" name="envio" value="" disabled>
+                                @endif
+                                <div id="containerSelectEnvio" class="d-none">
+                                    <select id="selectEnvio" name="selectEnvio" class="form-control selectpicker" data-live-search="true">
+                                        @if(count($data)==1)
+                                            <option style="height: 30px !important;" value="none">Selecciona una forma de envío</option>
+                                            @for($x=0; $x < (count($data[0]['shippingWays'])); $x++)
+                                                <option style="height: 30px !important;" value="{{$x}}">{{$data[0]['shippingWays'][$x]}}</option>
+                                            @endfor
+                                        @endif
+                                    </select>
+                                </div>
                             </div>
                     </div>
 
                     <div class="row">
                             <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                                <h5>Fletera</h5>
+                                <div class="skeleton-input"></div>  
+                                <h5 class="d-none" id="fleteraLabel">Fletera</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                <input type="text" class="inputPedido" id="envio" name="envio" value="{{$cotizacion->packageDelivery}}" disabled>
+                                @if(count($data)==1)
+                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
+                                @else
+                                    <div class="skeleton-input"></div>  
+                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" disabled>
+                                @endif
                             </div>
                     </div>
 
@@ -99,24 +133,29 @@
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
-                            <h5>Promo</h5>
+                            <div class="skeleton-input"></div>  
+                            <h5 class="d-none" id="tags-promoLabel">Promo</h5>
                         </div>
                         <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                            <ul class="tags-input" id="tags-promo">
-                                <!-- <li class="tags-new">
-                                    <input type="text" placeholder="Buscar"> 
-                                </li> -->
-                            </ul>  
+                            <div class="skeleton-input"></div>  
+                            <ul class="tags-input d-none" id="tags-promo"></ul>  
                         </div>
                     </div>
                     <br>
                     <div class="row d-flex flex-row justify-content-center align-items-center">
                         <div class="col-lg-2 col-md-3 col-12 rowPedido">
-                            <h5>Cupón</h5>
+                            <div class="skeleton-input"></div>  
+                            <h5 class="d-none" id="cuponLabel">Cupón</h5>
                         </div>
-                        <div class="col-lg-4 col-md-9 col-12 rowPedido"><input type="text" class="inputPedido" id="cupon" name="cupon"></div>
-                        <div class="col-lg-6 col-md-12 col-12 rowPedido">
-                            <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label for="cliente_recoge">Cliente recoge en sucursal</label>
+                        <div class="col-lg-4 col-md-9 col-12 rowPedido">
+                            <div class="skeleton-input"></div>  
+                            <input type="text" class="inputPedido d-none" id="cupon" name="cupon">
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12 rowPedido d-none" id="cliente_recogeLabel">
+                            <input type="checkbox" class="checkboxPedido" id="cliente_recoge"> <label class="cliente_recogeLabel" for="cliente_recoge">Cliente recoge en sucursal</label>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12 rowPedido" id="cliente_recogeSkeleton">
+                            <div class="skeleton-input"></div>  
                         </div>
                         <!-- <div class="col-lg-6 col-md-4 col-12 rowPedido">
                             <input type="checkbox" class="checkboxPedido" id="dividir"> <label for="dividir">Dividir 2000</label>
@@ -296,6 +335,19 @@
         </div>
 
         <!---------------------------------------------------------------------------------------------------- FIN INVENTARIO ---------------------------------------------------------------------------------------------->
+
+         <!-------------------------------------------------------------------------------------------- MODAL LOADING LEVANTAR PEDIDO NETSUITE ---------------------------------------------------------------------------------------------->
+
+         <div class="modal fade bd-example-modal-xl-ns" tabindex="-1" role="dialog" id="modalNetsuiteLoading" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content modal-content-inventario" id="modal-netsuite-loading">
+                <div class="text-center">
+                    <h4>Levantando Pedido</h4>
+                </div>
+                <div id='container-netsuite-loading'></div>
+            </div>
+        </div>
+        </div>
 
     </div> <!-- Cierre Pedido -->
     </div> <!-- Cierre content -->
