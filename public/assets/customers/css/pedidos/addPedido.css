@@ -192,6 +192,10 @@ background-color: #002868;
 color: white; 
 padding: 2px;
 text-align: center;
+position: sticky;
+z-index: 10;
+top: 0;
+left: 0;
 }
 
 .fadeOut{
@@ -212,6 +216,54 @@ padding: 5px;
 border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.totalFilas{
+  white-space: nowrap;
+}
+
+.tablaPedidoScrollable{
+  display: block;
+  height: 50vh !important;
+  overflow-y: scroll;
+}
+
+.input-switch{
+  opacity: 0;
+  display: block;
+}
+
+.switch {
+  position: relative;
+  width: 60px;
+  height: 20px;
+  display: inline-block;
+  background: #666666;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+}
+
+.switch:after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background: #FFF;
+  border-radius: 50%;
+  box-shadow: 1px 3px 6px #666666;
+}
+
+.input-switch:checked + label {
+  background: #009900;
+}
+
+.input-switch:checked + label:after {
+  left: auto;
+  right: 2px;
+}
 .text-inventario{
   font-size: 13px !important;
   font-weight: 400 !important;

@@ -519,8 +519,12 @@ function cargarProductosPorCodigo() {
         var art = selectedItemsFromInventory.find(o => o.item === (inputCodigo.value).trim());
         if(art != undefined)
             art['cant'] = (parseInt(art['cant']) + parseInt(inputCantidad.value)).toString();
-        else
-            selectedItemsFromInventory.push({ item: (inputCodigo.value).trim(), cant: inputCantidad.value });   
+        else{
+            art = items.find(o => o.itemid === (inputCodigo.value).trim());
+            if(art != undefined && inputCantidad.value != '') { selectedItemsFromInventory.push({ item: (inputCodigo.value).trim(), cant: inputCantidad.value });}
+            else if (art == undefined) { alert('El artículo '+(inputCodigo.value).trim()+' no existe');}
+            else if (inputCantidad.value == '') { alert('Agrega cantidad para el artículo '+(inputCodigo.value).trim());}
+        }
     }
 
     var table = document.getElementById('tableCargarPorCodigo');
@@ -669,8 +673,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
 }
 
 function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
-    console.log('SEPARAR FILAS');
-    console.log(json);
     for(var i=0; i<pedido.length; i++){
         for(var z=0; z<pedido[i]['items'].length; z++){
             if(pedido[i]['items'][z]['addRegalo']==0){
@@ -737,9 +739,7 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
                 pedido.push(rowPedido);
             }
             else{
-                console.log(json[x]);
                 var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
-                console.log(header);
                 if(header != undefined){
                     header['items'].push(item);
                 }
@@ -1033,6 +1033,17 @@ function cargarInventario() {
     }
 }
 
+function activeSwitch (type) {
+    var checkBox = document.getElementById("checkbox1");
+    type == 1 ? flag = true : flag = false;
+    if(pedido.length > 0){
+        if (checkBox.checked == flag){
+            document.getElementById('tablaPedido').classList.remove('tablaPedidoScrollable');
+          } else {
+            document.getElementById('tablaPedido').classList.add('tablaPedidoScrollable');
+        }
+    }   
+}
 function reloadInventario(){
     document.getElementById('empty').value = 'yes';
     $("#tablaInventario").dataTable().fnClearTable();
@@ -1042,10 +1053,9 @@ function reloadInventario(){
 }
 
 function createTablePedido(){
-    console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
-    
+    activeSwitch(2);
     while(filas > 1){
         table.deleteRow(filas);
         filas --;
@@ -1513,8 +1523,6 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         pedidoJson = [];
         var itemsJson = [];
 
-        console.log(pedido);
-
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
             var plazo = pedido[x]['plazo'];
@@ -1573,7 +1581,6 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
-            console.log(json);
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1962,7 +1969,7 @@ function saveAndGetIDCotizacion(){
                 comments: comentarios,
                 enviado: 1,
             };
-
+ 
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -192,9 +192,12 @@
 
     <div id="pedido" style="display:none;">
 
-        <div class="totalFilas">
-            <h5>Total filas: <span class="totalFilasCant" id="totalFilasCant">0</span></h5>
+        <div style="display: flex; align-items: flex-start;">
+            <h5>Scroll </h5>
+            <input type="checkbox" id="checkbox1" class='input-switch' />
+            <label for="checkbox1" class="switch" id="label-switch" onmouseup="activeSwitch(1)"></label>
         </div>
+        
         <!-- TABLA ARTICULOS PEDIDO -->
 
         <div class="cuerpoPedido row">
@@ -202,7 +205,9 @@
                 <table class="tablaPedido" id="tablaPedido">
                     <!-- CABECERA DE TABLA -->
                     <tr>
-                        <th>#</th>
+                        <th><div class="totalFilas">
+                            <h5># <span class="totalFilasCant" id="totalFilasCant">0</span></h5>
+                        </div></th>
                         <th>Art</th>
                         <th>Cant</th>
                         <th>Descripción</th>
