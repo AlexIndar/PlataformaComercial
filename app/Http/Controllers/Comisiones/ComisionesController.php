@@ -19,6 +19,11 @@ class ComisionesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function getCtesActivosMes($token, $referencia,$fecha){
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/CobranzaZona/getCtesActivosMes?referencia='.$referencia.'&fecha='.$fecha);
+        return json_decode($data->body());
+    }
+
     public static function getHistoricoCobranzaZonaList($token,$fecha){
         $data = Http::withToken($token)->get('http://192.168.70.107:64444/CobranzaZona/getHistoricoCobranzaZonaList?fecha='.$fecha);
         return json_decode($data->body());
