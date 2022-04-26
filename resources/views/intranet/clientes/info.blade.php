@@ -54,7 +54,7 @@
                     <div class="col-sm-12 invoice-col ">
                         <p class="lead "> <b> Cuentas Por Pagar y Crédito </b></p>
                     </div>
-                    <div class="col-sm-6 invoice-col">
+                    <div class="col-sm-7 invoice-col">
                         <strong>Saldo</strong><br>
                         <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : </b><br>
                         <table id="creditTable" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
@@ -88,7 +88,7 @@
                         Referencia Bancaria: ------ <br>
 
                      </div>
-                    <div class="col-sm-6   invoice-col">
+                    <div class="col-sm-5   invoice-col">
                     <strong>Estado de Cuenta </strong><br><br>
                     Seleccione Un Rango de Fechas: <br>
                     <div class="input-group">

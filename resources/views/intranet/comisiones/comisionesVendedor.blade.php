@@ -142,7 +142,31 @@
                            </table>
                         </div>
                      </div>
+
+                    <div   class="col-lg-12">
+                        <div class="card-body table-responsive p-0">
+                           <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  > BONOS </th>
+                                 </tr>
+                                 <tr >
+                                    <th style="width:320px">Clientes Nuevos</th>
+                                    <th>Clientes Activos</th>
+                                    <th>Valor Objetivo</th>
+                                    <th>%  de Alcance</th>
+                                    <th>Importe</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaBonos">
+                              </tbody>
+
+                           </table>
+                        </div>
+                     </div>
                   </div>
+
+
                </div>
             </div>
          </div>
@@ -194,7 +218,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-indarBlue">Descuentos</h3>
-                <h6 id ="vendedor" class="text-center title ml-auto"></h6>
+                <h6 id ="vendedordes" class="text-center title ml-auto"></h6>
                 <input type="text" id="typeFormInf" value="" hidden>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
@@ -222,6 +246,45 @@
                                  </tr>
                                </thead>
                                <tbody id="llenaDescModal">
+                               </tbody>
+                            </table>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Clientes Nuevos-->
+<div class="modal fade" id="nvosclientesModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-indarBlue">
+                <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
+                <h6 id ="vendedorbon" class="text-center title ml-auto"></h6>
+                <input type="text" id="typeFormInf" value="" hidden>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body text-indarBlue" id="modal2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-body table-responsive p-0">
+                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                               <thead style="background-color:#002868; color:white">
+                                  <tr >
+                                     <th>Código cliente</th>
+                                     <th style="width:320px">Nombre</th>
+                                     <th>Zona</th>
+                                     <th>Fecha</th>
+                                  </tr>
+                               </thead>
+                               <tbody id="clientesNvosModal">
                                </tbody>
                             </table>
                          </div>
@@ -480,7 +543,6 @@
            }
         });
 //
-
         function myCallback(response) {
 
 
@@ -497,17 +559,22 @@
            'data': {zona:id, fecha : date},
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
-           success: function(data){
-            //console.log(data.diasLaborados);
+           success: function array(data){
+            console.log(data[1]);
            // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
             var htmlModal = '';
-            var importePunt = (comisionTot * data.porcAlcanzado)/100;
-            console.log( comisionTot );
+            var htmlBonos = '';
+            var htmlModalnc = '';
+
+            var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
+            //console.log( comisionTot );
             var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
-            var vendedor = data.vendedor + ' | ' + data.zona;
-            var dataDetalle = data.detalle;
+            var vendedor = data[0].vendedor + ' | ' + data[0].zona;
+            var dataDetalle = data[0].detalle;
+            var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
+            var bonosPorc;
 
             for (i = 0; i < dataDetalle.length; i++) {
 
@@ -520,12 +587,22 @@
                             '</tr>';
             }
 
+            for (i = 0; i < bonoDetalle.length; i++) {
+
+                htmlModalnc += '<tr>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order+ '</td>' +
+                            '</tr>';
+                }
+
             htmlPuntualidad += '<tr style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">' +
                    '<td style="font-weight: bold" colspan="2"> Días No Reportados </td>' +
                    '<td style="font-weight: bold"> 8.7  % </td>' +
-                   '<td style="font-weight: bold" ><u>'+ data.diasLaborados +'</u></td>' +
-                   '<td style="font-weight: bold" ><u>'+ data.diasNoLAborados +'</u></td>' +
-                   '<td style="font-weight: bold">'+ data.porcAlcanzado +'%</td>' +
+                   '<td style="font-weight: bold" ><u>'+ data[0].diasLaborados +'</u></td>' +
+                   '<td style="font-weight: bold" ><u>'+ data[0].diasNoLAborados +'</u></td>' +
+                   '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>'+
                    '<tr>' +
@@ -533,9 +610,24 @@
                    '<td style="font-weight: bold">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
+            bonosPorc = parseInt(data[1].cumplimientoIndicador)*10;
+            bonoImp =( bonosPorc * comisionTot /100);
+            htmlBonos += '<tr>' +
+                     '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>' +
+                     '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
+                     '<td style="font-weight: bold" >' +  data[1].vo + '</td>' +
+                     '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
+                     '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                     '</tr>';
+
             $('#llenaPuntualidad').html(htmlPuntualidad);
             $('#llenaModal').html(htmlModal);
+            $('#vendedordes').text(vendedor);
+            $('#vendedorbon').text(vendedor);
             $('#vendedor').text(vendedor);
+            $('#llenaBonos').html(htmlBonos);
+            $('#clientesNvosModal').html(htmlModalnc);
+
            },
            error: function() {
                console.log("Error");

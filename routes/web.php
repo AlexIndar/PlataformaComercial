@@ -1336,7 +1336,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
-                //Comisiones
+                //******************************************* Comisiones ********************************************************
 
                 Route::get('/comisionesPorCliente', function(){
                     $token = TokenController::refreshToken();
@@ -1386,8 +1386,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                    $fecha = $request->fecha;
 
                    $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
-                   //dd($data);
-                    return $data;
+                   $dataBonos=ComisionesController::getCtesActivosMes($token,$zona,$fecha);
+
+                    return array($data, $dataBonos);
 
                 });
 
@@ -1455,7 +1456,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
 
-                // ******************  Pago en Linea *************************
+                // ************************************************  Pago en Linea ***************************************************
 
                 Route::get('/clientes/info', function(){
                     $token = TokenController::getToken();
