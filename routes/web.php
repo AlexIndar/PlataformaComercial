@@ -283,12 +283,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE['level'];
                                 }
                                 $entity = '';
-                                $username = $_COOKIE['username'];
+
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+
                                 $directores = ['rvelasco', 'alejandro.jimenez'];
                                 in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
                                 $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions]);
+                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::get('/getPedidos', function (){
@@ -750,13 +754,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
+                                
                                 $level = "C";
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
+
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+
                                 $promociones = PromoController::getAllEvents($token);
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions]);
+                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::post('/promociones/editar', function (Request $request){

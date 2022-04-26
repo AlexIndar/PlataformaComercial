@@ -156,10 +156,15 @@
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <span class="dropdown-item dropdown-header">Mi Cuenta</span>
             <div class="dropdown-divider"></div>
+            @if(isset($username))
+            <a href="/logout" class="dropdown-item">
+              {{$username}}@indar.com.mx</i>
+            </a>
+            <div class="dropdown-divider"></div>
+            @endif
             <a href="/logout" class="dropdown-item">
               Cerrar sesión <i class="fas fa-sign-out-alt mr-2 mt-1 float-right"></i>
             </a>
-            <div class="dropdown-divider"></div>
         </li>
         <li class="nav-item">
           <a class="nav-link icon-indar" data-widget="fullscreen" href="#" role="button">
@@ -187,10 +192,16 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <img src="{{asset('assets/customers/img/png/profile.png')}}" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Vendedor</a>
+            <a href="#" class="d-block">
+              @if(isset($userRol))
+                {{$userRol}}
+              @else
+                Vendedor
+              @endif
+            </a>
           </div>
         </div>
 
