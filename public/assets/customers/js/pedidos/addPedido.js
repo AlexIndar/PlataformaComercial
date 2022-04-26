@@ -516,14 +516,14 @@ function cargarProductosPorCodigo() {
     for (var x = 1; x <= rows.length; x++) {
         var inputCodigo = document.getElementById('input-codigo-' + x);
         var inputCantidad = document.getElementById('input-cantidad-' + x);
-        var art = selectedItemsFromInventory.find(o => o.item === (inputCodigo.value).trim());
+        var art = selectedItemsFromInventory.find(o => o.item === (inputCodigo.value).trim().toUpperCase());
         if(art != undefined)
             art['cant'] = (parseInt(art['cant']) + parseInt(inputCantidad.value)).toString();
         else{
-            art = items.find(o => o.itemid === (inputCodigo.value).trim());
-            if(art != undefined && inputCantidad.value != '') { selectedItemsFromInventory.push({ item: (inputCodigo.value).trim(), cant: inputCantidad.value });}
-            else if (art == undefined) { alert('El artículo '+(inputCodigo.value).trim()+' no existe');}
-            else if (inputCantidad.value == '') { alert('Agrega cantidad para el artículo '+(inputCodigo.value).trim());}
+            art = items.find(o => o.itemid === (inputCodigo.value).trim().toUpperCase());
+            if(art != undefined && inputCantidad.value != '') { selectedItemsFromInventory.push({ item: (inputCodigo.value).trim().toUpperCase(), cant: inputCantidad.value });}
+            else if (art == undefined) { alert('El artículo '+(inputCodigo.value).trim().toUpperCase()+' no existe');}
+            else if (inputCantidad.value == '') { alert('Agrega cantidad para el artículo '+(inputCodigo.value).trim().toUpperCase());}
         }
     }
 
@@ -1148,10 +1148,6 @@ function createTablePedido(){
     for(var x=0; x < btnActions.length; x++){
         btnActions[x].disabled = false;
     }
-
-
-
-
 }
 
 

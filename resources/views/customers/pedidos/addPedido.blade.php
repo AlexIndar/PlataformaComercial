@@ -33,14 +33,14 @@
                     <h5 class="d-none" id="customerIDLabel">Cliente</h5>
                 </div>
                 @if(count($data)==1)
-                    <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}}" disabled></div>
+                    <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}} ({{strtoupper($data[0]['zona'])}})" disabled></div>
                 @else
                     <div class="col-lg-5 col-md-5 col-12 rowPedido">
                         <div class="skeleton-input"></div>
                         <select id="customerID" name="customerID" class="form-control selectpicker d-none" data-live-search="true">
                             <option selected value="none">Selecciona un cliente</option>
                             @for($x=0; $x < (count($data)); $x++)
-                                <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}}</option>
+                                <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}} ({{strtoupper($data[$x]['zona'])}})</option>
                             @endfor
                         </select>
                     </div>
@@ -180,7 +180,7 @@
         </div>
     <!---------------------------------------------------------------------------------------------------- FIN ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
         
-    <br><br>
+    <br><br> 
 
     <!---------------------------------------------------------------------------------------------------- PEDIDO  ---------------------------------------------------------------------------------------------->
 
