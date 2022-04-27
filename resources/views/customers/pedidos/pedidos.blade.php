@@ -9,7 +9,7 @@
 <script src="{{asset('assets/customers/js/pedidos/pedidos.js')}}"></script>
 @endsection
 
-@section('body')
+@section('body') 
 
 <div class="content-wrapper p-5">
     <div class="container">
@@ -41,25 +41,7 @@
       
         <br><br>
         <div id="rowPedidos">
-            @foreach($pedidos as $pedido)
-                <div class="promo">
-                    <div class="promo-header">
-                        <h4>[#{{$pedido->idCotizacion}} - {{strtoupper($pedido->companyId)}}] {{$pedido->orderC}}</h4>
-                        <div class="actions">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-info" title="Editar" onclick="editarPedido('{{$pedido->idCotizacion}}', '{{$pedido->companyId}}')"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$pedido->idCotizacion}}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cuerpo-promo">
-                        <h5>Forma Envío <span class="fecha"><i class="fas fa-truck-loading"></i> {{$pedido->shippingWay}}</span> Fletera <span class="fecha"><i class="fas fa-shipping-fast"></i> {{$pedido->packageDelivery}}</span> </h5>
-                        <h5>{{$pedido->addressName}}</h5>
-                        <h5>{{$pedido->comments}}</h5>
-                    </div>
-                </div>
-
-            @endforeach
+            <!-- AQUÍ SE AGREGAN LAS COTIZACIONES DESDE EL DOM DE JAVASCRIPT -->
         </div>
        
 

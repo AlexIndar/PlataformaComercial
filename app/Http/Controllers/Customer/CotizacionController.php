@@ -70,6 +70,12 @@ class CotizacionController extends Controller
         return $cotizacion;     
     }
 
+    public static function getZonasApoyo($token, $username){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Cotizacion/getInfoZonasCotizacionIdWeb?usuario='.$username);
+        $zonas = json_decode($response->body());
+        return $zonas;     
+    }
+
     public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){
         $infoCustomer = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
         $customerHeat = json_decode($infoCustomer->body());
