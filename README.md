@@ -1,64 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="data:image/jpeg;base64,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" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# Plataforma Comercial
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Versiones:
+- ...
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Comandos
+### Instalar paquetes del proyecto:
+```
+composer install
+```
+### Ejecutar proyecto:
+```
+php artisan serve
+```
+### Crear Controladores: 
+```
+php artisan make:controller
+```
+# Archivo .env Dev
+```
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:YWof0VRI00bUXvFs1p5dXqP067hXdeRKfBbo/NdmuNQ=
+APP_DEBUG=true
+APP_URL=http://localhost
 
-## Learning Laravel
+LOG_CHANNEL=stack
+LOG_LEVEL=debug
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DRIVER=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
 
-## Laravel Sponsors
+MEMCACHED_HOST=127.0.0.1
+ 
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+MAIL_MAILER=smtp
+MAIL_HOST=sndr.indar.com.mx
+MAIL_PORT=465
+MAIL_USERNAME=mailing@sndr.indar.com.mx
+MAIL_PASSWORD=deWr75*8vjNc74&6
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=mailing@sndr.indar.com.mx
+MAIL_FROM_NAME="INDAR"
 
-### Premium Partners
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=mt1
 
-## Contributing
+MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
