@@ -163,13 +163,39 @@ $('document').ready(function(){
 		};
 		reader.readAsBinaryString(input.files[0]);
 	});
+
+
+
+    $('#regalosSub').on('change', function(evt, params) {
+        intervalSelected = window.setInterval(removeSelectedClass, 1000);
+        // $(".chosen-results .result-selected").addClass("active-result").removeClass("result-selected");
+    });
+
+    function removeSelectedClass(){
+        var elements = document.getElementsByClassName('result-selected');
+        while(elements.length > 0){
+            elements[0].classList.add('active-result');
+            elements[0].classList.remove('result-selected');
+            clearInterval(intervalSelected);
+        }
+    }
+
+
 });
  
-function activateModalRulesPackage(){
+function activateModalRulesPackage(type){ //type 1 oculta regalosCargados, type 2 muestra regalosCargados
     var modal = document.getElementById('reglasModal');
     modal.style.opacity = 1;
     modal.style.zIndex = 1000;
     modal.classList.add("active-modal");
+    if(type == 1){
+        document.getElementById('divRegalosCargadosLabel').classList.add('d-none');
+        document.getElementById('divRegalosCargadosSpan').classList.add('d-none');
+    }
+    else{
+        document.getElementById('divRegalosCargadosLabel').classList.remove('d-none');
+        document.getElementById('divRegalosCargadosSpan').classList.remove('d-none');
+    }
 }
 
 function addClientesCuotas(json, id){
@@ -285,7 +311,15 @@ function validarPaquete(){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();    
-        var regalos = $('#regalos').chosen().val();
+        var regalosChosen = document.querySelector('#regalos_chosen .chosen-choices').childNodes;
+        var regalos = [];
+        for(var x = 1; x < regalosChosen.length - 1; x++){
+            var regalo = regalosChosen[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalos.push(regalo);
+        }
+    
+        var regalos = regalos.join().slice(0, -1);
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
@@ -336,8 +370,8 @@ function validarPaquete(){
         }
 
         packageHeader = json;
-        activateModalRulesPackage();
-        document.getElementById("btn-add-sub").setAttribute( "onClick", "activateModalRulesPackage()" );
+        activateModalRulesPackage(1);
+        document.getElementById("btn-add-sub").setAttribute( "onClick", "activateModalRulesPackage(1)" );
     }
 
     if(!save){
@@ -392,6 +426,15 @@ function addRule(){
                 articulos = reglas[7].filter( x => !articulos.includes(x) );
             }
 
+            var regalosChosenSub = document.querySelector('#regalosSub_chosen .chosen-choices').childNodes;
+            var regalosSub = [];
+            for(var x = 1; x < regalosChosenSub.length - 1; x++){
+                var regalo = regalosChosenSub[x].innerText.split(']');
+                regalo = regalo[0].substring(1);
+                regalosSub.push(regalo);
+            }
+            var regalos = regalosSub.join().slice(0, -1);
+
             var json = {
                 nombreSub: document.getElementById('nombreSubregla').value,
                 descuentoSub: document.getElementById('descuentoSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla1').value),
@@ -399,7 +442,7 @@ function addRule(){
                 descuentosCategorias: categoriasSubregla,
                 montoMinCash: document.getElementById('preciominSub').value == "" ? 0 : parseInt(document.getElementById('preciominSub').value),
                 montoMinQty: document.getElementById('cantidadminSub').value == "" ? 0 : parseInt(document.getElementById('cantidadminSub').value),
-                regalos: $('#regalosSub').chosen().val(),
+                regalos: regalos,
                 proveedores: proveedores,
                 marcas: marcas,
                 articulos: articulos,
@@ -519,14 +562,14 @@ function editSubregla(id){
 
     var descuentosCategorias = subreglas[index]['descuentosCategorias'];
 
-    for(x = 0; x < descuentosCategorias.length; x++){
+    for(var x = 0; x < descuentosCategorias.length; x++){
         addRowCategoriaDescuento(x);
         $("#categoriaCliente"+(x+1)).val(descuentosCategorias[x]['categoria']);
         document.getElementById('descuentoSubregla'+(x+1)).value = descuentosCategorias[x]['descuento'];
         document.getElementById('descuentoWebSubregla'+(x+1)).value = descuentosCategorias[x]['descuentoWeb'];
     }
-
-    $('#regalosSub').val(subreglas[index]['regalos']).trigger('chosen:updated');
+    //a regalos le hacemos split porque es un string separado por comas y .val() recibe array
+    document.getElementById('regalosCargados').innerText = subreglas[index]['regalos'];
     $('#proveedores').val(subreglas[index]['proveedores']).trigger('chosen:updated');
     $('#marcas').val(subreglas[index]['marcas']).trigger('chosen:updated');
     $('#articulos').val(subreglas[index]['articulos']).trigger('chosen:updated');
@@ -535,8 +578,7 @@ function editSubregla(id){
 
     document.getElementById('btn-guardarSub').innerHTML = '<i class="fas fa-save"></i> Guardar';
 
-    activateModalRulesPackage();
-
+    activateModalRulesPackage(2);
 }
 
 function clearModalSubreglas(){
@@ -592,7 +634,16 @@ function updateRule(){
     subreglas[index]['descuentoWebSub'] = document.getElementById('descuentoWebSubregla1').value;
     subreglas[index]['montoMinCash'] = document.getElementById('preciominSub').value;
     subreglas[index]['montoMinQty'] = document.getElementById('cantidadminSub').value;
-    subreglas[index]['regalos'] = $('#regalosSub').chosen().val();
+    var regalosChosenSub = document.querySelector('#regalosSub_chosen .chosen-choices').childNodes;
+    var regalosSub = [];
+    for(var x = 1; x < regalosChosenSub.length - 1; x++){
+            var regalo = regalosChosenSub[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalosSub.push(regalo);
+    }
+    var regalosCargados = document.getElementById('regalosCargados').innerText;
+    var regalos = regalosCargados.length > 0 ? regalosCargados + ',' + regalosSub.join().slice(0, -1) : regalosSub.join().slice(0, -1);
+    subreglas[index]['regalos'] = regalos;
     subreglas[index]['proveedores'] = $('#proveedores').chosen().val();
     subreglas[index]['marcas'] = $('#marcas').chosen().val();
     subreglas[index]['articulos'] = $('#articulos').chosen().val();
@@ -787,7 +838,15 @@ function storeHeader(){
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
     
-        var regalos = $('#regalos').chosen().val();
+        var regalosChosen = document.querySelector('#regalos_chosen .chosen-choices').childNodes;
+        var regalos = [];
+        for(var x = 1; x < regalosChosen.length - 1; x++){
+            var regalo = regalosChosen[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalos.push(regalo);
+        }
+    
+        var regalos = regalos.join().slice(0, -1);
 
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";

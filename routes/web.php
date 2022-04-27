@@ -858,8 +858,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
+                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::get('/promociones/paquete', function (){
@@ -874,8 +877,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.promociones.addPaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
+                                return view('customers.promociones.addPaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::get('promociones/getPromocionesInfo', function (){

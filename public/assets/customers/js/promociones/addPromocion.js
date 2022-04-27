@@ -60,9 +60,7 @@ $('document').ready(function(){
 
       function removeSelectedClass(){
         var elements = document.getElementsByClassName('result-selected');
-        console.log(elements);
         while(elements.length > 0){
-            console.log(elements[0]);
             elements[0].classList.add('active-result');
             elements[0].classList.remove('result-selected');
             clearInterval(intervalSelected);
