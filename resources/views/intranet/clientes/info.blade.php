@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-sm-7 invoice-col">
                         <strong>Saldo</strong><br>
-                        <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : </b><br>
+                        <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : {{ $general->diasCredito }}</b><br>
                         <table id="creditTable" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
                            <thead style="background-color:#002868; color:white">
                               <tr>
@@ -70,10 +70,10 @@
                            <tbody id="">
                             <tr>
                                 <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->saldo,2) }}</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->de0a30,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->de31a60,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->de61a90,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->mayor90,2) }}</span></td>
                             </tr>
                            </tbody>
 
@@ -85,7 +85,7 @@
                         Total : <span style="font-size: 15px" class="badge badge-primary">$ {{  number_format($general->saldo,2) }}</span><br>
                         @endif --}}
                         Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->saldo,2) }}</span><br>
-                        Referencia Bancaria: ------ <br>
+                        Referencia Bancaria: {{ $general->referenciaBancaria }} <br>
 
                      </div>
                     <div class="col-sm-5   invoice-col">
@@ -118,34 +118,28 @@
                            </thead>
                            <tbody id="">
                             <tr>
-                                <td>Vendedor</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
-                            </tr>
-                            <tr>
-                                <td>Gerente</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
+                                <td>Representante</td>
+                                <td>{{ $general->nombrE_REPRESENTANTE }}</td>
+                                <td>{{ $general->telefonO_REPRESENTANTE }}</td>
+                                <td>{{ $general->emaiL_REPRESENTANTE }}</td>
                             </tr>
                             <tr>
                                 <td>Crédito y Cobranza</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
-                            </tr>
-                            <tr>
-                                <td>Post Venta</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
+                                <td>{{ $general->nombrE_AUXCOBRANZA }}</td>
+                                <td>{{ $general->telefonO_AUXCOBRANZA }}</td>
+                                <td>{{ $general->emaiL_AUXCOBRANZA }}</td>
                             </tr>
                             <tr>
                                 <td>Apoyo de Ventas</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
+                                <td>{{ $general->nombrE_APOYOVENTAS }}</td>
+                                <td>{{ $general->telefonO_APOYOVENTAS }}</td>
+                                <td>{{ $general->emaiL_APOYOVENTAS }}</td>
+                            </tr>
+                            <tr>
+                                <td>Post Venta</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                            </tbody>
 
@@ -163,7 +157,7 @@
                            <thead style="background-color:#002868; color:white">
                             <tr>
                                 <th  style="background-color:#073d92c5; font-size : 17px " class="text-center" colspan="3">
-                                    Referencia :
+                                    Referencia : {{ $general->referenciaBancaria }}
                                 </th>
                             </tr>
                               <tr>

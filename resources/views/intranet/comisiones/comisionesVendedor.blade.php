@@ -39,10 +39,10 @@
                   <div  id="divFiltroCli" class="card-body">
                      <div class="col-lg-12">
                         <div class="row ">
-                           <div class="col-sm-4">
+                           <div class="col-md-2">
                               <select name="zonas"  class="form-control js-example-basic-single" id="zonas"></select>
                            </div>
-                           <div class="col-sm-4">
+                           <div class="col-sm-2">
                               <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
                            </div>
                            <div class="col-md-4">
@@ -142,8 +142,7 @@
                            </table>
                         </div>
                      </div>
-
-                    <div   class="col-lg-12">
+                     <div   class="col-lg-12">
                         <div class="card-body table-responsive p-0">
                            <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
@@ -152,6 +151,7 @@
                                  </tr>
                                  <tr >
                                     <th style="width:320px">Clientes Nuevos</th>
+                                    <th>Parametro Nvos Ctes</th>
                                     <th>Clientes Activos</th>
                                     <th>Valor Objetivo</th>
                                     <th>%  de Alcance</th>
@@ -160,144 +160,167 @@
                               </thead>
                               <tbody id="llenaBonos">
                               </tbody>
-
                            </table>
                         </div>
                      </div>
                   </div>
-
-
                </div>
             </div>
          </div>
       </div>
    </div>
 </div>
-
-  <!-- Modal Detalle Dias no laborados -->
-  <div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Visitas y Días Laborados</h3>
-                <h6 id ="vendedor" class="text-center title ml-auto"></h6>
-                <input type="text" id="typeFormInf" value="" hidden>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+<!-- Modal Detalle Dias no laborados -->
+<div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            <h3 class="text-center title ml-auto">Detalle de Visitas y Días Laborados</h3>
+            <h6 id ="vendedor" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                           <tr >
+                              <th style="width:320px">Formulario</th>
+                              <th>Número de Visitas</th>
+                              <th>Código</th>
+                              <th>Fecha</th>
+                           </tr>
+                        </thead>
+                        <tbody id="llenaModal">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
             </div>
-            <div class="modal-body text-indarBlue" id="modal2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-body table-responsive p-0">
-                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                               <thead style="background-color:#002868; color:white">
-                                  <tr >
-                                     <th style="width:320px">Formulario</th>
-                                     <th>Número de Visitas</th>
-                                     <th>Código</th>
-                                     <th>Fecha</th>
-                                  </tr>
-                               </thead>
-                               <tbody id="llenaModal">
-                               </tbody>
-                            </table>
-                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
 </div>
-
-  <!-- Modal Detalle Descuentos -->
-  <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">Descuentos</h3>
-                <h6 id ="vendedordes" class="text-center title ml-auto"></h6>
-                <input type="text" id="typeFormInf" value="" hidden>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+<!-- Modal Detalle Descuentos -->
+<div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            Descuentos</h3>
+            <h6 id ="vendedordes" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:70% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                           <tr >
+                              <th>Id</th>
+                              <th>Cliente</th>
+                              <th>Recibida en el mes con IVA</th>
+                              <th>Cobrado en el mes sin IVA</th>
+                              <th>Pendiente Saldar mes anterior sin IVA</th>
+                              <th>Pendiente de saldar este mes sin IVA</th>
+                              <th>Sal dada en el mes sin IVA</th>
+                              <th>Desc Neg</th>
+                              <th>Desc. Fuera de Tiempo </th>
+                              <th>Nota de Credito por Incobra bilidad</th>
+                              <th>Incobra bilidad </th>
+                              <th>Comisión Base</th>
+                           </tr>
+                        </thead>
+                        <tbody id="llenaDescModal">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
             </div>
-            <div class="modal-body text-indarBlue" id="modal2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-body table-responsive p-0">
-                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:70% ;font-weight: bold ">
-                               <thead style="background-color:#002868; color:white">
-                                <tr >
-                                    <th>Id</th>
-                                    <th>Cliente</th>
-                                    <th>Recibida en el mes con IVA</th>
-                                    <th>Cobrado en el mes sin IVA</th>
-                                    <th>Pendiente Saldar mes anterior sin IVA</th>
-                                    <th>Pendiente de saldar este mes sin IVA</th>
-                                    <th>Sal dada en el mes sin IVA</th>
-                                    <th>Desc Neg</th>
-                                    <th>Desc. Fuera de Tiempo </th>
-                                    <th>Nota de Credito por Incobra bilidad</th>
-                                    <th>Incobra bilidad </th>
-                                    <th>Comisión Base</th>
-                                 </tr>
-                               </thead>
-                               <tbody id="llenaDescModal">
-                               </tbody>
-                            </table>
-                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
 </div>
-
 <!-- Modal Clientes Nuevos-->
 <div class="modal fade" id="nvosclientesModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
-                <h6 id ="vendedorbon" class="text-center title ml-auto"></h6>
-                <input type="text" id="typeFormInf" value="" hidden>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+   <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
+            <h6 id ="vendedorbon" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                           <tr >
+                              <th>Código cliente</th>
+                              <th style="width:320px">Nombre</th>
+                              <th>Zona</th>
+                              <th>Fecha</th>
+                           </tr>
+                        </thead>
+                        <tbody id="clientesNvosModal">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
             </div>
-            <div class="modal-body text-indarBlue" id="modal2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-body table-responsive p-0">
-                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                               <thead style="background-color:#002868; color:white">
-                                  <tr >
-                                     <th>Código cliente</th>
-                                     <th style="width:320px">Nombre</th>
-                                     <th>Zona</th>
-                                     <th>Fecha</th>
-                                  </tr>
-                               </thead>
-                               <tbody id="clientesNvosModal">
-                               </tbody>
-                            </table>
-                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
 </div>
-
+<!-- Modal Editar VO-->
+<div class="modal fade" id="editarVo" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-sm modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            <h3 class="text-center title ml-auto">Editar Parametro Nuevos Clientes</h3>
+            <h6 id ="zonareferencia" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <label for="">Nuevo Parametro  :</label>
+                     <input class="form-control" type="number" name="parametro" id="parametro" placeholder="Ingrese nuevo Parametro">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button id="submitParametro" type="submit" class="btn btn-success float-right" data-dismiss="modal">Guardar</button>
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
+</div>
 @endsection
 @section('js')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -307,6 +330,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
    $(document).ready(function() {
        //Collapse sideBar
@@ -349,7 +374,7 @@
    var dateprueba = new Date(año, mes-1, 01);
    var month = dateprueba.toLocaleString('default', { month: 'long' });
    document.getElementById("headerMes").innerHTML = ' COBRANZA '+month.toUpperCase()+' '+año;
-// AJAX Principal
+   // AJAX Principal
 
     $.ajax({
            'headers': {
@@ -516,11 +541,7 @@
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
-                   '</tr>'/* +
-                   '<tr style ="background-color: rgba(231, 235, 11, 0.705)">' +
-                   '<td style="font-weight: bold" colspan="5"> Comision Base </td>' +
-                   '<td style="font-weight: bold; text-center"  colspan="2">' + sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
-                   '</tr>' */;
+                   '</tr>';
 
                    htmlDespensa += '<tr>' +
                    '<td style="font-weight: bold" colspan="3"> Despensa </td>' +
@@ -542,7 +563,7 @@
                alert('Error, Tiempo de espera agotado');
            }
         });
-//
+   //
         function myCallback(response) {
 
 
@@ -583,7 +604,7 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' + dataDetalle[i].formulario + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].numVisitas + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].codigo + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].fecha + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].fecha.split(" ", 1); + '</td>' +
                             '</tr>';
             }
 
@@ -593,7 +614,7 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
                 }
 
@@ -614,8 +635,9 @@
             bonoImp =( bonosPorc * comisionTot /100);
             htmlBonos += '<tr>' +
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>' +
+                     '<td style="font-weight: bold;cursor: pointer" data-toggle="modal" data-target="#editarVo"><u>' +  data[1].parametroCtes + '</u></td>' +
                      '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
-                     '<td style="font-weight: bold" >' +  data[1].vo + '</td>' +
+                     '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
                      '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
                      '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                      '</tr>';
@@ -627,6 +649,7 @@
             $('#vendedor').text(vendedor);
             $('#llenaBonos').html(htmlBonos);
             $('#clientesNvosModal').html(htmlModalnc);
+            $('#zonareferencia').text(data[0].zona);
 
            },
            error: function() {
@@ -635,10 +658,71 @@
            }
        });
 
-          // Do whatever you need with result variable
         }
 
    }
+   //Función POST Parametro
+   $('#submitParametro').on('click', function(e) {
+    var parametro = document.getElementById('parametro').value;
+    var ref = document.getElementById('zonareferencia').textContent;
+
+    e.preventDefault();
+    $.ajax({
+           'headers': {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           'url': "/comisiones/postParametroCtesZona",
+           'type': 'POST',
+           'dataType': 'json',
+           'data': {referencia : ref , parametroCte : parametro},
+           'enctype': 'multipart/form-data',
+           'timeout': 4 * 60 * 60 * 1000,
+           success: function (data){
+            console.log(data);
+            var toast = Swal.mixin({
+                    toast: true,
+                    icon: 'success',
+                    title: 'General Title',
+                    animation: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: false,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            toast.fire({
+              animation: true,
+              title: 'Se Editó El parametro , En el ID:'+data,
+              icon: 'success'
+            });
+        },
+        error: function() {
+            var toast = Swal.mixin({
+                    toast: true,
+                    icon: 'danger',
+                    title: 'General Title',
+                    animation: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: false,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+                toast.fire({
+                  animation: true,
+                  title: 'Error Vuelva a intentar Editar el Parametro!',
+                  icon: 'danger'
+                });
+        }
+    });
+
+   });
 
    function detalleDesc(numero) {
     var id = document.getElementById("zonas").value;

@@ -754,7 +754,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
-                                
+
                                 $level = "C";
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
@@ -1402,6 +1402,22 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::post('/comisiones/postParametroCtesZona', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $referencia = $request->referencia;
+                   $parametroCte = $request->parametroCte ;
+
+                   $data=ComisionesController::postParametroCtesZona($token,$referencia,$parametroCte);
+
+
+                    return $data;
+
+                });
+
+
                 Route::get('/comisiones/getDetalle', function (Request $request){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
@@ -1475,7 +1491,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $cliente= 'C015423';
+                    $cliente= 'C009920';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
                     $general = $general[0];
                     //dd($general);
