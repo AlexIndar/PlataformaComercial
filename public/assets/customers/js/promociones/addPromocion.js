@@ -48,9 +48,26 @@ $('document').ready(function(){
     $(".chosen").chosen({
         no_results_text: "Sin resultados para",
         placeholder_text_single: "Buscar",
-        placeholder_text_multiple: "Seleccione una o más opciones"
+        placeholder_text_multiple: "Seleccione una o más opciones",
+        max_shown_results: 10,
+        hide_results_on_select: false,
     });
  
+    $('#regalos').on('change', function(evt, params) {
+        intervalSelected = window.setInterval(removeSelectedClass, 1000);
+        // $(".chosen-results .result-selected").addClass("active-result").removeClass("result-selected");
+    });
+
+      function removeSelectedClass(){
+        var elements = document.getElementsByClassName('result-selected');
+        console.log(elements);
+        while(elements.length > 0){
+            console.log(elements[0]);
+            elements[0].classList.add('active-result');
+            elements[0].classList.remove('result-selected');
+            clearInterval(intervalSelected);
+        }
+      }
     
 
     const fileArticulos = document.getElementById('articulosFile');
@@ -585,8 +602,16 @@ function validarPromo(){
         var proveedores = $('#proveedores').chosen().val();
         var marcas = $('#marcas').chosen().val();
         var articulos = $('#articulos').chosen().val();
+
+        var regalosChosen = document.querySelector('#regalos_chosen .chosen-choices').childNodes;
+        var regalos = [];
+        for(var x = 1; x < regalosChosen.length - 1; x++){
+            var regalo = regalosChosen[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalos.push(regalo);
+        }
     
-        var regalos = $('#regalos').chosen().val();
+        var regalos = regalos.join().slice(0, -1);
         var reemplaza = $('#reemplaza').chosen().val();
     
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
@@ -674,6 +699,8 @@ function validarPromo(){
             cuotasPersonalizadas: cuotasList,
         }
 
+        console.log(JSON.stringify(json));
+
 
         $.ajax({
             'headers': {
@@ -755,7 +782,7 @@ function addPromoRules(rules){
 
     if(regalos != null){
         regalos = regalos.split(',');
-        $('#regalos').val(regalos).trigger('chosen:updated');
+        $('#regalos').val(regalos).trigger('chosen:updated'); 
     }
     if(reemplazaRegalo != 0){
         $('#reemplaza').val(reemplazaRegalo).trigger('chosen:updated');

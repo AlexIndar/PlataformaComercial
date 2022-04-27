@@ -380,7 +380,7 @@
 
                 <div class="row reglas-row">
                     <div class="col-lg-2 col-md-3 col-12 text-center">
-                        <h5>Regalos:</h5>
+                        <h5>Regalos:</h5> 
                     </div>
                     <div class="col-lg-10 col-md-9 col-12">
                             <select id="regalosSub" name="regalosSub[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none">

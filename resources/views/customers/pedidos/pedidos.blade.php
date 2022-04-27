@@ -28,8 +28,13 @@
                             <option value="email">Email</option>             
                 </select>
             </div>
-            <div class="col-3">
+            <div class="col-3" id='inputFiltro'>
                 <input type="text" class="inputPedido" id="filterValue" name="filterValue" style="height: 40px !important; background-color: white !important;" disabled>
+            </div>
+            <div class="col-3 d-none" id='selectZonas'>
+                <select id="zonas" name="zonas" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="none">Selecciona una zona</option>               
+                </select>
             </div>
             <div class="col-2">
                     <button type="button" id="filtrarPedidos" class="btn btn-info" style="height: 40px !important;" onclick="filtrar()" disabled><i class="fas fa-search"></i> Buscar</button>

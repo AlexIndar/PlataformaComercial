@@ -41,6 +41,10 @@ $(document).ready(function(){
         $('#filterKey').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
             $('#filterValue').removeAttr('disabled');
             $('#filtrarPedidos').removeAttr('disabled');
+            console.log(clickedIndex);
+            // document.getElementById('selectZonas').classList.remove('d-none');
+            // document.getElementById('inputFiltro').classList.add('d-none');
+            // document.getElementById('filtrarPedidos').classList.add('d-none');
         });
 });
 
@@ -148,8 +152,6 @@ function DOMCotizaciones(cotizaciones){
         row.appendChild(container);
         
     }
-
-    console.log('dom cotizaciones');
 }
 
 function getCookie(name) { //saber si una cookie existe 
@@ -173,5 +175,12 @@ function getCookie(name) { //saber si una cookie existe
 
 function fillDropdownZonas(){
     if(zonas.length > 0){
+        $('#filterKey').append('<option value="zona">Zona</option>');
+        $('#filterKey').selectpicker("refresh");
+
+        zonas.forEach( zona => {
+            $('#zonas').append('<option value="'+zona+'">'+zona+'</option>');
+            $('#zonas').selectpicker("refresh");
+        });
     }
 }

@@ -228,6 +228,14 @@ $(document).ready(function() {
         prepareJsonSeparaPedidos(false);
     })
 
+    $('#modalNetsuiteLoading').on('hidden.bs.modal', function () {
+        selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
+        pedido = []; //vaciar pedido
+        document.getElementById('cupon').value = ''; //limpiar campo cupon
+        createTablePedido(); //limpiar tabla pedido
+        clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
+    })
+
 
     // UPDATE ADDRESSES AND DEFAULT SHIPPING WAT / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
 
@@ -2242,7 +2250,7 @@ function sendEmailDesneg(type, autoriza, descuento, date, indexPedido){
 
 function nuevaCotizacion(){
     $("#formNuevo").submit();
-}
+}  
 
 function activarEliminarModal(){
     //type indica si se quiere  borrar una cotización que ya estaba guardada o una cotización que se estaba realizando pero nunca se guardó

@@ -573,6 +573,10 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::post('/sendmail', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
@@ -631,6 +635,10 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                              Route::post('/sendmailErrorNS', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $responseNS = $request->responseNS;
                                 $correo = $request->email;
                                 $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
@@ -645,6 +653,10 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                              Route::post('/sendmailDesneg', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
