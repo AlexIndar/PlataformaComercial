@@ -15,7 +15,7 @@
     <div class="container">
         <br><br>
         <div>
-            <button class="bg-promo btn-primary" onclick="addPedido()"> <i class="fas fa-file"></i> Nuevo Pedido</button>
+            <button class="bg-promo btn-primary" onclick="addPedido()"> <i class="fas fa-file"></i> Nueva Cotización</button>
         </div>
         <br><br>
         <div class="row">

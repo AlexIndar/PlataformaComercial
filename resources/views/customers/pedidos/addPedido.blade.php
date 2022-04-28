@@ -323,6 +323,9 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-content-inventario">
                                 <input type="text" id="empty" value="yes" hidden>
+                                <div class="checkSoloExistencias d-flex flex-row justify-content-end align-items-center">
+                                    <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -2px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias">Mostrar solo existencias</label>
+                                </div>
                                 <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
                                     <thead>
                                         <tr>
@@ -424,6 +427,8 @@
   <!-- DIV PARA MOSTRAR IMAGEN DEL PRODUCTO AMPLIADA -->
 
 <div class="containerImgProduct" id="containerImgProduct">
+    <h4 id='codigoArticuloMD'>CÓDIGO ARTICULO</h5>
+    <h4 id='descripcionArticuloMD'>DESCRIPCIÓN ARTICULO</h5>
     <div class="magnify">
         <div class="large" id="zoom"></div>
         <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">

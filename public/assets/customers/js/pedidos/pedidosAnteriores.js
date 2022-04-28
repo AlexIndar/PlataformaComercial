@@ -98,7 +98,7 @@ $(document).ready(function(){
                     }
                     else {
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -196,7 +196,7 @@ $(document).ready(function(){
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -350,7 +350,7 @@ $(document).ready(function(){
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -521,7 +521,7 @@ function showAll(){
         }
         else{
             var hestatusDesc = document.createElement('h5');
-            hestatusDesc.innerHTML = "PENDIENTE";
+            hestatusDesc.innerHTML = "EN PROCESO";
             var indicador = document.createElement('div');
             indicador.classList = "indicador red";
         }

@@ -80,7 +80,7 @@ function filtrar(){
         if(cotizacion[key] == value)
             filtered.push(cotizacion);
     });
-    DOMCotizaciones(filtered);
+    DOMCotizaciones(filtered.reverse());
 }
 
 function DOMCotizaciones(cotizaciones){
@@ -90,6 +90,8 @@ function DOMCotizaciones(cotizaciones){
         row.removeChild(row.firstChild);
     }
     
+    cotizaciones = cotizaciones.reverse();
+    console.log(cotizaciones);
     for(var x = 0; x < cotizaciones.length; x++){
         var ordenCompra = cotizaciones[x]['orderC'] != null ? cotizaciones[x]['orderC'] : "";
         var container = document.createElement('div');

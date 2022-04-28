@@ -25,7 +25,7 @@
                 <div class="col-6">
                     <div class="input-group mb-3">
                         <span class="input-group-text">ID PEDIDO</span>
-                        <input type="text" class="form-control" id="idCotizacion" value="4147-1/17">
+                        <input type="text" class="form-control" id="idCotizacion" placeholder="4147-1/17">
                         <button type="button" class="btn btn-group-buttons" onclick="enviar()">ENVIAR</button> 
                         <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 5px;" id="btnSpinner" ></div>
                     </div>

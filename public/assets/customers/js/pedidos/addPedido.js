@@ -24,6 +24,7 @@ var pedido = [];
 var pedidoSeparado = []; //result separaPedidosPromo
 var tranIds = []; //arreglo con transids que retorna netsuite para indicarlos en correo
 var dataset = []; //arreglo cargado en datatable de inventario 
+var currentDataset = []; //variable para guardar actual dataset de inventario cuando filtran existencias
 
 
 var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
@@ -885,7 +886,8 @@ function noDisponible(img) {
 
 function cargarInventario() {
     var empty = document.getElementById('empty').value;
-
+    document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
+    $('#mostrar_existencias').prop("checked", false);
     if (empty == "yes") { //si la tabla está vacía, inicializarla
 
         document.getElementById('empty').value = 'no';
@@ -1526,6 +1528,18 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
 
         pedidoJson = [];
         var itemsJson = [];
+        if(type == 1 || type == 2){
+            pedido.forEach(function(row, index, object) {
+                var index = row['items'].length - 1;
+                while (index >= 0) {
+                    if (row['items'][index]['categoriaItem'] == 'PROMOCIONAL') {
+                        row['items'].splice(index, 1);
+                    }
+                    index -= 1;
+                }
+            });
+        }
+
 
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
@@ -1565,7 +1579,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             pedidoJson.push(temp); 
             itemsJson = [];
         }
-    
+     
         var json = {
             idCotizacion: type == 2 || type == 4 ? document.getElementById('idCotizacion').value : 0,
             companyId: idCustomer,
@@ -1583,6 +1597,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             type: type,
         };
 
+        console.log(json);
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
             $.ajax({
@@ -2391,6 +2406,9 @@ function levantandoPedidoLoading(){
 
 
 function verImagenProducto(itemid){
+    var art = items.find(o => o.itemid === itemid);
+    document.getElementById('codigoArticuloMD').innerText = itemid;
+    document.getElementById('descripcionArticuloMD').innerText = art['purchasedescription'];
     var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg";
     document.getElementById('containerImgProduct').style.display = 'flex';
     document.getElementById('imgProductMD').src = src;
@@ -2456,4 +2474,77 @@ function fillShippingWaysList(){
     }
     $('#selectEnvio').val(0); //Seleccionar la primera opcion
     $('#selectEnvio').selectpicker('refresh');
+}
+
+function mostrarSoloExistencias(){
+    var checkBox = document.getElementById("mostrar_existencias");
+    dataset = [];
+    if (checkBox.checked == true){
+        document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar todo';
+        var table = $('#tablaInventario').DataTable();
+        var data = table.rows({ filter : 'applied'}).data(); //obtiene información de tabla considerando si tiene algún filtro aplicado
+        currentDataset = table.rows().data(); //Obtiene toda la información de la tabla, sin tomar en cuenta el filtro que tenga
+        for(var x=0; x < data.length; x++){
+            var existencia = data[x][6].split('>')[2].split('<')[0];
+            if(existencia > 0){
+                dataset.push(data[x]);
+            }
+        }
+        $("#tablaInventario").dataTable().fnClearTable();
+        $("#tablaInventario").dataTable().fnDraw();
+        $("#tablaInventario").dataTable().fnDestroy();
+        var table = $("#tablaInventario").DataTable({
+            data: dataset,
+            pageLength : 5,
+            orderCellsTop: true,
+            fixedHeader: true,
+            deferRender: true,
+            lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
+            "initComplete": function (settings, json) {  
+                $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+            },
+            'columnDefs': [
+                {"targets": 0,"className": "td-center"},
+                {"targets": 1,"className": "td-center"},
+                {"targets": 2,"className": "td-center"},
+                {"targets": 3,"className": "td-center"},
+                {"targets": 4,"className": "td-center"}
+             ]
+        });
+         $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
+            table
+                .column( $(this).parent().index() )
+                .search( this.value )
+                .draw();
+        } );
+      } else {
+        document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
+        $("#tablaInventario").dataTable().fnClearTable();
+        $("#tablaInventario").dataTable().fnDraw();
+        $("#tablaInventario").dataTable().fnDestroy();
+        var table = $("#tablaInventario").DataTable({
+            data: currentDataset,
+            pageLength : 5,
+            orderCellsTop: true,
+            fixedHeader: true,
+            deferRender: true,
+            lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
+            "initComplete": function (settings, json) {  
+                $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+            },
+            'columnDefs': [
+                {"targets": 0,"className": "td-center"},
+                {"targets": 1,"className": "td-center"},
+                {"targets": 2,"className": "td-center"},
+                {"targets": 3,"className": "td-center"},
+                {"targets": 4,"className": "td-center"}
+             ]
+        });
+         $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
+            table
+                .column( $(this).parent().index() )
+                .search( this.value )
+                .draw();
+        } );
+      }
 }

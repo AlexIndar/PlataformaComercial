@@ -34,7 +34,6 @@ function enviar(){
 		'enctype': 'multipart/form-data',
 		'timeout': 2*60*60*1000,
 		success: function(data){
-                console.log(data[0]);
                 document.getElementById('internalId').innerText = data[0]['internalId'];
                 document.getElementById('json').innerText = data[0]['json'];
                 document.getElementById('message').innerText = data[0]['message'];
@@ -50,4 +49,4 @@ function enviar(){
 				alert('Error');
 		 }
 	});
-} 
+}  

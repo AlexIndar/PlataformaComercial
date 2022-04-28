@@ -2,7 +2,8 @@
 .bg-blue{
   background-color: #002868 !important;
   color: white !important;
-  font-size: 15px;
+  font-size: 20px;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -15,7 +16,8 @@ img.img-item {
 .bg-bo{
   background-color: #fcbf49 !important;
   color: black !important;
-  font-size: 15px;
+  font-size: 20px;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -512,9 +514,16 @@ display: none;
   display: none;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   background-color: rgba(0, 0, 0, 0.76);
   backdrop-filter: blur(5px);
   transition: all ease .4s;
+}
+
+.containerImgProduct h4{
+  color: white;
+  text-align: center;
+
 }
 
 .magnify{
