@@ -1598,7 +1598,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             type: type,
         };
 
-        console.log(json);
+        console.log(JSON.stringify(json));
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
             $.ajax({
@@ -1779,16 +1779,12 @@ function saveNS(){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
             
-            var evento;
-            pedidoSeparado.length>0 ? pedidoSeparado[indexItemSeparado]['evento'] : "";
+            var evento = pedido[indexItemSeparado]['evento'];
 
             var username = "USERNAME";
 
             for(var y = 0; y < pedido[x]['items'].length; y++){
-                
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
-                
-
                 var item = {
                     itemid: pedido[x]['items'][y]['itemid'],
                     quantity: pedido[x]['items'][y]['cantidad'],
@@ -1831,7 +1827,7 @@ function saveNS(){
                     txt: packageDelivery
                 },
                 typeSale: {
-                    id: pedido[x]['tipo'] == 'BO' ? "6" : "5",
+                    id: pedido[x]['tipo'] == 'BO' ? "6" : "1",
                     txt: ""
                 },
                 user: username,

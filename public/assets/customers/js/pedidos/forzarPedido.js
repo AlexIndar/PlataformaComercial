@@ -34,9 +34,10 @@ function enviar(){
 		'enctype': 'multipart/form-data',
 		'timeout': 2*60*60*1000, 
 		success: function(data){
+                document.getElementById('respuesta').classList.remove('d-none');
+                document.getElementById('jsonPeticion').innerText = JSON.stringify(data['peticion'][0]);
                 document.getElementById('internalId').innerText = data['response'][0]['internalId'];
                 document.getElementById('jsonRespuesta').innerText = data['response'][0]['json'];
-                document.getElementById('jsonPeticion').innerText = JSON.stringify(data['peticion'][0]);
                 document.getElementById('message').innerText = data['response'][0]['message'];
                 document.getElementById('status').innerText = data['response'][0]['status'];
                 if(data[0]['status'] == 'NOK')
@@ -44,7 +45,6 @@ function enviar(){
                 else   
                     document.getElementById('status').setAttribute('style', 'color: green; font-weight: 700; display: inline-block;');
                 document.getElementById('tranId').innerText = data['response'][0]['tranId'];
-                document.getElementById('respuesta').classList.remove('d-none');
 		}, 
 		error: function(error){
 				alert('Error'); 
