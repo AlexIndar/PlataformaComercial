@@ -1063,6 +1063,7 @@ function reloadInventario(){
 }
 
 function createTablePedido(){
+    console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     activeSwitch(2);
@@ -2190,8 +2191,8 @@ function sendEmail(){
     var numCotizacion = noCotizacionNS;
     var ordenCompra = document.getElementById("ordenCompra").value;
     var comentarios = document.getElementById("comments").value;
-    var cte = $('#customerID option:selected').text();
-    var formaEnvio = $('#selectEnvio option:selected').text();
+    var cte = $('#customerID option:selected').text() == '' ? document.getElementById('customerID').value : $('#customerID option:selected').text() ;
+    var formaEnvio = $('#selectEnvio option:selected').text() == 'Selecciona una forma de envío' ? document.getElementById('envio').value : $('#selectEnvio option:selected').text(); 
     var fletera = $("#fletera").val();
     $.ajax({
         'headers': {

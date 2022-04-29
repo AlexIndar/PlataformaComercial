@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-lg-4 col-md-3 col-12 rowPedido">
                     <div class="skeleton-input"></div>
-                    <input type="text" class="inputPedido d-none" id="ordenCompra" name="ordenCompra">
+                    <input type="text" class="inputPedido d-none" id="ordenCompra" name="ordenCompra" value="{{$cotizacion->orderC}}">
                 </div>
             </div>
             <div class="row  text-start">

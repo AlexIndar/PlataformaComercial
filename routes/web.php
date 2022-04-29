@@ -742,12 +742,12 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 $idCotizacion = explode('-', $request->cotizacion);
                                 $index = explode('/', $idCotizacion[1]);
-                                $idCotizacion = $idCotizacion[0];
+                                $idCotizacion = $idCotizacion[0]; 
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
-                                return $response;
+                                $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                return $response; 
                             });
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------

@@ -39,8 +39,10 @@
                     <legend class="scheduler-border">Respuesta</legend>
                     <h5 style="display: inline-block;">Internal ID:</h5>
                     <p style="display: inline-block;" id="internalId"></p><br>
-                    <h5>JSON:</h5>
-                    <p style="display: inline-block;" id="json"></p><br>
+                    <h5>JSON PETICIÓN:</h5>
+                    <p style="display: inline-block;" id="jsonPeticion"></p><br>
+                    <h5>JSON RESPUESTA:</h5>
+                    <p style="display: inline-block;" id="jsonRespuesta"></p><br>
                     <h5>Mensaje:</h5>
                     <p style="display: inline-block;" id="message"></p><br>
                     <h5 style="display: inline-block;">Status:</h5>
