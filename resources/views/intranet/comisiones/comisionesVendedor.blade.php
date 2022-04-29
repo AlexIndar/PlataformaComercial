@@ -229,6 +229,7 @@
                            <tr >
                               <th>Id</th>
                               <th>Cliente</th>
+                              <th>Id Documento</th>
                               <th>Recibida en el mes con IVA</th>
                               <th>Cobrado en el mes sin IVA</th>
                               <th>Pendiente Saldar mes anterior sin IVA</th>
@@ -520,22 +521,40 @@
                    '<td style="font-weight: bold">' + sumaTotalImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td id ="totalComision" style="font-weight: bold">' + sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>';
+                var desneg;
+                var desft;
+                var desinc;
 
-                   htmldescComi += '<tr onClick="detalleDesc(1);" style="cursor: pointer" data-toggle="modal" data-target="#descModal">' +
+                 if(sumaDescneg == 0){
+                    desneg = '<tr>';
+                 }else{
+                    desneg = '<tr onClick="detalleDesc(1);" style="cursor: pointer" data-toggle="modal" data-target="#descModal">';
+                 }
+                 if(sumaDesFT == 0){
+                     desft = '<tr>';
+                 }else{
+                     desft = '<tr  onClick="detalleDesc(2);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">';
+                 }
+                 if(sumaIncob == 0){
+                     desinc = '<tr>';
+                 }else{
+                    desinc = '<tr  onClick="detalleDesc(3);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">';
+                 }
+                   htmldescComi += desneg +
                    '<td style="font-weight: bold" colspan="3"> DESNEG </td>' +
                    '<td style="font-weight: bold">' + sumaImpD.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
-                   '<tr  onClick="detalleDesc(2);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">' +
+                   desft +
                    '<td style="font-weight: bold" colspan="3"> Descuento Fuera de Tiempo </td>' +
                    '<td style="font-weight: bold">' + sumaImpF.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
-                   '<tr  onClick="detalleDesc(3);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">' +
+                   desinc +
                    '<td style="font-weight: bold" colspan="3" > Incobrabilidad </td>' +
                    '<td style="font-weight: bold">' + sumaImpI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
@@ -581,7 +600,7 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function array(data){
-            console.log(data[1]);
+            //console.log(data[0]);
            // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
             var htmlModal = '';
@@ -591,7 +610,12 @@
             var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
             //console.log( comisionTot );
             var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
-            var vendedor = data[0].vendedor + ' | ' + data[0].zona;
+            if( data[0].vendedor == null){
+                var vendedor = " ";
+            }else{
+                vendedor = data[0].vendedor + ' | ' + data[0].zona;
+            }
+
             var dataDetalle = data[0].detalle;
             var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
@@ -618,7 +642,12 @@
                             '</tr>';
                 }
 
-            htmlPuntualidad += '<tr style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">' +
+            var show ;
+            if(data[0].diasLaborados == 0){
+                show = '<tr>';
+            }else show = '<tr style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">';
+
+            htmlPuntualidad +=  show +
                    '<td style="font-weight: bold" colspan="2"> Días No Reportados </td>' +
                    '<td style="font-weight: bold"> 8.7  % </td>' +
                    '<td style="font-weight: bold" ><u>'+ data[0].diasLaborados +'</u></td>' +
@@ -633,8 +662,14 @@
 
             bonosPorc = parseInt(data[1].cumplimientoIndicador)*10;
             bonoImp =( bonosPorc * comisionTot /100);
+            var ctesnvos ;
+            if(data[1].nuevosMesActual == 0){
+                ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
+            } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
+
             htmlBonos += '<tr>' +
-                     '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>' +
+                    ctesnvos
+                     +
                      '<td style="font-weight: bold;cursor: pointer" data-toggle="modal" data-target="#editarVo"><u>' +  data[1].parametroCtes + '</u></td>' +
                      '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
                      '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
@@ -645,6 +680,7 @@
             $('#llenaPuntualidad').html(htmlPuntualidad);
             $('#llenaModal').html(htmlModal);
             $('#vendedordes').text(vendedor);
+            console.log(vendedor);
             $('#vendedorbon').text(vendedor);
             $('#vendedor').text(vendedor);
             $('#llenaBonos').html(htmlBonos);
@@ -751,12 +787,14 @@
            'timeout': 4 * 60 * 60 * 1000,
            success: function(data){
             htmlModalDesc = '';
+            console.log(data);
             for (i = 0; i < data.length; i++) {
 
                 //console.log(data[i].companyname);
                 htmlModalDesc += '<tr>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].companyid.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].companyname.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].companyid + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].companyname + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].tranid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +

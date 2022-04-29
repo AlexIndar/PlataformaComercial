@@ -60,7 +60,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> <img src="/dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                                <td> <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
                                 <td>Factura</td>
                                   <td> <a href="#" class="text-muted">98875</a></td>
                                   <td>877.00</td>
@@ -68,7 +68,7 @@
                                   <td><a href="#" class="text-muted">I-60073</a></td>
                             </tr>
                             <tr>
-                                <td><img src="/dist/img/nota.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                                <td><img src="{{ asset('dist/img/nota.png') }}" alt="Product 1" class="img-size-32 mr-2"></td>
                                 <td> Nota de Crédito</td>
                                   <td> <a href="#" class="text-muted">208</a></td>
                                   <td>177.00</td>
@@ -76,7 +76,7 @@
                                   <td><a href="#" class="text-muted">N. C. </a></td>
                             </tr>
                            <tr>
-                               <td> <img src="/dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                               <td> <img src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
                             <td>Factura</td>
                               <td> <a href="#" class="text-muted">75009</a></td>
                               <td>890.00</td>
@@ -84,7 +84,7 @@
                               <td><a href="#" class="text-muted">I-7322</a></td>
                            </tr>
                            <tr>
-                               <td><img src="/dist/img/pdf.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                               <td><img src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
                             <td>Factura</td>
                               <td> <a href="#" class="text-muted">88722</a></td>
                               <td>303.00</td>
@@ -92,7 +92,7 @@
                               <td><a href="#" class="text-muted">I-3821</a></td>
                            </tr>
                            <tr>
-                            <td><img src="/dist/img/nota.png" alt="Product 1" class="img-size-32 mr-2"></td>
+                            <td><img src="{{asset('dist/img/nota.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
                             <td> Nota de Crédito</td>
                               <td> <a href="#" class="text-muted">345</a></td>
                               <td>99.00</td>
@@ -125,10 +125,10 @@
                 <div class="row">
                    <div class="col-6">
                       <p class="lead">Metodos de Pago:</p>
-                      <img src="/dist/img/credit/visa.png" alt="Visa">
-                      <img src="/dist/img/credit/mastercard.png" alt="Mastercard">
-                      <img src="/dist/img/credit/american-express.png" alt="American Express">
-                      <img src="/dist/img/credit/paypal2.png" alt="Paypal">
+                      <img src="{{ asset('dist/img/credit/visa.png') }}" alt="Visa">
+                      <img src="{{ asset('dist/img/credit/mastercard.png') }}" alt="Mastercard">
+                      <img src="{{ asset('dist/img/credit/american-express.png') }}" alt="American Express">
+                      <img src="{{ asset('dist/img/credit/paypal2.png') }}" alt="Paypal">
                       <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
                          Nota : solo se puede pagar ......
                       </p>

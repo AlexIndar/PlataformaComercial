@@ -494,16 +494,31 @@
 
               <li class="nav-item">
                 @if($active == 'Comisiones')
-                <a href="/comisionesPorCliente" class="nav-link active">
+                <a href="#" class="nav-link active">
                 @else
-                <a href="/comisionesPorCliente" class="nav-link">
+                <a href="#" class="nav-link">
                 @endif
-                <i class="nav-icon fas fa-cash-register"></i>
-                <p>
-                Comisiones
-                </p>
+                  <i class="nav-icon fas fa-cash-register"></i>
+                  <p>
+                    Comisiones
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
                 </a>
-            </li>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/comisionesVendedor" class="nav-link">
+                            <i class="nav-icon fas fa-cash-register"></i>
+                            <p>Comisiones</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/comisionesEspeciales" class="nav-link">
+                            <i class="nav-icon fas fa-tags"></i>
+                            <p>Especiales</p>
+                        </a>
+                    </li>
+                </ul>
+              </li>
         <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
