@@ -158,7 +158,7 @@ class SaleOrdersController extends Controller
         $info = json_decode($response->body());
         return $info;
     }
-
+ 
     public static function storePedidoNS($token, $data){
         $username = $_COOKIE['username'];
         $data[0]['user'] = $username;

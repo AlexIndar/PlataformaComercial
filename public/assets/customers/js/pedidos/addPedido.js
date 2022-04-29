@@ -1807,7 +1807,7 @@ function saveNS(){
                 internalId: 0,
                 idCustomer: internalId,
                 date: date,
-                location: marca == 'OUTLET' ? "36" : "1",
+                location: marca == 'OUTLET' ? "30" : "1",
                 billingAddress: {
                     id: "XXXXXX" //se llena en el back
                 },
