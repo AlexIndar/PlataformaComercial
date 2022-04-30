@@ -387,12 +387,6 @@
                             </select>
                             <h5 id="regalosSubLoading">Cargando regalos ...</h5>
                     </div> <br>
-                    <div id="divRegalosCargadosLabel" class="col-lg-2 col-md-3 col-12 text-center d-none">
-                        <h5>Cargados:</h5> 
-                    </div>
-                    <div id="divRegalosCargadosSpan" class="col-lg-10 col-md-9 col-12">
-                            <span id="regalosCargados"></span>
-                    </div>
                 </div> 
 
                 <br><br>

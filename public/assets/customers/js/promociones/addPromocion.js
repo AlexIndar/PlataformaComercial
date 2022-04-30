@@ -1,6 +1,7 @@
 var startDate;
 var endDate;
 var reglas = [];
+var cantRegalos = 0; //cantidad de regalos, para saber si quita o agrega
 $('document').ready(function(){
     $("body").addClass("sidebar-collapse");
 
@@ -54,18 +55,32 @@ $('document').ready(function(){
     });
  
     $('#regalos').on('change', function(evt, params) {
-        intervalSelected = window.setInterval(removeSelectedClass, 1000);
-        // $(".chosen-results .result-selected").addClass("active-result").removeClass("result-selected");
+        var elements = document.querySelectorAll('#regalos_chosen .chosen-choices .search-choice');
+        if(elements.length > cantRegalos){
+            var itemID = (elements[elements.length -1]['innerText'].split(']'))[0].substring(1);
+            var index = 1;
+            var selectRegalos = document.getElementById('regalos');
+            for(let i = 0; i < elements.length; i++){
+                if((elements[i]['innerText'].split(']'))[0].substring(1) == itemID){
+                    exists = true;
+                    if(index == 1)
+                        itemFull = elements[i]['innerText'];
+                    index++;
+                }
+            }
+                cantRegalos ++;
+                var option = document.createElement("option");
+                option.text = itemFull + "-"+(index);
+                option.value = itemID+'-'+(index);
+                selectRegalos.appendChild(option);
+                $('#regalos').trigger("chosen:updated");
+        }
+        else{
+            cantRegalos --;
+        }
+        
     });
 
-      function removeSelectedClass(){
-        var elements = document.getElementsByClassName('result-selected');
-        while(elements.length > 0){
-            elements[0].classList.add('active-result');
-            elements[0].classList.remove('result-selected');
-            clearInterval(intervalSelected);
-        }
-      }
     
 
     const fileArticulos = document.getElementById('articulosFile');
@@ -416,7 +431,6 @@ function checkRules() {
             document.getElementById('reemplaza_chosen').style.width = '100%';
         }
        
-
         document.getElementById('categorias_chosen').style.display = "block";
         document.getElementById('categoriasLoading').style.display = "none";
         var selectCategorias = document.getElementById('categorias');
@@ -551,6 +565,9 @@ function downloadTemplate(template){
 function validarPromo(){
     var bodyValidations = '';
     var save = true;
+    var proveedores = $('#proveedores').chosen().val();
+    var marcas = $('#marcas').chosen().val();
+    var articulos = $('#articulos').chosen().val();
     if(document.getElementById('nombrePromo').value == ''){
         save = false;
         document.getElementById('nombrePromo').classList.add('invalid-input');
@@ -589,6 +606,10 @@ function validarPromo(){
     else{
         document.getElementById('endTime').classList.remove('invalid-input');
         document.getElementById('endTime').classList.add('valid-input');
+    }
+    if(proveedores.length == 0 && marcas.length == 0 && articulos.length == 0){
+        save = false;
+        bodyValidations += '<h5>Carga proveedores, marcas y/o artículos</h5>';
     }
 
     
@@ -777,10 +798,47 @@ function addPromoRules(rules){
     var proveedores = [];
     var marcas = [];
     var articulos = [];
-
     if(regalos != null){
         regalos = regalos.split(',');
-        $('#regalos').val(regalos).trigger('chosen:updated'); 
+        cantRegalos = regalos.length;
+        var selectRegalos = document.getElementById('regalos');
+        var regalosFinal = [];
+        var repeticiones = 1;
+        for(var x = 0; x < regalos.length; x++){
+            if(regalos[x] == regalos[x+1]){
+                var fullnameRegalo = '';
+                repeticiones ++;
+                for(let i = 0; i < reglas[7].length; i++){
+                    if(reglas[7][i].includes(regalos[0])){
+                        fullnameRegalo = reglas[7][i];
+                        break;
+                    }  
+                }
+                var option = document.createElement("option");
+                option.text = fullnameRegalo+"-"+repeticiones;
+                option.value = regalos[x]+"-"+repeticiones;
+                selectRegalos.appendChild(option);
+                regalosFinal.push(regalos[x]+"-"+repeticiones);
+            }
+            else{
+                var fullnameRegalo = '';
+                repeticiones ++;
+                for(let i = 0; i < reglas[7].length; i++){
+                    if(reglas[7][i].includes(regalos[x])){
+                        fullnameRegalo = reglas[7][i];
+                        break;
+                    }  
+                }
+                var option = document.createElement("option");
+                option.text = fullnameRegalo+"-"+repeticiones;
+                option.value = regalos[x]+"-"+repeticiones;
+                selectRegalos.appendChild(option);
+                regalosFinal.push(regalos[x]);
+                repeticiones = 1;
+            }
+        }
+        $('#regalos').trigger("chosen:updated");
+        $('#regalos').val(regalosFinal).trigger('chosen:updated'); 
     }
     if(reemplazaRegalo != 0){
         $('#reemplaza').val(reemplazaRegalo).trigger('chosen:updated');
