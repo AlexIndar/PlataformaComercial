@@ -660,9 +660,13 @@
                    '<td style="font-weight: bold">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
+
             bonosPorc = parseInt(data[1].cumplimientoIndicador)*10;
+            if(bonosPorc >= 10){
+                bonosPorc = 10;
+            }
             bonoImp =( bonosPorc * comisionTot /100);
-            var ctesnvos ;
+            var ctesnvos ;  
             if(data[1].nuevosMesActual == 0){
                 ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
             } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
