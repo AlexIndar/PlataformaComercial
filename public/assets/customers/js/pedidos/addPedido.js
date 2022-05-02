@@ -154,7 +154,6 @@ $(document).ready(function() {
         }
         if (items.length > 0) {
             clearInterval(intervalInventario);
-            // cargarInventario();
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
             document.getElementById('loading').classList.remove('d-flex');
@@ -878,7 +877,7 @@ function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
 }
 
-async function cargarInventario() {
+function cargarInventario() {
     var empty = document.getElementById('empty').value;
     document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
     $('#mostrar_existencias').prop("checked", false);
@@ -1014,8 +1013,6 @@ async function cargarInventario() {
         } );
 
     }
-
-    return 1;
 }
 
 function activeSwitch (type) {
@@ -1741,6 +1738,10 @@ function saveNS(){
             var desgar = 0;
             var specialAuthorization = "";
             var indexItemSeparado;
+            console.log('PEDIDO');
+            console.log(pedido);
+            console.log('PEDIDO SEPARADO');
+            console.log(pedidoSeparado);
 
             if(pedido[x]['items'][0]['desneg'] != 0 && pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
@@ -1751,11 +1752,10 @@ function saveNS(){
             else if(pedidoSeparado.length>0){
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
-            
-            var evento = pedido[indexItemSeparado]['evento'];
-
+            console.log('INDEX PEDIDO SEPARADO');
+            console.log(indexItemSeparado);
+            var evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? pedidoSeparado[indexItemSeparado]['evento'] : "";
             var username = "USERNAME";
-
             for(var y = 0; y < pedido[x]['items'].length; y++){
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
                 var item = {
@@ -1844,7 +1844,6 @@ function saveNS(){
                 'timeout': 2*60*60*1000,
                 success: function(data){
                         var error = 0;
-                        var desneg = false;
                         for(var x = 0; x < data.length; x++){
                             if(data[x]['status']=='OK'){
                                 document.getElementById('spinner-'+x).classList.add('d-none');
