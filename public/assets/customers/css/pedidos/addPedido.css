@@ -523,7 +523,6 @@ display: none;
 .containerImgProduct h4{
   color: white;
   text-align: center;
-
 }
 
 .magnify{
@@ -630,6 +629,14 @@ cursor: pointer;
 
 .hidden{
   display: none !important;
+}
+
+#closeModalInventario{
+  cursor: pointer;
+  position: absolute;
+  margin-right: 15px;
+  top: 30px;
+  right: 0;
 }
 
 

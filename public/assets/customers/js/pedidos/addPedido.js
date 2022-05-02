@@ -325,6 +325,8 @@ $(document).ready(function() {
         $('#fletera').val(shippingWaysList[selected]['paqueteria']);
     });
 
+    // ZOOM EFFECT
+
     var native_width = 0;
 	var native_height = 0;
 
@@ -370,23 +372,30 @@ $(document).ready(function() {
 		}
 	});
 
+    
+
+    // FILTER INVENTARIO PRICE RANGE -------------------------------------------------------------------------------------------
+    $('#filterInventario').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
+        var filterValue = $( "#filterInventario" ).val();
+        var table = $('#tablaInventario').DataTable();
+        console.log(filterValue);
+        if(filterValue == 'precioDown')
+            table.column('10').order( 'desc' ).draw();
+        if(filterValue == 'precioUp')
+            table.column('10').order( 'asc' ).draw();
+        
+        });
 });
 
 
-
-
 function existingTag(text) {
-    var existing = false,
-        text = text.toLowerCase();
-
+    text = text.toLowerCase();
     $(".tags").each(function() {
         if ($(this).text().toLowerCase() == text) {
-            existing = true;
-            return "";
+            return true;
         }
     });
-
-    return existing;
+    return false;
 }
 
 
@@ -524,7 +533,7 @@ function cargarProductosPorCodigo() {
         if(art != undefined)
             art['cant'] = (parseInt(art['cant']) + parseInt(inputCantidad.value)).toString();
         else{
-            art = items.find(o => o.itemid === (inputCodigo.value).trim().toUpperCase());
+            art = items.find(o => o.itemid.toUpperCase() === (inputCodigo.value).trim().toUpperCase());
             if(art != undefined && inputCantidad.value != '') { selectedItemsFromInventory.push({ item: (inputCodigo.value).trim().toUpperCase(), cant: inputCantidad.value });}
             else if (art == undefined) { alert('El artículo '+(inputCodigo.value).trim().toUpperCase()+' no existe');}
             else if (inputCantidad.value == '') { alert('Agrega cantidad para el artículo '+(inputCodigo.value).trim().toUpperCase());}
@@ -950,7 +959,7 @@ function cargarInventario() {
                         currency: 'USD',
                     });
                     
-                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
+                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sug. de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>"
                     promociones = "<p>Sin promoción</p>";
                 }
                 else{
@@ -976,13 +985,14 @@ function cargarInventario() {
                         style: 'currency',
                         currency: 'USD',
                     });
-                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sugerido de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>";
+                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sug. de venta: <span class='detalles-item-right' style='width: auto !important'>"+precioSugerido+" con IVA</span></p>";
                 }
                 descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>P. Pago IVA incluído: <span class='detalles-item-right' id='precioIVA-"+items[x]['itemid']+"' style='width: auto !important'>"+precioIVA+"</span></p>"
                 descuentos = descuentos + "<div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-"+items[x]['itemid']+"' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>";
                 arr.push(descuentos);
                 arr.push(promociones);
                 arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " min="+ items[x]['multiploVenta'] +" step="+ items[x]['multiploVenta'] +" onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
+                arr.push(items[x]['price']);
                 dataset.push(arr);
             }
             x++;
@@ -1005,7 +1015,8 @@ function cargarInventario() {
                 {"targets": 1,"className": "td-center"},
                 {"targets": 2,"className": "td-center"},
                 {"targets": 3,"className": "td-center"},
-                {"targets": 4,"className": "td-center"}
+                {"targets": 4,"className": "td-center"},
+                {"targets": 10,"visible": false}
              ]
         });
         $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
@@ -2480,7 +2491,8 @@ function mostrarSoloExistencias(){
                 {"targets": 1,"className": "td-center"},
                 {"targets": 2,"className": "td-center"},
                 {"targets": 3,"className": "td-center"},
-                {"targets": 4,"className": "td-center"}
+                {"targets": 4,"className": "td-center"},
+                {"targets": 10,"visible": false}
              ]
         });
          $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
@@ -2509,7 +2521,8 @@ function mostrarSoloExistencias(){
                 {"targets": 1,"className": "td-center"},
                 {"targets": 2,"className": "td-center"},
                 {"targets": 3,"className": "td-center"},
-                {"targets": 4,"className": "td-center"}
+                {"targets": 4,"className": "td-center"},
+                {"targets": 10,"visible": false}
              ]
         });
          $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
