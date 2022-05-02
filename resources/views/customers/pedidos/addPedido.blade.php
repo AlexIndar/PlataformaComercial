@@ -324,7 +324,7 @@
             <div class="modal-content modal-content-inventario">
                                 <input type="text" id="empty" value="yes" hidden>
                                 <div class="checkSoloExistencias d-flex flex-row justify-content-end align-items-center">
-                                    <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -2px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias">Mostrar solo existencias</label>
+                                    <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -8px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias" style="margin-right: 40px;">Mostrar solo existencias</label> <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalInventario()"></i>
                                 </div>
                                 <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
                                     <thead>

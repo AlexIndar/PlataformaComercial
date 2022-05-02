@@ -154,13 +154,13 @@ $(document).ready(function() {
         }
         if (items.length > 0) {
             clearInterval(intervalInventario);
+            // cargarInventario();
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
             document.getElementById('loading').classList.remove('d-flex');
             if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
                 prepareJsonSeparaPedidos(false);
             }
-            cargarInventario();
         } else {
             document.getElementById('pedido').style.display = "none";
             document.getElementById('loading').style.display = "block";
@@ -878,7 +878,7 @@ function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
 }
 
-function cargarInventario() {
+async function cargarInventario() {
     var empty = document.getElementById('empty').value;
     document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
     $('#mostrar_existencias').prop("checked", false);
@@ -886,26 +886,24 @@ function cargarInventario() {
         document.getElementById('empty').value = 'no';
         document.getElementById('mostrarInventario').removeAttribute('onclick');
         dataset = [];
-        for (var x = 0; x < items.length; x++) {
+        var x = 0;
+        while (x < items.length) {
             var arr = [];
             if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
                 var precioCliente = 0;
                 if(items[x]['promoART'] != null){
-                    for(var y=0; y < items[x]['promoART'].length; y++){
+                    var y = 0;
+                    while(y < items[x]['promoART'].length){
                         if(items[x]['multiploVenta'] >= items[x]['promoART'][y]['cantidad']){
                             precioCliente = ((100 - items[x]['promoART'][y]['descuento']) / 100) * items[x]['price'];
                         }
+                        y++;
                     }
                     if(precioCliente == 0)
                         precioCliente = ((100 - items[x]['promoART'][0]['descuento']) / 100) * items[x]['price'];
                 }
                 else
                     precioCliente = items[x]['price'];
-
-                var precio = (precioCliente).toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                });
 
                 var precioLista = (items[x]['price']).toLocaleString('en-US', {
                     style: 'currency',
@@ -925,9 +923,6 @@ function cargarInventario() {
                 existenciaFormat = existenciaFormat.slice(1, -1);
                 existenciaFormat = existenciaFormat.split('.')[0];
     
-                var notFound = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
-                //arr.push("<img src='/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
-                //arr.push("<img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' onerror='noDisponible(this)' height='auto' class='img-item'/><img src='/assets/customers/img/jpg/imagen_no_disponible.jpg' height='auto' class='img-item'/>");
                 arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' onclick='verImagenProducto(\"" + items[x]['itemid'] + "\")' class='img-item'/><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
                 arr.push(items[x]['categoriaItem']);
                 arr.push(items[x]['clavefabricante']);
@@ -961,14 +956,14 @@ function cargarInventario() {
                 }
                 else{
                     precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
-                    for(var y=0; y < items[x]['promoART'].length; y++){ 
+                    var y = 0;
+                    while(y < items[x]['promoART'].length){ 
                         if(items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] ==1)
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" pieza y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
                         else if(items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] > 1)
                             var temp = "<p class='text-promo'>Compra "+items[x]['multiploVenta']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
                         else
                             var temp = "<p class='text-promo'>Compra "+items[x]['promoART'][y]['cantidad']+" piezas y obtén el <span class='text-red'> "+items[x]['promoART'][y]['descuento']+"% de descuento</span></p>";
-
                         promociones = promociones + temp;
                         var precioClienteDescuento = ((100 - items[x]['promoART'][y]['descuento']) * items[x]['price']) / 100;
                         precioClienteDescuento = (precioClienteDescuento).toLocaleString('en-US', {
@@ -976,6 +971,7 @@ function cargarInventario() {
                             currency: 'USD',
                         });
                         descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Precio cliente: <span class='text-red'> (-"+items[x]['promoART'][y]['descuento']+"%) </span> <span class='detalles-item-right' style='width: auto !important'> <span class='text-blue'>"+precioClienteDescuento+"</span> + IVA</span></p>"
+                        y++;
                     }
                     precioSugerido = (precioSugerido).toLocaleString('en-US', {
                         style: 'currency',
@@ -990,6 +986,7 @@ function cargarInventario() {
                 arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " min="+ items[x]['multiploVenta'] +" step="+ items[x]['multiploVenta'] +" onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-"+items[x]['itemid']+"'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
                 dataset.push(arr);
             }
+            x++;
         }
 
         $('#tablaInventario thead tr:eq(1) th').each( function () {
@@ -1016,9 +1013,9 @@ function cargarInventario() {
             table.column( $(this).parent().index() ).search( this.value ).draw();
         } );
 
-        console.log('datatable cargada');
-
     }
+
+    return 1;
 }
 
 function activeSwitch (type) {
@@ -2241,12 +2238,15 @@ function nuevaCotizacion(){
 }  
 
 function activarEliminarModal(){
-    //type indica si se quiere  borrar una cotización que ya estaba guardada o una cotización que se estaba realizando pero nunca se guardó
     $('#confirmDeleteModal').modal('show');
 }
 
 function closeModalDelete(){
     $('#confirmDeleteModal').modal('hide');
+}
+
+function closeModalInventario(){
+    $('#modalInventario').modal('hide');
 }
 
 function eliminarCotizacion(type){
