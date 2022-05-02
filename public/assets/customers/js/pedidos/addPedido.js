@@ -74,6 +74,7 @@ $(document).ready(function() {
     }
 
     if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+        fillShippingWaysList();
         document.getElementById('loading-message').innerHTML = 'Cargando pedido ...';
         $.ajaxSetup({
             headers: {
@@ -91,9 +92,15 @@ $(document).ready(function() {
                 'X-CSRF-Token': '{{ csrf_token() }}',
             },
             success: function(data) {
+                console.log(data);
                 
                 $('#sucursal').val(data['addressId']); //Seleccionar la primera opcion
                 $('#sucursal').selectpicker('refresh');
+                var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === data['shippingWay']);
+                $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+                $('#selectEnvio').selectpicker('refresh');
+                $('#fletera').val(data['packageDelivery']);
+                $('#correo').val(data['email']);
 
                 if(data['pickUp']==1){
                     $('#cliente_recoge').prop("checked", true);
@@ -205,7 +212,7 @@ $(document).ready(function() {
             document.getElementById('correoLabel').classList.remove('d-none');
             document.getElementById('sucursal').classList.remove('d-none');
             document.getElementById('sucursalLabel').classList.remove('d-none');
-            document.getElementById('envio').classList.remove('d-none');
+            document.getElementById('containerSelectEnvio').classList.remove('d-none');
             document.getElementById('envioLabel').classList.remove('d-none');
             document.getElementById('fletera').classList.remove('d-none');
             document.getElementById('fleteraLabel').classList.remove('d-none');

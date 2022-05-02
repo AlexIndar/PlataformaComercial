@@ -122,15 +122,10 @@
                                 <h5 class="d-none" id="fleteraLabel">Fletera</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
-                                @else
                                     <div class="skeleton-input"></div>  
-                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" disabled>
-                                @endif
+                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" autocomplete="off" disabled>
                             </div>
                     </div>
-
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-12">
