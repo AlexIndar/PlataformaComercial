@@ -9,7 +9,6 @@ var checkPromocionesCliente = true;
 var jsonItemsSeparar = "";
 var ignorarRegalos = [];
 var noCotizacionNS = 0;
-var tipoActualizacion = 0; //variable para saber si se actualiza el pedido por: 1 - cargar por código ; 2 - cargar por excel ; 3 - cargar por inventario ; 4 - sumar o restar cantidad de producto
 var ofertasVolumen = "";
 
 var indexFocus = []; //guardar el index de las filas editadas para que parpadeen después de crear nuevamente la tabla
@@ -67,6 +66,7 @@ $(document).ready(function() {
     entity = entity.toUpperCase();
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
         getEventosCliente(entity);
+        intervalInventario = window.setInterval(checkItems, 1000);
         getItems(entity);
     }
     else{ //si es zona o all (vendedor o apoyo)
@@ -75,7 +75,6 @@ $(document).ready(function() {
 
     if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
         document.getElementById('loading-message').innerHTML = 'Cargando pedido ...';
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -142,9 +141,6 @@ $(document).ready(function() {
 
 
 
-    intervalInventario = window.setInterval(checkItems, 1000);
-
-
     function checkItems() {
         if(promocionesCliente.length > 0 && checkPromocionesCliente){
             checkPromocionesCliente = false;
@@ -157,13 +153,14 @@ $(document).ready(function() {
             }
         }
         if (items.length > 0) {
+            clearInterval(intervalInventario);
             document.getElementById('pedido').style.display = "block";
             document.getElementById('loading').style.display = "none";
             document.getElementById('loading').classList.remove('d-flex');
             if(window.location.href.includes('pedido/editar')){ //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
                 prepareJsonSeparaPedidos(false);
             }
-            clearInterval(intervalInventario);
+            cargarInventario();
         } else {
             document.getElementById('pedido').style.display = "none";
             document.getElementById('loading').style.display = "block";
@@ -225,7 +222,6 @@ $(document).ready(function() {
     });
 
     $('#modalInventario').on('hidden.bs.modal', function () {
-        tipoActualizacion = 3;
         prepareJsonSeparaPedidos(false);
     })
 
@@ -547,7 +543,6 @@ function cargarProductosPorCodigo() {
     table.classList.remove('active');
     table.classList.add('inactive');
     document.getElementById('btnCargarPorCodigo').classList.add('d-none');
-    tipoActualizacion = 1;
     prepareJsonSeparaPedidos(false);
 }
 
@@ -563,7 +558,6 @@ function cargarProductosExcel(json) {
             selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
     }
 
-    tipoActualizacion = 2;
     prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
@@ -889,14 +883,12 @@ function cargarInventario() {
     document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
     $('#mostrar_existencias').prop("checked", false);
     if (empty == "yes") { //si la tabla está vacía, inicializarla
-
         document.getElementById('empty').value = 'no';
         document.getElementById('mostrarInventario').removeAttribute('onclick');
         dataset = [];
         for (var x = 0; x < items.length; x++) {
             var arr = [];
             if(items[x]['categoriaItem'] != 'PROMOCIONAL'){
-
                 var precioCliente = 0;
                 if(items[x]['promoART'] != null){
                     for(var y=0; y < items[x]['promoART'].length; y++){
@@ -1000,30 +992,18 @@ function cargarInventario() {
             }
         }
 
-         // Setup - add a text input to each footer cell
         $('#tablaInventario thead tr:eq(1) th').each( function () {
             var title = $(this).text();
             $(this).html( '<input type="text" placeholder="'+title+'" class="column_search" />' );
         } );
     
         var table = $("#tablaInventario").DataTable({
-            // dom : 'Bfrtip',
             data: dataset,
             pageLength : 5,
             orderCellsTop: true,
             fixedHeader: true,
             deferRender: true,
             lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
-            // buttons: [
-            //     {
-            //         extend:    'excel',
-            //         text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            //         titleAttr: 'Descargar Excel'
-            //     }
-            // ],
-            "initComplete": function (settings, json) {  
-                $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
-            },
             'columnDefs': [
                 {"targets": 0,"className": "td-center"},
                 {"targets": 1,"className": "td-center"},
@@ -1032,14 +1012,12 @@ function cargarInventario() {
                 {"targets": 4,"className": "td-center"}
              ]
         });
-
-         // Apply the search
-         $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
-            table
-                .column( $(this).parent().index() )
-                .search( this.value )
-                .draw();
+        $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
+            table.column( $(this).parent().index() ).search( this.value ).draw();
         } );
+
+        console.log('datatable cargada');
+
     }
 }
 
@@ -1430,7 +1408,6 @@ function addItemCant(item, cant, index) {
     var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
     jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) + multiploVenta).toString(); 
     jsonItemsSeparar = JSON.stringify(jsonObj);
-    tipoActualizacion = 4;
     separarPedidosPromo(jsonItemsSeparar, false);
 }
 
@@ -1462,7 +1439,6 @@ function decreaseItemCant(item, cant, index) {
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString(); 
         jsonItemsSeparar = JSON.stringify(jsonObj);
-        tipoActualizacion = 4;
         separarPedidosPromo(jsonItemsSeparar, false);
 }
 

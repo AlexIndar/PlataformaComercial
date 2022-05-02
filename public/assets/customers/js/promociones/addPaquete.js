@@ -645,11 +645,13 @@ function clearModalSubreglas(){
     var regalosSubreglas = $('#regalosSub option');
     regalosSubreglas.remove();
     var selectregalosSub = document.getElementById('regalosSub');
-    for(var x = 0; x<reglas[7].length; x++){
-        var option = document.createElement("option");
-        option.text = reglas[7][x];
-        option.value = (reglas[7][x].split(']'))[0].substring(1);
-        selectregalosSub.appendChild(option);
+    if(reglas[7]!=undefined){
+        for(var x = 0; x<reglas[7].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[7][x];
+            option.value = (reglas[7][x].split(']'))[0].substring(1);
+            selectregalosSub.appendChild(option);
+        }
     }
     $('#regalosSub').trigger('chosen:updated');
 
