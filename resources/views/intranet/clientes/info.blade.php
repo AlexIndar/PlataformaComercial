@@ -171,31 +171,26 @@
                                 <td>BBVA</td>
                                 <td>Convenio CIE: 806161</td>
                                 <td>012 320 00133687449 9</td>
-
                             </tr>
                             <tr>
                                 <td>BANORTE</td>
                                 <td>Convenio CEP: 51928</td>
                                 <td>072 320 00020039981 8</td>
-
                             </tr>
                             <tr>
                                 <td>Santander</td>
                                 <td>65-500776517</td>
                                 <td>014 320 65500776517 1</td>
-
                             </tr>
                             <tr>
                                 <td>HSBC</td>
                                 <td>Cuenta RAP: 2290</td>
                                 <td>021 320 04050561075 3</td>
-
                             </tr>
                             <tr>
                                 <td>BANAMEX</td>
                                 <td>110-1613905</td>
                                 <td>002 320 01101613905 6</td>
-
                             </tr>
                            </tbody>
                         </table>
@@ -250,12 +245,12 @@
                            <tbody id="">
                             <tr>
                                 <td>Nivel de Servicio a Primera Factura</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
                             </tr>
                             <tr>
                                 <td>Tiempo de Entrega entre captura y recepción</td>

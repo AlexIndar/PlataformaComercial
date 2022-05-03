@@ -241,7 +241,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama3 = RamasController::getRama3();
                                     $level = "C";
                                     if(isset($_COOKIE['level'])){
-                                        $level = $_COOKIE['level'];     
+                                        $level = $_COOKIE['level'];
                                     }
                                     return view('customers.catalogo', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
                                 });
@@ -256,7 +256,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama3 = RamasController::getRama3();
                                     $level = "C";
                                     if(isset($_COOKIE['level'])){
-                                        $level = $_COOKIE['level'];     
+                                        $level = $_COOKIE['level'];
                                     }
                                     return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
                                 });
@@ -742,12 +742,12 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 $idCotizacion = explode('-', $request->cotizacion);
                                 $index = explode('/', $idCotizacion[1]);
-                                $idCotizacion = $idCotizacion[0]; 
+                                $idCotizacion = $idCotizacion[0];
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
                                 $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
-                                return $response; 
+                                return $response;
                             });
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1478,6 +1478,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                    $data=ComisionesController::getCierreMesCobranzaZona($token,$fecha);
                    dd($data);
                    return $data;
+
+                });
+
+                Route::get('/comisionesEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    return view('intranet.comisiones.comisionesEspeciales',['token' => $token, 'permissions' => $permissions]);
 
                 });
 
