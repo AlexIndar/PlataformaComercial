@@ -302,6 +302,11 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   line-height: 3px !important;
 }
 
+.datos-item{
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
 .detalles-item-descuentos{
   min-width: 250px !important;
 }

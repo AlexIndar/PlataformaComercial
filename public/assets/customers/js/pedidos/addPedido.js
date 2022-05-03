@@ -935,11 +935,11 @@ function cargarInventario() {
                 existenciaFormat = existenciaFormat.split('.')[0];
     
                 arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' onclick='verImagenProducto(\"" + items[x]['itemid'] + "\")' class='img-item'/><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
-                arr.push(items[x]['categoriaItem']);
-                arr.push(items[x]['clavefabricante']);
-                arr.push(items[x]['familia']);
-                arr.push(items[x]['itemid']);
-                arr.push(items[x]['purchasedescription']);
+                arr.push("<p class='datos-item'>"+items[x]['categoriaItem']+"</p>");
+                arr.push("<p class='datos-item'>"+items[x]['clavefabricante']+"</p>");
+                arr.push("<p class='datos-item'>"+items[x]['familia']+"</p>");
+                arr.push("<p class='datos-item'>"+items[x]['itemid']+"</p>");
+                arr.push("<p class='datos-item'>"+items[x]['purchasedescription']+"</p>");
                 
                 var detalles = "";
                 detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>"+existenciaFormat+"</span></p>";
