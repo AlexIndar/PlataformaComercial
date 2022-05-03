@@ -302,6 +302,14 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   line-height: 3px !important;
 }
 
+.datos-pedidos-cliente{
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1px !important;
+  margin-top: 10px !important;
+  vertical-align: middle !important;
+}
+
 .datos-item{
   font-size: 13px !important;
   font-weight: 500 !important;
@@ -372,7 +380,14 @@ height: 30px;
 }
 
 .td-center{
-text-align: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.td-right{
+  text-align: right !important;
+  margin-right: 5px !important;
+  vertical-align: middle !important;
 }
 
 #categoria-linea{

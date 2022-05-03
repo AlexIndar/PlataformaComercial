@@ -301,6 +301,9 @@
             <br><br>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                 <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
+                @if($username == 'alejandro.jimenez')
+                <button type="button" id="pedidosClientes" class="btn btn-group-buttons" onclick="pedidosClientes()"><i class="fas fa-user"></i> Pedidos clientes</button>
+                @endif
                 <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
                 <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
                 <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
@@ -397,6 +400,51 @@
                     <h4>Levantando Pedido</h4>
                 </div>
                 <div id='container-netsuite-loading'></div>
+            </div>
+        </div>
+        </div>
+
+         <!--------------------------------------------------------------------------------------------- PEDIDOS CAPTURADOS POR CLIENTES ---------------------------------------------------------------------------------------------->
+
+         <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="modalPedidosClientes" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content modal-content-inventario">
+                                <input type="text" id="emptyPedidosClientes" value="yes" hidden>
+                                <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalPedidosClientes()"></i>
+                                <br><br>
+                                <table id="tablaPedidosClientes" class="table-striped table-bordered table-hover compact display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="customHeader">Zona</th>
+                                            <th class="customHeader">Cliente</th>
+                                            <th class="customHeader">Pedido</th>
+                                            <th class="customHeader">Importe</th>
+                                            <th class="customHeader">Fecha</th>
+                                            <th class="customHeader">Acciones</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Zona</th>
+                                            <th>Cliente</th>
+                                            <th>Pedido</th>
+                                            <th>Importe</th>
+                                            <th>Fecha</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th class="customHeader">Zona</th>
+                                            <th class="customHeader">Cliente</th>
+                                            <th class="customHeader">Pedido</th>
+                                            <th class="customHeader">Importe</th>
+                                            <th class="customHeader">Fecha</th>
+                                            <th class="customHeader">Acciones</th>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
+                                </table>
             </div>
         </div>
         </div>

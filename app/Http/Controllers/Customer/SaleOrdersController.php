@@ -181,6 +181,12 @@ class SaleOrdersController extends Controller
         return $shippingWays;
     } 
 
+    public static function getPedidosPendientesCTE($token){
+        $getPedidosPendientesCTE = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/PedidosPendientesCTE');
+        $pedidosPendientes = json_decode($getPedidosPendientesCTE->body());
+        return $pedidosPendientes;
+    } 
+
     public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){
         $infoCustomer = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
         $customerHeat = json_decode($infoCustomer->body());

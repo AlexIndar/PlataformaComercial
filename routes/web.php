@@ -381,7 +381,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $entity = 'ALL';
                                 }
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
-                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::post('/pedido/eliminar', function (Request $request){
@@ -528,7 +531,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $data = SaleOrdersController::getItemByID($token, $id, $entity);
                                 return  $data;
                             });
-
+ 
                             Route::post('/pedido/nuevo/SepararPedidosPromo', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
@@ -546,6 +549,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 $json = $request->key;
                                 $data = SaleOrdersController::separarPedidosPaquete($token, $json);
+                                return  $data;
+                            });
+
+                            Route::get('/getPedidosPendientesCTE', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::getPedidosPendientesCTE($token);
                                 return  $data;
                             });
 
