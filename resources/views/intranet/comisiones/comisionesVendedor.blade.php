@@ -130,9 +130,10 @@
                               <tbody id="llenaDespensa">
                               </tbody>
                               <tr style="background-color:#002868; color:white" >
-                                 <th colspan="2">Bono de Puntualidad (8.7 %)</th>
+                                 <th >Bono de Puntualidad (8.7 %)</th>
                                  <th > % Bono </th>
                                  <th >Días Laborados </th>
+                                 <th>clientes Visitados</th>
                                  <th >Días no Reportados </th>
                                  <th >% de Alcance </th>
                                  <th >Importe </th>
@@ -621,14 +622,31 @@
             var i ;
             var bonosPorc;
 
-            for (i = 0; i < dataDetalle.length; i++) {
+            var rawtData = data[0].detalle;
+                var groupBy = function (miarray, prop) {
+                return miarray.reduce(function(groups, item) {
+                   var val = item[prop];
+                   groups[val] = groups[val] || {formulario: item.formulario, codigo: item.codigo,fecha: item.fecha, numVisitas: 0};
+                   groups[val].numVisitas += item.numVisitas;
+
+
+
+                   return groups;
+               }, {});
+            }
+            //console.log(groupBy(rawtData,'companyname'));
+            var resultData = Object.values(groupBy(rawtData,'codigo'));
+            console.log(resultData);
+
+
+            for (i = 0; i < resultData.length; i++) {
 
                 //console.log(dataDetalle[i].formulario);
                 htmlModal += '<tr>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + dataDetalle[i].formulario + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].numVisitas + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].codigo + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].fecha.split(" ", 1); + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + resultData[i].formulario + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].numVisitas + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].codigo + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].fecha.split(" ", 1); + '</td>' +
                             '</tr>';
             }
 
@@ -648,9 +666,10 @@
             }else show = '<tr style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">';
 
             htmlPuntualidad +=  show +
-                   '<td style="font-weight: bold" colspan="2"> Días No Reportados </td>' +
+                   '<td style="font-weight: bold" > Días No Reportados </td>' +
                    '<td style="font-weight: bold"> 8.7  % </td>' +
                    '<td style="font-weight: bold" ><u>'+ data[0].diasLaborados +'</u></td>' +
+                   '<td style="font-weight: bold" ><u>'+ resultData.length +'</u></td>' +
                    '<td style="font-weight: bold" ><u>'+ data[0].diasNoLAborados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
@@ -666,11 +685,10 @@
                 bonosPorc = 10;
             }
             bonoImp =( bonosPorc * comisionTot /100);
-            var ctesnvos ;  
+            var ctesnvos ;
             if(data[1].nuevosMesActual == 0){
                 ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
             } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
-
             htmlBonos += '<tr>' +
                     ctesnvos
                      +
