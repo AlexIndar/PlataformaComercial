@@ -58,7 +58,7 @@
                            <table id="comisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
                                  <tr>
-                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >  </th>
+                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =8  >  </th>
                                  </tr>
                                  <tr >
                                     <th style="width:320px">Concepto</th>
@@ -72,10 +72,10 @@
                               <tbody id="llenaTable">
                               </tbody>
                               <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =7  > DIAS DE ATRASO EN LA COBRANZA PARA COMISIONES</th>
+                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > DIAS DE ATRASO EN LA COBRANZA PARA COMISIONES</th>
                               </tr>
                               <tr style="background-color:#002868; color:white" >
-                                 <th>Concepto</th>
+                                 <th colspan="2">Concepto</th>
                                  <th>De 0 a 30 Días</th>
                                  <th>De 31 a 60 Días </th>
                                  <th>De 61 a 90 Días </th>
@@ -86,7 +86,7 @@
                               <tbody id="llenaMN">
                               </tbody>
                               <tr style="background-color:#0744a7d2 ; color:white">
-                                 <th>Factor MN</th>
+                                 <th colspan="2">Factor MN</th>
                                  <th>1.805 %</th>
                                  <th>1.264 % </th>
                                  <th>0.722 % </th>
@@ -97,7 +97,7 @@
                               <tbody id="llenaMB">
                               </tbody>
                               <tr style="background-color:#0744a7d2 ; color:white">
-                                 <th>Factor MB</th>
+                                 <th colspan="2">Factor MB</th>
                                  <th>0.903 %</th>
                                  <th>0.632 %</th>
                                  <th>0.361 %</th>
@@ -108,10 +108,10 @@
                               <tbody id="llenaSubtotal">
                               </tbody>
                               <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =7  > DESCUENTOS A COMISIONES</th>
+                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > DESCUENTOS A COMISIONES</th>
                               </tr>
                               <tr style="background-color:#002868; color:white" >
-                                 <th colspan="3">Concepto</th>
+                                 <th colspan="4">Concepto</th>
                                  <th>Importe</th>
                                  <th>% de Descuento </th>
                                  <th>Total </th>
@@ -120,20 +120,21 @@
                               <tbody id="llenadesComi">
                               </tbody>
                               <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =7  > PRESTACIONES</th>
+                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > PRESTACIONES</th>
                               </tr>
                               <tr style="background-color:#002868; color:white" >
-                                 <th colspan="3">Concepto</th>
+                                 <th colspan="4">Concepto</th>
                                  <th colspan="2"> % </th>
                                  <th colspan="2">Importe </th>
                               </tr>
                               <tbody id="llenaDespensa">
                               </tbody>
                               <tr style="background-color:#002868; color:white" >
-                                 <th >Bono de Puntualidad (8.7 %)</th>
+                                 <th >Bono de Puntualidad (8.7%)</th>
                                  <th > % Bono </th>
-                                 <th >Días Laborados </th>
                                  <th>clientes Visitados</th>
+                                 <th>Total de Clientes</th>
+                                 <th >Días Laborados </th>
                                  <th >Días no Reportados </th>
                                  <th >% de Alcance </th>
                                  <th >Importe </th>
@@ -171,7 +172,7 @@
       </div>
    </div>
 </div>
-<!-- Modal Detalle Dias no laborados -->
+<!-- Modal Detalle Dias laborados -->
 <div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
@@ -193,7 +194,6 @@
                               <th style="width:320px">Formulario</th>
                               <th>Número de Visitas</th>
                               <th>Código</th>
-                              <th>Fecha</th>
                            </tr>
                         </thead>
                         <tbody id="llenaModal">
@@ -209,6 +209,33 @@
       </div>
    </div>
 </div>
+<!-- Modal Detalle Dias NO laborados -->
+<div class="modal fade" id="diasNoLaboradosModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+             <h3 class="text-center title ml-auto">Detalle Días No Laborados</h3>
+             <h6 id ="vendedor" class="text-center title ml-auto"></h6>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <div id='calendar'></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
+    </div>
+ </div>
 <!-- Modal Detalle Descuentos -->
 <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -324,6 +351,7 @@
    </div>
 </div>
 @endsection
+
 @section('js')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -334,6 +362,15 @@
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
 <!-- SWAL -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- FULLCALENDAR-->
+<link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
+<script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+
+
+
+
 <script>
    $(document).ready(function() {
        //Collapse sideBar
@@ -485,7 +522,7 @@
 
                if(html == ''){
                    html += '<tr>' +
-                   '<td style="font-weight: bold"> Cobranza </td>' +
+                   '<td style="font-weight: bold" > Cobranza </td>' +
                    '<td style="font-weight: bold">' + sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaRMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaPSMASI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -494,7 +531,7 @@
                    '</tr>';
 
                    htmlmn += '<tr>' +
-                   '<td style="font-weight: bold"> Importe Cobrado productos MN </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Importe Cobrado productos MN </td>' +
                    '<td style="font-weight: bold">' +sumaMN30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMN60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMN90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -504,7 +541,7 @@
                    '</tr>';
 
                    htmlmb += '<tr>' +
-                   '<td style="font-weight: bold"> Importe Cobrado productos MB </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Importe Cobrado productos MB </td>' +
                    '<td style="font-weight: bold">' +sumaMB30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMB60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMB90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -514,7 +551,7 @@
                    '</tr>';
 
                    htmlsubtotal += '<tr style ="background-color: rgba(231, 235, 11, 0.705)">' +
-                   '<td style="font-weight: bold"> Cobrado </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Cobrado </td>' +
                    '<td style="font-weight: bold">' +sumaTotal30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -542,21 +579,21 @@
                     desinc = '<tr  onClick="detalleDesc(3);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">';
                  }
                    htmldescComi += desneg +
-                   '<td style="font-weight: bold" colspan="3"> DESNEG </td>' +
+                   '<td style="font-weight: bold" colspan="4"> DESNEG </td>' +
                    '<td style="font-weight: bold">' + sumaImpD.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
                    desft +
-                   '<td style="font-weight: bold" colspan="3"> Descuento Fuera de Tiempo </td>' +
+                   '<td style="font-weight: bold" colspan="4"> Descuento Fuera de Tiempo </td>' +
                    '<td style="font-weight: bold">' + sumaImpF.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
                    desinc +
-                   '<td style="font-weight: bold" colspan="3" > Incobrabilidad </td>' +
+                   '<td style="font-weight: bold" colspan="4" > Incobrabilidad </td>' +
                    '<td style="font-weight: bold">' + sumaImpI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -564,7 +601,7 @@
                    '</tr>';
 
                    htmlDespensa += '<tr>' +
-                   '<td style="font-weight: bold" colspan="3"> Despensa </td>' +
+                   '<td style="font-weight: bold" colspan="4"> Despensa </td>' +
                    '<td style="font-weight: bold" colspan="2"> 10.00 % </td>' +
                    '<td style="font-weight: bold" colspan="2">' + despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>';
@@ -601,6 +638,46 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function array(data){
+
+            var events = []; //The array
+            var fechaCalendar;
+            var inicioCalendar;
+            var añoCalendar = data[0].detalle[0].fecha.slice(6,10);
+            var mesCalendar = data[0].detalle[0].fecha.slice(3,5);
+            var diaCalendar = data[0].detalle[0].fecha.slice(0,2);
+            inicioCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
+
+            events.push({title :'Inicio del Periodo' , start: data[0].fechaInicioPeriodo, backgroundColor: 'green'});
+            events.push({title :'Fin del Periodo' , start: data[0].fechaFinPeriodo, backgroundColor: 'red'});
+
+            for(var i =0; i < data[0].detalle.length; i++)
+            {
+
+                añoCalendar = data[0].detalle[i].fecha.slice(6,10);
+                mesCalendar = data[0].detalle[i].fecha.slice(3,5);
+                diaCalendar = data[0].detalle[i].fecha.slice(0,2);
+                fechaCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
+
+                events.push( {title: data[0].detalle[i].codigo , start: fechaCalendar})
+            }
+
+
+
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+              plugins: [ 'dayGrid' ],
+              defaultView: 'dayGridMonth',
+              header: {
+                center: 'addEventButton'
+              },
+              defaultDate: inicioCalendar,
+
+              events: events
+
+            });
+
+            calendar.render();
             //console.log(data[0]);
            // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
@@ -621,7 +698,6 @@
             var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
             var bonosPorc;
-
             var rawtData = data[0].detalle;
                 var groupBy = function (miarray, prop) {
                 return miarray.reduce(function(groups, item) {
@@ -636,9 +712,7 @@
             }
             //console.log(groupBy(rawtData,'companyname'));
             var resultData = Object.values(groupBy(rawtData,'codigo'));
-            console.log(resultData);
-
-
+            //console.log(resultData);
             for (i = 0; i < resultData.length; i++) {
 
                 //console.log(dataDetalle[i].formulario);
@@ -646,7 +720,6 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' + resultData[i].formulario + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].numVisitas + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].codigo + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].fecha.split(" ", 1); + '</td>' +
                             '</tr>';
             }
 
@@ -660,22 +733,24 @@
                             '</tr>';
                 }
 
+
             var show ;
             if(data[0].diasLaborados == 0){
-                show = '<tr>';
-            }else show = '<tr style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">';
+                show =   '<td style="font-weight: bold">';
+            }else show = '<td style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">';
 
-            htmlPuntualidad +=  show +
+            htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" > Días No Reportados </td>' +
                    '<td style="font-weight: bold"> 8.7  % </td>' +
-                   '<td style="font-weight: bold" ><u>'+ data[0].diasLaborados +'</u></td>' +
-                   '<td style="font-weight: bold" ><u>'+ resultData.length +'</u></td>' +
-                   '<td style="font-weight: bold" ><u>'+ data[0].diasNoLAborados +'</u></td>' +
+                   show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
+                   '<td style="font-weight: bold">'+ data[0].totalClientes +'</td>' +
+                   show +'<u>'+ data[0].diasLaborados +'</u></td>' +
+                   '<td style="cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
-                   '</tr>'+
+                   '</td>'+
                    '<tr>' +
-                   '<td style="font-weight: bold" colspan="6"> Comision Integrada </td>' +
+                   '<td style="font-weight: bold" colspan="7"> Comision Integrada </td>' +
                    '<td style="font-weight: bold">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
@@ -702,7 +777,6 @@
             $('#llenaPuntualidad').html(htmlPuntualidad);
             $('#llenaModal').html(htmlModal);
             $('#vendedordes').text(vendedor);
-            console.log(vendedor);
             $('#vendedorbon').text(vendedor);
             $('#vendedor').text(vendedor);
             $('#llenaBonos').html(htmlBonos);
