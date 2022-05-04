@@ -71,7 +71,7 @@ $(document).ready(function() {
     if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
         getEventosCliente(entity);
         intervalInventario = window.setInterval(checkItems, 1000);
-        getItems(entity);
+        getItems(entity, true);
     }
     else{ //si es zona o all (vendedor o apoyo)
         document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
@@ -214,6 +214,7 @@ $(document).ready(function() {
         var selected = clickedIndex - 1;
         indexCustomer = selected;
         var refrescaInventario = false;
+        tipoPedido = 0; // esta variable controla el campo CapturadoXCte, si cambia el cliente poner en 0 nuevamente 
         //INFO es la lista de todos los clientes con su información correspondiente
         addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
         shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
@@ -245,7 +246,7 @@ $(document).ready(function() {
             lastRefreshInventory = new Date;
             priceList = info[selected]['priceList'];
             items = [];
-            getItems(entityCte);
+            getItems(entityCte, true);
         }
 
         var selectSucursales = $('#sucursal option');
@@ -700,22 +701,25 @@ function separarFilas(json){ //prepara arreglo de pedido, agregando encabezados 
     }
     if(json.length>0){
         pedido = [];
+        console.log(items);
         for(var x=0; x<json.length; x++){
             var art;
+            console.log(json[x]['itemID']);
             if(json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined){
                 art = items.find(o => o.itemid === json[x]['itemID']);
                 ofertasVolumen = "";
-                if(art['promoART'] != null){
-                    for(var i=0; i<art['promoART'].length; i++){
-                        if(json[x]['quantity']>=art['promoART'][i]['cantidad']){
-                            json[x]['promo'] = art['promoART'][i]['descuento'];
-                        }
-                        else if(i>0){
-                            ofertasVolumen += 'Compra '+art['promoART'][i]['cantidad']+' piezas de '+json[x]['itemID']+' y llévate un '+art['promoART'][i]['descuento']+'% de descuento.\n';
+                if(art != undefined){
+                    if(art['promoART'] != null){
+                        for(var i=0; i<art['promoART'].length; i++){
+                            if(json[x]['quantity']>=art['promoART'][i]['cantidad']){
+                                json[x]['promo'] = art['promoART'][i]['descuento'];
+                            }
+                            else if(i>0){
+                                ofertasVolumen += 'Compra '+art['promoART'][i]['cantidad']+' piezas de '+json[x]['itemID']+' y llévate un '+art['promoART'][i]['descuento']+'% de descuento.\n';
+                            }
                         }
                     }
                 }
-
             } 
             
             var item = {
@@ -804,7 +808,6 @@ function getItemById(item, separa) {
         success: function(data) {
             cantItemsCargados ++;
             if(data.length>0){
-                var art = items.find(o => o.itemid === data[0]['itemid']);
                 var itemSeparar = {
                     itemID: data[0]['itemid'],
                     codCustomer: entity,
@@ -813,7 +816,7 @@ function getItemById(item, separa) {
                     punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
                     multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
                     regalo: 0,
-                    existencia: art['disponible']
+                    existencia: data[0]['disponible']
                 };
     
                 if(cantItemsCargados == cantItemsPorCargar){
@@ -843,7 +846,7 @@ function getItemById(item, separa) {
 }
 
 
-function getItems(entity) {
+function getItems(entity, async) {
     let data = { entity: entity };
     $.ajax({
         'headers': {
@@ -854,6 +857,7 @@ function getItems(entity) {
         'dataType': 'json',
         'data': data,
 		'enctype': 'multipart/form-data',
+        'async': async,
 		'timeout': 2*60*60*1000,
 		success: function(data){
 				items = data;
@@ -2578,6 +2582,13 @@ function loadDatasetPedidosClientes(){
             }
             x++;
         }
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+
+        today = parseInt(yyyy + '' + mm + '' + dd);
     
         x = 0;
     
@@ -2591,9 +2602,18 @@ function loadDatasetPedidosClientes(){
             arr.push("<p class='datos-pedidos-cliente'>"+data[x]['cliente']+" - "+data[x]['nombre']+"</p>");
             arr.push("<p class='datos-pedidos-cliente'>"+data[x]['id']+"</p>");
             arr.push("<p class='datos-pedidos-cliente'>"+importe+"</p>");
+            var fechaOrden = data[x]['fecha'].split('/');
+            fechaOrden = parseInt(fechaOrden[2] + "" + fechaOrden[1] + "" + fechaOrden[0]);
             var datetime = "";
-            datetime = datetime + "<p class='datos-pedidos-cliente'>"+data[x]['fecha']+"</p>";
-            datetime = datetime + "<p class='datos-pedidos-cliente'>"+data[x]['hora']+"</p>";
+            if(fechaOrden < today){
+                datetime = datetime + "<p class='datos-pedidos-cliente text-red'>"+data[x]['fecha']+"</p>";
+                datetime = datetime + "<p class='datos-pedidos-cliente text-red'>"+data[x]['hora']+"</p>";
+            }
+            else{
+                datetime = datetime + "<p class='datos-pedidos-cliente'>"+data[x]['fecha']+"</p>";
+                datetime = datetime + "<p class='datos-pedidos-cliente'>"+data[x]['hora']+"</p>";
+            }
+           
             arr.push(datetime);
             arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='loadPendingCustomerSaleOrder(\"" + data[x]['id'] + "\")'></i></div>");
             dataset.push(arr);
@@ -2658,7 +2678,7 @@ function loadPendingCustomerSaleOrder(id){
     }
 
     tipoPedido = 1;
-    prepareJsonSeparaPedidos(true);
+    prepareJsonSeparaPedidos(false);
 }
 
 
@@ -2695,7 +2715,7 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
             lastRefreshInventory = new Date;
             priceList = info[selected]['priceList'];
             items = [];
-            getItems(entityCte);
+            getItems(entityCte, false);
         }
 
         var selectSucursales = $('#sucursal option');
