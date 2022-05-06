@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\Controller;
 use Config;
 
@@ -161,7 +161,9 @@ class SaleOrdersController extends Controller
  
     public static function storePedidoNS($token, $data){
         $username = $_COOKIE['username'];
-        $data[0]['user'] = $username;
+        foreach($data as $partida){
+            $partida['user'] = $username;
+        }
         $storeNS = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EnviarPedidosNetsuite', [
             "prePedido" => $data 
         ]);

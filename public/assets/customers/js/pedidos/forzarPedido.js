@@ -40,7 +40,7 @@ function enviar(){
                 document.getElementById('jsonRespuesta').innerText = data['response'][0]['json'];
                 document.getElementById('message').innerText = data['response'][0]['message'];
                 document.getElementById('status').innerText = data['response'][0]['status'];
-                if(data[0]['status'] == 'NOK')
+                if(data['response'][0]['status'] == 'NOK')
                     document.getElementById('status').setAttribute('style', 'color: red; font-weight: 700; display: inline-block;');
                 else   
                     document.getElementById('status').setAttribute('style', 'color: green; font-weight: 700; display: inline-block;');
