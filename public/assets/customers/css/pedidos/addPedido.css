@@ -309,7 +309,9 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   margin-top: 10px !important;
   vertical-align: middle !important;
 }
-
+#codArticulo{
+  font-size: 18px !important;
+}
 .datos-item{
   font-size: 13px !important;
   font-weight: 500 !important;
@@ -330,13 +332,14 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .quantityBtn{
-background-color: #E9ECEF;
-border: 1px solid rgba(0, 0, 0, 0.1);
-width: 25px;
-height: 34px;
-position: relative;
-margin-top: -2px;
+  background-color: #E9ECEF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 25px;
+  height: 34px;
+  position: relative;
+  margin-top: -2px;
 }
+
 
 .input-cantidad{
 background-color: #F2F2F2 !important;

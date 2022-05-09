@@ -42,10 +42,18 @@ var intervalInventario;
 var entity;
 var entityCte;
 
-//TIPO PEDIDO. 1 = PEDIDO CLIENTE;  0 = PEDIDO VENDEDOR
+//TIPO PEDIDO. 1 = PEDIDO CREADO POR CLIENTE;  0 = PEDIDO CREADO POR VENDEDOR
 var tipoPedido = 0;
+//TIPO GET ITEM BY ID. 0 = CON AJAX, EJECUTAR REQUEST DE API GETITEMBYID; 1 = DEL INVENTARIO, SIRVE PARA CARGAR PEDIDOS CREADOS POR CLIENTES Y CUANDO SON MUY LARGOS (MUCHAS PARTIDAS) NO DE PROBLEMAS PARA CARGARLOS
+var tipoGetItemById = 0;
 
 $(document).ready(function() {
+
+    window['adrum-config'] = {
+        xhr: {
+           maxPerPageView: "UNLIMITED"
+        }
+     };
 
     //Inicia Ajax
     $(document).ajaxStart(function() {
@@ -215,6 +223,7 @@ $(document).ready(function() {
         indexCustomer = selected;
         var refrescaInventario = false;
         tipoPedido = 0; // esta variable controla el campo CapturadoXCte, si cambia el cliente poner en 0 nuevamente 
+        tipoGetItemById = 0;
         //INFO es la lista de todos los clientes con su información correspondiente
         addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
         shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
@@ -588,9 +597,9 @@ function validateTab(e){
     }
 }
 function prepareJsonSeparaPedidos(separa){
+    console.log(selectedItemsFromInventory);
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
-    console.log(selectedItemsFromInventory);
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
         var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
         getItemById(item, separa);
@@ -600,7 +609,8 @@ function prepareJsonSeparaPedidos(separa){
 
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
     if(separar && json == null){
-        setTimeout(prepareJsonSeparaPedidos(true), 2000);
+        tipoGetItemById = 0;
+        setTimeout(prepareJsonSeparaPedidos(true), 1000);
     }
     if(separar && json != null){
         console.log(json);
@@ -792,125 +802,167 @@ function getItemById(item, separa) {
     var entity = document.getElementById('entity').value;
     var data = { id: item['articulo'], entity: entity };
     var cantidad = item['cantidad'];
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    if(tipoGetItemById == 1){
+        var art = items.find(o => o.itemid === item['articulo']);
+        cantItemsCargados ++;
+        if(art != undefined){
+            var itemSeparar = {
+                itemID: art['itemid'],
+                codCustomer: entity,
+                quantity: cantidad,
+                plista: art['price'],
+                punitario: parseFloat(((100 - parseFloat(art['promo'])) * parseFloat(art['price']) / 100).toFixed(2)),
+                multiplo: art['multiploVenta'] != null ? art['multiploVenta'] : 1,
+                regalo: 0,
+                existencia: art['disponible']
+            };
+            if(cantItemsCargados == cantItemsPorCargar){
+                jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
+                separarPedidosPromo(jsonItemsSeparar, separa);
+                cantItemsCargados = 0;
+                cantItemsPorCargar = 0;
+            }
+            else{
+                jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+            }
         }
-    }); 
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "nuevo/getItemByID",
-        timeout: 2 * 60 * 60 * 1000,
-        data: data,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        },
-        success: function(data) {
-
-            // ----------------------------------------------------------------- PREGUNTAR SI MULTIPLO SUBE O BAJA -----------------------------------------------------
-
-            // if(data.length>0){
-            //     var multiplo = data[0]['multiploVenta'];
-            //     var cant;
-            //     multiplo % cantidad == 0 ? cant = cantidad : cant = 0;
-            //     if(cantidad < multiplo && multiplo % cantidad > 0){
-            //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+multiplo+" piezas a tu pedido?");
-            //         answer ? cant = multiplo : cant = 0;
-            //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
-            //     }
-            //     if(cantidad > multiplo && multiplo % cantidad > 0){
-            //         var menos = (Math.trunc(cantidad/multiplo)) * multiplo;
-            //         var mas = (Math.trunc(cantidad/multiplo) + 1) * multiplo;
-            //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+mas+" piezas a tu pedido? Presiona cancelar para solo agregar "+menos);
-            //         answer ? cant = mas : cant = menos;
-            //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
-            //     }
-            //     if(cant > 0){
-            //         var itemSeparar = {
-            //             itemID: data[0]['itemid'],
-            //             codCustomer: entity,
-            //             quantity: cant,
-            //             plista: data[0]['price'],
-            //             punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
-            //             multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
-            //             regalo: 0,
-            //             existencia: data[0]['disponible']
-            //         };
-            //         cantItemsCargados ++;
-            //         if(cantItemsCargados == cantItemsPorCargar){
-            //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
-            //             separarPedidosPromo(jsonItemsSeparar, separa);
-            //             cantItemsCargados = 0;
-            //             cantItemsPorCargar = 0;
-            //         }
-            //         else{
-            //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
-            //         }
-            //     }    
-            //     else{
-            //         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === data[0]['itemid']);
-            //         selectedItemsFromInventory.splice(indexInventory, 1);
-            //         cantItemsPorCargar --;
-            //         if(cantItemsCargados == cantItemsPorCargar && cantItemsCargados > 1){
-            //             var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-            //             newJson = newJson + ']';
-            //             jsonItemsSeparar = newJson;
-            //             separarPedidosPromo(newJson, separa);
-            //             cantItemsCargados = 0;
-            //             cantItemsPorCargar = 0;
-            //         }
-            //     }
-            // }
-            // if(data.length==0 && (cantItemsCargados + 1) == cantItemsPorCargar){
-            //         var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-            //         newJson = newJson + ']';
-            //         jsonItemsSeparar = newJson;
-            //         separarPedidosPromo(newJson, separa);
-            //         cantItemsCargados = 0;
-            //         cantItemsPorCargar = 0;
-            // }
-
-
-            //  -------------------------------------------------------------- AJUSTAR MULTIPLO AUTOMÁTICAMENTE SIEMPRE HACIA ARRIBA ---------------------------------------
-
-            cantItemsCargados ++;
-            if(data.length>0){
-                var itemSeparar = {
-                    itemID: data[0]['itemid'],
-                    codCustomer: entity,
-                    quantity: validarMultiplo(data[0]['multiploVenta'], cantidad),
-                    plista: data[0]['price'],
-                    punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
-                    multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
-                    regalo: 0,
-                    existencia: data[0]['disponible']
-                };
+        else if (art == undefined && cantItemsCargados == cantItemsPorCargar){
+                var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+                newJson = newJson + ']';
+                jsonItemsSeparar = newJson;
+                separarPedidosPromo(newJson, separa);
+                cantItemsCargados = 0;
+                cantItemsPorCargar = 0;
+        }
+        if(art == undefined){
+            alert("Artículo "+item['articulo']+" no encontrado en inventario");
+            var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item['articulo']);
+            selectedItemsFromInventory.splice(indexInventory, 1);
+            cantItemsPorCargar --;
+        }
+    }
+    else{
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }); 
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "nuevo/getItemByID",
+            timeout: 2 * 60 * 60 * 1000,
+            async: true,
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            success: function(data) {
     
-                if(cantItemsCargados == cantItemsPorCargar){
-                    jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
-                    separarPedidosPromo(jsonItemsSeparar, separa);
-                    cantItemsCargados = 0;
-                    cantItemsPorCargar = 0;
+                // ----------------------------------------------------------------- PREGUNTAR SI MULTIPLO SUBE O BAJA -----------------------------------------------------
+    
+                // if(data.length>0){
+                //     var multiplo = data[0]['multiploVenta'];
+                //     var cant;
+                //     multiplo % cantidad == 0 ? cant = cantidad : cant = 0;
+                //     if(cantidad < multiplo && multiplo % cantidad > 0){
+                //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+multiplo+" piezas a tu pedido?");
+                //         answer ? cant = multiplo : cant = 0;
+                //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
+                //     }
+                //     if(cantidad > multiplo && multiplo % cantidad > 0){
+                //         var menos = (Math.trunc(cantidad/multiplo)) * multiplo;
+                //         var mas = (Math.trunc(cantidad/multiplo) + 1) * multiplo;
+                //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+mas+" piezas a tu pedido? Presiona cancelar para solo agregar "+menos);
+                //         answer ? cant = mas : cant = menos;
+                //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
+                //     }
+                //     if(cant > 0){
+                //         var itemSeparar = {
+                //             itemID: data[0]['itemid'],
+                //             codCustomer: entity,
+                //             quantity: cant,
+                //             plista: data[0]['price'],
+                //             punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
+                //             multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
+                //             regalo: 0,
+                //             existencia: data[0]['disponible']
+                //         };
+                //         cantItemsCargados ++;
+                //         if(cantItemsCargados == cantItemsPorCargar){
+                //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
+                //             separarPedidosPromo(jsonItemsSeparar, separa);
+                //             cantItemsCargados = 0;
+                //             cantItemsPorCargar = 0;
+                //         }
+                //         else{
+                //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+                //         }
+                //     }    
+                //     else{
+                //         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === data[0]['itemid']);
+                //         selectedItemsFromInventory.splice(indexInventory, 1);
+                //         cantItemsPorCargar --;
+                //         if(cantItemsCargados == cantItemsPorCargar && cantItemsCargados > 1){
+                //             var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+                //             newJson = newJson + ']';
+                //             jsonItemsSeparar = newJson;
+                //             separarPedidosPromo(newJson, separa);
+                //             cantItemsCargados = 0;
+                //             cantItemsPorCargar = 0;
+                //         }
+                //     }
+                // }
+                // if(data.length==0 && (cantItemsCargados + 1) == cantItemsPorCargar){
+                //         var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+                //         newJson = newJson + ']';
+                //         jsonItemsSeparar = newJson;
+                //         separarPedidosPromo(newJson, separa);
+                //         cantItemsCargados = 0;
+                //         cantItemsPorCargar = 0;
+                // }
+    
+    
+                //  -------------------------------------------------------------- AJUSTAR MULTIPLO AUTOMÁTICAMENTE SIEMPRE HACIA ARRIBA ---------------------------------------
+    
+                cantItemsCargados ++;
+                if(data.length>0){
+                    var itemSeparar = {
+                        itemID: data[0]['itemid'],
+                        codCustomer: entity,
+                        quantity: validarMultiplo(data[0]['multiploVenta'], cantidad),
+                        plista: data[0]['price'],
+                        punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
+                        multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
+                        regalo: 0,
+                        existencia: data[0]['disponible']
+                    };
+        
+                    if(cantItemsCargados == cantItemsPorCargar){
+                        jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
+                        separarPedidosPromo(jsonItemsSeparar, separa);
+                        cantItemsCargados = 0;
+                        cantItemsPorCargar = 0;
+                    }
+                    else{
+                        jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+                    }
                 }
-                else{
-                    jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+                if(data.length==0 && cantItemsCargados == cantItemsPorCargar){
+                        var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+                        newJson = newJson + ']';
+                        jsonItemsSeparar = newJson;
+                        separarPedidosPromo(newJson, separa);
+                        cantItemsCargados = 0;
+                        cantItemsPorCargar = 0;
                 }
+                
+            },
+            error: function(error) {
+                // alert('error');
             }
-            if(data.length==0 && cantItemsCargados == cantItemsPorCargar){
-                    var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-                    newJson = newJson + ']';
-                    jsonItemsSeparar = newJson;
-                    separarPedidosPromo(newJson, separa);
-                    cantItemsCargados = 0;
-                    cantItemsPorCargar = 0;
-            }
-            
-        },
-        error: function(error) {
-            // alert('error');
-        }
-    });
+        });
+    }
 }
 
 
@@ -1135,6 +1187,7 @@ function createTablePedido(){
     var totalPedido;
 
     var fila = 1;
+    console.log(pedido);
     for(var x = 0; x < pedido.length; x++){
         var subtotal = 0;
         for(var y = 0; y < pedido[x]['items'].length; y++){
@@ -1234,9 +1287,9 @@ function addRowPedido(item, fila, indexPedido) {
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
 
-    var cantidad = item['cantidad'];
+    var cantidadItems = item['cantidad'];
     var pUnitario = ((100 - parseFloat(item['promo'])) * parseFloat(item['price']) / 100).toFixed(2);
-    var importe = (cantidad * pUnitario).toFixed(2);
+    var importe = (cantidadItems * pUnitario).toFixed(2);
 
     var price = (item["price"]).toLocaleString('en-US', {
         style: 'currency',
@@ -1258,10 +1311,14 @@ function addRowPedido(item, fila, indexPedido) {
         currency: 'USD',
     });
 
-    var cantidadItems = (parseFloat(cantidad)).toLocaleString('en-US', {
-        style: 'decimal',
+
+    var cantidad = (parseFloat(item['cantidad'])).toLocaleString('en-US', {
+        style: 'currency',
         currency: 'USD',
     });
+
+    cantidad = cantidad.slice(1, -1);
+    cantidad = cantidad.split('.')[0];
 
     existenciaFormat = existenciaFormat.slice(1, -1);
     existenciaFormat = existenciaFormat.split('.')[0];
@@ -1283,7 +1340,7 @@ function addRowPedido(item, fila, indexPedido) {
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
-    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "' title='"+cantidadItems+"'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+","+indexPedido+")'>+</button></div></div>";
+    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+")'>-</button></div><input type='text' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2' readonly><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+", "+cantidadItems+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
         cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
@@ -1294,7 +1351,7 @@ function addRowPedido(item, fila, indexPedido) {
     cell6.innerHTML = "<h5 id='promo'>" + item["promo"] + "%</h5>";
     cell7.innerHTML = "<h5 id='precioUnitario'>" + unitario + "</h5>";
     cell8.innerHTML = "<h5 id='importe-"+item["itemid"]+"-"+indexPedido+"'>" + imp + "</h5>";
-    cell9.innerHTML = "<i class='fas fa-minus-square fa-2x fa-delete' onclick='deleteRowPedido(this, \"" + item['itemid'] + "\", "+indexPedido+", "+cantidad+", \"" + 'item' + "\")'></i>";
+    cell9.innerHTML = "<i class='fas fa-minus-square fa-2x fa-delete' onclick='deleteRowPedido(this, \"" + item['itemid'] + "\", "+indexPedido+", "+cantidadItems+", \"" + 'item' + "\")'></i>";
 
     cell1.classList.add('td-center');
     cell2.classList.add('td-center');
@@ -1383,7 +1440,6 @@ function addRowRegalo(item, fila, indexPedido) {
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
 
-    var cantidad = item['cantidad'];
     var pUnitario = ((100 - parseFloat(item['promo'])) * parseFloat(item['price']) / 100).toFixed(2);
     var importe = (cantidad * pUnitario).toFixed(2);
 
@@ -1410,9 +1466,18 @@ function addRowRegalo(item, fila, indexPedido) {
     existenciaFormat = existenciaFormat.slice(1, -1);
     existenciaFormat = existenciaFormat.split('.')[0];
 
+    var cantidad = (parseFloat(item['cantidad'])).toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    cantidad = cantidad.slice(1, -1);
+    cantidad = cantidad.split('.')[0];
+    console.log(cantidad);
+
     cell1.innerHTML = "<h4>" + fila + "</h4>";
     cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
-    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='number' aria-label='cantidad' id='cant-"+item['itemid']+"-"+indexPedido+"' name='cantidad' class='form-control input-cantidad' value='" + cantidad + "'  min='" + item['multiploVenta'] + "' readonly='readonly'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
+    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='text' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2' readonly><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
         cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
@@ -1458,7 +1523,7 @@ function validarMultiplo(multiplo, cant) {
     return cantidad;
 }
 
-function addItemCant(item, cant, index) {
+function addItemCant(item, multiplo, cant, index) {
     var table = document.getElementById('tablaPedido');
     for(var x = 0; x < table.rows.length; x++){
         if(table.rows[x].cells[1].innerText.indexOf(item) >=0){
@@ -1466,21 +1531,18 @@ function addItemCant(item, cant, index) {
         }
      }
     itemToFocus = item;
-    document.getElementById('cant-'+item+"-"+index).stepUp(cant);
-    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
-    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
-    var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
-    var price = pedido[index]['items'][indexItem]['price'];
-    var promo = pedido[index]['items'][indexItem]['promo'];
-    var pUnitario = ((100 - parseFloat(promo)) * parseFloat(price) / 100).toFixed(2);
-    var importe = ((cantidad + multiploVenta) * pUnitario).toFixed(2);
-    var imp = (parseFloat(importe)).toLocaleString('en-US', {
+    var newCant = (parseFloat(cant + multiplo)).toLocaleString('en-US', {
         style: 'currency',
         currency: 'USD',
     });
+
+    newCant = newCant.slice(1, -1);
+    newCant = newCant.split('.')[0];
+    document.getElementById('cant-'+item+"-"+index).value = newCant;
+    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
+    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
+    var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
     pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
-    
-    
     var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
     selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
     var jsonObj = JSON.parse(jsonItemsSeparar);
@@ -1490,28 +1552,26 @@ function addItemCant(item, cant, index) {
     separarPedidosPromo(jsonItemsSeparar, false);
 }
 
-function decreaseItemCant(item, cant, index) {
-    itemToFocus = item;
-    document.getElementById('cant-'+item+"-"+index).stepDown(cant);
-    var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
-    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
-    var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
-    var price = pedido[index]['items'][indexItem]['price'];
-    var promo = pedido[index]['items'][indexItem]['promo'];
-    var pUnitario = ((100 - parseFloat(promo)) * parseFloat(price) / 100).toFixed(2);
-    var importe = ((cantidad - multiploVenta) * pUnitario).toFixed(2);
-    var imp = (parseFloat(importe)).toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
+function decreaseItemCant(item, multiplo, cant, index) {
+    if(cant - multiplo > 0){
+        itemToFocus = item;
+        var newCant = (parseFloat(cant - multiplo)).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+        newCant = newCant.slice(1, -1);
+        newCant = newCant.split('.')[0];
+        document.getElementById('cant-'+item+"-"+index).value = newCant;
+        var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
+        var cantidad = pedido[index]['items'][indexItem]['cantidad'];
+        var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
         var table = document.getElementById('tablaPedido');
         for(var x = 0; x < table.rows.length; x++){
             if(table.rows[x].cells[1].innerText.indexOf(item) >=0){
-                 table.rows[x].classList.add('fadeOut');
+                    table.rows[x].classList.add('fadeOut');
             }
         }
         pedido[index]['items'][indexItem]['cantidad'] = cantidad - multiploVenta;
-        
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
         selectedItemsFromInventory[indexInventory]['cant'] = cantidad - multiploVenta;
         var jsonObj = JSON.parse(jsonItemsSeparar);
@@ -1519,6 +1579,7 @@ function decreaseItemCant(item, cant, index) {
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString(); 
         jsonItemsSeparar = JSON.stringify(jsonObj);
         separarPedidosPromo(jsonItemsSeparar, false);
+    }
 }
 
 
@@ -2682,7 +2743,7 @@ function loadDatasetPedidosClientes(){
             }
            
             arr.push(datetime);
-                arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' id='btnAddPedidosClientes-"+ data[x]['id'] +"' onclick='loadPendingCustomerSaleOrder(\"" + data[x]['id'] + "\")'></i><div class='spinner-border text-secondary' style='display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;' id='btnSpinnerPedidosClientes-"+ data[x]['id'] +"' ></div></div>");
+                arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' id='btnAddPedidosClientes-"+ data[x]['id'] +"' onclick='loadPendingCustomerSaleOrder(\"" + data[x]['id'] + "\")'></i><div class='spinner-border text-secondary' style='display:none; width: 25px; height: 25px;' id='btnSpinnerPedidosClientes-"+ data[x]['id'] +"' ></div></div>");
             dataset.push(arr);
             x++;
         }
@@ -2715,8 +2776,6 @@ function loadDatasetPedidosClientes(){
 }
 
 function loadPendingCustomerSaleOrder(id){
-    // document.getElementById("btnSpinnerPedidosClientes-"+ id +"").style.display = 'block';
-    // document.getElementById("btnAddPedidosClientes-"+ id +"").style.display = 'none';
     var order = [];
     var x = 0;
     while(x < pendingSaleOrders.length){
@@ -2728,14 +2787,18 @@ function loadPendingCustomerSaleOrder(id){
     $('#customerID').selectpicker('refresh');
     updateCustomerInfo(indexCustomerInfo);
     cantItemsPorCargar = order.length;
+    console.log('ORDEN CLIENTE');
+    console.log(JSON.stringify(order));
     for (var x = 0; x < order.length; x++) {
         var art = selectedItemsFromInventory.find(o => o.item === order[x]['articulo'].trim());
         if(art != undefined)
-            art['cant'] = (parseInt(art['cant']) + parseInt(order[x]['articulo'])).toString();
+            art['cant'] = (parseInt(art['cant']) + parseInt(order[x]['cantidad'])).toString();
         else
             selectedItemsFromInventory.push({ item: order[x]['articulo'].trim(), cant: order[x]['cantidad'] });
     }
+    console.log(selectedItemsFromInventory);
     tipoPedido = 1;
+    tipoGetItemById = 1;
     $('#modalPedidosClientes').modal('hide');
     prepareJsonSeparaPedidos(false);
 }
