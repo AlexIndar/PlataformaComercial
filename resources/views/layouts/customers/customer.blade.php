@@ -184,7 +184,7 @@
                 <div class="col-12">
                     <div class="menu-item">
                         @if ($level == ('E')) 
-                            <h5>Intranet</h5> 
+                            <h5><a href="/Intranet" style="color: #002868;">Intranet</a></h5> 
                         @endif
                     </div>
                 </div>

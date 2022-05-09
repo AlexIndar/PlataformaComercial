@@ -427,7 +427,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::post('/pedido/storePedido', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
-                                    return redirect('/logout');
+                                    return redirect('/logout'); 
                                 }
                                 $response = CotizacionController::storePedido($token, json_encode($request->all()));
                                 $rama1 = RamasController::getRama1();
