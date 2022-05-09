@@ -590,6 +590,7 @@ function validateTab(e){
 function prepareJsonSeparaPedidos(separa){
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
+    console.log(selectedItemsFromInventory);
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
         var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
         getItemById(item, separa);
@@ -806,6 +807,73 @@ function getItemById(item, separa) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
         success: function(data) {
+
+            // ----------------------------------------------------------------- PREGUNTAR SI MULTIPLO SUBE O BAJA -----------------------------------------------------
+
+            // if(data.length>0){
+            //     var multiplo = data[0]['multiploVenta'];
+            //     var cant;
+            //     multiplo % cantidad == 0 ? cant = cantidad : cant = 0;
+            //     if(cantidad < multiplo && multiplo % cantidad > 0){
+            //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+multiplo+" piezas a tu pedido?");
+            //         answer ? cant = multiplo : cant = 0;
+            //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
+            //     }
+            //     if(cantidad > multiplo && multiplo % cantidad > 0){
+            //         var menos = (Math.trunc(cantidad/multiplo)) * multiplo;
+            //         var mas = (Math.trunc(cantidad/multiplo) + 1) * multiplo;
+            //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+mas+" piezas a tu pedido? Presiona cancelar para solo agregar "+menos);
+            //         answer ? cant = mas : cant = menos;
+            //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
+            //     }
+            //     if(cant > 0){
+            //         var itemSeparar = {
+            //             itemID: data[0]['itemid'],
+            //             codCustomer: entity,
+            //             quantity: cant,
+            //             plista: data[0]['price'],
+            //             punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
+            //             multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
+            //             regalo: 0,
+            //             existencia: data[0]['disponible']
+            //         };
+            //         cantItemsCargados ++;
+            //         if(cantItemsCargados == cantItemsPorCargar){
+            //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
+            //             separarPedidosPromo(jsonItemsSeparar, separa);
+            //             cantItemsCargados = 0;
+            //             cantItemsPorCargar = 0;
+            //         }
+            //         else{
+            //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+            //         }
+            //     }    
+            //     else{
+            //         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === data[0]['itemid']);
+            //         selectedItemsFromInventory.splice(indexInventory, 1);
+            //         cantItemsPorCargar --;
+            //         if(cantItemsCargados == cantItemsPorCargar && cantItemsCargados > 1){
+            //             var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+            //             newJson = newJson + ']';
+            //             jsonItemsSeparar = newJson;
+            //             separarPedidosPromo(newJson, separa);
+            //             cantItemsCargados = 0;
+            //             cantItemsPorCargar = 0;
+            //         }
+            //     }
+            // }
+            // if(data.length==0 && (cantItemsCargados + 1) == cantItemsPorCargar){
+            //         var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
+            //         newJson = newJson + ']';
+            //         jsonItemsSeparar = newJson;
+            //         separarPedidosPromo(newJson, separa);
+            //         cantItemsCargados = 0;
+            //         cantItemsPorCargar = 0;
+            // }
+
+
+            //  -------------------------------------------------------------- AJUSTAR MULTIPLO AUTOMÁTICAMENTE SIEMPRE HACIA ARRIBA ---------------------------------------
+
             cantItemsCargados ++;
             if(data.length>0){
                 var itemSeparar = {
@@ -1054,7 +1122,6 @@ function reloadInventario(){
 }
 
 function createTablePedido(){
-    console.log(pedido);
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     activeSwitch(2);
@@ -1071,7 +1138,7 @@ function createTablePedido(){
     for(var x = 0; x < pedido.length; x++){
         var subtotal = 0;
         for(var y = 0; y < pedido[x]['items'].length; y++){
-            var cantidad = validarMultiplo(pedido[x]['items'][y]['multiploVenta'], pedido[x]['items'][y]['cantidad']);
+            var cantidad = pedido[x]['items'][y]['cantidad'];
             var pUnitario = ((100 - parseFloat(pedido[x]['items'][y]['promo'])) * parseFloat(pedido[x]['items'][y]['price']) / 100).toFixed(2);
             var importe = (cantidad * pUnitario).toFixed(2);
             subtotal += parseFloat(importe);
@@ -1167,7 +1234,7 @@ function addRowPedido(item, fila, indexPedido) {
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
 
-    var cantidad = validarMultiplo(item['multiploVenta'], item['cantidad']);
+    var cantidad = item['cantidad'];
     var pUnitario = ((100 - parseFloat(item['promo'])) * parseFloat(item['price']) / 100).toFixed(2);
     var importe = (cantidad * pUnitario).toFixed(2);
 
@@ -1316,7 +1383,7 @@ function addRowRegalo(item, fila, indexPedido) {
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
 
-    var cantidad = validarMultiplo(item['multiploVenta'], item['cantidad']);
+    var cantidad = item['cantidad'];
     var pUnitario = ((100 - parseFloat(item['promo'])) * parseFloat(item['price']) / 100).toFixed(2);
     var importe = (cantidad * pUnitario).toFixed(2);
 
@@ -1489,16 +1556,16 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         var shippingWay; //id
         var packageDelivery; //id
         var comentarios; //maximo 400 caracteres
-    
+        
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
-            idSucursal = info[0]['addresses'][indexAddress]["addressID"];
+            idSucursal = ("#sucursal").val();
             shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
             packageDelivery =  $("#fletera").val();
         }
         else{
             idCustomer = entityCte;
-            idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
+            idSucursal =  $("#sucursal").val();
             shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
             packageDelivery = $("#fletera").val();
         }
@@ -2411,6 +2478,7 @@ function closeImgProductMD(){
 function addItemInventory(item){
     var cant = document.getElementById('inputPrecioCliente-'+item).value;
     var art = selectedItemsFromInventory.find(o => o.item === item.trim());
+    console.log(art +" - "+cant);
     if(art != undefined)
         art['cant'] = (parseInt(art['cant']) + parseInt(cant)).toString();
     else
@@ -2614,7 +2682,7 @@ function loadDatasetPedidosClientes(){
             }
            
             arr.push(datetime);
-            arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='loadPendingCustomerSaleOrder(\"" + data[x]['id'] + "\")'></i></div>");
+                arr.push("<div class='table-actions'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' id='btnAddPedidosClientes-"+ data[x]['id'] +"' onclick='loadPendingCustomerSaleOrder(\"" + data[x]['id'] + "\")'></i><div class='spinner-border text-secondary' style='display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;' id='btnSpinnerPedidosClientes-"+ data[x]['id'] +"' ></div></div>");
             dataset.push(arr);
             x++;
         }
@@ -2647,27 +2715,19 @@ function loadDatasetPedidosClientes(){
 }
 
 function loadPendingCustomerSaleOrder(id){
-   
-    $('#modalPedidosClientes').modal('hide');
-
+    // document.getElementById("btnSpinnerPedidosClientes-"+ id +"").style.display = 'block';
+    // document.getElementById("btnAddPedidosClientes-"+ id +"").style.display = 'none';
     var order = [];
-
     var x = 0;
     while(x < pendingSaleOrders.length){
         if(pendingSaleOrders[x]['id'] == id) {order.push(pendingSaleOrders[x]);}
         x ++;
     }
-
-    var infoCustomer = info.find(o => o.companyId.toUpperCase() === order[0]['cliente'].trim().toUpperCase());
     var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === order[0]['cliente'].toUpperCase());
     $('#customerID').val(indexCustomerInfo); //Seleccionar la primera opcion
     $('#customerID').selectpicker('refresh');
     updateCustomerInfo(indexCustomerInfo);
-    console.log(infoCustomer);
-
-    console.log(order);
     cantItemsPorCargar = order.length;
-
     for (var x = 0; x < order.length; x++) {
         var art = selectedItemsFromInventory.find(o => o.item === order[x]['articulo'].trim());
         if(art != undefined)
@@ -2675,13 +2735,14 @@ function loadPendingCustomerSaleOrder(id){
         else
             selectedItemsFromInventory.push({ item: order[x]['articulo'].trim(), cant: order[x]['cantidad'] });
     }
-
     tipoPedido = 1;
+    $('#modalPedidosClientes').modal('hide');
     prepareJsonSeparaPedidos(false);
 }
 
 
 function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (SUCURSALES, FORMAS DE ENVIO, FLETERAS, CATEGORÍA, CLIENTE, EMAIL ... )
+        indexCustomer = selected;
         var refrescaInventario = false;
         //INFO es la lista de todos los clientes con su información correspondiente
         addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
@@ -2689,7 +2750,6 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
         packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
         document.getElementById('entity').value = info[selected]["companyId"];
         entityCte = info[selected]["companyId"];
-
         if(priceList != '' && priceList != info[selected]['priceList']) { refrescaInventario = true; } //si ya existe una lista de precio cargada y es diferente a a del nuevo cliente seleccionado
         if(priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
         if(((new Date) - lastRefreshInventory) > oneHour){ refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
