@@ -52,13 +52,13 @@
                         </div>
                      </div>
                   </div>
-                  <div  class="card-body">
-                     <div   class="col-lg-12">
+                  <div  class="card-body" id="tablaDiv" style="display: none">
+                     <div  class="col-lg-12">
                         <div class="card-body table-responsive p-0">
                            <table id="comisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
                                  <tr>
-                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =8  >  </th>
+                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =12>  </th>
                                  </tr>
                                  <tr >
                                     <th style="width:320px">Concepto</th>
@@ -161,6 +161,43 @@
                                  </tr>
                               </thead>
                               <tbody id="llenaBonos">
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                     <div   class="col-lg-12">
+                        <div class="card-body table-responsive p-0">
+                           <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
+                                 </tr>
+                                 <tr >
+                                    <th style="width:420px" >Especiales del Mes (15%)</th>
+                                    <th >Cuota</th>
+                                    <th>Real</th>
+                                    <th>Avance</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaEspeciales">
+                                <tr>
+                                  <td>E01</td>
+                                  <td >cuota</td>
+                                  <td>Real</td>
+                                  <td>Avance</td>
+                                </tr>
+                                <tr>
+                                    <td>E02</td>
+                                    <td >cuota</td>
+                                    <td>Real</td>
+                                    <td>Avance</td>
+                                </tr>
+                                <tr>
+                                    <td>E03</td>
+                                    <td>cuota</td>
+                                    <td>Real</td>
+                                    <td>Avance</td>
+                                </tr>
                               </tbody>
                            </table>
                         </div>
@@ -397,13 +434,13 @@
            //Esconde y muestra DIV
            document.getElementById("btnSpinner").style.display = "none";
            document.getElementById("btnConsultar").style.display = "block";
+           document.getElementById("tablaDiv").style.display = "block";
+
        } );
 
    });
    function consultar() {
       // $.fn.dataTable.ext.errMode = 'none';
-   $("#comisionesTable").dataTable().fnDestroy();
-   $("#comisionesDetalle").dataTable().fnDestroy();
 
    var id = document.getElementById("zonas").value;
    var pfecha = document.getElementById("fechaCliente").value;
@@ -623,7 +660,6 @@
    //
         function myCallback(response) {
 
-
          var comisionTot = response.replace(',','');
 
           //AJAX Detalle Días
@@ -642,10 +678,43 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            var añoCalendar = data[0].detalle[0].fecha.slice(6,10);
-            var mesCalendar = data[0].detalle[0].fecha.slice(3,5);
-            var diaCalendar = data[0].detalle[0].fecha.slice(0,2);
-            inicioCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
+            console.log(data[0].detalle);
+            if(data[0].detalle.length === 0 ){
+                var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
+                var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
+
+                inicioCalendar = añoCalendar + '-' + mesCalendar+'-01';
+                // Alerta de que no existen días Reportados
+                var toast = Swal.mixin({
+                    toast: true,
+                    icon: 'danger',
+                    title: 'General Title',
+                    animation: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: false,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+                toast.fire({
+                  animation: true,
+                  title: 'No Existe Registro de Días trabajados!',
+                  icon: 'danger'
+                });
+
+            }else{
+
+                var añoCalendar = data[0].detalle[0].fecha.slice(6,10);
+                var mesCalendar = data[0].detalle[0].fecha.slice(3,5);
+                var diaCalendar = data[0].detalle[0].fecha.slice(0,2);
+                inicioCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
+
+
+            }
+
 
             events.push({title :'Inicio del Periodo' , start: data[0].fechaInicioPeriodo, backgroundColor: 'green'});
             events.push({title :'Fin del Periodo' , start: data[0].fechaFinPeriodo, backgroundColor: 'red'});
@@ -783,16 +852,24 @@
             $('#clientesNvosModal').html(htmlModalnc);
             $('#zonareferencia').text(data[0].zona);
 
+
            },
            error: function() {
                console.log("Error");
                alert('Error, Tiempo de espera agotado');
            }
        });
-
         }
 
    }
+
+   $('#diasNoLaboradosModal').on('hidden.bs.modal', function () {
+        // remove the bs.modal data attribute from it
+
+        // and empty the modal-content element
+       console.log('aquiiii');
+    });
+
    //Función POST Parametro
    $('#submitParametro').on('click', function(e) {
     var parametro = document.getElementById('parametro').value;

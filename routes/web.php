@@ -531,7 +531,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $data = SaleOrdersController::getItemByID($token, $id, $entity);
                                 return  $data;
                             });
- 
+
                             Route::post('/pedido/nuevo/SepararPedidosPromo', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
@@ -1520,16 +1520,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general]);
                 });
 
-                Route::get('/clientes/pagoEnLinea', function(){
+                Route::get('/clientes/pagoEnLinea/{cte}/{fechaini}/{fechafin}', function($cliente, $fechaini, $fechafin){
                     $token = TokenController::getToken();
-
                     $permissions = LoginController::getPermissions();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $zonas = AplicarPagoController::getZonas($token);
-                    $clientes = AplicarPagoController::getCargaListaClientes($token);
-                    return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
+
+                    $data = ClientesController::getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin);
+                    $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
+
+                    //dd($notas);
+                    return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
                 });
 
 

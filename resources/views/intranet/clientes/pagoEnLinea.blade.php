@@ -12,7 +12,6 @@
    <div class="content-header">
       <div class="container-fluid">
          <div class="row mb-2">
-
          </div>
       </div>
    </div>
@@ -24,29 +23,31 @@
                 <div class="row">
                    <div class="col-12">
                     <h4>
-                        <i class="fas fa-globe"></i> Clientes | Pago en Linea | Nombre del Cliente.
+                        <i class="fas fa-globe"></i> Clientes | Pago en Linea
                         <small class="float-right"><?php echo "Fecha :  " . date("d/m/Y") . "<br>"; ?></small>
                     </h4>
                    </div>
                 </div>
                 <div class="row invoice-info">
                    <div class="col-sm-6 invoice-col">
-                      <address>
-                        ID.Cliente : ----  <br>
-                        Zona : ----- <br>
+                       @if($data === [])
+                      <h1 style="color: red"><u>NO TIENE FACTURAS PENDIENTES DE PAGO!</u></h1>
+                       @else
+                       @foreach ($data as $value )
+                       @endforeach
+                       <address>
+                        ID.Cliente :{{ $value->companyname }}  <br>
+                        Zona : {{ $value->zona }}<br>
+                        Código Cte : {{ $value->companyid }}
                       </address>
-                   </div>
-                   <div class="col-sm-6 invoice-col">
-                      <strong>Linea de Crédito</strong><br>
-                      Saldo Total: $ 400.00 a Pagar Antes del : 02/04/2022 <br>
-                      Disponible: $ 600.00<br>
-                      <b> Limite de Crédito:</b> $ 1,000.00  <br>
+                      @endif
                    </div>
                 </div>
                 <hr>
                 <div class="row">
-                   <div class="col-6 table-responsive">
-                    <p class="lead">Seleccione Documento a Pagar:</p>
+                   <div class="col-6 table-responsive" id="facturasDiv">
+                    <p class="lead">Seleccione La Factura a Pagar:</p>
+                    <button style = "display:none" class="form-control btn-primary" onclick="mostrarNotas()" id="btnMostrarNotas">Abonar Notas de Crédito</button>
                     <table id="example" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
                         <thead>
                            <tr>
@@ -54,51 +55,48 @@
                             <th>Documento</th>
                             <th>No.</th>
                             <th>Monto</th>
+                            <th>Fecha Facturación</th>
                             <th>Vencimiento</th>
-                            <th>Pedido</th>
                            </tr>
                         </thead>
                         <tbody>
+                            @foreach ( $data as $value )
                             <tr>
                                 <td> <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
                                 <td>Factura</td>
-                                  <td> <a href="#" class="text-muted">98875</a></td>
-                                  <td>877.00</td>
-                                  <td>11/07/2022</td>
-                                  <td><a href="#" class="text-muted">I-60073</a></td>
+                                  <td> <a href="#" class="text-muted">{{ $value->tranid }}</a></td>
+                                  <td class="text-center">{{ number_format($value->saldo, 2) }}</td>
+                                  <td class="text-center">{{ substr($value->fechaFactura, 0, 10) }}</td>
+                                  <td class="text-center">{{ substr($value->dueDate, 0, 10)  }}</td>
                             </tr>
+                        @endforeach
+                        </tbody>
+                     </table>
+                   </div>
+                   <div class="col-6 table-responsive" id="notasDiv" style="display:none">
+                    <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-primary" onclick="mostrarFacturas()" id="btnMostrarFacturas">Regresar a Facturas</button>
+                    <table id="tableNotas" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
+                        <thead>
+                           <tr>
+                            <th></th>
+                            <th>Documento</th>
+                            <th>No.</th>
+                            <th>Monto</th>
+                            <th>Fecha Facturación</th>
+                            <th>Vencimiento</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ( $notas as $nota )
                             <tr>
-                                <td><img src="{{ asset('dist/img/nota.png') }}" alt="Product 1" class="img-size-32 mr-2"></td>
-                                <td> Nota de Crédito</td>
-                                  <td> <a href="#" class="text-muted">208</a></td>
-                                  <td>177.00</td>
-                                  <td>12/03/2022</td>
-                                  <td><a href="#" class="text-muted">N. C. </a></td>
+                                <td> <img  src="{{asset('dist/img/nota.png')}}" alt="Nota" class="img-size-32 mr-2"></td>
+                                <td>Nota de Crédito</td>
+                                  <td> <a href="#" class="text-muted">{{ $nota->transaction_id }}</a></td>
+                                  <td class="text-center">{{ number_format($nota->amount, 2) }}</td>
+                                  <td class="text-center">{{ substr($nota->fecha_nota, 0, 10) }}</td>
+                                  <td class="text-center">{{ substr($nota->fecha_nota, 0, 10)  }}</td>
                             </tr>
-                           <tr>
-                               <td> <img src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
-                            <td>Factura</td>
-                              <td> <a href="#" class="text-muted">75009</a></td>
-                              <td>890.00</td>
-                              <td>01/12/2022</td>
-                              <td><a href="#" class="text-muted">I-7322</a></td>
-                           </tr>
-                           <tr>
-                               <td><img src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
-                            <td>Factura</td>
-                              <td> <a href="#" class="text-muted">88722</a></td>
-                              <td>303.00</td>
-                              <td>08/04/2022</td>
-                              <td><a href="#" class="text-muted">I-3821</a></td>
-                           </tr>
-                           <tr>
-                            <td><img src="{{asset('dist/img/nota.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
-                            <td> Nota de Crédito</td>
-                              <td> <a href="#" class="text-muted">345</a></td>
-                              <td>99.00</td>
-                              <td>22/06/2023</td>
-                              <td><a href="#" class="text-muted">N. C. </a></td>
-                        </tr>
+                        @endforeach
                         </tbody>
                      </table>
                    </div>
@@ -111,8 +109,8 @@
                               <th>Documento</th>
                               <th>No.</th>
                               <th>Monto</th>
-                              <th>Vencimiento</th>
-                              <th>Pedido</th>
+                              <th>Fecha Fact</th>
+                              <th>Fecha Venc</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -168,10 +166,38 @@
           </div>
        </div>
     </div>
+<!-- Modal Notas de Crédito-->
+<div class="modal fade" id="notasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+            <h4 class="text-center title ml-auto">Agregar Nota de Crédito</h4>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+             <div class="row">
+                <div class="col-md-12">
+                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">(Deberá Asignar el Total de la N.C a una ó varias Facturas)</h6>
+                </div>
+                <div class="col-md-12">
+                    <label for="">Selecciona la Factura a Asignar la N.C</label>
+                    <input class="form-control" type="number" name="idFactura" id="idFactura" placeholder="Ingrese No. Factura">
+                </div>
+             </div>
+          </div>
+          <div class="modal-footer">
+             <button id="agregarNc" type="submit" class="btn btn-success float-right" data-dismiss="modal">Agregar N.C</button>
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
+    </div>
+ </div>
 
  </section>
 </div>
-        {{--  MODAL PAGO  --}}
 
 @endsection
 
@@ -192,6 +218,10 @@ var table = $('#example').DataTable({
 
     } );
 
+var tableNotas = $('#tableNotas').DataTable({
+    dom : 'Brt',
+} );
+
 var t = $('#example2').DataTable({
     dom : 'Brt',
     rowCallback: function(row, data, index){
@@ -202,59 +232,99 @@ var subTotal = 0;
 var descuento = 0;
 var total = 0;
  $('#example tbody').on('click', 'tr', function () {
+
     jQuery(this).toggle("scale");
      var data = table.row( this ).data();
+    // Mostrar Boton de NC
+    document.getElementById("btnMostrarNotas").style.display = "block";
+
 if(data[1]=='Factura'){
+    data[3] = data[3].replace(/,/g, "");
     subTotal += parseFloat(data[3]);
-    $('#subtotal').text('$' + subTotal);
+    $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 }
 else{
     descuento += parseFloat(data[3]);
-    $('#descuento').text('$' + descuento);
+    $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 }
 
 total = subTotal - descuento;
-$('#total').text('$' + total);
+$('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
 
     t.row.add( [
        data[0],
        data[1],
         data[2],
-        data[3],
+        monto,
         data[4],
         data[5]
 
     ] ).draw();
  } );
 
- $('#example2 tbody').on('click', 'tr', function () {
-    jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
-     var data = t.row( this ).data();
-    if(data[1]=='Factura'){
-        subTotal -=  parseFloat(data[3]);
-        $('#subtotal').text('$' + subTotal);
-    }else{
+ $('#tableNotas tbody').on('click', 'tr', function () {
+    //jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
+    $('#notasModal').modal('show');
+     var data = tableNotas.row( this ).data();
+     console.log(data);
         descuento -= parseFloat(data[3]);
-        $('#descuento').text('$' + descuento);
-    }
+        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+
 
     total = subTotal - descuento;
-    $('#total').text('$' + total);
+    $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-    table.row.add( [
+    t.row.add( [
        data[0],
        data[1],
         data[2],
-        data[3],
+        monto,
         data[4],
         data[5]
 
     ], ).draw();
  } );
 
+ $('#example2 tbody').on('click', 'tr', function () {
+    jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
+     var data = t.row( this ).data();
+    if(data[1]=='Factura'){
+        data[3] = data[3] = data[3].replace(/,/g, "");
+        subTotal -=  parseFloat(data[3]);
+        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    }else{
+        descuento -= parseFloat(data[3]);
+        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    }
 
+    total = subTotal - descuento;
+    $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    table.row.add( [
+       data[0],
+       data[1],
+        data[2],
+        monto,
+        data[4],
+        data[5]
+
+    ], ).draw();
+ } );
 
 });
+
+function mostrarNotas() {
+  document.getElementById("notasDiv").style.display = "block";
+  document.getElementById("facturasDiv").style.display = "none";
+}
+
+function mostrarFacturas() {
+  document.getElementById("notasDiv").style.display = "none";
+  document.getElementById("facturasDiv").style.display = "block";
+}
 
 </script>
 @endsection

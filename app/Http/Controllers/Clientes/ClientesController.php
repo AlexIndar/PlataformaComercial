@@ -15,6 +15,15 @@ class ClientesController extends Controller
         return json_decode(json_encode($data));
     }
 
+    public static function getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin){
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/EstadoCuentaCte/getFacturasCtesOpen?cte='.$cliente.'&fechaini='.$fechaini.'&fechafin='.$fechafin);
+        return json_decode($data->body());
+    }
+
+    public static function getNotasCreditoCtesOpen($token, $cliente){
+        $dato = Http::withToken($token)->get('http://192.168.70.107:64444/EstadoCuentaCte/getNotasCreditoCtesOpen?cte='.$cliente);
+        return json_decode($dato->body());
+    }
 
 
 }

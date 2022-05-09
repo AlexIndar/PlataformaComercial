@@ -32,6 +32,7 @@
                 <div class="row invoice-info">
                    <div class="col-sm-4 invoice-col">
                     <strong>Info del Cliente </strong>
+                    <input type="text" hidden id="cliente" value="{{ $general->companyid  }}">
                       <address>
                         {{ $general->companyname }} <br>
                         Código : {{ $general->companyid }}  <br>
@@ -96,8 +97,8 @@
                         <i class="far fa-calendar-alt"></i>
                         </span>
                         <input type="text" class="form-control float-right" id="edoCuenta">
-                        <a href="/clientes/pagoEnLinea" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>&nbsp;
-                        <a href="/clientes/pagoEnLinea" target="_blank"><button  class="btn btn-success"  id="btnConsultar">Ir a Pagar </button></a>
+                        <a href="#" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>&nbsp;
+                        <button  class="btn btn-success"  id="btnPagar">Ir a Pagar </button>
                     </div>
                   </div>
                  </div>
@@ -313,39 +314,6 @@
                         </table>
                      </div>
                 </div>
-                {{-- <div class="row">
-                    <div class="col-sm-12 invoice-col ">
-                        <p class="lead "> <b> Cuentas Bancarias para Depósito </b></p>
-                    </div>
-                    <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Nombre del Vendedor </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                     <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Nombre del Gerente </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                     <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Credito y cobranza </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                     <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Post Venta </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                </div> --}}
              </div>
           </div>
        </div>
@@ -360,51 +328,17 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
 
 $('#edoCuenta').daterangepicker();
-
-var table = $('#example').DataTable({
-        dom : 'Brt',
-
-    } );
-
-var t = $('#example2').DataTable({
-    dom : 'Brt',
-    rowCallback: function(row, data, index){
-                $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
-        }
-} );
-
- $('#example tbody').on('click', 'tr', function () {
-    jQuery(this).toggle("scale");
-     var data = table.row( this ).data();
-    console.log(data);
-    t.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        data[3],
-        data[4]
-
-    ] ).draw();
- } );
-
- $('#example2 tbody').on('click', 'tr', function () {
-    jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
-     var data = t.row( this ).data();
-    console.log(data);
-    table.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        data[3],
-        data[4]
-
-    ], ).draw();
- } );
-
+var cliente =  document.getElementById("cliente").value;
+$("#btnPagar").click(function(){
+   var fechaini =  $('#edoCuenta').data('daterangepicker').startDate.format('MM-DD-YYYY');
+   var fechafin =  $('#edoCuenta').data('daterangepicker').endDate.format('MM-DD-YYYY');
+window.location.href = "pagoEnLinea/"+cliente+"/"+fechaini+"/"+fechafin;
+});
 
 
 });
