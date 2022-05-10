@@ -264,21 +264,29 @@ $(document).ready(function() {
         selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
+        var defaultBillingSelected = false;
+        var indexDefaultBilling;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+            console.log(addresses[x]);
+            console.log(shippingWays[x]);
+            console.log(packageDeliveries[x]);
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            $('#sucursal').val(addresses[x]['addressID']);
-            $('#sucursal').selectpicker("refresh");
+            if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
+                defaultBillingSelected = true;
+                indexDefaultBilling = x;
+                $('#sucursal').val(addresses[x]['addressID']); 
+                $('#sucursal').selectpicker('refresh');
+            }
         }
 
-        $('#sucursal').val(addresses[0]['addressID']); //Seleccionar la primera opcion
-        $('#sucursal').selectpicker('refresh');
+        console.log('Address id: '+ $('#sucursal').val());
 
         fillShippingWaysList();
 
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === info[selected]['shippingWayF']);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultBilling]);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default billing
         $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(info[selected]['packgeDeliveryF']);
+        $('#fletera').val(packageDeliveries[indexDefaultBilling]);
         $('#correo').val(info[selected]['email']);
     });
 
@@ -1345,9 +1353,9 @@ function addRowPedido(item, fila, indexPedido) {
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+")'>-</button></div><input type='text' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2' readonly><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+", "+cantidadItems+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>" + item["promo"] + "%</h5>";
@@ -1482,9 +1490,9 @@ function addRowRegalo(item, fila, indexPedido) {
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='text' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2' readonly><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>0%</h5>";
@@ -1622,7 +1630,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         
         if (!entity.startsWith("Z") && !entity.startsWith("A")) {
             idCustomer = entity;
-            idSucursal = ("#sucursal").val();
+            idSucursal = $("#sucursal").val();
             shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() :  $("#envio").val();
             packageDelivery =  $("#fletera").val();
         }
