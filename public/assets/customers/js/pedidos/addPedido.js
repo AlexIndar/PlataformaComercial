@@ -2805,6 +2805,7 @@ function loadPendingCustomerSaleOrder(id){
             selectedItemsFromInventory.push({ item: order[x]['articulo'].trim(), cant: order[x]['cantidad'] });
     }
     document.getElementById('comments').value = order[0]['comentario'];
+    document.getElementById('ordenCompra').value = order[0]['ordenCompra'];
     tipoPedido = 1;
     tipoGetItemById = 1;
     $('#modalPedidosClientes').modal('hide');
@@ -2834,6 +2835,8 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
         selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
         pedido = []; //vaciar pedido
         document.getElementById('cupon').value = ''; //limpiar campo cupon
+        document.getElementById('comments').value = ''; //limpiar campo comentarios
+        document.getElementById('ordenCompra').value = ''; //limpiar campo orden compra
         createTablePedido(); //limpiar tabla pedido
         clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
 
@@ -2852,20 +2855,28 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
         selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
+        var defaultBillingSelected = false;
+        var indexDefaultBilling;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+            console.log(addresses[x]);
+            console.log(shippingWays[x]);
+            console.log(packageDeliveries[x]);
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            $('#sucursal').val(addresses[x]['addressID']);
-            $('#sucursal').selectpicker("refresh");
+            if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
+                defaultBillingSelected = true;
+                indexDefaultBilling = x;
+                $('#sucursal').val(addresses[x]['addressID']); 
+                $('#sucursal').selectpicker('refresh');
+            }
         }
 
-        $('#sucursal').val(addresses[0]['addressID']); //Seleccionar la primera opcion
-        $('#sucursal').selectpicker('refresh');
+        console.log('Address id: '+ $('#sucursal').val());
 
         fillShippingWaysList();
 
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === info[selected]['shippingWayF']);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultBilling]);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default billing
         $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(info[selected]['packgeDeliveryF']);
+        $('#fletera').val(packageDeliveries[indexDefaultBilling]);
         $('#correo').val(info[selected]['email']);
 }
