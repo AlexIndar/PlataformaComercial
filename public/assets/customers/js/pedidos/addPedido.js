@@ -2789,8 +2789,6 @@ function loadPendingCustomerSaleOrder(id){
     $('#customerID').selectpicker('refresh');
     updateCustomerInfo(indexCustomerInfo);
     cantItemsPorCargar = order.length;
-    console.log('ORDEN CLIENTE');
-    console.log(JSON.stringify(order));
     for (var x = 0; x < order.length; x++) {
         var art = selectedItemsFromInventory.find(o => o.item === order[x]['articulo'].trim());
         if(art != undefined)
@@ -2798,7 +2796,7 @@ function loadPendingCustomerSaleOrder(id){
         else
             selectedItemsFromInventory.push({ item: order[x]['articulo'].trim(), cant: order[x]['cantidad'] });
     }
-    console.log(selectedItemsFromInventory);
+    document.getElementById('comments').value = order[0]['comentario'];
     tipoPedido = 1;
     tipoGetItemById = 1;
     $('#modalPedidosClientes').modal('hide');
