@@ -278,8 +278,20 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
+                                $entity = 'ALL';
+                                if($userRol == "VENDEDOR"){
+                                    $zone = MisSolicitudesController::getZone($token, $username);
+                                    if($zone->getStatusCode()== 400){
+                                        return redirect('/Intranet');
+                                    }
+                                    else{
+                                        $entity = json_decode($zone->body())->description;
+                                    }
+
+                                }
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
+
+                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity]);
                             });
 
                             Route::get('/getPedidos', function (){
