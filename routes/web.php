@@ -427,7 +427,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::post('/pedido/storePedido', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
-                                    return redirect('/logout'); 
+                                    return redirect('/logout');
                                 }
                                 $response = CotizacionController::storePedido($token, json_encode($request->all()));
                                 $rama1 = RamasController::getRama1();
@@ -1503,6 +1503,33 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::post('/comisiones/postActualizarArticulosEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $json = $request->ArtEspeciales;
+
+                   $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
+
+                    return $data;
+                });
+
+                Route::post('/comisiones/postActualizarEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   //dd($request->EspecialesModel);
+                   $json = $request->EspecialesModel;
+
+                   $data=ComisionesController::postActualizarEspeciales($token,$json);
+
+                    return $data;
+                });
+
+
+
 
                 // ************************************************  Pago en Linea ***************************************************
 
@@ -1513,7 +1540,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $cliente= 'C009920';
+                    $cliente= 'C004955';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
                     $general = $general[0];
                     //dd($general);

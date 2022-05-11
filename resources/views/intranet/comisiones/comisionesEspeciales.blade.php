@@ -104,38 +104,127 @@ function triggerInputArt() {
 }
 
 function cargarEspecialesExcel(json) {
-    selectedItemsFromInventory=[];
+    var json;
+    jsonCompleto = [];
+    jsonEspeciales = [];
     especiales = [];
-    cuotas = [];
 
-    selectedItemsFromInventory.push({ ejercicio: 2022, aperiodo: 4, especiales });
 
     jsonObj = JSON.parse(json);
 
-    cantItemsPorCargar = jsonObj.length;
-    for (var x = 0; x < jsonObj.length; x++) {
-        especiales.push({ cons: jsonObj[x]['Zona'], nombre: jsonObj[x]['E01'], tipo : jsonObj[x]['pesos'], cuotas });
-        cuotas.push({ zona: jsonObj[x]['Zona'], cuota: jsonObj[x]['E01'] });
-    }
+    let claves = Object.keys(jsonObj[0]);
 
-    console.log(selectedItemsFromInventory);
+    for ( var x=0 ; x < claves.length; x++ ){
+        cuotas = [];
+        //console.log(jsonObj[x]);
+        for ( var y=2 ; y < jsonObj.length; y++){
+
+        //console.log(jsonObj[y]['E00']);
+        cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
+
+        }
+
+        //console.log(cuotas);
+           /*  articulo.push({valor : jsonObj[index][x+1]});
+            cuotas.push({ zona: jsonObj[index]['E00'], cuota: parseFloat(jsonObj[x]['E01'])}); */
+        especiales.push({ cons: x+1, nombre: jsonObj[1]['E'+(x+1)], tipo : jsonObj[0]['E'+(x+1)] ,cuotas});
+    }
+    jsonEspeciales.push({ ejercicio: 2022, aperiodo: 4, especiales });
+    jsonCompleto.push({ EspecialesModel: jsonEspeciales });
+    console.log(jsonCompleto);
+    json = JSON.stringify(jsonCompleto);
+    json = json.slice(1,-1);
+    console.log(json);
+    $.ajax({
+           'headers': {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           'url': "/comisiones/postActualizarEspeciales",
+           'type': 'POST',
+           'dataType': 'json',
+           'data': {EspecialesModel : json},
+           'enctype': 'multipart/form-data',
+           'timeout': 4 * 60 * 60 * 1000,
+           success: function (data){
+            console.log(data);
+            Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: 'Se cargarón los Especiales Correctamente ',
+            showConfirmButton: false,
+            timer: 5000
+          })
+        },
+        error: function() {
+            Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Error Vuelva a cargar el Archivo',
+            showConfirmButton: false,
+            timer: 5000
+          })
+        }
+    });
 
     document.getElementById("excelEspeciales").value = "";
 }
 
 function cargarArticulosExcel(json) {
-    articulosJson = [];
-    articulo = [];
-
-    articulosJson.push({ especial: 1 , articulo });
-
+    var json;
+    jsonCompleto = [];
+    especial =[];
     jsonObj = JSON.parse(json);
     cantItemsPorCargar = jsonObj.length;
-    for (var x = 0; x < jsonObj.length; x++) {
-        articulo.push({ valor: jsonObj[x]['E1'] });
-    }
+    var property = '';
+    let claves = Object.keys(jsonObj[0]);
 
-    console.log(JSON.stringify(articulosJson));
+    for ( var x=0 ; x < claves.length; x++ ){
+        articulo = [];
+        for (var index in jsonObj){
+
+            articulo.push({valor : jsonObj[index][x+1]});
+
+        }
+        especial.push({ especial:x+1, articulo});
+    }
+    jsonCompleto.push({ ArtEspeciales: especial});
+
+
+    json = JSON.stringify(jsonCompleto);
+    json = json.slice(1, -1)
+    console.log(json);
+
+    $.ajax({
+           'headers': {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           'url': "/comisiones/postActualizarArticulosEspeciales",
+           'type': 'POST',
+           'dataType': 'json',
+           'data': {ArtEspeciales : json},
+           'enctype': 'multipart/form-data',
+           'timeout': 4 * 60 * 60 * 1000,
+           success: function (data){
+            console.log(data);
+            Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: 'Se cargarón los Especiales Correctamente ',
+            showConfirmButton: false,
+            timer: 5000
+          })
+        },
+        error: function() {
+            Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Error Vuelva a cargar el Archivo',
+            showConfirmButton: false,
+            timer: 5000
+          })
+        }
+    });
+
 
     document.getElementById("excelArticulos").value = "";
 }
