@@ -63,6 +63,7 @@ class LogisticaController extends Controller
                                 $style = 'Atrasado';
                             }
                             $dataArea =  array($area => [
+                                'mov'       => $planeador[$b]->mov,
                                 'name'      => $area,
                                 'porsurtir' => $planeador[$b]->porsurtir,
                                 'surtido'   => $planeador[$b]->surtido,
@@ -81,6 +82,7 @@ class LogisticaController extends Controller
                                 $style = 'Atrasado';
                             }
                         $dataArea =  array($area => [
+                            'mov'       => $planeador[$b]->mov,
                             'name'      => $area,
                             'porsurtir' => $planeador[$b]->porsurtir,
                             'surtido'   => $planeador[$b]->surtido,
@@ -95,7 +97,17 @@ class LogisticaController extends Controller
         }
         
         return $pedidosAcomodados;
-    } 
+    }
+    public static function getArrayPlaneador($token){
+        $getPlaneador = Http::withToken($token)->get('https://localhost:44384/MesaControl/GetPlaneador');
+        $planeador = json_decode($getPlaneador->body());
+        return $planeador;
+    }
+    public static function getCajasPendientes($token){
+        $getCajasPendientes = Http::withToken($token)->get('https://localhost:44384/MesaControl/GetCajasPendientes');
+        $cajasPendientes = json_decode($getCajasPendientes->body());
+        return $cajasPendientes;
+    }
     public static function getVendors($token){
         $getVendors = Http::withToken($token)->get('https://localhost:44384/Distribucion/GetVendors');
         $vendors = json_decode($getVendors->body());

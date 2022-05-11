@@ -6,13 +6,16 @@
     color:white;
 }
 .EnTiempo{
-    background-color: #00bd00
+    background-color: #00bd00;
+    cursor: pointer;
 }
 .Atrasado{
     background-color: #db8606;
+    cursor: pointer;
 }
 .Valorando{
-    background-color: #b1a6a6;
+    background-color: white;
+    cursor: pointer;
 }
 .dt-button-collection > .dropdown-menu > .buttons-columnVisibility{
     background-color: #002868;

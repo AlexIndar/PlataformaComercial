@@ -1586,10 +1586,38 @@ Route::get('/logistica/mesaControl/planeador',function(){
     $userRol = $userData->permissions;
 
     $permissions = LoginController::getPermissions();
-    $planeador = LogisticaController::getPlaneador($token);
-    //dd($planeador);
-    return view('intranet.logistica.mesaControl.planeador',compact('token','rama1','rama2','rama3','level','permissions','username','userRol','planeador'));
+    return view('intranet.logistica.mesaControl.planeador',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
 })->name('logistica.mesaControl.planeador');
+Route::get('/logistica/mesaControl/planeador/getPlaneador', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $planeador = LogisticaController::getPlaneador($token);
+    return $planeador;
+});
+Route::get('/logistica/mesaControl/planeador/getArrayPlaneador',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $arrayPlaneador = LogisticaController::getArrayPlaneador($token);
+    return $arrayPlaneador;
+});
+Route::get('/logistica/mesaControl/planeador/getCajasPendientes', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $cajasPendientes = LogisticaController::getCajasPendientes($token);
+    return $cajasPendientes;
+});
 Route::get('/logistica/distribucion',function(){
     $token = TokenController::getToken();
     if($token == 'error'){

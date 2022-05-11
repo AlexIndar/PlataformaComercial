@@ -19,8 +19,7 @@ $(document).ready(function(){
             });
             break;
         case '/logistica/mesaControl/planeador':
-            //Se iniciliaza la tabla 
-            logisticaController.initDataTable();
+            logisticaController.getPlaneador();
             break;
     }
 });
@@ -32,22 +31,263 @@ var Toast = Swal.mixin({
     timerProgressBar: false
 });
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '';
-let arraytable2 = new Array();
+let arraytable2 = new Array(), arrayPlaneador = new Array();
+let contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 const logisticaController = {
-    initDataTable: () => {
-         $("#example1").DataTable({
-            "responsive": false,
-            "lengthChange": false, 
-            "autoWidth": false,
-            "buttons": [
-                {
-                    extend: 'colvis',
-                    text: "Visibilidad de columna",
-                    postfixButtons: [ 'colvisRestore' ]
+    slopesBoxes: () => {
+        $.ajax({
+            url: '/logistica/mesaControl/planeador/getCajasPendientes',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                $('#content-cajas-pendientes').empty();
+                $('#modal-cajas-pendientes').modal('show');
+                $.each(data,function(index,val){
+                    $('#content-cajas-pendientes').append('<tr>'
+                        +'<td>'+ val.pedidoConsolidado +'</td>'
+                        +'<td>'+ val.formaEnvio +'</td>'
+                        +'<td>'+ val.prioridad +'</td>'
+                        +'<td>'+ val.caja +'</td>'
+                        +'<td>'+ val.articulo +'</td>'
+                        +'<td>'+ val.cantidad +'</td>'
+                        +'<td>'+ val.ubicacionOrigen +'</td>'
+                        +'<td>'+ val.usuario +'</td>'
+                        +'<td>'+ val.nombre +'</td>'
+                        +'<td>'+ val.fechaSurtido +'</td>'
+                        +'<td>'+ val.tiempoEspera +'</td>'
+                        +'</tr>');
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    reloadTable: () => {
+        logisticaController.getPlaneador();
+    },
+    getArrayPlaneador: () => {
+        $.ajax({
+            url: '/logistica/mesaControl/planeador/getArrayPlaneador',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
+                arrayPlaneador = new Array();
+                arrayPlaneador = data;
+                for(let a=0; a < arrayPlaneador.length; a++){
+                    switch(arrayPlaneador[a].area)
+                    {
+                        case 'SECTOR 1':
+
+                                arrayPlaneador[a].porsurtir == 1 ? contArea1 += 1 : '';
+                                break;
+                            case 'SECTOR 2':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea2 += 1 : '';
+                                break;
+                            case 'SECTOR 3':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea3 += 1 : '';
+                                break;
+                            case 'SECTOR 4':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea4 += 1 : '';
+                                break;
+                            case 'SECTOR 5':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea5 += 1 : '';
+                                break;
+                            case 'VALIDANDO':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea6 += 1 : '';
+                                break;
+                            case 'Z_BULK1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea7 += 1 : '';
+                                break;
+                            case 'Z_BULK2':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea8 += 1 : '';
+                                break;
+                            case 'Z_BULKIN1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea9 += 1 : '';
+                            break;
+                            case 'Z_INF1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea10 += 1 : '';
+                                break;
+                            case 'Z_VOL1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea11 += 1 : '';
+                                break;
+                            case 'Z_VOL2':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea12 += 1 : '';
+                                break;
+                    }
                 }
-            ],
-            "paging": false
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+                $('#content-table-planeador').append('<tr>'
+                    +'<td colspan="4" class="text-right"><strong>Total: </strong></td>'
+                    +'<td><strong>'+ contArea1 +'</strong></td>'
+                    +'<td><strong>'+ contArea2 +'</strong></td>'
+                    +'<td><strong>'+ contArea3 +'</strong></td>'
+                    +'<td><strong>'+ contArea4 +'</strong></td>'
+                    +'<td><strong>'+ contArea5 +'</strong></td>'
+                    +'<td><strong>'+ contArea6 +'</strong></td>'
+                    +'<td><strong>'+ contArea7 +'</strong></td>'
+                    +'<td><strong>'+ contArea8 +'</strong></td>'
+                    +'<td><strong>'+ contArea9 +'</strong></td>'
+                    +'<td><strong>'+ contArea10 +'</strong></td>'
+                    +'<td><strong>'+ contArea11 +'</strong></td>'
+                    +'<td><strong>'+ contArea12 +'</strong></td>'
+                    +'</tr>');                
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    getPlaneador: () => {
+        $('#content-table-planeador').empty();
+        $.ajax({
+            url: '/logistica/mesaControl/planeador/getPlaneador',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                let area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
+                let styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';
+                let functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
+                for(let a=0; a< data.length; a++){
+                    let areas = data[a].areas;
+                    $.each(areas,function( index, val){
+                        switch(val.name)
+                        {
+                            case 'SECTOR 1':
+                                area1 = val.porsurtir;
+                                styleA1 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA1 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 2':
+                                area2 = val.porsurtir;
+                                styleA2 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA2 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 3':
+                                area3 = val.porsurtir;
+                                styleA3 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA3 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 4':
+                                area4 = val.porsurtir;
+                                styleA4 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA4 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 5':
+                                area5 = val.porsurtir;
+                                styleA5 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA5 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'VALIDANDO':
+                                area6 = val.porsurtir;
+                                styleA6 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA6 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_BULK1':
+                                area7 = val.porsurtir;
+                                styleA7 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA7 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_BULK2':
+                                area8 = val.porsurtir;
+                                styleA8 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA8 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_BULKIN1':
+                                area9 = val.porsurtir;
+                                styleA9 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA9 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                            break;
+                            case 'Z_INF1':
+                                area10 = val.porsurtir;
+                                styleA10 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA10 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_VOL1':
+                                area11 = val.porsurtir;
+                                styleA11 = val.style; 
+                                typeof val.porsurtir !== 'undefined' ? functionA11 = 'onclick="logisticaController.showPlaneadorDetail(this)"':''; 
+                                break;
+                            case 'Z_VOL2':
+                                area12 = val.porsurtir;
+                                styleA12 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA12 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                        }
+                    })
+                    
+                    $('#content-table-planeador').append('<tr>' 
+                        +'<td>'+ data[a].prioridad +'</td>'
+                        +'<td>'+ data[a].formaEnvio +'</td>'
+                        +'<td>'+ data[a].cliente +'</td>'
+                        +'<td>'+ data[a].numPedido +'</td>'
+                        +'<td class="'+ styleA1+'" '+ functionA1 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 1">'+ area1 +'</td>'
+                        +'<td class="'+ styleA2+'" '+ functionA2 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 2">'+ area2 +'</td>'
+                        +'<td class="'+ styleA3+'" '+ functionA3 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 3">'+ area3 +'</td>'
+                        +'<td class="'+ styleA4+'" '+ functionA4 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 4">'+ area4 +'</td>'
+                        +'<td class="'+ styleA5+'" '+ functionA5 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 5">'+ area5 +'</td>'
+                        +'<td class="'+ styleA6+'" '+ functionA6 +' data-numpedido="'+data[a].numPedido+'" data-area="VALIDANDO">'+ area6 +'</td>'
+                        +'<td class="'+ styleA7+'" '+ functionA7 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK1">'+ area7 +'</td>'
+                        +'<td class="'+ styleA8+'" '+ functionA8 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK2">'+ area8 +'</td>'
+                        +'<td class="'+ styleA9+'" '+ functionA9 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULKIN1">'+ area9 +'</td>'
+                        +'<td class="'+ styleA10+'" '+ functionA10 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_INF1">'+ area10 +'</td>'
+                        +'<td class="'+ styleA11+'" '+ functionA11 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL1">'+ area11 +'</td>'
+                        +'<td class="'+ styleA12+'" '+ functionA12 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL2">'+ area12 +'</td>'
+                        +'</tr>');  
+                        area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
+                        styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';  
+                        functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
+                }
+                logisticaController.getArrayPlaneador();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    showPlaneadorDetail: (e) => {
+        let numPedido = $(e).data('numpedido');
+        let area = $(e).data('area');
+        let pedidos = new Array();
+        console.log(arrayPlaneador);
+        $.each(arrayPlaneador,function(index,val){
+            if(val.numPedido == numPedido && val.area == area)
+            {
+                pedidos.push({
+                    'mov'       : val.mov,
+                    'numPedido' : val.numPedido,
+                    'prioridad' : val.prioridad,
+                    'formaEnvio': val.formaEnvio,
+                    'cliente'   : val.cliente,
+                    'clave'     : val.clave,
+                    'nombre'    : val.nombre,
+                    'area'      : val.area,
+                    'porsurtir' : val.porsurtir,
+                    'surtido'   : val.surtido
+                });
+            }
+        });
+        console.log(pedidos);
+        $('#content-planeador-detail').empty();
+        $('#modal-planeador-detail').modal('show');
+        let rows = '';
+        for(var a=0; a < pedidos.length; a++)
+        {
+            rows += '<tr>'
+                    +'<td>'+ pedidos[a].mov +'</td>'
+                    +'<td>'+ pedidos[a].numPedido +'</td>'
+                    +'<td>'+ pedidos[a].prioridad +'</td>'
+                    +'<td>'+ pedidos[a].formaEnvio +'</td>'
+                    +'<td>'+ pedidos[a].cliente +'</td>'
+                    +'<td>'+ pedidos[a].clave +'</td>'
+                    +'<td>'+ pedidos[a].nombre +'</td>'
+                    +'<td>'+ pedidos[a].area +'</td>'
+                    +'<td>'+ pedidos[a].porsurtir +'</td>'
+                    +'<td>'+ pedidos[a].surtido +'</td>'
+                    +'</tr>'; 
+        }
+        $('#content-planeador-detail').append(rows);
     },
     initSelect2: ()=>{
         //Initialize Select2 Elements
