@@ -16,7 +16,7 @@ class VerifyCsrfToken extends Middleware
         '/pedido/nuevo/getItemByID',
         '/pedido/nuevo/SepararPedidosPromo',
         '/pedido/nuevo/SepararPedidosPaquete',
-        '/pedido/editar', 
+        '/pedido/editar',
         '/pedido/nuevo',
         '/pedido/eliminar',
         '/pedido/storePedido',
@@ -51,7 +51,7 @@ class VerifyCsrfToken extends Middleware
         '/EstadisticaCliente/getEmployeeReport',
         '/EstadisticaCliente/getGeneralReport',
         '/EstadisticaCliente/getGeneralReportByManagement',
-        '/EstadisticaCliente/getManagementReport', 
+        '/EstadisticaCliente/getManagementReport',
         '/EstadisticaCliente/getManagementReportByEmployee',
         '/Indarnet/getMyZone',
     ];

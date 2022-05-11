@@ -98,7 +98,7 @@ $(document).ready(function(){
                     }
                     else {
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -196,7 +196,7 @@ $(document).ready(function(){
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -350,7 +350,7 @@ $(document).ready(function(){
                     }
                     else{
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -521,7 +521,7 @@ function showAll(){
         }
         else{
             var hestatusDesc = document.createElement('h5');
-            hestatusDesc.innerHTML = "PENDIENTE";
+            hestatusDesc.innerHTML = "EN PROCESO";
             var indicador = document.createElement('div');
             indicador.classList = "indicador red";
         }
@@ -639,27 +639,9 @@ function getDetalleFacturado(numPedido){
                         var arr = [];
                         arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + data[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' height='auto' onclick='verImagenProducto(\"" + data[x]['itemid'] + "\")' class='img-item' onerror='noDisponible(this)'/>");
                         arr.push("<p style='display: inline;'>"+data[x]['itemid']+"</p>");
-                        arr.push(data[0]['cantPedido']);
-                        arr.push(data[0]['cantEmpacada']);
-                        data[0]['cantFacturada'] != '' ? arr.push(data[0]['cantFacturada']) : arr.push('<p style="display: inline; margin-left: 20px;"><i class="fas fa-times" style="margin-right: 10px; color: red;"></i><strong>Sin Factura </strong></p>');
-                        // var row = document.createElement('div');
-                        // row.setAttribute('class', 'row d-flex align-items-center');
-                        // row.setAttribute('style', 'height: 80px; margin-bottom: 0 !important;');
-                        // var div = document.createElement('div');
-                        // div.setAttribute('class', 'col-4 d-flex align-items-center h-100');
-                        // div.setAttribute('style', 'border-right: 1px solid #0000005e;');
-                        // var div2 = document.createElement('div');
-                        // div2.setAttribute('class', 'col-8 d-flex justify-content-start align-items-center h-100');
-                        // var innerItem = "<br><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + data[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' height='auto' onclick='verImagenProducto(\"" + data[x]['itemid'] + "\")' class='img-item' onerror='noDisponible(this)'/><p style='display: inline;'>"+data[x]['itemid']+"</p>";
-                        // var innerDetail = '';
-                        // innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-shopping-bag" style="margin-right: 10px; color:#002868;"></i><strong>Pedido: </strong>'+data[0]['cantPedido']+'</p>'
-                        // innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-shipping-fast" style="margin-right: 10px; color:#002868;"></i><strong>Empacado: </strong>'+data[0]['cantEmpacada']+'</p>'
-                        // data[0]['cantFacturada'] != '' ? innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-file-invoice" style="margin-right: 10px; color:#002868;"></i><strong>Facturado: </strong>'+data[0]['cantFacturada']+'</p>' : innerDetail += '<p style="display: inline; margin-left: 20px;"><i class="fas fa-times" style="margin-right: 10px; color: red;"></i><strong>Sin Factura </strong></p>' ;
-                        // div.innerHTML = innerItem;
-                        // div2.innerHTML = innerDetail;
-                        // row.appendChild(div);
-                        // row.appendChild(div2);
-                        // body.appendChild(row);
+                        arr.push(data[x]['cantPedido']);
+                        arr.push(data[x]['cantEmpacada']);
+                        data[x]['cantFacturada'] != '' ? arr.push(data[x]['cantFacturada']) : arr.push('<p style="display: inline; margin-left: 20px;"><i class="fas fa-times" style="margin-right: 10px; color: red;"></i><strong>Sin Factura </strong></p>');
                         dataset.push(arr);
                     }  
                     var table = $("#tablaDetalle").DataTable({

@@ -5,6 +5,7 @@ var idPaquete = 0;
 var cuotasList = [];
 var maxIndexRowDescuentos = 1;
 var update = false;
+var cantRegalosSub = 0; //cantidad de regalos subreglas, para saber si quita o agrega
 
 $('document').ready(function(){
     $("body").addClass("sidebar-collapse");
@@ -104,7 +105,6 @@ $('document').ready(function(){
                         sub['descuentosCategorias'].push(categoriaDescuentos);
                     }  
                 }
-                console.log(subreglas);
                 for(var x=0; x<subreglas.length; x++){
                     subreglas[x]['descuentosCategorias'] = subreglas[x]['descuentosCategorias'].sort((a,b) => b.descuento - a.descuento);
                 }
@@ -163,9 +163,37 @@ $('document').ready(function(){
 		};
 		reader.readAsBinaryString(input.files[0]);
 	});
+
+
+
+    $('#regalosSub').on('change', function(evt, params) {
+        var elements = document.querySelectorAll('#regalosSub_chosen .chosen-choices .search-choice');
+        if(elements.length > cantRegalosSub){
+            var itemID = (elements[elements.length -1]['innerText'].split(']'))[0].substring(1);
+            var index = 1;
+            var selectRegalos = document.getElementById('regalosSub');
+            for(let i = 0; i < elements.length; i++){
+                if((elements[i]['innerText'].split(']'))[0].substring(1) == itemID){
+                    if(index == 1)
+                        itemFull = elements[i]['innerText'];
+                    index++;
+                }
+            }
+                cantRegalosSub ++;
+                var option = document.createElement("option");
+                option.text = itemFull + "-"+(index);
+                option.value = itemID+'-'+(index);
+                selectRegalos.appendChild(option);
+                $('#regalosSub').trigger("chosen:updated");
+        }
+        else{
+            cantRegalosSub --;
+        }
+    });
+
 });
  
-function activateModalRulesPackage(){
+function activateModalRulesPackage(){ 
     var modal = document.getElementById('reglasModal');
     modal.style.opacity = 1;
     modal.style.zIndex = 1000;
@@ -285,7 +313,15 @@ function validarPaquete(){
         var categorias = $('#categorias').chosen().val();
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();    
-        var regalos = $('#regalos').chosen().val();
+        var regalosChosen = document.querySelector('#regalos_chosen .chosen-choices').childNodes;
+        var regalos = [];
+        for(var x = 1; x < regalosChosen.length - 1; x++){
+            var regalo = regalosChosen[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalos.push(regalo);
+        }
+    
+        var regalos = regalos.join().slice(0, -1);
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";
 
@@ -392,6 +428,15 @@ function addRule(){
                 articulos = reglas[7].filter( x => !articulos.includes(x) );
             }
 
+            var regalosChosenSub = document.querySelector('#regalosSub_chosen .chosen-choices').childNodes;
+            var regalosSub = [];
+            for(var x = 1; x < regalosChosenSub.length - 1; x++){
+                var regalo = regalosChosenSub[x].innerText.split(']');
+                regalo = regalo[0].substring(1);
+                regalosSub.push(regalo);
+            }
+            var regalos = regalosSub.join().slice(0, -1);
+
             var json = {
                 nombreSub: document.getElementById('nombreSubregla').value,
                 descuentoSub: document.getElementById('descuentoSubregla1').value == "" ? 0 : parseInt(document.getElementById('descuentoSubregla1').value),
@@ -399,7 +444,7 @@ function addRule(){
                 descuentosCategorias: categoriasSubregla,
                 montoMinCash: document.getElementById('preciominSub').value == "" ? 0 : parseInt(document.getElementById('preciominSub').value),
                 montoMinQty: document.getElementById('cantidadminSub').value == "" ? 0 : parseInt(document.getElementById('cantidadminSub').value),
-                regalos: $('#regalosSub').chosen().val(),
+                regalos: regalos,
                 proveedores: proveedores,
                 marcas: marcas,
                 articulos: articulos,
@@ -503,40 +548,79 @@ function clearCuotas(){
 
 function editSubregla(id){
     var index = id - 1;
-
+    clearModalSubreglas();
     document.getElementById('nombreSubregla').value = subreglas[index]['nombreSub'];
     document.getElementById('descuentoSubregla1').value = subreglas[index]['descuentoSub'];
     document.getElementById('descuentoWebSubregla1').value = subreglas[index]['descuentoWebSub'];
     document.getElementById('cantidadminSub').value = subreglas[index]['montoMinQty'];
     document.getElementById('preciominSub').value = subreglas[index]['montoMinCash'];
-
     let childs = document.getElementById('descuentosPorCategoria').children.length;
     var container = document.getElementById('descuentosPorCategoria');
-
     for(var x = childs; x>0; x--){
         container.removeChild(container.lastElementChild);
     }
-
     var descuentosCategorias = subreglas[index]['descuentosCategorias'];
-
-    for(x = 0; x < descuentosCategorias.length; x++){
+    for(var x = 0; x < descuentosCategorias.length; x++){
         addRowCategoriaDescuento(x);
         $("#categoriaCliente"+(x+1)).val(descuentosCategorias[x]['categoria']);
         document.getElementById('descuentoSubregla'+(x+1)).value = descuentosCategorias[x]['descuento'];
         document.getElementById('descuentoWebSubregla'+(x+1)).value = descuentosCategorias[x]['descuentoWeb'];
     }
+    
+    var regalosSub = subreglas[index]['regalos'];
+    if(regalosSub != null){
+        regalosSub = regalosSub.split(',');
+        cantRegalosSub = regalosSub.length;
+        var selectRegalosSub = document.getElementById('regalosSub');
+        var regalosSubFinal = [];
+        var regalosSubSeleccionados = [];
+        for(var x = 0; x < regalosSub.length; x++){
+            if(!regalosSubSeleccionados.includes(regalosSub[x])){
+                var fullnameRegalo = '';
+                let repeticiones = 1;
+                regalosSub.forEach(element => {
+                if (element === regalosSub[x]) {
+                    repeticiones += 1;
+                }
+                });
+                console.log(regalosSub[x]+":"+repeticiones);
+                for(let i = 0; i < reglas[7].length; i++){
+                    if(reglas[7][i].includes(regalosSub[x])){
+                        fullnameRegalo = reglas[7][i];
+                        break;
+                    }  
+                }
+                for(let y = 1; y < repeticiones; y++){
+                    if(y == 1){
+                        regalosSubFinal.push(regalosSub[x]);
+                    }else{
+                        console.log(regalosSub[x]+" - "+y);
+                        var option = document.createElement("option");
+                        option.text = fullnameRegalo+"-"+y;
+                        option.value = regalosSub[x]+"-"+y;
+                        selectRegalosSub.appendChild(option);
+                        regalosSubFinal.push(regalosSub[x]+"-"+y);
+                    }
+                }
+                //crear la opcion siguiente 
+                console.log(regalosSub[x]+" - extra");
+                var option = document.createElement("option");
+                option.text = fullnameRegalo+"-"+repeticiones;
+                option.value = regalosSub[x]+"-"+repeticiones;
+                selectRegalosSub.appendChild(option);
+                regalosSubSeleccionados.push(regalosSub[x]);
+            }
+        }
+        console.log(regalosSubFinal);
+        $('#regalosSub').val(regalosSubFinal).trigger('chosen:updated'); 
+    }
 
-    $('#regalosSub').val(subreglas[index]['regalos']).trigger('chosen:updated');
     $('#proveedores').val(subreglas[index]['proveedores']).trigger('chosen:updated');
     $('#marcas').val(subreglas[index]['marcas']).trigger('chosen:updated');
     $('#articulos').val(subreglas[index]['articulos']).trigger('chosen:updated');
-
     document.getElementById('indexSubregla').value = index.toString();
-
     document.getElementById('btn-guardarSub').innerHTML = '<i class="fas fa-save"></i> Guardar';
-
     activateModalRulesPackage();
-
 }
 
 function clearModalSubreglas(){
@@ -557,7 +641,19 @@ function clearModalSubreglas(){
 
     addRowCategoriaDescuento(0);
 
-    $('#regalosSub').val('').trigger('chosen:updated');
+    cantRegalosSub = 0;
+    var regalosSubreglas = $('#regalosSub option');
+    regalosSubreglas.remove();
+    var selectregalosSub = document.getElementById('regalosSub');
+    if(reglas[7]!=undefined){
+        for(var x = 0; x<reglas[7].length; x++){
+            var option = document.createElement("option");
+            option.text = reglas[7][x];
+            option.value = (reglas[7][x].split(']'))[0].substring(1);
+            selectregalosSub.appendChild(option);
+        }
+    }
+    $('#regalosSub').trigger('chosen:updated');
 
     $('#proveedores').val('').trigger('chosen:updated');
     $('#proveedoresFile').val('');
@@ -592,7 +688,15 @@ function updateRule(){
     subreglas[index]['descuentoWebSub'] = document.getElementById('descuentoWebSubregla1').value;
     subreglas[index]['montoMinCash'] = document.getElementById('preciominSub').value;
     subreglas[index]['montoMinQty'] = document.getElementById('cantidadminSub').value;
-    subreglas[index]['regalos'] = $('#regalosSub').chosen().val();
+    var regalosChosenSub = document.querySelector('#regalosSub_chosen .chosen-choices').childNodes;
+    var regalosSub = [];
+    for(var x = 1; x < regalosChosenSub.length - 1; x++){
+            var regalo = regalosChosenSub[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalosSub.push(regalo);
+    }
+    var regalos = regalosSub.join().slice(0, -1);
+    subreglas[index]['regalos'] = regalos;
     subreglas[index]['proveedores'] = $('#proveedores').chosen().val();
     subreglas[index]['marcas'] = $('#marcas').chosen().val();
     subreglas[index]['articulos'] = $('#articulos').chosen().val();
@@ -787,7 +891,15 @@ function storeHeader(){
         var giros = $('#giros').chosen().val();
         var clientes = $('#clientes').chosen().val();
     
-        var regalos = $('#regalos').chosen().val();
+        var regalosChosen = document.querySelector('#regalos_chosen .chosen-choices').childNodes;
+        var regalos = [];
+        for(var x = 1; x < regalosChosen.length - 1; x++){
+            var regalo = regalosChosen[x].innerText.split(']');
+            regalo = regalo[0].substring(1);
+            regalos.push(regalo);
+        }
+    
+        var regalos = regalos.join().slice(0, -1);
 
         var startTime = startDate+" "+document.getElementById('startTime').value+":00";
         var endTime = endDate+" "+document.getElementById('endTime').value+":00";

@@ -1,0 +1,36 @@
+{
+    "Ejercicio" : 2022,
+    "Periodo": 05,
+    "Especiales": [
+        {
+            "Cons": 01,
+            "Nombre": "Nombre del especial 01",
+            "Tipo": "CLIENTES"
+            "Cuotas": [
+                {
+                    "Zona": "Z105",
+                    "Cuota": 4
+                },
+                {
+                    "Zona": "Z110",
+                    "Cuota": 4
+                }
+            ]
+        },
+        {
+            "Cons": 02,
+            "Nombre": "Nombre del especial 02",
+            "Tipo": "PESOS"
+            "Cuotas": [
+                {
+                    "Zona": "Z002",
+                    "Cuota": 3
+                },
+                {
+                    "Zona": "Z003",
+                    "Cuota": 2
+                }
+            ]
+        }
+    ]
+}

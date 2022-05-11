@@ -2,7 +2,8 @@
 .bg-blue{
   background-color: #002868 !important;
   color: white !important;
-  font-size: 15px;
+  font-size: 20px;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -15,7 +16,8 @@ img.img-item {
 .bg-bo{
   background-color: #fcbf49 !important;
   color: black !important;
-  font-size: 15px;
+  font-size: 20px;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -185,6 +187,11 @@ color: white !important;
 width: auto !important;
 }
 
+.col-descripcion{
+  float: left;
+  text-align: left !important;
+  margin-left: 20px;
+}
 
 
 .tablaPedido th{
@@ -300,6 +307,21 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   line-height: 3px !important;
 }
 
+.datos-pedidos-cliente{
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1px !important;
+  margin-top: 10px !important;
+  vertical-align: middle !important;
+}
+#codArticulo{
+  font-size: 18px !important;
+}
+.datos-item{
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
 .detalles-item-descuentos{
   min-width: 250px !important;
 }
@@ -315,13 +337,14 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .quantityBtn{
-background-color: #E9ECEF;
-border: 1px solid rgba(0, 0, 0, 0.1);
-width: 25px;
-height: 34px;
-position: relative;
-margin-top: -2px;
+  background-color: #E9ECEF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 25px;
+  height: 34px;
+  position: relative;
+  margin-top: -2px;
 }
+
 
 .input-cantidad{
 background-color: #F2F2F2 !important;
@@ -365,7 +388,14 @@ height: 30px;
 }
 
 .td-center{
-text-align: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.td-right{
+  text-align: right !important;
+  margin-right: 5px !important;
+  vertical-align: middle !important;
 }
 
 #categoria-linea{
@@ -512,9 +542,15 @@ display: none;
   display: none;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   background-color: rgba(0, 0, 0, 0.76);
   backdrop-filter: blur(5px);
   transition: all ease .4s;
+}
+
+.containerImgProduct h4{
+  color: white;
+  text-align: center;
 }
 
 .magnify{
@@ -621,6 +657,14 @@ cursor: pointer;
 
 .hidden{
   display: none !important;
+}
+
+#closeModalInventario{
+  cursor: pointer;
+  position: absolute;
+  margin-right: 15px;
+  top: 30px;
+  right: 0;
 }
 
 

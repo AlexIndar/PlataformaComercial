@@ -32,6 +32,7 @@
                 <div class="row invoice-info">
                    <div class="col-sm-4 invoice-col">
                     <strong>Info del Cliente </strong>
+                    <input type="text" hidden id="cliente" value="{{ $general->companyid  }}">
                       <address>
                         {{ $general->companyname }} <br>
                         Código : {{ $general->companyid }}  <br>
@@ -56,7 +57,7 @@
                     </div>
                     <div class="col-sm-7 invoice-col">
                         <strong>Saldo</strong><br>
-                        <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : </b><br>
+                        <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : {{ $general->diasCredito }}</b><br>
                         <table id="creditTable" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
                            <thead style="background-color:#002868; color:white">
                               <tr>
@@ -70,10 +71,10 @@
                            <tbody id="">
                             <tr>
                                 <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->saldo,2) }}</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
-                                <td><span style="font-size: 15px" class="badge badge-warning">$ 0.00</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->de0a30,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->de31a60,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->de61a90,2) }}</span></td>
+                                <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->mayor90,2) }}</span></td>
                             </tr>
                            </tbody>
 
@@ -85,7 +86,7 @@
                         Total : <span style="font-size: 15px" class="badge badge-primary">$ {{  number_format($general->saldo,2) }}</span><br>
                         @endif --}}
                         Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->saldo,2) }}</span><br>
-                        Referencia Bancaria: ------ <br>
+                        Referencia Bancaria: {{ $general->referenciaBancaria }} <br>
 
                      </div>
                     <div class="col-sm-5   invoice-col">
@@ -96,8 +97,8 @@
                         <i class="far fa-calendar-alt"></i>
                         </span>
                         <input type="text" class="form-control float-right" id="edoCuenta">
-                        <a href="/clientes/pagoEnLinea" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>&nbsp;
-                        <a href="/clientes/pagoEnLinea" target="_blank"><button  class="btn btn-success"  id="btnConsultar">Ir a Pagar </button></a>
+                        <a href="#" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>&nbsp;
+                        <button  class="btn btn-success"  id="btnPagar">Ir a Pagar </button>
                     </div>
                   </div>
                  </div>
@@ -118,34 +119,28 @@
                            </thead>
                            <tbody id="">
                             <tr>
-                                <td>Vendedor</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
-                            </tr>
-                            <tr>
-                                <td>Gerente</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
+                                <td>Representante</td>
+                                <td>{{ $general->nombrE_REPRESENTANTE }}</td>
+                                <td>{{ $general->telefonO_REPRESENTANTE }}</td>
+                                <td>{{ $general->emaiL_REPRESENTANTE }}</td>
                             </tr>
                             <tr>
                                 <td>Crédito y Cobranza</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
-                            </tr>
-                            <tr>
-                                <td>Post Venta</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
+                                <td>{{ $general->nombrE_AUXCOBRANZA }}</td>
+                                <td>{{ $general->telefonO_AUXCOBRANZA }}</td>
+                                <td>{{ $general->emaiL_AUXCOBRANZA }}</td>
                             </tr>
                             <tr>
                                 <td>Apoyo de Ventas</td>
-                                <td>Nombre ----</td>
-                                <td>331255431</td>
-                                <td>indar@indar.com.mx</td>
+                                <td>{{ $general->nombrE_APOYOVENTAS }}</td>
+                                <td>{{ $general->telefonO_APOYOVENTAS }}</td>
+                                <td>{{ $general->emaiL_APOYOVENTAS }}</td>
+                            </tr>
+                            <tr>
+                                <td>Post Venta</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                            </tbody>
 
@@ -163,7 +158,7 @@
                            <thead style="background-color:#002868; color:white">
                             <tr>
                                 <th  style="background-color:#073d92c5; font-size : 17px " class="text-center" colspan="3">
-                                    Referencia :
+                                    Referencia : {{ $general->referenciaBancaria }}
                                 </th>
                             </tr>
                               <tr>
@@ -177,31 +172,26 @@
                                 <td>BBVA</td>
                                 <td>Convenio CIE: 806161</td>
                                 <td>012 320 00133687449 9</td>
-
                             </tr>
                             <tr>
                                 <td>BANORTE</td>
                                 <td>Convenio CEP: 51928</td>
                                 <td>072 320 00020039981 8</td>
-
                             </tr>
                             <tr>
                                 <td>Santander</td>
                                 <td>65-500776517</td>
                                 <td>014 320 65500776517 1</td>
-
                             </tr>
                             <tr>
                                 <td>HSBC</td>
                                 <td>Cuenta RAP: 2290</td>
                                 <td>021 320 04050561075 3</td>
-
                             </tr>
                             <tr>
                                 <td>BANAMEX</td>
                                 <td>110-1613905</td>
                                 <td>002 320 01101613905 6</td>
-
                             </tr>
                            </tbody>
                         </table>
@@ -256,12 +246,12 @@
                            <tbody id="">
                             <tr>
                                 <td>Nivel de Servicio a Primera Factura</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
-                                <td>%%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
+                                <td>%</td>
                             </tr>
                             <tr>
                                 <td>Tiempo de Entrega entre captura y recepción</td>
@@ -324,39 +314,6 @@
                         </table>
                      </div>
                 </div>
-                {{-- <div class="row">
-                    <div class="col-sm-12 invoice-col ">
-                        <p class="lead "> <b> Cuentas Bancarias para Depósito </b></p>
-                    </div>
-                    <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Nombre del Vendedor </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                     <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Nombre del Gerente </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                     <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Credito y cobranza </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                     <div class="col-sm-3 invoice-col ">
-                        <address>
-                           <strong>Post Venta </strong><br>
-                           Email : indar@indar.com <br>
-                           Telefono: (012) 539-1037 <br>
-                        </address>
-                     </div>
-                </div> --}}
              </div>
           </div>
        </div>
@@ -371,51 +328,17 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
 
 $('#edoCuenta').daterangepicker();
-
-var table = $('#example').DataTable({
-        dom : 'Brt',
-
-    } );
-
-var t = $('#example2').DataTable({
-    dom : 'Brt',
-    rowCallback: function(row, data, index){
-                $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
-        }
-} );
-
- $('#example tbody').on('click', 'tr', function () {
-    jQuery(this).toggle("scale");
-     var data = table.row( this ).data();
-    console.log(data);
-    t.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        data[3],
-        data[4]
-
-    ] ).draw();
- } );
-
- $('#example2 tbody').on('click', 'tr', function () {
-    jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
-     var data = t.row( this ).data();
-    console.log(data);
-    table.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        data[3],
-        data[4]
-
-    ], ).draw();
- } );
-
+var cliente =  document.getElementById("cliente").value;
+$("#btnPagar").click(function(){
+   var fechaini =  $('#edoCuenta').data('daterangepicker').startDate.format('MM-DD-YYYY');
+   var fechafin =  $('#edoCuenta').data('daterangepicker').endDate.format('MM-DD-YYYY');
+window.location.href = "pagoEnLinea/"+cliente+"/"+fechaini+"/"+fechafin;
+});
 
 
 });

@@ -1,4 +1,5 @@
 var cotizaciones;
+var zonas;
 
 $(document).ready(function(){
         $.ajax({
@@ -10,16 +11,40 @@ $(document).ready(function(){
             },
             success: function(data){
                     cotizaciones = data;
+                    DOMCotizaciones(cotizaciones);
             }, 
             error: function(error){
-                  console.log(error);
+                    console.log(error);
              }
-    
         });   
+
+        $.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "getZonasApoyo",
+            async: "false",
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function(data){
+                    zonas = data;
+                    fillDropdownZonas();
+            }, 
+            error: function(error){
+                    console.log(error);
+             }
+        });   
+
+        
+
 
         $('#filterKey').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
             $('#filterValue').removeAttr('disabled');
             $('#filtrarPedidos').removeAttr('disabled');
+            console.log(clickedIndex);
+            // document.getElementById('selectZonas').classList.remove('d-none');
+            // document.getElementById('inputFiltro').classList.add('d-none');
+            // document.getElementById('filtrarPedidos').classList.add('d-none');
         });
 });
 
@@ -55,15 +80,20 @@ function filtrar(){
         if(cotizacion[key] == value)
             filtered.push(cotizacion);
     });
+    DOMCotizaciones(filtered.reverse());
+}
 
+function DOMCotizaciones(cotizaciones){
     var row = document.getElementById('rowPedidos');
 
     while (row.firstChild) {
         row.removeChild(row.firstChild);
     }
     
-    for(var x = 0; x < filtered.length; x++){
-        var ordenCompra = filtered[x]['orderC'] != null ? filtered[x]['orderC'] : "";
+    cotizaciones = cotizaciones.reverse();
+    console.log(cotizaciones);
+    for(var x = 0; x < cotizaciones.length; x++){
+        var ordenCompra = cotizaciones[x]['orderC'] != null ? cotizaciones[x]['orderC'] : "";
         var container = document.createElement('div');
         container.classList = "promo"; 
 
@@ -71,7 +101,7 @@ function filtrar(){
         div1.classList = "promo-header"; 
 
         var hheader = document.createElement('h4');
-        hheader.innerHTML = "[#"+filtered[x]['idCotizacion']+" - "+filtered[x]['companyId'].toUpperCase()+"] "+ordenCompra;
+        hheader.innerHTML = "[#"+cotizaciones[x]['idCotizacion']+" - "+cotizaciones[x]['companyId'].toUpperCase()+"] "+ordenCompra;
         var actions = document.createElement('div');
         actions.classList = "actions";
         var btnGroup = document.createElement('div');
@@ -83,7 +113,7 @@ function filtrar(){
         btnEdit.setAttribute('type', 'button');
         btnEdit.setAttribute('class', 'btn btn-info');
         btnEdit.setAttribute('title', 'Editar');
-        btnEdit.setAttribute('onclick', "editarPedido(\""+filtered[x]['idCotizacion']+"\",\""+filtered[x]['companyId']+"\")");
+        btnEdit.setAttribute('onclick', "editarPedido(\""+cotizaciones[x]['idCotizacion']+"\",\""+cotizaciones[x]['companyId']+"\")");
         var iEdit = document.createElement('i');
         iEdit.setAttribute('class', 'fas fa-edit');
 
@@ -91,7 +121,7 @@ function filtrar(){
         btnDelete.setAttribute('type', 'button');
         btnDelete.setAttribute('class', 'btn btn-danger');
         btnDelete.setAttribute('title', 'Eliminar');
-        btnDelete.setAttribute('onclick', "activarEliminarModal(\""+filtered[x]['idCotizacion']+"\")");
+        btnDelete.setAttribute('onclick', "activarEliminarModal(\""+cotizaciones[x]['idCotizacion']+"\")");
         var iDelete = document.createElement('i');
         iDelete.setAttribute('class', 'fas fa-trash');
 
@@ -108,11 +138,11 @@ function filtrar(){
         div2.classList = "cuerpo-promo"; 
 
         var hbody1 = document.createElement('h5');
-        hbody1.innerHTML = "Forma Envío <span class='fecha'><i class='fas fa-truck-loading'></i> "+filtered[x]['shippingWay']+"</span> Fletera <span class='fecha'><i class='fas fa-shipping-fast'></i> "+filtered[x]['packageDelivery']+"</span> "
+        hbody1.innerHTML = "Forma Envío <span class='fecha'><i class='fas fa-truck-loading'></i> "+cotizaciones[x]['shippingWay']+"</span> Fletera <span class='fecha'><i class='fas fa-shipping-fast'></i> "+cotizaciones[x]['packageDelivery']+"</span> "
         var hbody2 = document.createElement('h5');
-        hbody2.innerHTML = filtered[x]['addressName'];
+        hbody2.innerHTML = cotizaciones[x]['addressName'];
         var hbody3 = document.createElement('h5');
-        hbody3.innerHTML = filtered[x]['comments'];
+        hbody3.innerHTML = cotizaciones[x]['comments'];
 
         div2.appendChild(hbody1);
         div2.appendChild(hbody2);
@@ -124,8 +154,35 @@ function filtrar(){
         row.appendChild(container);
         
     }
+}
 
+function getCookie(name) { //saber si una cookie existe 
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
+    }
+    else
+    {
+        begin += 2;
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+        end = dc.length;
+        }
+    }
+    return decodeURI(dc.substring(begin + prefix.length, end));
+} 
 
+function fillDropdownZonas(){
+    if(zonas.length > 0){
+        $('#filterKey').append('<option value="zona">Zona</option>');
+        $('#filterKey').selectpicker("refresh");
 
-
+        zonas.forEach( zona => {
+            $('#zonas').append('<option value="'+zona+'">'+zona+'</option>');
+            $('#zonas').selectpicker("refresh");
+        });
+    }
 }

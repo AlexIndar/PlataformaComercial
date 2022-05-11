@@ -39,10 +39,10 @@
                   <div  id="divFiltroCli" class="card-body">
                      <div class="col-lg-12">
                         <div class="row ">
-                           <div class="col-sm-4">
+                           <div class="col-md-2">
                               <select name="zonas"  class="form-control js-example-basic-single" id="zonas"></select>
                            </div>
-                           <div class="col-sm-4">
+                           <div class="col-sm-2">
                               <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
                            </div>
                            <div class="col-md-4">
@@ -52,13 +52,13 @@
                         </div>
                      </div>
                   </div>
-                  <div  class="card-body">
-                     <div   class="col-lg-12">
+                  <div  class="card-body" id="tablaDiv" style="display: none">
+                     <div  class="col-lg-12">
                         <div class="card-body table-responsive p-0">
                            <table id="comisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
                                  <tr>
-                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >  </th>
+                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =12>  </th>
                                  </tr>
                                  <tr >
                                     <th style="width:320px">Concepto</th>
@@ -72,10 +72,10 @@
                               <tbody id="llenaTable">
                               </tbody>
                               <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =7  > DIAS DE ATRASO EN LA COBRANZA PARA COMISIONES</th>
+                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > DIAS DE ATRASO EN LA COBRANZA PARA COMISIONES</th>
                               </tr>
                               <tr style="background-color:#002868; color:white" >
-                                 <th>Concepto</th>
+                                 <th colspan="2">Concepto</th>
                                  <th>De 0 a 30 Días</th>
                                  <th>De 31 a 60 Días </th>
                                  <th>De 61 a 90 Días </th>
@@ -86,7 +86,7 @@
                               <tbody id="llenaMN">
                               </tbody>
                               <tr style="background-color:#0744a7d2 ; color:white">
-                                 <th>Factor MN</th>
+                                 <th colspan="2">Factor MN</th>
                                  <th>1.805 %</th>
                                  <th>1.264 % </th>
                                  <th>0.722 % </th>
@@ -97,7 +97,7 @@
                               <tbody id="llenaMB">
                               </tbody>
                               <tr style="background-color:#0744a7d2 ; color:white">
-                                 <th>Factor MB</th>
+                                 <th colspan="2">Factor MB</th>
                                  <th>0.903 %</th>
                                  <th>0.632 %</th>
                                  <th>0.361 %</th>
@@ -108,10 +108,10 @@
                               <tbody id="llenaSubtotal">
                               </tbody>
                               <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =7  > DESCUENTOS A COMISIONES</th>
+                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > DESCUENTOS A COMISIONES</th>
                               </tr>
                               <tr style="background-color:#002868; color:white" >
-                                 <th colspan="3">Concepto</th>
+                                 <th colspan="4">Concepto</th>
                                  <th>Importe</th>
                                  <th>% de Descuento </th>
                                  <th>Total </th>
@@ -120,18 +120,20 @@
                               <tbody id="llenadesComi">
                               </tbody>
                               <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =7  > PRESTACIONES</th>
+                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > PRESTACIONES</th>
                               </tr>
                               <tr style="background-color:#002868; color:white" >
-                                 <th colspan="3">Concepto</th>
+                                 <th colspan="4">Concepto</th>
                                  <th colspan="2"> % </th>
                                  <th colspan="2">Importe </th>
                               </tr>
                               <tbody id="llenaDespensa">
                               </tbody>
                               <tr style="background-color:#002868; color:white" >
-                                 <th colspan="2">Bono de Puntualidad (8.7 %)</th>
+                                 <th >Bono de Puntualidad (8.7%)</th>
                                  <th > % Bono </th>
+                                 <th>clientes Visitados</th>
+                                 <th>Total de Clientes</th>
                                  <th >Días Laborados </th>
                                  <th >Días no Reportados </th>
                                  <th >% de Alcance </th>
@@ -142,8 +144,7 @@
                            </table>
                         </div>
                      </div>
-
-                    <div   class="col-lg-12">
+                     <div   class="col-lg-12">
                         <div class="card-body table-responsive p-0">
                            <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
@@ -152,6 +153,7 @@
                                  </tr>
                                  <tr >
                                     <th style="width:320px">Clientes Nuevos</th>
+                                    <th>Parametro Nvos Ctes</th>
                                     <th>Clientes Activos</th>
                                     <th>Valor Objetivo</th>
                                     <th>%  de Alcance</th>
@@ -160,145 +162,233 @@
                               </thead>
                               <tbody id="llenaBonos">
                               </tbody>
-
+                           </table>
+                        </div>
+                     </div>
+                     <div   class="col-lg-12">
+                        <div class="card-body table-responsive p-0">
+                           <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
+                                 </tr>
+                                 <tr >
+                                    <th style="width:420px" >Especiales del Mes (15%)</th>
+                                    <th >Cuota</th>
+                                    <th>Real</th>
+                                    <th>Avance</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaEspeciales">
+                                <tr>
+                                  <td>E01</td>
+                                  <td >cuota</td>
+                                  <td>Real</td>
+                                  <td>Avance</td>
+                                </tr>
+                                <tr>
+                                    <td>E02</td>
+                                    <td >cuota</td>
+                                    <td>Real</td>
+                                    <td>Avance</td>
+                                </tr>
+                                <tr>
+                                    <td>E03</td>
+                                    <td>cuota</td>
+                                    <td>Real</td>
+                                    <td>Avance</td>
+                                </tr>
+                              </tbody>
                            </table>
                         </div>
                      </div>
                   </div>
-
-
                </div>
             </div>
          </div>
       </div>
    </div>
 </div>
-
-  <!-- Modal Detalle Dias no laborados -->
-  <div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+<!-- Modal Detalle Dias laborados -->
+<div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            <h3 class="text-center title ml-auto">Detalle de Visitas y Días Laborados</h3>
+            <h6 id ="vendedor" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                           <tr >
+                              <th style="width:320px">Formulario</th>
+                              <th>Número de Visitas</th>
+                              <th>Código</th>
+                           </tr>
+                        </thead>
+                        <tbody id="llenaModal">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal Detalle Dias NO laborados -->
+<div class="modal fade" id="diasNoLaboradosModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Visitas y Días Laborados</h3>
-                <h6 id ="vendedor" class="text-center title ml-auto"></h6>
-                <input type="text" id="typeFormInf" value="" hidden>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+             <h3 class="text-center title ml-auto">Detalle Días No Laborados</h3>
+             <h6 id ="vendedor" class="text-center title ml-auto"></h6>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <div id='calendar'></div>
+                  </div>
+               </div>
             </div>
-            <div class="modal-body text-indarBlue" id="modal2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-body table-responsive p-0">
-                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                               <thead style="background-color:#002868; color:white">
-                                  <tr >
-                                     <th style="width:320px">Formulario</th>
-                                     <th>Número de Visitas</th>
-                                     <th>Código</th>
-                                     <th>Fecha</th>
-                                  </tr>
-                               </thead>
-                               <tbody id="llenaModal">
-                               </tbody>
-                            </table>
-                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
+         </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
     </div>
+ </div>
+<!-- Modal Detalle Descuentos -->
+<div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            Descuentos</h3>
+            <h6 id ="vendedordes" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:70% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                           <tr >
+                              <th>Id</th>
+                              <th>Cliente</th>
+                              <th>Id Documento</th>
+                              <th>Recibida en el mes con IVA</th>
+                              <th>Cobrado en el mes sin IVA</th>
+                              <th>Pendiente Saldar mes anterior sin IVA</th>
+                              <th>Pendiente de saldar este mes sin IVA</th>
+                              <th>Sal dada en el mes sin IVA</th>
+                              <th>Desc Neg</th>
+                              <th>Desc. Fuera de Tiempo </th>
+                              <th>Nota de Credito por Incobra bilidad</th>
+                              <th>Incobra bilidad </th>
+                              <th>Comisión Base</th>
+                           </tr>
+                        </thead>
+                        <tbody id="llenaDescModal">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
 </div>
-
-  <!-- Modal Detalle Descuentos -->
-  <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">Descuentos</h3>
-                <h6 id ="vendedordes" class="text-center title ml-auto"></h6>
-                <input type="text" id="typeFormInf" value="" hidden>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body text-indarBlue" id="modal2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-body table-responsive p-0">
-                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:70% ;font-weight: bold ">
-                               <thead style="background-color:#002868; color:white">
-                                <tr >
-                                    <th>Id</th>
-                                    <th>Cliente</th>
-                                    <th>Recibida en el mes con IVA</th>
-                                    <th>Cobrado en el mes sin IVA</th>
-                                    <th>Pendiente Saldar mes anterior sin IVA</th>
-                                    <th>Pendiente de saldar este mes sin IVA</th>
-                                    <th>Sal dada en el mes sin IVA</th>
-                                    <th>Desc Neg</th>
-                                    <th>Desc. Fuera de Tiempo </th>
-                                    <th>Nota de Credito por Incobra bilidad</th>
-                                    <th>Incobra bilidad </th>
-                                    <th>Comisión Base</th>
-                                 </tr>
-                               </thead>
-                               <tbody id="llenaDescModal">
-                               </tbody>
-                            </table>
-                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Modal Clientes Nuevos-->
 <div class="modal fade" id="nvosclientesModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-indarBlue">
-                <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
-                <h6 id ="vendedorbon" class="text-center title ml-auto"></h6>
-                <input type="text" id="typeFormInf" value="" hidden>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+   <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
+            <h6 id ="vendedorbon" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                           <tr >
+                              <th>Código cliente</th>
+                              <th style="width:320px">Nombre</th>
+                              <th>Zona</th>
+                              <th>Fecha</th>
+                           </tr>
+                        </thead>
+                        <tbody id="clientesNvosModal">
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
             </div>
-            <div class="modal-body text-indarBlue" id="modal2">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-body table-responsive p-0">
-                            <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                               <thead style="background-color:#002868; color:white">
-                                  <tr >
-                                     <th>Código cliente</th>
-                                     <th style="width:320px">Nombre</th>
-                                     <th>Zona</th>
-                                     <th>Fecha</th>
-                                  </tr>
-                               </thead>
-                               <tbody id="clientesNvosModal">
-                               </tbody>
-                            </table>
-                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
 </div>
-
+<!-- Modal Editar VO-->
+<div class="modal fade" id="editarVo" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-sm modal-dialog-scrollable">
+      <div class="modal-content">
+         <div class="modal-header bg-indarBlue">
+            <h3 class="text-center title ml-auto">Editar Parametro Nuevos Clientes</h3>
+            <h6 id ="zonareferencia" class="text-center title ml-auto"></h6>
+            <input type="text" id="typeFormInf" value="" hidden>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="modal-body text-indarBlue" id="modal2">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="card-body table-responsive p-0">
+                     <label for="">Nuevo Parametro  :</label>
+                     <input class="form-control" type="number" name="parametro" id="parametro" placeholder="Ingrese nuevo Parametro">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button id="submitParametro" type="submit" class="btn btn-success float-right" data-dismiss="modal">Guardar</button>
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
+</div>
 @endsection
+
 @section('js')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -307,6 +397,17 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- FULLCALENDAR-->
+<link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
+<script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+
+
+
+
 <script>
    $(document).ready(function() {
        //Collapse sideBar
@@ -333,13 +434,13 @@
            //Esconde y muestra DIV
            document.getElementById("btnSpinner").style.display = "none";
            document.getElementById("btnConsultar").style.display = "block";
+           document.getElementById("tablaDiv").style.display = "block";
+
        } );
 
    });
    function consultar() {
       // $.fn.dataTable.ext.errMode = 'none';
-   $("#comisionesTable").dataTable().fnDestroy();
-   $("#comisionesDetalle").dataTable().fnDestroy();
 
    var id = document.getElementById("zonas").value;
    var pfecha = document.getElementById("fechaCliente").value;
@@ -349,7 +450,7 @@
    var dateprueba = new Date(año, mes-1, 01);
    var month = dateprueba.toLocaleString('default', { month: 'long' });
    document.getElementById("headerMes").innerHTML = ' COBRANZA '+month.toUpperCase()+' '+año;
-// AJAX Principal
+   // AJAX Principal
 
     $.ajax({
            'headers': {
@@ -458,7 +559,7 @@
 
                if(html == ''){
                    html += '<tr>' +
-                   '<td style="font-weight: bold"> Cobranza </td>' +
+                   '<td style="font-weight: bold" > Cobranza </td>' +
                    '<td style="font-weight: bold">' + sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaRMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaPSMASI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -467,7 +568,7 @@
                    '</tr>';
 
                    htmlmn += '<tr>' +
-                   '<td style="font-weight: bold"> Importe Cobrado productos MN </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Importe Cobrado productos MN </td>' +
                    '<td style="font-weight: bold">' +sumaMN30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMN60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMN90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -477,7 +578,7 @@
                    '</tr>';
 
                    htmlmb += '<tr>' +
-                   '<td style="font-weight: bold"> Importe Cobrado productos MB </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Importe Cobrado productos MB </td>' +
                    '<td style="font-weight: bold">' +sumaMB30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMB60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaMB90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -487,7 +588,7 @@
                    '</tr>';
 
                    htmlsubtotal += '<tr style ="background-color: rgba(231, 235, 11, 0.705)">' +
-                   '<td style="font-weight: bold"> Cobrado </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Cobrado </td>' +
                    '<td style="font-weight: bold">' +sumaTotal30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -495,35 +596,49 @@
                    '<td style="font-weight: bold">' + sumaTotalImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td id ="totalComision" style="font-weight: bold">' + sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>';
+                var desneg;
+                var desft;
+                var desinc;
 
-                   htmldescComi += '<tr onClick="detalleDesc(1);" style="cursor: pointer" data-toggle="modal" data-target="#descModal">' +
-                   '<td style="font-weight: bold" colspan="3"> DESNEG </td>' +
+                 if(sumaDescneg == 0){
+                    desneg = '<tr>';
+                 }else{
+                    desneg = '<tr onClick="detalleDesc(1);" style="cursor: pointer" data-toggle="modal" data-target="#descModal">';
+                 }
+                 if(sumaDesFT == 0){
+                     desft = '<tr>';
+                 }else{
+                     desft = '<tr  onClick="detalleDesc(2);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">';
+                 }
+                 if(sumaIncob == 0){
+                     desinc = '<tr>';
+                 }else{
+                    desinc = '<tr  onClick="detalleDesc(3);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">';
+                 }
+                   htmldescComi += desneg +
+                   '<td style="font-weight: bold" colspan="4"> DESNEG </td>' +
                    '<td style="font-weight: bold">' + sumaImpD.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
-                   '<tr  onClick="detalleDesc(2);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">' +
-                   '<td style="font-weight: bold" colspan="3"> Descuento Fuera de Tiempo </td>' +
+                   desft +
+                   '<td style="font-weight: bold" colspan="4"> Descuento Fuera de Tiempo </td>' +
                    '<td style="font-weight: bold">' + sumaImpF.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>'+
-                   '<tr  onClick="detalleDesc(3);" style="cursor: pointer"  data-toggle="modal" data-target="#descModal">' +
-                   '<td style="font-weight: bold" colspan="3" > Incobrabilidad </td>' +
+                   desinc +
+                   '<td style="font-weight: bold" colspan="4" > Incobrabilidad </td>' +
                    '<td style="font-weight: bold">' + sumaImpI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
-                   '</tr>'/* +
-                   '<tr style ="background-color: rgba(231, 235, 11, 0.705)">' +
-                   '<td style="font-weight: bold" colspan="5"> Comision Base </td>' +
-                   '<td style="font-weight: bold; text-center"  colspan="2">' + sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
-                   '</tr>' */;
+                   '</tr>';
 
                    htmlDespensa += '<tr>' +
-                   '<td style="font-weight: bold" colspan="3"> Despensa </td>' +
+                   '<td style="font-weight: bold" colspan="4"> Despensa </td>' +
                    '<td style="font-weight: bold" colspan="2"> 10.00 % </td>' +
                    '<td style="font-weight: bold" colspan="2">' + despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>';
@@ -542,9 +657,8 @@
                alert('Error, Tiempo de espera agotado');
            }
         });
-//
+   //
         function myCallback(response) {
-
 
          var comisionTot = response.replace(',','');
 
@@ -560,7 +674,80 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function array(data){
-            console.log(data[1]);
+
+            var events = []; //The array
+            var fechaCalendar;
+            var inicioCalendar;
+            console.log(data[0].detalle);
+            if(data[0].detalle.length === 0 ){
+                var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
+                var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
+
+                inicioCalendar = añoCalendar + '-' + mesCalendar+'-01';
+                // Alerta de que no existen días Reportados
+                var toast = Swal.mixin({
+                    toast: true,
+                    icon: 'danger',
+                    title: 'General Title',
+                    animation: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: false,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+                toast.fire({
+                  animation: true,
+                  title: 'No Existe Registro de Días trabajados!',
+                  icon: 'danger'
+                });
+
+            }else{
+
+                var añoCalendar = data[0].detalle[0].fecha.slice(6,10);
+                var mesCalendar = data[0].detalle[0].fecha.slice(3,5);
+                var diaCalendar = data[0].detalle[0].fecha.slice(0,2);
+                inicioCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
+
+
+            }
+
+
+            events.push({title :'Inicio del Periodo' , start: data[0].fechaInicioPeriodo, backgroundColor: 'green'});
+            events.push({title :'Fin del Periodo' , start: data[0].fechaFinPeriodo, backgroundColor: 'red'});
+
+            for(var i =0; i < data[0].detalle.length; i++)
+            {
+
+                añoCalendar = data[0].detalle[i].fecha.slice(6,10);
+                mesCalendar = data[0].detalle[i].fecha.slice(3,5);
+                diaCalendar = data[0].detalle[i].fecha.slice(0,2);
+                fechaCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
+
+                events.push( {title: data[0].detalle[i].codigo , start: fechaCalendar})
+            }
+
+
+
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+              plugins: [ 'dayGrid' ],
+              defaultView: 'dayGridMonth',
+              header: {
+                center: 'addEventButton'
+              },
+              defaultDate: inicioCalendar,
+
+              events: events
+
+            });
+
+            calendar.render();
+            //console.log(data[0]);
            // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
             var htmlModal = '';
@@ -570,20 +757,38 @@
             var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
             //console.log( comisionTot );
             var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
-            var vendedor = data[0].vendedor + ' | ' + data[0].zona;
+            if( data[0].vendedor == null){
+                var vendedor = " ";
+            }else{
+                vendedor = data[0].vendedor + ' | ' + data[0].zona;
+            }
+
             var dataDetalle = data[0].detalle;
             var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
             var bonosPorc;
+            var rawtData = data[0].detalle;
+                var groupBy = function (miarray, prop) {
+                return miarray.reduce(function(groups, item) {
+                   var val = item[prop];
+                   groups[val] = groups[val] || {formulario: item.formulario, codigo: item.codigo,fecha: item.fecha, numVisitas: 0};
+                   groups[val].numVisitas += item.numVisitas;
 
-            for (i = 0; i < dataDetalle.length; i++) {
+
+
+                   return groups;
+               }, {});
+            }
+            //console.log(groupBy(rawtData,'companyname'));
+            var resultData = Object.values(groupBy(rawtData,'codigo'));
+            //console.log(resultData);
+            for (i = 0; i < resultData.length; i++) {
 
                 //console.log(dataDetalle[i].formulario);
                 htmlModal += '<tr>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + dataDetalle[i].formulario + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].numVisitas + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].codigo + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  dataDetalle[i].fecha + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + resultData[i].formulario + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].numVisitas + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].codigo + '</td>' +
                             '</tr>';
             }
 
@@ -593,29 +798,47 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
                 }
 
-            htmlPuntualidad += '<tr style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">' +
-                   '<td style="font-weight: bold" colspan="2"> Días No Reportados </td>' +
+
+            var show ;
+            if(data[0].diasLaborados == 0){
+                show =   '<td style="font-weight: bold">';
+            }else show = '<td style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">';
+
+            htmlPuntualidad +=  '<tr>' +
+                   '<td style="font-weight: bold" > Días No Reportados </td>' +
                    '<td style="font-weight: bold"> 8.7  % </td>' +
-                   '<td style="font-weight: bold" ><u>'+ data[0].diasLaborados +'</u></td>' +
-                   '<td style="font-weight: bold" ><u>'+ data[0].diasNoLAborados +'</u></td>' +
+                   show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
+                   '<td style="font-weight: bold">'+ data[0].totalClientes +'</td>' +
+                   show +'<u>'+ data[0].diasLaborados +'</u></td>' +
+                   '<td style="cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
-                   '</tr>'+
+                   '</td>'+
                    '<tr>' +
-                   '<td style="font-weight: bold" colspan="6"> Comision Integrada </td>' +
+                   '<td style="font-weight: bold" colspan="7"> Comision Integrada </td>' +
                    '<td style="font-weight: bold">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
+
             bonosPorc = parseInt(data[1].cumplimientoIndicador)*10;
+            if(bonosPorc >= 10){
+                bonosPorc = 10;
+            }
             bonoImp =( bonosPorc * comisionTot /100);
+            var ctesnvos ;
+            if(data[1].nuevosMesActual == 0){
+                ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
+            } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
             htmlBonos += '<tr>' +
-                     '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>' +
+                    ctesnvos
+                     +
+                     '<td style="font-weight: bold;cursor: pointer" data-toggle="modal" data-target="#editarVo"><u>' +  data[1].parametroCtes + '</u></td>' +
                      '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
-                     '<td style="font-weight: bold" >' +  data[1].vo + '</td>' +
+                     '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
                      '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
                      '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                      '</tr>';
@@ -627,6 +850,8 @@
             $('#vendedor').text(vendedor);
             $('#llenaBonos').html(htmlBonos);
             $('#clientesNvosModal').html(htmlModalnc);
+            $('#zonareferencia').text(data[0].zona);
+
 
            },
            error: function() {
@@ -634,11 +859,79 @@
                alert('Error, Tiempo de espera agotado');
            }
        });
-
-          // Do whatever you need with result variable
         }
 
    }
+
+   $('#diasNoLaboradosModal').on('hidden.bs.modal', function () {
+        // remove the bs.modal data attribute from it
+
+        // and empty the modal-content element
+       console.log('aquiiii');
+    });
+
+   //Función POST Parametro
+   $('#submitParametro').on('click', function(e) {
+    var parametro = document.getElementById('parametro').value;
+    var ref = document.getElementById('zonareferencia').textContent;
+
+    e.preventDefault();
+    $.ajax({
+           'headers': {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           'url': "/comisiones/postParametroCtesZona",
+           'type': 'POST',
+           'dataType': 'json',
+           'data': {referencia : ref , parametroCte : parametro},
+           'enctype': 'multipart/form-data',
+           'timeout': 4 * 60 * 60 * 1000,
+           success: function (data){
+            console.log(data);
+            var toast = Swal.mixin({
+                    toast: true,
+                    icon: 'success',
+                    title: 'General Title',
+                    animation: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: false,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            toast.fire({
+              animation: true,
+              title: 'Se Editó El parametro , En el ID:'+data,
+              icon: 'success'
+            });
+        },
+        error: function() {
+            var toast = Swal.mixin({
+                    toast: true,
+                    icon: 'danger',
+                    title: 'General Title',
+                    animation: true,
+                    position: 'top-start',
+                    showConfirmButton: false,
+                    timer: 6000,
+                    timerProgressBar: false,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+                toast.fire({
+                  animation: true,
+                  title: 'Error Vuelva a intentar Editar el Parametro!',
+                  icon: 'danger'
+                });
+        }
+    });
+
+   });
 
    function detalleDesc(numero) {
     var id = document.getElementById("zonas").value;
@@ -667,12 +960,14 @@
            'timeout': 4 * 60 * 60 * 1000,
            success: function(data){
             htmlModalDesc = '';
+            console.log(data);
             for (i = 0; i < data.length; i++) {
 
                 //console.log(data[i].companyname);
                 htmlModalDesc += '<tr>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].companyid.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].companyname.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].companyid + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].companyname + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].tranid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].recibo_mes_actual_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  data[i].pendiente_saldar_mes_anteriorl_siniva.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +

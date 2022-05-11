@@ -84,7 +84,7 @@ class TokenController extends Controller
 
     public function decrypt($encrypt, $key){
          // Store the cipher method
-         $ciphering = "AES-128-CTR";
+        $ciphering = "AES-128-CTR";
         $options = 0;
         // Non-NULL Initialization Vector for decryption
         $decryption_iv = '1234567891011121';

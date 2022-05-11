@@ -74,7 +74,6 @@ Route::get('/', function () {
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
 
-
     $level = "C";
     if(isset($_COOKIE['level'])){
         $level = $_COOKIE['level'];
@@ -144,8 +143,8 @@ Route::get('/bladeInvoice', function () {
 Route::get('/about', function () {
     $token = TokenController::getToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -160,8 +159,8 @@ Route::get('/about', function () {
 Route::get('/centros', function () {
     $token = TokenController::getToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -176,8 +175,8 @@ Route::get('/centros', function () {
 Route::get('/postventa', function () {
     $token = TokenController::getToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -192,8 +191,8 @@ Route::get('/postventa', function () {
 Route::get('/contacto', function () {
     $token = TokenController::getToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -208,8 +207,8 @@ Route::get('/contacto', function () {
 Route::get('/descontinuados', function () {
     $token = TokenController::getToken();
     if($token == 'error'){
-                                    return redirect('/logout');
-                                }
+        return redirect('/logout');
+    }
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
@@ -224,30 +223,28 @@ Route::get('/descontinuados', function () {
 
 Route::get('/logout', [LoginController::class, 'logout']);
 
-
 //---------------------------------------------------------------------------------------------------------------- PROTECTED VIEWS - ONLY CUSTOMERS -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Route::middleware([ValidateSession::class])->group(function(){
 
+    // ALEJANDRO JIMÉNEZ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 // GENERAL ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                 Route::get('/catalogo', function () {
                                     $token = TokenController::getToken();
                                     if($token == 'error'){
-                                    return redirect('/logout');
+                                        return redirect('/logout');
                                     }
                                     $rama1 = RamasController::getRama1();
                                     $rama2 = RamasController::getRama2();
                                     $rama3 = RamasController::getRama3();
                                     $level = "C";
                                     if(isset($_COOKIE['level'])){
-
-                                    $level = $_COOKIE['level'];     }
-
+                                        $level = $_COOKIE['level'];
+                                    }
                                     return view('customers.catalogo', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
                                 });
-
 
                                 Route::get('/detallesProducto',function () {
                                     $token = TokenController::getToken();
@@ -259,14 +256,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $rama3 = RamasController::getRama3();
                                     $level = "C";
                                     if(isset($_COOKIE['level'])){
-
-                                    $level = $_COOKIE['level'];     }
-
+                                        $level = $_COOKIE['level'];
+                                    }
                                     return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
-
                                 });
-
-
 
                 // PEDIDOS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -282,17 +275,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-                                $entity = '';
-
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
-
-                                $directores = ['rvelasco', 'alejandro.jimenez'];
-                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
-                                $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'pedidos' => $pedidos, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
+                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::get('/getPedidos', function (){
@@ -301,11 +288,37 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $entity = '';
-                                $username = $_COOKIE['username'];
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $directores = ['rvelasco', 'alejandro.jimenez'];
                                 in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
                                 $entity == 'ALL' ? $pedidos = CotizacionController::getCotizaciones($token, $entity) : $pedidos = CotizacionController::getCotizacionesByUser($token, $entity);
                                 return $pedidos;
+                            });
+
+                            Route::get('/getZonasApoyo', function (){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+                                $zonas = CotizacionController::getZonasApoyo($token, $username);
+                                return $zonas;
+                            });
+
+                            Route::get('/getCotizacionesZonas', function (){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+                                $cotizaciones = CotizacionController::getCotizaciones($token, $entity);
+                                return $cotizaciones;
                             });
 
                             Route::get('/pedidosAnteriores/{customer}', function ($customer){
@@ -330,7 +343,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return redirect('/logout');
                                 }
                                 $saleOrders = SaleOrdersController::getSaleOrders($token, $customer);
-
                                 return $saleOrders;
                             });
 
@@ -368,25 +380,20 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(str_starts_with($entity, 'Z1')){
                                     $entity = 'ALL';
                                 }
-
-
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
-                                // dd($data);
-                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
-
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::post('/pedido/eliminar', function (Request $request){
                                 $token = TokenController::getToken();
-
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-
                                 $response = CotizacionController::deletePedido($token, $request->idCotizacion);
-
                                 return redirect('/pedidos');
-
                             });
 
                             Route::post('/pedido/editar', function (Request $request){
@@ -413,7 +420,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $id);
                                 return $cotizacion;
                             });
@@ -447,7 +453,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-                                // dd($response->body());
                                 return $response;
                             });
 
@@ -482,7 +487,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $entity = $customer;
+                                $entity = $customer; 
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return  $data;
                             });
@@ -547,6 +552,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return  $data;
                             });
 
+                            Route::get('/getPedidosPendientesCTE', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $data = SaleOrdersController::getPedidosPendientesCTE($token);
+                                return  $data;
+                            });
+
                             Route::post('/pedidosAnteriores/RegresaEstadoPedido', function (Request $request){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
@@ -571,7 +585,13 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::post('/sendmail', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
-                                $username = $_COOKIE['username'];
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
@@ -609,8 +629,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['iva'] = number_format($detallesPedido['iva'], 2, '.', ',');
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
-
-
                                 $emails = [];
                                 $correo != "" ? array_push($emails, $correo) : $correo = "";
                                 array_push($emails, $username."@indar.com.mx");
@@ -625,29 +643,32 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     else
                                         return response()->json(['success' => 'Pedido enviado por correo correctamente'], 200);
                                 }
-
-
                              });
 
                              Route::post('/sendmailErrorNS', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $responseNS = $request->responseNS;
                                 $correo = $request->email;
                                 $emails = ['alejandro.jimenez@indar.com.mx', 'rvelasco@indar.com.mx'];
                                 Mail::to($emails)->send(new ErrorNetsuite($responseNS));
-
-                                 // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Se detectaron errores al enviar pedidos. No pudimos notificar al equipo de soporte para forzar los pedidos con error.'], 404);
                                 }
                                 else{
                                     return response()->json(['success' => 'Se detectaron errores al enviar pedidos. Hemos notificado al equipo de soporte para forzar los pedidos con error.'], 200);
                                 }
-
                              });
 
                              Route::post('/sendmailDesneg', function (Request $request) {
                                 ini_set('max_input_vars','100000' );
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                    return redirect('/logout');
+                                }
                                 $pedido = $request->pedido;
                                 $idCotizacion = $request->idCotizacion;
                                 $correo = $request->email;
@@ -661,7 +682,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $tipoDescuento = $request->tipoDescuento;
                                 $indexPedido = $request->indexPedido;
                                 $fecha = $request->fecha;
-                                $username = $_COOKIE['username'];
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $asunto = "Nuevo pedido con ".$tipoDescuento;
                                 $detallesPedido = [
                                     "subtotal" => 0,
@@ -670,7 +693,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 ];
                                 $pedidoDesneg = [];
                                 array_push($pedidoDesneg, $pedido[$indexPedido]);
-
 
                                 for($x = 0; $x < count($pedidoDesneg); $x++){
                                     $subtotal = 0;
@@ -707,8 +729,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 else{
                                     return response()->json(['success' => 'Correo enviado correctamente a '.$autoriza], 200);
                                 }
-
-
                              });
 
                              Route::get('forzarPedido', function (){
@@ -724,7 +744,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE['level'];
                                 }
                                 $permissions = LoginController::getPermissions();
-
                                 return view('customers.pedidos.forzarPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions]);
                             });
 
@@ -739,12 +758,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = CotizacionController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
                                 return $response;
                             });
 
                 // PROMOCIONES ------------------------------------------------------------------------------------------------------------------------------------------------
-
 
                             Route::get('/promociones', function (){
                                 $token = TokenController::getToken();
@@ -754,7 +772,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
-                                
+
                                 $level = "C";
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
@@ -817,7 +835,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-
                                 $promo = PromoController::getEventById($token, $id);
                                 return $promo[0];
                             });
@@ -853,10 +870,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $permissions = LoginController::getPermissions();
-
-                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
+                                return view('customers.promociones.addPromocion', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::get('/promociones/paquete', function (){
@@ -871,33 +889,27 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['level'])){
                                     $level = $_COOKIE['level'];
                                 }
-
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
                                 $permissions = LoginController::getPermissions();
-
-                                return view('customers.promociones.addPaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions]);
+                                return view('customers.promociones.addPaquete', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level,'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::get('promociones/getPromocionesInfo', function (){
                                 $token = TokenController::getToken();
                                 ini_set('max_execution_time', 300); //300 segundos = 5 minutos
-
                                 $dataCustomers = PromoController::getCustomersInfo($token);
-
                                 $customersInfo = $dataCustomers['customersInfo'];
                                 $categories = $dataCustomers['categories'];
                                 $giros = $dataCustomers['giros'];
                                 $customers = $dataCustomers['customers'];
-
-
                                 $dataArticulos = PromoController::getItems($token);
                                 $infoArticulos = $dataArticulos['items'];
                                 $proveedores = $dataArticulos['proveedores'];
                                 $marcas = $dataArticulos['marcas'];
                                 $articulos = $dataArticulos['articulos'];
-
                                 $promociones = PromoController::getAllEvents($token);
-
-
                                 $info = array($customersInfo, $categories, $giros, $customers, $infoArticulos, $proveedores, $marcas, $articulos, $promociones);
                                 return $info;
                             });
@@ -944,9 +956,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $level = $_COOKIE['level'];
                                 }
                                 return $response;
-
                             });
 
+// FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 /* ********************************************* INDARNET ************************************************ */
 
@@ -1402,6 +1414,22 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::post('/comisiones/postParametroCtesZona', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $referencia = $request->referencia;
+                   $parametroCte = $request->parametroCte ;
+
+                   $data=ComisionesController::postParametroCtesZona($token,$referencia,$parametroCte);
+
+
+                    return $data;
+
+                });
+
+
                 Route::get('/comisiones/getDetalle', function (Request $request){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
@@ -1465,6 +1493,43 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::get('/comisionesEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    return view('intranet.comisiones.comisionesEspeciales',['token' => $token, 'permissions' => $permissions]);
+
+                });
+
+                Route::post('/comisiones/postActualizarArticulosEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $json = $request->ArtEspeciales;
+
+                   $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
+
+                    return $data;
+                });
+
+                Route::post('/comisiones/postActualizarEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   //dd($request->EspecialesModel);
+                   $json = $request->EspecialesModel;
+
+                   $data=ComisionesController::postActualizarEspeciales($token,$json);
+
+                    return $data;
+                });
+
+
+
 
                 // ************************************************  Pago en Linea ***************************************************
 
@@ -1475,23 +1540,25 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $cliente= 'C015423';
+                    $cliente= 'C004955';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
                     $general = $general[0];
                     //dd($general);
                     return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general]);
                 });
 
-                Route::get('/clientes/pagoEnLinea', function(){
+                Route::get('/clientes/pagoEnLinea/{cte}/{fechaini}/{fechafin}', function($cliente, $fechaini, $fechafin){
                     $token = TokenController::getToken();
-
                     $permissions = LoginController::getPermissions();
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                    $zonas = AplicarPagoController::getZonas($token);
-                    $clientes = AplicarPagoController::getCargaListaClientes($token);
-                    return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'zonas'=>$zonas,'clientes' => $clientes]);
+
+                    $data = ClientesController::getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin);
+                    $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
+
+                    //dd($notas);
+                    return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
                 });
 
 

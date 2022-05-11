@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-lg-4 col-md-3 col-12 rowPedido">
                     <div class="skeleton-input"></div>
-                    <input type="text" class="inputPedido d-none" id="ordenCompra" name="ordenCompra">
+                    <input type="text" class="inputPedido d-none" id="ordenCompra" name="ordenCompra" value="{{$cotizacion->orderC}}">
                 </div>
             </div>
             <div class="row  text-start">
@@ -69,7 +69,7 @@
                             </div>
                         @endif
                         
-                    </div>
+                    </div> 
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-12 rowPedido">
                             <div class="skeleton-input"></div>
@@ -94,7 +94,7 @@
                                 <h5 class="d-none" id="envioLabel">Form. Envío</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
+                                @if(count($data)==1) 
                                     <input type="text" class="inputPedido" id="envio" name="envio" value="{{$data[0]['shippingWayF']}}" disabled>
                                 @else
                                     <div class="skeleton-input"></div>  
@@ -119,12 +119,8 @@
                                 <h5 class="d-none" id="fleteraLabel">Fletera</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
-                                @else
                                     <div class="skeleton-input"></div>  
-                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" disabled>
-                                @endif
+                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" autocomplete="off" disabled>
                             </div>
                     </div>
 
@@ -314,29 +310,68 @@
         <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="modalInventario" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-content-inventario">
-                                <input type="text" id="empty" value="yes" hidden>
-                                <table id="tablaInventario" class="table-striped table-bordered table-hover" style="width:100%">
+                            <input type="text" id="empty" value="yes" hidden>
+                                <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalInventario()"></i>
+                                <div class="checkSoloExistencias row d-flex flex-row justify-content-end align-items-center mb-5">
+                                        <div class="col-lg-8 col-md-6 col-12 mt-2 mt-sm-5">
+                                            <select id="filterInventario" name="filterInventario" class="form-control selectpicker" data-live-search="true">
+                                                <option selected value="none">Ordenar</option>
+                                                    <option class="optionFilterInventario" style="height: 30px !important;" value="precioDown">Precio 10 - 1</option>
+                                                    <option class="optionFilterInventario" style="height: 30px !important;" value="precioUp">Precio 1 - 10</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 col-12 mt-2 mt-sm-5">
+                                            <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -8px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias" style="margin-right: 40px;">Mostrar solo existencias</label>
+                                        </div>
+
+                                </div>
+                                <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="customHeader">Img</th>
                                             <th class="customHeader">Categoría</th>
                                             <th class="customHeader">Fab</th>
                                             <th class="customHeader">Fam</th>
-                                            <th class="customHeader">Grupo</th>
-                                            <th class="customHeader">Tipo</th>
-                                            <th class="customHeader">ID</th>
                                             <th class="customHeader">Cod Art</th>
                                             <th class="customHeader">Descripción</th>
-                                            <th class="customHeader">Multiplo</th>
-                                            <th class="customHeader">Cantidad</th>
-                                            <th class="customHeader">Precio</th>
-                                            <th class="customHeader">Unidad</th>
-                                            <th class="customHeader">Promo</th>
-                                            <th class="customHeader">Existencia</th>
+                                            <th class="customHeader">Detalles</th>
+                                            <th class="customHeader">Descuentos</th>
+                                            <th class="customHeader">Promo Vol</th>
                                             <th class="customHeader">Acciones</th>
+                                            <th>Precio</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Img</th>
+                                            <th>Categoría</th>
+                                            <th>Fabricante</th>
+                                            <th>Familia</th>
+                                            <th>Artículo</th>
+                                            <th>Descripción</th>
+                                            <th>Detalles</th>
+                                            <th>Descuentos</th>
+                                            <th>Promo Vol</th>
+                                            <th>Acciones</th>
+                                            <th>Precio</th>
                                         </tr>
                                     </thead>
-                                    <tbody></tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th class="customHeader">Img</th>
+                                            <th class="customHeader">Categoría</th>
+                                            <th class="customHeader">Fab</th>
+                                            <th class="customHeader">Fam</th>
+                                            <th class="customHeader">Cod Art</th>
+                                            <th class="customHeader">Descripción</th>
+                                            <th class="customHeader">Detalles</th>
+                                            <th class="customHeader">Descuentos</th>
+                                            <th class="customHeader">Promo Vol</th>
+                                            <th class="customHeader">Acciones</th>
+                                            <th>Precio</th>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
                                 </table>
             </div>
         </div>
@@ -396,6 +431,19 @@
             </div>
             </div>
         </div>
+        </div>
+
+        <!-- DIV PARA MOSTRAR IMAGEN DEL PRODUCTO AMPLIADA -->
+
+        <div class="containerImgProduct" id="containerImgProduct">
+            <h4 id='codigoArticuloMD'>CÓDIGO ARTICULO</h5>
+            <h4 id='descripcionArticuloMD'>DESCRIPCIÓN ARTICULO</h5>
+            <div class="magnify">
+                <div class="large" id="zoom"></div>
+                <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">
+            </div>
+            
+            <i class="fa-solid fa-xmark closeImgProductMDIcon" id="closeImgProductMDIcon" onclick="closeImgProductMD()"></i>
         </div>
 
   <br><br>
