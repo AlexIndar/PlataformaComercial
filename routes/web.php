@@ -1503,6 +1503,33 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::post('/comisiones/postActualizarArticulosEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $json = $request->ArtEspeciales;
+
+                   $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
+
+                    return $data;
+                });
+
+                Route::post('/comisiones/postActualizarEspeciales', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   //dd($request->EspecialesModel);
+                   $json = $request->EspecialesModel;
+
+                   $data=ComisionesController::postActualizarEspeciales($token,$json);
+
+                    return $data;
+                });
+
+
+
 
                 // ************************************************  Pago en Linea ***************************************************
 
