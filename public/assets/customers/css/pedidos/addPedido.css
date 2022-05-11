@@ -187,6 +187,11 @@ color: white !important;
 width: auto !important;
 }
 
+.col-descripcion{
+  float: left;
+  text-align: left !important;
+  margin-left: 20px;
+}
 
 
 .tablaPedido th{

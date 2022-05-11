@@ -88,17 +88,20 @@ class SaleOrdersController extends Controller
                 $temp_address = array(
                     "addressID" => $info[$x]->addressID,
                     "address" => $info[$x]->address,
+                    "defaultBilling" => $info[$x]->defaultbilling,
+                    "defaultShipping" => $info[$x]->defaultshipping,
                 );
                 array_push($addresses, $temp_address);
                 $insertShipmentInfo = count($data)-1;
             }
             else{ 
-                
                 array_push($shippingWays, $info[$x]->shippingWay);
                 array_push($packageDeliveries, $info[$x]->packageDelivery);
                 $temp_address = array(
                     "addressID" => $info[$x]->addressID, 
                     "address" => $info[$x]->address,
+                    "defaultBilling" => $info[$x]->defaultbilling,
+                    "defaultShipping" => $info[$x]->defaultshipping,
                 );
                 array_push($addresses, $temp_address);
             }

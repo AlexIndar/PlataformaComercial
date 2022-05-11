@@ -487,7 +487,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $entity = $customer;
+                                $entity = $customer; 
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return  $data;
                             });
