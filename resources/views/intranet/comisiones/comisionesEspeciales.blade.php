@@ -104,38 +104,56 @@ function triggerInputArt() {
 }
 
 function cargarEspecialesExcel(json) {
-    selectedItemsFromInventory=[];
+    var jsonEspeciales;
     especiales = [];
-    cuotas = [];
 
-    selectedItemsFromInventory.push({ ejercicio: 2022, aperiodo: 4, especiales });
-
+    jsonEspeciales.push({ ejercicio: 2022, aperiodo: 4, especiales });
     jsonObj = JSON.parse(json);
 
-    cantItemsPorCargar = jsonObj.length;
-    for (var x = 0; x < jsonObj.length; x++) {
-        especiales.push({ cons: jsonObj[x]['Zona'], nombre: jsonObj[x]['E01'], tipo : jsonObj[x]['pesos'], cuotas });
-        cuotas.push({ zona: jsonObj[x]['Zona'], cuota: jsonObj[x]['E01'] });
-    }
+    let claves = Object.keys(jsonObj[0]);
 
-    console.log(selectedItemsFromInventory);
+    for ( var x=0 ; x < claves.length; x++ ){
+        cuotas = [];
+        //console.log(jsonObj[x]);
+        for ( var y=2 ; y < jsonObj.length; y++){
+
+        //console.log(jsonObj[y]['E00']);
+        cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
+
+        }
+
+        //console.log(cuotas);
+           /*  articulo.push({valor : jsonObj[index][x+1]});
+            cuotas.push({ zona: jsonObj[index]['E00'], cuota: parseFloat(jsonObj[x]['E01'])}); */
+        especiales.push({ cons: x+1, nombre: jsonObj[1]['E'+(x+1)], tipo : jsonObj[0]['E'+(x+1)] ,cuotas});
+    }
+    console.log(especiales);
+    jsonEspeciales = JSON.stringify(especiales);
 
     document.getElementById("excelEspeciales").value = "";
 }
 
 function cargarArticulosExcel(json) {
-    articulosJson = [];
-    articulo = [];
 
-    articulosJson.push({ especial: 1 , articulo });
-
+    especial =[];
     jsonObj = JSON.parse(json);
     cantItemsPorCargar = jsonObj.length;
-    for (var x = 0; x < jsonObj.length; x++) {
-        articulo.push({ valor: jsonObj[x]['E1'] });
-    }
+    var property = '';
+    let claves = Object.keys(jsonObj[0]);
 
-    console.log(JSON.stringify(articulosJson));
+    for ( var x=0 ; x < claves.length; x++ ){
+        articulo = [];
+        for (var index in jsonObj){
+
+            articulo.push({valor : jsonObj[index][x+1]});
+
+        }
+        especial.push({ especial:x+1, articulo});
+    }
+    var jsonArticulos;
+    jsonArticulos = JSON.stringify(especial);
+    console.log(jsonArticulos);
+
 
     document.getElementById("excelArticulos").value = "";
 }
