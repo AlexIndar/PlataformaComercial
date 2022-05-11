@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script> -->
 
 
@@ -42,7 +43,7 @@
   <!-- DATATABLES -->
   <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"> -->
   <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.1/css/fixedHeader.dataTables.min.css"> -->
-
+  @yield('css')
 
 </head>
 
@@ -457,7 +458,38 @@
               </ul>
             </li>
             @endif
-
+            @if(in_array('Planeador',$permissions))
+            <li class="nav-item">
+              @if($active == 'Logistica')
+                <a href="#" class="nav-link active">
+              @else
+                <a href="#" class="nav-link">
+              @endif
+              
+                <i class="fas fa-boxes nav-icon"></i>
+                <p>
+                  Logistica
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('logistica.mesaControl.planeador') }}" class="nav-link">
+                    <i class="fas fa-solid fa-clipboard-list"></i>
+                    <p> Mesa Control</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('logistica.distribucion') }}" class="nav-link">
+                    <i class="fas fa-solid fa-dolly"></i>
+                    <p>Distribución</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            @endif
             @if(in_array('CXC', $permissions))
             <li class="nav-item">
                 @if($active == 'CXC')

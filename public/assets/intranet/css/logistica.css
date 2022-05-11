@@ -1,0 +1,46 @@
+.buttons-collection{
+    background-color: #002868;
+}
+.title-table{
+    background-color: #002868; 
+    color:white;
+}
+.EnTiempo{
+    background-color: #00bd00
+}
+.Atrasado{
+    background-color: #db8606;
+}
+.Valorando{
+    background-color: #b1a6a6;
+}
+.dt-button-collection > .dropdown-menu > .buttons-columnVisibility{
+    background-color: #002868;
+}
+.dt-button-collection > .dropdown-menu{
+    background-color: #002868;
+}
+.encabezado-table{
+    font-size: small;
+}
+.btn-orange{
+    background-color: #dc8a35!important;
+    border-color: #dc8a35!important;
+}
+.close{
+    color: white;
+}
+.close:hover{
+    color: white;
+}
+.btn-plataform{
+    background-color: #002868;
+    color: white;
+}
+.btn-plataform:hover{
+    background-color: #294a7e;
+    color: white;
+}
+#agregarGuiaNumeroGuia,#agregarGuiaImporte{
+    font-weight: bold;
+}
