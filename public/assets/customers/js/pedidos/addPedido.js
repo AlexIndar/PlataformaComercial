@@ -46,6 +46,7 @@ var entityCte;
 var tipoPedido = 0;
 //TIPO GET ITEM BY ID. 0 = CON AJAX, EJECUTAR REQUEST DE API GETITEMBYID; 1 = DEL INVENTARIO, SIRVE PARA CARGAR PEDIDOS CREADOS POR CLIENTES Y CUANDO SON MUY LARGOS (MUCHAS PARTIDAS) NO DE PROBLEMAS PARA CARGARLOS
 var tipoGetItemById = 0;
+var pedidoCargadoCte = 0;
 
 $(document).ready(function() {
 
@@ -837,6 +838,7 @@ function getItemById(item, separa) {
             }
         }
         else if (art == undefined && cantItemsCargados == cantItemsPorCargar){
+                alert("Artículo "+item['articulo']+" no encontrado en inventario");
                 var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
                 newJson = newJson + ']';
                 jsonItemsSeparar = newJson;
@@ -2851,13 +2853,10 @@ function loadPendingCustomerSaleOrder(id){ //Cargar orden capturada por el clien
             else{
                 message = 'Forma envio: '+order[0]['formaEnvio']+' no encontrada';
             }
-            Swal.fire(
-                'Alerta',
-                message,
-                'info'
-            );
+            Swal.fire('Alerta',message,'info');
         }
     }
+    pedidoCargadoCte = order[0]['id'];
     $('#selectEnvio').val(indexShippingWay); //Seleccionar Forma Envío según el index de la forma envío que seleccionó el cliente
     $('#selectEnvio').selectpicker('refresh');
     $('#fletera').val(order[0]['fletera']); //Seleccionar Fletera según el index de la forma envío que seleccionó el cliente
