@@ -35,16 +35,32 @@ $(document).ready(function(){
              }
         });   
 
-        
+        $('#zonas').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+            var zona = document.getElementById('zonas').value;
+            alert(zona);
+            var filtered = [];
+            console.log(cotizaciones);
+            // cotizaciones.forEach(cotizacion => {
+            //     if(cotizacion[key] == value)
+            //         filtered.push(cotizacion);
+            // });
+            // DOMCotizaciones(filtered.reverse());
+        });
 
 
         $('#filterKey').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
             $('#filterValue').removeAttr('disabled');
             $('#filtrarPedidos').removeAttr('disabled');
-            console.log(clickedIndex);
-            // document.getElementById('selectZonas').classList.remove('d-none');
-            // document.getElementById('inputFiltro').classList.add('d-none');
-            // document.getElementById('filtrarPedidos').classList.add('d-none');
+            if(clickedIndex == 5){
+                document.getElementById('selectZonas').classList.remove('d-none');
+                document.getElementById('inputFiltro').classList.add('d-none');
+                document.getElementById('filtrarPedidos').classList.add('d-none');
+            }
+            else{
+                document.getElementById('selectZonas').classList.add('d-none');
+                document.getElementById('inputFiltro').classList.remove('d-none');
+                document.getElementById('filtrarPedidos').classList.remove('d-none');
+            }
         });
 });
 
@@ -89,9 +105,7 @@ function DOMCotizaciones(cotizaciones){
     while (row.firstChild) {
         row.removeChild(row.firstChild);
     }
-    
     cotizaciones = cotizaciones.reverse();
-    console.log(cotizaciones);
     for(var x = 0; x < cotizaciones.length; x++){
         var ordenCompra = cotizaciones[x]['orderC'] != null ? cotizaciones[x]['orderC'] : "";
         var container = document.createElement('div');

@@ -46,6 +46,7 @@ var entityCte;
 var tipoPedido = 0;
 //TIPO GET ITEM BY ID. 0 = CON AJAX, EJECUTAR REQUEST DE API GETITEMBYID; 1 = DEL INVENTARIO, SIRVE PARA CARGAR PEDIDOS CREADOS POR CLIENTES Y CUANDO SON MUY LARGOS (MUCHAS PARTIDAS) NO DE PROBLEMAS PARA CARGARLOS
 var tipoGetItemById = 0;
+var pedidoCargadoCte = 0;
 
 $(document).ready(function() {
 
@@ -837,6 +838,7 @@ function getItemById(item, separa) {
             }
         }
         else if (art == undefined && cantItemsCargados == cantItemsPorCargar){
+                alert("Artículo "+item['articulo']+" no encontrado en inventario");
                 var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
                 newJson = newJson + ']';
                 jsonItemsSeparar = newJson;
@@ -1350,7 +1352,7 @@ function addRowPedido(item, fila, indexPedido) {
     else 
         cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
-    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+")'>-</button></div><input type='text' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2' readonly><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+", "+cantidadItems+","+indexPedido+")'>+</button></div></div>";
+    cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+")'>-</button></div><input type='text' onkeyup='updateRowQuantity(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+", event)' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+", "+cantidadItems+","+indexPedido+")'>+</button></div></div>";
 
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
         cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
@@ -1592,6 +1594,38 @@ function decreaseItemCant(item, multiplo, cant, index) {
     }
 }
 
+function updateRowQuantity(item, multiplo, cant, index, e){
+        var keycode = e.keyCode || e.which;
+        if (keycode == 13) {
+            itemToFocus = item;
+            cant = document.getElementById('cant-'+item+"-"+index).value;
+            var newCant = (parseFloat(cant)).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+            newCant = newCant.slice(1, -1);
+            newCant = newCant.split('.')[0];
+            document.getElementById('cant-'+item+"-"+index).value = newCant;
+            var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
+            var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
+            var cantidadPorMultiplo =  validarMultiplo(multiploVenta, cant);
+            console.log(cantidadPorMultiplo);
+            var table = document.getElementById('tablaPedido');
+            for(var x = 0; x < table.rows.length; x++){
+                if(table.rows[x].cells[1].innerText.indexOf(item) >=0){
+                        table.rows[x].classList.add('fadeOut');
+                }
+            }
+            pedido[index]['items'][indexItem]['cantidad'] = cantidadPorMultiplo;
+            var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
+            selectedItemsFromInventory[indexInventory]['cant'] = cantidadPorMultiplo;
+            var jsonObj = JSON.parse(jsonItemsSeparar);
+            var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
+            jsonObj[indexjsonObj]['quantity'] = (cantidadPorMultiplo).toString(); 
+            jsonItemsSeparar = JSON.stringify(jsonObj);
+            separarPedidosPromo(jsonItemsSeparar, false);
+        }
+}
 
 
 function triggerInputFile() {
@@ -2785,7 +2819,7 @@ function loadDatasetPedidosClientes(){
     $('#modalPedidosClientes').modal('show');
 }
 
-function loadPendingCustomerSaleOrder(id){
+function loadPendingCustomerSaleOrder(id){ //Cargar orden capturada por el cliente
     var order = [];
     var x = 0;
     while(x < pendingSaleOrders.length){
@@ -2806,6 +2840,29 @@ function loadPendingCustomerSaleOrder(id){
     }
     document.getElementById('comments').value = order[0]['comentario'];
     document.getElementById('ordenCompra').value = order[0]['ordenCompra'];
+    var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === order[0]['formaEnvio']);
+    if(indexShippingWay == -1){ //si no se encuentra la forma de envío
+        if(order[0]['formaEnvio'] == 'GDL-07 CLIENTE RECOGE'){ //esta forma de envío no existe en netsuite, hay que cambiarla por la que sí existe
+            indexShippingWay = shippingWaysList.findIndex(o => o.fletera === "GDL07 CLIENTE RECOGE");
+        }
+        else{ 
+            var message = "";
+            if(order[0]['formaEnvio'] == ""){ //si la forma de envío viene vacía
+                message = 'El pedido no cuenta con forma de envío';
+            }
+            else{ //no se encuentra esa forma de envío
+                message = 'Forma envio: '+order[0]['formaEnvio']+' no encontrada';
+            }
+            Swal.fire('Alerta',message,'info');
+        }
+    }
+    pedidoCargadoCte = order[0]['id'];
+    $('#selectEnvio').val(indexShippingWay); //Seleccionar Forma Envío según el index de la forma envío que seleccionó el cliente
+    $('#selectEnvio').selectpicker('refresh');
+    $('#fletera').val(order[0]['fletera']); //Poner Fletera que seleccionó el cliente
+    if(order[0]['fletera'] == ""){ //si la fletera viene vacía
+        Swal.fire('Alerta','El pedido no cuenta con fletera','info');
+    }
     tipoPedido = 1;
     tipoGetItemById = 1;
     $('#modalPedidosClientes').modal('hide');

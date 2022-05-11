@@ -88,7 +88,7 @@
             <h5 onclick="navigate('/logout', false)">Cerrar sesión</h5>
         @else
             <h5 onclick="activeModal(2)">Regístrate  &nbsp;&nbsp;|</h5>
-            <h5 onclick="activeModal(1)">Iniciar sesión</h5>
+            <h5 onclick="activeModal(1)">Iniciar sesion</h5>
         @endif
         <h5 onclick="navigate('/faq', false)">Ayuda</h5>
         <i onclick="navigate('/faq', false)" class="fas fa-question-circle question fa-sm"></i> 

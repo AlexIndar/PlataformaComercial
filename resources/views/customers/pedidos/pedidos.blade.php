@@ -58,7 +58,7 @@
 
         <form style="display: none" action="/pedido/nuevo" method="POST" id="formNuevo">
             @csrf
-            <input type="hidden" id="entity" name="entity" value="ALL"/>
+            <input type="hidden" id="entity" name="entity" value="{{$entity}}"/>
         </form>
 
         <!-- FORM OCULTO PARA ELIMINAR COTIZACIÓN GUARDADA-->

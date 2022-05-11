@@ -116,17 +116,9 @@ function cargarEspecialesExcel(json) {
 
     for ( var x=0 ; x < claves.length; x++ ){
         cuotas = [];
-        //console.log(jsonObj[x]);
         for ( var y=2 ; y < jsonObj.length; y++){
-
-        //console.log(jsonObj[y]['E00']);
-        cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
-
+            cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
         }
-
-        //console.log(cuotas);
-           /*  articulo.push({valor : jsonObj[index][x+1]});
-            cuotas.push({ zona: jsonObj[index]['E00'], cuota: parseFloat(jsonObj[x]['E01'])}); */
         especiales.push({ cons: x+1, nombre: jsonObj[1]['E'+(x+1)], tipo : jsonObj[0]['E'+(x+1)] ,cuotas});
     }
     jsonEspeciales.push({ ejercicio: 2022, aperiodo: 4, especiales });
@@ -135,6 +127,7 @@ function cargarEspecialesExcel(json) {
     json = JSON.stringify(jsonCompleto);
     json = json.slice(1,-1);
     console.log(json);
+
     $.ajax({
            'headers': {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
