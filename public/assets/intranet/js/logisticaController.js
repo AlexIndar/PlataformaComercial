@@ -43,6 +43,7 @@ const logisticaController = {
                 $('#content-cajas-pendientes').empty();
                 $('#modal-cajas-pendientes').modal('show');
                 $.each(data,function(index,val){
+                    let fechaSurtido = val.fechaSurtido;
                     $('#content-cajas-pendientes').append('<tr>'
                         +'<td>'+ val.pedidoConsolidado +'</td>'
                         +'<td>'+ val.formaEnvio +'</td>'
@@ -53,7 +54,7 @@ const logisticaController = {
                         +'<td>'+ val.ubicacionOrigen +'</td>'
                         +'<td>'+ val.usuario +'</td>'
                         +'<td>'+ val.nombre +'</td>'
-                        +'<td>'+ val.fechaSurtido +'</td>'
+                        +'<td>'+ fechaSurtido.split('T')[0] +'</td>'
                         +'<td>'+ val.tiempoEspera +'</td>'
                         +'</tr>');
                 });

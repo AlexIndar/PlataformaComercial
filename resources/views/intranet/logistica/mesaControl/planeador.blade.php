@@ -62,7 +62,7 @@
     </section>
 </div>
 <div class="modal fade" id="modal-planeador-detail">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header title-table">
                 <h4 class="modal-title ">Planeador Detalle</h4>
@@ -99,7 +99,7 @@
     <!-- /.modal-dialog -->
 </div>
 <div class="modal fade" id="modal-cajas-pendientes">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header title-table">
                 <h4 class="modal-title ">Cajas Pendientes</h4>
