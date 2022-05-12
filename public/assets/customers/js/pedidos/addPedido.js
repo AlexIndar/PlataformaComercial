@@ -266,7 +266,7 @@ $(document).ready(function() {
         $('#sucursal').selectpicker('refresh');
 
         var defaultBillingSelected = false;
-        var indexDefaultBilling;
+        var indexDefaultBilling = 0;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
             if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
@@ -275,6 +275,11 @@ $(document).ready(function() {
                 $('#sucursal').val(addresses[x]['addressID']); 
                 $('#sucursal').selectpicker('refresh');
             }
+        }
+
+        if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
+            $('#sucursal').val(addresses[0]['addressID']); 
+            $('#sucursal').selectpicker('refresh');
         }
 
         fillShippingWaysList();
@@ -1730,7 +1735,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             pedidoJson.push(temp); 
             itemsJson = [];
         }
-     
+ 
         var json = {
             idCotizacion: type == 2 || type == 4 ? document.getElementById('idCotizacion').value : 0,
             companyId: idCustomer,
@@ -2693,7 +2698,8 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
         $('#sucursal').selectpicker('refresh');
 
         var defaultBillingSelected = false;
-        var indexDefaultBilling;
+        var indexDefaultBilling = 0;
+
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
             if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
@@ -2702,6 +2708,11 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
                 $('#sucursal').val(addresses[x]['addressID']); 
                 $('#sucursal').selectpicker('refresh');
             }
+        }
+
+        if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
+            $('#sucursal').val(addresses[0]['addressID']); 
+            $('#sucursal').selectpicker('refresh');
         }
 
         fillShippingWaysList();
