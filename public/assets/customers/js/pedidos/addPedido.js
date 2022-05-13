@@ -273,14 +273,14 @@ $(document).ready(function() {
                 defaultBillingSelected = true;
                 indexDefaultBilling = x;
                 $('#sucursal').val(addresses[x]['addressID']); 
-                $('#sucursal').selectpicker('refresh');
             }
         }
 
         if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']); 
-            $('#sucursal').selectpicker('refresh');
         }
+
+        $('#sucursal').selectpicker('refresh'); //el refresh debe ir después de todos los cambios
 
         fillShippingWaysList();
 
@@ -1640,7 +1640,9 @@ function downloadPlantillaPedido(){
     window.location.href = '/downloadTemplatePedido';
 }
 
-// FUNCIÓN GUARDAR PEDIDO WEB
+//----------------------------------------------------------------------------  FUNCIÓN GUARDAR PEDIDO WEB  -------------------------------------------------------------------
+
+
 function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = ACTUALIZAR Y LEVANTAR PEDIDO
     if(pedido.length == 0){
         alert('Agrega artículos al pedido');
@@ -1701,6 +1703,43 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             });
         }
 
+        // -------------------------- SEPARAR ARTICULOS BACKORDER EN PEDIDOS INDEPENDIENTES (1 ARTICULO POR PEDIDO) --------------------------------------------------
+        var x = 0;
+        while(x < pedido.length){ //RECORRER TODO EL PEDIDO
+            if(pedido[x]['tipo'] == 'BO' && pedido[x]['items'].length > 1){ //SI EL TIPO DEL PEDIDO ES BACKORDER Y TIENE MÁS DE 1 ITEM
+                var descuento = pedido[x]['descuento']; //OBTENER VALORES GENERALES DEL PEDIDO
+                var evento = pedido[x]['evento'];
+                var marca = pedido[x]['marca'];
+                var plazo = pedido[x]['plazo'];
+                var regalo = pedido[x]['regalo'];
+                var tipo = pedido[x]['tipo'];
+                var items = [];
+                var y = 0;
+                while(y < pedido[x]['items'].length){ //RECORRER TODOS LOS ITEMS QUE TIENE EL PEDIDO
+                        items.push(pedido[x]['items'][y]); //GUARDAR LOS ITEMS EN UN ARREGLO PARA PODER ELIMINAR LA FILA DEL PEDIDO
+                    y++;
+                }
+                pedido.splice(x, 1); //ELIMINAR FILA DEL PEDIDO
+                var z = 0;
+                while(z < items.length){ //POR CADA ITEM QUE TENÍA EL PEDIDO, HACER UNA NUEVA FILA DEL PEDIDO
+                    var rowPedido = {
+                        descuento: descuento,
+                        plazo: plazo,
+                        marca: marca,
+                        tipo: tipo,
+                        regalo: regalo,
+                        evento: evento,
+                        items: []
+                    };
+                    rowPedido['items'].push(items[z]); //AGREGAR 1 ITEM POR FILA
+                    pedido.push(rowPedido); //AGREGAR NUEVA FILA AL PEDIDO, 1 A 1 LOS ITEMS
+                    z++;
+                }
+            }
+            x++;
+        }
+
+        // ------------------------------------------------------- ARMAR JSON PARA ENVIAR A BACK ----------------------------------------------------------------------
 
         for(var x = 0; x < pedido.length; x++){
             var descuento = pedido[x]['descuento'];
@@ -1754,6 +1793,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
         };
 
         console.log(JSON.stringify(json));
+        console.log(json);
 
         if(!update){ // No hubo modificaciones y puede guardarse el pedido
             $.ajax({
@@ -1767,15 +1807,15 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
                 'enctype': 'multipart/form-data',
                 'timeout': 2*60*60*1000,
                 success: function(data){
-                        if(type == 3){
-                            noCotizacionNS = data['idCotizacion']; //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
+                        if(type == 3){ //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
+                            noCotizacionNS = data['idCotizacion']; 
                             saveNS();
                         }
                         else if (type == 4){ //se está editando el pedido, ya tengo el numero de cotización en el html 
                             noCotizacionNS = document.getElementById('idCotizacion').value;
                             saveNS();
                         }
-                        else{
+                        else{ // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
                             window.location.href = '/pedidos';
                         }
                 }, 
@@ -2706,14 +2746,14 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
                 defaultBillingSelected = true;
                 indexDefaultBilling = x;
                 $('#sucursal').val(addresses[x]['addressID']); 
-                $('#sucursal').selectpicker('refresh');
             }
         }
 
         if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']); 
-            $('#sucursal').selectpicker('refresh');
         }
+
+        $('#sucursal').selectpicker('refresh');
 
         fillShippingWaysList();
 
