@@ -55,7 +55,8 @@
                     <div class="col-sm-12 invoice-col ">
                         <p class="lead "> <b> Cuentas Por Pagar y Crédito </b></p>
                     </div>
-                    <div class="col-sm-7 invoice-col">
+
+                    <div class="col-sm-7 invoice-col table-responsive p-0">
                         <strong>Saldo</strong><br>
                         <b>Total de Crédito:</b> <span style="font-size: 15px" class="badge badge-primary">$ {{ number_format($general->creditLimit,2) }}</span>  <b>Días de Crédito : {{ $general->diasCredito }}</b><br>
                         <table id="creditTable" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:73%">
@@ -77,7 +78,6 @@
                                 <td><span style="font-size: 15px" class="badge badge-warning">$ {{ number_format($general->mayor90,2) }}</span></td>
                             </tr>
                            </tbody>
-
                         </table>
 
                        {{--  @if( $general->saldo <= 0)
@@ -96,10 +96,11 @@
                         <span class="input-group-text">
                         <i class="far fa-calendar-alt"></i>
                         </span>
-                        <input type="text" class="form-control float-right" id="edoCuenta">
-                        <a href="#" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>&nbsp;
-                        <button  class="btn btn-success"  id="btnPagar">Ir a Pagar </button>
+                        <input type="text" class="form-control float-right" id="edoCuenta">&nbsp;
+                        <a href="#" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>
                     </div>
+                    <br>
+                    <button  class="btn btn-success form-control"  id="btnPagar"> Ir a Pagar &nbsp; &nbsp  <i class="fas fa-money-bill"></i></button>
                   </div>
                  </div>
                  <hr>

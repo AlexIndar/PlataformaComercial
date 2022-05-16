@@ -94,7 +94,7 @@
                                   <td> <a href="#" class="text-muted">{{ $nota->transaction_id }}</a></td>
                                   <td class="text-center">{{ number_format($nota->amount, 2) }}</td>
                                   <td class="text-center">{{ substr($nota->fecha_nota, 0, 10) }}</td>
-                                  <td class="text-center">{{ substr($nota->fecha_nota, 0, 10)  }}</td>
+                                  <td class="text-center"> NA </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -184,7 +184,14 @@
                 </div>
                 <div class="col-md-12">
                     <label for="">Selecciona la Factura a Asignar la N.C</label>
-                    <input class="form-control" type="number" name="idFactura" id="idFactura" placeholder="Ingrese No. Factura">
+                    <select class="form-control" name="" id="">
+                        <option value="1">813535</option>
+                        <option value="2">Ejemplo2</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="">Ingrese el monto a Abonar </label>
+                    <input class="form-control" type="number" name="" id="">
                 </div>
              </div>
           </div>
@@ -265,27 +272,38 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
 
  $('#tableNotas tbody').on('click', 'tr', function () {
     //jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
+    var data = tableNotas.row( this ).data();
     $('#notasModal').modal('show');
-     var data = tableNotas.row( this ).data();
-     console.log(data);
-        descuento -= parseFloat(data[3]);
+    var hide = jQuery(this);
+     //Función Agregar NC
+    $('#agregarNc').on('click', function(e) {
+        hide.toggle("scale");
+        e.preventDefault();
+        console.log(data);
+        data[3] = data[3].replace(/,/g, "");
+        descuento += parseFloat(data[3]);
         $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 
 
-    total = subTotal - descuento;
-    $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+        total = subTotal - descuento;
+        $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+        var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+        t.row.add( [
+           data[0],
+           data[1],
+            data[2],
+            monto,
+            data[4],
+            data[5]
 
-    t.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        monto,
-        data[4],
-        data[5]
+        ], ).draw();
 
-    ], ).draw();
+
+    });
+
  } );
+
+
 
  $('#example2 tbody').on('click', 'tr', function () {
     jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
@@ -303,7 +321,8 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
     $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
     var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-    table.row.add( [
+    if(data[1]=='Factura'){
+        table.row.add( [
        data[0],
        data[1],
         data[2],
@@ -312,6 +331,20 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
         data[5]
 
     ], ).draw();
+
+    }else{
+        tableNotas.row.add( [
+        data[0],
+        data[1],
+        data[2],
+        monto,
+        data[4],
+        data[5]
+
+    ], ).draw();
+    }
+
+
  } );
 
 });

@@ -487,7 +487,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $entity = $customer; 
+                                $entity = $customer;
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return  $data;
                             });
@@ -1509,7 +1509,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                    $json = $request->ArtEspeciales;
-
+                    //dd($json);
                    $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
 
                     return $data;
@@ -1520,7 +1520,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                   //dd($request->EspecialesModel);
+
+                    //dd($request->EspecialesModel);
                    $json = $request->EspecialesModel;
 
                    $data=ComisionesController::postActualizarEspeciales($token,$json);
@@ -1542,6 +1543,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $cliente= 'C004955';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
+                    //dd($general)
                     $general = $general[0];
                     //dd($general);
                     return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general]);

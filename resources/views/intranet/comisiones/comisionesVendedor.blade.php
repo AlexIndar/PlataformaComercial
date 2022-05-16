@@ -152,15 +152,25 @@
                                     <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  > BONOS </th>
                                  </tr>
                                  <tr >
-                                    <th style="width:320px">Clientes Nuevos</th>
-                                    <th>Parametro Nvos Ctes</th>
                                     <th>Clientes Activos</th>
+                                    <th>Límite de Especificación</th>
                                     <th>Valor Objetivo</th>
                                     <th>%  de Alcance</th>
                                     <th>Importe</th>
                                  </tr>
                               </thead>
                               <tbody id="llenaBonos">
+                              </tbody>
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th>Clientes Nuevos (ref TdeP )</th>
+                                    <th>Límite de Especificación</th>
+                                    <th>Valor Objetivo</th>
+                                    <th>%  de Alcance</th>
+                                    <th>Importe</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaNvosCtes">
                               </tbody>
                            </table>
                         </div>
@@ -214,7 +224,7 @@
    <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
          <div class="modal-header bg-indarBlue">
-            <h3 class="text-center title ml-auto">Detalle de Visitas y Días Laborados</h3>
+            <h4 class="text-center title ml-auto">Detalle de Clientes NO Visitados</h4>
             <h6 id ="vendedor" class="text-center title ml-auto"></h6>
             <input type="text" id="typeFormInf" value="" hidden>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -559,8 +569,8 @@
 
                if(html == ''){
                    html += '<tr>' +
-                   '<td style="font-weight: bold" > Cobranza </td>' +
-                   '<td style="font-weight: bold">' + sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                   '<td style="font-weight: bold; cursor: pointer" ><a href="/comisionesPorCliente" target="_blank"> Cobranza</a> </td>' +
+                   '<td style="font-weight: bold; cursor: pointer "><a href="/comisionesPorCliente" target="_blank">' + sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</a></td>' +
                    '<td style="font-weight: bold">' + sumaRMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaPSMASI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaPSEMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -678,7 +688,7 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            console.log(data[0].detalle);
+            //console.log(data[0].detalle);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -753,10 +763,11 @@
             var htmlModal = '';
             var htmlBonos = '';
             var htmlModalnc = '';
+            var htmlNvosCtes = '';
 
             var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
             //console.log( comisionTot );
-            var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
+
             if( data[0].vendedor == null){
                 var vendedor = " ";
             }else{
@@ -807,6 +818,17 @@
             if(data[0].diasLaborados == 0){
                 show =   '<td style="font-weight: bold">';
             }else show = '<td style="cursor: pointer"  data-toggle="modal" data-target="#diasModal">';
+            var porClientesVisitados;
+            porClientesVisitados = data[0].totalClientes * .9;
+
+            //console.log(porClientesVisitados);
+            //console.log(data[0].totalClientesVisitados );
+            if ( data[0].totalClientesVisitados <= porClientesVisitados ){
+               importePunt = 0.00;
+               data[0].porcAlcanzado=0.00;
+            }
+
+            var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
 
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" > Días No Reportados </td>' +
@@ -824,20 +846,29 @@
                    '</tr>';
 
 
-            bonosPorc = parseInt(data[1].cumplimientoIndicador)*10;
+            bonosPorc = (data[1].cumplimientoIndicador)*10;
+            //console.log(data[1].cumplimientoIndicador);
             if(bonosPorc >= 10){
                 bonosPorc = 10;
             }
+
             bonoImp =( bonosPorc * comisionTot /100);
             var ctesnvos ;
+            var le = data[1].real -  data[1].nuevosMesActual;
             if(data[1].nuevosMesActual == 0){
                 ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
             } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
-            htmlBonos += '<tr>' +
-                    ctesnvos
-                     +
-                     '<td style="font-weight: bold;cursor: pointer" data-toggle="modal" data-target="#editarVo"><u>' +  data[1].parametroCtes + '</u></td>' +
+            htmlBonos += '<tr>'+
                      '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
+                     '<td style="font-weight: bold" >' +  le + '</td>' +
+                     '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
+                     '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
+                     '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                     '</tr>';
+
+            htmlNvosCtes += '<tr>'+
+                     ctesnvos +
+                     '<td style="font-weight: bold" >' +  le + '</td>' +
                      '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
                      '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
                      '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
@@ -849,6 +880,7 @@
             $('#vendedorbon').text(vendedor);
             $('#vendedor').text(vendedor);
             $('#llenaBonos').html(htmlBonos);
+            $('#llenaNvosCtes').html(htmlNvosCtes);
             $('#clientesNvosModal').html(htmlModalnc);
             $('#zonareferencia').text(data[0].zona);
 
@@ -867,7 +899,7 @@
         // remove the bs.modal data attribute from it
 
         // and empty the modal-content element
-       console.log('aquiiii');
+       console.log('diasNoLaboradosModal');
     });
 
    //Función POST Parametro
@@ -887,7 +919,7 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            console.log(data);
+            //console.log(data);
             var toast = Swal.mixin({
                     toast: true,
                     icon: 'success',
@@ -960,7 +992,7 @@
            'timeout': 4 * 60 * 60 * 1000,
            success: function(data){
             htmlModalDesc = '';
-            console.log(data);
+            //console.log(data);
             for (i = 0; i < data.length; i++) {
 
                 //console.log(data[i].companyname);
