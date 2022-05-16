@@ -280,7 +280,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $userRol = $userData->permissions;
                                 $directores = ['rvelasco', 'alejandro.jimenez'];
                                 in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
-                                if($userRol == "VENDEDOR"){
+                                if($userRol == "VENDEDOR" || $userRol == "VENDEDOR TEL"){
                                     $zone = MisSolicitudesController::getZone($token, $username);
                                     if($zone->getStatusCode()== 400){
                                         return redirect('/Intranet');
@@ -388,17 +388,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $entity = $request->entity;
-                                $zonaInfo = MisSolicitudesController::getZone($token,$entity);
-                                $zona = json_decode($zonaInfo->body())->description;
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+                                $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                                if(isset(json_decode($zonaInfo->body())->status)){
+                                    $entity = 'ALL';
+                                    $zona = 'ALL';
+                                }
+                                else{
+                                    $entity = json_decode($zonaInfo->body())->description;
+                                    $zona = json_decode($zonaInfo->body())->description;
+                                }
                                 $level = $entity[0];
                                 if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
                                 if(str_starts_with($entity, 'Z1')){
                                     $entity = 'ALL';
+                                    $zona = 'ALL';
                                 }
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $zona);
-                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
-                                $username = $userData->typeUser;
-                                $userRol = $userData->permissions;
+                               
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
