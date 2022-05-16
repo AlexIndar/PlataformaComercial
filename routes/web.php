@@ -388,12 +388,14 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $entity = $request->entity;
+                                $zonaInfo = MisSolicitudesController::getZone($token,$entity);
+                                $zona = json_decode($zonaInfo->body())->description;
                                 $level = $entity[0];
                                 if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
                                 if(str_starts_with($entity, 'Z1')){
                                     $entity = 'ALL';
                                 }
-                                $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
+                                $data = SaleOrdersController::getInfoHeatWeb($token, $zona);
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
