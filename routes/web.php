@@ -278,7 +278,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
-                                $entity = 'ALL';
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
+                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
                                 if($userRol == "VENDEDOR"){
                                     $zone = MisSolicitudesController::getZone($token, $username);
                                     if($zone->getStatusCode()== 400){
@@ -975,9 +976,14 @@ Route::middleware([ValidateSession::class])->group(function(){
                 /* ********************************************* INDARNET ************************************************ */
 
                  Route::get('/Intranet', function(){
-                    $entity = "C002620";
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
-                    return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions]);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions,  'username' => $username, 'userRol' => $userRol]);
                 });
 
                 //////// MIS SOLICITUDES /////

@@ -617,6 +617,7 @@ function prepareJsonSeparaPedidos(separa){
 
 
 function separarPedidosPromo(json, separar){  //envía json a back y recibe pedido separado
+    console.log(json);
     if(separar && json == null){
         tipoGetItemById = 0;
         setTimeout(prepareJsonSeparaPedidos(true), 1000);
@@ -1703,7 +1704,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
             });
         }
 
-        // -------------------------- SEPARAR ARTICULOS BACKORDER EN PEDIDOS INDEPENDIENTES (1 ARTICULO POR PEDIDO) --------------------------------------------------
+        // -------------------------- SEPARAR ARTICULOS BACK ORDER EN PEDIDOS INDEPENDIENTES (1 ARTICULO POR PEDIDO) --------------------------------------------------
         var x = 0;
         while(x < pedido.length){ //RECORRER TODO EL PEDIDO
             if(pedido[x]['tipo'] == 'BO' && pedido[x]['items'].length > 1){ //SI EL TIPO DEL PEDIDO ES BACKORDER Y TIENE MÁS DE 1 ITEM
@@ -1820,7 +1821,7 @@ function save(type){ //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDA
                         }
                 }, 
                 error: function(error){
-                    alert('error');
+                    alert('Error al guardar pedido');
                         // window.location.href = '/pedidos';
                  }
             });
@@ -2095,7 +2096,7 @@ function saveNS(){
                         // window.location.href = '/pedidos';
                 }, 
                 error: function(error){
-                        alert('error');
+                        alert('Error al enviar pedido a Netsuite');
                         // sendEmail();
                         // window.location.href = '/pedidos';
                  }
