@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\LoginController;
-
 // CUSTOMERS -------------------------------------------------------------------------------
 use App\Http\Controllers\Customer\ItemsController;
 use App\Http\Controllers\Customer\RamasController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
+use App\Http\Controllers\Logistica\LogisticaController;
 use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
@@ -278,8 +278,20 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
+                                $entity = 'ALL';
+                                if($userRol == "VENDEDOR"){
+                                    $zone = MisSolicitudesController::getZone($token, $username);
+                                    if($zone->getStatusCode()== 400){
+                                        return redirect('/Intranet');
+                                    }
+                                    else{
+                                        $entity = json_decode($zone->body())->description;
+                                    }
+
+                                }
                                 $permissions = LoginController::getPermissions();
-                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
+
+                                return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity]);
                             });
 
                             Route::get('/getPedidos', function (){
@@ -300,7 +312,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::get('/getZonasApoyo', function (){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
-                                    return redirect('/logout');
+                                    return redirect('/logout'); 
                                 }
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
@@ -947,7 +959,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = PromoController::storePromo($token, json_encode($request->all()));
+                                $response = PromoController::storePromo($token, json_encode($request->all())); 
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -1565,6 +1577,165 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
 });
+                // lOGISTICA ------------------------------------------------------------------------------------------------------------------------------------------------
 
+Route::get('/logistica/mesaControl/planeador',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+    
+    $level = "C";
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
+    }
+
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.mesaControl.planeador',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
+})->name('logistica.mesaControl.planeador');
+Route::get('/logistica/mesaControl/planeador/getPlaneador', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $planeador = LogisticaController::getPlaneador($token);
+    return $planeador;
+});
+Route::get('/logistica/mesaControl/planeador/getArrayPlaneador',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $arrayPlaneador = LogisticaController::getArrayPlaneador($token);
+    return $arrayPlaneador;
+});
+Route::get('/logistica/mesaControl/planeador/getCajasPendientes', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $cajasPendientes = LogisticaController::getCajasPendientes($token);
+    return $cajasPendientes;
+});
+Route::get('/logistica/distribucion',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+    
+    $level = "C";
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
+    }
+
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.distribucion.index',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
+})->name('logistica.distribucion');
+Route::get('/logistica/distribucion/capturaGastoFletera',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    
+    if(isset($_COOKIE['level'])){
+        $level = $_COOKIE['level'];
+    }
+
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    $vendors = LogisticaController::getVendors($token);
+    $departments = LogisticaController::getDepartments($token);
+    $municipios = LogisticaController::getMunicipios($token);
+    $clasificadores = LogisticaController::getClasificadores($token);
+    return view('intranet.logistica.distribucion.capturaGastoFletera',compact('token','permissions','username','userRol','vendors','departments','municipios','clasificadores'));
+})->name('logistica.distribucion.capturaGastoFletera');
+Route::get('/logistica/distribucion/capturaGastoFletera/getGuias', function (Request $request) {
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::getGuias($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/capturaGastoFletera/getGuia', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::getGuia($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/capturaGastoFletera/guiaSelected',function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::guiaSelected($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/capturaGastoFletera/getAutorizacion',function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::getAutorizacion($token,json_encode($request->all()));
+    return $response;
+});
+Route::post('/logistica/distribucion/capturaGastoFletera/registroGuia', function (Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::registroGuia($token, json_encode($request->all()));
+    return $response;
+});
+Route::post('/logistica/distribucion/capturaGastoFletera/readFileXML', function (Request $request){
+    // dd($request->file('file'));
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    if ($files = $request->file('file')) {
+        $file = $request->file('file')->store('public/documents');
+        $response = LogisticaController::readFileXML($token,$file);
+        return $response;
+    }
+});
+Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function (Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::registerNet($token,$request->all());
+});
 
 

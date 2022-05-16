@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Config;
+use Artisan;
 
 
 class LoginController extends Controller
@@ -65,6 +66,7 @@ class LoginController extends Controller
         setcookie("access", "", time()- 60*60*24, '/');
         setcookie("username", "", time()- 60*60*24, '/');
         setcookie("level", "", time()- 60*60*24, '/');
+        Artisan::call('cache:clear');
         return redirect('/');
     }
 

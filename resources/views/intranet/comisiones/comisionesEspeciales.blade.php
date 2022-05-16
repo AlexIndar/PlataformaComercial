@@ -122,12 +122,8 @@ function cargarEspecialesExcel(json) {
 
     for ( var x=0 ; x < claves.length; x++ ){
         cuotas = [];
-        //console.log(jsonObj[x]);
         for ( var y=2 ; y < jsonObj.length; y++){
-
-        //console.log(jsonObj[y]['E00']);
-        cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
-
+            cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
         }
 
         especiales.push({ cons: x+1, nombre: jsonObj[1]['E'+(x+1)], tipo : jsonObj[0]['E'+(x+1)] ,cuotas});
