@@ -211,6 +211,7 @@ $(document).ready(function() {
     $('#modalNetsuiteLoading').on('hidden.bs.modal', function () {
         selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
         pedido = []; //vaciar pedido
+        ignorarRegalos = [];
         document.getElementById('cupon').value = ''; //limpiar campo cupon
         document.getElementById('comments').value = ''; //limpiar campo comentarios
         document.getElementById('ordenCompra').value = ''; //limpiar campo orden compra
@@ -246,6 +247,7 @@ $(document).ready(function() {
 
         selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
         pedido = []; //vaciar pedido
+        ignorarRegalos = [];
         document.getElementById('cupon').value = ''; //limpiar campo cupon
         createTablePedido(); //limpiar tabla pedido
         clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
@@ -973,7 +975,7 @@ function getItemById(item, separa) {
                 
             },
             error: function(error) {
-                // alert('error');
+                console.log(error);
             }
         });
     }
@@ -2717,6 +2719,7 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
 
         selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
         pedido = []; //vaciar pedido
+        ignorarRegalos = [];
         document.getElementById('cupon').value = ''; //limpiar campo cupon
         document.getElementById('comments').value = ''; //limpiar campo comentarios
         document.getElementById('ordenCompra').value = ''; //limpiar campo orden compra

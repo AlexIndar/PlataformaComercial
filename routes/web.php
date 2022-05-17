@@ -290,6 +290,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     }
 
                                 }
+                                if($userRol == "APOYOVENTA"){
+                                    $entity = 'ALL';
+                                }
                                 $permissions = LoginController::getPermissions();
 
                                 return view('customers.pedidos.pedidos', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity]);
@@ -391,8 +394,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
                                 $zonaInfo = MisSolicitudesController::getZone($token,$username);
-                                if(isset(json_decode($zonaInfo->body())->status)){
+                                if(isset(json_decode($zonaInfo->body())->status) || $userRol == 'APOYOVENTA' || in_array($username, $directores) ){
                                     $entity = 'ALL';
                                     $zona = 'ALL';
                                 }
@@ -654,8 +658,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $detallesPedido['total'] = number_format($detallesPedido['total'], 2, '.', ',');
 
                                 $emails = [];
-                                $correo != "" ? array_push($emails, $correo) : $correo = "";
-                                array_push($emails, $username."@indar.com.mx");
+                                $correoUsuarioLevanta = $username."@indar.com.mx";
+                                $codCliente = substr((explode("]", $cliente)[0]), 1);
+                                $listaCorreos = SaleOrdersController::getListaEmailPedido($token, $codCliente);
+                                if( $listaCorreos->vendedor != "") array_push($emails, $listaCorreos->vendedor);
+                                if( $listaCorreos->apoyo != "") array_push($emails, $listaCorreos->apoyo);
+                                if( $listaCorreos->cliente != "") array_push($emails, $listaCorreos->cliente);
+                                if( $listaCorreos->gerente != "") array_push($emails, $listaCorreos->gerente);
+                                if( $correo != "" && $correo != $listaCorreos->cliente ) array_push($emails, $correo);
+                                if( $correoUsuarioLevanta != $listaCorreos->vendedor && $correoUsuarioLevanta != $listaCorreos->apoyo && $correoUsuarioLevanta != $listaCorreos->gerente && $correoUsuarioLevanta != $listaCorreos->cliente && $correoUsuarioLevanta != $correo ) array_push($emails, $correoUsuarioLevanta);
                                 Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds));
                                  // check for failures
                                 if (Mail::failures()) {
