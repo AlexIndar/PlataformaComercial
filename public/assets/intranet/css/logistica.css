@@ -47,3 +47,11 @@
 #agregarGuiaNumeroGuia,#agregarGuiaImporte{
     font-weight: bold;
 }
+.card-logistica{
+    background-color: #002868;
+    color: white;
+    border-radius: 14px;
+}
+.btn-consultar-factura,.btn-consultar-gasto-fletera{
+    color: white;
+}

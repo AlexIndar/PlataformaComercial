@@ -1637,21 +1637,13 @@ Route::get('/logistica/distribucion',function(){
     }else if(empty($token)){
         return redirect('/logout');
     }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
-    
-    $level = "C";
-    if(isset($_COOKIE['level'])){
-        $level = $_COOKIE['level'];
-    }
 
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
 
     $permissions = LoginController::getPermissions();
-    return view('intranet.logistica.distribucion.index',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
+    return view('intranet.logistica.distribucion.index',compact('token','permissions','username','userRol'));
 })->name('logistica.distribucion');
 Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     $token = TokenController::getToken();
@@ -1660,11 +1652,6 @@ Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     }else if(empty($token)){
         return redirect('/logout');
     }
-    
-    if(isset($_COOKIE['level'])){
-        $level = $_COOKIE['level'];
-    }
-
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
@@ -1735,5 +1722,62 @@ Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function 
     }
     $response = LogisticaController::registerNet($token,$request->all());
 });
+Route::get('/logistica/reportes', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
 
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
 
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.index',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes');
+Route::get('/logistica/reportes/facturasXEmbarque', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.facturasxEmbarcar',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes.facturasXEmbarcar');
+Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', function (Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/reportes/gastoFleteras', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.gastoFleteras',compact('token','permissions','username','userRol')); 
+})->name('logistica.reportes.gastoFleteras');
+Route::get('/logistica/reportes/gastoFleteras/consultFreightExpense', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultFreightExpense($token);
+    return $response;
+});

@@ -21,6 +21,17 @@ $(document).ready(function(){
         case '/logistica/mesaControl/planeador':
             logisticaController.getPlaneador();
             break;
+        case '/logistica/reportes/facturasXEmbarque':
+            $('#fechas').daterangepicker({
+                opens: 'left'
+              }, function(start, end, label) {
+                  fechaInicio= start.format('YYYY-MM-DD');
+                  fechaFin= end.format('YYYY-MM-DD');
+              });
+            break;
+        case '/logistica/reportes/gastoFleteras':
+            logisticaController.consultFreightExpense();
+            break;
     }
 });
 var Toast = Swal.mixin({
@@ -30,10 +41,253 @@ var Toast = Swal.mixin({
     timer: 8000,
     timerProgressBar: false
 });
-let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '';
+let d = new Date();
+let mount = d.getMonth()+1;
+mount = mount >= 10 ? mount : '0'+mount;
+let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
+let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow;
 let arraytable2 = new Array(), arrayPlaneador = new Array();
-let contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
+let contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 const logisticaController = {
+    consultFreightExpense: () => {
+        $('#card-table').attr('hidden',true);
+        contTable != 0 ?  (
+                        $('.btn-consultar-gasto-fletera').empty(),
+                        $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
+                        $('#table-gasto-fleteras').DataTable().clear(),
+                        $('#table-gasto-fleteras').DataTable().destroy() 
+        ): '';
+        $.ajax({
+            url: '/logistica/reportes/gastoFleteras/consultFreightExpense',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                let row = '';
+                data.forEach(element => 
+                    row += element.rowHtml
+                );
+                document.getElementById('content-table-gasto-fleteras').insertAdjacentHTML('afterbegin',row);
+                $('#table-gasto-fleteras').DataTable({
+                    "responsive": true,
+                    "lengthChange": false, "autoWidth": false,
+                    "buttons": ["excel"]
+                });
+                $('#card-table').attr('hidden',false);
+                $('.btn-consultar-gasto-fletera').empty();
+                $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                contTable++;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    consultBillsXShipments:() => {
+        $('.card-table-facturas-embarcar').prop('hidden',false);
+        $('.btn-consultar-factura').prop('disabled',true);
+        $('.btn-consultar-factura').empty();
+        $('.btn-consultar-factura').append('<i class="fa-solid fa-spinner fa-spin fa-1x mr-2" style="color:white;"></i>  Consultando');
+        // $.ajax({
+        //     url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
+        //     type: 'GET',
+        //     data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
+        //     datatype: 'json',
+        //     async: false,
+        //     success: function (data) {
+        //         console.log(data);
+        //         $('#content-table-facturas-embarque').empty();
+        //         let rows = ''; 
+        //         if(data != "")
+        //         {
+        //             $('#alert-message').empty();
+        //             $('#alert-message').prop('hidden',true);
+        //             $('.table-responsive').prop('hidden',false);
+        //             // $.each(data,function(index,value){
+        //             //     let fechaIngreso = value.fechaIngreso != '0001-01-01T00:00:00' ? value.fechaIngreso : '';
+        //             //     let fechaFactura = value.fechaFactura != '0001-01-01T00:00:00' ? value.fechaFactura : '';
+        //             //     let embarque = value.embarque != '' ? value.embarque : '';
+        //             //     let fechaEmbarque = value.fechaEmbarque != '0001-01-01T00:00:00' ? value.fechaEmbarque : '';
+        //             //     let fechaFleteXConfirmar = value.fechaFleteXConfirmar != '0001-01-01T00:00:00' ? value.fechaFleteXConfirmar : '';
+        //             //     let fechaEntrega = value.fechaEntrega != '0001-01-01T00:00:00' ? value.fechaEntrega : '';
+        //             //     let responsable = value.responsable != null ? value.responsable : '';
+        //             //     let diasPermitidos = value.diasPermitidos != null ? value.diasPermitidos : '';
+        //             //     rows += '<tr>'
+        //             //         +'<td>'+value.pedido+'</td>'
+        //             //         +'<td>'+value.cotizacion+'</td>'
+        //             //         +'<td>'+value.consolidado+'</td>'
+        //             //         +'<td>'+value.movimiento+'</td>'
+        //             //         +'<td>'+fechaIngreso.split('T')[0]+'</td>'
+        //             //         +'<td>'+value.factura+'</td>'
+        //             //         +'<td>'+value.ubicacion+'</td>'
+        //             //         +'<td>'+fechaFactura.split('T')[0]+'</td>'
+        //             //         +'<td>'+value.cliente+'</td>'
+        //             //         +'<td>'+value.zona+'</td>'
+        //             //         +'<td>'+value.nota+'</td>'
+        //             //         +'<td>'+value.condicionPago+'</td>'
+        //             //         +'<td>'+value.importe+'</td>'
+        //             //         +'<td>'+value.formaEnvio+'</td>'
+        //             //         +'<td>'+value.fletera+'</td>'
+        //             //         +'<td>'+value.totalEmbarques+'</td>'
+        //             //         +'<td>'+embarque+'</td>'
+        //             //         +'<td>'+fechaEmbarque.split('T')[0]+'</td>'
+        //             //         +'<td>'+value.estadoEmbarque+'</td>'
+        //             //         +'<td>'+value.comentarioEmbarque+'</td>'
+        //             //         +'<td>'+value.estadoFactura+'</td>'
+        //             //         +'<td>'+value.comentarioFactura+'</td>'
+        //             //         +'<td>'+fechaFleteXConfirmar+'</td>'
+        //             //         +'<td>'+fechaEntrega.split('T')[0]+'</td>'
+        //             //         +'<td>'+value.usuario+'</td>'
+        //             //         +'<td>'+value.chofer+'</td>'
+        //             //         +'<td>'+value.dias+'</td>'
+        //             //         +'<td>'+responsable+'</td>'
+        //             //         +'<td>'+diasPermitidos+'</td>'
+        //             //         +'<td>'+value.Estatus+'</td>'
+        //             //         +'</tr>';
+        //             // });
+        //             $('.card-table-facturas-embarcar').prop('hidden',false);
+        //             $('#content-table-facturas-embarque').prepend(rows);
+        //             if(contTable != 0)
+        //             {
+        //                 $('#table-facturas-embarque').DataTable().clear();
+        //                 $('#table-facturas-embarque').DataTable().destroy();
+        //             }
+        //             $("#table-facturas-embarque").DataTable({
+        //                 "responsive": true,
+        //                 "lengthChange": false, "autoWidth": false,
+        //                 "buttons": ["excel"]
+        //               }).buttons().container().appendTo('#table-facturas-embarque_wrapper .col-md-6:eq(0)');
+        //               contTable++;
+        //         }else{
+        //             $('.card-table-facturas-embarcar').prop('hidden',false);
+        //             $('.table-responsive').prop('hidden',true);
+        //             $('#alert-message').empty();
+        //             $('#alert-message').prop('hidden',false);
+        //             $('#alert-message').append('No se encontraron resultados.');
+        //         }
+                    // $('.btn-consultar-factura').prop('disabled',false);
+                    // $('.btn-consultar-factura').empty();
+                    // $('.btn-consultar-factura').append('Consultar');
+        //     },
+        //     error: function (jqXHR, textStatus, errorThrown) {
+        //         console.log(textStatus);     
+        //     }
+        // });
+        if(contTable != 0){
+            $('#table-facturas-embarque').DataTable().clear();
+            $('#table-facturas-embarque').DataTable().destroy();
+        }
+        $('#table-facturas-embarque').dataTable({
+            'ajax':{
+                method: 'GET',
+                url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
+                deferRender: false,
+                data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                dataSrc: function (data) {
+                    $('.table-responsive').prop('hidden',false);
+                    $('.btn-consultar-factura').prop('disabled',false);
+                    $('.btn-consultar-factura').empty();
+                    $('.btn-consultar-factura').append('Consultar');
+                    console.log(data);
+                    let a = 0;
+                    while(a < data.length){
+                        let fechaIngreso = data[a].fechaIngreso != '0001-01-01T00:00:00' ? data[a].fechaIngreso : '';
+                        let fechaFactura = data[a].fechaFactura != '0001-01-01T00:00:00' ? data[a].fechaFactura : '';
+                        let embarque = data[a].embarque != '' ? data[a].embarque : '';
+                        let fechaEmbarque = data[a].fechaEmbarque != '0001-01-01T00:00:00' ? data[a].fechaEmbarque : '';
+                        let fechaFleteXConfirmar = data[a].fechaFleteXConfirmar != '0001-01-01T00:00:00' ? data[a].fechaFleteXConfirmar : '';
+                        let fechaEntrega = data[a].fechaEntrega != '0001-01-01T00:00:00' ? data[a].fechaEntrega : '';
+                        let responsable = data[a].responsable != null ? data[a].responsable : '';
+                        let diasPermitidos = data[a].diasPermitidos != null ? data[a].diasPermitidos : '';
+
+                        data[a].fechaIngreso = fechaIngreso.split('T')[0];
+                        data[a].fechaFactura = fechaFactura.split('T')[0];
+                        data[a].embarque = embarque;
+                        data[a].fechaEmbarque = fechaEmbarque.split('T')[0];
+                        data[a].fechaFleteXConfirmar = fechaFleteXConfirmar.split('T')[0];
+                        data[a].fechaEntrega = fechaEntrega.split('T')[0];
+                        data[a].responsable = responsable;
+                        data[a].diasPermitidos = diasPermitidos;
+                        a++;
+                    }
+                    // for(let a=0;a<data.length;a++)
+                    // {
+                        // let fechaIngreso = data[a].fechaIngreso != '0001-01-01T00:00:00' ? data[a].fechaIngreso : '';
+                        // let fechaFactura = data[a].fechaFactura != '0001-01-01T00:00:00' ? data[a].fechaFactura : '';
+                        // let embarque = data[a].embarque != '' ? data[a].embarque : '';
+                        // let fechaEmbarque = data[a].fechaEmbarque != '0001-01-01T00:00:00' ? data[a].fechaEmbarque : '';
+                        // let fechaFleteXConfirmar = data[a].fechaFleteXConfirmar != '0001-01-01T00:00:00' ? data[a].fechaFleteXConfirmar : '';
+                        // let fechaEntrega = data[a].fechaEntrega != '0001-01-01T00:00:00' ? data[a].fechaEntrega : '';
+                        // let responsable = data[a].responsable != null ? data[a].responsable : '';
+                        // let diasPermitidos = data[a].diasPermitidos != null ? data[a].diasPermitidos : '';
+
+                        // data[a].fechaIngreso = fechaIngreso.split('T')[0];
+                        // data[a].fechaFactura = fechaFactura.split('T')[0];
+                        // data[a].embarque = embarque;
+                        // data[a].fechaEmbarque = fechaEmbarque.split('T')[0];
+                        // data[a].fechaFleteXConfirmar = fechaFleteXConfirmar.split('T')[0];
+                        // data[a].fechaEntrega = fechaEntrega.split('T')[0];
+                        // data[a].responsable = responsable;
+                        // data[a].diasPermitidos = diasPermitidos;
+                    // }
+                    $('.btn-consultar-factura').prop('disabled',false);
+                    $('.btn-consultar-factura').empty();
+                    $('.btn-consultar-factura').append('Consultar');
+                    return data;
+                }
+            },
+            columns: [
+                { data:'pedido'},
+                { data:'cotizacion'},
+                { data:'consolidado'},
+                { data:'movimiento'},
+                { data:'fechaIngreso'},
+                { data:'factura'},
+                { data:'ubicacion'},
+                { data:'fechaFactura'},
+                { data:'cliente'},
+                { data:'zona'},
+                { data:'nota'},
+                { data:'condicionPago'},
+                { data:'importe'},
+                { data:'formaEnvio'},
+                { data:'fletera'},
+                { data:'totalEmbarques'},
+                { data:'embarque'},
+                { data:'fechaEmbarque'},
+                { data:'estadoEmbarque'},
+                { data:'comentarioEmbarque'},
+                { data:'estadoFactura'},
+                { data:'comentarioFactura'},
+                { data:'fechaFleteXConfirmar'},
+                { data:'fechaEntrega'},
+                { data:'usuario'},
+                { data:'chofer'},
+                { data:'dias'},
+                { data:'responsable'},
+                { data:'diasPermitidos'}
+            ],
+            // lenguaje: {
+            //     url: 'cdn.datatables.net/plug-ins/1.12.0/i18n/es-ES.json'
+            // },
+            pageLenght: 10,
+            // responsive: true,
+            // dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Reporte_facturas_x_emparque'
+                }
+            ]
+        });
+        contTable++;
+    },
     slopesBoxes: () => {
         $.ajax({
             url: '/logistica/mesaControl/planeador/getCajasPendientes',
@@ -65,6 +319,7 @@ const logisticaController = {
         });
     },
     reloadTable: () => {
+        $('.fa-cog').addClass('fa-spin');
         logisticaController.getPlaneador();
     },
     getArrayPlaneador: () => {
@@ -147,6 +402,7 @@ const logisticaController = {
             datatype: 'json',
             success: function (data) { 
                 console.log(data);
+                let rows = '';
                 let area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
                 let styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';
                 let functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
@@ -217,34 +473,35 @@ const logisticaController = {
                                 break;
                         }
                     })
-                    
-                    $('#content-table-planeador').append('<tr>' 
-                        +'<td>'+ data[a].prioridad +'</td>'
-                        +'<td>'+ data[a].formaEnvio +'</td>'
-                        +'<td>'+ data[a].cliente +'</td>'
-                        +'<td>'+ data[a].numPedido +'</td>'
-                        +'<td class="'+ styleA1+'" '+ functionA1 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 1">'+ area1 +'</td>'
-                        +'<td class="'+ styleA2+'" '+ functionA2 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 2">'+ area2 +'</td>'
-                        +'<td class="'+ styleA3+'" '+ functionA3 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 3">'+ area3 +'</td>'
-                        +'<td class="'+ styleA4+'" '+ functionA4 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 4">'+ area4 +'</td>'
-                        +'<td class="'+ styleA5+'" '+ functionA5 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 5">'+ area5 +'</td>'
-                        +'<td class="'+ styleA6+'" '+ functionA6 +' data-numpedido="'+data[a].numPedido+'" data-area="VALIDANDO">'+ area6 +'</td>'
-                        +'<td class="'+ styleA7+'" '+ functionA7 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK1">'+ area7 +'</td>'
-                        +'<td class="'+ styleA8+'" '+ functionA8 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK2">'+ area8 +'</td>'
-                        +'<td class="'+ styleA9+'" '+ functionA9 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULKIN1">'+ area9 +'</td>'
-                        +'<td class="'+ styleA10+'" '+ functionA10 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_INF1">'+ area10 +'</td>'
-                        +'<td class="'+ styleA11+'" '+ functionA11 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL1">'+ area11 +'</td>'
-                        +'<td class="'+ styleA12+'" '+ functionA12 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL2">'+ area12 +'</td>'
-                        +'</tr>');  
+                    rows += '<tr>' 
+                    +'<td>'+ data[a].prioridad +'</td>'
+                    +'<td>'+ data[a].formaEnvio +'</td>'
+                    +'<td>'+ data[a].cliente +'</td>'
+                    +'<td>'+ data[a].numPedido +'</td>'
+                    +'<td class="'+ styleA1+'" '+ functionA1 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 1">'+ area1 +'</td>'
+                    +'<td class="'+ styleA2+'" '+ functionA2 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 2">'+ area2 +'</td>'
+                    +'<td class="'+ styleA3+'" '+ functionA3 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 3">'+ area3 +'</td>'
+                    +'<td class="'+ styleA4+'" '+ functionA4 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 4">'+ area4 +'</td>'
+                    +'<td class="'+ styleA5+'" '+ functionA5 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 5">'+ area5 +'</td>'
+                    +'<td class="'+ styleA6+'" '+ functionA6 +' data-numpedido="'+data[a].numPedido+'" data-area="VALIDANDO">'+ area6 +'</td>'
+                    +'<td class="'+ styleA7+'" '+ functionA7 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK1">'+ area7 +'</td>'
+                    +'<td class="'+ styleA8+'" '+ functionA8 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK2">'+ area8 +'</td>'
+                    +'<td class="'+ styleA9+'" '+ functionA9 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULKIN1">'+ area9 +'</td>'
+                    +'<td class="'+ styleA10+'" '+ functionA10 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_INF1">'+ area10 +'</td>'
+                    +'<td class="'+ styleA11+'" '+ functionA11 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL1">'+ area11 +'</td>'
+                    +'<td class="'+ styleA12+'" '+ functionA12 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL2">'+ area12 +'</td>'
+                    +'</tr>';
                         area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
                         styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';  
                         functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
                 }
+                $('#content-table-planeador').prepend(rows);  
+                $('.fa-cog').removeClass('fa-spin');
                 logisticaController.getArrayPlaneador();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);     
-            }
+            },
         });
     },
     showPlaneadorDetail: (e) => {
