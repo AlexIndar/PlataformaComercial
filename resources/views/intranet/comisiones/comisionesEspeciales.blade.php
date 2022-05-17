@@ -104,6 +104,12 @@ function triggerInputArt() {
 }
 
 function cargarEspecialesExcel(json) {
+
+    var currentTime = new Date();
+    var year = currentTime.getFullYear();
+    var month = currentTime.getMonth();
+    console.log(year,month);
+
     var json;
     jsonCompleto = [];
     jsonEspeciales = [];
@@ -119,14 +125,16 @@ function cargarEspecialesExcel(json) {
         for ( var y=2 ; y < jsonObj.length; y++){
             cuotas.push({ zona: jsonObj[y]['E00'], cuota: parseFloat(jsonObj[y]['E'+(x+1)])});
         }
+
         especiales.push({ cons: x+1, nombre: jsonObj[1]['E'+(x+1)], tipo : jsonObj[0]['E'+(x+1)] ,cuotas});
     }
-    jsonEspeciales.push({ ejercicio: 2022, aperiodo: 4, especiales });
-    jsonCompleto.push({ EspecialesModel: jsonEspeciales });
-    console.log(jsonCompleto);
-    json = JSON.stringify(jsonCompleto);
-    json = json.slice(1,-1);
-    console.log(json);
+    jsonEspeciales.push({ ejercicio: year, periodo: month, especiales });
+
+    jsonEspeciales = JSON.stringify(jsonEspeciales);
+    jsonEspeciales = jsonEspeciales.slice(1,-1);
+    jsonEspeciales = JSON.parse(jsonEspeciales);
+    json = jsonEspeciales;
+    console.log(jsonEspeciales);
 
     $.ajax({
            'headers': {
@@ -135,7 +143,7 @@ function cargarEspecialesExcel(json) {
            'url': "/comisiones/postActualizarEspeciales",
            'type': 'POST',
            'dataType': 'json',
-           'data': {EspecialesModel : json},
+           'data': { EspecialesModel: json},
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
@@ -163,9 +171,10 @@ function cargarEspecialesExcel(json) {
 }
 
 function cargarArticulosExcel(json) {
+
     var json;
     jsonCompleto = [];
-    especial =[];
+    especial = [];
     jsonObj = JSON.parse(json);
     cantItemsPorCargar = jsonObj.length;
     var property = '';
@@ -178,14 +187,16 @@ function cargarArticulosExcel(json) {
             articulo.push({valor : jsonObj[index][x+1]});
 
         }
+
         especial.push({ especial:x+1, articulo});
     }
     jsonCompleto.push({ ArtEspeciales: especial});
-
-
     json = JSON.stringify(jsonCompleto);
     json = json.slice(1, -1)
-    console.log(json);
+    //console.log(json);//json
+    json = JSON.parse(json);
+    json = json.ArtEspeciales;
+    //console.log(json);
 
     $.ajax({
            'headers': {

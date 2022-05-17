@@ -25,16 +25,20 @@ class ComisionesController extends Controller
     }
 
     public static function  postActualizarArticulosEspeciales($token, $json){
-        $data = Http::withToken($token)->post('http://192.168.70.107:64444//Especiales/postActualizarArticulosEspeciales',[
+        //dd($json);
+        $data = Http::withToken($token)->post('http://192.168.70.107:64444/Especiales/postActualizarArticulosEspeciales',[
             "ArtEspeciales" => $json
         ]);
         return json_decode($data->body());
     }
 
     public static function  postActualizarEspeciales($token, $json){
-        $data = Http::withToken($token)->post('http://192.168.70.107:64444//Especiales/postActualizarEspeciales',[
+
+        //dd($json);
+        $data = Http::withToken($token)->post('http://192.168.70.107:64444/Especiales/postActualizarEspeciales',[
             "EspecialesModel" => $json
         ]);
+        //dd($data);
         return json_decode($data->body());
     }
 

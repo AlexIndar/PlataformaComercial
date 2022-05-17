@@ -278,8 +278,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
-                                $entity = 'ALL';
-                                if($userRol == "VENDEDOR"){
+                                $directores = ['rvelasco', 'alejandro.jimenez'];
+                                in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                                if($userRol == "VENDEDOR" || $userRol == "VENDEDOR TEL"){
                                     $zone = MisSolicitudesController::getZone($token, $username);
                                     if($zone->getStatusCode()== 400){
                                         return redirect('/Intranet');
@@ -387,15 +388,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
                                 $entity = $request->entity;
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $userRol = $userData->permissions;
+                                $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                                if(isset(json_decode($zonaInfo->body())->status)){
+                                    $entity = 'ALL';
+                                    $zona = 'ALL';
+                                }
+                                else{
+                                    $entity = json_decode($zonaInfo->body())->description;
+                                    $zona = json_decode($zonaInfo->body())->description;
+                                }
                                 $level = $entity[0];
                                 if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
                                 if(str_starts_with($entity, 'Z1')){
                                     $entity = 'ALL';
+                                    $zona = 'ALL';
                                 }
-                                $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
-                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
-                                $username = $userData->typeUser;
-                                $userRol = $userData->permissions;
+                                $data = SaleOrdersController::getInfoHeatWeb($token, $zona);
+                               
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
@@ -499,7 +511,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $entity = $customer; 
+                                $entity = $customer;
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return  $data;
                             });
@@ -975,9 +987,14 @@ Route::middleware([ValidateSession::class])->group(function(){
                 /* ********************************************* INDARNET ************************************************ */
 
                  Route::get('/Intranet', function(){
-                    $entity = "C002620";
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions();
-                    return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions]);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    return view('intranet.main', ['entity' => $entity, 'permissions' => $permissions,  'username' => $username, 'userRol' => $userRol]);
                 });
 
                 //////// MIS SOLICITUDES /////
@@ -1521,7 +1538,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                    $json = $request->ArtEspeciales;
-
+                    //dd($json);
                    $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
 
                     return $data;
@@ -1532,7 +1549,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
-                   //dd($request->EspecialesModel);
+
+                    //dd($request->EspecialesModel);
                    $json = $request->EspecialesModel;
 
                    $data=ComisionesController::postActualizarEspeciales($token,$json);
@@ -1554,6 +1572,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $cliente= 'C004955';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
+                    //dd($general)
                     $general = $general[0];
                     //dd($general);
                     return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general]);

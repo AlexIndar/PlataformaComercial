@@ -313,6 +313,7 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   line-height: 1px !important;
   margin-top: 10px !important;
   vertical-align: middle !important;
+  white-space: nowrap !important;
 }
 #codArticulo{
   font-size: 18px !important;
