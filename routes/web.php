@@ -316,7 +316,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::get('/getZonasApoyo', function (){
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
-                                    return redirect('/logout'); 
+                                    return redirect('/logout');
                                 }
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
                                 $username = $userData->typeUser;
@@ -981,7 +981,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = PromoController::storePromo($token, json_encode($request->all())); 
+                                $response = PromoController::storePromo($token, json_encode($request->all()));
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -1550,7 +1550,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                    $json = $request->ArtEspeciales;
                     //dd($json);
                    $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
-
+                    //dd($data);
                     return $data;
                 });
 
@@ -1560,7 +1560,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
 
-                    //dd($request->EspecialesModel);
                    $json = $request->EspecialesModel;
 
                    $data=ComisionesController::postActualizarEspeciales($token,$json);
@@ -1616,7 +1615,7 @@ Route::get('/logistica/mesaControl/planeador',function(){
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
-    
+
     $level = "C";
     if(isset($_COOKIE['level'])){
         $level = $_COOKIE['level'];
@@ -1669,7 +1668,7 @@ Route::get('/logistica/distribucion',function(){
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
-    
+
     $level = "C";
     if(isset($_COOKIE['level'])){
         $level = $_COOKIE['level'];
@@ -1689,7 +1688,7 @@ Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     }else if(empty($token)){
         return redirect('/logout');
     }
-    
+
     if(isset($_COOKIE['level'])){
         $level = $_COOKIE['level'];
     }
