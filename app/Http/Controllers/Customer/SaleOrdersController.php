@@ -125,6 +125,12 @@ class SaleOrdersController extends Controller
         return $info;
     } 
 
+    public static function getListaEmailPedido($token, $cliente){
+        $response = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/ListaEmailPedido?cliente='.$cliente);
+        $info = json_decode($response->body());
+        return $info;
+    } 
+
     public static function getEventosCliente($token, $entity){
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EventosParaCliente?cliente='.$entity);
         $info = json_decode($response->body());
