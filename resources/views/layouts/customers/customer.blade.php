@@ -9,16 +9,16 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <link rel="icon" type="image/png" href="/assets/customers/img/png/favicon.png">
         <link rel="stylesheet" href="{{asset('assets/customers/css/index.css')}}">
-         
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-        
 
-        
+
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
         <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
@@ -29,7 +29,7 @@
         <script src="https://unpkg.com/scrollreveal"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  
+
 
 
         <!-- DataTables  & Plugins -->
@@ -52,7 +52,7 @@
         <!-- summernote -->
         <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
 
-        <!-- DATEPICKER --> 
+        <!-- DATEPICKER -->
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -79,10 +79,10 @@
     <!-- LOGIN OPTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------->
     <div class="login-options">
         <h5>Síguenos en </h5>
-        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i style="color: #002868; margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>  
-        <a style="margin-top: -2px !important;" target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a> 
-        <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a> 
-        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a> 
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i style="color: #002868; margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a>
+        <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a>
+        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a>
 
         @if($token && $token != 'error')
             <h5 onclick="navigate('/logout', false)">Cerrar sesión</h5>
@@ -91,13 +91,13 @@
             <h5 onclick="activeModal(1)">Iniciar sesion</h5>
         @endif
         <h5 onclick="navigate('/faq', false)">Ayuda</h5>
-        <i onclick="navigate('/faq', false)" class="fas fa-question-circle question fa-sm"></i> 
+        <i onclick="navigate('/faq', false)" class="fas fa-question-circle question fa-sm"></i>
     </div>
 
     <!-- NAVBAR MOBILE ------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
     <label for="check" class="hamburguer">
-      <input type="checkbox" class="checkboxHamburguer" id="check"/> 
+      <input type="checkbox" class="checkboxHamburguer" id="check"/>
       <span></span>
       <span></span>
       <span></span>
@@ -121,14 +121,14 @@
                                     </div>
                                     <div class="rama-1 rama-cuenta">
                                         <h5 onclick="activeModal(1)">Iniciar sesión</h5>
-                                    </div>                                    
+                                    </div>
                                 @endif
-                                
+
                 </div>
 
                 <div class="col-12">
                     <div class="menu-item" onclick="activeRama1('productos', this)">
-                        <h5>Productos</h5>  <i class="fas fa-angle-down submenu-icon"></i> 
+                        <h5>Productos</h5>  <i class="fas fa-angle-down submenu-icon"></i>
                     </div>
                                  @for($i = 0; $i < count($rama1); $i ++)
                                         <div class="rama-1 rama-productos" onclick="activeRama2('{{$rama1[$i]}}', this)">
@@ -144,21 +144,21 @@
                                                     </div>
                                                 @endfor
                                         @endfor
-                                @endfor       
+                                @endfor
                 </div>
-                
+
                 <div class="col-12">
                     <div class="menu-item">
-                        <h5>Catálogo</h5> 
+                        <h5>Catálogo</h5>
                     </div>
                 </div>
-                
+
                 <div class="col-12">
                     <div class="menu-item">
-                        <h5>Ferreimpulsos</h5> 
+                        <h5>Ferreimpulsos</h5>
                     </div>
                 </div>
-                
+
                 <div class="col-12">
                     <div class="menu-item" onclick="activeRama1('empresa', this)">
                         <h5>Empresa</h5> <i class="fas fa-angle-down submenu-icon"></i>
@@ -174,21 +174,21 @@
                                     <h5>Servicio postventa</h5>
                                 </div>
                 </div>
-                
+
                 <div class="col-12">
                     <div class="menu-item">
-                        <h5>Contacto</h5> 
+                        <h5>Contacto</h5>
                     </div>
                 </div>
-                
+
                 <div class="col-12">
                     <div class="menu-item">
-                        @if ($level == ('E')) 
-                            <h5><a href="/Intranet" style="color: #002868;">Intranet</a></h5> 
+                        @if ($level == ('E'))
+                            <h5><a href="/Intranet" style="color: #002868;">Intranet</a></h5>
                         @endif
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -285,9 +285,9 @@
         </nav>
     </div>
 
-    
 
-    
+
+
     <!-- BODY CONTENT -->
 
 
@@ -318,7 +318,7 @@
         </div>
     </div> -->
 
-    
+
     <!-- FOOTER ---------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
     <div class="footer">
@@ -328,10 +328,10 @@
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center flex-row">
               <div class="social-media-icons appear-500">
-                        <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i class="fab fa-facebook-square fa-2x"></i></a>  
-                        <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i class="fab fa-youtube-square fa-2x"></i> </a> 
-                        <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a> 
-                        <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i class="fab fa-linkedin fa-2x"></i></a> 
+                        <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i class="fab fa-facebook-square fa-2x"></i></a>
+                        <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i class="fab fa-youtube-square fa-2x"></i> </a>
+                        <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a>
+                        <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i class="fab fa-linkedin fa-2x"></i></a>
             </div>
         </div>
         </div>
@@ -348,7 +348,7 @@
                 <h4><strong>PROMOCIONES</strong></h4>
                 <h5>Ofertas relámpago</h5>
                 <h5>Lanzamientos INDAR</h5>
-                <h5>Especiales del mes</h5>
+                <h5> del mes</h5>
                 <h5>Eventos</h5>
                 <h5>Combos INDAR</h5>
             </div>
@@ -389,11 +389,11 @@
                     @csrf
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Usuario o Correo electrónico" required></div>      
+                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Usuario o Correo electrónico" required></div>
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Password">Contraseña:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>      
+                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>
                     </div>
                     <br>
                     <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> Recordar credenciales</label><br>
@@ -406,7 +406,7 @@
                         <a href="#">Recuperar usuario y contraseña</a>
                     </div>
                 </form>
-                
+
             </div>
         </div>
     </div>
@@ -423,15 +423,15 @@
                 <form action="#">
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Codigo">Código cliente:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="codigo" name="codigo" placeholder="Código de cliente" required></div>      
+                        <div class="col-lg-9 col-md-12"><input type="text" id="codigo" name="codigo" placeholder="Código de cliente" required></div>
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Correo electrónico" required></div>      
+                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Correo electrónico" required></div>
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Password">Contraseña:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>      
+                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>
                     </div>
                     <br>
                     <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> No cerrar sesión</label><br>
@@ -439,7 +439,7 @@
                         <button class="btn login-btn" type="submit">Regístrate</button>
                     </div>
                 </form>
-                
+
             </div>
         </div>
     </div>

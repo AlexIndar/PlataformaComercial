@@ -31,9 +31,6 @@
                <div class="card">
                   <div class="card-header border-0">
                      <div class="d-flex justify-content-between">
-                        {{--
-                        <h3 class="card-title">Seleccione una zona</h3>
-                        --}}
                      </div>
                   </div>
                   <div  id="divFiltroCli" class="card-body">
@@ -130,14 +127,12 @@
                               <tbody id="llenaDespensa">
                               </tbody>
                               <tr style="background-color:#002868; color:white" >
-                                 <th >Bono de Puntualidad (8.7%)</th>
-                                 <th > % Bono </th>
-                                 <th>clientes Visitados</th>
-                                 <th>Total de Clientes</th>
-                                 <th >Días Laborados </th>
-                                 <th >Días no Reportados </th>
+                                 <th colspan="2">Bono de Puntualidad (8.7%)</th>
+                                 <th>Valor Objetivo</th>
+                                 <th>Limite de Especificación</th>
+                                 <th>Real</th>
                                  <th >% de Alcance </th>
-                                 <th >Importe </th>
+                                 <th colspan="2">Importe </th>
                               </tr>
                               <tbody id="llenaPuntualidad">
                               </tbody>
@@ -152,9 +147,10 @@
                                     <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  > BONOS </th>
                                  </tr>
                                  <tr >
-                                    <th>Clientes Activos</th>
-                                    <th>Límite de Especificación</th>
+                                    <th>Clientes Activos (10%)</th>
                                     <th>Valor Objetivo</th>
+                                    <th>Límite de Especificación</th>
+                                    <th>Real</th>
                                     <th>%  de Alcance</th>
                                     <th>Importe</th>
                                  </tr>
@@ -163,15 +159,28 @@
                               </tbody>
                               <thead style="background-color:#002868; color:white">
                                  <tr>
-                                    <th>Clientes Nuevos (ref TdeP )</th>
-                                    <th>Límite de Especificación</th>
+                                    <th>Clientes Nuevos de Giros (5%)</th>
                                     <th>Valor Objetivo</th>
+                                    <th>Límite de Especificación</th>
+                                    <th>Real</th>
                                     <th>%  de Alcance</th>
                                     <th>Importe</th>
                                  </tr>
                               </thead>
                               <tbody id="llenaNvosCtes">
                               </tbody>
+                              <thead style="background-color:#002868; color:white">
+                                <tr>
+                                   <th>Ventas (10%)</th>
+                                   <th>Valor Objetivo</th>
+                                   <th>Límite de Especificación</th>
+                                   <th>Real</th>
+                                   <th>%  de Alcance</th>
+                                   <th>Importe</th>
+                                </tr>
+                             </thead>
+                             <tbody id="llenaVentas">
+                             </tbody>
                            </table>
                         </div>
                      </div>
@@ -182,33 +191,18 @@
                                  <tr>
                                     <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
                                  </tr>
-                                 <tr >
-                                    <th style="width:420px" >Especiales del Mes (15%)</th>
-                                    <th >Cuota</th>
-                                    <th>Real</th>
-                                    <th>Avance</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaEspeciales">
-                                <tr>
-                                  <td>E01</td>
-                                  <td >cuota</td>
-                                  <td>Real</td>
-                                  <td>Avance</td>
-                                </tr>
-                                <tr>
-                                    <td>E02</td>
-                                    <td >cuota</td>
-                                    <td>Real</td>
-                                    <td>Avance</td>
-                                </tr>
-                                <tr>
-                                    <td>E03</td>
-                                    <td>cuota</td>
-                                    <td>Real</td>
-                                    <td>Avance</td>
-                                </tr>
-                              </tbody>
+                                 <thead style="background-color:#002868; color:white">
+                                    <tr>
+                                       <th>Resultado Especiales</th>
+                                       <th>Valor Objetivo</th>
+                                       <th>Límite de Especificación</th>
+                                       <th>Real</th>
+                                       <th>%  de Alcance</th>
+                                       <th>Importe</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody id="llenaEspeciales">
+                                 </tbody>
                            </table>
                         </div>
                      </div>
@@ -224,7 +218,7 @@
    <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
          <div class="modal-header bg-indarBlue">
-            <h4 class="text-center title ml-auto">Detalle de Clientes NO Visitados</h4>
+            <h4 class="text-left title ml-auto">Detalle de Clientes</h4>
             <h6 id ="vendedor" class="text-center title ml-auto"></h6>
             <input type="text" id="typeFormInf" value="" hidden>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -232,20 +226,66 @@
             </button>
          </div>
          <div class="modal-body text-indarBlue" id="modal2">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="card-body table-responsive p-0">
-                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
-                           <tr >
-                              <th style="width:320px">Formulario</th>
-                              <th>Número de Visitas</th>
-                              <th>Código</th>
-                           </tr>
-                        </thead>
-                        <tbody id="llenaModal">
-                        </tbody>
-                     </table>
+            <div class="card card-primary card-outline card-tabs">
+               <div class="card-header p-0 pt-1 border-bottom-0">
+                  <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                     <li class="nav-item">
+                        <a class="nav-link active" id="custom-tabs-three-visit-tab" data-toggle="pill" href="#custom-tabs-three-visit" role="tab" aria-controls="custom-tabs-three-visit" aria-selected="true"><p id="clientesVis"></p></a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-three-novisit-tab" style="color: red" data-toggle="pill" href="#custom-tabs-three-novisit" role="tab" aria-controls="custom-tabs-three-novisit" aria-selected="false"><p id="clientesNoVis"></p> </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-three-noactive-tab" data-toggle="pill" href="#custom-tabs-three-noactive" role="tab" aria-controls="custom-tabs-three-noactive" aria-selected="false"><p id="clientesNoAct"></p></a>
+                     </li>
+                  </ul>
+               </div>
+               <div class="card-body">
+                  <div class="tab-content" id="custom-tabs-three-tabContent">
+                     <div class="tab-pane fade active show" id="custom-tabs-three-visit" role="tabpanel" aria-labelledby="custom-tabs-three-visit-tab">
+                        <div class="card-body table-responsive p-0">
+                           <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th>Nombre de Cliente</th>
+                                    <th>Código</th>
+                                    <th>Número de Visitas</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaModal">
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                     <div class="tab-pane fade" id="custom-tabs-three-novisit" role="tabpanel" aria-labelledby="custom-tabs-three-novisit-tab">
+                        <div class="card-body table-responsive p-0">
+                           <table id="ctesNoVistadosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th>Nombre del Cliente</th>
+                                    <th>Código</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaCtesNoVisitados">
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                     <div class="tab-pane fade" id="custom-tabs-three-noactive" role="tabpanel" aria-labelledby="custom-tabs-three-noactive-tab">
+                        <div class="card-body table-responsive p-0">
+                           <table id="ctesNoActivosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
+                              <thead style="background-color:#002868; color:white">
+                                 <tr>
+                                    <th>Nombre de Cliente</th>
+                                    <th>Código</th>
+                                    <th>Número de Visitas</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="llenaCtesNoActivos">
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
                   </div>
                </div>
             </div>
@@ -397,6 +437,66 @@
       </div>
    </div>
 </div>
+<!-- Modal Especiales -->
+<div class="modal fade" id="modalEspeciales" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+             <h4 class="text-center title ml-auto">Especiales</h4>
+             <h6 id ="vendedorEsp" class="text-center title ml-auto"></h6>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+             <div class="row">
+                <div class="col-md-12">
+                    <div class="card-body table-responsive p-0">
+                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                           <thead style="background-color:#002868; color:white">
+                              <tr>
+                                 <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
+                              </tr>
+                              <thead style="background-color:#002868; color:white">
+                              <tr >
+                                 <th style="width:420px" >Especiales del Mes (15%)</th>
+                                 <th >Cuota</th>
+                                 <th>Real</th>
+                                 <th>Avance</th>
+                              </tr>
+                           </thead>
+                           <tbody id="llenaEspeciales">
+                             <tr>
+                               <td>E01</td>
+                               <td >cuota</td>
+                               <td>Real</td>
+                               <td>Avance</td>
+                             </tr>
+                             <tr>
+                                 <td>E02</td>
+                                 <td >cuota</td>
+                                 <td>Real</td>
+                                 <td>Avance</td>
+                             </tr>
+                             <tr>
+                                 <td>E03</td>
+                                 <td>cuota</td>
+                                 <td>Real</td>
+                                 <td>Avance</td>
+                             </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                </div>
+             </div>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
+    </div>
+ </div>
 @endsection
 
 @section('js')
@@ -764,6 +864,10 @@
             var htmlBonos = '';
             var htmlModalnc = '';
             var htmlNvosCtes = '';
+            var htmlVentas='';
+            var htmlEspeciales = '';
+            var htmlCtesNoVisitados = '';
+            var htmlCtesNoActivos = '';
 
             var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
             //console.log( comisionTot );
@@ -778,28 +882,60 @@
             var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
             var bonosPorc;
-            var rawtData = data[0].detalle;
-                var groupBy = function (miarray, prop) {
-                return miarray.reduce(function(groups, item) {
-                   var val = item[prop];
-                   groups[val] = groups[val] || {formulario: item.formulario, codigo: item.codigo,fecha: item.fecha, numVisitas: 0};
-                   groups[val].numVisitas += item.numVisitas;
+            var rawtData = data[0].detalle;//agrupar Clientes Visitados
+            var rawtDataNoActivos = data[0].detalleVisitadosNoAct;//agrupar Clientes Visitados No Activos
 
-
-
-                   return groups;
+            //Agrupar Clientes Visitados
+            var groupBy = function (miarray, prop) {
+               return miarray.reduce(function(groups, item) {
+                  var val = item[prop];
+                  groups[val] = groups[val] || {companyname: item.companyName, codigo: item.codigo,fecha: item.fecha, numVisitas: 0};
+                  groups[val].numVisitas += item.numVisitas;
+                  return groups;
                }, {});
             }
-            //console.log(groupBy(rawtData,'companyname'));
             var resultData = Object.values(groupBy(rawtData,'codigo'));
-            //console.log(resultData);
+
+            //Agrupar Clientes Visitados No Activos
+            var groupNoAct = function (miarray, prop) {
+               return miarray.reduce(function(groups, item) {
+                  var val = item[prop];
+                  groups[val] = groups[val] || {companyname: item.companyName, codigo: item.codigo,fecha: item.fecha, numVisitas: 0};
+                  groups[val].numVisitas += item.numVisitas;
+                  return groups;
+               }, {});
+            }
+            var resultNoAct = Object.values(groupNoAct(rawtDataNoActivos,'codigo'));
+            console.log(resultNoAct);
+
+
+
             for (i = 0; i < resultData.length; i++) {
 
                 //console.log(dataDetalle[i].formulario);
                 htmlModal += '<tr>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + resultData[i].formulario + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].numVisitas + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].codigo + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].numVisitas + '</td>' +
+                            '</tr>';
+            }
+
+            for (i = 0; i < resultNoAct.length; i++) {
+
+            htmlCtesNoActivos+= '<tr>' +
+                        '<td style="font-weight: bold; background-color:#f9ea45">' +  resultNoAct[i].companyname + '</td>' +
+                        '<td style="font-weight: bold; background-color:#f9ea45">' +  resultNoAct[i].codigo + '</td>' +
+                        '<td style="font-weight: bold; background-color:#f9ea45">' +  resultNoAct[i].numVisitas + '</td>' +
+                        '</tr>';
+            }
+
+            var ctesNoVisitados = data[0].detallePorVisitar;
+
+            for (i = 0; i< ctesNoVisitados.length; i++){
+
+               htmlCtesNoVisitados += '<tr>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  ctesNoVisitados[i].companyName + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  ctesNoVisitados[i].companyId + '</td>' +
                             '</tr>';
             }
 
@@ -822,7 +958,7 @@
             porClientesVisitados = data[0].totalClientes * .9;
 
             //console.log(porClientesVisitados);
-            //console.log(data[0].totalClientesVisitados );
+            console.log(data[0] );
             if ( data[0].totalClientesVisitados <= porClientesVisitados ){
                importePunt = 0.00;
                data[0].porcAlcanzado=0.00;
@@ -831,18 +967,23 @@
             var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
 
             htmlPuntualidad +=  '<tr>' +
-                   '<td style="font-weight: bold" > Días No Reportados </td>' +
-                   '<td style="font-weight: bold"> 8.7  % </td>' +
-                   show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
+                   '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
+                   '<td style="font-weight: bold" >'+ porClientesVisitados +'</td>' +
                    '<td style="font-weight: bold">'+ data[0].totalClientes +'</td>' +
-                   show +'<u>'+ data[0].diasLaborados +'</u></td>' +
-                   '<td style="cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
+                   show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
-                   '<td style="font-weight: bold">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
+                   '<td style="font-weight: bold" colspan="2">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</td>'+
                    '<tr>' +
-                   '<td style="font-weight: bold" colspan="7"> Comision Integrada </td>' +
-                   '<td style="font-weight: bold">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
+                    '<tr>' +
+                   '<td style="font-weight: bold" colspan="4" > Días No Reportados </td>' +
+                   '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
+                   '<td style="font-weight: bold"> NA </td>' +
+                   '<td style="font-weight: bold" colspan="2"> NA </td>' +
+                   '</td>'+
+                   '<tr>' +
+                   '<td style="font-weight: bold" colspan="6"> Comision Integrada </td>' +
+                   '<td style="font-weight: bold" colspan="2">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
 
@@ -859,30 +1000,57 @@
                 ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
             } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
             htmlBonos += '<tr>'+
-                     '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
+                    '<td style="font-weight: bold" >Clientes Activos</td>' +
+                    '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
                      '<td style="font-weight: bold" >' +  le + '</td>' +
-                     '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
+                     '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
                      '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
                      '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                      '</tr>';
 
             htmlNvosCtes += '<tr>'+
+                     '<td style="font-weight: bold" >Clientes Nuevos (Refa y T de P)</td>' +
+                     '<td style="font-weight: bold ; cursor: pointer" data-toggle="modal" data-target="#editarVo"> <u> 2 </u> </td>' +
+                     '<td style="font-weight: bold" > 1 </td>' +
                      ctesnvos +
-                     '<td style="font-weight: bold" >' +  le + '</td>' +
-                     '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
                      '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
                      '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                      '</tr>';
 
+            htmlVentas += '<tr>'+
+                     '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
+                     '<td style="font-weight: bold "> Vo </td>' +
+                     '<td style="font-weight: bold" > Le </td>' +
+                     '<td style="font-weight: bold" > Real </td>' +
+                     '<td style="font-weight: bold" >% </td>' +
+                     '<td style="font-weight: bold" >Importe</td>' +
+                     '</tr>';
+
+            htmlEspeciales += '<tr>'+
+                     '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +
+                     '<td style="font-weight: bold "> Vo </td>' +
+                     '<td style="font-weight: bold" > Le </td>' +
+                     '<td style="font-weight: bold" > Real </td>' +
+                     '<td style="font-weight: bold" >% </td>' +
+                     '<td style="font-weight: bold" >Importe</td>' +
+                     '</tr>';
+
             $('#llenaPuntualidad').html(htmlPuntualidad);
-            $('#llenaModal').html(htmlModal);
+            $('#llenaModal').html(htmlModal); //llena tabla Ctes Visitados
+            $('#llenaCtesNoVisitados').html(htmlCtesNoVisitados);//llena Tabla Ctes No Visitados
+            $('#llenaCtesNoActivos').html(htmlCtesNoActivos);//llena Tabla Ctes No Visitados
             $('#vendedordes').text(vendedor);
             $('#vendedorbon').text(vendedor);
             $('#vendedor').text(vendedor);
+            $('#vendedorEsp').text(vendedor);
             $('#llenaBonos').html(htmlBonos);
             $('#llenaNvosCtes').html(htmlNvosCtes);
+            $('#llenaVentas').html(htmlVentas);
+            $('#llenaEspeciales').html(htmlEspeciales);
             $('#clientesNvosModal').html(htmlModalnc);
             $('#zonareferencia').text(data[0].zona);
+            $('#clientesVis').text('Clientes Visitados : '+resultData.length);
+            $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);
 
 
            },
