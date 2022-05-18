@@ -382,7 +382,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             // });
 
                             Route::post('/pedido/nuevo', function (Request $request){
-                                ini_set('max_input_vars','5000' );
+                                ini_set('memory_limit', '-1');
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');
@@ -410,8 +410,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $entity = 'ALL';
                                     $zona = 'ALL';
                                 }
-                                $data = SaleOrdersController::getInfoHeatWeb($token, $zona);
-                               
+                                $data = SaleOrdersController::getInfoHeatWeb($token, $zona);                               
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
