@@ -282,8 +282,15 @@ class LogisticaController extends Controller
             {
                 ini_set('memory_limit','-1');
                 $jsonData = json_decode($data);
-                $facturasEmbarques = Http::withToken($token)->get('https://localhost:44384/Logistica/consultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
+                $facturasEmbarques = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
                 $facturas = json_decode($facturasEmbarques->body());
+                foreach($facturas as $fa){
+                    $fa->fechaEmbarque = explode('T',$fa->fechaEmbarque)[0];
+                    $fa->fechaFleteXConfirmar = $fa->fechaFleteXConfirmar == '0001-01-01T00:00:00' ? '' : $fa->fechaFleteXConfirmar;
+                    $fa->fechaFactura = explode('T',$fa->fechaFactura)[0];
+                    $fa->fechaIngreso = explode('T',$fa->fechaIngreso)[0];
+
+                }
                 return $facturas;
             }
             #endregion
@@ -291,7 +298,7 @@ class LogisticaController extends Controller
             #region GASTO FLETERA
             public static function consultFreightExpense($token)
             {
-                $gastoFleteras = Http::withToken($token)->get('https://localhost:44384/Logistica/consultFreightExpense');
+                $gastoFleteras = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultFreightExpense');
                 $reporte = json_decode($gastoFleteras->body());
                 return $reporte;
             }

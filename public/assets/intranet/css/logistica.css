@@ -55,3 +55,18 @@
 .btn-consultar-factura,.btn-consultar-gasto-fletera{
     color: white;
 }
+#table-gasto-fleteras{
+    table-layout: fixed;
+}
+
+#table-gasto-fleteras th,
+#table-gasto-fleteras td {
+    text-overflow: clip;
+}
+table.dataTable>tbody>tr.child ul.dtr-details>li {
+    border-bottom: 0px solid #efefef!important;
+    padding: 0px!important;
+}
+table.dataTable>tbody>tr{
+    /* white-space: nowrap; */
+}

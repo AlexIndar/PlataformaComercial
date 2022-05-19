@@ -1,6 +1,6 @@
-@extends('layouts.intranet.main',['active' => 'Logistica'])
+@extends('layouts.intranet.main',['active' => 'Logistica','permissions' => $permissions])
 
-@section('title') Indar @endsection
+@section('title') Indar | Reportes @endsection
 
 @section('styles')
 {{-- <link rel="stylesheet" href="{{asset('assets/intranet/css/')}}"> --}}
@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="{{ env('APP_URL') }}assets/intranet/css/logistica.css">
 @endsection
 @section('body')
-
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
@@ -25,30 +24,30 @@
                           <button type="button" class="btn btn-outline-primary btn-consultar-gasto-fletera" onclick="logisticaController.consultFreightExpense()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Consultando</button>
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body" id="card-table" hidden>
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table id="table-gasto-fleteras" class="table table-bordered table-hover table-sm">
                                     <thead class="encabezado-table">
                                         <tr>
-                                            <th>NUM DOC</th>
-                                            <th>VENDOR</th>
-                                            <th>NUM FACTURA</th>
-                                            <th>IMPORTE FACTURA</th>
-                                            <th>CHECK RETENCIÓN</th>
-                                            <th>UUID</th>
-                                            <th>USUARIO</th>
-                                            <th>COMENTARIO</th>
-                                            <th>AUTORIZADO</th>
-                                            <th>AUTORIZADO USUARIO</th>
-                                            <th>NUM GUIA</th>
-                                            <th>IMPORTE GUIA</th>
-                                            <th>FACTURAS</th>
-                                            <th>COMENTARIO GUIA</th>
+                                            <th data-priority="1">NUM DOC</th>
+                                            <th data-priority="2">VENDOR</th>
+                                            <th data-priority="3">NUM FACTURA</th>
+                                            <th data-priority="4">IMPORTE FACTURA</th>
+                                            <th data-priority="5">CHECK RETENCIÓN</th>
+                                            <th data-priority="6">UUID</th>
+                                            <th data-priority="7">USUARIO</th>
+                                            <th data-priority="8">COMENTARIO</th>
+                                            <th data-priority="9">AUTORIZADO</th>
+                                            <th data-priority="10">AUTORIZADO USUARIO</th>
+                                            <th data-priority="11">NUM GUIA</th>
+                                            <th data-priority="12">IMPORTE GUIA</th>
+                                            <th data-priority="13">FACTURAS</th>
+                                            <th data-priority="14">COMENTARIO GUIA</th>
                                         </tr>
                                     </thead>
                                     <tbody id="content-table-gasto-fleteras">
                                     </tbody>
-                                  </table>
+                                </table>
                             </div>
                         </div>
                         <!-- /.card-body -->

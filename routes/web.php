@@ -1800,3 +1800,26 @@ Route::get('/logistica/reportes/gastoFleteras/consultFreightExpense', function()
     $response = LogisticaController::consultFreightExpense($token);
     return $response;
 });
+Route::get('/logistica/reportes/interfazRecibo', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes.interfazRecibo');
+Route::get('/pedidos-exporta',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    return view('exporta.pedidos');
+})->name('pedidos-exporta');

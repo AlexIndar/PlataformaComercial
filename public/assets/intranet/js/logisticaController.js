@@ -28,8 +28,115 @@ $(document).ready(function(){
                   fechaInicio= start.format('YYYY-MM-DD');
                   fechaFin= end.format('YYYY-MM-DD');
               });
+              $('#table-facturas-embarque').DataTable({
+                paging: true,
+                responsive: true,
+                searching: true,
+                processing: true,
+                bSortClasses: false,
+                fixedHeader: true,
+                scrollY:        400,
+                deferRender:    true,
+                scroller:       true,
+                columns: [
+                    { data:'pedido'},
+                    { data:'cotizacion'},
+                    { data:'consolidado'},
+                    { data:'movimiento'},
+                    { data:'fechaIngreso'},
+                    { data:'factura'},
+                    { data:'ubicacion'},
+                    { data:'fechaFactura'},
+                    { data:'cliente'},
+                    { data:'zona'},
+                    { data:'nota'},
+                    { data:'condicionPago'},
+                    { data:'importe'},
+                    { data:'formaEnvio'},
+                    { data:'fletera'},
+                    { data:'totalEmbarques'},
+                    { data:'embarque'},
+                    { data:'fechaEmbarque'},
+                    { data:'estadoEmbarque'},
+                    { data:'comentarioEmbarque'},
+                    { data:'estadoFactura'},
+                    { data:'comentarioFactura'},
+                    { data:'fechaFleteXConfirmar'},
+                    { data:'fechaEntrega'},
+                    { data:'usuario'},
+                    { data:'chofer'},
+                    { data:'dias'},
+                    { data:'responsable'},
+                    { data:'diasPermitidos'}
+                ],
+                language: {
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Documentos",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                      "first": "Primero",
+                      "last": "Ultimo",
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                    }
+                  }
+            });
             break;
         case '/logistica/reportes/gastoFleteras':
+            $('#table-gasto-fleteras').DataTable({
+               paging: true,
+                responsive: true,
+                searching: true,
+                processing: true,
+                bSortClasses: false,
+                fixedHeader: true,
+                // scrollY:        400,
+                deferRender:    true,
+                scroller:       true,
+                columns: [
+                    { data:'numDoc', visible:true},
+                    { data:'vendor', visible:true},
+                    { data:'numFactura', visible:true},
+                    { data:'importeFactura', visible:true},
+                    { data:'checkRetencion', visible:true},
+                    { data:'uuid', visible:true},
+                    { data:'usuario', visible:true},
+                    { data:'comentario', visible:true},
+                    { data:'autorizado', visible:true},
+                    { data:'autorizadoUsuario', visible:true},
+                    { data:'numGuia', visible:true},
+                    { data:'importeGuia', visible:true},
+                    { data:'facturas', visible:true},
+                    { data:'comentarioGuia', visible:true}
+                ],
+                language: {
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Documentos",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                      "first": "Primero",
+                      "last": "Ultimo",
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                    }
+                  }
+            });
             logisticaController.consultFreightExpense();
             break;
     }
@@ -46,16 +153,14 @@ let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow;
-let arraytable2 = new Array(), arrayPlaneador = new Array();
+let arraytable2 = new Array(), arrayPlaneador = new Array(), reportsHtmlArrays = new Array();
 let contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 const logisticaController = {
     consultFreightExpense: () => {
-        $('#card-table').attr('hidden',true);
         contTable != 0 ?  (
                         $('.btn-consultar-gasto-fletera').empty(),
                         $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
-                        $('#table-gasto-fleteras').DataTable().clear(),
-                        $('#table-gasto-fleteras').DataTable().destroy() 
+                        $('#table-gasto-fleteras').DataTable().clear().draw()
         ): '';
         $.ajax({
             url: '/logistica/reportes/gastoFleteras/consultFreightExpense',
@@ -63,230 +168,59 @@ const logisticaController = {
             datatype: 'json',
             success: function (data) { 
                 console.log(data);
+                console.time();
                 let row = '';
                 data.forEach(element => 
                     row += element.rowHtml
                 );
-                document.getElementById('content-table-gasto-fleteras').insertAdjacentHTML('afterbegin',row);
-                $('#table-gasto-fleteras').DataTable({
-                    "responsive": true,
-                    "lengthChange": false, "autoWidth": false,
-                    "buttons": ["excel"]
-                });
-                $('#card-table').attr('hidden',false);
+                $('#table-gasto-fleteras').DataTable().clear().draw();
+                $('#table-gasto-fleteras').DataTable().rows.add(data).draw();
                 $('.btn-consultar-gasto-fletera').empty();
                 $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
                 contTable++;
+            },
+            complete:()=>{
+                console.timeEnd();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);     
             }
         });
     },
-    consultBillsXShipments:() => {
-        $('.card-table-facturas-embarcar').prop('hidden',false);
+    consultBillsXShipments: () => {
         $('.btn-consultar-factura').prop('disabled',true);
         $('.btn-consultar-factura').empty();
-        $('.btn-consultar-factura').append('<i class="fa-solid fa-spinner fa-spin fa-1x mr-2" style="color:white;"></i>  Consultando');
-        // $.ajax({
-        //     url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
-        //     type: 'GET',
-        //     data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
-        //     datatype: 'json',
-        //     async: false,
-        //     success: function (data) {
-        //         console.log(data);
-        //         $('#content-table-facturas-embarque').empty();
-        //         let rows = ''; 
-        //         if(data != "")
-        //         {
-        //             $('#alert-message').empty();
-        //             $('#alert-message').prop('hidden',true);
-        //             $('.table-responsive').prop('hidden',false);
-        //             // $.each(data,function(index,value){
-        //             //     let fechaIngreso = value.fechaIngreso != '0001-01-01T00:00:00' ? value.fechaIngreso : '';
-        //             //     let fechaFactura = value.fechaFactura != '0001-01-01T00:00:00' ? value.fechaFactura : '';
-        //             //     let embarque = value.embarque != '' ? value.embarque : '';
-        //             //     let fechaEmbarque = value.fechaEmbarque != '0001-01-01T00:00:00' ? value.fechaEmbarque : '';
-        //             //     let fechaFleteXConfirmar = value.fechaFleteXConfirmar != '0001-01-01T00:00:00' ? value.fechaFleteXConfirmar : '';
-        //             //     let fechaEntrega = value.fechaEntrega != '0001-01-01T00:00:00' ? value.fechaEntrega : '';
-        //             //     let responsable = value.responsable != null ? value.responsable : '';
-        //             //     let diasPermitidos = value.diasPermitidos != null ? value.diasPermitidos : '';
-        //             //     rows += '<tr>'
-        //             //         +'<td>'+value.pedido+'</td>'
-        //             //         +'<td>'+value.cotizacion+'</td>'
-        //             //         +'<td>'+value.consolidado+'</td>'
-        //             //         +'<td>'+value.movimiento+'</td>'
-        //             //         +'<td>'+fechaIngreso.split('T')[0]+'</td>'
-        //             //         +'<td>'+value.factura+'</td>'
-        //             //         +'<td>'+value.ubicacion+'</td>'
-        //             //         +'<td>'+fechaFactura.split('T')[0]+'</td>'
-        //             //         +'<td>'+value.cliente+'</td>'
-        //             //         +'<td>'+value.zona+'</td>'
-        //             //         +'<td>'+value.nota+'</td>'
-        //             //         +'<td>'+value.condicionPago+'</td>'
-        //             //         +'<td>'+value.importe+'</td>'
-        //             //         +'<td>'+value.formaEnvio+'</td>'
-        //             //         +'<td>'+value.fletera+'</td>'
-        //             //         +'<td>'+value.totalEmbarques+'</td>'
-        //             //         +'<td>'+embarque+'</td>'
-        //             //         +'<td>'+fechaEmbarque.split('T')[0]+'</td>'
-        //             //         +'<td>'+value.estadoEmbarque+'</td>'
-        //             //         +'<td>'+value.comentarioEmbarque+'</td>'
-        //             //         +'<td>'+value.estadoFactura+'</td>'
-        //             //         +'<td>'+value.comentarioFactura+'</td>'
-        //             //         +'<td>'+fechaFleteXConfirmar+'</td>'
-        //             //         +'<td>'+fechaEntrega.split('T')[0]+'</td>'
-        //             //         +'<td>'+value.usuario+'</td>'
-        //             //         +'<td>'+value.chofer+'</td>'
-        //             //         +'<td>'+value.dias+'</td>'
-        //             //         +'<td>'+responsable+'</td>'
-        //             //         +'<td>'+diasPermitidos+'</td>'
-        //             //         +'<td>'+value.Estatus+'</td>'
-        //             //         +'</tr>';
-        //             // });
-        //             $('.card-table-facturas-embarcar').prop('hidden',false);
-        //             $('#content-table-facturas-embarque').prepend(rows);
-        //             if(contTable != 0)
-        //             {
-        //                 $('#table-facturas-embarque').DataTable().clear();
-        //                 $('#table-facturas-embarque').DataTable().destroy();
-        //             }
-        //             $("#table-facturas-embarque").DataTable({
-        //                 "responsive": true,
-        //                 "lengthChange": false, "autoWidth": false,
-        //                 "buttons": ["excel"]
-        //               }).buttons().container().appendTo('#table-facturas-embarque_wrapper .col-md-6:eq(0)');
-        //               contTable++;
-        //         }else{
-        //             $('.card-table-facturas-embarcar').prop('hidden',false);
-        //             $('.table-responsive').prop('hidden',true);
-        //             $('#alert-message').empty();
-        //             $('#alert-message').prop('hidden',false);
-        //             $('#alert-message').append('No se encontraron resultados.');
-        //         }
-                    // $('.btn-consultar-factura').prop('disabled',false);
-                    // $('.btn-consultar-factura').empty();
-                    // $('.btn-consultar-factura').append('Consultar');
-        //     },
-        //     error: function (jqXHR, textStatus, errorThrown) {
-        //         console.log(textStatus);     
-        //     }
-        // });
-        if(contTable != 0){
-            $('#table-facturas-embarque').DataTable().clear();
-            $('#table-facturas-embarque').DataTable().destroy();
-        }
-        $('#table-facturas-embarque').dataTable({
-            'ajax':{
-                method: 'GET',
-                url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
-                deferRender: false,
-                data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
-                beforeSend: function () {
-
-                },
-                complete: function () {
-
-                },
-                dataSrc: function (data) {
-                    $('.table-responsive').prop('hidden',false);
-                    $('.btn-consultar-factura').prop('disabled',false);
-                    $('.btn-consultar-factura').empty();
-                    $('.btn-consultar-factura').append('Consultar');
-                    console.log(data);
-                    let a = 0;
-                    while(a < data.length){
-                        let fechaIngreso = data[a].fechaIngreso != '0001-01-01T00:00:00' ? data[a].fechaIngreso : '';
-                        let fechaFactura = data[a].fechaFactura != '0001-01-01T00:00:00' ? data[a].fechaFactura : '';
-                        let embarque = data[a].embarque != '' ? data[a].embarque : '';
-                        let fechaEmbarque = data[a].fechaEmbarque != '0001-01-01T00:00:00' ? data[a].fechaEmbarque : '';
-                        let fechaFleteXConfirmar = data[a].fechaFleteXConfirmar != '0001-01-01T00:00:00' ? data[a].fechaFleteXConfirmar : '';
-                        let fechaEntrega = data[a].fechaEntrega != '0001-01-01T00:00:00' ? data[a].fechaEntrega : '';
-                        let responsable = data[a].responsable != null ? data[a].responsable : '';
-                        let diasPermitidos = data[a].diasPermitidos != null ? data[a].diasPermitidos : '';
-
-                        data[a].fechaIngreso = fechaIngreso.split('T')[0];
-                        data[a].fechaFactura = fechaFactura.split('T')[0];
-                        data[a].embarque = embarque;
-                        data[a].fechaEmbarque = fechaEmbarque.split('T')[0];
-                        data[a].fechaFleteXConfirmar = fechaFleteXConfirmar.split('T')[0];
-                        data[a].fechaEntrega = fechaEntrega.split('T')[0];
-                        data[a].responsable = responsable;
-                        data[a].diasPermitidos = diasPermitidos;
-                        a++;
-                    }
-                    // for(let a=0;a<data.length;a++)
-                    // {
-                        // let fechaIngreso = data[a].fechaIngreso != '0001-01-01T00:00:00' ? data[a].fechaIngreso : '';
-                        // let fechaFactura = data[a].fechaFactura != '0001-01-01T00:00:00' ? data[a].fechaFactura : '';
-                        // let embarque = data[a].embarque != '' ? data[a].embarque : '';
-                        // let fechaEmbarque = data[a].fechaEmbarque != '0001-01-01T00:00:00' ? data[a].fechaEmbarque : '';
-                        // let fechaFleteXConfirmar = data[a].fechaFleteXConfirmar != '0001-01-01T00:00:00' ? data[a].fechaFleteXConfirmar : '';
-                        // let fechaEntrega = data[a].fechaEntrega != '0001-01-01T00:00:00' ? data[a].fechaEntrega : '';
-                        // let responsable = data[a].responsable != null ? data[a].responsable : '';
-                        // let diasPermitidos = data[a].diasPermitidos != null ? data[a].diasPermitidos : '';
-
-                        // data[a].fechaIngreso = fechaIngreso.split('T')[0];
-                        // data[a].fechaFactura = fechaFactura.split('T')[0];
-                        // data[a].embarque = embarque;
-                        // data[a].fechaEmbarque = fechaEmbarque.split('T')[0];
-                        // data[a].fechaFleteXConfirmar = fechaFleteXConfirmar.split('T')[0];
-                        // data[a].fechaEntrega = fechaEntrega.split('T')[0];
-                        // data[a].responsable = responsable;
-                        // data[a].diasPermitidos = diasPermitidos;
-                    // }
-                    $('.btn-consultar-factura').prop('disabled',false);
-                    $('.btn-consultar-factura').empty();
-                    $('.btn-consultar-factura').append('Consultar');
-                    return data;
-                }
+        $('.btn-consultar-factura').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
+        let row = '';
+        console.log(contTable);
+        contTable != 0 ?  (
+            $('#table-facturas-embarque').DataTable().clear().draw()
+            // $('#table-facturas-embarque').DataTable().destroy()
+        ): '';
+        $.ajax({
+            url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
+            type: 'GET',
+            data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                console.time();
+                
+                $('#table-facturas-embarque').DataTable().clear().draw();
+                $('#table-facturas-embarque').DataTable().rows.add(data).draw();
+                $('.btn-consultar-factura').prop('disabled',false);
+                $('.btn-consultar-factura').empty();
+                $('.btn-consultar-factura').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                contTable++;
             },
-            columns: [
-                { data:'pedido'},
-                { data:'cotizacion'},
-                { data:'consolidado'},
-                { data:'movimiento'},
-                { data:'fechaIngreso'},
-                { data:'factura'},
-                { data:'ubicacion'},
-                { data:'fechaFactura'},
-                { data:'cliente'},
-                { data:'zona'},
-                { data:'nota'},
-                { data:'condicionPago'},
-                { data:'importe'},
-                { data:'formaEnvio'},
-                { data:'fletera'},
-                { data:'totalEmbarques'},
-                { data:'embarque'},
-                { data:'fechaEmbarque'},
-                { data:'estadoEmbarque'},
-                { data:'comentarioEmbarque'},
-                { data:'estadoFactura'},
-                { data:'comentarioFactura'},
-                { data:'fechaFleteXConfirmar'},
-                { data:'fechaEntrega'},
-                { data:'usuario'},
-                { data:'chofer'},
-                { data:'dias'},
-                { data:'responsable'},
-                { data:'diasPermitidos'}
-            ],
-            // lenguaje: {
-            //     url: 'cdn.datatables.net/plug-ins/1.12.0/i18n/es-ES.json'
-            // },
-            pageLenght: 10,
-            // responsive: true,
-            // dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: 'Reporte_facturas_x_emparque'
-                }
-            ]
+            complete:() => {
+                $('.card-body').attr('hidden',false);
+                console.timeEnd();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
         });
-        contTable++;
     },
     slopesBoxes: () => {
         $.ajax({
