@@ -2479,11 +2479,12 @@ function mostrarSoloExistencias(){
     dataset = [];
     if (checkBox.checked == true){
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar todo';
-        var table = $('#tablaInventario').DataTable();
-        var data = table.rows({ filter : 'applied'}).data(); //obtiene información de tabla considerando si tiene algún filtro aplicado
-        currentDataset = table.rows().data(); //Obtiene toda la información de la tabla, sin tomar en cuenta el filtro que tenga
-        for(var x=0; x < data.length; x++){
-            var existencia = data[x][6].split('>')[2].split('<')[0];
+        let currentTable = $('#tablaInventario').DataTable();
+        let data = currentTable.rows({ filter : 'applied'}).data(); //obtiene información de tabla considerando si tiene algún filtro aplicado
+        currentDataset = currentTable.rows().data(); //Obtiene toda la información de la tabla, sin tomar en cuenta el filtro que tenga
+        let currentFilter = currentTable.search();
+        for(let x=0; x < data.length; x++){
+            let existencia = data[x][6].split('>')[2].split('<')[0];
             if(existencia > 0){
                 dataset.push(data[x]);
             }
@@ -2491,7 +2492,7 @@ function mostrarSoloExistencias(){
         $("#tablaInventario").dataTable().fnClearTable();
         $("#tablaInventario").dataTable().fnDraw();
         $("#tablaInventario").dataTable().fnDestroy();
-        var table = $("#tablaInventario").DataTable({
+        let newTable = $("#tablaInventario").DataTable({
             data: dataset,
             pageLength : 5,
             orderCellsTop: true,
@@ -2510,18 +2511,22 @@ function mostrarSoloExistencias(){
                 {"targets": 10,"visible": false}
              ]
         });
+
+        newTable.search(currentFilter);
          $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
-            table
+            newTable
                 .column( $(this).parent().index() )
                 .search( this.value )
                 .draw();
         } );
-      } else {
+    } else {
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
+        let currentTable = $('#tablaInventario').DataTable();
+        let currentFilter = currentTable.search();
         $("#tablaInventario").dataTable().fnClearTable();
         $("#tablaInventario").dataTable().fnDraw();
         $("#tablaInventario").dataTable().fnDestroy();
-        var table = $("#tablaInventario").DataTable({
+        let newTable = $("#tablaInventario").DataTable({
             data: currentDataset,
             pageLength : 5,
             orderCellsTop: true,
@@ -2540,8 +2545,9 @@ function mostrarSoloExistencias(){
                 {"targets": 10,"visible": false}
              ]
         });
+        newTable.search(currentFilter).draw();
          $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
-            table
+            newTable
                 .column( $(this).parent().index() )
                 .search( this.value )
                 .draw();

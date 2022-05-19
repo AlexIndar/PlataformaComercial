@@ -318,15 +318,15 @@
             <div class="modal-content modal-content-inventario">
                                 <input type="text" id="empty" value="yes" hidden>
                                 <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalInventario()"></i>
-                                <div class="checkSoloExistencias row d-flex flex-row justify-content-end align-items-center mb-5">
-                                        <div class="col-lg-8 col-md-6 col-12 mt-2 mt-sm-5">
+                                <div class="checkSoloExistencias row d-flex flex-row justify-content-end align-items-center mb-3 mt-3">
+                                        <div class="col-lg-8 col-md-6 col-12">
                                             <select id="filterInventario" name="filterInventario" class="form-control selectpicker" data-live-search="true">
                                                 <option selected value="none">Ordenar</option>
                                                     <option class="optionFilterInventario" style="height: 30px !important;" value="precioDown">Precio 10 - 1</option>
                                                     <option class="optionFilterInventario" style="height: 30px !important;" value="precioUp">Precio 1 - 10</option>
                                             </select>
                                         </div>
-                                        <div class="col-lg-4 col-md-6 col-12 mt-2 mt-sm-5">
+                                        <div class="col-lg-4 col-md-6 col-12">
                                             <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -8px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias" style="margin-right: 40px;">Mostrar solo existencias</label>
                                         </div>
 

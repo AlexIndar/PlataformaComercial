@@ -638,7 +638,7 @@ height: 95vh;
 overflow-y: scroll;
 border: 0;
 border-radius: 5px;
-padding: 20px;
+padding: 0 20px 20px 20px;
 width: 100% !important;
 }
 
