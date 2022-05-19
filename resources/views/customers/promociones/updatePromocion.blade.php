@@ -49,7 +49,8 @@
 
                 <div class="row text-center">
                     <div class="col-12">
-                        <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' value="{{$datePromo}}"/>
+                        <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' style="display:none" value="{{$datePromo}}"/>
+                        <h5 id="fechasLoading">Cargando fechas ...</h5>
                     </div>
                 </div>
 

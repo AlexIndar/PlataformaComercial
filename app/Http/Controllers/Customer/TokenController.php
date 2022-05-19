@@ -33,21 +33,28 @@ class TokenController extends Controller
     }
 
     public static function refreshToken(){
+        if(!isset($_COOKIE['username'])){
+            setcookie("laravel-token", "", time()-60*60*24, '/');
+            setcookie("refresh", "", time()- 60*60*24, '/');
+            setcookie("access", "", time()- 60*60*24, '/');
+            setcookie("username", "", time()- 60*60*24, '/');
+            setcookie("level", "", time()- 60*60*24, '/');
+            return redirect('/');
+        }
         if(isset($_COOKIE["refresh"])){
             $old = $_COOKIE["refresh"];
             $username = $_COOKIE["username"];
             $typeUser = Http::withToken($old)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
             $permissions = (json_decode(json_decode($typeUser->body())->permissions));
             $response = Http::withToken($old)->post('http://192.168.70.107:64444/Login/RefreshToken');
-            
             if($response->getStatusCode() == 200){ 
                     $token = $response->body();
                     setcookie("laravel-token", "", time()-60*60*24, '/');
                     setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
                     setcookie("refresh", "", time()- 60*60*24, '/');
                     setcookie("refresh", $token, time()+ 60*60*24, '/');
-                    setcookie('access', "", time()-60*60*24*30, '/');
-                    setcookie('access', json_encode($permissions), time()+60*60*24*30, '/');
+                    setcookie("access", "", time()- 60*60*24, '/');
+                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
                     setcookie('username', "", time()-60*60*24*30, '/');
                     setcookie('username', $username, time()+60*60*24*30, '/');
                     return $token;
@@ -77,7 +84,7 @@ class TokenController extends Controller
 
     public function decrypt($encrypt, $key){
          // Store the cipher method
-         $ciphering = "AES-128-CTR";
+        $ciphering = "AES-128-CTR";
         $options = 0;
         // Non-NULL Initialization Vector for decryption
         $decryption_iv = '1234567891011121';

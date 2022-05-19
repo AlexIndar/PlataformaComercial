@@ -11,7 +11,7 @@ $(document).ready(function(){
             data: FormData,
             headers: {
                 'X-CSRF-Token': '{{ csrf_token() }}',
-            },
+            }, 
             success: function(data){
                     saleOrders = data;
             }, 
@@ -90,9 +90,15 @@ $(document).ready(function(){
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador green";
                     }
-                    else{
+                    else if(saleOrders[x]['status'] == "Pending Approval"){
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "POR APROBAR";
+                        var indicador = document.createElement('div');
+                        indicador.classList = "indicador orange";
+                    }
+                    else {
+                        var hestatusDesc = document.createElement('h5');
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -182,9 +188,15 @@ $(document).ready(function(){
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador green";
                     }
+                    else if(saleOrders[x]['status'] == "Pending Approval"){
+                        var hestatusDesc = document.createElement('h5');
+                        hestatusDesc.innerHTML = "POR APROBAR";
+                        var indicador = document.createElement('div');
+                        indicador.classList = "indicador orange";
+                    }
                     else{
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -222,6 +234,52 @@ $(document).ready(function(){
         }
     });
 
+    // ZOOM EFFECT
+
+    var native_width = 0;
+	var native_height = 0;
+
+	$(".magnify").mousemove(function(e){
+		if(!native_width && !native_height)
+		{
+		
+			var image_object = new Image();
+			image_object.src = $(".small").attr("src");
+			native_width = image_object.width;
+			native_height = image_object.height;
+		}
+		else
+		{
+            var src = $(".small").attr("src");
+            document.getElementById('zoom').style.background = "url('"+src+"') no-repeat";
+
+			var magnify_offset = $(this).offset();
+		
+			var mx = e.pageX - magnify_offset.left;
+			var my = e.pageY - magnify_offset.top;
+		
+			if(mx < $(this).width() && my < $(this).height() && mx > 0 && my > 0)
+			{
+				$(".large").fadeIn(100);
+			}
+			else
+			{
+				$(".large").fadeOut(100);
+			}
+			if($(".large").is(":visible"))
+			{
+
+				var rx = Math.round(mx/$(".small").width()*native_width - $(".large").width()/2)*-1;
+				var ry = Math.round(my/$(".small").height()*native_height - $(".large").height()/2)*-1;
+				var bgp = rx + "px " + ry + "px";
+				
+				var px = mx - $(".large").width()/2;
+				var py = my - $(".large").height()/2;
+			
+				$(".large").css({left: px, top: py, backgroundPosition: bgp});
+			}
+		}
+	});
     
     // FILTRO POR AÑO ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -284,9 +342,15 @@ $(document).ready(function(){
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador green";
                     }
+                    else if(saleOrders[x]['status'] == "Pending Approval"){
+                        var hestatusDesc = document.createElement('h5');
+                        hestatusDesc.innerHTML = "POR APROBAR";
+                        var indicador = document.createElement('div');
+                        indicador.classList = "indicador orange";
+                    }
                     else{
                         var hestatusDesc = document.createElement('h5');
-                        hestatusDesc.innerHTML = "PENDIENTE";
+                        hestatusDesc.innerHTML = "EN PROCESO";
                         var indicador = document.createElement('div');
                         indicador.classList = "indicador red";
                     }
@@ -328,7 +392,7 @@ $(document).ready(function(){
 
     $( ".fa-refresh" ).on( "click", function( e ) {
         var icon = $(this).find( ".fa-refresh" ),
-          animateClass = "glyphicon-refresh-animate";
+        animateClass = "glyphicon-refresh-animate";
     
         $(this).addClass( animateClass );
         // setTimeout is to indicate some async operation
@@ -364,9 +428,6 @@ $(document).ready(function(){
         showAll();
 
     });    
-
-
-
 
 });
 
@@ -452,9 +513,15 @@ function showAll(){
             var indicador = document.createElement('div');
             indicador.classList = "indicador green";
         }
+        else if(saleOrders[x]['status'] == "Pending Approval"){
+            var hestatusDesc = document.createElement('h5');
+            hestatusDesc.innerHTML = "POR APROBAR";
+            var indicador = document.createElement('div');
+            indicador.classList = "indicador orange";
+        }
         else{
             var hestatusDesc = document.createElement('h5');
-            hestatusDesc.innerHTML = "PENDIENTE";
+            hestatusDesc.innerHTML = "EN PROCESO";
             var indicador = document.createElement('div');
             indicador.classList = "indicador red";
         }
@@ -476,6 +543,9 @@ function showAll(){
 }
 
 function openDetail(numPedido){
+    $("#tablaDetalle").dataTable().fnClearTable();
+    $("#tablaDetalle").dataTable().fnDraw();
+    $("#tablaDetalle").dataTable().fnDestroy();
     $('#modalDetail').modal('show');
     document.getElementById('titleModalDetail').innerHTML = '<h3>Estatus Pedido: '+numPedido+'</h3>';
     $.ajax({
@@ -489,7 +559,7 @@ function openDetail(numPedido){
 		'enctype': 'multipart/form-data',
 		'timeout': 2*60*60*1000,
 		success: function(data){
-                if(data.length == 0){
+                if(data==null){
                     document.getElementById("labelWMS").innerHTML = 'WMS';
                     document.getElementById("labelWMS").classList.remove('active');
                     document.getElementById("labelFactura").innerHTML = 'FACTURA';
@@ -498,7 +568,6 @@ function openDetail(numPedido){
                     document.getElementById("labelEmbarque").classList.remove('active');
                 }
                 else{
-
                     if(data[0]['wms'] != null){
                         var statusWMS = '';
                         switch(data[0]['wms']){
@@ -534,10 +603,95 @@ function openDetail(numPedido){
                         document.getElementById("labelEmbarque").classList.remove('active');
                     }
                 }
+
+                getDetalleFacturado(numPedido);
 				
 		}, 
 		error: function(error){
-			//   console.log(error);
+			alert('error');
 		 }
 	});
+}
+
+function noDisponible(img) {
+    img.src = 'http://indarweb.dyndns.org:8080/assets/customers/img/jpg/imagen_no_disponible.jpg';
+}
+
+function getDetalleFacturado(numPedido){
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "getDetalleFacturado",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {id: numPedido},
+		'enctype': 'multipart/form-data',
+		'timeout': 2*60*60*1000,
+		success: function(data){
+                var body = document.getElementById('saleOrderDetail');
+                var sinDetalle = document.getElementById('sinDetalle');
+                sinDetalle.innerHTML = '';
+                var dataset = [];
+                if(data != null){
+                    body.style.display = 'block';
+                    for(var x = 0; x < data.length; x++){
+                        var arr = [];
+                        arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + data[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' height='auto' onclick='verImagenProducto(\"" + data[x]['itemid'] + "\")' class='img-item' onerror='noDisponible(this)'/>");
+                        arr.push("<p style='display: inline;'>"+data[x]['itemid']+"</p>");
+                        arr.push(data[x]['cantPedido']);
+                        arr.push(data[x]['cantEmpacada']);
+                        data[x]['cantFacturada'] != '' ? arr.push(data[x]['cantFacturada']) : arr.push('<p style="display: inline; margin-left: 20px;"><i class="fas fa-times" style="margin-right: 10px; color: red;"></i><strong>Sin Factura </strong></p>');
+                        dataset.push(arr);
+                    }  
+                    var table = $("#tablaDetalle").DataTable({
+                        data: dataset,
+                        pageLength : 5,
+                        deferRender: true,
+                        lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
+                        "initComplete": function (settings, json) {  
+                            $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+                        },
+                        'columnDefs': [
+                            {"targets": 0,"className": "td-center"},
+                            {"targets": 1,"className": "td-center"},
+                            {"targets": 2,"className": "td-center"},
+                            {"targets": 3,"className": "td-center"},
+                            {"targets": 4,"className": "td-center"}
+                         ]
+                    });
+                }
+                else{
+                    body.style.display = 'none';
+                    var row = document.createElement('div');
+                    row.setAttribute('class', 'row d-flex align-items-center justify-content-center');
+                    row.setAttribute('style', 'height: 80px; margin-bottom: 0 !important;');
+                    var div = document.createElement('div');
+                    div.setAttribute('class', 'col-12 d-flex align-items-center justify-content-center h-100');
+                    var innerDetail = "<h3 style='display: inline;'>Sin Detalle</h3>";
+                    div.innerHTML = innerDetail;
+                    row.appendChild(div);
+                    sinDetalle.appendChild(row);
+                }
+                
+                
+
+              
+		}, 
+		error: function(error){
+			alert('error');
+		 }
+	});
+}
+
+function verImagenProducto(itemid){
+    var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg";
+    document.getElementById('containerImgProduct').style.display = 'flex';
+    document.getElementById('imgProductMD').src = src;
+    document.getElementById('imgProductMD').setAttribute('onerror', "onerror='noDisponible(this)'");
+
+}
+
+function closeImgProductMD(){
+    document.getElementById('containerImgProduct').style.display = 'none';
 }

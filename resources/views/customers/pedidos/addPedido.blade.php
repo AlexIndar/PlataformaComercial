@@ -1,4 +1,4 @@
-
+ 
 @extends('layouts.customers.customer')
 
 @section('title') Indar - Agregar Pedido @endsection
@@ -33,14 +33,14 @@
                     <h5 class="d-none" id="customerIDLabel">Cliente</h5>
                 </div>
                 @if(count($data)==1)
-                    <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}}" disabled></div>
+                    <div class="col-lg-5 col-md-5 col-12 rowPedido"><input type="text" class="inputPedido" id="customerID" name="customerID" value="[{{strtoupper($data[0]['companyId'])}}] - {{strtoupper($data[0]['company'])}} ({{strtoupper($data[0]['zona'])}})" disabled></div>
                 @else
                     <div class="col-lg-5 col-md-5 col-12 rowPedido">
                         <div class="skeleton-input"></div>
                         <select id="customerID" name="customerID" class="form-control selectpicker d-none" data-live-search="true">
                             <option selected value="none">Selecciona un cliente</option>
                             @for($x=0; $x < (count($data)); $x++)
-                                <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}}</option>
+                                <option class="optionCustomerID" style="height: 30px !important;" value="{{$x}}">[{{strtoupper($data[$x]['companyId'])}}] - {{strtoupper($data[$x]['company'])}} ({{strtoupper($data[$x]['zona'])}})</option>
                             @endfor
                         </select>
                     </div>
@@ -122,15 +122,10 @@
                                 <h5 class="d-none" id="fleteraLabel">Fletera</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if(count($data)==1)
-                                    <input type="text" class="inputPedido" id="fletera" name="fletera" value="{{$data[0]['packgeDeliveryF']}}" disabled>
-                                @else
                                     <div class="skeleton-input"></div>  
-                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" disabled>
-                                @endif
+                                    <input type="text" class="inputPedido d-none" id="fletera" name="fletera" value="" autocomplete="off" disabled>
                             </div>
                     </div>
-
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-12">
@@ -180,7 +175,7 @@
         </div>
     <!---------------------------------------------------------------------------------------------------- FIN ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
         
-    <br><br>
+    <br><br> 
 
     <!---------------------------------------------------------------------------------------------------- PEDIDO  ---------------------------------------------------------------------------------------------->
 
@@ -189,8 +184,15 @@
     </div>
 
 
+
     <div id="pedido" style="display:none;">
 
+        <div style="display: flex; align-items: flex-start;">
+            <h5>Scroll </h5>
+            <input type="checkbox" id="checkbox1" class='input-switch' />
+            <label for="checkbox1" class="switch" id="label-switch" onmouseup="activeSwitch(1)"></label>
+        </div>
+        
         <!-- TABLA ARTICULOS PEDIDO -->
 
         <div class="cuerpoPedido row">
@@ -198,7 +200,9 @@
                 <table class="tablaPedido" id="tablaPedido">
                     <!-- CABECERA DE TABLA -->
                     <tr>
-                        <th>#</th>
+                        <th><div class="totalFilas">
+                            <h5># <span class="totalFilasCant" id="totalFilasCant">0</span></h5>
+                        </div></th>
                         <th>Art</th>
                         <th>Cant</th>
                         <th>Descripción</th>
@@ -297,23 +301,37 @@
             <br><br>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                 <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-                <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)" data-toggle="modal" data-target=".bd-example-modal-xl-ns"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
+                <button type="button" id="pedidosClientes" class="btn btn-group-buttons" onclick="pedidosClientes()"><i class="fas fa-user"></i> Pedidos clientes</button>
+                <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i class="fas fa-paper-plane"></i> Levantar pedido</button> 
                 <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
                 <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
             </div> 
         </div>
 
-
-
         <!---------------------------------------------------------------------------------------------------- FIN PIE PEDIDO ---------------------------------------------------------------------------------------------->
 
-
+ 
         <!---------------------------------------------------------------------------------------------------- INVENTARIO ---------------------------------------------------------------------------------------------->
 
         <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="modalInventario" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-content-inventario">
                                 <input type="text" id="empty" value="yes" hidden>
+                                <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalInventario()"></i>
+                                <div class="checkSoloExistencias row d-flex flex-row justify-content-end align-items-center mb-3 mt-3">
+                                        <div class="col-lg-8 col-md-6 col-12">
+                                            <select id="filterInventario" name="filterInventario" class="form-control selectpicker" data-live-search="true">
+                                                <option selected value="none">Ordenar</option>
+                                                    <option class="optionFilterInventario" style="height: 30px !important;" value="precioDown">Precio 10 - 1</option>
+                                                    <option class="optionFilterInventario" style="height: 30px !important;" value="precioUp">Precio 1 - 10</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 col-12">
+                                            <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -8px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias" style="margin-right: 40px;">Mostrar solo existencias</label>
+                                        </div>
+
+                                </div>
+
                                 <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
                                     <thead>
                                         <tr>
@@ -327,6 +345,7 @@
                                             <th class="customHeader">Descuentos</th>
                                             <th class="customHeader">Promo Vol</th>
                                             <th class="customHeader">Acciones</th>
+                                            <th>Precio</th>
                                         </tr>
                                         <tr>
                                             <th>Img</th>
@@ -339,6 +358,7 @@
                                             <th>Descuentos</th>
                                             <th>Promo Vol</th>
                                             <th>Acciones</th>
+                                            <th>Precio</th>
                                         </tr>
                                     </thead>
 
@@ -354,6 +374,7 @@
                                             <th class="customHeader">Descuentos</th>
                                             <th class="customHeader">Promo Vol</th>
                                             <th class="customHeader">Acciones</th>
+                                            <th>Precio</th>
                                         </tr>
                                     </tfoot>
 
@@ -366,7 +387,7 @@
 
         <!---------------------------------------------------------------------------------------------------- FIN INVENTARIO ---------------------------------------------------------------------------------------------->
 
-        <!---------------------------------------------------------------------------------------------------- INVENTARIO ---------------------------------------------------------------------------------------------->
+        <!-------------------------------------------------------------------------------------------- MODAL LOADING LEVANTAR PEDIDO NETSUITE ---------------------------------------------------------------------------------------------->
 
         <div class="modal fade bd-example-modal-xl-ns" tabindex="-1" role="dialog" id="modalNetsuiteLoading" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -375,6 +396,51 @@
                     <h4>Levantando Pedido</h4>
                 </div>
                 <div id='container-netsuite-loading'></div>
+            </div>
+        </div>
+        </div>
+
+         <!--------------------------------------------------------------------------------------------- PEDIDOS CAPTURADOS POR CLIENTES ---------------------------------------------------------------------------------------------->
+
+         <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="modalPedidosClientes" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content modal-content-inventario">
+                                <input type="text" id="emptyPedidosClientes" value="yes" hidden>
+                                <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalPedidosClientes()"></i>
+                                <br><br>
+                                <table id="tablaPedidosClientes" class="table-striped table-bordered table-hover compact display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="customHeader">Zona</th>
+                                            <th class="customHeader">Cliente</th>
+                                            <th class="customHeader">Pedido</th>
+                                            <th class="customHeader">Importe</th>
+                                            <th class="customHeader">Fecha</th>
+                                            <th class="customHeader">Acciones</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Zona</th>
+                                            <th>Cliente</th>
+                                            <th>Pedido</th>
+                                            <th>Importe</th>
+                                            <th>Fecha</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th class="customHeader">Zona</th>
+                                            <th class="customHeader">Cliente</th>
+                                            <th class="customHeader">Pedido</th>
+                                            <th class="customHeader">Importe</th>
+                                            <th class="customHeader">Fecha</th>
+                                            <th class="customHeader">Acciones</th>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody class="bodyInventario" style="height: 200px; overflow-y: auto;"></tbody>
+                                </table>
             </div>
         </div>
         </div>
@@ -415,6 +481,8 @@
   <!-- DIV PARA MOSTRAR IMAGEN DEL PRODUCTO AMPLIADA -->
 
 <div class="containerImgProduct" id="containerImgProduct">
+    <h4 id='codigoArticuloMD'>CÓDIGO ARTICULO</h5>
+    <h4 id='descripcionArticuloMD'>DESCRIPCIÓN ARTICULO</h5>
     <div class="magnify">
         <div class="large" id="zoom"></div>
         <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">

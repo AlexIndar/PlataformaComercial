@@ -15,18 +15,32 @@ class ConfirmarPedido extends Mailable
     public $pedido;
     public $detallesPedido; 
     public $idCotizacion;
-    public function __construct($pedido, $detallesPedido, $idCotizacion)
+    public $cliente;
+    public $comentarios;
+    public $ordenCompra;
+    public $formaEnvio;
+    public $fletera;
+    public $tranIds;
+    public $asunto;
+    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds)
     {   
         $this->pedido = $pedido;
         $this->detallesPedido = $detallesPedido;
         $this->idCotizacion = $idCotizacion;
+        $this->cliente = $cliente;
+        $this->comentarios = $comentarios;
+        $this->ordenCompra = $ordenCompra;
+        $this->formaEnvio = $formaEnvio;
+        $this->fletera = $fletera;
+        $this->asunto = $asunto;
+        $this->tranIds = $tranIds;
     }
 
     public function build()
     {
         return $this->from('mailing@sndr.indar.com.mx', 'INDAR')
         ->replyTo('mailing@sndr.indar.com.mx', 'INDAR')
-        ->subject('Nueva Cotización INDAR')
+        ->subject($this->asunto)
         ->view('mails.confirmaPedido');
     }
 }

@@ -9,13 +9,13 @@
 <script src="{{asset('assets/customers/js/pedidos/pedidos.js')}}"></script>
 @endsection
 
-@section('body')
+@section('body') 
 
 <div class="content-wrapper p-5">
     <div class="container">
         <br><br>
         <div>
-            <button class="bg-promo btn-primary" onclick="addPedido()"> <i class="fas fa-file"></i> Nuevo Pedido</button>
+            <button class="bg-promo btn-primary" onclick="addPedido()"> <i class="fas fa-file"></i> Nueva Cotización</button>
         </div>
         <br><br>
         <div class="row">
@@ -28,8 +28,13 @@
                             <option value="email">Email</option>             
                 </select>
             </div>
-            <div class="col-3">
+            <div class="col-3" id='inputFiltro'>
                 <input type="text" class="inputPedido" id="filterValue" name="filterValue" style="height: 40px !important; background-color: white !important;" disabled>
+            </div>
+            <div class="col-3 d-none" id='selectZonas'>
+                <select id="zonas" name="zonas" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="none">Selecciona una zona</option>               
+                </select>
             </div>
             <div class="col-2">
                     <button type="button" id="filtrarPedidos" class="btn btn-info" style="height: 40px !important;" onclick="filtrar()" disabled><i class="fas fa-search"></i> Buscar</button>
@@ -41,25 +46,7 @@
       
         <br><br>
         <div id="rowPedidos">
-            @foreach($pedidos as $pedido)
-                <div class="promo">
-                    <div class="promo-header">
-                        <h4>[#{{$pedido->idCotizacion}} - {{strtoupper($pedido->companyId)}}] {{$pedido->orderC}}</h4>
-                        <div class="actions">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-info" title="Editar" onclick="editarPedido('{{$pedido->idCotizacion}}', '{{$pedido->companyId}}')"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger" title="Eliminar" onclick="activarEliminarModal('{{$pedido->idCotizacion}}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cuerpo-promo">
-                        <h5>Forma Envío <span class="fecha"><i class="fas fa-truck-loading"></i> {{$pedido->shippingWay}}</span> Fletera <span class="fecha"><i class="fas fa-shipping-fast"></i> {{$pedido->packageDelivery}}</span> </h5>
-                        <h5>{{$pedido->addressName}}</h5>
-                        <h5>{{$pedido->comments}}</h5>
-                    </div>
-                </div>
-
-            @endforeach
+            <!-- AQUÍ SE AGREGAN LAS COTIZACIONES DESDE EL DOM DE JAVASCRIPT -->
         </div>
        
 
@@ -71,7 +58,7 @@
 
         <form style="display: none" action="/pedido/nuevo" method="POST" id="formNuevo">
             @csrf
-            <input type="hidden" id="entity" name="entity" value="ALL"/>
+            <input type="hidden" id="entity" name="entity" value="{{$entity}}"/>
         </form>
 
         <!-- FORM OCULTO PARA ELIMINAR COTIZACIÓN GUARDADA-->

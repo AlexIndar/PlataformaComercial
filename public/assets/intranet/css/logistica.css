@@ -1,0 +1,72 @@
+.buttons-collection{
+    background-color: #002868;
+}
+.title-table{
+    background-color: #002868; 
+    color:white;
+}
+.EnTiempo{
+    background-color: #00bd00;
+    cursor: pointer;
+}
+.Atrasado{
+    background-color: #db8606;
+    cursor: pointer;
+}
+.Valorando{
+    background-color: white;
+    cursor: pointer;
+}
+.dt-button-collection > .dropdown-menu > .buttons-columnVisibility{
+    background-color: #002868;
+}
+.dt-button-collection > .dropdown-menu{
+    background-color: #002868;
+}
+.encabezado-table{
+    font-size: small;
+}
+.btn-orange{
+    background-color: #dc8a35!important;
+    border-color: #dc8a35!important;
+}
+.close{
+    color: white;
+}
+.close:hover{
+    color: white;
+}
+.btn-plataform{
+    background-color: #002868;
+    color: white;
+}
+.btn-plataform:hover{
+    background-color: #294a7e;
+    color: white;
+}
+#agregarGuiaNumeroGuia,#agregarGuiaImporte{
+    font-weight: bold;
+}
+.card-logistica{
+    background-color: #002868;
+    color: white;
+    border-radius: 14px;
+}
+.btn-consultar-factura,.btn-consultar-gasto-fletera{
+    color: white;
+}
+#table-gasto-fleteras{
+    table-layout: fixed;
+}
+
+#table-gasto-fleteras th,
+#table-gasto-fleteras td {
+    text-overflow: clip;
+}
+table.dataTable>tbody>tr.child ul.dtr-details>li {
+    border-bottom: 0px solid #efefef!important;
+    padding: 0px!important;
+}
+table.dataTable>tbody>tr{
+    /* white-space: nowrap; */
+}

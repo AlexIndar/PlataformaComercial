@@ -38,6 +38,10 @@ body{
     background-color: rgba(250, 91, 91, 1);
 }
 
+.orange {
+    background-color: #f7a84e;
+}
+
 .indicador{
     width: 0%;
     height: 10px;
@@ -235,7 +239,167 @@ p{
 	max-width: 900px !important;
 }
 
+.img-item{
+	width: 70px !important;
+	margin-right: 10px;
+	border: 1px solid #002868 !important;
+	cursor: pointer;
+}
 
+/* ------------------------------------------------------------------------------- MODAL IMAGEN AMPLIADA MD --------------------------------------------------------- */
+.containerImgProduct{
+	width:100%; 
+	height: 100vh; 
+	z-index: 100000; 
+	position: fixed; 
+	top:0; 
+	left:0;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.76);
+	backdrop-filter: blur(5px);
+	transition: all ease .4s;
+  }
+
+  .containerImgProduct h4{
+	color: white;
+	text-align: center;
+  }
+  
+  
+  .magnify{
+	height: auto;
+	max-height: 90vh; 
+	width: auto;
+	max-width: 90%;
+	position: relative;
+	display: flex;
+	justify-content: center !important;
+	align-items: center !important;
+  }
+  
+  .closeImgProductMDIcon{
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-top: 20px;
+	margin-right: 20px;
+	cursor: pointer;
+	color: white !important;
+	font-size: 20px !important;
+  }
+  
+  .large {
+	  width: 200px; 
+	height: 200px;
+	  position: absolute;
+	  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85), 
+	  0 0 1px 1px rgba(0, 0, 0, 0.25), 
+	  inset 0 0 1px 1px rgba(0, 0, 0, 0.063);
+	  display: none;
+  }
+  
+  .small { display: block; }
+  
+  .bigImageProduct{
+	object-fit: cover;
+	border: 1px solid rgba(0, 0, 0, 0.165);
+	width: auto;
+	height: 50vh;
+  }
+
+
+  /* NEW STEPPER */
+/*font Variables*/
+/*Color Variables*/
+
+
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+#progressbar li {
+	list-style-type: none;
+	color: #99a2a8;
+	font-size: 15px;
+	width: calc(100% / 4);
+	float: left;
+	position: relative;
+	text-align: center;
+}
+#progressbar li:nth-child(2):before {
+	content: "\f474";
+}
+#progressbar li:nth-child(3):before {
+	content: "\f570";
+}
+#progressbar li:nth-child(4):before {
+	content: "\f0d1";
+}
+#progressbar li:before {
+	content: "\f07a";
+	font-family: "Font Awesome\ 5 Free";
+	font-weight: 900;
+	display: flex;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	background: #eaf0f4;
+	border-radius: 50%;
+	margin: 0 auto 10px auto;
+	z-index: 1052 !important;
+}
+#progressbar li:after {
+	content: "";
+	width: 100% !important;
+	height: 10px !important;
+	background: #eaf0f4;
+	position: absolute;
+	left: -7%;
+	top: 21px;
+	z-index: 1051 !important;
+}
+#progressbar li:last-child:after {
+	width: 150%;
+}
+#progressbar li.active {
+	color: #5cb85c;
+}
+#progressbar li.active:before, #progressbar li.active:after {
+	background: #5cb85c;
+	color: white;
+}
+
+/* TABLA DETALLE PEDIDO */
+	
+.customHeader{
+	background-color: #002868 !important;
+	color: white !important;
+	width: auto !important;
+	text-align: center !important;
+}
+
+.td-center{
+	text-align: center !important;
+}
+
+.saleOrderDetail {
+	height: 95vh;
+	overflow-y: scroll;
+	border: 0;
+	border-radius: 5px;
+	padding: 20px;
+	width: 100% !important;
+	min-width: 95% !important;
+}
+
+.dataTables_wrapper .dataTables_filter input{
+	margin-bottom: 30px !important;
+}
 
 
 
