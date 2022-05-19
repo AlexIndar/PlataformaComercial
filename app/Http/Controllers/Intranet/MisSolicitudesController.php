@@ -37,7 +37,6 @@ class MisSolicitudesController extends Controller
 
     public static function getTableView($token, $zone){
         $zDescription = $zone->description;
-        // $zDescription = "Z652";
         $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zDescription);
         return json_decode($solicitudes->body());
     }
@@ -84,6 +83,21 @@ class MisSolicitudesController extends Controller
 
     public static function getValidationRequest($token, $folio){
         $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionSolicitud?id='.$folio);
+        return json_decode($valSol->body());
+    }
+
+    public static function getValidacionActConst($token, $folio){
+        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getValidacionActConst?id='.$folio);
+        return json_decode($valSol->body());
+    }
+
+    public static function getValidacionFacturas($token, $folio){
+        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionFacturas?id='.$folio);
+        return json_decode($valSol->body());
+    }
+
+    public static function getValidacionReferencias($token, $folio){
+        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionReferencias?id='.$folio);
         return json_decode($valSol->body());
     }
 
