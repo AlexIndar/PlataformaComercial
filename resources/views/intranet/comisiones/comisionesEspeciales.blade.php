@@ -108,7 +108,7 @@ function cargarEspecialesExcel(json) {
     var currentTime = new Date();
     var year = currentTime.getFullYear();
     var month = currentTime.getMonth();
-    console.log(year,month);
+    //console.log(year,month);
 
     var json;
     jsonCompleto = [];
@@ -134,7 +134,7 @@ function cargarEspecialesExcel(json) {
     jsonEspeciales = jsonEspeciales.slice(1,-1);
     jsonEspeciales = JSON.parse(jsonEspeciales);
     json = jsonEspeciales;
-    console.log(jsonEspeciales);
+    //console.log(jsonEspeciales);
 
     $.ajax({
            'headers': {
@@ -147,7 +147,7 @@ function cargarEspecialesExcel(json) {
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            console.log(data);
+            //console.log(data);
             Swal.fire({
             position: 'top',
             icon: 'success',
@@ -174,29 +174,25 @@ function cargarArticulosExcel(json) {
 
     var json;
     jsonCompleto = [];
-    especial = [];
+    data = [];
     jsonObj = JSON.parse(json);
     cantItemsPorCargar = jsonObj.length;
     var property = '';
-    let claves = Object.keys(jsonObj[0]);
+    //let claves = Object.keys(jsonObj[0]);
 
-    for ( var x=0 ; x < claves.length; x++ ){
-        articulo = [];
-        for (var index in jsonObj){
+    for ( var x=0 ; x < jsonObj.length; x++ ){
+        //
 
-            articulo.push({valor : jsonObj[index][x+1]});
-
-        }
-
-        especial.push({ especial:x+1, articulo});
+       data.push(jsonObj[x]);
     }
-    jsonCompleto.push({ ArtEspeciales: especial});
+    jsonCompleto.push({ ArtEspeciales: data});
+    //console.log(jsonCompleto)
     json = JSON.stringify(jsonCompleto);
     json = json.slice(1, -1)
-    //console.log(json);//json
+    //console.log(json);
     json = JSON.parse(json);
     json = json.ArtEspeciales;
-    //console.log(json);
+    console.log(json);
 
     $.ajax({
            'headers': {
@@ -204,8 +200,8 @@ function cargarArticulosExcel(json) {
            },
            'url': "/comisiones/postActualizarArticulosEspeciales",
            'type': 'POST',
-           'dataType': 'json',
-           'data': {ArtEspeciales : json},
+           'dataType': 'text',
+           'data': { ArtEspeciales: json},
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
@@ -213,12 +209,13 @@ function cargarArticulosExcel(json) {
             Swal.fire({
             position: 'top',
             icon: 'success',
-            title: 'Se cargarón los Especiales Correctamente ',
+            title: 'Se cargó el Archivo Correctamente ',
             showConfirmButton: false,
             timer: 5000
           })
         },
-        error: function() {
+        error: function(data) {
+            console.log(data);
             Swal.fire({
             position: 'top',
             icon: 'warning',

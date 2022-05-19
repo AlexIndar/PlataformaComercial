@@ -193,6 +193,11 @@ width: auto !important;
   margin-left: 20px;
 }
 
+.col-codArticulo{
+  float: left;
+  text-align: left !important;
+}
+
 
 .tablaPedido th{
 background-color: #002868;
@@ -357,7 +362,6 @@ height: 30px;
 
 .select-descuento{
   background-color: #F2F2F2 !important;
-  text-align: center !important;
   height: 30px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
@@ -399,12 +403,12 @@ height: 30px;
   vertical-align: middle !important;
 }
 
-#categoria-linea{
+#categoria-green{
 color: #139966;
 font-weight: 700;
 }
 
-#categoria-pedido{
+#categoria-red{
 color: #C82333;
 font-weight: 700;
 }
@@ -634,7 +638,7 @@ height: 95vh;
 overflow-y: scroll;
 border: 0;
 border-radius: 5px;
-padding: 20px;
+padding: 0 20px 20px 20px;
 width: 100% !important;
 }
 
