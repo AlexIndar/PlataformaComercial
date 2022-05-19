@@ -26,8 +26,6 @@
                 </div>
                 <div class="col-md-8 text-center">
                     <h2>Solicitudes Pendientes</h2>
-                    <button onclick="acceptForCash(27450)">Contado</button>
-                    <button onclick="acceptForCash(27443)">Credito</button>
                     <input type="text" id="userName" value="{{$user['typeUser']}}" hidden>
                     <input type="text" id="userP" value="{{$user['permissions']}}" hidden>
                 </div>

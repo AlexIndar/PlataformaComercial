@@ -1414,17 +1414,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
-                // Route::post('/SolicitudesPendientes/ReactiveClient', function (Request $request){
-                //     $token = TokenController::getToken();
-                //     if($token == 'error'){
-                //         return redirect('/logout');
-                //     }
-                //     $folio = $request->Folio;
-                //     $noC = $request->NoC;
-                //     $isCredit = $request->IsCredit;
-                //     $data = SolicitudesPendientesController::reactiveClient($token, $noC, $folio, $isCredit);
-                //     return  $data;
-                // });
+                Route::post('/SolicitudesPendientes/ReactiveClient', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $folio = $request->Folio;
+                    $noC = $request->NoC;
+                    $isCredit = $request->IsCredit;
+                    $data = SolicitudesPendientesController::reactiveClient($token, $noC, $folio, $isCredit);
+                    return  $data;
+                });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////
                 Route::get('/MisSolicitudesAdmin', function(){

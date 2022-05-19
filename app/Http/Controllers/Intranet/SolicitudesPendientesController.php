@@ -49,10 +49,10 @@ class SolicitudesPendientesController extends Controller
         return json_decode($file->body());
     }
 
-    // public static function reactiveClient($token, $noC, $folio, $isCredit){
-    //     $file = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/ReactiveClient?noC='.$noC.'&folio='.$folio.'&isCredit='.$isCredit);
-    //     return json_decode($file->body());
-    // }
+    public static function reactiveClient($token, $noC, $folio, $isCredit){
+        $file = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/ReactiveClient?noC='.$noC.'&folio='.$folio.'&isCredit='.$isCredit);
+        return json_decode($file->body());
+    }
 
     public static function saveValidation($token, $data){
         $json = json_decode($data);        
