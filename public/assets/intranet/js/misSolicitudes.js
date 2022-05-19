@@ -1996,7 +1996,6 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
         document.getElementById("datContactos").innerHTML = itemsC;
         getAlert("alertCont", data.observations.contactoPrincipal);
 
-
         if (data.tipo != false) {
             //CREDITO
             document.getElementById("crediSection").style.display = "flex";
@@ -2721,6 +2720,7 @@ function continueModal(facturas, archivos, data) {
     var idTypeSol = data.tipo == null ? "changeRSRadio" : data.tipo == 2 ? "creditABRadio" : data.tipo == 1 ? "creditRadio" : "cashRadio";
     document.getElementById(idTypeSol).checked = true;
     valiteTypeForm();
+    console.log(archivos);
     manejoArchivos(archivos);
     cargarArchivos(archivos);
     document.getElementById('creditoInput').value = data.credito;
