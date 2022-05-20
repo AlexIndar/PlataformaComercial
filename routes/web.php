@@ -977,6 +977,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             Route::post('/promociones/storePromo', function (Request $request){
+                                ini_set('max_input_vars','100000' );
                                 $token = TokenController::getToken();
                                 if($token == 'error'){
                                     return redirect('/logout');

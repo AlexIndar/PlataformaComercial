@@ -590,6 +590,12 @@ function cargarProductosExcel(json) {
             selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
     }
 
+    document.getElementById("btnSpinner").style.display = "block";
+    var btnActions = document.getElementsByClassName('btn-group-buttons');
+    for(var x=0; x < btnActions.length; x++){
+        btnActions[x].disabled = true;
+    }
+
     prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
@@ -699,7 +705,13 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 artArr['quantity'] = (parseInt(json[x]['quantity']) + parseInt(artArr['quantity'])).toString();
             }
             else{
-                if(json[x]['quantity'] > 0){
+                if(art == undefined){
+                    alert("Artículo "+json[x]['itemID']+" no encontrado en inventario");
+                    var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === json[x]['itemID']);
+                    selectedItemsFromInventory.splice(indexInventory, 1);
+                    cantItemsPorCargar --;
+                }
+                else if(json[x]['quantity'] > 0){
                     json[x]['descuento'] = 0;
                     json[x]['plazo'] = 0;
                     json[x]['marca'] = '';
@@ -712,7 +724,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                     arr.push(json[x]);
                 }
             }
-            
         }
         separarFilas(arr);
     }
@@ -858,6 +869,13 @@ function getItemById(item, separa) {
         }
     }
     else{
+
+        //si hay más de 150 partidas getItemById NO debe ser ascincrono porque da errores
+
+        let asincrono;
+        selectedItemsFromInventory.length > 150 ? asincrono = false : asincrono = true; 
+
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
