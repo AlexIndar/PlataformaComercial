@@ -1,0 +1,54 @@
+.titulo {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 30px;
+}
+.img-log{
+    margin-top: 30px;
+}
+.icon-1{
+    background-image: url('/assets/exporta/icons/icon-1.png')!important;
+}
+.icon-2{
+    background-image: url('/assets/exporta/icons/icon-2.png')!important;
+}
+.icon-3{
+    background-image: url('/assets/exporta/icons/icon-3.png')!important;
+}
+.icon-4{
+    background-image: url('/assets/exporta/icons/icon-4.png')!important;
+}
+.icon-5{
+    background-image: url('/assets/exporta/icons/icon-5.png')!important;
+}
+.icon-6{
+    background-image: url('/assets/exporta/icons/icon-6.png')!important;
+}
+.icon-7{
+    background-image: url('/assets/exporta/icons/icon-7.png')!important;
+}
+.icon-8{
+    background-image: url('/assets/exporta/icons/icon-8.png')!important;
+}
+.icon-1, .icon-2,.icon-3,.icon-4,.icon-5,.icon-6,.icon-7,.icon-8{
+    width: 60px;
+    height: 60px;
+    background-size: 60px;
+}
+.btn-xs{
+    background: #c1c1c1!important;
+}
+.div-fecha{
+    border:2px solid black;
+}
+.pd-0{
+    padding: 0px!important;
+}
+.table{
+    border: 1px solid black;
+}
+td{
+    border: 1px solid black;
+    padding: 0px!important;
+    text-align: center;
+}

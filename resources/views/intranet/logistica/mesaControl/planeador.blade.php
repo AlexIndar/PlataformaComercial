@@ -22,7 +22,7 @@
                     <div class="card mt-2">
                         <div class="card-header title-table">
                           <h3 class="card-title mt-2 mr-3">Planeador</h3>
-                          <button type="button" class="btn btn-outline-primary" onclick="logisticaController.reloadTable()"><i class="fas fa-sync-alt mr-1"></i> Actualizar</button>
+                          <button type="button" class="btn btn-outline-primary" onclick="logisticaController.reloadTable()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Actualizar</button>
                           <button type="button" class="btn btn-outline-primary float-right" onclick="logisticaController.slopesBoxes()"><i class="fas fa-solid fa-dolly"></i> Cajas Pendientes</button>
                         </div>
                         <!-- /.card-header -->

@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Dashboard', 'permissions' => $permissions]) 
+@extends('layouts.intranet.main', ['active' => 'Logistica']) 
 
 @section('title') Indar @endsection
 
@@ -14,8 +14,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-users fa-2x"></i><br>
-                        <i class="nav-icon fas fa-solid fa-people-carry-box"></i>
+                        <i class="fa-solid fa-people-carry-box fa-2x"></i><br>
                         <h6>Embarque Masivo</h6>
                       </div>
                     </a>
@@ -24,7 +23,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-map-marker-alt fa-2x"></i><br>
+                        <i class="fa-solid fa-arrow-up-1-9 fa-2x"></i><br>
                         <h6>Numero Guia</h6>
                       </div>
                     </a>
@@ -33,7 +32,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-search-dollar fa-2x"></i><br>
+                        <i class="fa-solid fa-truck-ramp-box fa-2x"></i><br>
                         <h6>Desembarcar</h6>
                       </div>
                     </a>
@@ -42,7 +41,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-book fa-2x"></i><br>
+                        <i class="fa-solid fa-clipboard-check fa-2x"></i><br>
                         <h6>Confirmar</h6>
                       </div>
                     </a>
@@ -51,7 +50,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-hammer fa-2x"></i><br>
+                        <i class="fa-solid fa-list-check fa-2x"></i><br>
                         <h6>Validar SAD</h6>
                       </div>
                     </a>
@@ -60,7 +59,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-book-open fa-2x"></i><br>
+                        <i class="fa-solid fa-newspaper fa-2x"></i><br>
                         <h6>Reporte SAD</h6>
                       </div>
                     </a>
@@ -69,7 +68,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-book-open fa-2x"></i><br>
+                        <i class="fa-solid fa-file-lines fa-2x"></i><br>
                         <h6>Reporte Embarque</h6>
                       </div>
                     </a>
@@ -78,7 +77,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-book-open fa-2x"></i><br>
+                        <i class="fa-solid fa-file-pen fa-2x"></i><br>
                         <h6>Editar Num. Guia</h6>
                       </div>
                     </a>
@@ -87,7 +86,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="{{ route('logistica.distribucion.capturaGastoFletera') }}" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-book-open fa-2x"></i><br>
+                        <i class="fa-solid fa-book-open-reader fa-2x"></i><br>
                         <h6>Captura Gasto Fletera</h6>
                       </div>
                     </a>
@@ -96,7 +95,7 @@
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
-                        <i class="nav-icon fas fa-book-open fa-2x"></i><br>
+                        <i class="fa-solid fa-arrow-up-1-9 fa-2x"></i><br>
                         <h6>Num. Guia Postventa</h6>
                       </div>
                     </a>

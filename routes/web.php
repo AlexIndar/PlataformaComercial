@@ -1104,7 +1104,37 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $fol = $request->Item;
                     $data = MisSolicitudesController::getValidationRequest($token, $fol);
-                    return  $data;
+                    return $data;
+                });
+
+                Route::post('/MisSolicitudes/getValidacionActConst', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getValidacionActConst($token, $fol);
+                    return $data;
+                });
+
+                Route::post('/MisSolicitudes/GetValidacionFacturas', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getValidacionFacturas($token, $fol);
+                    return $data;
+                });
+
+                Route::post('/MisSolicitudes/GetValidacionReferencias', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = MisSolicitudesController::getValidacionReferencias($token, $fol);
+                    return $data;
                 });
 
                 Route::post('/MisSolicitudes/getFiles', function (Request $request){
@@ -1114,6 +1144,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $fol = $request->Item;
                     $data = MisSolicitudesController::getFiles($token, $fol);
+                    return  $data;
+                });
+
+                Route::post('/SolicitudesPendientes/getFile', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Folio;
+                    $type = $request->Type;
+                    $data = SolicitudesPendientesController::getFile($token, $fol, $type);
                     return  $data;
                 });
 
@@ -1296,13 +1337,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     //$auxUser = json_decode($user->body());
                     //$userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    $testUSer = "bgaribay";
-                    $listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
-                    function getTime($time){
-                        return $time;
-                    }
-                    // dd($user);
-                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'listSol' => $listSol]);
+                    //$testUSer = "bgaribay";
+                    //$listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
+                    //function getTime($time){
+                    //    return $time;
+                    //}
+                    // dd($user->body());
+                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                 });
 
                 Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
@@ -1330,6 +1371,60 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $data = SolicitudesPendientesController::getCustomerCatalogs($token);
                     return $data;
+                });
+
+                Route::post('/SolicitudesPendientes/SaveValidation', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request);
+                    $response = SolicitudesPendientesController::saveValidation($token, json_encode($request->all()));
+                    return $response;
+                });
+
+                Route::post('/SolicitudesPendientes/RollBackRequest', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fol = $request->Item;
+                    $data = SolicitudesPendientesController::rollBackRequest($token, $fol);
+                    return  $data;
+                });
+
+                Route::post('/SolicitudesPendientes/AcceptRequest', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    // dd($request);
+                    $response = SolicitudesPendientesController::acceptRequest($token, json_encode($request->all()));
+                    return $response;
+                });
+
+                Route::post('/SolicitudesPendientes/SetReference', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $folio = $request->Folio;
+                    $noC = $request->CustomerID;
+                    $reference = $request->Reference;
+                    $data = SolicitudesPendientesController::setReference($token, $noC, $reference, $folio);
+                    return  $data;
+                });
+
+                Route::post('/SolicitudesPendientes/ReactiveClient', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $folio = $request->Folio;
+                    $noC = $request->NoC;
+                    $isCredit = $request->IsCredit;
+                    $data = SolicitudesPendientesController::reactiveClient($token, $noC, $folio, $isCredit);
+                    return  $data;
                 });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////
@@ -1680,7 +1775,7 @@ Route::get('/logistica/distribucion',function(){
     $userRol = $userData->permissions;
 
     $permissions = LoginController::getPermissions();
-    return view('intranet.logistica.distribucion.index',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
+    return view('intranet.logistica.distribucion.index',compact('token','permissions','username','userRol'));
 })->name('logistica.distribucion');
 Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     $token = TokenController::getToken();
@@ -1764,5 +1859,85 @@ Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function 
     }
     $response = LogisticaController::registerNet($token,$request->all());
 });
+Route::get('/logistica/reportes', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
 
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
 
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.index',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes');
+Route::get('/logistica/reportes/facturasXEmbarque', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.facturasxEmbarcar',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes.facturasXEmbarcar');
+Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', function (Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/reportes/gastoFleteras', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.gastoFleteras',compact('token','permissions','username','userRol')); 
+})->name('logistica.reportes.gastoFleteras');
+Route::get('/logistica/reportes/gastoFleteras/consultFreightExpense', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultFreightExpense($token);
+    return $response;
+});
+Route::get('/logistica/reportes/interfazRecibo', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes.interfazRecibo');
+Route::get('/pedidos-exporta',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    return view('exporta.pedidos');
+})->name('pedidos-exporta');

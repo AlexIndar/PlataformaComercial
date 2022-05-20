@@ -33,4 +33,69 @@ class SolicitudesPendientesController extends Controller
         $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getCYCTableView?username='.$username);
         return json_decode($solicitudes->body());
     }
+
+    public static function getFile($token, $folio, $type){
+        $file = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getFile?id='.$folio.'&type='.$type);
+        return json_decode($file->body());
+    }
+
+    public static function rollBackRequest($token, $folio){
+        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/RollBackRequest?folio='.$folio);
+        return json_decode($history->body());
+    }
+
+    public static function setReference($token, $noC, $reference, $folio){
+        $file = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/SetReference?noC='.$noC.'&reference='.$reference.'&folio='.$folio);
+        return json_decode($file->body());
+    }
+
+    public static function reactiveClient($token, $noC, $folio, $isCredit){
+        $file = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/ReactiveClient?noC='.$noC.'&folio='.$folio.'&isCredit='.$isCredit);
+        return json_decode($file->body());
+    }
+
+    public static function saveValidation($token, $data){
+        $json = json_decode($data);        
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/SaveValidation', [
+            "Solicitud" => $json->Solicitud,
+            "Referencias" => $json->Referencias,
+            "ActasConst" => $json->ActasConst,
+            "Contacto" => $json->Contacto,
+            "Facturas" => $json->Facturas,
+            "Status" => $json->Status,
+            "Observaciones" => $json->Observaciones,
+        ]);
+        // dd($response);
+        return $response;
+    }
+
+    public static function acceptRequest($token, $data){
+        $json = json_decode($data);        
+        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/AcceptRequest', [
+            "folioSolicitud" => $json->FolioSolicitud,
+            "referenciaBancaria" => $json->ReferenciaBancaria,
+            "condicionesComerciales" => $json->CondicionesComerciales,
+            "listaPrecios" => $json->ListaPrecios,
+            "condicionPago" => $json->CondicionPago,
+            "formaEnvio" => $json->FormaEnvio,
+            "limiteSaldo" => $json->LimiteSaldo,
+            "diasMaximos" => $json->DiasMaximos,
+            "indarBonoCteNvo" => $json->IndarBonoCteNvo,
+            "indarRutaVenta" => $json->IndarRutaVenta,
+            "movimientoVenta" => $json->MovimientoVenta,
+            "indarRuta" => $json->IndarRuta,
+            "pagareMonto" => $json->PagareMonto,
+            "pagareNuevo" => $json->PagareNuevo,
+            "usuario" => $json->Usuario,
+            "ineValidacion" => $json->IneValidacion,
+            "status" => $json->Status,
+            "categoryId" => $json->CategoryId,
+            "indarFormaEnvioFiscal" => $json->IndarFormaEnvioFiscal,
+            "indarPaqueteriaFiscal" => $json->IndarPaqueteriaFiscal,
+            "indarFormaEnvio" => $json->IndarFormaEnvio,
+            "indarPaqueteriaEnvio" => $json->IndarPaqueteriaEnvio,
+        ]);
+        // dd($response);
+        return $response;
+    }
 }
