@@ -249,7 +249,6 @@
                                  <tr>
                                     <th>Nombre de Cliente</th>
                                     <th>Código</th>
-                                    <th>Número de Visitas</th>
                                  </tr>
                               </thead>
                               <tbody id="llenaModal">
@@ -278,7 +277,6 @@
                                  <tr>
                                     <th>Nombre de Cliente</th>
                                     <th>Código</th>
-                                    <th>Número de Visitas</th>
                                  </tr>
                               </thead>
                               <tbody id="llenaCtesNoActivos">
@@ -413,7 +411,7 @@
    <div class="modal-dialog modal-sm modal-dialog-scrollable">
       <div class="modal-content">
          <div class="modal-header bg-indarBlue">
-            <h3 class="text-center title ml-auto">Editar Parametro Nuevos Clientes</h3>
+            <h3 class="text-center title ml-auto">Editar Parametro Clientes Activos</h3>
             <h6 id ="zonareferencia" class="text-center title ml-auto"></h6>
             <input type="text" id="typeFormInf" value="" hidden>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -788,32 +786,20 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            //console.log(data[0].detalle);
+            //console.log(data[0]);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
 
                 inicioCalendar = añoCalendar + '-' + mesCalendar+'-01';
                 // Alerta de que no existen días Reportados
-                var toast = Swal.mixin({
-                    toast: true,
-                    icon: 'danger',
-                    title: 'General Title',
-                    animation: true,
-                    position: 'top-start',
-                    showConfirmButton: false,
-                    timer: 6000,
-                    timerProgressBar: false,
-                    didOpen: (toast) => {
-                      toast.addEventListener('mouseenter', Swal.stopTimer)
-                      toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                });
-                toast.fire({
-                  animation: true,
-                  title: 'No Existe Registro de Días trabajados!',
-                  icon: 'danger'
-                });
+                Swal.fire({
+                position: 'top',
+                icon: 'warning',
+                title: 'No Hay Regístro de Días Laborados Este Mes',
+                showConfirmButton: false,
+                timer: 5000
+                })
 
             }else{
 
@@ -849,6 +835,12 @@
               defaultView: 'dayGridMonth',
               header: {
                 center: 'addEventButton'
+              },
+              eventLimit: true,
+              views: {
+                 month: {
+                   eventLimit: 3
+                 }
               },
               defaultDate: inicioCalendar,
 
@@ -906,7 +898,7 @@
                }, {});
             }
             var resultNoAct = Object.values(groupNoAct(rawtDataNoActivos,'codigo'));
-            console.log(resultNoAct);
+            //console.log(resultNoAct);
 
 
 
@@ -916,7 +908,6 @@
                 htmlModal += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].codigo + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' +  resultData[i].numVisitas + '</td>' +
                             '</tr>';
             }
 
@@ -925,7 +916,6 @@
             htmlCtesNoActivos+= '<tr>' +
                         '<td style="font-weight: bold; background-color:#f9ea45">' +  resultNoAct[i].companyname + '</td>' +
                         '<td style="font-weight: bold; background-color:#f9ea45">' +  resultNoAct[i].codigo + '</td>' +
-                        '<td style="font-weight: bold; background-color:#f9ea45">' +  resultNoAct[i].numVisitas + '</td>' +
                         '</tr>';
             }
 
@@ -958,18 +948,23 @@
             porClientesVisitados = data[0].totalClientes * .9;
 
             //console.log(porClientesVisitados);
-            console.log(data[0] );
+            //console.log(data[0] );
             if ( data[0].totalClientesVisitados <= porClientesVisitados ){
                importePunt = 0.00;
                data[0].porcAlcanzado=0.00;
             }
 
             var comisionInt = parseFloat(comisionTot) + parseFloat(importePunt) + parseFloat(comisionTot*0.10);
+            var importdiasNoLaborados;
+            var comisionXdia = comisionTot / 30;
+            importdiasNoLaborados = data[0].diasNoLAborados * comisionXdia;
+            comisionInt = comisionInt - importdiasNoLaborados;
+            //console.log(importdiasNoLaborados, comisionInt);
 
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
-                   '<td style="font-weight: bold" >'+ porClientesVisitados +'</td>' +
-                   '<td style="font-weight: bold">'+ data[0].totalClientes +'</td>' +
+                   '<td style="font-weight: bold" >'+ data[0].totalClientes  +'</td>' +
+                   '<td style="font-weight: bold">'+ porClientesVisitados +'</td>' +
                    show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold" colspan="2">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
@@ -979,7 +974,7 @@
                    '<td style="font-weight: bold" colspan="4" > Días No Reportados </td>' +
                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
                    '<td style="font-weight: bold"> NA </td>' +
-                   '<td style="font-weight: bold" colspan="2"> NA </td>' +
+                   '<td style="font-weight: bold; color:red" colspan="2"> -'+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                    '</td>'+
                    '<tr>' +
                    '<td style="font-weight: bold" colspan="6"> Comision Integrada </td>' +
@@ -995,26 +990,35 @@
 
             bonoImp =( bonosPorc * comisionTot /100);
             var ctesnvos ;
-            var le = data[1].real -  data[1].nuevosMesActual;
-            if(data[1].nuevosMesActual == 0){
-                ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActual+ '</u></td>';
-            } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActual+ '</u></td>';
+            var le = data[1].le;
+            //var le = data[1].real -  data[1].nuevosMesActualRoTP;
+            if(data[1].nuevosMesActualRoTP == 0){
+                ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActualRoTP+ '</u></td>';
+            } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActualRoTP+ '</u></td>';
             htmlBonos += '<tr>'+
                     '<td style="font-weight: bold" >Clientes Activos</td>' +
-                    '<td style="font-weight: bold">' +  data[1].vo + '</td>' +
+                    '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#editarVo""><u>' +  data[1].vo + '</u></td>' +
                      '<td style="font-weight: bold" >' +  le + '</td>' +
                      '<td style="font-weight: bold" >' +  data[1].real + '</td>' +
-                     '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
+                     '<td style="font-weight: bold" >' + bonosPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' % </td>' +
                      '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                      '</tr>';
-
+            var voCtesNvos = 2;
+            var porCtesNvos;
+            var importCtesNvos;
+            if(data[1].nuevosMesActualRoTP >= voCtesNvos){
+                porCtesNvos = 5;
+            }else{
+                porCtesNvos = 0;
+            }
+            importCtesNvos = ( comisionTot * porCtesNvos)/100;
             htmlNvosCtes += '<tr>'+
                      '<td style="font-weight: bold" >Clientes Nuevos (Refa y T de P)</td>' +
-                     '<td style="font-weight: bold ; cursor: pointer" data-toggle="modal" data-target="#editarVo"> <u> 2 </u> </td>' +
+                     '<td style="font-weight: bold ">'+ voCtesNvos +'</td>' +
                      '<td style="font-weight: bold" > 1 </td>' +
                      ctesnvos +
-                     '<td style="font-weight: bold" >' + bonosPorc + ' % </td>' +
-                     '<td style="font-weight: bold" >' +  bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                     '<td style="font-weight: bold" >' + porCtesNvos + ' % </td>' +
+                     '<td style="font-weight: bold" >' + importCtesNvos + '</td>' +
                      '</tr>';
 
             htmlVentas += '<tr>'+
@@ -1051,6 +1055,7 @@
             $('#zonareferencia').text(data[0].zona);
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
             $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);
+            $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
 
 
            },

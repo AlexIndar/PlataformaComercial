@@ -232,8 +232,8 @@ var tableNotas = $('#tableNotas').DataTable({
 var t = $('#example2').DataTable({
     dom : 'Brt',
     rowCallback: function(row, data, index){
-                $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
-        }
+        $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
+    }
 } );
 var subTotal = 0;
 var descuento = 0;

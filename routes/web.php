@@ -411,7 +411,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $zona = 'ALL';
                                 }
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $zona);
-                               
+
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
@@ -1528,7 +1528,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                    $fecha = $request->fecha;
                    $data=ComisionesController::getCierreMesCobranzaZona($token,$fecha);
-                   dd($data);
+                   //dd($data);
                    return $data;
 
                 });
@@ -1562,10 +1562,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
 
                    $json = $request->EspecialesModel;
-
+                    //dd($json);
                    $data=ComisionesController::postActualizarEspeciales($token,$json);
-
                     return $data;
+                });
+
+                Route::get('/comisiones/getEspecialesPorPeriodo', function (Request $request){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $year = $request->year;
+                   $month = $request->month;
+                   $data=ComisionesController::getEspecialesPorPeriodo($token, $year, $month);
+                   return $data;
+
                 });
 
 
