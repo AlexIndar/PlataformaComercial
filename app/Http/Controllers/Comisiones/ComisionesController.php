@@ -35,11 +35,15 @@ class ComisionesController extends Controller
 
     public static function  postActualizarEspeciales($token, $json){
 
-        //dd($json);
         $data = Http::withToken($token)->post('http://192.168.70.107:64444/Especiales/postActualizarEspeciales',[
             "EspecialesModel" => $json
         ]);
         //dd($data);
+        return json_decode($data->body());
+    }
+
+    public static function getEspecialesPorPeriodo($token, $year,$month){
+        $data = Http::withToken($token)->get('http://192.168.70.107:64444/Especiales/getEspecialesPorPeriodo?year='.$year.'&month='.$month);
         return json_decode($data->body());
     }
 
