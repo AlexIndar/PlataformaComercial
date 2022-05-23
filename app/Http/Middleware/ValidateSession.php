@@ -18,11 +18,11 @@ class ValidateSession
     public function handle(Request $request, Closure $next)
     {
         
-        if(isset($_COOKIE["laravel-token"])){
-            $token = $_COOKIE["laravel-token"];
+        if(isset($_COOKIE["_lt"])){
+            $token = $_COOKIE["_lt"];
             return $this->nocache($next($request));
         }
-        else if(isset($_COOKIE["refresh"])){
+        else if(isset($_COOKIE["_rfs"])){
             $token = TokenController::refreshToken();
             return $this->nocache($next($request));
         }

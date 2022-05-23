@@ -227,14 +227,14 @@ background-color: #F5F8F8;
 padding: 5px;
 border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-
+ 
 .totalFilas{
   white-space: nowrap;
 }
 
 .tablaPedidoScrollable{
   display: block;
-  height: 50vh !important;
+  max-height: 50vh !important;
   overflow-y: scroll;
 }
 

@@ -37,42 +37,51 @@ class LoginController extends Controller
                 $token = $response->body();
                 $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
+                $fullname = (json_decode($typeUser->body())->name);
+                setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
+                setcookie("_rfs", $token, time()+60*60*24, '/');
+                setcookie("_fln", encrypt($fullname, "7Ind4r7"), time()+60*60*24, '/');
+                setcookie("_usn", encrypt($username, "7Ind4r7"), time()+60*60*24, '/');
                 if(json_decode($typeUser->body())->typeUser == "C"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
-                    setcookie("refresh", $token, time()+60*60*24, '/');
-                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
-                    setcookie("username", $username, time()+60*60*24, '/');
-                    setcookie("level", "C", time()+60*60*24, '/');
+                    setcookie("_lv", "C", time()+60*60*24, '/');
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
-                    setcookie("refresh", $token, time()+60*60*24, '/');
-                    setcookie("username", $username, time()+60*60*24, '/');
-                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
-                    setcookie("level", "E", time()+60*60*24, '/');
+                    setcookie("_lv", "E", time()+60*60*24, '/');
                     return redirect('/Intranet');
                 }
         } 
         else{
-            setcookie("laravel-token", "error", time()+900, '/');
+            setcookie("_lt", "error", time()+900, '/');
             return redirect('/'); 
         }
     }
 
     public function logout(){
+        setcookie("_lt", "", time()-60*60*24, '/');
+        setcookie("_rfs", "", time()- 60*60*24, '/');
+        setcookie("_fln", "", time()- 60*60*24, '/');
+        setcookie("_usn", "", time()- 60*60*24, '/');
+        setcookie("_lv", "", time()- 60*60*24, '/');
         setcookie("laravel-token", "", time()-60*60*24, '/');
         setcookie("refresh", "", time()- 60*60*24, '/');
-        setcookie("access", "", time()- 60*60*24, '/');
+        setcookie("fullname", "", time()- 60*60*24, '/');
         setcookie("username", "", time()- 60*60*24, '/');
         setcookie("level", "", time()- 60*60*24, '/');
         Artisan::call('cache:clear');
         return redirect('/');
     }
 
-    public static function getPermissions(){
-        $permissions = json_decode($_COOKIE["access"]);
+    public static function getPermissions($token){
+        $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
+        $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
+        $permissions = json_decode(json_decode($typeUser->body())->permissions);
         return $permissions;
+    }
+
+    public static function getFullName(){
+        $fullname = decrypt($_COOKIE["_fln"], "7Ind4r7");
+        return $fullname;
     }
 
     public function encrypt($token, $key){
@@ -89,8 +98,8 @@ class LoginController extends Controller
     }
 
     public function decrypt($encrypt, $key){
-         // Store the cipher method
-         $ciphering = "AES-128-CTR";
+        // Store the cipher method
+        $ciphering = "AES-128-CTR";
         $options = 0;
         // Non-NULL Initialization Vector for decryption
         $decryption_iv = '1234567891011121';

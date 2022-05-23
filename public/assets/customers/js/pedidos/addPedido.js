@@ -870,12 +870,6 @@ function getItemById(item, separa) {
     }
     else{
 
-        //si hay más de 150 partidas getItemById NO debe ser ascincrono porque da errores
-
-        let asincrono;
-        selectedItemsFromInventory.length > 150 ? asincrono = false : asincrono = true; 
-
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -993,6 +987,10 @@ function getItemById(item, separa) {
                 
             },
             error: function(error) {
+                alert("Error cargando artículo "+item['articulo']);
+                var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item['articulo']);
+                selectedItemsFromInventory.splice(indexInventory, 1);
+                cantItemsPorCargar --;
                 console.log(error);
             }
         });
