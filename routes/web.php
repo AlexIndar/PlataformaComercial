@@ -1715,7 +1715,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
 });
-                // lOGISTICA ------------------------------------------------------------------------------------------------------------------------------------------------
+// ******************** LOGISTICA ******************** \\
 
 Route::get('/logistica/mesaControl/planeador',function(){
     $token = TokenController::getToken();
@@ -1912,6 +1912,14 @@ Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', funct
     $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
     return $response;
 });
+Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){ 
+        return redirect('/logout');
+    }
+    $response = LogisticaController::exportExcelBillsXShipments($token,json_encode($request->all()));
+    return $response;
+});
 Route::get('/logistica/reportes/gastoFleteras', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1947,6 +1955,31 @@ Route::get('/logistica/reportes/interfazRecibo', function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
 })->name('logistica.reportes.interfazRecibo');
+
+Route::get('/logistica/reportes/interfazFacturacion',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions();
+    return view('intranet.logistica.reportes.interfazFacturacion',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes.interfazFacturacion');
+Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultBillingInterface($token,json_encode($request->all()));
+    return $response;
+});
+
+//************ EXPORTA  ************/
 Route::get('/pedidos-exporta',function(){
     $token = TokenController::getToken();
     if($token == 'error'){

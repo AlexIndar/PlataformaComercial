@@ -52,7 +52,7 @@
     color: white;
     border-radius: 14px;
 }
-.btn-consultar-factura,.btn-consultar-gasto-fletera{
+.btn-consultar-factura,.btn-consultar-gasto-fletera,.btn-excel{
     color: white;
 }
 #table-gasto-fleteras{
@@ -67,6 +67,7 @@ table.dataTable>tbody>tr.child ul.dtr-details>li {
     border-bottom: 0px solid #efefef!important;
     padding: 0px!important;
 }
-table.dataTable>tbody>tr{
-    /* white-space: nowrap; */
+.card-title{
+    text-transform: uppercase;
+    font-weight: bolder;
 }

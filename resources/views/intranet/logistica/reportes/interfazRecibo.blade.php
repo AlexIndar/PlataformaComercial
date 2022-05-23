@@ -1,6 +1,6 @@
-@extends('layouts.intranet.main',['active' => 'Logistica'])
+@extends('layouts.intranet.main',['active' => 'Logistica','permissions' => $permissions])
 
-@section('title') Indar @endsection
+@section('title') Indar | Reportes @endsection
 
 @section('styles')
 {{-- <link rel="stylesheet" href="{{asset('assets/intranet/css/')}}"> --}}
@@ -17,29 +17,6 @@
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
-            {{-- <div class="row">
-                <div class="col-12 scroll">
-                    <div class="card mt-3">
-                        <div class="card-body card-logistica">
-                            <div class="row">
-                                <div class="col-3">
-                                    <label for="">Fechas:</label>
-                                    <div class="input-group date" >
-                                        <input type="text" class="form-control" id="fechas"/>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <label for=""></label>
-                                    <button type="button" class="btn btn-block btn-outline-primary btn-lg btn-consultar-factura" onclick="logisticaController.consultBillsXShipments()" ><i class="fa-solid fa-cog mr-1"></i>Consultar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
             <div class="row">
                 <div class="col-12">
                     <div class="card mt-2" id="card-table">
@@ -51,7 +28,7 @@
                                 <div class="col-3">
                                     <label for="">Fechas:</label>
                                     <div class="input-group date" >
-                                        <input type="text" class="form-control" id="fechas"/>
+                                        <input type="text" class="form-control datetime" id="fechas" autocomplete="false"/>
                                         <div class="input-group-append">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
@@ -59,7 +36,7 @@
                                 </div>
                                 <div class="col-2 mt-1">
                                     <label for=""></label>
-                                    <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-consultar-factura" onclick="logisticaController.consultBillsXShipments()" ><i class="fa-solid fa-cog mr-1"></i>Consultar</button>
+                                    <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-consultar-factura" onclick="logisticaController.consultReceiptInterface()" ><i class="fa-solid fa-cog mr-1"></i>Consultar</button>
                                 </div>
                             </div>
                         </div>

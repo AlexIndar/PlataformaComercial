@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main',['active' => 'Logistica','permissions' => $permissions])
 
-@section('title') Indar @endsection
+@section('title') Indar | Reportes @endsection
 
 @section('styles')
 {{-- <link rel="stylesheet" href="{{asset('assets/intranet/css/')}}"> --}}
@@ -25,7 +25,7 @@
                                 <h3 class="card-title mt-2 mr-3">Facturas por embarcar</h3>
                             </div>
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-3 p-0">
                                     <label for="">Fechas:</label>
                                     <div class="input-group date" >
                                         <input type="text" class="form-control" id="fechas"/>
@@ -34,9 +34,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2 mt-1">
+                                <div class="col-3 mt-1">
                                     <label for=""></label>
                                     <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-consultar-factura" onclick="logisticaController.consultBillsXShipments()" ><i class="fa-solid fa-cog mr-1"></i>Consultar</button>
+                                </div>
+                                <div class="col-3 mt-1">
+                                    <label for=""></label>
+                                    <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-excel" onclick="logisticaController.exportExcelBillsXShipments()" disabled><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +53,7 @@
                                             <thead class="encabezado-table">
                                                 <tr>
                                                     <th>PEDIDO</th>
-                                                    <th>COTIZACIÓN</th>
+                                                    <th>COTIZACION</th>
                                                     <th>CONSOLIDADO</th>
                                                     <th>MOVIMIENTO</th>
                                                     <th>FECHA INGRESO</th>
@@ -77,7 +81,7 @@
                                                     <th>DIAS</th>
                                                     <th>RESPONSABLE</th>
                                                     <th>DIAS PERMITIDOS</th>
-                                                    {{-- <th>ESTATUS</th> --}}
+                                                    <th>ESTATUS</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="content-table-facturas-embarque">
