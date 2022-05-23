@@ -22,11 +22,6 @@ class ValidateSession
             $token = $_COOKIE["_lt"];
             return $this->nocache($next($request));
         }
-        else if(isset($_COOKIE["_rfs"])){
-            $token = TokenController::refreshToken();
-            return $this->nocache($next($request));
-        }
-        
         else{
             return redirect('/');
         }

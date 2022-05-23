@@ -60,10 +60,7 @@ use PHPUnit\Framework\Constraint\Count;
 */
 Route::get('/', function () {
     $token = TokenController::getToken();
-    if($token == 'error'){
-        return redirect('/logout');
-    }
-    if($token && $token != 'error'){
+    if($token && $token != 'error' && $token != 'expired'){
         $bestSellers = ItemsController::getBestSellers($token);
     }
     else{
@@ -265,7 +262,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::get('/pedidos', function (){
                                 $token = TokenController::getToken();
-                                if($token == 'error'){
+                                if($token == 'error' || $token == 'expired'){
                                     return redirect('/logout');
                                 }
                                 $rama1 = RamasController::getRama1();
@@ -1503,7 +1500,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 //******************************************* Comisiones ********************************************************
 
                 Route::get('/comisionesPorCliente', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
@@ -1515,7 +1512,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/comisionesVendedor', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
@@ -1587,7 +1584,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/comisionesCierreMes', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');

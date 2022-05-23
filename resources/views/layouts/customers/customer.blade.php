@@ -84,7 +84,7 @@
         <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a>
         <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a>
 
-        @if($token && $token != 'error')
+        @if($token && $token != 'error' && $token != 'expired')
             <h5 onclick="navigate('/logout', false)">Cerrar sesión</h5>
         @else
             <h5 onclick="activeModal(2)">Regístrate  &nbsp;&nbsp;|</h5>
@@ -110,8 +110,7 @@
                     <div class="menu-item" onclick="activeRama1('cuenta', this)">
                         <h5>Cuenta</h5> <i class="fas fa-angle-down submenu-icon"></i>
                     </div>
-
-                                @if($token && $token != 'error')
+                                @if($token && $token != 'error' && $token != 'expired')
                                     <div class="rama-1 rama-cuenta">
                                         <h5 onclick="navigate('/logout', false)">Cerrar Sesión</h5>
                                     </div>
@@ -123,7 +122,6 @@
                                         <h5 onclick="activeModal(1)">Iniciar sesión</h5>
                                     </div>
                                 @endif
-
                 </div>
 
                 <div class="col-12">
