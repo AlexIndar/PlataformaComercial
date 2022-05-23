@@ -590,6 +590,12 @@ function cargarProductosExcel(json) {
             selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
     }
 
+    document.getElementById("btnSpinner").style.display = "block";
+    var btnActions = document.getElementsByClassName('btn-group-buttons');
+    for(var x=0; x < btnActions.length; x++){
+        btnActions[x].disabled = true;
+    }
+
     prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
@@ -699,7 +705,13 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                 artArr['quantity'] = (parseInt(json[x]['quantity']) + parseInt(artArr['quantity'])).toString();
             }
             else{
-                if(json[x]['quantity'] > 0){
+                if(art == undefined){
+                    alert("Artículo "+json[x]['itemID']+" no encontrado en inventario");
+                    var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === json[x]['itemID']);
+                    selectedItemsFromInventory.splice(indexInventory, 1);
+                    cantItemsPorCargar --;
+                }
+                else if(json[x]['quantity'] > 0){
                     json[x]['descuento'] = 0;
                     json[x]['plazo'] = 0;
                     json[x]['marca'] = '';
@@ -712,7 +724,6 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                     arr.push(json[x]);
                 }
             }
-            
         }
         separarFilas(arr);
     }
@@ -858,6 +869,7 @@ function getItemById(item, separa) {
         }
     }
     else{
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -969,12 +981,16 @@ function getItemById(item, separa) {
                         newJson = newJson + ']';
                         jsonItemsSeparar = newJson;
                         separarPedidosPromo(newJson, separa);
-                        cantItemsCargados = 0;
+                        cantItemsCargados = 0; 
                         cantItemsPorCargar = 0;
                 }
                 
             },
             error: function(error) {
+                alert("Error cargando artículo "+item['articulo']);
+                var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item['articulo']);
+                selectedItemsFromInventory.splice(indexInventory, 1);
+                cantItemsPorCargar --;
                 console.log(error);
             }
         });
@@ -1345,24 +1361,28 @@ function addRowPedido(item, fila, indexPedido) {
     else
         marca = 'marca';
     if (item["categoriaItem"] == "LINEA" && item['desneg'] == 0 && item['desgar'] == 0 && !marca.includes('MBajo'))
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12 col-codArticulo'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Descuento</option><option value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row d-none' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else if (item["categoriaItem"] == "LINEA" && item['desneg'] != 0 && !marca.includes('MBajo'))
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12 col-codArticulo'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option selected value='desneg'>DesNeg</option><option value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desneg']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else if (item["categoriaItem"] == "LINEA" && item['desgar'] != 0 && !marca.includes('MBajo'))
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option value='desneg'>DesNeg</option><option selected value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desgar']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12 col-codArticulo'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div><div class='col-12'><select id='desneg' name='desneg' class='select-descuento' onchange='applyDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option value=''>Descuento</option><option value='desneg'>DesNeg</option><option selected value='desgar'>DesGar</option></select></div><div><div class='row' id='row-descuento-detalles-"+item['itemid']+"-"+indexPedido+"'><div class='col-6 mt-2'><div class='input-group'><input type='number' class='form-control input-descuento' id='cantDesneg-"+item['itemid']+"-"+indexPedido+"' name='cantDesneg' value='"+item['desgar']+"'><div class='input-group-append text-center append-inventario'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div></div><div class='col-6 mt-2'><select id='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' name='autoriza-desneg-"+item['itemid']+"-"+indexPedido+"' class='select-descuento' onchange='updatePedidoDesneg(\"" + item['itemid'] + "\",this, "+indexPedido+")'><option selected value=''>Autoriza</option><option value='JMGA'>JMGA</option><option value='EOEGA'>EOEGA</option><option value='JSB'>JSB</option></select></div></div>";
     
     else 
-        cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
+        cell2.innerHTML = "<div class='row'><div class='col-12 col-codArticulo'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
 
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos' onClick='decreaseItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+")'>-</button></div><input type='text' onkeyup='updateRowQuantity(\"" + item['itemid'] + "\", "+item['multiploVenta']+"," +cantidadItems+","+indexPedido+", event)' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2'><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas' onClick='addItemCant(\"" + item['itemid'] + "\", "+item['multiploVenta']+", "+cantidadItems+","+indexPedido+")'>+</button></div></div>";
 
-    if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
-        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
-    else
-        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+    var colorExistencia = '';
+    existenciaFormat == 0 ? colorExistencia = "#C82333" : colorExistencia = "#000";
 
+    if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-red'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> <span id='existencia' style='color:"+colorExistencia+"'>Existencia: " + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+    else
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-green'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> <span id='existencia' style='color:"+colorExistencia+"'>Existencia: " + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+
+        
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>" + item["promo"] + "%</h5>";
     cell7.innerHTML = "<h5 id='precioUnitario'>" + unitario + "</h5>";
@@ -1492,13 +1512,16 @@ function addRowRegalo(item, fila, indexPedido) {
     cantidad = cantidad.split('.')[0];
 
     cell1.innerHTML = "<h4>" + fila + "</h4>";
-    cell2.innerHTML = "<div class='row'><div class='col-12'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
+    cell2.innerHTML = "<div class='row'><div class='col-12 col-codArticulo'><h4 id='codArticulo'>" + item["itemid"] + "</h4></div></div>";
     cell3.innerHTML = "<div class='input-group'><div class='input-group-prepend'><button id='menos' class='quantityBtn' name='menos'>-</button></div><input type='text' id='cant-"+item['itemid']+"-"+indexPedido+"' value='"+cantidad+"' class='form-control input-cantidad' name='cantidad' placeholder='"+cantidad+"' title='"+cantidad+"' aria-label='cantidad' aria-describedby='basic-addon2' readonly><div class='input-group-append'><button id='mas' class='quantityBtn' name='mas'>+</button></div></div>";
 
+    var colorExistencia = '';
+    existenciaFormat == 0 ? colorExistencia = "#C82333" : colorExistencia = "#000";
+
     if (item["categoriaItem"] == "CADUCADO" || item["categoriaItem"] == "S/PEDIDO" || item["categoriaItem"] == 'NO RESURTIBLE' || item["categoriaItem"] == 'OUTLET' )
-        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-pedido'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-red'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia' style='color:"+colorExistencia+"'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
     else
-        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-linea'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
+        cell4.innerHTML = "<div class='row'><div class='col-12 col-descripcion'><h5 id='descripcion'>" + item["purchasedescription"] + "</h5></div><div class='col-12 col-descripcion'>Categoría: <span id='categoria-green'>" + item["categoriaItem"] + "</span> Unidad: <span id='unidad'>" + item["unidad"] + "</span> Existencia: <span id='existencia' style='color:"+colorExistencia+"'>" + existenciaFormat + "</span> Múltiplo: <span id='multiplo'>" + item["multiploVenta"] + "</span></div></div>";
 
     cell5.innerHTML = "<h5 id='precioLista'>" + price + "</h5>";
     cell6.innerHTML = "<h5 id='promo'>0%</h5>";
@@ -2472,11 +2495,12 @@ function mostrarSoloExistencias(){
     dataset = [];
     if (checkBox.checked == true){
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar todo';
-        var table = $('#tablaInventario').DataTable();
-        var data = table.rows({ filter : 'applied'}).data(); //obtiene información de tabla considerando si tiene algún filtro aplicado
-        currentDataset = table.rows().data(); //Obtiene toda la información de la tabla, sin tomar en cuenta el filtro que tenga
-        for(var x=0; x < data.length; x++){
-            var existencia = data[x][6].split('>')[2].split('<')[0];
+        let currentTable = $('#tablaInventario').DataTable();
+        let data = currentTable.rows({ filter : 'applied'}).data(); //obtiene información de tabla considerando si tiene algún filtro aplicado
+        currentDataset = currentTable.rows().data(); //Obtiene toda la información de la tabla, sin tomar en cuenta el filtro que tenga
+        let currentFilter = currentTable.search();
+        for(let x=0; x < data.length; x++){
+            let existencia = data[x][6].split('>')[2].split('<')[0];
             if(existencia > 0){
                 dataset.push(data[x]);
             }
@@ -2484,7 +2508,7 @@ function mostrarSoloExistencias(){
         $("#tablaInventario").dataTable().fnClearTable();
         $("#tablaInventario").dataTable().fnDraw();
         $("#tablaInventario").dataTable().fnDestroy();
-        var table = $("#tablaInventario").DataTable({
+        let newTable = $("#tablaInventario").DataTable({
             data: dataset,
             pageLength : 5,
             orderCellsTop: true,
@@ -2503,18 +2527,22 @@ function mostrarSoloExistencias(){
                 {"targets": 10,"visible": false}
              ]
         });
+
+        newTable.search(currentFilter);
          $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
-            table
+            newTable
                 .column( $(this).parent().index() )
                 .search( this.value )
                 .draw();
         } );
-      } else {
+    } else {
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
+        let currentTable = $('#tablaInventario').DataTable();
+        let currentFilter = currentTable.search();
         $("#tablaInventario").dataTable().fnClearTable();
         $("#tablaInventario").dataTable().fnDraw();
         $("#tablaInventario").dataTable().fnDestroy();
-        var table = $("#tablaInventario").DataTable({
+        let newTable = $("#tablaInventario").DataTable({
             data: currentDataset,
             pageLength : 5,
             orderCellsTop: true,
@@ -2533,8 +2561,9 @@ function mostrarSoloExistencias(){
                 {"targets": 10,"visible": false}
              ]
         });
+        newTable.search(currentFilter).draw();
          $('#tablaInventario thead').on( 'keyup', ".column_search",function () {
-            table
+            newTable
                 .column( $(this).parent().index() )
                 .search( this.value )
                 .draw();

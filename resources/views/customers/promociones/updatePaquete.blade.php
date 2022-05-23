@@ -35,7 +35,7 @@
                     <div class="col-lg-10 col-md-9 col-sm-12 col-12">
                         <input class="input-promociones" type="text" id="rangoFechas" name="daterange" data-date-container='#datepicker' style="display:none" value="{{$datePromo}}"/>
                         <h5 id="fechasLoading">Cargando fechas ...</h5>
-                    </div>
+                    </div> 
                 </div>
                 <br>
 
@@ -201,11 +201,27 @@
                 <div class="clientesGeneral">
                     <div class="row reglas-row text-center">
                         <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Clientes:</h4></div>
-                        <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
+                        <div class="col-lg-6 col-md-4 col-sm-12 col-12">
+                            <select id="listaClientes" name="listaClientes" class="form-control selectpicker" data-live-search="true">
+                                <option selected value="blanca">Blanca (inclusiva)</option>
+                                <option value="negra">Negra (exclusiva)</option>
+                            </select>
+                        </div>
+                    </div>
+    
+                    <br><br>
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <h5 id="mensaje-clientes" class="mensaje-clientes mensaje green"> <strong>Sólo estos clientes</strong> participan en la promoción</h5>
+                        </div>
+                    </div>
+    
+                    <br>
+                    <div class="col-12">
                                 <select id="clientes" name="clientes[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                                 </select> 
                                 <h5 id="clientesLoading">Cargando clientes ...</h5>
-                        </div>
                     </div>
                     <br>
                     <div class="col-12 d-flex flex-row justify-content-center align-items-center">
@@ -247,11 +263,27 @@
 
                 <div class="row reglas-row text-center">
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12"><h4>Categorías de clientes:</h4></div>
-                    <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+                    <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de lista</h5></div>
+                    <div class="col-lg-6 col-md-4 col-sm-12 col-12">
+                        <select id="listaCategoriaClientes" name="listaCategoriaClientes" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="blanca">Blanca (inclusiva)</option>
+                            <option value="negra">Negra (exclusiva)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br><br>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h5 id="mensaje-categorias" class="mensaje-categorias mensaje green"> <strong>Sólo estas categorías de clientes</strong> participan en la promoción</h5>
+                    </div>
+                </div>
+
+                <br>
+                <div class="col-12">
                             <select id="categorias" name="categorias[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
                             </select>
                             <h5 id="categoriasLoading">Cargando categorías ...</h5>
-                    </div>
                 </div>
                 <br>
                 <div class="col-12 d-flex flex-row justify-content-center align-items-center">

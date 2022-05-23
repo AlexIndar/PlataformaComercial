@@ -23,7 +23,8 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- iCheck -->
@@ -277,7 +278,7 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{ route('logistica.mesaControl.planeador') }}" class="nav-link">
-                    <i class="fas fa-solid fa-clipboard-list"></i>
+                    <i class="fas fa-solar-panel"></i>
                     <p> Mesa Control</p>
                   </a>
                 </li>
@@ -287,6 +288,14 @@
                   <a href="{{ route('logistica.distribucion') }}" class="nav-link">
                     <i class="fas fa-solid fa-dolly"></i>
                     <p>Distribución</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('logistica.reportes') }}" class="nav-link">
+                    <i class="fas fa-clipboard-list ml-1 mr-1"></i>
+                    <p>Reportes</p>
                   </a>
                 </li>
               </ul>

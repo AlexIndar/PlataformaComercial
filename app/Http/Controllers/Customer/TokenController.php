@@ -23,40 +23,37 @@ class TokenController extends Controller
 
     public static function getToken(){ 
         $token = "";
-        if(isset($_COOKIE["laravel-token"]) && $_COOKIE["laravel-token"] != 'error'){ 
-            $token = decrypt($_COOKIE["laravel-token"], "7Ind4r7");
+        if(isset($_COOKIE["_lt"]) && $_COOKIE["_lt"] != 'error'){
+            $token = decrypt($_COOKIE["_lt"], "7Ind4r7");
         }
-        else if(isset($_COOKIE["refresh"])){
+        else if(isset($_COOKIE["_rfs"])){
             $token = TokenController::refreshToken(); 
         }
-        return $token;
+        return $token; 
     }
 
     public static function refreshToken(){
-        if(!isset($_COOKIE['username'])){
-            setcookie("laravel-token", "", time()-60*60*24, '/');
-            setcookie("refresh", "", time()- 60*60*24, '/');
-            setcookie("access", "", time()- 60*60*24, '/');
-            setcookie("username", "", time()- 60*60*24, '/');
-            setcookie("level", "", time()- 60*60*24, '/');
+        if(!isset($_COOKIE['_usn'])){
+            setcookie("_lt", "", time()-60*60*24, '/');
+            setcookie("_rfs", "", time()- 60*60*24, '/');
+            setcookie("_usn", "", time()- 60*60*24, '/');
+            setcookie("_lv", "", time()- 60*60*24, '/');
             return redirect('/');
         }
-        if(isset($_COOKIE["refresh"])){
-            $old = $_COOKIE["refresh"];
-            $username = $_COOKIE["username"];
+        if(isset($_COOKIE["_rfs"])){
+            $old = $_COOKIE["_rfs"];
+            $username = $_COOKIE["_usn"];
             $typeUser = Http::withToken($old)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
             $permissions = (json_decode(json_decode($typeUser->body())->permissions));
             $response = Http::withToken($old)->post('http://192.168.70.107:64444/Login/RefreshToken');
             if($response->getStatusCode() == 200){ 
                     $token = $response->body();
-                    setcookie("laravel-token", "", time()-60*60*24, '/');
-                    setcookie("laravel-token", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
-                    setcookie("refresh", "", time()- 60*60*24, '/');
-                    setcookie("refresh", $token, time()+ 60*60*24, '/');
-                    setcookie("access", "", time()- 60*60*24, '/');
-                    setcookie("access", json_encode($permissions), time()+60*60*24, '/');
-                    setcookie('username', "", time()-60*60*24*30, '/');
-                    setcookie('username', $username, time()+60*60*24*30, '/');
+                    setcookie("_lt", "", time()-60*60*24, '/');
+                    setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
+                    setcookie("_rfs", "", time()- 60*60*24, '/');
+                    setcookie("_rfs", $token, time()+ 60*60*24, '/');
+                    setcookie('_usn', "", time()-60*60*24*30, '/');
+                    setcookie('_usn', $username, time()+60*60*24*30, '/');
                     return $token;
             }
             else{
