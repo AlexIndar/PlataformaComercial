@@ -22,6 +22,7 @@
                         <div class="card-header title-table">
                           <h3 class="card-title mt-2 mr-3">Gasto Fleteras</h3>
                           <button type="button" class="btn btn-outline-primary btn-consultar-gasto-fletera" onclick="logisticaController.consultFreightExpense()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Consultando</button>
+                          <button type="button" class="btn btn-outline-primary  btn-excel ml-2" onclick="logisticaController.exportExcelFreightExpense()" disabled><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

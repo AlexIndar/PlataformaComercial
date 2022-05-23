@@ -246,7 +246,7 @@ let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow,link='';
-let arraytable2 = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array();
+let arraytable2 = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array();
 let contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 //#endregion
 
@@ -406,6 +406,7 @@ const logisticaController = {
             success: function (data) { 
                 console.log(data);
                 console.time();
+                ReporteGastoFleteras = data;
                 $('#table-gasto-fleteras').DataTable().clear().draw();
                 $('#table-gasto-fleteras').DataTable().rows.add(data).draw();
                 $('.btn-consultar-gasto-fletera').empty();
@@ -414,11 +415,81 @@ const logisticaController = {
             },
             complete:()=>{
                 console.timeEnd();
+                $('.btn-excel').prop('disabled',false);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);     
             }
         });
+    },
+    exportExcelFreightExpense: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled',true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'NUM DOC',
+            'VENDOR',
+            'NUM FACTURA',
+            'IMPORTE FACTURA',
+            'CHECK RETENCION',
+            'UUID',
+            'USUARIO',
+            'COMENTARIO',
+            'AUTORIZADO',
+            'AUTORIZADO USUARIO',
+            'NUM GUIA',
+            'IMPORTE GUIA',
+            'FACTURAS',
+            'COMENTARIO GUIA'
+        ]);
+        $.each(ReporteGastoFleteras,function(key,value){
+            let facturas = value.facturas;
+            let checkRetencion = value.checkRetencion;
+            checkRetencion = checkRetencion == "<input type='checkbox' disabled>" ? 0 : 1;
+            let autorizado = value.autorizado;
+            autorizado = autorizado == "<input type='checkbox' disabled>" ? 0 : 1;
+            let vendor =  value.vendor;
+            let comentario = value.comentario;
+            let comentarioGuia = value.comentarioGuia;
+            let data = [
+                value.numDoc,
+                vendor.replace(/,/g,''),
+                value.numFactura,
+                value.importeFactura,
+                checkRetencion,
+                value.uuid,
+                value.usuario,
+                comentario.replace(/,/g,''),
+                autorizado,
+                value.autorizadoUsuario,
+                value.numGuia,
+                value.importeGuia,
+                facturas.replace(/,/g,'.'),
+                comentarioGuia.replace(/,/g,'')
+            ];
+            arrayRows.push(data);
+        });
+        // console.log(arrayRows);
+        csvContent = "data:text/csv;charset=utf-8,";
+         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+         arrayRows.forEach(function(rowArray){
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+ 
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_GastoFleteras.csv");
+        document.getElementById('table-gasto-fleteras').appendChild(link);
+        link.click();
+        setTimeout(function(){
+            $('.btn-excel').empty();
+            $('.btn-excel').prop('disabled', false);
+            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
+        },5000);
     },
     //#endregion
     //#region INTERFAZ RECIBO 
