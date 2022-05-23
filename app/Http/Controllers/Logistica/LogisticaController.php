@@ -277,21 +277,29 @@ class LogisticaController extends Controller
         #endregion
         
         #region REPORTES
-            #region FACTURAS X EMBARQUE
+            #region FACTURAS X EMBARCAR
             public static function consultBillsXShipments($token,$data)
             {
                 ini_set('memory_limit','-1');
                 $jsonData = json_decode($data);
-                $facturasEmbarques = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
-                $facturas = json_decode($facturasEmbarques->body());
+                $facturasEmbarcar = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
+                $facturas = json_decode($facturasEmbarcar->body());
                 foreach($facturas as $fa){
                     $fa->fechaEmbarque = explode('T',$fa->fechaEmbarque)[0];
-                    $fa->fechaFleteXConfirmar = $fa->fechaFleteXConfirmar == '0001-01-01T00:00:00' ? '' : $fa->fechaFleteXConfirmar;
+                    $fechaFleteXConfirmar  = explode('T',$fa->fechaFleteXConfirmar)[0];
+                    $fa->fechaFleteXConfirmar = $fechaFleteXConfirmar == '0001-01-01' ? '' : $fechaFleteXConfirmar;
                     $fa->fechaFactura = explode('T',$fa->fechaFactura)[0];
-                    $fa->fechaIngreso = explode('T',$fa->fechaIngreso)[0];
-
+                    $fechaIngreso  = explode('T',$fa->fechaIngreso)[0];
+                    $fa->fechaIngreso = $fechaIngreso == "0001-01-01" ? '' : $fechaIngreso;
                 }
                 return $facturas;
+            }
+            public static function exportExcelBillsXShipments($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $exportExcel = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFi);
+                $export = json_decode($exportExcel->body());
+                return $export;
             }
             #endregion
             
@@ -301,6 +309,17 @@ class LogisticaController extends Controller
                 $gastoFleteras = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultFreightExpense');
                 $reporte = json_decode($gastoFleteras->body());
                 return $reporte;
+            }
+            #endregion
+            
+            #region INTERFA FACTURACION
+            public static function consultBillingInterface($toke,$data)
+            {
+                ini_set('memory_limit','-1');
+                $jsonData = json_decode($data);
+                $facturasEmbarques = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillingInterface?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
+                $reporte = json_decode($facturasEmbarques->body());
+                return $facturas;
             }
             #endregion
         #endregion

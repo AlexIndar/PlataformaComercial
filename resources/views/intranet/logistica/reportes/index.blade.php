@@ -36,7 +36,7 @@
                     </a>
                   </div>
                   <div class="col-lg-3 col-md-4 col-sm-12">
-                    <a href="#" class="card-link">
+                    <a href="{{ route('logistica.reportes.interfazFacturacion') }}" class="card-link">
                       <div class="dashboard-cards">
                         <i class="fa-solid fa-display fa-2x"></i><br>
                         <h6>Interfaz Facturación</h6>

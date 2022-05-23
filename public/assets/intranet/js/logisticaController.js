@@ -3,6 +3,7 @@ $(document).ready(function(){
     switch(window.location.pathname)
     {
         case '/logistica/distribucion/capturaGastoFletera':
+            //#region captura gasto fletera
             //Se inicializan los selectores que se encuentran en la vista 
             logisticaController.initSelect2();
 
@@ -17,11 +18,15 @@ $(document).ready(function(){
                 digitsOptional: false,
                 placeholder: "0.00"
             });
+            //#endregion
             break;
         case '/logistica/mesaControl/planeador':
+            //#region planeador
             logisticaController.getPlaneador();
+            //#endregion
             break;
         case '/logistica/reportes/facturasXEmbarque':
+            //#region facturas x embarque
             $('#fechas').daterangepicker({
                 opens: 'left'
               }, function(start, end, label) {
@@ -29,9 +34,9 @@ $(document).ready(function(){
                   fechaFin= end.format('YYYY-MM-DD');
               });
               $('#table-facturas-embarque').DataTable({
-                paging: true,
+                // paging: true,
                 responsive: true,
-                searching: true,
+                // searching: true,
                 processing: true,
                 bSortClasses: false,
                 fixedHeader: true,
@@ -67,7 +72,8 @@ $(document).ready(function(){
                     { data:'chofer'},
                     { data:'dias'},
                     { data:'responsable'},
-                    { data:'diasPermitidos'}
+                    { data:'diasPermitidos'},
+                    { data:'estatus'}
                 ],
                 language: {
                     "emptyTable": "No hay información",
@@ -89,58 +95,145 @@ $(document).ready(function(){
                     }
                   }
             });
+            //#endregion
             break;
         case '/logistica/reportes/gastoFleteras':
+            //#region gastoFleteras
             $('#table-gasto-fleteras').DataTable({
-               paging: true,
-                responsive: true,
-                searching: true,
-                processing: true,
-                bSortClasses: false,
-                fixedHeader: true,
-                // scrollY:        400,
-                deferRender:    true,
-                scroller:       true,
-                columns: [
-                    { data:'numDoc', visible:true},
-                    { data:'vendor', visible:true},
-                    { data:'numFactura', visible:true},
-                    { data:'importeFactura', visible:true},
-                    { data:'checkRetencion', visible:true},
-                    { data:'uuid', visible:true},
-                    { data:'usuario', visible:true},
-                    { data:'comentario', visible:true},
-                    { data:'autorizado', visible:true},
-                    { data:'autorizadoUsuario', visible:true},
-                    { data:'numGuia', visible:true},
-                    { data:'importeGuia', visible:true},
-                    { data:'facturas', visible:true},
-                    { data:'comentarioGuia', visible:true}
-                ],
-                language: {
-                    "emptyTable": "No hay información",
-                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
-                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ Documentos",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "zeroRecords": "Sin resultados encontrados",
-                    "paginate": {
-                      "first": "Primero",
-                      "last": "Ultimo",
-                      "next": "Siguiente",
-                      "previous": "Anterior"
-                    }
-                  }
-            });
-            logisticaController.consultFreightExpense();
+                paging: true,
+                 responsive: true,
+                 searching: true,
+                 processing: true,
+                 bSortClasses: false,
+                 fixedHeader: true,
+                 // scrollY:        400,
+                 deferRender:    true,
+                 scroller:       true,
+                 columns: [
+                     { data:'numDoc', visible:true},
+                     { data:'vendor', visible:true},
+                     { data:'numFactura', visible:true},
+                     { data:'importeFactura', visible:true},
+                     { data:'checkRetencion', visible:true},
+                     { data:'uuid', visible:true},
+                     { data:'usuario', visible:true},
+                     { data:'comentario', visible:true},
+                     { data:'autorizado', visible:true},
+                     { data:'autorizadoUsuario', visible:true},
+                     { data:'numGuia', visible:true},
+                     { data:'importeGuia', visible:true},
+                     { data:'facturas', visible:true},
+                     { data:'comentarioGuia', visible:true}
+                 ],
+                 language: {
+                     "emptyTable": "No hay información",
+                     "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                     "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                     "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                     "infoPostFix": "",
+                     "thousands": ",",
+                     "lengthMenu": "Mostrar _MENU_ Documentos",
+                     "loadingRecords": "Cargando...",
+                     "processing": "Procesando...",
+                     "search": "Buscar:",
+                     "zeroRecords": "Sin resultados encontrados",
+                     "paginate": {
+                       "first": "Primero",
+                       "last": "Ultimo",
+                       "next": "Siguiente",
+                       "previous": "Anterior"
+                     }
+                   }
+             });
+             logisticaController.consultFreightExpense();
+            //#endregion
             break;
+            case '/logistica/reportes/interfazRecibo':
+                $('#fechas').daterangepicker({
+                    singleDatePicker: true,
+                  }, function(start, end, label) {
+                      fechaInicio= start.format('YYYY-MM-DD');
+                  });      
+            break;
+        case '/logistica/reportes/interfazFacturacion':
+            $('#fechas').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                fechaInicio= start.format('YYYY-MM-DD');
+                fechaFin= end.format('YYYY-MM-DD');
+            });
+            //   $('#table-interfaz-facturacion').DataTable({
+            //     paging: true,
+            //     responsive: true,
+            //     searching: true,
+            //     processing: true,
+            //     bSortClasses: false,
+            //     fixedHeader: true,
+            //     scrollY:        400,
+            //     deferRender:    true,
+            //     scroller:       true,
+            //     columns: [
+            //         { data:'MOV'},
+            //         { data:'cotizacion'},
+            //         { data:'consolidado'},
+            //         { data:'movimiento'},
+            //         { data:'fechaIngreso'},
+            //         { data:'factura'},
+            //         { data:'ubicacion'},
+            //         { data:'fechaFactura'},
+            //         { data:'cliente'},
+            //         { data:'zona'},
+            //         { data:'nota'},
+            //         { data:'condicionPago'},
+            //         { data:'importe'},
+            //         { data:'formaEnvio'},
+            //         { data:'fletera'},
+            //         { data:'totalEmbarques'},
+            //         { data:'embarque'},
+            //         { data:'fechaEmbarque'},
+            //         { data:'estadoEmbarque'},
+            //         { data:'comentarioEmbarque'},
+            //         { data:'estadoFactura'},
+            //         { data:'comentarioFactura'},
+            //         { data:'fechaFleteXConfirmar'},
+            //         { data:'fechaEntrega'},
+            //         { data:'usuario'},
+            //         { data:'chofer'},
+            //         { data:'dias'},
+            //         { data:'responsable'},
+            //         { data:'diasPermitidos'}
+            //     ],
+            //     language: {
+            //         "emptyTable": "No hay información",
+            //         "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+            //         "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+            //         "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            //         "infoPostFix": "",
+            //         "thousands": ",",
+            //         "lengthMenu": "Mostrar _MENU_ Documentos",
+            //         "loadingRecords": "Cargando...",
+            //         "processing": "Procesando...",
+            //         "search": "Buscar:",
+            //         "zeroRecords": "Sin resultados encontrados",
+            //         "paginate": {
+            //           "first": "Primero",
+            //           "last": "Ultimo",
+            //           "next": "Siguiente",
+            //           "previous": "Anterior"
+            //         }
+            //       }
+            // });
+            $('#fechas').daterangepicker({
+                opens: 'left'
+              }, function(start, end, label) {
+                  fechaInicio= start.format('DD/MM/YYYY');
+                  fechaFin= end.format('DD/MM/YYYY');
+              });
+            break;
+        
     }
 });
+//#region VARIABLES GLOBALES
 var Toast = Swal.mixin({
     toast: true,
     position: 'top-start',
@@ -152,10 +245,154 @@ let d = new Date();
 let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
-let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow;
-let arraytable2 = new Array(), arrayPlaneador = new Array(), reportsHtmlArrays = new Array();
+let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow,link='';
+let arraytable2 = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array();
 let contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
+//#endregion
+
 const logisticaController = {
+    //#region SCRIPTS
+    
+    //#region SCRIPTS REPORTES
+    //#region FACTURAS X EMBARQUE
+    consultBillsXShipments: () => {
+        $('.btn-consultar-factura').prop('disabled',true);
+        $('.btn-consultar-factura').empty();
+        $('.btn-consultar-factura').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
+        let row = '';
+        console.log(contTable);
+        contTable != 0 ?  (
+            $('#table-facturas-embarque').DataTable().clear().draw()
+        ): '';
+        $.ajax({
+            url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
+            type: 'GET',
+            data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                console.time();
+                ReporteFacturasPorEmbarcar = data;
+                $('#table-facturas-embarque').DataTable().clear().draw();
+                $('#table-facturas-embarque').DataTable().rows.add(data).draw();
+                $('.btn-consultar-factura').prop('disabled',false);
+                $('.btn-consultar-factura').empty();
+                $('.btn-consultar-factura').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                contTable++;
+            },
+            complete:() => {
+                $('.card-body').attr('hidden',false);
+                $('.btn-excel').prop('disabled',false);
+                console.timeEnd();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    exportExcelBillsXShipments: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled',true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'PEDIDO',
+            'COTIZACION',
+            'CONSOLIDADO',
+            'MOVIMIENTO',
+            'FECHA INGRESO',
+            'FACTURA',
+            'ENVIA A',
+            'FECHA FACTURA',
+            'CLIENTE',
+            'ZONA',
+            'NOTA',
+            'CONDICION PAGO',
+            'IMPORTE',
+            'FORMA ENVIO',
+            'FLETERA',
+            'TOTAL EMBARQUES',
+            'EMBARQUE',
+            'FECHA EMBARQUE',
+            'ESTADO EMBARQUE',
+            'COMENTARIO EMBARQUE',
+            'ESTADO FACTURA',
+            'COMENTARIO FACTURA',
+            'FECHA FLETE X CONFIRMAR',
+            'FECHA ENTRAGA',
+            'USUARIO',
+            'CHOFER',
+            'DIAS',
+            'RESPONSABLE',
+            'DIAS PERMITIDOS'
+        ]);
+        $.each(ReporteFacturasPorEmbarcar,function(key,value){
+            let nota = value.nota.replace(/,/g, '.');
+            let comentarioEmbarque = value.comentarioEmbarque.replace(/,/g,'.');
+            let comentarioFactura = value.comentarioFactura.replace(/,/g, '.');
+            let condicionPago = value.condicionPago;
+            let cliente = value.cliente.replace(/,/g,'.');
+            let formaEnvio = value.formaEnvio;
+            let fletera = value.fletera;
+            nota = nota.replace(/[#]/g, '');
+            comentarioEmbarque = comentarioEmbarque.replace(/[#]/g, '');
+            comentarioFactura  = comentarioFactura.replace(/[#]/g, '');
+            let data = [
+                value.pedido,
+                value.cotizacion,
+                value.consolidado,
+                value.movimiento,
+                value.fechaIngreso,
+                value.factura,
+                value.ubicacion,
+                value.fechaFactura,
+                cliente.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                value.zona,
+                nota.replace(/(\r\n|\n|\r)/gm,""),
+                condicionPago.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                value.importe,
+                formaEnvio.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                fletera.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                value.totalEmbarques,
+                value.embarque,
+                value.fechaEmbarque,
+                value.estadoEmbarque,
+                comentarioEmbarque.replace(/(\r\n|\n|\r)/gm,""),
+                value.estadoFactura,
+                comentarioFactura.replace(/(\r\n|\n|\r)/gm,""),
+                value.fechaFleteXConfirmar,
+                value.fechaEntrega,
+                value.usuario,
+                value.chofer,
+                value.dias,
+                value.responsable,
+                value.diasPermitidos
+            ];
+            arrayRows.push(data);
+        });
+        // console.log(arrayRows);
+        csvContent = "data:text/csv;charset=utf-8,";
+         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+         arrayRows.forEach(function(rowArray){
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+ 
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_FacturasPorEmbarcar.csv");
+        document.getElementById('table-facturas-embarque').appendChild(link);
+        link.click();
+        setTimeout(function(){
+            $('.btn-excel').empty();
+            $('.btn-excel').prop('disabled', false);
+            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
+        },5000);
+    },
+    //#endregion
+    //#region GASTO FLETERAS
     consultFreightExpense: () => {
         contTable != 0 ?  (
                         $('.btn-consultar-gasto-fletera').empty(),
@@ -169,10 +406,6 @@ const logisticaController = {
             success: function (data) { 
                 console.log(data);
                 console.time();
-                let row = '';
-                data.forEach(element => 
-                    row += element.rowHtml
-                );
                 $('#table-gasto-fleteras').DataTable().clear().draw();
                 $('#table-gasto-fleteras').DataTable().rows.add(data).draw();
                 $('.btn-consultar-gasto-fletera').empty();
@@ -187,300 +420,45 @@ const logisticaController = {
             }
         });
     },
-    consultBillsXShipments: () => {
-        $('.btn-consultar-factura').prop('disabled',true);
-        $('.btn-consultar-factura').empty();
-        $('.btn-consultar-factura').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
-        let row = '';
-        console.log(contTable);
+    //#endregion
+    //#region INTERFAZ RECIBO 
+    consultReceiptInterface: () => {
+        console.log(fechaInicio);
+    },
+    //#endregion
+    //#region INTERFAZ FACTURACION
+    consultBillingInterface: () =>{
         contTable != 0 ?  (
-            $('#table-facturas-embarque').DataTable().clear().draw()
-            // $('#table-facturas-embarque').DataTable().destroy()
+            $('.btn-consultar-interfaz-facturacion').empty(),
+            $('.btn-consultar-interfaz-facturacion').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
+            $('#table-interfaz-facturacion').DataTable().clear().draw()
         ): '';
         $.ajax({
-            url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
-            type: 'GET',
-            data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
-            datatype: 'json',
-            success: function (data) { 
-                console.log(data);
-                console.time();
-                
-                $('#table-facturas-embarque').DataTable().clear().draw();
-                $('#table-facturas-embarque').DataTable().rows.add(data).draw();
-                $('.btn-consultar-factura').prop('disabled',false);
-                $('.btn-consultar-factura').empty();
-                $('.btn-consultar-factura').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
-                contTable++;
-            },
-            complete:() => {
-                $('.card-body').attr('hidden',false);
-                console.timeEnd();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);     
-            }
-        });
-    },
-    slopesBoxes: () => {
-        $.ajax({
-            url: '/logistica/mesaControl/planeador/getCajasPendientes',
-            type: 'GET',
-            datatype: 'json',
-            success: function (data) { 
-                $('#content-cajas-pendientes').empty();
-                $('#modal-cajas-pendientes').modal('show');
-                $.each(data,function(index,val){
-                    let fechaSurtido = val.fechaSurtido;
-                    $('#content-cajas-pendientes').append('<tr>'
-                        +'<td>'+ val.pedidoConsolidado +'</td>'
-                        +'<td>'+ val.formaEnvio +'</td>'
-                        +'<td>'+ val.prioridad +'</td>'
-                        +'<td>'+ val.caja +'</td>'
-                        +'<td>'+ val.articulo +'</td>'
-                        +'<td>'+ val.cantidad +'</td>'
-                        +'<td>'+ val.ubicacionOrigen +'</td>'
-                        +'<td>'+ val.usuario +'</td>'
-                        +'<td>'+ val.nombre +'</td>'
-                        +'<td>'+ fechaSurtido.split('T')[0] +'</td>'
-                        +'<td>'+ val.tiempoEspera +'</td>'
-                        +'</tr>');
-                });
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);     
-            }
-        });
-    },
-    reloadTable: () => {
-        $('.fa-cog').addClass('fa-spin');
-        logisticaController.getPlaneador();
-    },
-    getArrayPlaneador: () => {
-        $.ajax({
-            url: '/logistica/mesaControl/planeador/getArrayPlaneador',
-            type: 'GET',
-            datatype: 'json',
-            success: function (data) { 
-                contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
-                arrayPlaneador = new Array();
-                arrayPlaneador = data;
-                for(let a=0; a < arrayPlaneador.length; a++){
-                    switch(arrayPlaneador[a].area)
-                    {
-                        case 'SECTOR 1':
-
-                                arrayPlaneador[a].porsurtir == 1 ? contArea1 += 1 : '';
-                                break;
-                            case 'SECTOR 2':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea2 += 1 : '';
-                                break;
-                            case 'SECTOR 3':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea3 += 1 : '';
-                                break;
-                            case 'SECTOR 4':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea4 += 1 : '';
-                                break;
-                            case 'SECTOR 5':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea5 += 1 : '';
-                                break;
-                            case 'VALIDANDO':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea6 += 1 : '';
-                                break;
-                            case 'Z_BULK1':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea7 += 1 : '';
-                                break;
-                            case 'Z_BULK2':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea8 += 1 : '';
-                                break;
-                            case 'Z_BULKIN1':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea9 += 1 : '';
-                            break;
-                            case 'Z_INF1':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea10 += 1 : '';
-                                break;
-                            case 'Z_VOL1':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea11 += 1 : '';
-                                break;
-                            case 'Z_VOL2':
-                                arrayPlaneador[a].porsurtir == 1 ? contArea12 += 1 : '';
-                                break;
-                    }
-                }
-                $('#content-table-planeador').append('<tr>'
-                    +'<td colspan="4" class="text-right"><strong>Total: </strong></td>'
-                    +'<td><strong>'+ contArea1 +'</strong></td>'
-                    +'<td><strong>'+ contArea2 +'</strong></td>'
-                    +'<td><strong>'+ contArea3 +'</strong></td>'
-                    +'<td><strong>'+ contArea4 +'</strong></td>'
-                    +'<td><strong>'+ contArea5 +'</strong></td>'
-                    +'<td><strong>'+ contArea6 +'</strong></td>'
-                    +'<td><strong>'+ contArea7 +'</strong></td>'
-                    +'<td><strong>'+ contArea8 +'</strong></td>'
-                    +'<td><strong>'+ contArea9 +'</strong></td>'
-                    +'<td><strong>'+ contArea10 +'</strong></td>'
-                    +'<td><strong>'+ contArea11 +'</strong></td>'
-                    +'<td><strong>'+ contArea12 +'</strong></td>'
-                    +'</tr>');                
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);     
-            }
-        });
-    },
-    getPlaneador: () => {
-        $('#content-table-planeador').empty();
-        $.ajax({
-            url: '/logistica/mesaControl/planeador/getPlaneador',
-            type: 'GET',
-            datatype: 'json',
-            success: function (data) { 
-                console.log(data);
-                let rows = '';
-                let area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
-                let styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';
-                let functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
-                for(let a=0; a< data.length; a++){
-                    let areas = data[a].areas;
-                    $.each(areas,function( index, val){
-                        switch(val.name)
-                        {
-                            case 'SECTOR 1':
-                                area1 = val.porsurtir;
-                                styleA1 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA1 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'SECTOR 2':
-                                area2 = val.porsurtir;
-                                styleA2 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA2 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'SECTOR 3':
-                                area3 = val.porsurtir;
-                                styleA3 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA3 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'SECTOR 4':
-                                area4 = val.porsurtir;
-                                styleA4 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA4 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'SECTOR 5':
-                                area5 = val.porsurtir;
-                                styleA5 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA5 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'VALIDANDO':
-                                area6 = val.porsurtir;
-                                styleA6 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA6 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'Z_BULK1':
-                                area7 = val.porsurtir;
-                                styleA7 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA7 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'Z_BULK2':
-                                area8 = val.porsurtir;
-                                styleA8 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA8 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'Z_BULKIN1':
-                                area9 = val.porsurtir;
-                                styleA9 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA9 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                            break;
-                            case 'Z_INF1':
-                                area10 = val.porsurtir;
-                                styleA10 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA10 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                            case 'Z_VOL1':
-                                area11 = val.porsurtir;
-                                styleA11 = val.style; 
-                                typeof val.porsurtir !== 'undefined' ? functionA11 = 'onclick="logisticaController.showPlaneadorDetail(this)"':''; 
-                                break;
-                            case 'Z_VOL2':
-                                area12 = val.porsurtir;
-                                styleA12 = val.style;
-                                typeof val.porsurtir !== 'undefined' ? functionA12 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
-                                break;
-                        }
-                    })
-                    rows += '<tr>' 
-                    +'<td>'+ data[a].prioridad +'</td>'
-                    +'<td>'+ data[a].formaEnvio +'</td>'
-                    +'<td>'+ data[a].cliente +'</td>'
-                    +'<td>'+ data[a].numPedido +'</td>'
-                    +'<td class="'+ styleA1+'" '+ functionA1 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 1">'+ area1 +'</td>'
-                    +'<td class="'+ styleA2+'" '+ functionA2 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 2">'+ area2 +'</td>'
-                    +'<td class="'+ styleA3+'" '+ functionA3 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 3">'+ area3 +'</td>'
-                    +'<td class="'+ styleA4+'" '+ functionA4 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 4">'+ area4 +'</td>'
-                    +'<td class="'+ styleA5+'" '+ functionA5 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 5">'+ area5 +'</td>'
-                    +'<td class="'+ styleA6+'" '+ functionA6 +' data-numpedido="'+data[a].numPedido+'" data-area="VALIDANDO">'+ area6 +'</td>'
-                    +'<td class="'+ styleA7+'" '+ functionA7 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK1">'+ area7 +'</td>'
-                    +'<td class="'+ styleA8+'" '+ functionA8 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK2">'+ area8 +'</td>'
-                    +'<td class="'+ styleA9+'" '+ functionA9 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULKIN1">'+ area9 +'</td>'
-                    +'<td class="'+ styleA10+'" '+ functionA10 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_INF1">'+ area10 +'</td>'
-                    +'<td class="'+ styleA11+'" '+ functionA11 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL1">'+ area11 +'</td>'
-                    +'<td class="'+ styleA12+'" '+ functionA12 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL2">'+ area12 +'</td>'
-                    +'</tr>';
-                        area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
-                        styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';  
-                        functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
-                }
-                $('#content-table-planeador').prepend(rows);  
-                $('.fa-cog').removeClass('fa-spin');
-                logisticaController.getArrayPlaneador();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);     
-            },
-        });
-    },
-    showPlaneadorDetail: (e) => {
-        let numPedido = $(e).data('numpedido');
-        let area = $(e).data('area');
-        let pedidos = new Array();
-        console.log(arrayPlaneador);
-        $.each(arrayPlaneador,function(index,val){
-            if(val.numPedido == numPedido && val.area == area)
-            {
-                pedidos.push({
-                    'mov'       : val.mov,
-                    'numPedido' : val.numPedido,
-                    'prioridad' : val.prioridad,
-                    'formaEnvio': val.formaEnvio,
-                    'cliente'   : val.cliente,
-                    'clave'     : val.clave,
-                    'nombre'    : val.nombre,
-                    'area'      : val.area,
-                    'porsurtir' : val.porsurtir,
-                    'surtido'   : val.surtido
-                });
-            }
-        });
-        console.log(pedidos);
-        $('#content-planeador-detail').empty();
-        $('#modal-planeador-detail').modal('show');
-        let rows = '';
-        for(var a=0; a < pedidos.length; a++)
-        {
-            rows += '<tr>'
-                    +'<td>'+ pedidos[a].mov +'</td>'
-                    +'<td>'+ pedidos[a].numPedido +'</td>'
-                    +'<td>'+ pedidos[a].prioridad +'</td>'
-                    +'<td>'+ pedidos[a].formaEnvio +'</td>'
-                    +'<td>'+ pedidos[a].cliente +'</td>'
-                    +'<td>'+ pedidos[a].clave +'</td>'
-                    +'<td>'+ pedidos[a].nombre +'</td>'
-                    +'<td>'+ pedidos[a].area +'</td>'
-                    +'<td>'+ pedidos[a].porsurtir +'</td>'
-                    +'<td>'+ pedidos[a].surtido +'</td>'
-                    +'</tr>'; 
+        url: '/logistica/reportes/interfazFacturacion/consultBillingInterface',
+        type: 'GET',
+        datatype: 'json',
+        success: function (data) { 
+            console.log(data);
+            console.time();
+            $('#table-interfaz-facturacion').DataTable().clear().draw();
+            $('#table-interfaz-facturacion').DataTable().rows.add(data).draw();
+            $('.btn-consultar-interfaz-facturacion').empty();
+            $('.btn-consultar-interfaz-facturacion').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+            contTable++;
+        },
+        complete:()=>{
+            console.timeEnd();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);     
         }
-        $('#content-planeador-detail').append(rows);
+        });
     },
+    //#endregion
+    //#endregion
+
+    //#region SCRIPTS LOGISTICA
+    //#region CAPTURA GASTO FLETERA
     initSelect2: ()=>{
         //Initialize Select2 Elements
         $('.select2').select2();
@@ -1050,5 +1028,273 @@ const logisticaController = {
                 console.log(textStatus);     
             }
         });
+    },
+    //#endregion
+    //#endregion
+    
+    //#region SCRIPTS MESA CONTROL
+    //#region PLANEADOR
+    slopesBoxes: () => {
+        $.ajax({
+            url: '/logistica/mesaControl/planeador/getCajasPendientes',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                $('#content-cajas-pendientes').empty();
+                $('#modal-cajas-pendientes').modal('show');
+                $.each(data,function(index,val){
+                    let fechaSurtido = val.fechaSurtido;
+                    $('#content-cajas-pendientes').append('<tr>'
+                        +'<td>'+ val.pedidoConsolidado +'</td>'
+                        +'<td>'+ val.formaEnvio +'</td>'
+                        +'<td>'+ val.prioridad +'</td>'
+                        +'<td>'+ val.caja +'</td>'
+                        +'<td>'+ val.articulo +'</td>'
+                        +'<td>'+ val.cantidad +'</td>'
+                        +'<td>'+ val.ubicacionOrigen +'</td>'
+                        +'<td>'+ val.usuario +'</td>'
+                        +'<td>'+ val.nombre +'</td>'
+                        +'<td>'+ fechaSurtido.split('T')[0] +'</td>'
+                        +'<td>'+ val.tiempoEspera +'</td>'
+                        +'</tr>');
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    reloadTable: () => {
+        $('.fa-cog').addClass('fa-spin');
+        logisticaController.getPlaneador();
+    },
+    getArrayPlaneador: () => {
+        $.ajax({
+            url: '/logistica/mesaControl/planeador/getArrayPlaneador',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
+                arrayPlaneador = new Array();
+                arrayPlaneador = data;
+                for(let a=0; a < arrayPlaneador.length; a++){
+                    switch(arrayPlaneador[a].area)
+                    {
+                        case 'SECTOR 1':
+
+                                arrayPlaneador[a].porsurtir == 1 ? contArea1 += 1 : '';
+                                break;
+                            case 'SECTOR 2':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea2 += 1 : '';
+                                break;
+                            case 'SECTOR 3':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea3 += 1 : '';
+                                break;
+                            case 'SECTOR 4':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea4 += 1 : '';
+                                break;
+                            case 'SECTOR 5':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea5 += 1 : '';
+                                break;
+                            case 'VALIDANDO':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea6 += 1 : '';
+                                break;
+                            case 'Z_BULK1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea7 += 1 : '';
+                                break;
+                            case 'Z_BULK2':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea8 += 1 : '';
+                                break;
+                            case 'Z_BULKIN1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea9 += 1 : '';
+                            break;
+                            case 'Z_INF1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea10 += 1 : '';
+                                break;
+                            case 'Z_VOL1':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea11 += 1 : '';
+                                break;
+                            case 'Z_VOL2':
+                                arrayPlaneador[a].porsurtir == 1 ? contArea12 += 1 : '';
+                                break;
+                    }
+                }
+                $('#content-table-planeador').append('<tr>'
+                    +'<td colspan="4" class="text-right"><strong>Total: </strong></td>'
+                    +'<td><strong>'+ contArea1 +'</strong></td>'
+                    +'<td><strong>'+ contArea2 +'</strong></td>'
+                    +'<td><strong>'+ contArea3 +'</strong></td>'
+                    +'<td><strong>'+ contArea4 +'</strong></td>'
+                    +'<td><strong>'+ contArea5 +'</strong></td>'
+                    +'<td><strong>'+ contArea6 +'</strong></td>'
+                    +'<td><strong>'+ contArea7 +'</strong></td>'
+                    +'<td><strong>'+ contArea8 +'</strong></td>'
+                    +'<td><strong>'+ contArea9 +'</strong></td>'
+                    +'<td><strong>'+ contArea10 +'</strong></td>'
+                    +'<td><strong>'+ contArea11 +'</strong></td>'
+                    +'<td><strong>'+ contArea12 +'</strong></td>'
+                    +'</tr>');                
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    getPlaneador: () => {
+        $('#content-table-planeador').empty();
+        $.ajax({
+            url: '/logistica/mesaControl/planeador/getPlaneador',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                let rows = '';
+                let area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
+                let styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';
+                let functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
+                for(let a=0; a< data.length; a++){
+                    let areas = data[a].areas;
+                    $.each(areas,function( index, val){
+                        switch(val.name)
+                        {
+                            case 'SECTOR 1':
+                                area1 = val.porsurtir;
+                                styleA1 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA1 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 2':
+                                area2 = val.porsurtir;
+                                styleA2 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA2 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 3':
+                                area3 = val.porsurtir;
+                                styleA3 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA3 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 4':
+                                area4 = val.porsurtir;
+                                styleA4 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA4 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'SECTOR 5':
+                                area5 = val.porsurtir;
+                                styleA5 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA5 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'VALIDANDO':
+                                area6 = val.porsurtir;
+                                styleA6 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA6 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_BULK1':
+                                area7 = val.porsurtir;
+                                styleA7 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA7 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_BULK2':
+                                area8 = val.porsurtir;
+                                styleA8 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA8 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_BULKIN1':
+                                area9 = val.porsurtir;
+                                styleA9 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA9 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                            break;
+                            case 'Z_INF1':
+                                area10 = val.porsurtir;
+                                styleA10 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA10 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                            case 'Z_VOL1':
+                                area11 = val.porsurtir;
+                                styleA11 = val.style; 
+                                typeof val.porsurtir !== 'undefined' ? functionA11 = 'onclick="logisticaController.showPlaneadorDetail(this)"':''; 
+                                break;
+                            case 'Z_VOL2':
+                                area12 = val.porsurtir;
+                                styleA12 = val.style;
+                                typeof val.porsurtir !== 'undefined' ? functionA12 = 'onclick="logisticaController.showPlaneadorDetail(this)"':'';
+                                break;
+                        }
+                    })
+                    rows += '<tr>' 
+                    +'<td>'+ data[a].prioridad +'</td>'
+                    +'<td>'+ data[a].formaEnvio +'</td>'
+                    +'<td>'+ data[a].cliente +'</td>'
+                    +'<td>'+ data[a].numPedido +'</td>'
+                    +'<td class="'+ styleA1+'" '+ functionA1 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 1">'+ area1 +'</td>'
+                    +'<td class="'+ styleA2+'" '+ functionA2 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 2">'+ area2 +'</td>'
+                    +'<td class="'+ styleA3+'" '+ functionA3 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 3">'+ area3 +'</td>'
+                    +'<td class="'+ styleA4+'" '+ functionA4 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 4">'+ area4 +'</td>'
+                    +'<td class="'+ styleA5+'" '+ functionA5 +' data-numpedido="'+data[a].numPedido+'" data-area="SECTOR 5">'+ area5 +'</td>'
+                    +'<td class="'+ styleA6+'" '+ functionA6 +' data-numpedido="'+data[a].numPedido+'" data-area="VALIDANDO">'+ area6 +'</td>'
+                    +'<td class="'+ styleA7+'" '+ functionA7 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK1">'+ area7 +'</td>'
+                    +'<td class="'+ styleA8+'" '+ functionA8 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULK2">'+ area8 +'</td>'
+                    +'<td class="'+ styleA9+'" '+ functionA9 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_BULKIN1">'+ area9 +'</td>'
+                    +'<td class="'+ styleA10+'" '+ functionA10 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_INF1">'+ area10 +'</td>'
+                    +'<td class="'+ styleA11+'" '+ functionA11 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL1">'+ area11 +'</td>'
+                    +'<td class="'+ styleA12+'" '+ functionA12 +' data-numpedido="'+data[a].numPedido+'" data-area="Z_VOL2">'+ area12 +'</td>'
+                    +'</tr>';
+                        area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
+                        styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';  
+                        functionA1='',functionA2='',functionA3='',functionA4='',functionA5='',functionA6='',functionA7='',functionA8='',functionA9='',functionA10='',functionA11='',functionA12='';
+                }
+                $('#content-table-planeador').prepend(rows);  
+                $('.fa-cog').removeClass('fa-spin');
+                logisticaController.getArrayPlaneador();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            },
+        });
+    },
+    showPlaneadorDetail: (e) => {
+        let numPedido = $(e).data('numpedido');
+        let area = $(e).data('area');
+        let pedidos = new Array();
+        console.log(arrayPlaneador);
+        $.each(arrayPlaneador,function(index,val){
+            if(val.numPedido == numPedido && val.area == area)
+            {
+                pedidos.push({
+                    'mov'       : val.mov,
+                    'numPedido' : val.numPedido,
+                    'prioridad' : val.prioridad,
+                    'formaEnvio': val.formaEnvio,
+                    'cliente'   : val.cliente,
+                    'clave'     : val.clave,
+                    'nombre'    : val.nombre,
+                    'area'      : val.area,
+                    'porsurtir' : val.porsurtir,
+                    'surtido'   : val.surtido
+                });
+            }
+        });
+        console.log(pedidos);
+        $('#content-planeador-detail').empty();
+        $('#modal-planeador-detail').modal('show');
+        let rows = '';
+        for(var a=0; a < pedidos.length; a++)
+        {
+            rows += '<tr>'
+                    +'<td>'+ pedidos[a].mov +'</td>'
+                    +'<td>'+ pedidos[a].numPedido +'</td>'
+                    +'<td>'+ pedidos[a].prioridad +'</td>'
+                    +'<td>'+ pedidos[a].formaEnvio +'</td>'
+                    +'<td>'+ pedidos[a].cliente +'</td>'
+                    +'<td>'+ pedidos[a].clave +'</td>'
+                    +'<td>'+ pedidos[a].nombre +'</td>'
+                    +'<td>'+ pedidos[a].area +'</td>'
+                    +'<td>'+ pedidos[a].porsurtir +'</td>'
+                    +'<td>'+ pedidos[a].surtido +'</td>'
+                    +'</tr>'; 
+        }
+        $('#content-planeador-detail').append(rows);
     }
+    //#endregion
+    //#endregion
+    
+    //#endregion
 } 
