@@ -10,7 +10,7 @@
 
 <div class="content-wrapper">
       <div class="container">
-
+ 
             <div class="row">
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="about" class="card-link">

@@ -124,7 +124,7 @@
                             <option selected value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
-                        </select>
+                        </select> 
                     </div>
  
                     <div class="col-lg-2 col-md-3 col-12 text-center">

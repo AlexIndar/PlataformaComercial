@@ -79,7 +79,7 @@
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
                                 <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
-                                <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th>
+                                <th style='background-color:#002868; color:white; padding: 2px; text-align: center;'></th> 
                             @endif
                             </tr>
                         @endif
@@ -107,5 +107,15 @@
                     <h5><strong>IVA:</strong> <span style="float: right; text-align: right">${{$detallesPedido['iva']}}</span></h5>
                     <h5><strong>TOTAL:</strong> <span style="float: right; text-align: right">${{$detallesPedido['total']}}</span></h5>
                 </fieldset>
+
+                <br>
+                <br>
+
+                <div class="row">
+                    <div class="col-12 text-center d-flex justify-content-center align-items-center" style="width: 100%; min-width: 1000px; text-align: center;">
+                        <h5 class="text-center" style="width: 100%; min-width: 1000px; text-align: center;"><strong>Atentamente:</strong></h5>
+                        <h5 class="text-center" style="width: 100%; min-width: 1000px; text-align: center;"><strong>{{ucwords($fullName)}}</strong></h5>
+                    </div>
+                </div>
 </body>
 </html> 

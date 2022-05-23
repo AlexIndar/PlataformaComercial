@@ -2,7 +2,7 @@ var saleOrders= [];
 
 $(document).ready(function(){
     var companyId = document.getElementById('companyId').value;
-    var token = getCookie('laravel-token');    
+    var token = getCookie('_lt');    
 
         $.ajax({
             type: "GET",

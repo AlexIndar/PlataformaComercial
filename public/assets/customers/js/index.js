@@ -99,8 +99,8 @@ $('document').ready(function(){
       var timer = setInterval(function () {
       
         document.getElementById('first-carousel-item').classList.add('active');
-        if(getCookie("laravel-token")){
-          if(getCookie("laravel-token").includes('error')){
+        if(getCookie("_lt")){
+          if(getCookie("_lt").includes('error')){
             var toast = Swal.mixin({
               toast: true,
               icon: 'error',
@@ -427,7 +427,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function navigate(blade, validateToken){ //validateToken => Boolean   true: vista protegida, únicamente usuarios logueados      false: vista pública
         if(validateToken){
-            if(getCookie("refresh")){
+            if(getCookie("_rfs")){
               window.location.href = blade;
             }
             else{
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function deleteTokenCookie(){
-      document.cookie = "refresh= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+      document.cookie = "_rfs= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     }
 
     function showLoadImg(element){
