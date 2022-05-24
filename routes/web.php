@@ -1670,7 +1670,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                    $json = $request->ArtEspeciales;
-                    //dd($json);
                    $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
                     //dd($data);
                     return $data;
