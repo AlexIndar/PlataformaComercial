@@ -1933,7 +1933,7 @@ Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', funct
     $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
     return $response;
 });
-Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(){
+Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
