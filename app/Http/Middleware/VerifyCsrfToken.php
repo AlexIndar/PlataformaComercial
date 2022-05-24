@@ -54,5 +54,11 @@ class VerifyCsrfToken extends Middleware
         '/EstadisticaCliente/getManagementReport',
         '/EstadisticaCliente/getManagementReportByEmployee',
         '/Indarnet/getMyZone',
+        '/SolicitudesPendientes/GetCycTableView',
+        '/SolicitudesPendientes/SaveValidation',
+        '/SolicitudesPendientes/RollBackRequest',
+        '/SolicitudesPendientes/AcceptRequest',
+        '/SolicitudesPendientes/SetReference',
+        '/SolicitudesPendientes/ReactiveClient',
     ];
 }
