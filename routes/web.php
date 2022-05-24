@@ -1503,7 +1503,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 //******************************************* Comisiones ********************************************************
 
                 Route::get('/comisionesPorCliente', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
@@ -1515,7 +1515,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/comisionesVendedor', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
@@ -1524,6 +1524,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
                     return view('intranet.comisiones.comisionesVendedor',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
+                });
+
+                Route::get('/comisionesResumen', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    //$user = MisSolicitudesController::getUser($token);
+                    //$zone = MisSolicitudesController::getZone($token,$user->body());
+                    return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions]);
                 });
 
 
@@ -1551,8 +1562,9 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                    $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
                    $dataBonos=ComisionesController::getCtesActivosMes($token,$zona,$fecha);
+                   $dataVentas =ComisionesController::getTotalVentasZona($token,$zona,$fecha);
 
-                    return array($data, $dataBonos);
+                    return array($data, $dataBonos, $dataVentas);
 
                 });
 
@@ -1587,7 +1599,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                 });
 
                 Route::get('/comisionesCierreMes', function(){
-                    $token = TokenController::refreshToken();
+                    $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
@@ -1671,7 +1683,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 Route::get('/comisiones/getEspecialesPorPeriodo', function (Request $request){
                     $token = TokenController::getToken();
-                    $permissions = LoginController::getPermissions();
+                    //$permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
                     }

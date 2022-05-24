@@ -161,7 +161,7 @@
                 </p>
               </a>
             </li>
-            
+
             @if(in_array('MisSolicitudes', $permissions) || in_array('Estadistica Cliente', $permissions))
             <li class="nav-item">
               @if($active == 'Intranet')
@@ -301,6 +301,7 @@
               </ul>
             </li>
             @endif
+
             @if(in_array('CXC', $permissions))
             <li class="nav-item">
                 @if($active == 'CXC')
@@ -334,7 +335,7 @@
                 </ul>
               </li>
               @endif
-
+              @if(in_array('Comisiones', $permissions))
               <li class="nav-item">
                 @if($active == 'Comisiones')
                 <a href="#" class="nav-link active">
@@ -360,8 +361,15 @@
                             <p>Cargar Especiales</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="/comisionesResumen" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Resumen Por Vendedor</p>
+                        </a>
+                    </li>
                 </ul>
               </li>
+              @endif
         </ul>
         </nav>
       </div>

@@ -18,18 +18,18 @@ class TokenController extends Controller
      */
     public function __invoke(Request $request)
     {
-        //  
+        //
     }
 
-    public static function getToken(){ 
+    public static function getToken(){
         $token = "";
         if(isset($_COOKIE["_lt"]) && $_COOKIE["_lt"] != 'error'){
             $token = decrypt($_COOKIE["_lt"], "7Ind4r7");
         }
         else if(isset($_COOKIE["_rfs"])){
-            $token = TokenController::refreshToken(); 
+            $token = TokenController::refreshToken();
         }
-        return $token; 
+        return $token;
     }
 
     public static function refreshToken(){
@@ -44,9 +44,10 @@ class TokenController extends Controller
             $old = $_COOKIE["_rfs"];
             $username = $_COOKIE["_usn"];
             $typeUser = Http::withToken($old)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
+            dd($typeUser->body());
             $permissions = (json_decode(json_decode($typeUser->body())->permissions));
             $response = Http::withToken($old)->post('http://192.168.70.107:64444/Login/RefreshToken');
-            if($response->getStatusCode() == 200){ 
+            if($response->getStatusCode() == 200){
                     $token = $response->body();
                     setcookie("_lt", "", time()-60*60*24, '/');
                     setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
@@ -63,7 +64,7 @@ class TokenController extends Controller
         else{
             return "";
         }
-        
+
     }
 
     public function encrypt($token, $key){
