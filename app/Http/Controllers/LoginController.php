@@ -27,19 +27,33 @@ class LoginController extends Controller
         $username = explode('@', $request->email)[0];
         $password = $request->password; 
 
+
         $response = Http::post('http://192.168.70.107:64444/login/authenticate', [
             'username' => $username,
             'password' => $password
         ]);
 
+        // NOMBRES DE COOKIES 
+
+        /*
+        
+        _lt     -       token api back
+        _fln    -       full name logged user
+        _usn    -       username
+        _lv     -       user level (C - Customer : E - Employee)
+        _la     -       last authenticated time 
+        _ep     -       expired (used to know if a token has been requested)
+        
+        */
+
 
         if($response->getStatusCode() == 200){ 
+                setcookie("_la", time(), time()+60*60*24*365, '/');
                 $token = $response->body();
                 $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
                 $fullname = (json_decode($typeUser->body())->name);
                 setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
-                setcookie("_rfs", $token, time()+60*60*24, '/');
                 setcookie("_fln", encrypt($fullname, "7Ind4r7"), time()+60*60*24, '/');
                 setcookie("_usn", encrypt($username, "7Ind4r7"), time()+60*60*24, '/');
                 if(json_decode($typeUser->body())->typeUser == "C"){
@@ -63,6 +77,7 @@ class LoginController extends Controller
         setcookie("_fln", "", time()- 60*60*24, '/');
         setcookie("_usn", "", time()- 60*60*24, '/');
         setcookie("_lv", "", time()- 60*60*24, '/');
+        setcookie("_la", "", time()- 60*60*24*365, '/');
         setcookie("laravel-token", "", time()-60*60*24, '/');
         setcookie("refresh", "", time()- 60*60*24, '/');
         setcookie("fullname", "", time()- 60*60*24, '/');

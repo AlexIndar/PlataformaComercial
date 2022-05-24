@@ -14,12 +14,6 @@
             <div class="col-lg-12">
                 <div class="hero">
                     <input type="hidden" name="token" id="token" value="{{$token}}">
-                    @if($token == "error")
-                        <div class="alert alert-danger alert-dismissible fade in show appear-1000" role="alert" style="width:30%; margin-left:35%; position: absolute; z-index:11000; margin-top: 10px;text-align:center;">
-                            Usuario inválido o contraseña incorrecta
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="deleteTokenCookie()" aria-label="Close"></button>
-                        </div>
-                    @endif
                     <div class="slider">
                         <div class="carousel slide carousel-fade h-100 w-100" id="carouselIndar" data-ride="carousel">
                         <!-- <div class="carousel-indicators">

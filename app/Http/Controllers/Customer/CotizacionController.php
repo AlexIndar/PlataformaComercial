@@ -39,12 +39,11 @@ class CotizacionController extends Controller
         return $cotizacion;
     }
 
-    public static function storePedido($token, $data){
+    public static function storePedido($token, $data, $username){
         date_default_timezone_set('America/Mexico_City');
         $json = json_decode($data);
         $dateTime = date("Y-m-d H:i:s");
         $dateTime = str_replace(" ", "T", $dateTime);
-        $username = $_COOKIE['username'];
         $response = Http::withToken($token)->post('http://192.168.70.107:64444/Cotizacion/CotizacionInsertLWS', [
             "idCotizacion" => $json->idCotizacion,
             "companyId" => $json->companyId,

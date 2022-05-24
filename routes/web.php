@@ -60,10 +60,7 @@ use PHPUnit\Framework\Constraint\Count;
 */
 Route::get('/', function () {
     $token = TokenController::getToken();
-    if($token == 'error'){
-        return redirect('/logout');
-    }
-    if($token && $token != 'error'){
+    if($token && $token != 'error' && $token != 'expired'){
         $bestSellers = ItemsController::getBestSellers($token);
     }
     else{
@@ -265,7 +262,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::get('/pedidos', function (){
                                 $token = TokenController::getToken();
-                                if($token == 'error'){
+                                if($token == 'error' || $token == 'expired'){
                                     return redirect('/logout');
                                 }
                                 $rama1 = RamasController::getRama1();
@@ -455,7 +452,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), $username);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -471,7 +470,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), $username);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -487,7 +488,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), $username);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -503,8 +506,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
                                 $json = $request->json; //json para guardar pedido en netsuite
-                                $response = SaleOrdersController::storePedidoNS($token, $json);
+                                $response = SaleOrdersController::storePedidoNS($token, $json, $username);
                                 return $response;
                             });
 
@@ -793,13 +798,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
                                 $idCotizacion = explode('-', $request->cotizacion);
                                 $index = explode('/', $idCotizacion[1]);
                                 $idCotizacion = $idCotizacion[0];
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad, $username);
                                 return $response;
                             });
 
@@ -1683,7 +1690,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 Route::get('/comisiones/getEspecialesPorPeriodo', function (Request $request){
                     $token = TokenController::getToken();
-                    //$permissions = LoginController::getPermissions($token);
+                    $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -1730,7 +1737,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
 });
-                // lOGISTICA ------------------------------------------------------------------------------------------------------------------------------------------------
+// ******************** LOGISTICA ******************** \\
 
 Route::get('/logistica/mesaControl/planeador',function(){
     $token = TokenController::getToken();
@@ -1927,6 +1934,14 @@ Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', funct
     $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
     return $response;
 });
+Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::exportExcelBillsXShipments($token,json_encode($request->all()));
+    return $response;
+});
 Route::get('/logistica/reportes/gastoFleteras', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1962,6 +1977,31 @@ Route::get('/logistica/reportes/interfazRecibo', function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
 })->name('logistica.reportes.interfazRecibo');
+
+Route::get('/logistica/reportes/interfazFacturacion',function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+    return view('intranet.logistica.reportes.interfazFacturacion',compact('token','permissions','username','userRol'));
+})->name('logistica.reportes.interfazFacturacion');
+Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultBillingInterface($token,json_encode($request->all()));
+    return $response;
+});
+
+//************ EXPORTA  ************/
 Route::get('/pedidos-exporta',function(){
     $token = TokenController::getToken();
     if($token == 'error'){

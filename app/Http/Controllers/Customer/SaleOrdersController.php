@@ -168,8 +168,7 @@ class SaleOrdersController extends Controller
         return $info;
     }
  
-    public static function storePedidoNS($token, $data){
-        $username = $_COOKIE['username'];
+    public static function storePedidoNS($token, $data, $username){
         foreach($data as $partida){
             $partida['user'] = $username;
         }
@@ -198,7 +197,7 @@ class SaleOrdersController extends Controller
         return $pedidosPendientes;
     } 
 
-    public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad){
+    public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad, $username){
         $infoCustomer = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
         $customerHeat = json_decode($infoCustomer->body());
         date_default_timezone_set('America/Mexico_City');
@@ -239,7 +238,7 @@ class SaleOrdersController extends Controller
         $typeSale['id'] = $cotizacion->order[$index-1]->tipo == 'BO' ? '6' : '5';
         $typeSale['txt'] = "";
         
-        $username = $_COOKIE['username'];
+        $username = $username;
 
         $methodPayment['id'] = "10";
         $methodPayment['txt'] = "";
