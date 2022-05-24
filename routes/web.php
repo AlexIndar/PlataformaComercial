@@ -452,7 +452,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), $username);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -468,7 +470,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), $username);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -484,7 +488,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $response = CotizacionController::storePedido($token, json_encode($request->all()));
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
+                                $response = CotizacionController::storePedido($token, json_encode($request->all()), $username);
                                 $rama1 = RamasController::getRama1();
                                 $rama2 = RamasController::getRama2();
                                 $rama3 = RamasController::getRama3();
@@ -500,8 +506,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
                                 $json = $request->json; //json para guardar pedido en netsuite
-                                $response = SaleOrdersController::storePedidoNS($token, $json);
+                                $response = SaleOrdersController::storePedidoNS($token, $json, $username);
                                 return $response;
                             });
 
@@ -790,13 +798,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
+                                $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                $username = $userData->typeUser;
                                 $idCotizacion = explode('-', $request->cotizacion);
                                 $index = explode('/', $idCotizacion[1]);
                                 $idCotizacion = $idCotizacion[0];
                                 $cantidad = $index[1];
                                 $index = $index[0];
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $idCotizacion);
-                                $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad);
+                                $response = SaleOrdersController::forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad, $username);
                                 return $response;
                             });
 
@@ -1668,7 +1678,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 Route::get('/comisiones/getEspecialesPorPeriodo', function (Request $request){
                     $token = TokenController::getToken();
-                    $permissions = LoginController::getPermissions();
+                    $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
                     }
@@ -1967,7 +1977,7 @@ Route::get('/logistica/reportes/interfazFacturacion',function(){
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
 
-    $permissions = LoginController::getPermissions();
+    $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.reportes.interfazFacturacion',compact('token','permissions','username','userRol'));
 })->name('logistica.reportes.interfazFacturacion');
 Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',function(Request $request){

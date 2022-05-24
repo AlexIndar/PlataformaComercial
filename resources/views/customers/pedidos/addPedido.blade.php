@@ -329,7 +329,6 @@
                                         <div class="col-lg-4 col-md-6 col-12">
                                             <input type="checkbox" class="checkboxPedido" id="mostrar_existencias" onclick="mostrarSoloExistencias()" style="margin-top: -8px; margin-right: 5px;"> <label class="mostrar_existenciasLabel" id='mostrar_existenciasLabel' for="mostrar_existencias" style="margin-right: 40px;">Mostrar solo existencias</label>
                                         </div>
-
                                 </div>
 
                                 <table id="tablaInventario" class="table-striped table-bordered table-hover compact display" style="width:100%">
