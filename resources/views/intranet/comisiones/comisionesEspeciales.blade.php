@@ -161,7 +161,7 @@ $(document).ready(function() {
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            //console.log(data);
+            //console.log('RespuestaAjaxEspeciales'+data);
             if(data.length == 0){
                 Swal.fire({
                 position: 'top',
@@ -337,10 +337,10 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
 
     jsonEspeciales = JSON.stringify(jsonEspeciales);
     jsonEspeciales = jsonEspeciales.slice(1,-1);
-    console.log (jsonEspeciales);
+    //console.log (jsonEspeciales);
     jsonEspeciales = JSON.parse(jsonEspeciales);
     json = jsonEspeciales;
-    //console.log(jsonEspeciales);
+    console.log(jsonEspeciales);
     $.ajax({
            'headers': {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -362,6 +362,7 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
           })
         },
         error: function() {
+            console.log(data);
             Swal.fire({
             position: 'top',
             icon: 'warning',
@@ -417,7 +418,7 @@ function cargarArticulosExcel(json, ejercicio, periodo) {
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            console.log(data);
+            console.log('RespuestaAjaxArti'+data);
             Swal.fire({
             position: 'top',
             icon: 'success',

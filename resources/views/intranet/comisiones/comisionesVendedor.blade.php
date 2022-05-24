@@ -786,7 +786,7 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            //console.log(data[0]);
+            console.log(data[2]);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -931,12 +931,16 @@
 
             for (i = 0; i < bonoDetalle.length; i++) {
 
-                htmlModalnc += '<tr>' +
+                if(bonoDetalle[i].giro_id == 30 || bonoDetalle[i].giro_id == 45 ){
+                    htmlModalnc += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
+                }
+
+
                 }
 
 

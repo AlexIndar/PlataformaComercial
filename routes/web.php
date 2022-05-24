@@ -1533,6 +1533,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return view('intranet.comisiones.comisionesVendedor',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
                 });
 
+                Route::get('/comisionesResumen', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    //$user = MisSolicitudesController::getUser($token);
+                    //$zone = MisSolicitudesController::getZone($token,$user->body());
+                    return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions]);
+                });
+
 
                 //Get primera informacion detalle
                 Route::get('/comisiones/getInfoCobranzaZonaWeb', function (Request $request){
@@ -1558,8 +1569,9 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                    $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
                    $dataBonos=ComisionesController::getCtesActivosMes($token,$zona,$fecha);
+                   $dataVentas =ComisionesController::getTotalVentasZona($token,$zona,$fecha);
 
-                    return array($data, $dataBonos);
+                    return array($data, $dataBonos, $dataVentas);
 
                 });
 
@@ -1924,7 +1936,7 @@ Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', funct
 });
 Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(){
     $token = TokenController::getToken();
-    if($token == 'error'){ 
+    if($token == 'error'){
         return redirect('/logout');
     }
     $response = LogisticaController::exportExcelBillsXShipments($token,json_encode($request->all()));
