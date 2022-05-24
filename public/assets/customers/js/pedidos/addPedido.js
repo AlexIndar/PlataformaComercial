@@ -267,18 +267,18 @@ $(document).ready(function() {
         selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
-        var defaultBillingSelected = false;
-        var indexDefaultBilling = 0;
+        var defaultShippingSelected = false;
+        var indexDefaultShipping = 0;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
-                defaultBillingSelected = true;
-                indexDefaultBilling = x;
+            if(addresses[x]['defaultshipping'] == true && !defaultShippingSelected){//Seleccionar la primera opcion que tenga defaultshipping
+                defaultShippingSelected = true;
+                indexDefaultShipping = x;
                 $('#sucursal').val(addresses[x]['addressID']); 
             }
         }
 
-        if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
+        if(!defaultShippingSelected){ //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']); 
         }
 
@@ -286,10 +286,10 @@ $(document).ready(function() {
 
         fillShippingWaysList();
 
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultBilling]);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default billing
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default shipping
         $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(packageDeliveries[indexDefaultBilling]);
+        $('#fletera').val(packageDeliveries[indexDefaultShipping]);
         $('#correo').val(info[selected]['email']);
     });
 
@@ -658,11 +658,11 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function(data) {
-                    console.log(data);
                     pedidoSeparado = data;
                     var x = 0;
                     while (x < pedidoSeparado.length) {
                         pedidoSeparado[x]['evento'] = cupon;
+                        if(pedidoSeparado[x]['mgsFalta'] != null) { console.log('mgsFalta: '+pedidoSeparado[x]['mgsFalta']); }
                         x++;
                     }
                     separarFilas(data);
@@ -2808,19 +2808,19 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
         selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
-        var defaultBillingSelected = false;
-        var indexDefaultBilling = 0;
+        var defaultShippingSelected = false;
+        var indexDefaultShipping = 0;
 
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
-                defaultBillingSelected = true;
-                indexDefaultBilling = x;
+            if(addresses[x]['defaultshipping'] == true && !defaultShippingSelected){//Seleccionar la primera opcion que tenga defaultshipping
+                defaultShippingSelected = true;
+                indexDefaultShipping = x;
                 $('#sucursal').val(addresses[x]['addressID']); 
             }
         }
 
-        if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
+        if(!defaultShippingSelected){ //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']); 
         }
 
@@ -2828,9 +2828,9 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
 
         fillShippingWaysList();
 
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultBilling]);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default billing
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default shipping
         $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(packageDeliveries[indexDefaultBilling]);
+        $('#fletera').val(packageDeliveries[indexDefaultShipping]);
         $('#correo').val(info[selected]['email']);
 }
