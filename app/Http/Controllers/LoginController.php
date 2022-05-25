@@ -28,7 +28,7 @@ class LoginController extends Controller
         $password = $request->password; 
 
 
-        $response = Http::post('http://192.168.70.107:64444/login/authenticate', [
+        $response = Http::post(config('global.api_url').'/login/authenticate', [
             'username' => $username,
             'password' => $password
         ]);
@@ -50,7 +50,7 @@ class LoginController extends Controller
         if($response->getStatusCode() == 200){ 
                 setcookie("_la", time(), time()+60*60*24*365, '/');
                 $token = $response->body();
-                $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
+                $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username);
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
                 $fullname = (json_decode($typeUser->body())->name);
                 setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
@@ -89,7 +89,7 @@ class LoginController extends Controller
 
     public static function getPermissions($token){
         $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
-        $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username);
+        $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username);
         $permissions = json_decode(json_decode($typeUser->body())->permissions);
         return $permissions;
     }
