@@ -45,7 +45,9 @@ class ComisionesController extends Controller
     }
 
     public static function getEspecialesPorPeriodo($token, $year,$month){
-        $data = Http::withToken($token)->get(config('global.api_url').'/getEspecialesPorPeriodo?year='.$year.'&month='.$month);
+
+        $data = Http::withToken($token)->get(config('global.api_url').'/Especiales/getEspecialesPorPeriodo?year='.$year.'&month='.$month);
+        //dd($data);
         return json_decode($data->body());
     }
 
