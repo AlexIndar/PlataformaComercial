@@ -21,7 +21,7 @@
                   </div>
 
                   <div class="col-lg-2 col-md-4 col-sm-12">
-                    <a href="#" class="card-link">
+                    <a href="{{ route('logistica.numeroGuia'); }}" class="card-link">
                       <div class="dashboard-cards">
                         <i class="fa-solid fa-arrow-up-1-9 fa-2x"></i><br>
                         <h6>Numero Guia</h6>

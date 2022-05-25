@@ -1737,8 +1737,8 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
 });
-// ******************** LOGISTICA ******************** \\
-
+// ********************* LOGISTICA ******************** \\
+// ********************* MESA CONTROL ******************* \\
 Route::get('/logistica/mesaControl/planeador',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1762,6 +1762,7 @@ Route::get('/logistica/mesaControl/planeador',function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.mesaControl.planeador',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
 })->name('logistica.mesaControl.planeador');
+
 Route::get('/logistica/mesaControl/planeador/getPlaneador', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1772,6 +1773,7 @@ Route::get('/logistica/mesaControl/planeador/getPlaneador', function(){
     $planeador = LogisticaController::getPlaneador($token);
     return $planeador;
 });
+
 Route::get('/logistica/mesaControl/planeador/getArrayPlaneador',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1792,6 +1794,7 @@ Route::get('/logistica/mesaControl/planeador/getCajasPendientes', function(){
     $cajasPendientes = LogisticaController::getCajasPendientes($token);
     return $cajasPendientes;
 });
+// *************************** DISTRIBUCION ***************************** \\
 Route::get('/logistica/distribucion',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1815,6 +1818,39 @@ Route::get('/logistica/distribucion',function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.distribucion.index',compact('token','permissions','username','userRol'));
 })->name('logistica.distribucion');
+// ************************* NUMERO GUIA ************************************** \\
+Route::get('/logistica/numeroGuia', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+
+    $level = "C";
+    if(isset($_COOKIE['_lv'])){
+        $level = $_COOKIE['_lv'];
+    }
+    $freighters = LogisticaController::getFreighters($token);
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters'));
+})->name('logistica.numeroGuia');
+Route::get('/logistica/numeroGuia/existShipment', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::existShipment($token,json_encode($request->all()));
+    return $response;
+});
+// ************************* CAPTURA GASTO FLETERA ***************************** \\
 Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1879,7 +1915,6 @@ Route::post('/logistica/distribucion/capturaGastoFletera/registroGuia', function
     return $response;
 });
 Route::post('/logistica/distribucion/capturaGastoFletera/readFileXML', function (Request $request){
-    // dd($request->file('file'));
     $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
@@ -1897,6 +1932,7 @@ Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function 
     }
     $response = LogisticaController::registerNet($token,$request->all());
 });
+//****************************** REPORTES  ************************************\\
 Route::get('/logistica/reportes', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1912,6 +1948,7 @@ Route::get('/logistica/reportes', function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.reportes.index',compact('token','permissions','username','userRol'));
 })->name('logistica.reportes');
+//***************************** FACTURAS X EMBARCAR **************************\\
 Route::get('/logistica/reportes/facturasXEmbarque', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1942,6 +1979,7 @@ Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', f
     $response = LogisticaController::exportExcelBillsXShipments($token,json_encode($request->all()));
     return $response;
 });
+//**************************** GASTO FLETERAS ******************************\\
 Route::get('/logistica/reportes/gastoFleteras', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1964,6 +2002,7 @@ Route::get('/logistica/reportes/gastoFleteras/consultFreightExpense', function()
     $response = LogisticaController::consultFreightExpense($token);
     return $response;
 });
+//******************************* INTERFAZ RECIBO ****************************\\
 Route::get('/logistica/reportes/interfazRecibo', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1977,7 +2016,7 @@ Route::get('/logistica/reportes/interfazRecibo', function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
 })->name('logistica.reportes.interfazRecibo');
-
+//***************************** INTERFAZ FACTURACION *******************************\\
 Route::get('/logistica/reportes/interfazFacturacion',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -2001,7 +2040,7 @@ Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',fun
     return $response;
 });
 
-//************ EXPORTA  ************/
+//******************************* EXPORTA  ************************************\\
 Route::get('/pedidos-exporta',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
