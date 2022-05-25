@@ -401,6 +401,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     document.getElementById("refSection").style.display = "none";
     document.getElementById("factSection").style.display = "none";
     document.getElementById("observRef").style.display = "none";
+    document.getElementById("showIneValidationSection").style.display = "none";
     document.getElementById("moneySolT").hidden = true;
     document.getElementById("moneySol").innerHTML = "";
 
@@ -722,6 +723,9 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                 case 13:
                     getButtonImg("imgFSButton", filesList[i].fileStr);
                     break;
+                case 15:
+                    document.getElementById("showIneValidationSection").style.display = "flex";
+                    getButtonImg("imgIneVal", filesList[i].fileStr);
                 case 21:
                     getButtonImg("imgCDRButton", filesList[i].fileStr);
                     break;
@@ -1520,10 +1524,10 @@ function valAcceptCredit() {
 
 function valAcceptCash() {
     let alertMsg = ``;
-    console.log("prueba file");
-    console.log(fileIneValidation);
-    console.log("prueba file end");
-    console.log(document.getElementById("typeSolCash").value);
+    // console.log("prueba file");
+    // console.log(fileIneValidation);
+    // console.log("prueba file end");
+    // console.log(document.getElementById("typeSolCash").value);
     if (document.getElementById("saleRoutesSelect").value == "-1") alertMsg += `<p>Ingresa la ruta de venta</p>`;
     if (document.getElementById("limitCash").value == "") alertMsg += `<p>Ingresa el limite de saldo</p>`;
     if (document.getElementById("maxDayCash").value == "") alertMsg += `<p>Ingresa los dias maximos</p>`;
@@ -1544,6 +1548,9 @@ function valAcceptCash() {
         if (document.getElementById("paqueteriaSelect2").value == "-1") alertMsg += `<p>Ingresa la paqueteria de Envio 3</p>`;
     }
 
+    if (document.getElementById("montoPagare").value == "")
+        document.getElementById("montoPagare").value = 0;
+
     if (document.getElementById("typeSolCash").value != "0") {
         if (fileIneValidation == '') alertMsg += `<p>Ingresa la imagen de la INE</p>`;
     }
@@ -1559,6 +1566,7 @@ function valAcceptCash() {
 
 function acceptCredit() {
     if (valAcceptCredit()) {
+        let file = "";
         let jsonDatosIntelisis = {
             FolioSolicitud: document.getElementById("folAcceptCredit").innerHTML,
             ReferenciaBancaria: null,
@@ -1575,9 +1583,10 @@ function acceptCredit() {
             PagareNuevo: false,
             Usuario: null,
             IneValidacion: {
-                FileStr: "",
-                Type: "",
-                Subtype: null,
+                "Id": 0,
+                "FileStr": null,
+                "Type": 19,
+                "SubType": null
             },
             Status: 2,
             CategoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
@@ -1586,23 +1595,27 @@ function acceptCredit() {
             IndarFormaEnvio: null,
             IndarPaqueteriaEnvio: null
         }
+        console.log(jsonDatosIntelisis);
+        console.log(JSON.stringify(jsonDatosIntelisis));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            'url': "/SolicitudesPendientes/RollBackRequest",
+            'url': "/SolicitudesPendientes/AcceptRequest",
             'type': 'POST',
             'dataType': 'json',
             'data': jsonDatosIntelisis,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(response) {
+                console.log(response);
                 if (response != "") {
                     $('#acceptForCreditModal').modal('hide');
                     $('#infoModal').modal('hide');
                     sendMail(response);
-                    if (response.customerID != "YES")
+                    if (response.customerID != "YES") {
                         setReferenceModal(response.customerID, response.folio);
+                    }
                 } else {
                     $('#alertModal').modal('show');
                     let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
@@ -1718,7 +1731,7 @@ function acceptContado() {
             IndarBonoCteNvo: document.getElementById("defaultCheck2").checked,
             IndarRutaVenta: document.getElementById("saleRoutesSelect").value,
             IndarRuta: document.getElementById("routeSelect").value,
-            PagareMonto: document.getElementById("montoPagare").value,
+            PagareMonto: parseInt(document.getElementById("montoPagare").value),
             PagareNuevo: document.getElementById("defaultCheck1").checked,
             Usuario: document.getElementById("userCash").value,
             IneValidacion: {
@@ -1733,6 +1746,8 @@ function acceptContado() {
             IndarFormaEnvio: document.getElementById("shippingWaySelect3").value,
             IndarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
         }
+        console.log(jsonDatosIntelisis);
+        console.log(JSON.stringify(jsonDatosIntelisis));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1745,6 +1760,7 @@ function acceptContado() {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(response) {
                 // $('#cargaModal').modal('hide');
+                console.log(response);
                 if (response != "") {
                     $('#acceptForCreditModal').modal('hide');
                     $('#infoModal').modal('hide');
@@ -1815,4 +1831,52 @@ function setReactCli() {
         alert("ingresa el codigo de cliente");
     }
 
+}
+
+function envioMail() {
+    $('#cargaModal').modal('show');
+    let mailJson = {
+        folio: 27599,
+        tipoSol: "CREDITO",
+        cliente: "P030522",
+        razonSocial: "CORRAL MONGE JORGE MARIO",
+        rfc: "COMJ680903669",
+        zona: "Z975",
+        emails: [
+            "vrodriguez@indar.com.mx",
+            "adan.perez@indar.com.mx",
+            "david.valdez@indar.com.mx",
+            "gdejesus@indar.com.mx",
+            "anunez@indar.com.mx"
+        ],
+        customerID: "YES",
+        status: "Aceptada Credito",
+        result: false
+    };
+    console.log(mailJson);
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailSolicitud",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': mailJson,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            console.log(data);
+            alert(data.success);
+            $('#infoModal').modal('hide');
+            $('#cargaModal').modal('hide');
+            realoadTableView();
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error al enviar los correos");
+            $('#cargaModal').modal('hide');
+            $('#infoModal').modal('hide');
+            realoadTableView();
+        }
+    });
 }

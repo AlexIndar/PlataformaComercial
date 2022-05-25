@@ -39,6 +39,7 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
+                            <button onclick="envioMail()"></button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -450,6 +451,10 @@
                                 <label class="mr-3 text-green"><input type="radio" name="credRevData" value="Aceptado" id="credRevData">SI</label>
                                 <label class="mr-3 text-red"><input type="radio" name="credRevData" value="Rechazado" id="credRevData2">NO</label>
                             </div>
+                        </div>
+                        <div class="row mb-3" id="showIneValidationSection" style="display: none;">
+                            <div class="col-md-4">Ine Validation</div>
+                            <div class="col-md-4" id="imgIneVal"><button class="btn btn-warning"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-12 text-center">
