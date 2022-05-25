@@ -521,7 +521,14 @@
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
        //Recibe Json
-       var zonas = JSON.parse({!! json_encode($zonas) !!});
+       var zonavar = {!! json_encode($zona) !!};
+       console.log(zonavar);
+       if(zonavar == 0){
+       $('#zonas').append('<option value="0">No tiene Zona Asignada</option>');
+       document.getElementById("btnConsultar").style.display = "none";
+       document.getElementById("fechaCliente").style.display = "none";
+       }if(zonavar=='todo'){
+        var zonas = JSON.parse({!! json_encode($zonas) !!});
        //Llena select zonas
        $('.js-example-basic-single').select2();
 
@@ -530,6 +537,10 @@
        $.each(zonas, function(id, name) {
            $selectZonas.append('<option value='+name.zona+'>'+name.zona+'</option>');
        });
+       }else{
+        $('#zonas').append('<option value='+zonavar+'>'+zonavar+'</option>');
+       }
+
 
        //Inicia Ajax
        $(document).ajaxStart(function() {

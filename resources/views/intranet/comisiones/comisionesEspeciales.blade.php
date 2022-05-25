@@ -162,7 +162,7 @@ $(document).ready(function() {
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            console.log('RespuestaAjaxEspeciales'+data);
+            //console.log('RespuestaAjaxEspeciales'+data);
             if(data.length == 0){
                 Swal.fire({
                 position: 'top',

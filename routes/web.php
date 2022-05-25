@@ -1529,9 +1529,25 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $zonas = AplicarPagoController::getZonas($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+
+                    $zona = $zonaInfo->body();
+                    if((str_contains($zona, 'Bad Request"'))){
+                        $zona = 0;
+                    }if($userData->permissions=='ADMIN'){
+                        dd($userData);
+                        $zona = 'todo';
+                    }else{
+
+                        $zona = json_decode($zonaInfo->body())->description;
+                    }
+                    //dd($zonas,$zona);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesVendedor',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
+                    return view('intranet.comisiones.comisionesVendedor',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zona'=> $zona]);
+
                 });
 
                 Route::get('/comisionesResumen', function(){
