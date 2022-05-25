@@ -20,27 +20,27 @@ class EstadisticasClientesController extends Controller
     }
 
     public static function getEmployeeReport($token, $zone, $typeR, $ini, $fin){
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetEmployeeReport?zona='.$zone.'&typeSol='.$typeR.'&ini='.$ini.'&end='.$fin);        
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetEmployeeReport?zona='.$zone.'&typeSol='.$typeR.'&ini='.$ini.'&end='.$fin);        
         return json_decode($solicitudes->body());
     }
 
     public static function getGeneralReport($token, $typeS, $ini, $end){
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetGeneralReport?typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetGeneralReport?typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
         return json_decode($solicitudes->body());
     }
 
     public static function getGeneralReportByManagement($token, $typeS, $ini, $end){
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetGeneralReportByManagement?typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetGeneralReportByManagement?typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
         return json_decode($solicitudes->body());
     }
 
     public static function getManagementReport($token, $idGerencia, $typeS, $ini, $end){
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetManagementReport?id='.$idGerencia.'&typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetManagementReport?id='.$idGerencia.'&typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
         return json_decode($solicitudes->body());
     }
 
     public static function getManagementReportByEmployee($token, $idGerencia, $typeS, $ini, $end){
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetManagementReportByEmployee?id='.$idGerencia.'&typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetManagementReportByEmployee?id='.$idGerencia.'&typeSol='.$typeS.'&ini='.$ini.'&end='.$end);        
         return json_decode($solicitudes->body());
     }
     
