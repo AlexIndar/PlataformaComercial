@@ -1566,34 +1566,35 @@ function valAcceptCash() {
 
 function acceptCredit() {
     if (valAcceptCredit()) {
+        $('#cargaModal').modal('show');
         let file = "";
         let jsonDatosIntelisis = {
-            FolioSolicitud: document.getElementById("folAcceptCredit").innerHTML,
-            ReferenciaBancaria: null,
-            CondicionesCoerciales: null,
-            ListaPrecios: document.getElementById("priceListSelectCredit").value,
-            CondicionPago: document.getElementById("commercialPaySelectCredit").value,
-            FormaEnvio: document.getElementById("shippingWaySelectCredit").value,
-            LimiteSaldo: document.getElementById("limitCredit").value,
-            DiasMaximos: document.getElementById("maxDayOfCredit").value,
-            IndarBonoCteNvo: false,
-            IndarRutaVenta: null,
-            IndarRuta: null,
-            PagareMonto: 0,
-            PagareNuevo: false,
-            Usuario: null,
-            IneValidacion: {
+            folioSolicitud: document.getElementById("folAcceptCredit").innerHTML,
+            referenciaBancaria: null,
+            condicionesComerciales: null,
+            listaPrecios: document.getElementById("priceListSelectCredit").value,
+            condicionPago: document.getElementById("commercialPaySelectCredit").value,
+            formaEnvio: document.getElementById("shippingWaySelectCredit").value,
+            limiteSaldo: document.getElementById("limitCredit").value,
+            diasMaximos: document.getElementById("maxDayOfCredit").value,
+            indarBonoCteNvo: false,
+            indarRutaVenta: null,
+            indarRuta: null,
+            pagareMonto: 0,
+            pagareNuevo: false,
+            usuario: null,
+            ineValidacion: {
                 "Id": 0,
                 "FileStr": null,
                 "Type": 19,
                 "SubType": null
             },
-            Status: 2,
-            CategoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
-            IndarFormaEnvioFiscal: null,
-            IndarPaqueteriaFiscal: null,
-            IndarFormaEnvio: null,
-            IndarPaqueteriaEnvio: null
+            status: 2,
+            categoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
+            indarFormaEnvioFiscal: null,
+            indarPaqueteriaFiscal: null,
+            indarFormaEnvio: null,
+            indarPaqueteriaEnvio: null
         }
         console.log(jsonDatosIntelisis);
         console.log(JSON.stringify(jsonDatosIntelisis));
@@ -1718,36 +1719,35 @@ function clearList(id) {
 
 function acceptContado() {
     if (valAcceptCash()) {
-        // $('#cargaModal').modal('show');
+        $('#cargaModal').modal('show');
         let jsonDatosIntelisis = {
-            FolioSolicitud: document.getElementById("folAcceptCash").innerHTML,
-            ReferenciaBancaria: null,
-            CondicionesComerciales: document.getElementById("commercialTermsSelect").value,
-            ListaPrecios: document.getElementById("priceListSelect").value,
-            CondicionPago: null,
-            FormaEnvio: document.getElementById("shippingWaySelect").value,
-            LimiteSaldo: document.getElementById("limitCash").value,
-            DiasMaximos: document.getElementById("maxDayCash").value,
-            IndarBonoCteNvo: document.getElementById("defaultCheck2").checked,
-            IndarRutaVenta: document.getElementById("saleRoutesSelect").value,
-            IndarRuta: document.getElementById("routeSelect").value,
-            PagareMonto: parseInt(document.getElementById("montoPagare").value),
-            PagareNuevo: document.getElementById("defaultCheck1").checked,
-            Usuario: document.getElementById("userCash").value,
-            IneValidacion: {
+            folioSolicitud: document.getElementById("folAcceptCash").innerHTML,
+            referenciaBancaria: null,
+            condicionesComerciales: document.getElementById("commercialTermsSelect").value,
+            listaPrecios: document.getElementById("priceListSelect").value,
+            condicionPago: null,
+            formaEnvio: document.getElementById("shippingWaySelect").value,
+            limiteSaldo: document.getElementById("limitCash").value,
+            diasMaximos: document.getElementById("maxDayCash").value,
+            indarBonoCteNvo: document.getElementById("defaultCheck2").checked,
+            indarRutaVenta: document.getElementById("saleRoutesSelect").value,
+            indarRuta: document.getElementById("routeSelect").value,
+            pagareMonto: parseInt(document.getElementById("montoPagare").value),
+            pagareNuevo: document.getElementById("defaultCheck1").checked,
+            usuario: document.getElementById("userCash").value,
+            ineValidacion: {
                 FileStr: fileIneValidation,
                 Type: 15,
                 Subtype: null,
             },
-            Status: 1,
-            CategoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
-            IndarFormaEnvioFiscal: document.getElementById("shippingWaySelect2").value,
-            IndarPaqueteriaFiscal: document.getElementById("paqueteriaSelect").value,
-            IndarFormaEnvio: document.getElementById("shippingWaySelect3").value,
-            IndarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
+            status: 1,
+            categoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
+            indarFormaEnvioFiscal: document.getElementById("shippingWaySelect2").value,
+            indarPaqueteriaFiscal: document.getElementById("paqueteriaSelect").value,
+            indarFormaEnvio: document.getElementById("shippingWaySelect3").value,
+            indarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
         }
-        console.log(jsonDatosIntelisis);
-        console.log(JSON.stringify(jsonDatosIntelisis));
+
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1833,21 +1833,21 @@ function setReactCli() {
 
 }
 
-function envioMail() {
+function envioMail2() {
     $('#cargaModal').modal('show');
     let mailJson = {
-        folio: 27599,
+        folio: 27626,
         tipoSol: "CREDITO",
-        cliente: "P030522",
-        razonSocial: "CORRAL MONGE JORGE MARIO",
-        rfc: "COMJ680903669",
-        zona: "Z975",
+        cliente: "P030537",
+        razonSocial: "MEDINA HERNANDEZ FRANCELIA",
+        rfc: "MEHF7704157T5",
+        zona: "Z656",
         emails: [
             "vrodriguez@indar.com.mx",
             "adan.perez@indar.com.mx",
-            "david.valdez@indar.com.mx",
-            "gdejesus@indar.com.mx",
-            "anunez@indar.com.mx"
+            "salvador.cervantes@indar.com.mx",
+            "mamartinez@indar.com.mx",
+            "rlozano@indar.com.mx"
         ],
         customerID: "YES",
         status: "Aceptada Credito",
@@ -1879,4 +1879,8 @@ function envioMail() {
             realoadTableView();
         }
     });
+}
+
+function envioMail() {
+    alert("No tienes permisos");
 }

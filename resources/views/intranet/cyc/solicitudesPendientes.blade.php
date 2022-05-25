@@ -40,6 +40,7 @@
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
                             <button onclick="envioMail()"></button>
+                            <button onclick="ocultar()"></button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
