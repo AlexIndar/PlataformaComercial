@@ -1537,7 +1537,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if((str_contains($zona, 'Bad Request"'))){
                         $zona = 0;
                     }if($userData->permissions=='ADMIN'){
-                        dd($userData);
+                        //dd($userData);
                         $zona = 'todo';
                     }else{
 
