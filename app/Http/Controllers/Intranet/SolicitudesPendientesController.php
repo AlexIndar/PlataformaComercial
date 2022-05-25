@@ -65,7 +65,6 @@ class SolicitudesPendientesController extends Controller
             "Status" => $json->Status,
             "Observaciones" => $json->Observaciones,
         ]);
-        // dd($response);
         return $response;
     }
 
@@ -95,7 +94,6 @@ class SolicitudesPendientesController extends Controller
             "indarFormaEnvio" => $json->IndarFormaEnvio,
             "indarPaqueteriaEnvio" => $json->IndarPaqueteriaEnvio,
         ]);
-        // dd($response);
         return $response;
     }
 }
