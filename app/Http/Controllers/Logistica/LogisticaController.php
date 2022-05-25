@@ -17,7 +17,7 @@ class LogisticaController extends Controller
         #region MESA CONTROL
             #region PLANEADO
             public static function getPlaneador($token){
-                $getPlaneador = Http::withToken($token)->get('https://localhost:44384/Logistica/GetPlaneador');
+                $getPlaneador = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetPlaneador');
                 $planeador = json_decode($getPlaneador->body());
                 $pedidos = array();
                 foreach ($planeador as $element) {
@@ -103,12 +103,12 @@ class LogisticaController extends Controller
                 return $pedidosAcomodados;
             }
             public static function getArrayPlaneador($token){
-                $getPlaneador = Http::withToken($token)->get('https://localhost:44384/Logistica/GetPlaneador');
+                $getPlaneador = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetPlaneador');
                 $planeador = json_decode($getPlaneador->body());
                 return $planeador;
             }
             public static function getCajasPendientes($token){
-                $getCajasPendientes = Http::withToken($token)->get('https://localhost:44384/Logistica/GetCajasPendientes');
+                $getCajasPendientes = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetCajasPendientes');
                 $cajasPendientes = json_decode($getCajasPendientes->body());
                 return $cajasPendientes;
             }
@@ -116,57 +116,70 @@ class LogisticaController extends Controller
         #endregion
 
         #region DISTRIBUCION
+            #region NUMERO GUIA
+            public static function getFreighters($token){
+                $getFreighters = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetFreighters');
+                $freighters = json_decode($getFreighters->body());
+                return $freighters;
+            }
+            public static function existShipment($token,$data){
+                $dataJson = json_decode($data);
+                $existShipment = Http::withToken($token)->get('/Logistica/ExistShipment?embarque='.$dataJson->embarque);
+                $exist = json_decode($existShipment);
+                return $exist;
+            }
+            #endregion
             #region CAPTURA GASTO FLETERA
             public static function getVendors($token){
-                $getVendors = Http::withToken($token)->get('https://localhost:44384/Logistica/GetVendors');
+                $getVendors = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetVendors');
                 $vendors = json_decode($getVendors->body());
                 return $vendors;
             }
             public static function getDepartments($token){
-                $getDepartments = Http::withToken($token)->get('https://localhost:44384/Logistica/GetDepartments');
+                $getDepartments = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetDepartments');
                 $departments = json_decode($getDepartments->body());
                 return $departments;
             }
             public static function getMunicipios($token){
-                $getMunicipios = Http::withToken($token)->get('https://localhost:44384/Logistica/GetMunicipios');
+                $getMunicipios = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetMunicipios');
                 $municipios = json_decode($getMunicipios->body());
                 return $municipios;
             }
             public static function getClasificadores($token){
-                $getClasificadores = Http::withToken($token)->get('https://localhost:44384/Logistica/GetClasificadores');
+                $getClasificadores = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetClasificadores');
                 $clasificadores = json_decode($getClasificadores->body());
                 return $clasificadores;
             }
             public static function getGuias($token,$data){
                 $dataJson = json_decode($data);
-                $getGuias = Http::withToken($token)->get('https://localhost:44384/Logistica/GetGuias?paqueteriaID='.$dataJson->paqueteriaID);
+                $getGuias = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetGuias?paqueteriaID='.$dataJson->paqueteriaID);
                 $guias = json_decode($getGuias->body());
                 return $guias;
             }
             public static function getGuia($token, $data){
                 $dataJson = json_decode($data);
-                $getGuia = Http::withToken($token)->get('https://localhost:44384/Logistica/GetGuia?numeroGuia='.$dataJson->numeroGuia);
+                $getGuia = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetGuia?numeroGuia='.$dataJson->numeroGuia);
                 $guia = json_decode($getGuia->body());
                 return $guia;
             }
             public static function guiaSelected($token,$data)
             {
                 $dataJson = json_decode($data);
-                $guiaSelected = Http::withToken($token)->get('https://localhost:44384/Logistica/GuiaSelected?idNumeroGuia='.$dataJson->idNumeroGuia.'&numeroGuia='.$dataJson->numeroGuia.'&importeTotal='.$dataJson->importeTotal);
+                $guiaSelected = Http::withToken($token)->get(config('global.api_url').'/Logistica/GuiaSelected?idNumeroGuia='.$dataJson->idNumeroGuia.'&numeroGuia='.$dataJson->numeroGuia.'&importeTotal='.$dataJson->importeTotal);
                 $guia = json_decode($guiaSelected->body());
                 return $guia;
             }
             public static function getAutorizacion($token,$data)
             {
                 $dataJson = json_decode($data);
-                $getAutorizacion = Http::withToken($token)->get('https://localhost:44384/Logistica/GetAutorizacion?user='.$dataJson->user.'&pass='.$dataJson->password);
+                $getAutorizacion = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetAutorizacion?user='.$dataJson->user.'&pass='.$dataJson->password);
                 $autorizacion = json_decode($getAutorizacion->body());
                 return $autorizacion;
             }
             public static function registroGuia($token, $data)
             {
                 $dataJson = json_decode($data);
-                $registroGuia = Http::withToken($token)->post('https://localhost:44384/Logistica/RegistroGuia',[
+                $registroGuia = Http::withToken($token)->post(config('global.api_url').'/Logistica/RegistroGuia',[
                     "numguia" => $dataJson->numguia,
                     "importe" => $dataJson->importe,
                     "vendor" => $dataJson->vendor,
@@ -282,7 +295,7 @@ class LogisticaController extends Controller
             {
                 ini_set('memory_limit','-1');
                 $jsonData = json_decode($data);
-                $facturasEmbarcar = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
+                $facturasEmbarcar = Http::withToken($token)->get(config('global.api_url').'/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
                 $facturas = json_decode($facturasEmbarcar->body());
                 foreach($facturas as $fa){
                     $fa->fechaEmbarque = explode('T',$fa->fechaEmbarque)[0];
@@ -297,7 +310,7 @@ class LogisticaController extends Controller
             public static function exportExcelBillsXShipments($token,$data)
             {
                 $jsonData = json_decode($data);
-                $exportExcel = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFi);
+                $exportExcel = Http::withToken($token)->get(config('global.api_url').'/Logistica/ConsultBillsXShipments?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFi);
                 $export = json_decode($exportExcel->body());
                 return $export;
             }
@@ -306,7 +319,7 @@ class LogisticaController extends Controller
             #region GASTO FLETERA
             public static function consultFreightExpense($token)
             {
-                $gastoFleteras = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultFreightExpense');
+                $gastoFleteras = Http::withToken($token)->get(config('global.api_url').'/Logistica/ConsultFreightExpense');
                 $reporte = json_decode($gastoFleteras->body());
                 return $reporte;
             }
@@ -317,7 +330,7 @@ class LogisticaController extends Controller
             {
                 ini_set('memory_limit','-1');
                 $jsonData = json_decode($data);
-                $facturasEmbarques = Http::withToken($token)->get('https://localhost:44384/Logistica/ConsultBillingInterface?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
+                $facturasEmbarques = Http::withToken($token)->get(config('global.api_url').'/Logistica/ConsultBillingInterface?fechaInicio='.$jsonData->fechaInicio.'&fechaFin='.$jsonData->fechaFin);
                 $reporte = json_decode($facturasEmbarques->body());
                 return $facturas;
             }

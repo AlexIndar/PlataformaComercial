@@ -22,10 +22,6 @@ class ItemsController extends Controller
        
     }
 
-    
-
-
-
     public static function getBestSellers($token){
         $getProducts = Http::withToken($token)->post(config('global.api_url').'/item/GetItemsWhere', [
             "columns" => "fabricanteArticulo",
