@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Config;
-use Artisan;
+use Illuminate\Support\Facades\Artisan;
 
 
 class LoginController extends Controller

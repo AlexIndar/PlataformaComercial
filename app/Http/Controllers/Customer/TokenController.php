@@ -32,7 +32,7 @@ class TokenController extends Controller
             catch (DecryptException $e) {
                 $token = "expired";
             }
-            $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username); //ejecutar y ver si responde Unauthoraized
+            $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username); //ejecutar y ver si responde Unauthoraized
             if($typeUser->getStatusCode() == 401){//si responde error 401 Unauthorized, entonces el token no es válido
                 $token = "expired";
                 setcookie("_lt", "", time()-60*60*24, '/');

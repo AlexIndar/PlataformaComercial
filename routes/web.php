@@ -16,6 +16,7 @@ use App\Http\Controllers\Logistica\LogisticaController;
 use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
+use Barryvdh\DomPDF\Facade as PDF;
 // -----------------------------------------------------------------------------------------
 
 // INTRANET --------------------------------------------------------------------------------
