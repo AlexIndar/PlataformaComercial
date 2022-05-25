@@ -70,7 +70,7 @@ class SolicitudesPendientesController extends Controller
     }
 
     public static function acceptRequest($token, $data){
-        $json = json_decode($data);        
+        $json = json_decode($data);
         $response = Http::withToken($token)->post(config('global.api_url').'/CyC/AcceptRequest', [
             "folioSolicitud" => $json->FolioSolicitud,
             "referenciaBancaria" => $json->ReferenciaBancaria,
