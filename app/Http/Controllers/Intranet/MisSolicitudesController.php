@@ -37,7 +37,7 @@ class MisSolicitudesController extends Controller
 
     public static function getTableView($token, $zone){
         $zDescription = $zone->description;
-        $solicitudes = Http::withToken($token)->get(config('global.api_url').':64444/Cyc/getTableView?zona='.$zDescription);
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/getTableView?zona='.$zDescription);
         return json_decode($solicitudes->body());
     }
 
