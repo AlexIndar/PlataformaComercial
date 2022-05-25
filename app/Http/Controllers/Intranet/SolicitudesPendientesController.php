@@ -65,37 +65,34 @@ class SolicitudesPendientesController extends Controller
             "Status" => $json->Status,
             "Observaciones" => $json->Observaciones,
         ]);
-        // dd($response);
         return $response;
     }
 
     public static function acceptRequest($token, $data){
-        $json = json_decode($data);        
+        $json = json_decode($data);
         $response = Http::withToken($token)->post(config('global.api_url').'/CyC/AcceptRequest', [
-            "folioSolicitud" => $json->FolioSolicitud,
-            "referenciaBancaria" => $json->ReferenciaBancaria,
-            "condicionesComerciales" => $json->CondicionesComerciales,
-            "listaPrecios" => $json->ListaPrecios,
-            "condicionPago" => $json->CondicionPago,
-            "formaEnvio" => $json->FormaEnvio,
-            "limiteSaldo" => $json->LimiteSaldo,
-            "diasMaximos" => $json->DiasMaximos,
-            "indarBonoCteNvo" => $json->IndarBonoCteNvo,
-            "indarRutaVenta" => $json->IndarRutaVenta,
-            "movimientoVenta" => $json->MovimientoVenta,
-            "indarRuta" => $json->IndarRuta,
-            "pagareMonto" => $json->PagareMonto,
-            "pagareNuevo" => $json->PagareNuevo,
-            "usuario" => $json->Usuario,
-            "ineValidacion" => $json->IneValidacion,
-            "status" => $json->Status,
-            "categoryId" => $json->CategoryId,
-            "indarFormaEnvioFiscal" => $json->IndarFormaEnvioFiscal,
-            "indarPaqueteriaFiscal" => $json->IndarPaqueteriaFiscal,
-            "indarFormaEnvio" => $json->IndarFormaEnvio,
-            "indarPaqueteriaEnvio" => $json->IndarPaqueteriaEnvio,
+            "folioSolicitud" => $json->folioSolicitud,
+            "referenciaBancaria" => $json->referenciaBancaria,
+            "condicionesComerciales" => $json->condicionesComerciales,
+            "listaPrecios" => $json->listaPrecios,
+            "condicionPago" => $json->condicionPago,
+            "formaEnvio" => $json->formaEnvio,
+            "limiteSaldo" => $json->limiteSaldo,
+            "diasMaximos" => $json->diasMaximos,
+            "indarBonoCteNvo" => $json->indarBonoCteNvo,
+            "indarRutaVenta" => $json->indarRutaVenta,
+            "indarRuta" => $json->indarRuta,
+            "pagareMonto" => $json->pagareMonto,
+            "pagareNuevo" => $json->pagareNuevo,
+            "usuario" => $json->usuario,
+            "ineValidacion" => $json->ineValidacion,
+            "status" => $json->status,
+            "categoryId" => $json->categoryId,
+            "indarFormaEnvioFiscal" => $json->indarFormaEnvioFiscal,
+            "indarPaqueteriaFiscal" => $json->indarPaqueteriaFiscal,
+            "indarFormaEnvio" => $json->indarFormaEnvio,
+            "indarPaqueteriaEnvio" => $json->indarPaqueteriaEnvio,
         ]);
-        // dd($response);
         return $response;
     }
 }
