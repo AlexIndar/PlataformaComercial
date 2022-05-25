@@ -533,7 +533,7 @@
 
             <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-outline-success float-right"  onclick="acceptCredit(true)">Aceptar</button> -->
-                <button type="button" class="btn btn-outline-success float-right" onclick="initialQuestionTrue(false)" id="acceptOne" style="display: none;">Aceptar</button>
+                <button type="button" class="btn btn-outline-success float-right" onclick="saveValidation(true)" id="acceptOne" style="display: none;">Aceptar</button>
                 <button type="button" class="btn btn-outline-success float-right" onclick="initialQuestionTrue(true)" id="acceptTwo" style="display: none;">Aceptar</button>
                 <button type="button" class="btn btn-outline-danger float-right" onclick="saveValidation(false)">Rechazar</button>
                 <button type="button" class="btn btn-outline-info float-right" onclick="saveValidation(null)">Guardar</button>

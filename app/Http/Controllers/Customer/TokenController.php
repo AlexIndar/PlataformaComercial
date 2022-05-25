@@ -19,33 +19,33 @@ class TokenController extends Controller
      */
     public function __invoke(Request $request)
     {
-        //  
+        //
     }
 
-    public static function getToken(){ 
+    public static function getToken(){
         $token = "";
         if(isset($_COOKIE["_lt"]) && $_COOKIE["_lt"] != 'error' && $_COOKIE["_lt"] != 'expired'){
             $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
             try{ //cuando token es error o expired lanza excepción porque no puede hacer decrypt de un string que no está encriptado
-                $token = decrypt($_COOKIE["_lt"], "7Ind4r7"); 
+                $token = decrypt($_COOKIE["_lt"], "7Ind4r7");
             }
             catch (DecryptException $e) {
                 $token = "expired";
             }
-            $typeUser = Http::withToken($token)->get('http://192.168.70.107:64444/login/getListMenu?user='.$username); //ejecutar y ver si responde Unauthoraized 
+            $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username); //ejecutar y ver si responde Unauthoraized
             if($typeUser->getStatusCode() == 401){//si responde error 401 Unauthorized, entonces el token no es válido
                 $token = "expired";
                 setcookie("_lt", "", time()-60*60*24, '/');
                 setcookie("_lt", "expired", time()+900, '/');
                 setcookie("_ep", time(), time()+60*60*24*365, '/');
             }
-            
+
         }
         else{
             setcookie("_ep", time(), time()+60*60*24*365, '/');
             $token = "expired";
         }
-        return $token; 
+        return $token;
     }
 
     public function encrypt($token, $key){

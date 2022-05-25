@@ -77,25 +77,6 @@
                 <hr>
                 <div   class="col-lg-12">
                     <div class="card-body table-responsive p-0">
-                       <table id="especialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
-                          <thead style="background-color:#002868; color:white">
-                             <tr>
-                                <th class="text-center" style="font-size:15px " colspan =21 >ESPECIALES</th>
-                             </tr>
-                             <thead style="background-color:#002868; color:white">
-                                <tr id="headerEspeciales">
-                                </tr>
-                                <tr id="headerTipo">
-                                </tr>
-                             </thead>
-                             <tbody id="llenaCuotas">
-                             </tbody>
-                       </table>
-                    </div>
-                 </div>
-                 <hr>
-                 <div   class="col-lg-12">
-                    <div class="card-body table-responsive p-0">
                        <table id="articulosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                           <thead style="background-color:#002868; color:white">
                              <tr>
@@ -113,6 +94,26 @@
                        </table>
                     </div>
                  </div>
+                 <hr>
+                <div   class="col-lg-12">
+                    <div class="card-body table-responsive p-0">
+                       <table id="especialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                          <thead style="background-color:#002868; color:white">
+                             <tr>
+                                <th class="text-center" style="font-size:15px " colspan =21 >ESPECIALES</th>
+                             </tr>
+                                <tr id="headerEspeciales">
+                                </tr>
+                                <tr id="headerTipo">
+                                </tr>
+                             </thead>
+                             <tbody id="llenaCuotas">
+                             </tbody>
+                       </table>
+                    </div>
+                 </div>
+
+
               </div>
            </div>
         </div>
@@ -161,7 +162,7 @@ $(document).ready(function() {
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            //console.log(data);
+            //console.log('RespuestaAjaxEspeciales'+data);
             if(data.length == 0){
                 Swal.fire({
                 position: 'top',
@@ -208,12 +209,6 @@ $(document).ready(function() {
                         }
                     }
                 }
-
-
-                $('#headerEspeciales').html(htmlheaderEspecial);
-                $('#headerTipo').html(htmlheaderTipo);
-                $('#bodyArt').html(htmlArticulos);
-
                 arraryCuotas = [];
 
                 for(x=0; x < data[0].detalle.length ; x++){
@@ -236,6 +231,11 @@ $(document).ready(function() {
                         tdCuotas+
                         '<tr></tr>';
                 }
+
+
+                $('#headerEspeciales').html(htmlheaderEspecial);
+                $('#headerTipo').html(htmlheaderTipo);
+                $('#bodyArt').html(htmlArticulos);
                 $('#llenaCuotas').html(htmlCuotas);
             }
             },
@@ -288,12 +288,16 @@ $(document).ready(function() {
 //Func Termina Ajax
 $(document).ajaxStop(function() {
     //Esconde y muestra DIV
+
     document.getElementById("divEspeciales").style.display="block";
     document.getElementById("btnSpinner").style.display = "none";
     document.getElementById("btnRefresh").style.display = "block";
     document.getElementById("selectEjercicio").disabled = true;
     document.getElementById("selectPeriodo").disabled = true;
+
     var table2 = $('#articulosTable').DataTable();
+    $('#especialesTable').DataTable();
+
 
 });
 
@@ -312,6 +316,7 @@ function triggerInputArt() {
 }
 
 function cargarEspecialesExcel(json, ejercicio, periodo) {
+
     var currentTime = new Date();
     var year = ejercicio;
     var month = periodo;
@@ -338,7 +343,7 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
     jsonEspeciales = JSON.stringify(jsonEspeciales);
     jsonEspeciales = jsonEspeciales.slice(1,-1);
     console.log (jsonEspeciales);
-    jsonEspeciales = JSON.parse(jsonEspeciales);
+    //jsonEspeciales = JSON.parse(jsonEspeciales);
     json = jsonEspeciales;
     //console.log(jsonEspeciales);
     $.ajax({
@@ -360,8 +365,10 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
             showConfirmButton: false,
             timer: 5000
           })
+
         },
         error: function() {
+            console.log(data);
             Swal.fire({
             position: 'top',
             icon: 'warning',
@@ -397,13 +404,14 @@ function cargarArticulosExcel(json, ejercicio, periodo) {
     arrayEjer = arrayEjer.slice(1,-1);
     //console.log(arrayEjer);
     arrayEjer = JSON.parse(arrayEjer);
-    jsonCompleto.push({ ArtEspeciales: arrayEjer});
+    jsonCompleto.push(arrayEjer);
     //console.log(jsonCompleto)
     json = JSON.stringify(jsonCompleto);
     json = json.slice(1, -1)
-    //console.log(json);
-    json = JSON.parse(json);
+    console.log(json);
+    /* json = JSON.parse(json);
     json = json.ArtEspeciales;
+    json = JSON.stringify(json); */
     //console.log(json);
 
     $.ajax({
@@ -417,7 +425,7 @@ function cargarArticulosExcel(json, ejercicio, periodo) {
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function (data){
-            console.log(data);
+            console.log('RespuestaAjaxArti'+data);
             Swal.fire({
             position: 'top',
             icon: 'success',

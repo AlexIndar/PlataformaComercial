@@ -29,6 +29,7 @@ var valObser = [];
 var fileIneValidation = '';
 
 $(document).ready(function() {
+    console.log(document.getElementById("userName").value);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -107,8 +108,33 @@ $(document).ready(function() {
                 alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
             }
         });
-    } else {
-        getSolicitudesPendientes(document.getElementById("userName").value);
+    }
+    // else {
+    //     getSolicitudesPendientes(document.getElementById("userName").value);
+    // }
+
+    if (document.getElementById("userP").value == "CYC") {
+        let objUser = {
+            User: document.getElementById("userName").value,
+        }
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/SolicitudesPendientes/GetCycTableView",
+            'type': 'POST',
+            // 'async': false,
+            'dataType': 'json',
+            'data': objUser,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function(data) {
+                reloadCycTable(data);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
     }
 
     $(function() {
@@ -139,29 +165,19 @@ $(document).ready(function() {
     });
 });
 
-function toBase64Edit(file) {
-    var reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
-        fileEdit = reader.result.split(',')[1];
-        // fileEdit = result;
-    };
-    reader.onerror = function(error) {
-        return "Error"
-    };
+const addSelectListItems = (data, idItem) => {
+    let itemSelectorOption = $(idItem + ' option');
+    itemSelectorOption.remove(); -
+    $(idItem).selectpicker('refresh');
+    $(idItem).append('<option value="-1">Selecciona un opcion</option>');
+    for (let i = 0; i < data.length; i++) {
+        $(idItem).append('<option value="' + data[i]['listId'] + '">' + data[i]['listItemName'] + '</option>');
+        $(idItem).val(data[i]['listId']);
+        $(idItem).selectpicker("refresh");
+    }
+    $(idItem).val('-1');
+    $(idItem).selectpicker("refresh");
 }
-
-function toBase64IneValidation(file) {
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
-        fileIneValidation = reader.result.split(',')[1];
-    };
-    reader.onerror = function(error) {
-        return "Error"
-    };
-}
-
 
 const getSolicitudesPendientes = (user) => {
     let objUser = {
@@ -186,10 +202,6 @@ const getSolicitudesPendientes = (user) => {
         }
     });
 }
-
-document.getElementById("inputGroupSelect01").addEventListener("change", function(e) {
-    getSolicitudesPendientes(e.target.value);
-});
 
 const reloadCycTable = (data) => {
     let dataTableCyc = [];
@@ -354,13 +366,18 @@ const getInfoSol = (solObj, typeCyC) => {
     }
 }
 
-function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
-    // console.log(data);
-    // console.log(data2);
-    // console.log(valContac);
-    // console.log(filesList);
-    // console.log(factList);
+document.getElementById("shippingWaySelect").addEventListener("change", function(e) {
+    let val = e.target.value;
+    $('#shippingWaySelect2').val(val);
+    $('#shippingWaySelect2').selectpicker("refresh");
+});
 
+
+document.getElementById("inputGroupSelect01").addEventListener("change", function(e) {
+    getSolicitudesPendientes(e.target.value);
+});
+
+function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     valSolicitud = data2;
     valContactos = valContac;
     valObser = data.observations;
@@ -727,16 +744,22 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     }
 }
 
-const getButtonImg = (idBtn, file) => {
+function setAlert(idAlert, msg) {
+    if (msg != null && msg != "") {
+        document.getElementById(idAlert).value = msg;
+    }
+}
+
+function getButtonImg(idBtn, file) {
     if (document.getElementById(idBtn))
         document.getElementById(idBtn).innerHTML = `<button class="btn btn-warning" onclick="showIMG('` + file + `')"><i class="far fa-eye"></i> Ver Archivo</button>`;
 }
 
-const showIMG = (itemIMG) => {
+function showIMG(itemIMG) {
     penNewWindow("data:image/jpg;base64," + itemIMG, "600px", "360px");
 }
 
-const penNewWindow = (bigurl, width, height) => {
+function penNewWindow(bigurl, width, height) {
     const newWindow = window.open("", "pictureViewer",
         "location=no, directories=no, fullscreen=no, " +
         "menubar=no, status=no, toolbar=no, width=" +
@@ -748,7 +771,7 @@ const penNewWindow = (bigurl, width, height) => {
     newWindow.document.writeln("</body></html>");
 }
 
-const getTypeSol = (id) => {
+function getTypeSol(id) {
     let tipo = "";
     switch (id) {
         case 0:
@@ -767,7 +790,7 @@ const getTypeSol = (id) => {
     return tipo;
 }
 
-const getTypeCont = (id) => {
+function getTypeCont(id) {
     let typeCont = "";
     switch (id) {
         case 1:
@@ -791,12 +814,12 @@ const getTypeCont = (id) => {
     return typeCont;
 }
 
-const getGiro = (id) => {
+function getGiro(id) {
     let giro = businessLines.filter(x => x.id == id);
     return giro.length > 0 ? giro[0].description : "Error en giro";
 }
 
-const clearTextArea = () => {
+function clearTextArea() {
     document.getElementById("obsDatGen").value = "";
     document.getElementById("obsFiscal").value = "";
     document.getElementById("obsEntrea").value = "";
@@ -807,7 +830,7 @@ const clearTextArea = () => {
     document.getElementById("obsReferencias").value = "";
 }
 
-const getValidationRadio = (id1, id2, flag) => {
+function getValidationRadio(id1, id2, flag) {
     if (flag != null)
         flag ? document.getElementById(id1).checked = true : document.getElementById(id2).checked = true;
     else {
@@ -816,7 +839,7 @@ const getValidationRadio = (id1, id2, flag) => {
     }
 }
 
-const getTransactionHistory = (folio) => {
+function getTransactionHistory(folio) {
     if (folio != null) {
         let data = { Item: folio };
         $.ajax({
@@ -841,7 +864,7 @@ const getTransactionHistory = (folio) => {
 }
 
 
-const showHistoryModal = (data) => {
+function showHistoryModal(data) {
     if (data != null) {
         document.getElementById("titleHistory").innerHTML = "Historial de transacciones de la solicitud " + data[0].folioSol;
         let historyList = "";
@@ -856,7 +879,7 @@ const showHistoryModal = (data) => {
     }
 }
 
-const acceptForCash = (folio) => {
+function acceptForCash(folio) {
     let solObj = { Item: folio };
     document.getElementById("folAcceptCash").innerHTML = folio;
     $.ajax({
@@ -878,8 +901,7 @@ const acceptForCash = (folio) => {
     });
 }
 
-const showModalAcceptForCash = (item) => {
-    console.log(item);
+function showModalAcceptForCash(item) {
     clearModalAcceptCredit();
     document.getElementById("typeSolAccept").innerHTML = getTypeSol(item.tipo);
     document.getElementById("typeSolCash").value = item.tipo != null ? item.tipo : "X";
@@ -908,27 +930,36 @@ const showModalAcceptForCash = (item) => {
     $('#acceptForCashModal').modal('show');
 }
 
-const isSameAddress = (addr1, addr2) => {
+function toBase64Edit(file) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        fileEdit = reader.result.split(',')[1];
+        // fileEdit = result;
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
+function toBase64IneValidation(file) {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(subtype) {
+        fileIneValidation = reader.result.split(',')[1];
+    };
+    reader.onerror = function(error) {
+        return "Error"
+    };
+}
+
+function isSameAddress(addr1, addr2) {
     if (addr1.calle == addr2.calle && addr1.cp == addr2.cp && addr1.colonia == addr2.colonia && addr1.noExt == addr2.noExt)
         return true;
     else return false;
 }
 
-const addSelectListItems = (data, idItem) => {
-    let itemSelectorOption = $(idItem + ' option');
-    itemSelectorOption.remove(); -
-    $(idItem).selectpicker('refresh');
-    $(idItem).append('<option value="-1">Selecciona un opcion</option>');
-    for (let i = 0; i < data.length; i++) {
-        $(idItem).append('<option value="' + data[i]['listId'] + '">' + data[i]['listItemName'] + '</option>');
-        $(idItem).val(data[i]['listId']);
-        $(idItem).selectpicker("refresh");
-    }
-    $(idItem).val('-1');
-    $(idItem).selectpicker("refresh");
-}
-
-const getvalidacionActa = (folio) => {
+function getvalidacionActa(folio) {
     let objFolio = { Item: folio };
     let info = [];
     $.ajax({
@@ -952,7 +983,7 @@ const getvalidacionActa = (folio) => {
     return info;
 }
 
-const getValidacionFactura = (folio) => {
+function getValidacionFactura(folio) {
     let objFolio = { Item: folio };
     let info = [];
     $.ajax({
@@ -976,7 +1007,7 @@ const getValidacionFactura = (folio) => {
     return info;
 }
 
-const getValidacionReferencias = (folio) => {
+function getValidacionReferencias(folio) {
     let objFolio = { Item: folio };
     let info = [];
     $.ajax({
@@ -1000,7 +1031,7 @@ const getValidacionReferencias = (folio) => {
     return info;
 }
 
-const getValueChecks = () => {
+function getValueChecks() {
     let alertMsg = ``;
     if (permiso != "B") {
         //Datos Generales
@@ -1092,13 +1123,9 @@ const getValueChecks = () => {
     }
 }
 
-const setAlert = (idAlert, msg) => {
-    if (msg != null && msg != "") {
-        document.getElementById(idAlert).value = msg;
-    }
-}
 
-const printTextArea = () => {
+
+function printTextArea() {
     console.log(document.getElementById("obsDatGen").value);
     console.log(document.getElementById("obsFiscal").value);
     console.log(document.getElementById("obsEntrea").value);
@@ -1114,14 +1141,14 @@ const printTextArea = () => {
     console.log(document.getElementById("obsNegocio").value);
 }
 
-const convertToBool = (item) => {
+function convertToBool(item) {
     if ($('input[name="' + item + '"]:checked').val() != undefined)
         return $('input[name="' + item + '"]:checked').val() == "Aceptado" ? true : false;
     else
         return null;
 }
 
-const getJsonValidation = (flag) => {
+function getJsonValidation(flag) {
     if (permiso != "B") {
         //DATOS GENERALES
         valSolicitud.rfc = convertToBool("rfcData");
@@ -1229,7 +1256,7 @@ const getJsonValidation = (flag) => {
 }
 
 
-const openUpdateFile = (item) => {
+function openUpdateFile(item) {
     fileEdit = '';
     $('#label-inputGroupFile19').html("Archivo de Referencias");
     let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
@@ -1238,7 +1265,7 @@ const openUpdateFile = (item) => {
     $('#editImageModal').modal('show');
 }
 
-const confirmUpdateFile = (item) => {
+function confirmUpdateFile(item) {
     if (fileEdit != '') {
         let type;
         let folio;
@@ -1274,7 +1301,6 @@ const confirmUpdateFile = (item) => {
                     $('#cargaModal').modal('hide');
                     document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
                     $('#infoModal').modal('hide');
-                    // getSolicitudesPendientes(document.getElementById("userName").value);
                     realoadTableView();
                 } else {
                     console.log(data);
@@ -1296,11 +1322,11 @@ const confirmUpdateFile = (item) => {
     }
 }
 
-const cancelEditForm = () => {
+function cancelEditForm() {
     $('#editImageModal').modal('hide');
 }
 
-const getReferencesFile = (folio) => {
+function getReferencesFile(folio) {
     let json = {
         Folio: folio,
         Type: 14
@@ -1332,7 +1358,7 @@ const getReferencesFile = (folio) => {
     });
 }
 
-const s2ab = (s) => {
+function s2ab(s) {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
     for (let i = 0; i != s.length; ++i) { view[i] = s.charCodeAt(i) & 0xFF; }
@@ -1340,7 +1366,7 @@ const s2ab = (s) => {
 }
 
 
-const saveValidation = (flag) => {
+function saveValidation(flag) {
     let auxJson = '';
     if (flag != null) {
         if (getValueChecks())
@@ -1378,7 +1404,7 @@ const saveValidation = (flag) => {
     }
 }
 
-const sendMail = (objMail) => {
+function sendMail(objMail) {
     $('#cargaModal').modal('show');
     let mailJson = {
         folio: objMail.folio,
@@ -1427,7 +1453,7 @@ const sendMail = (objMail) => {
     });
 }
 
-const rollbackSol = (folio) => {
+function rollbackSol(folio) {
     $('#confirModal').modal('show');
     document.getElementById("titleModalConfirm").innerHTML = `¿Desea regresar al proceso anterio la solicitud con folio. ${folio}?`;
     var buttons = `<button class="btn btn-success btn-circle" onclick="confirmRollback('` + folio + `')"><i class="fas fa-paper-plane"></i> Si, Reenviar</button>`;
@@ -1435,7 +1461,7 @@ const rollbackSol = (folio) => {
     document.getElementById("bodyModalConfirm").innerHTML = buttons;
 }
 
-const confirmRollback = (folio) => {
+function confirmRollback(folio) {
     $('#confirModal').modal('hide');
     if (folio != null) {
         let data = { Item: folio };
@@ -1465,17 +1491,17 @@ const confirmRollback = (folio) => {
     }
 }
 
-const realoadTableView = () => {
+function realoadTableView() {
     getSolicitudesPendientes(document.getElementById("inputGroupSelect01").value);
 }
 
-const initialQuestionTrue = (flag) => {
+function initialQuestionTrue(flag) {
     console.log(flag);
     clearModalAcceptCredit();
     $('#acceptForCreditModal').modal('show');
 }
 
-const valAcceptCredit = () => {
+function valAcceptCredit() {
     let alertMsg = ``;
     if (document.getElementById("priceListSelectCredit").value == "-1") alertMsg += `<p>Ingresa la lista de precio</p>`;
     if (document.getElementById("commercialPaySelectCredit").value == "-1") alertMsg += `<p>Ingresa la condición de pago</p>`;
@@ -1492,7 +1518,7 @@ const valAcceptCredit = () => {
     }
 }
 
-const valAcceptCash = () => {
+function valAcceptCash() {
     let alertMsg = ``;
     console.log("prueba file");
     console.log(fileIneValidation);
@@ -1531,7 +1557,7 @@ const valAcceptCash = () => {
     }
 }
 
-const acceptCredit = () => {
+function acceptCredit() {
     if (valAcceptCredit()) {
         let jsonDatosIntelisis = {
             FolioSolicitud: document.getElementById("folAcceptCredit").innerHTML,
@@ -1593,13 +1619,13 @@ const acceptCredit = () => {
     }
 }
 
-const setReferenceModal = (customerId, folio) => {
+function setReferenceModal(customerId, folio) {
     $('#setReferenceModal').modal('show');
     document.getElementById("codCustomer").value = customerId;
     document.getElementById("folRef").value = folio;
 }
 
-const setReference = () => {
+function setReference() {
     $('#cargaModal').modal('show');
     let referencia = document.getElementById("referenceValue").value;
     let folio = document.getElementById("folRef").value;
@@ -1644,7 +1670,7 @@ const setReference = () => {
     }
 }
 
-const clearModalAcceptCredit = () => {
+function clearModalAcceptCredit() {
     fileIneValidation = '';
     $('#label-ineValidationFile').html("Ingresa archivo");
     document.getElementById("limitCash").value = "";
@@ -1670,18 +1696,14 @@ const clearModalAcceptCredit = () => {
     clearList("#priceListSelectCredit");
 }
 
-const clearList = (id) => {
+function clearList(id) {
     $(id).val('-1');
     $(id).selectpicker("refresh");
 }
 
-document.getElementById("shippingWaySelect").addEventListener("change", function(e) {
-    let val = e.target.value;
-    $('#shippingWaySelect2').val(val);
-    $('#shippingWaySelect2').selectpicker("refresh");
-});
 
-const acceptContado = () => {
+
+function acceptContado() {
     if (valAcceptCash()) {
         // $('#cargaModal').modal('show');
         let jsonDatosIntelisis = {
@@ -1746,13 +1768,13 @@ const acceptContado = () => {
     }
 }
 
-const showReact = (folio) => {
+function showReact(folio) {
     $('#reactiveClieModal').modal('show');
     document.getElementById("folReact").innerHTML = folio.split('-')[0];
     document.getElementById("rfcReact").innerHTML = folio.split('-')[1];
 }
 
-const setReactCli = () => {
+function setReactCli() {
     if (document.getElementById("reactiveClieValue").value != "") {
         $('#cargaModal').modal('show');
         let jsonReactive = {

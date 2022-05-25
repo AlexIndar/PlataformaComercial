@@ -27,7 +27,7 @@ class ItemsController extends Controller
 
 
     public static function getBestSellers($token){
-        $getProducts = Http::withToken($token)->post('http://192.168.70.107:64444/item/GetItemsWhere', [
+        $getProducts = Http::withToken($token)->post(config('global.api_url').'/item/GetItemsWhere', [
             "columns" => "fabricanteArticulo",
             "values" => "34"
         ]);
@@ -44,17 +44,13 @@ class ItemsController extends Controller
     public static function getProduct($id, $token){
         $id = strtr($id, "_", " ");
         dd($id);
-        $getProduct = Http::withToken($token)->post('http://192.168.70.107:64444/item/GetItemsWhere', [
+        $getProduct = Http::withToken($token)->post(config('global.api_url').'/item/GetItemsWhere', [
             "columns" => "itemid",
             "values" => $id
         ]);
 
         $item = json_decode($getProduct->body());
         dd($item);
-        foreach($bestSellers as $item){
-            $item->itemid = strtr($item->itemid, " ", "_");
-            // dd($item);
-        }
         $token = TokenController::getToken();
         return view('customers.detallesProducto', ['id' => $id, 'token' => $token]);
     }

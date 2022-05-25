@@ -267,18 +267,18 @@ $(document).ready(function() {
         selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
-        var defaultBillingSelected = false;
-        var indexDefaultBilling = 0;
+        var defaultShippingSelected = false;
+        var indexDefaultShipping = 0;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
-                defaultBillingSelected = true;
-                indexDefaultBilling = x;
+            if(addresses[x]['defaultshipping'] == true && !defaultShippingSelected){//Seleccionar la primera opcion que tenga defaultshipping
+                defaultShippingSelected = true;
+                indexDefaultShipping = x;
                 $('#sucursal').val(addresses[x]['addressID']); 
             }
         }
 
-        if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
+        if(!defaultShippingSelected){ //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']); 
         }
 
@@ -286,10 +286,10 @@ $(document).ready(function() {
 
         fillShippingWaysList();
 
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultBilling]);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default billing
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default shipping
         $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(packageDeliveries[indexDefaultBilling]);
+        $('#fletera').val(packageDeliveries[indexDefaultShipping]);
         $('#correo').val(info[selected]['email']);
     });
 
@@ -580,7 +580,6 @@ function cargarProductosPorCodigo() {
 
 function cargarProductosExcel(json) {
     jsonObj = JSON.parse(json);
-    
     cantItemsPorCargar = jsonObj.length;
     for (var x = 0; x < jsonObj.length; x++) {
         var art = selectedItemsFromInventory.find(o => o.item === jsonObj[x]['Codigos'].trim());
@@ -614,7 +613,11 @@ function validateTab(e){
         addRowCargarPorCodigo();
     }
 }
-function prepareJsonSeparaPedidos(separa){
+
+function prepareJsonSeparaPedidos(separa){ //acomoda arreglo con todos los items cargados en json para enviarlo al back
+    if(!separa){
+        tipoGetItemById = 1;
+    }
     cantItemsPorCargar = selectedItemsFromInventory.length;
     jsonItemsSeparar = "[";
     for (var x = 0; x < selectedItemsFromInventory.length; x++) {
@@ -659,6 +662,7 @@ function separarPedidosPromo(json, separar){  //envía json a back y recibe pedi
                     var x = 0;
                     while (x < pedidoSeparado.length) {
                         pedidoSeparado[x]['evento'] = cupon;
+                        if(pedidoSeparado[x]['mgsFalta'] != null) { console.log('mgsFalta: '+pedidoSeparado[x]['mgsFalta']); }
                         x++;
                     }
                     separarFilas(data);
@@ -987,10 +991,44 @@ function getItemById(item, separa) {
                 
             },
             error: function(error) {
-                alert("Error cargando artículo "+item['articulo']);
-                var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item['articulo']);
-                selectedItemsFromInventory.splice(indexInventory, 1);
-                cantItemsPorCargar --;
+                var art = items.find(o => o.itemid === item['articulo']);
+                console.log("Existencia de "+art['itemid']+" obtenida de inventario");
+                var precioCliente = 0;
+                if (art['promoART'] != null) {
+                    var y = 0;
+                    while (y < art['promoART'].length) {
+                        if (art['multiploVenta'] >= art['promoART'][y]['cantidad']) {
+                            precioCliente = ((100 - art['promoART'][y]['descuento']) / 100) * art['price'];
+                        }
+                        y++;
+                    }
+                    if (precioCliente == 0)
+                        precioCliente = ((100 - art['promoART'][0]['descuento']) / 100) * art['price'];
+                }
+                else
+                    precioCliente = art['price'];
+
+                cantItemsCargados++;
+                var itemSeparar = {
+                    itemID: art['itemid'],
+                    codCustomer: entity,
+                    quantity: validarMultiplo(art['multiploVenta'], cantidad),
+                    plista: art['price'],
+                    punitario: precioCliente,
+                    multiplo: art['multiploVenta'] != null ? art['multiploVenta'] : 1,
+                    regalo: 0,
+                    existencia: art['disponible']
+                };
+
+                if (cantItemsCargados == cantItemsPorCargar) {
+                    jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
+                    separarPedidosPromo(jsonItemsSeparar, separa);
+                    cantItemsCargados = 0;
+                    cantItemsPorCargar = 0;
+                }
+                else {
+                    jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
+                }
                 console.log(error);
             }
         });
@@ -2770,19 +2808,19 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
         selectSucursales.remove();
         $('#sucursal').selectpicker('refresh');
 
-        var defaultBillingSelected = false;
-        var indexDefaultBilling = 0;
+        var defaultShippingSelected = false;
+        var indexDefaultShipping = 0;
 
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
             $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            if(addresses[x]['defaultBilling'] == true && !defaultBillingSelected){//Seleccionar la primera opcion que tenga defaultBilling
-                defaultBillingSelected = true;
-                indexDefaultBilling = x;
+            if(addresses[x]['defaultshipping'] == true && !defaultShippingSelected){//Seleccionar la primera opcion que tenga defaultshipping
+                defaultShippingSelected = true;
+                indexDefaultShipping = x;
                 $('#sucursal').val(addresses[x]['addressID']); 
             }
         }
 
-        if(!defaultBillingSelected){ //si ninguna dirección es defaultBilling, seleccionar la primera
+        if(!defaultShippingSelected){ //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']); 
         }
 
@@ -2790,9 +2828,9 @@ function updateCustomerInfo(selected){ //RECARGA TODO EL ENCABEZADO DEL PEDIDO (
 
         fillShippingWaysList();
 
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultBilling]);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default billing
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default shipping
         $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(packageDeliveries[indexDefaultBilling]);
+        $('#fletera').val(packageDeliveries[indexDefaultShipping]);
         $('#correo').val(info[selected]['email']);
 }
