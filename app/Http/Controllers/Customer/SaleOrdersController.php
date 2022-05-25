@@ -22,14 +22,14 @@ class SaleOrdersController extends Controller
     } 
 
     public static function getSaleOrders($token, $customer){
-        $getOrders = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getOrders?customerID='.$customer);
+        $getOrders = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/getOrders?customerID='.$customer);
         $saleOrders = json_decode($getOrders->body());
         return $saleOrders;
     } 
 
     public static function getInfoHeatWeb($token, $entity){
         $entity = strtoupper($entity);
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.$entity);
+        $response = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/getInfoHeatWeb?entity='.$entity);
         $info = json_decode($response->body());
         $data = [];
         $shippingWays = [];
@@ -118,7 +118,7 @@ class SaleOrdersController extends Controller
     }
 
     public static function getItems($token, $entity){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/getItems', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/getItems', [
             "codCustomer" => $entity,
         ]);
         $info = json_decode($response->body());
@@ -126,19 +126,19 @@ class SaleOrdersController extends Controller
     } 
 
     public static function getListaEmailPedido($token, $cliente){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/ListaEmailPedido?cliente='.$cliente);
+        $response = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/ListaEmailPedido?cliente='.$cliente);
         $info = json_decode($response->body());
         return $info;
     } 
 
     public static function getEventosCliente($token, $entity){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EventosParaCliente?cliente='.$entity);
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/EventosParaCliente?cliente='.$entity);
         $info = json_decode($response->body());
         return $info;
     } 
 
     public static function getItemByID($token, $id, $entity){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/getItemByID', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/getItemByID', [
             "itemID" => $id,
             "codCustomer" => $entity,
         ]);
@@ -147,7 +147,7 @@ class SaleOrdersController extends Controller
     } 
 
     public static function separarPedidosPromo($token, $json){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/SeparaPedidosPromo', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/SeparaPedidosPromo', [
             "articulos" => json_decode($json)
         ]);
         $info = json_decode($response->body());
@@ -155,7 +155,7 @@ class SaleOrdersController extends Controller
     }
 
     public static function separarPedidosPaquete($token, $json){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/SeparaPedidosPAQUETE', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/SeparaPedidosPAQUETE', [
             "articulos" => json_decode($json)
         ]);
         $info = json_decode($response->body());
@@ -163,7 +163,7 @@ class SaleOrdersController extends Controller
     }
 
     public static function regresaEstadoPedido($token, $id){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/RegresaEstadoPedido?Id='.$id);
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/RegresaEstadoPedido?Id='.$id);
         $info = json_decode($response->body());
         return $info;
     }
@@ -172,7 +172,7 @@ class SaleOrdersController extends Controller
         foreach($data as $partida){
             $partida['user'] = $username;
         }
-        $storeNS = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EnviarPedidosNetsuite', [
+        $storeNS = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/EnviarPedidosNetsuite', [
             "prePedido" => $data  
         ]);
         $response = json_decode($storeNS->body());
@@ -180,25 +180,25 @@ class SaleOrdersController extends Controller
     }
 
     public static function getDetalleFacturado($token, $id){
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/SaleOrderDetalleFacturado?factura='.$id);
+        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/SaleOrderDetalleFacturado?factura='.$id);
         $info = json_decode($response->body());
         return $info;
     }
 
     public static function getformaEnvioFletera($token){
-        $getShippingWays = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/formaEnvioFletera');
+        $getShippingWays = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/formaEnvioFletera');
         $shippingWays = json_decode($getShippingWays->body());
         return $shippingWays;
     } 
 
     public static function getPedidosPendientesCTE($token){
-        $getPedidosPendientesCTE = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/PedidosPendientesCTE');
+        $getPedidosPendientesCTE = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/PedidosPendientesCTE');
         $pedidosPendientes = json_decode($getPedidosPendientesCTE->body());
         return $pedidosPendientes;
     } 
 
     public static function forzarPedido($token, $cotizacion, $idCotizacion, $index, $cantidad, $username){
-        $infoCustomer = Http::withToken($token)->get('http://192.168.70.107:64444/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
+        $infoCustomer = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/getInfoHeatWeb?entity='.strtoupper($cotizacion->companyId));
         $customerHeat = json_decode($infoCustomer->body());
         date_default_timezone_set('America/Mexico_City');
         $date = date('d/m/y');
@@ -279,7 +279,7 @@ class SaleOrdersController extends Controller
 
         array_push($listNS, $json);
 
-        $storeNS = Http::withToken($token)->post('http://192.168.70.107:64444/SaleOrder/EnviarPedidosNetsuite', [
+        $storeNS = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/EnviarPedidosNetsuite', [
             "prePedido" => $listNS
         ]); 
         $response = json_decode($storeNS->body());

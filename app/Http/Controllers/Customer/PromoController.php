@@ -28,7 +28,7 @@ class PromoController extends Controller
     }
 
     public static function getCustomersInfo($token){
-        $getCustomers = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/GetCustomers');
+        $getCustomers = Http::withToken($token)->get(config('global.api_url').'/Eventos/GetCustomers');
         $customers = json_decode($getCustomers->body());
 
         $categories = [];
@@ -56,7 +56,7 @@ class PromoController extends Controller
     } 
 
     public static function getItems($token){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/GetItemsForEvents');
+        $response = Http::withToken($token)->get(config('global.api_url').'/Eventos/GetItemsForEvents');
         $info = json_decode($response->body());
         
         $proveedores = [];
@@ -88,7 +88,7 @@ class PromoController extends Controller
 
     public static function storePromo($token, $data){
         $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/Eventos/EventADDNewEdit', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/Eventos/EventADDNewEdit', [
             "id" => $json->id,
             "nombrePromo" => $json->nombrePromo, 
             "descuento" => $json->descuento,
@@ -118,18 +118,18 @@ class PromoController extends Controller
     }
 
     public static function deletePromo($token, $id){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getDeleteEvents?IdDelete='.$id);
+        $response = Http::withToken($token)->get(config('global.api_url').'/Eventos/getDeleteEvents?IdDelete='.$id);
         $promo = json_decode($response->body());
         return $promo;
     }
 
     public static function getAllEvents($token){
-        $events = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getAllEvents');
+        $events = Http::withToken($token)->get(config('global.api_url').'/Eventos/getAllEvents');
         return json_decode($events->body());
     }
 
     public static function getEventById($token, $id){
-        $event = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getIdEvents?IdPromo='.$id);
+        $event = Http::withToken($token)->get(config('global.api_url').'/Eventos/getIdEvents?IdPromo='.$id);
         return json_decode($event->body());
     }
     
@@ -180,12 +180,12 @@ class PromoController extends Controller
     }
 
     public static function getCuotasPersonalizadas($token, $id){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getCuotaPersonalizada?Id='.$id);
+        $response = Http::withToken($token)->get(config('global.api_url').'/Eventos/getCuotaPersonalizada?Id='.$id);
         return json_decode($response->body());
     }
 
     public static function getReglasPaquete($token, $id){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Eventos/getIdPaquete?IdPaquete='.$id);
+        $response = Http::withToken($token)->get(config('global.api_url').'/Eventos/getIdPaquete?IdPaquete='.$id);
         return json_decode($response->body());
     }
 }
