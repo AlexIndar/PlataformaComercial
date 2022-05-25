@@ -2,6 +2,9 @@ $(document).ready(function(){
     //Se inicializa validando en que vista se encuentra para ejecutar ciertas funciones
     switch(window.location.pathname)
     {
+        case '/logistica/numeroGuia':
+            $('[data-toggle="tooltip"]').tooltip();
+            break;
         case '/logistica/distribucion/capturaGastoFletera':
             //#region captura gasto fletera
             //Se inicializan los selectores que se encuentran en la vista 
@@ -246,289 +249,92 @@ let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow,link='';
-let arraytable2 = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array();
-let contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
+let arraytable2 = new Array(),arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array();
+let contRowTypeTable = 0,contRowEmbarqueTable = 0,contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 //#endregion
 
 const logisticaController = {
-    //#region SCRIPTS
-    
-    //#region SCRIPTS REPORTES
-    //#region FACTURAS X EMBARQUE
-    consultBillsXShipments: () => {
-        $('.btn-consultar-factura').prop('disabled',true);
-        $('.btn-consultar-factura').empty();
-        $('.btn-consultar-factura').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
-        let row = '';
-        console.log(contTable);
-        contTable != 0 ?  (
-            $('#table-facturas-embarque').DataTable().clear().draw()
-        ): '';
-        $.ajax({
-            url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
-            type: 'GET',
-            data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
-            datatype: 'json',
-            success: function (data) { 
-                console.log(data);
-                console.time();
-                ReporteFacturasPorEmbarcar = data;
-                $('#table-facturas-embarque').DataTable().clear().draw();
-                $('#table-facturas-embarque').DataTable().rows.add(data).draw();
-                $('.btn-consultar-factura').prop('disabled',false);
-                $('.btn-consultar-factura').empty();
-                $('.btn-consultar-factura').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
-                contTable++;
-            },
-            complete:() => {
-                $('.card-body').attr('hidden',false);
-                $('.btn-excel').prop('disabled',false);
-                console.timeEnd();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);     
-            }
-        });
-    },
-    exportExcelBillsXShipments: () => {
-        $('.btn-excel').empty();
-        $('.btn-excel').prop('disabled',true);
-        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
-        var arrayRows = [];
-        arrayRows.push([
-            'PEDIDO',
-            'COTIZACION',
-            'CONSOLIDADO',
-            'MOVIMIENTO',
-            'FECHA INGRESO',
-            'FACTURA',
-            'ENVIA A',
-            'FECHA FACTURA',
-            'CLIENTE',
-            'ZONA',
-            'NOTA',
-            'CONDICION PAGO',
-            'IMPORTE',
-            'FORMA ENVIO',
-            'FLETERA',
-            'TOTAL EMBARQUES',
-            'EMBARQUE',
-            'FECHA EMBARQUE',
-            'ESTADO EMBARQUE',
-            'COMENTARIO EMBARQUE',
-            'ESTADO FACTURA',
-            'COMENTARIO FACTURA',
-            'FECHA FLETE X CONFIRMAR',
-            'FECHA ENTRAGA',
-            'USUARIO',
-            'CHOFER',
-            'DIAS',
-            'RESPONSABLE',
-            'DIAS PERMITIDOS'
-        ]);
-        $.each(ReporteFacturasPorEmbarcar,function(key,value){
-            let nota = value.nota.replace(/,/g, '.');
-            let comentarioEmbarque = value.comentarioEmbarque.replace(/,/g,'.');
-            let comentarioFactura = value.comentarioFactura.replace(/,/g, '.');
-            let condicionPago = value.condicionPago;
-            let cliente = value.cliente.replace(/,/g,'.');
-            let formaEnvio = value.formaEnvio;
-            let fletera = value.fletera;
-            nota = nota.replace(/[#]/g, '');
-            comentarioEmbarque = comentarioEmbarque.replace(/[#]/g, '');
-            comentarioFactura  = comentarioFactura.replace(/[#]/g, '');
-            let data = [
-                value.pedido,
-                value.cotizacion,
-                value.consolidado,
-                value.movimiento,
-                value.fechaIngreso,
-                value.factura,
-                value.ubicacion,
-                value.fechaFactura,
-                cliente.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
-                value.zona,
-                nota.replace(/(\r\n|\n|\r)/gm,""),
-                condicionPago.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
-                value.importe,
-                formaEnvio.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
-                fletera.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
-                value.totalEmbarques,
-                value.embarque,
-                value.fechaEmbarque,
-                value.estadoEmbarque,
-                comentarioEmbarque.replace(/(\r\n|\n|\r)/gm,""),
-                value.estadoFactura,
-                comentarioFactura.replace(/(\r\n|\n|\r)/gm,""),
-                value.fechaFleteXConfirmar,
-                value.fechaEntrega,
-                value.usuario,
-                value.chofer,
-                value.dias,
-                value.responsable,
-                value.diasPermitidos
-            ];
-            arrayRows.push(data);
-        });
-        // console.log(arrayRows);
-        csvContent = "data:text/csv;charset=utf-8,";
-         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
-         arrayRows.forEach(function(rowArray){
-            row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
- 
-        /* create a hidden <a> DOM node and set its download attribute */
-        var encodedUri = encodeURI(csvContent);
-        link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "Reporte_FacturasPorEmbarcar.csv");
-        document.getElementById('table-facturas-embarque').appendChild(link);
-        link.click();
-        setTimeout(function(){
-            $('.btn-excel').empty();
-            $('.btn-excel').prop('disabled', false);
-            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
-        },5000);
-    },
-    //#endregion
-    //#region GASTO FLETERAS
-    consultFreightExpense: () => {
-        contTable != 0 ?  (
-                        $('.btn-consultar-gasto-fletera').empty(),
-                        $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
-                        $('#table-gasto-fleteras').DataTable().clear().draw()
-        ): '';
-        $.ajax({
-            url: '/logistica/reportes/gastoFleteras/consultFreightExpense',
-            type: 'GET',
-            datatype: 'json',
-            success: function (data) { 
-                console.log(data);
-                console.time();
-                ReporteGastoFleteras = data;
-                $('#table-gasto-fleteras').DataTable().clear().draw();
-                $('#table-gasto-fleteras').DataTable().rows.add(data).draw();
-                $('.btn-consultar-gasto-fletera').empty();
-                $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
-                contTable++;
-            },
-            complete:()=>{
-                console.timeEnd();
-                $('.btn-excel').prop('disabled',false);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);     
-            }
-        });
-    },
-    exportExcelFreightExpense: () => {
-        $('.btn-excel').empty();
-        $('.btn-excel').prop('disabled',true);
-        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
-        var arrayRows = [];
-        arrayRows.push([
-            'NUM DOC',
-            'VENDOR',
-            'NUM FACTURA',
-            'IMPORTE FACTURA',
-            'CHECK RETENCION',
-            'UUID',
-            'USUARIO',
-            'COMENTARIO',
-            'AUTORIZADO',
-            'AUTORIZADO USUARIO',
-            'NUM GUIA',
-            'IMPORTE GUIA',
-            'FACTURAS',
-            'COMENTARIO GUIA'
-        ]);
-        $.each(ReporteGastoFleteras,function(key,value){
-            let facturas = value.facturas;
-            let checkRetencion = value.checkRetencion;
-            checkRetencion = checkRetencion == "<input type='checkbox' disabled>" ? 0 : 1;
-            let autorizado = value.autorizado;
-            autorizado = autorizado == "<input type='checkbox' disabled>" ? 0 : 1;
-            let vendor =  value.vendor;
-            let comentario = value.comentario;
-            let comentarioGuia = value.comentarioGuia;
-            let data = [
-                value.numDoc,
-                vendor.replace(/,/g,''),
-                value.numFactura,
-                value.importeFactura,
-                checkRetencion,
-                value.uuid,
-                value.usuario,
-                comentario.replace(/,/g,''),
-                autorizado,
-                value.autorizadoUsuario,
-                value.numGuia,
-                value.importeGuia,
-                facturas.replace(/,/g,'.'),
-                comentarioGuia.replace(/,/g,'')
-            ];
-            arrayRows.push(data);
-        });
-        // console.log(arrayRows);
-        csvContent = "data:text/csv;charset=utf-8,";
-         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
-         arrayRows.forEach(function(rowArray){
-            row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
- 
-        /* create a hidden <a> DOM node and set its download attribute */
-        var encodedUri = encodeURI(csvContent);
-        link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "Reporte_GastoFleteras.csv");
-        document.getElementById('table-gasto-fleteras').appendChild(link);
-        link.click();
-        setTimeout(function(){
-            $('.btn-excel').empty();
-            $('.btn-excel').prop('disabled', false);
-            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
-        },5000);
-    },
-    //#endregion
-    //#region INTERFAZ RECIBO 
-    consultReceiptInterface: () => {
-        console.log(fechaInicio);
-    },
-    //#endregion
-    //#region INTERFAZ FACTURACION
-    consultBillingInterface: () =>{
-        contTable != 0 ?  (
-            $('.btn-consultar-interfaz-facturacion').empty(),
-            $('.btn-consultar-interfaz-facturacion').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
-            $('#table-interfaz-facturacion').DataTable().clear().draw()
-        ): '';
-        $.ajax({
-        url: '/logistica/reportes/interfazFacturacion/consultBillingInterface',
-        type: 'GET',
-        datatype: 'json',
-        success: function (data) { 
-            console.log(data);
-            console.time();
-            $('#table-interfaz-facturacion').DataTable().clear().draw();
-            $('#table-interfaz-facturacion').DataTable().rows.add(data).draw();
-            $('.btn-consultar-interfaz-facturacion').empty();
-            $('.btn-consultar-interfaz-facturacion').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
-            contTable++;
-        },
-        complete:()=>{
-            console.timeEnd();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus);     
-        }
-        });
-    },
-    //#endregion
-    //#endregion
-
     //#region SCRIPTS LOGISTICA
+    
+    //#region SCRIPTS DISTRIBUCION
+    //#region NUMERO GUIA
+    addTypeRowTable: () =>{
+        contRowTypeTable++;
+        $('#table-content-guia-type').append(
+             '<tr id="rowType'+contRowTypeTable+'">'
+            +'<td style="padding: 10px 0px 0px 0px;">'
+            +'<select class="form-control" id="tipo-'+contRowTypeTable+'" style="width: 100%;">'
+            +'<option value="BULTO">BULTO</option>'
+            +'<option value="CAJA">CAJA</option>'
+            +'<option value="TARIMA">TARIMA</option>'
+            +'<option value="ATADO">ATADO</option>'
+            +'<option value="PESO">PESO</option>'
+            +'<option value="VOLUMEN">VOLUMEN</option>'
+            +'</select>'
+            +'</td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" type="text" style="width: 100%;"></td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" type="int" style="width: 100%;"></td>'
+            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+            +'</tr>'
+        );
+    },
+    deleteRowTable: (e) => {
+        let idrow = $(e).data('idrow');
+        $('#'+idrow).remove();
+    },
+    addEmbarqueRowTable: () => {
+        contRowEmbarqueTable++;
+        $('#table-content-embarque').append(
+            '<tr id="rowEmbarque'+contRowEmbarqueTable+'">'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" onchange="logisticaController.onChangeRowEmbarque(this)" id="embarque'+contRowEmbarqueTable+'" data-idembarque="'+contRowEmbarqueTable+'" type="text" style="width: 100%;"></td>'
+            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-idrow="rowEmbarque'+contRowEmbarqueTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+           +'</tr>'
+       );
+    },
+    onChangeRowEmbarque : (e) => {
+        let idembarque = 'embarque'+$(e).data('idembarque');
+        let embarque = $('#'+idembarque).val();
+        let dato = [];
+        $.ajax({
+            url: '/logistica/numeroGuia/existShipment',
+            type: 'GET',
+            data: { embarque : embarque},
+            datatype: 'json',
+            success: function(data){
+                if(data != 0){
+                    Toast.fire({
+                        icon: 'success',
+                        title: '¡Embarque agregado!'
+                    });
+                    arrayRowsEmbarques[idembarque] = {
+                        'embarque': embarque,
+                        'disponible': true,
+                    };
+                    $('#'+idembarque).css('background-color','#fffff');
+                    $('#'+idembarque).css('color','gray');
+                }else{
+                    Toast.fire({
+                        icon: 'error',
+                        title: '¡Error al agregar embarque : esta con estatus [CONCLUIDO O CANCELADO]!'
+                    });
+                    arrayRowsEmbarques[idembarque] = {
+                        'embarque': embarque,
+                        'disponible': false
+                    };
+                    $('#'+idembarque).css('background-color','#f73737');
+                    $('#'+idembarque).css('color','white');
+                }
+                console.log(arrayRowsEmbarques);
+            },
+            complete: function(){
+
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.log(textStatus);
+            }
+        });
+    },
+    //#endregion
     //#region CAPTURA GASTO FLETERA
     initSelect2: ()=>{
         //Initialize Select2 Elements
@@ -1102,6 +908,283 @@ const logisticaController = {
     },
     //#endregion
     //#endregion
+
+    //#region SCRIPTS REPORTES
+    //#region FACTURAS X EMBARQUE
+    consultBillsXShipments: () => {
+        $('.btn-consultar-factura').prop('disabled',true);
+        $('.btn-consultar-factura').empty();
+        $('.btn-consultar-factura').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
+        let row = '';
+        console.log(contTable);
+        contTable != 0 ?  (
+            $('#table-facturas-embarque').DataTable().clear().draw()
+        ): '';
+        $.ajax({
+            url: '/logistica/reportes/facturasXEmbarque/consultBillsXShipments',
+            type: 'GET',
+            data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                console.time();
+                ReporteFacturasPorEmbarcar = data;
+                $('#table-facturas-embarque').DataTable().clear().draw();
+                $('#table-facturas-embarque').DataTable().rows.add(data).draw();
+                $('.btn-consultar-factura').prop('disabled',false);
+                $('.btn-consultar-factura').empty();
+                $('.btn-consultar-factura').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                contTable++;
+            },
+            complete:() => {
+                $('.card-body').attr('hidden',false);
+                $('.btn-excel').prop('disabled',false);
+                console.timeEnd();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    exportExcelBillsXShipments: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled',true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'PEDIDO',
+            'COTIZACION',
+            'CONSOLIDADO',
+            'MOVIMIENTO',
+            'FECHA INGRESO',
+            'FACTURA',
+            'ENVIA A',
+            'FECHA FACTURA',
+            'CLIENTE',
+            'ZONA',
+            'NOTA',
+            'CONDICION PAGO',
+            'IMPORTE',
+            'FORMA ENVIO',
+            'FLETERA',
+            'TOTAL EMBARQUES',
+            'EMBARQUE',
+            'FECHA EMBARQUE',
+            'ESTADO EMBARQUE',
+            'COMENTARIO EMBARQUE',
+            'ESTADO FACTURA',
+            'COMENTARIO FACTURA',
+            'FECHA FLETE X CONFIRMAR',
+            'FECHA ENTRAGA',
+            'USUARIO',
+            'CHOFER',
+            'DIAS',
+            'RESPONSABLE',
+            'DIAS PERMITIDOS'
+        ]);
+        $.each(ReporteFacturasPorEmbarcar,function(key,value){
+            let nota = value.nota.replace(/,/g, '.');
+            let comentarioEmbarque = value.comentarioEmbarque.replace(/,/g,'.');
+            let comentarioFactura = value.comentarioFactura.replace(/,/g, '.');
+            let condicionPago = value.condicionPago;
+            let cliente = value.cliente.replace(/,/g,'.');
+            let formaEnvio = value.formaEnvio;
+            let fletera = value.fletera;
+            nota = nota.replace(/[#]/g, '');
+            comentarioEmbarque = comentarioEmbarque.replace(/[#]/g, '');
+            comentarioFactura  = comentarioFactura.replace(/[#]/g, '');
+            let data = [
+                value.pedido,
+                value.cotizacion,
+                value.consolidado,
+                value.movimiento,
+                value.fechaIngreso,
+                value.factura,
+                value.ubicacion,
+                value.fechaFactura,
+                cliente.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                value.zona,
+                nota.replace(/(\r\n|\n|\r)/gm,""),
+                condicionPago.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                value.importe,
+                formaEnvio.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                fletera.normalize('NFD').replace(/[\u0300-\u036f]/g,""),
+                value.totalEmbarques,
+                value.embarque,
+                value.fechaEmbarque,
+                value.estadoEmbarque,
+                comentarioEmbarque.replace(/(\r\n|\n|\r)/gm,""),
+                value.estadoFactura,
+                comentarioFactura.replace(/(\r\n|\n|\r)/gm,""),
+                value.fechaFleteXConfirmar,
+                value.fechaEntrega,
+                value.usuario,
+                value.chofer,
+                value.dias,
+                value.responsable,
+                value.diasPermitidos
+            ];
+            arrayRows.push(data);
+        });
+        // console.log(arrayRows);
+        csvContent = "data:text/csv;charset=utf-8,";
+         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+         arrayRows.forEach(function(rowArray){
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+ 
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_FacturasPorEmbarcar.csv");
+        document.getElementById('table-facturas-embarque').appendChild(link);
+        link.click();
+        setTimeout(function(){
+            $('.btn-excel').empty();
+            $('.btn-excel').prop('disabled', false);
+            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
+        },5000);
+    },
+    //#endregion
+    //#region GASTO FLETERAS
+    consultFreightExpense: () => {
+        contTable != 0 ?  (
+                        $('.btn-consultar-gasto-fletera').empty(),
+                        $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
+                        $('#table-gasto-fleteras').DataTable().clear().draw()
+        ): '';
+        $.ajax({
+            url: '/logistica/reportes/gastoFleteras/consultFreightExpense',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) { 
+                console.log(data);
+                console.time();
+                ReporteGastoFleteras = data;
+                $('#table-gasto-fleteras').DataTable().clear().draw();
+                $('#table-gasto-fleteras').DataTable().rows.add(data).draw();
+                $('.btn-consultar-gasto-fletera').empty();
+                $('.btn-consultar-gasto-fletera').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                contTable++;
+            },
+            complete:()=>{
+                console.timeEnd();
+                $('.btn-excel').prop('disabled',false);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);     
+            }
+        });
+    },
+    exportExcelFreightExpense: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled',true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'NUM DOC',
+            'VENDOR',
+            'NUM FACTURA',
+            'IMPORTE FACTURA',
+            'CHECK RETENCION',
+            'UUID',
+            'USUARIO',
+            'COMENTARIO',
+            'AUTORIZADO',
+            'AUTORIZADO USUARIO',
+            'NUM GUIA',
+            'IMPORTE GUIA',
+            'FACTURAS',
+            'COMENTARIO GUIA'
+        ]);
+        $.each(ReporteGastoFleteras,function(key,value){
+            let facturas = value.facturas;
+            let checkRetencion = value.checkRetencion;
+            checkRetencion = checkRetencion == "<input type='checkbox' disabled>" ? 0 : 1;
+            let autorizado = value.autorizado;
+            autorizado = autorizado == "<input type='checkbox' disabled>" ? 0 : 1;
+            let vendor =  value.vendor;
+            let comentario = value.comentario;
+            let comentarioGuia = value.comentarioGuia;
+            let data = [
+                value.numDoc,
+                vendor.replace(/,/g,''),
+                value.numFactura,
+                value.importeFactura,
+                checkRetencion,
+                value.uuid,
+                value.usuario,
+                comentario.replace(/,/g,''),
+                autorizado,
+                value.autorizadoUsuario,
+                value.numGuia,
+                value.importeGuia,
+                facturas.replace(/,/g,'.'),
+                comentarioGuia.replace(/,/g,'')
+            ];
+            arrayRows.push(data);
+        });
+        // console.log(arrayRows);
+        csvContent = "data:text/csv;charset=utf-8,";
+         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+         arrayRows.forEach(function(rowArray){
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+ 
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_GastoFleteras.csv");
+        document.getElementById('table-gasto-fleteras').appendChild(link);
+        link.click();
+        setTimeout(function(){
+            $('.btn-excel').empty();
+            $('.btn-excel').prop('disabled', false);
+            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
+        },5000);
+    },
+    //#endregion
+    //#region INTERFAZ RECIBO 
+    consultReceiptInterface: () => {
+        console.log(fechaInicio);
+    },
+    //#endregion
+    //#region INTERFAZ FACTURACION
+    consultBillingInterface: () =>{
+        contTable != 0 ?  (
+            $('.btn-consultar-interfaz-facturacion').empty(),
+            $('.btn-consultar-interfaz-facturacion').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando'),
+            $('#table-interfaz-facturacion').DataTable().clear().draw()
+        ): '';
+        $.ajax({
+        url: '/logistica/reportes/interfazFacturacion/consultBillingInterface',
+        type: 'GET',
+        datatype: 'json',
+        success: function (data) { 
+            console.log(data);
+            console.time();
+            $('#table-interfaz-facturacion').DataTable().clear().draw();
+            $('#table-interfaz-facturacion').DataTable().rows.add(data).draw();
+            $('.btn-consultar-interfaz-facturacion').empty();
+            $('.btn-consultar-interfaz-facturacion').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+            contTable++;
+        },
+        complete:()=>{
+            console.timeEnd();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);     
+        }
+        });
+    },
+    //#endregion
+    //#endregion
+
+    
     
     //#region SCRIPTS MESA CONTROL
     //#region PLANEADOR

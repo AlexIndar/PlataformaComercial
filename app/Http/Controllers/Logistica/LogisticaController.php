@@ -116,6 +116,19 @@ class LogisticaController extends Controller
         #endregion
 
         #region DISTRIBUCION
+            #region NUMERO GUIA
+            public static function getFreighters($token){
+                $getFreighters = Http::withToken($token)->get('https://localhost:44384/Logistica/GetFreighters');
+                $freighters = json_decode($getFreighters->body());
+                return $freighters;
+            }
+            public static function existShipment($token,$data){
+                $dataJson = json_decode($data);
+                $existShipment = Http::withToken($token)->get('https://localhost:44384/Logistica/ExistShipment?embarque='.$dataJson->embarque);
+                $exist = json_decode($existShipment);
+                return $exist;
+            }
+            #endregion
             #region CAPTURA GASTO FLETERA
             public static function getVendors($token){
                 $getVendors = Http::withToken($token)->get('https://localhost:44384/Logistica/GetVendors');
