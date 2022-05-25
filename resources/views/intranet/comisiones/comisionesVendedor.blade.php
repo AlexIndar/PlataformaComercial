@@ -786,7 +786,7 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            console.log(data[2]);
+            console.log(data);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -1024,14 +1024,15 @@
                      '<td style="font-weight: bold" >' + porCtesNvos + ' % </td>' +
                      '<td style="font-weight: bold" >' + importCtesNvos + '</td>' +
                      '</tr>';
-
+            var vtasPorc = data[2].alcance/10;
+            var vtasImporte = (vtasPorc/100) * comisionTot;
             htmlVentas += '<tr>'+
                      '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
-                     '<td style="font-weight: bold "> Vo </td>' +
-                     '<td style="font-weight: bold" > Le </td>' +
-                     '<td style="font-weight: bold" > Real </td>' +
-                     '<td style="font-weight: bold" >% </td>' +
-                     '<td style="font-weight: bold" >Importe</td>' +
+                     '<td style="font-weight: bold "> '+ data[2].vo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>' +
+                     '<td style="font-weight: bold" > '+ data[2].le.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' </td>' +
+                     '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
+                     '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
 
             htmlEspeciales += '<tr>'+
