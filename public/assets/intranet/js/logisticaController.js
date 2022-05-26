@@ -2,8 +2,28 @@ $(document).ready(function(){
     //Se inicializa validando en que vista se encuentra para ejecutar ciertas funciones
     switch(window.location.pathname)
     {
-        case '/logistica/numeroGuia':
+        case '/logistica/distribucion/numeroGuia':
             $('[data-toggle="tooltip"]').tooltip();
+            $("#importeTotal").inputmask({
+                alias:"decimal",
+                radixPoint: ".", 
+                autoGroup: true, 
+                groupSeparator: ".",
+                digits:2,
+                allowMinus:false,        
+                digitsOptional: false,
+                placeholder: "0.00"
+            });
+            $("#importeSeguro").inputmask({
+                alias:"decimal",
+                radixPoint: ".", 
+                autoGroup: true, 
+                groupSeparator: ".",
+                digits:2,
+                allowMinus:false,        
+                digitsOptional: false,
+                placeholder: "0.00"
+            });
             break;
         case '/logistica/distribucion/capturaGastoFletera':
             //#region captura gasto fletera
@@ -249,8 +269,8 @@ let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow,link='';
-let arraytable2 = new Array(),arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array();
-let contRowTypeTable = 0,contRowEmbarqueTable = 0,contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
+let arrayRowTableType = new Array(),arraytable2 = new Array(),arrayResultFacturas = new Array(),arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array();
+let contRowTypeTable = 0,contRowEmbarqueTable = 0,contRowFacturasSelected = 0,contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 //#endregion
 
 const logisticaController = {
@@ -258,12 +278,54 @@ const logisticaController = {
     
     //#region SCRIPTS DISTRIBUCION
     //#region NUMERO GUIA
+    addNumGuia: () => {
+        let tablaTipo = arrayRowTableType;
+        let facturasSelected = arrayFacturasSelected;
+        let fletera = $('#fletera').val();
+        let numGuia = $('#NumGuia').val();
+        let importeTotal = $('#importeTotal').val();
+        let importeSeguro = $('#importeSeguro').val();
+        let bandera=0,bandera2=0;
+        for(let a=0; a< tablaTipo.length; a++){
+            if(tablaTipo[a] != undefined)
+            {
+                bandera=1;
+                break;
+            }
+        }
+        for(let a=0; a< facturasSelected.length; a++){
+            if(facturasSelected[a] != undefined)
+            {
+                bandera2=1;
+                break;
+            }
+        }
+
+        if(bandera == 0 || bandera2 == 0 || fletera == "" || numGuia == "" || importeTotal == "0.00" )
+        {
+            Toast.fire({
+                icon: 'error',
+                title: '¡Falta datos por llenar!'
+            });
+        }else{
+            let data = {
+                fletera:fletera,
+                numGuia:numGuia,
+                importeTotal:importeTotal,
+                importeSeguro:importeSeguro,
+                tablaTipo:tablaTipo,
+                facturasSelected:facturasSelected
+            };
+            console.log(data);
+        }
+        
+    },
     addTypeRowTable: () =>{
         contRowTypeTable++;
         $('#table-content-guia-type').append(
              '<tr id="rowType'+contRowTypeTable+'">'
             +'<td style="padding: 10px 0px 0px 0px;">'
-            +'<select class="form-control" id="tipo-'+contRowTypeTable+'" style="width: 100%;">'
+            +'<select class="form-control" id="tipo'+contRowTypeTable+'" style="width: 100%;" data-row="'+contRowTypeTable+'" onchange="logisticaController.changeTypeSelect(this)">'
             +'<option value="BULTO">BULTO</option>'
             +'<option value="CAJA">CAJA</option>'
             +'<option value="TARIMA">TARIMA</option>'
@@ -272,18 +334,105 @@ const logisticaController = {
             +'<option value="VOLUMEN">VOLUMEN</option>'
             +'</select>'
             +'</td>'
-            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" type="text" style="width: 100%;"></td>'
-            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" type="int" style="width: 100%;"></td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeCount(this)" type="text" style="width: 100%;"></td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeImport(this)" type="int" style="width: 100%;"></td>'
             +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+contRowTypeTable+'" data-table="tipos" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
             +'</tr>'
         );
+        $('#importe'+contRowTypeTable).inputmask({
+            alias:"decimal",
+            radixPoint: ".", 
+            autoGroup: true, 
+            groupSeparator: ".",
+            digits:2,
+            allowMinus:false,        
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        arrayRowTableType.push({
+            'tipo': '',
+            'cantidad':'',
+            'importe': '',
+            'row': contRowTypeTable
+        });
+    },
+    changeTypeSelect: (e) => {
+        let row = $(e).data('row');
+        let tipo = $('#tipo'+row).val();
+        for(let a=0; a < arrayRowTableType.length; a++)
+        {
+            if(arrayRowTableType[a] != undefined)
+            {
+                if(arrayRowTableType[a].row == row)
+                {
+                    arrayRowTableType[a].tipo = tipo; 
+                }
+            }
+        }
+    },
+    changeTypeCount: (e) =>{
+        let row = $(e).data('row');
+        let cantidad = $('#cantidad'+row).val();
+        for(let a=0; a < arrayRowTableType.length; a++)
+        {
+            if(arrayRowTableType[a] != undefined)
+            {
+                if(arrayRowTableType[a].row == row)
+                {
+                    arrayRowTableType[a].cantidad = cantidad; 
+                }
+            }
+        }
+    },
+    changeTypeImport: (e) => {
+        let row = $(e).data('row');
+        console.log(row);
+        let importe = $('#importe'+row).val();
+        for(let a=0; a < arrayRowTableType.length; a++)
+        {
+            if(arrayRowTableType[a] != undefined)
+            {
+                if(arrayRowTableType[a].row == row)
+                {
+                    arrayRowTableType[a].importe = importe; 
+                }
+            }
+        }
     },
     deleteRowTable: (e) => {
         let idrow = $(e).data('idrow');
         let table = $(e).data('table');
         let row = $(e).data('row');
+        let embarque = $('#embarque'+row).val();
         $('#'+idrow).remove();
+        if(table == 'facturasSelected')
+        {
+            let factura = $(e).data('factura');
+            for(let a= 0; a < arrayFacturasSelected.length; a++)
+            {
+                if(arrayFacturasSelected[a] != undefined)
+                {
+                    if(arrayFacturasSelected[a].factura == factura)
+                    {
+                        for(let b=0; b < arrayResultFacturas.length; b++)
+                        {
+                            if(arrayResultFacturas[b] != undefined)
+                            {
+                                if(arrayResultFacturas[b].factura == factura)
+                                {
+                                    arrayResultFacturas[b].check = "0";
+                                    logisticaController.acomodateTableEmbarqueFactura();
+                                }
+                            }
+                        }
+                        delete arrayFacturasSelected[a];
+                        break;
+                    }
+                }
+            }
+        }
         if(table == 'embarques'){
+            
             for(let a = 0; a < arrayRowsEmbarques.length; a++)
             {
                 if(arrayRowsEmbarques[a] != undefined)
@@ -293,6 +442,74 @@ const logisticaController = {
                         break;
                     }
                 }
+            }
+            for(let b = 0; b < arrayResultFacturas.length; b++){
+                if(arrayResultFacturas[b] != undefined)
+                {
+                    if(arrayResultFacturas[b].embarque == embarque)
+                    {
+                        for(let c = 0; c < arrayFacturasSelected.length; c++){
+                            if(arrayFacturasSelected[c] != undefined){
+                                if(arrayFacturasSelected[c].factura == arrayResultFacturas[b].factura){
+
+                                    delete arrayFacturasSelected[c];
+                                }
+                            }
+                        }
+                        delete arrayResultFacturas[b];
+                    }
+                }
+            }
+            logisticaController.acomodateTableEmbarqueFactura();
+            logisticaController.acomodateTableFacturasSelected();
+        }
+        if(table == 'tipos'){
+            for(let a=0; a < arrayRowTableType.length; a++)
+            {
+                if(arrayRowTableType[a] != undefined)
+                {
+                    if(arrayRowTableType[a].row == row)
+                    {
+                        delete arrayRowTableType[a];
+                    }
+                }
+            }
+        }
+    },
+    acomodateTableEmbarqueFactura: () => {
+        $('#table-content-embarque-factura').empty();
+        for(let c=0; c < arrayResultFacturas.length; c++)
+        {
+            let check = '';
+            if(arrayResultFacturas[c] != undefined)
+            {
+                if(arrayResultFacturas[c].check == '1'){
+                    check='background-color:#50ff50';
+                }
+                $('#table-content-embarque-factura').append(
+                    '<tr id="rowFactura'+arrayResultFacturas[c].factura+'" style="'+check+'">'
+                    +'<td>'+arrayResultFacturas[c].factura+'</td>'
+                    +'<td>'+arrayResultFacturas[c].cliente+'</td>'
+                    +'<td>'+arrayResultFacturas[c].embarque+'</td>'
+                    +'</tr>'
+                );
+            }
+        }
+    },
+    acomodateTableFacturasSelected: () => {
+        $('#table-content-facturas-selected').empty();
+        for(let b = 0;  b < arrayFacturasSelected.length; b ++){
+            if(arrayFacturasSelected[b] != undefined)
+            {
+                $('#rowFactura'+arrayFacturasSelected[b].factura).css('background-color','#50ff50');
+                $('#table-content-facturas-selected').append(
+                    '<tr>'
+                    +'<td>'+arrayFacturasSelected[b].factura+'</td>'
+                    +'<td>'+arrayFacturasSelected[b].embarque+'</td>'
+                    // +'<td><input class="form-control" value="'+arrayFacturasSelected[b].autorizado+'" /></td>'
+                    +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" data-table="facturasSelected" data-idrow="rowFacturaSelected'+contRowFacturasSelected+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                    +'</tr>'
+                );   
             }
         }
     },
@@ -364,10 +581,9 @@ const logisticaController = {
                     $('#'+idembarque).css('background-color','#fffff');
                     $('#'+idembarque).css('color','gray');
                 }else{
-                    debugger;
                     Toast.fire({
                         icon: 'error',
-                        title: '¡Error al agregar embarque : esta con estatus [CONCLUIDO O CANCELADO]!'
+                        title: '¡Embarque no existe o concluida!'
                     });
                     for(let a=0; a < arrayRowsEmbarques.length; a++)
                     {
@@ -419,56 +635,206 @@ const logisticaController = {
         });
     },
     CaptureInvoices: () => {
-        const arrayEmbarquesFinal = new Array();
         let data = '';
-        for(let a = 0; a < arrayRowsEmbarques.length; a++)
-        {
-            if(arrayRowsEmbarques[a] != undefined)
+        let arrayEmbarquesFinal = new Array()
+        if(arrayRowsEmbarques.length != 0){
+            for(let a = 0; a < arrayRowsEmbarques.length; a++)
             {
-                if(arrayRowsEmbarques[a].disponible){
-                     data += arrayRowsEmbarques[a].embarque+',';
+                if(arrayRowsEmbarques[a] != undefined)
+                {
+                    if(arrayRowsEmbarques[a].disponible){
+                        data += arrayRowsEmbarques[a].embarque+',';
+                    }
                 }
             }
-        }
-        
-        arrayEmbarquesFinal.push(data.substring(0, data.length - 1));
-        console.log(arrayEmbarquesFinal);
-        logisticaController.token();
-        $.ajax({
-            url:'/logistica/distribucion/numeroGuia/captureInvoice',
-            type: 'POST',
-            data: {embarques:arrayEmbarquesFinal},
-            datatype: 'json',
-            success: function(data){
-                $('#table-content-embarque-factura').empty();
-                if(data == "")
-                {
-                    $('#table-content-embarque-factura').append(
-                        '<tr>'
-                        +'<td class="text-center" colspan="3">No se encontraron resultados</td>'
-                        +'</tr>'
-                    );
-                }else{
-                    for(let a=0; a < data.length; a++)
+            arrayEmbarquesFinal.push(data.substring(0, data.length - 1));
+            logisticaController.token();
+            $.ajax({
+                url:'/logistica/distribucion/numeroGuia/captureInvoice',
+                type: 'POST',
+                data: {embarques:arrayEmbarquesFinal},
+                datatype: 'json',
+                success: function(data){
+                    $('#table-content-embarque-factura').empty();
+                    if(data == "")
                     {
                         $('#table-content-embarque-factura').append(
                             '<tr>'
-                            +'<td>'+data[a].factura+'</td>'
-                            +'<td>'+data[a].cliente+'</td>'
-                            +'<td>'+data[a].embarque+'</td>'
+                            +'<td class="text-center" colspan="3">No se encontraron resultados</td>'
                             +'</tr>'
                         );
+                    }else{
+                        if(arrayResultFacturas.length == 0)
+                        {
+                            arrayResultFacturas = data;
+                        }else{
+                            for(let b=0; b < data.length; b++){
+                                let bandera = 0;
+                                for(let c=0; c < arrayResultFacturas.length; c++){
+                                    if(arrayResultFacturas[c] != undefined)
+                                    {
+                                        if(data[b].factura == arrayResultFacturas[c].factura)
+                                        {
+                                            bandera = 1;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(bandera == 0)
+                                {
+                                    arrayResultFacturas.push(data[b]);
+                                }
+                            }
+                        }
+                        for(let a=0; a < arrayResultFacturas.length; a++)
+                        {
+                            let check = '';
+                            if(arrayResultFacturas[a] != undefined)
+                            {
+                                if(arrayResultFacturas[a].check == '1'){
+                                    check='background-color:#50ff50';
+                                }
+                                $('#table-content-embarque-factura').append(
+                                    '<tr id="rowFactura'+arrayResultFacturas[a].factura+'" style="'+check+'">'
+                                    +'<td>'+arrayResultFacturas[a].factura+'</td>'
+                                    +'<td>'+arrayResultFacturas[a].cliente+'</td>'
+                                    +'<td>'+arrayResultFacturas[a].embarque+'</td>'
+                                    +'</tr>'
+                                );
+                            }
+                        }
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+    
+                },
+                complete: function(){
+    
+                }
+            })
+        }else{
+            Toast.fire({
+                icon: 'error',
+                title: '¡Ingrese al menos un embarque para la captura de facturas!'
+            });
+        }
+    },
+    searchBills: () => {
+        let factura = $('#searchFactura').val();
+        let bandera = 0;
+        if(arrayResultFacturas.length != 0){
+            for(let a = 0; a < arrayResultFacturas.length; a++){
+                if(arrayResultFacturas[a] != undefined)
+                {
+                    if(arrayResultFacturas[a].factura == factura)
+                    {
+                        bandera = 1;
+                        if(arrayFacturasSelected.length != 0)
+                        {
+                            let bandera2 = 0;
+                            for(let c = 0; c < arrayFacturasSelected.length; c++){
+                                if(arrayFacturasSelected[c] != undefined)
+                                {
+                                    //VALIDAR QUE NO ESTE REPETIDO LA MISMA FACTURA EN LA ULTIMA TABLA
+                                    if(arrayFacturasSelected[c].factura == factura){
+                                        bandera2 = 1;
+                                        break; 
+                                    }
+                                }
+                            }
+                            if(bandera2 == 1){
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: '¡Ya esta seleccionada esta factura!'
+                                });
+                            }else{
+                                arrayResultFacturas[a].check = "1";
+                                arrayFacturasSelected.push({
+                                    'factura' : arrayResultFacturas[a].factura,
+                                    'autorizado' : '',
+                                    'embarque': arrayResultFacturas[a].embarque
+                                });
+                            }
+                        }else{
+                            arrayResultFacturas[a].check = "1";
+                            arrayFacturasSelected.push({
+                                'factura' : arrayResultFacturas[a].factura,
+                                'autorizado' : '',
+                                'embarque': arrayResultFacturas[a].embarque
+                            });
+                        }
+                        break;
                     }
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-
-            },
-            complete: function(){
-
             }
-        })
-        console.log(arrayEmbarquesFinal);
+            if(bandera == 0)
+            {
+                $.ajax({
+                    url: '/logistica/distribucion/numeroGuia/existAnyBillsInAnyShipment',
+                    type: 'GET',
+                    data: {factura:factura},
+                    datatype: 'json',
+                    success: function(data){
+                        if(data){
+                            Toast.fire({
+                                icon: 'error',
+                                title: '¡Esta Factura no Pertence a los embarques señalados!'
+                            });  
+                        }else{
+                            Toast.fire({
+                                icon: 'error',
+                                title: '¡Esta factura nunca a sido embarcada!'
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+
+                    },
+                    complete: function(){
+
+                    }
+                })
+            }else{
+                $('#table-content-facturas-selected').empty();
+                for(let b = 0;  b < arrayFacturasSelected.length; b ++){
+                    if(arrayFacturasSelected[b] != undefined)
+                    {
+                        contRowFacturasSelected++
+                        $('#rowFactura'+arrayFacturasSelected[b].factura).css('background-color','#50ff50');
+                        $('#table-content-facturas-selected').append(
+                            '<tr id="rowFacturaSelected'+contRowFacturasSelected+'">'
+                            +'<td>'+arrayFacturasSelected[b].factura+'</td>'
+                            +'<td>'+arrayFacturasSelected[b].embarque+'</td>'
+                            // +'<td><input class="form-control" id="autorizado'+contRowFacturasSelected+'" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" onkeyup="logisticaController.changeAuthoriceBills(this)" value="'+arrayFacturasSelected[b].autorizado+'" /></td>'
+                            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" data-table="facturasSelected" data-idrow="rowFacturaSelected'+contRowFacturasSelected+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                            +'</tr>'
+                        );   
+                    }
+                }
+            }
+        }else{
+            Toast.fire({
+                icon: 'error',
+                title: '¡Ingrese algun embarque para posterior obtener una captura de facturas!'
+            });
+        }
+        $('#searchFactura').val('');
+    },
+    changeAuthoriceBills: (e) => {
+        let row = $(e).data('row');
+        let autorizado = $('#autorizado'+row).val();
+        let factura = $(e).data('factura');
+        for(let a= 0; a < arrayFacturasSelected.length; a++)
+        {
+            if(arrayFacturasSelected[a] != undefined)
+            {
+                if(arrayFacturasSelected[a].factura == factura)
+                {
+                    arrayFacturasSelected[a].autorizado = autorizado;
+                    break;
+                }
+            }
+        }
     },
     //#endregion
     //#region CAPTURA GASTO FLETERA

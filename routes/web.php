@@ -1858,6 +1858,14 @@ Route::post('/logistica/distribucion/numeroGuia/captureInvoice', function(Reques
     $response = LogisticaController::captureInvoice($token,json_encode($request->all()));
     return $response;
 });
+Route::get('/logistica/distribucion/numeroGuia/existAnyBillsInAnyShipment', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::existAnyBillsInAnyShipment($token,json_encode($request->all()));
+    return $response;
+});
 // ************************* CAPTURA GASTO FLETERA ***************************** \\
 Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     $token = TokenController::getToken();
