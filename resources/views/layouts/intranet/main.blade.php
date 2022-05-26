@@ -192,6 +192,14 @@
                   </a>
                 </li>
                 @endif
+                @if(in_array('SolicitudesPendientes', $permissions))
+                <li class="nav-item">
+                  <a href="/SolicitudesPendientes" class="nav-link">
+                    <i class="fa-solid fa-calculator"></i>
+                    <p>Solicitudes Pendientes</p>
+                  </a>
+                </li>
+                @endif
               </ul>
             </li>
             @endif
@@ -355,21 +363,48 @@
                             <p>Comisiones</p>
                         </a>
                     </li>
+                    @if(in_array('CargarEspeciales', $permissions))
                     <li class="nav-item">
                         <a href="/comisionesEspeciales" class="nav-link">
                             <i class="nav-icon fas fa-tags"></i>
                             <p>Cargar Especiales</p>
                         </a>
                     </li>
+                    @endif
+                    @if(in_array('ComisionesResumen', $permissions))
                     <li class="nav-item">
                         <a href="/comisionesResumen" class="nav-link">
                             <i class="nav-icon fas fa-chart-line"></i>
                             <p>Resumen Por Vendedor</p>
                         </a>
                     </li>
+                    @endif
                 </ul>
               </li>
               @endif
+              @if(in_array('Clientes', $permissions))
+              <li class="nav-item">
+               @if($active == 'Clientes')
+               <a href="#" class="nav-link active">
+              @else
+               <a href="#" class="nav-link">
+              @endif
+                <i class="nav-icon fas fa-users"></i>
+                <p>
+                  Clientes
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="/clientes/info" class="nav-link" >
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>Estado de Cuenta</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            @endif
         </ul>
         </nav>
       </div>

@@ -100,7 +100,7 @@
                        <table id="especialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                           <thead style="background-color:#002868; color:white">
                              <tr>
-                                <th class="text-center" style="font-size:15px " colspan =21 >ESPECIALES</th>
+                                <th class="text-center" style="font-size:15px " colspan =23 >ESPECIALES</th>
                              </tr>
                                 <tr id="headerEspeciales">
                                 </tr>
@@ -243,7 +243,7 @@ $(document).ready(function() {
             Swal.fire({
             position: 'top',
             icon: 'warning',
-            title: 'Error Vuelva a cargar el Archivo',
+            title: 'Error Al cargar los Archivos',
             showConfirmButton: false,
             timer: 5000
             })
@@ -345,8 +345,8 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
     console.log (jsonEspeciales);
     //jsonEspeciales = JSON.parse(jsonEspeciales);
     json = jsonEspeciales;
-    //console.log(jsonEspeciales);
-    $.ajax({
+    console.log(jsonEspeciales);
+    /* $.ajax({
            'headers': {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
            },
@@ -378,7 +378,7 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
           })
         }
     });
-
+ */
     document.getElementById("excelEspeciales").value = "";
 }
 

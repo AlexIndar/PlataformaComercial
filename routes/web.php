@@ -1350,7 +1350,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $user = MisSolicitudesController::getUserRol($token);
-                    //$auxUser = json_decode($user->body());
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                        return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                    }else{
+                        return redirect('/Intranet');
+                    }
                     //$userRol = [$auxUser->typeUser, $auxUser->permissions];
                     //$testUSer = "bgaribay";
                     //$listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
@@ -1358,7 +1364,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     //    return $time;
                     //}
                     // dd($user->body());
-                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    
                 });
 
                 Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
@@ -1529,9 +1535,32 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $zonas = AplicarPagoController::getZonas($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    //$username = 'jramirez';
+                    $username = $userData->typeUser;
+                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                    $zonasgtes = ComisionesController::GetZonasGerente($token,$username);
+                    $zona = $zonaInfo->body();
+                    //dd($userData->permissions);
+                    if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN' && $userData->permissions != 'GERENTEVENTA'){
+                        $zona = 0;
+                    }elseif($userData->permissions == 'ADMIN'){
+                        $zona = 'todo';
+                         //dd('entraaqui');
+                    }elseif(count($zonasgtes) != 0){
+                        $zona = $zonasgtes;
+                         //dd('entraaqui');
+                    }else{
+
+                        $zona = json_decode($zonaInfo->body())->description;
+
+                    }
+                    //dd($zona);
+                    //dd($zonas,$zona);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesVendedor',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
+                    return view('intranet.comisiones.comisionesVendedor',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zona'=> $zona]);
+
                 });
 
                 Route::get('/comisionesResumen', function(){
@@ -1700,8 +1729,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                    return $data;
 
                 });
-
-
 
 
                 // ************************************************  Pago en Linea ***************************************************

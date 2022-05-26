@@ -180,6 +180,22 @@
           <div class="modal-body text-indarBlue" id="modal2">
              <div class="row">
                 <div class="col-md-12">
+                    <div class="card-body table-responsive p-0">
+                    <table id="selectFacTable" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
+                        <thead>
+                           <tr>
+                            <th></th>
+                            <th>Documento</th>
+                            <th>No.</th>
+                            <th>Monto</th>
+                            <th>Fecha Facturación</th>
+                            <th>Vencimiento</th>
+                           </tr>
+                        </thead>
+                        <tbody id="bodyFacturasSelec">
+                        </tbody>
+                     </table>
+                    </div>
                     <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">(Deberá Asignar el Total de la N.C a una ó varias Facturas)</h6>
                 </div>
                 <div class="col-md-12">
@@ -239,6 +255,7 @@ var subTotal = 0;
 var descuento = 0;
 var total = 0;
  $('#example tbody').on('click', 'tr', function () {
+    htmlSelectFact='';
 
     jQuery(this).toggle("scale");
      var data = table.row( this ).data();
@@ -268,6 +285,19 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
         data[5]
 
     ] ).draw();
+
+    htmlSelectFact += '<tr>'+
+        '<td>Buton</td>'+
+        '<td>' + data[0]+ '</td>'+
+        '<td>' + data[1]+ '</td>'+
+        '<td>' + data[2]+ '</td>'+
+        '<td>' + monto+ '</td>'+
+        '<td>' + data[4]+ '</td>'+
+        '<td>' + data[5]+ '</td>'+
+        '</tr>';
+    $('#selectFacTable').html(htmlSelectFact);
+
+
  } );
 
  $('#tableNotas tbody').on('click', 'tr', function () {
@@ -277,6 +307,7 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
     var hide = jQuery(this);
      //Función Agregar NC
     $('#agregarNc').on('click', function(e) {
+
         hide.toggle("scale");
         e.preventDefault();
         console.log(data);
@@ -297,6 +328,8 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
             data[5]
 
         ], ).draw();
+
+
 
 
     });

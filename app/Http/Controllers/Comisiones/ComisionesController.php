@@ -45,12 +45,19 @@ class ComisionesController extends Controller
     }
 
     public static function getEspecialesPorPeriodo($token, $year,$month){
-        $data = Http::withToken($token)->get(config('global.api_url').'/getEspecialesPorPeriodo?year='.$year.'&month='.$month);
+
+        $data = Http::withToken($token)->get(config('global.api_url').'/Especiales/getEspecialesPorPeriodo?year='.$year.'&month='.$month);
+        //dd($data);
         return json_decode($data->body());
     }
 
     public static function getCtesActivosMes($token, $referencia,$fecha){
         $data = Http::withToken($token)->get(config('global.api_url').'/CobranzaZona/getCtesActivosMes?referencia='.$referencia.'&fecha='.$fecha);
+        return json_decode($data->body());
+    }
+
+    public static function GetZonasGerente($token, $user){
+        $data = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetZonasGerente?user='.$user);
         return json_decode($data->body());
     }
 
