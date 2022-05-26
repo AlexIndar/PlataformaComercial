@@ -226,6 +226,8 @@ const reloadCycTable = (data) => {
 
         if (data[i].isOnIntelisis)
             actions += ` ` + `<div class="btn btn-danger btn-circle" title="Reactivación" onclick="showReact(` + folioRfc + `)"><i class="fas fa-skull"></i></div>`;
+        if (data[i].isOnIntelisis && data[i].isCredit)
+            actions += ` ` + `<div class="btn btn-outline-info btn-circle" title="Agregar Validación de INE" onclick="openUpdateIne(` + data[i].folio + `)"><i class="fa-solid fa-id-card"></i></div>`;
         if (data[i].status == 11 || data[i].status == 12)
             actions += ` ` + `<div class="btn btn-secondary btn-circle" title="Regresar Solicitud" onclick="rollbackSol(` + data[i].folio + `)"><i class="fas fa-undo"></i></div>`;
         if (data[i].isCredit && !data[i].haveReferencesFile && data[i].status == 11)
@@ -281,6 +283,7 @@ const showReferences = (folio) => {
 }
 
 const getInfoSol = (solObj, typeCyC) => {
+    $('#cargaModal').modal('show');
     if (solObj != null) {
         $.ajax({
             'headers': {
@@ -378,6 +381,7 @@ document.getElementById("inputGroupSelect01").addEventListener("change", functio
 });
 
 function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
+    $('#cargaModal').modal('hide');
     valSolicitud = data2;
     valContactos = valContac;
     valObser = data.observations;
@@ -1259,72 +1263,154 @@ function getJsonValidation(flag) {
     return ValidationValues;
 }
 
-
 function openUpdateFile(item) {
     fileEdit = '';
-    $('#label-inputGroupFile19').html("Archivo de Referencias");
+    document.getElementById("titleModalEdit").innerHTML = "Agregar Referencias";
+    document.getElementById("titlePictureEdit").innerHTML = "Agregar Referencias";
+    document.getElementById("label-inputGroupFile19").innerHTML = "Archivo de Referencias";
+    // $('#label-inputGroupFile19').html("Archivo de Referencias");
     let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
     buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
     document.getElementById("editConfirButtons").innerHTML = buttons;
     $('#editImageModal').modal('show');
 }
 
-function confirmUpdateFile(item) {
+function openUpdateIne(item) {
+    fileEdit = '';
+    $('#titleModalEdit').html("Agregar Validacion de INE");
+    $('#titlePictureEdit').html("Agregar Validacion de INE");
+    $('#label-inputGroupFile19').html("Validación de INE");
+    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateIne('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
+    document.getElementById("editConfirButtons").innerHTML = buttons;
+    $('#editImageModal').modal('show');
+}
+
+function confirmUpdateIne(item) {
     if (fileEdit != '') {
-        let type;
-        let folio;
         $('#cargaModal').modal('show');
-        if (item == 15) {
-            // folio = document.getElementById("").innerHTML;
-            type = item;
-        } else {
-            type = 14;
-            folio = item;
-        }
         let json = {
-            Folio: folio,
+            Folio: item,
             File: {
                 Id: 0,
                 FileStr: fileEdit,
-                Type: type,
+                Type: 15,
                 Subtype: null,
             }
         }
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "MisSolicitudes/UpdateFile",
-            'type': 'POST',
-            'dataType': 'json',
-            'data': json,
-            'enctype': 'multipart/form-data',
-            'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
-                if (Number.isInteger(data)) {
-                    $('#cargaModal').modal('hide');
-                    document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
-                    $('#infoModal').modal('hide');
-                    realoadTableView();
-                } else {
-                    console.log(data);
-                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-                    $('#cargaModal').modal('hide');
-                }
-            },
-            error: function(error) {
-                console.log(error);
-                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-                $('#cargaModal').modal('hide');
-            }
-        });
-        console.log(json);
-        console.log(JSON.stringify(json));
+        setFile(json);
     } else {
         console.log(fileEdit);
         alert("Seleccione un archivo");
     }
 }
+
+function confirmUpdateFile(item) {
+    if (fileEdit != '') {
+        $('#cargaModal').modal('show');
+        let json = {
+            Folio: item,
+            File: {
+                Id: 0,
+                FileStr: fileEdit,
+                Type: 14,
+                Subtype: null,
+            }
+        }
+        setFile(json);
+    } else {
+        console.log(fileEdit);
+        alert("Seleccione un archivo");
+    }
+}
+
+function setFile(json) {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "MisSolicitudes/UpdateFile",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': json,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            if (Number.isInteger(data)) {
+                $('#cargaModal').modal('hide');
+                document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
+                $('#infoModal').modal('hide');
+                realoadTableView();
+            } else {
+                console.log(data);
+                alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            $('#cargaModal').modal('hide');
+        }
+    });
+}
+
+// function confirmUpdateFile2(item) {
+//     if (fileEdit != '') {
+//         let type;
+//         let folio;
+//         $('#cargaModal').modal('show');
+//         if (item == 15) {
+//             // folio = document.getElementById("").innerHTML;
+//             type = item;
+//         } else {
+//             type = 14;
+//             folio = item;
+//         }
+//         let json = {
+//             Folio: folio,
+//             File: {
+//                 Id: 0,
+//                 FileStr: fileEdit,
+//                 Type: type,
+//                 Subtype: null,
+//             }
+//         }
+//         $.ajax({
+//             'headers': {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
+//             'url': "MisSolicitudes/UpdateFile",
+//             'type': 'POST',
+//             'dataType': 'json',
+//             'data': json,
+//             'enctype': 'multipart/form-data',
+//             'timeout': 2 * 60 * 60 * 1000,
+//             success: function(data) {
+//                 if (Number.isInteger(data)) {
+//                     $('#cargaModal').modal('hide');
+//                     document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
+//                     $('#infoModal').modal('hide');
+//                     realoadTableView();
+//                 } else {
+//                     console.log(data);
+//                     alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+//                     $('#cargaModal').modal('hide');
+//                 }
+//             },
+//             error: function(error) {
+//                 console.log(error);
+//                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+//                 $('#cargaModal').modal('hide');
+//             }
+//         });
+//         console.log(json);
+//         console.log(JSON.stringify(json));
+//     } else {
+//         console.log(fileEdit);
+//         alert("Seleccione un archivo");
+//     }
+// }
 
 function cancelEditForm() {
     $('#editImageModal').modal('hide');
@@ -1371,6 +1457,7 @@ function s2ab(s) {
 
 
 function saveValidation(flag) {
+    $('#cargaModal').modal('show');
     let auxJson = '';
     if (flag != null) {
         if (getValueChecks())
@@ -1392,6 +1479,7 @@ function saveValidation(flag) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(result) {
+                $('#cargaModal').modal('hide');
                 if (result && flag == null) {
                     $('#infoModal').modal('hide');
                     realoadTableView();
@@ -1635,7 +1723,8 @@ function acceptCredit() {
 
 function setReferenceModal(customerId, folio) {
     $('#setReferenceModal').modal('show');
-    document.getElementById("codCustomer").value = customerId;
+    document.getElementById("referenceValue").value = "";
+    document.getElementById("codCustomer").innerHTML = customerId;
     document.getElementById("folRef").value = folio;
 }
 
@@ -1643,7 +1732,7 @@ function setReference() {
     $('#cargaModal').modal('show');
     let referencia = document.getElementById("referenceValue").value;
     let folio = document.getElementById("folRef").value;
-    let customerId = document.getElementById("codCustomer").value;
+    let customerId = document.getElementById("codCustomer").innerHTML;
     if (referencia != "") {
         if (customerId != "" && folio != "") {
             let jsonReference = {
@@ -1651,11 +1740,13 @@ function setReference() {
                 CustomerID: customerId,
                 Reference: referencia
             }
+            console.log(jsonReference);
+            console.log(JSON.stringify(jsonReference));
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                'url': "/SolicitudesPendientes/AcceptRequest",
+                'url': "/SolicitudesPendientes/SetReference",
                 'type': 'POST',
                 'dataType': 'json',
                 'data': jsonReference,
@@ -1663,7 +1754,9 @@ function setReference() {
                 'timeout': 2 * 60 * 60 * 1000,
                 success: function(response) {
                     $('#cargaModal').modal('hide');
+                    console.log(response);
                     if (response) {
+                        $('#setReferenceModal').modal('hide');
                         alert("Referencia agregada exitosamente");
                     } else {
                         $('#alertModal').modal('show');
