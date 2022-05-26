@@ -1532,7 +1532,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $userData = json_decode(MisSolicitudesController::getUserRol($token));
                     $username = $userData->typeUser;
                     $zonaInfo = MisSolicitudesController::getZone($token,$username);
-                   // dd($userData->permissions);
+                   //dd($zonaInfo);
                     $zona = $zonaInfo->body();
                     if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN'){
                         $zona = 0;
@@ -1717,8 +1717,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                    return $data;
 
                 });
-
-
 
 
                 // ************************************************  Pago en Linea ***************************************************
