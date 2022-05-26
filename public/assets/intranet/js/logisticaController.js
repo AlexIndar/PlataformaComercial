@@ -274,29 +274,47 @@ const logisticaController = {
             +'</td>'
             +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" type="text" style="width: 100%;"></td>'
             +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" type="int" style="width: 100%;"></td>'
-            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+contRowTypeTable+'" data-table="tipos" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
             +'</tr>'
         );
     },
     deleteRowTable: (e) => {
         let idrow = $(e).data('idrow');
+        let table = $(e).data('table');
+        let row = $(e).data('row');
         $('#'+idrow).remove();
+        if(table == 'embarques'){
+            for(let a = 0; a < arrayRowsEmbarques.length; a++)
+            {
+                if(arrayRowsEmbarques[a] != undefined)
+                {
+                    if(arrayRowsEmbarques[a].row == row){
+                        delete arrayRowsEmbarques[a];
+                        break;
+                    }
+                }
+            }
+        }
     },
     addEmbarqueRowTable: () => {
         contRowEmbarqueTable++;
         $('#table-content-embarque').append(
             '<tr id="rowEmbarque'+contRowEmbarqueTable+'">'
             +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" onchange="logisticaController.onChangeRowEmbarque(this)" id="embarque'+contRowEmbarqueTable+'" data-idembarque="'+contRowEmbarqueTable+'" type="text" style="width: 100%;"></td>'
-            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-idrow="rowEmbarque'+contRowEmbarqueTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+contRowEmbarqueTable+'" data-table="embarques" data-idrow="rowEmbarque'+contRowEmbarqueTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
            +'</tr>'
        );
     },
     onChangeRowEmbarque : (e) => {
-        let idembarque = 'embarque'+$(e).data('idembarque');
+        let rowembarque = $(e).data('idembarque');
+        let idembarque = 'embarque'+rowembarque;
         let embarque = $('#'+idembarque).val();
+        // console.log(rowembarque,idembarque,embarque);
         let dato = [];
+        let repetido = 0;
+        let modificado = 0;
         $.ajax({
-            url: '/logistica/numeroGuia/existShipment',
+            url: '/logistica/distribucion/numeroGuia/existShipment',
             type: 'GET',
             data: { embarque : embarque},
             datatype: 'json',
@@ -306,25 +324,91 @@ const logisticaController = {
                         icon: 'success',
                         title: '¡Embarque agregado!'
                     });
-                    arrayRowsEmbarques[idembarque] = {
-                        'embarque': embarque,
-                        'disponible': true,
-                    };
+                    for(let a=0; a < arrayRowsEmbarques.length; a++)
+                    {
+                        if(arrayRowsEmbarques[a] != undefined)
+                        {
+                            if(arrayRowsEmbarques[a].embarque == embarque)
+                            {
+                                //validamos si el renglon agregado ya esta repetido
+                                repetido = 1;
+                                break;
+                            }else{
+                                //validamos si quieren modificar el mismo renglon
+                                if(arrayRowsEmbarques[a].row == rowembarque)
+                                {
+                                    arrayRowsEmbarques[a].embarque = embarque;
+                                    arrayRowsEmbarques[a].disponible = true;
+                                    arrayRowsEmbarques[a].row = rowembarque;
+                                    modificado=1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(!repetido){
+                        if(!modificado){
+                            arrayRowsEmbarques.push({
+                                'embarque': embarque,
+                                'disponible': true,
+                                'row': rowembarque
+                            });
+                        }
+                    }else{
+                        $('#rowEmbarque'+rowembarque).remove();
+                        Toast.fire({
+                            icon: 'error',
+                            title: '¡No se pueden repetir los embarques!'
+                        });
+                    }
                     $('#'+idembarque).css('background-color','#fffff');
                     $('#'+idembarque).css('color','gray');
                 }else{
+                    debugger;
                     Toast.fire({
                         icon: 'error',
                         title: '¡Error al agregar embarque : esta con estatus [CONCLUIDO O CANCELADO]!'
                     });
-                    arrayRowsEmbarques[idembarque] = {
-                        'embarque': embarque,
-                        'disponible': false
-                    };
+                    for(let a=0; a < arrayRowsEmbarques.length; a++)
+                    {
+                        if(arrayRowsEmbarques[a] != undefined)
+                        {
+                            if(arrayRowsEmbarques[a].embarque == embarque)
+                            {
+                                //validamos si el renglon agregado ya esta repetido
+                                repetido = 1;
+                                break;
+                            }else{
+                                //validamos si quieren modificar el mismo renglon
+                                if(arrayRowsEmbarques[a].row == rowembarque)
+                                {
+                                    arrayRowsEmbarques[a].embarque = embarque;
+                                    arrayRowsEmbarques[a].disponible = false;
+                                    arrayRowsEmbarques[a].row = rowembarque;
+                                    modificado=1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(!repetido){
+                        if(!modificado){
+                            arrayRowsEmbarques.push({
+                                'embarque': embarque,
+                                'disponible': false,
+                                'row': rowembarque
+                            });
+                        }
+                    }else{
+                        $('#rowEmbarque'+rowembarque).remove();
+                        Toast.fire({
+                            icon: 'error',
+                            title: '¡No se pueden repetir los embarques!'
+                        });
+                    }
                     $('#'+idembarque).css('background-color','#f73737');
                     $('#'+idembarque).css('color','white');
                 }
-                console.log(arrayRowsEmbarques);
             },
             complete: function(){
 
@@ -333,6 +417,58 @@ const logisticaController = {
                 console.log(textStatus);
             }
         });
+    },
+    CaptureInvoices: () => {
+        const arrayEmbarquesFinal = new Array();
+        let data = '';
+        for(let a = 0; a < arrayRowsEmbarques.length; a++)
+        {
+            if(arrayRowsEmbarques[a] != undefined)
+            {
+                if(arrayRowsEmbarques[a].disponible){
+                     data += arrayRowsEmbarques[a].embarque+',';
+                }
+            }
+        }
+        
+        arrayEmbarquesFinal.push(data.substring(0, data.length - 1));
+        console.log(arrayEmbarquesFinal);
+        logisticaController.token();
+        $.ajax({
+            url:'/logistica/distribucion/numeroGuia/captureInvoice',
+            type: 'POST',
+            data: {embarques:arrayEmbarquesFinal},
+            datatype: 'json',
+            success: function(data){
+                $('#table-content-embarque-factura').empty();
+                if(data == "")
+                {
+                    $('#table-content-embarque-factura').append(
+                        '<tr>'
+                        +'<td class="text-center" colspan="3">No se encontraron resultados</td>'
+                        +'</tr>'
+                    );
+                }else{
+                    for(let a=0; a < data.length; a++)
+                    {
+                        $('#table-content-embarque-factura').append(
+                            '<tr>'
+                            +'<td>'+data[a].factura+'</td>'
+                            +'<td>'+data[a].cliente+'</td>'
+                            +'<td>'+data[a].embarque+'</td>'
+                            +'</tr>'
+                        );
+                    }
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+
+            },
+            complete: function(){
+
+            }
+        })
+        console.log(arrayEmbarquesFinal);
     },
     //#endregion
     //#region CAPTURA GASTO FLETERA

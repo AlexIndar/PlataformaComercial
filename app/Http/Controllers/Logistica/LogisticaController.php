@@ -124,9 +124,18 @@ class LogisticaController extends Controller
             }
             public static function existShipment($token,$data){
                 $dataJson = json_decode($data);
-                $existShipment = Http::withToken($token)->get('/Logistica/ExistShipment?embarque='.$dataJson->embarque);
+                $existShipment = Http::withToken($token)->get(config('global.api_url').'/Logistica/ExistShipment?embarque='.$dataJson->embarque);
                 $exist = json_decode($existShipment);
                 return $exist;
+            }
+            public static function captureInvoice($token,$data){
+                $dataJson = json_decode($data);
+                $captureInvoice = Http::withToken($token)->post(config('global.api_url').'/Logistica/regresaFacturas',
+                [
+                    $dataJson->embarques[0]
+                ]);
+                $invoice = json_decode($captureInvoice);
+                return $invoice;
             }
             #endregion
             #region CAPTURA GASTO FLETERA

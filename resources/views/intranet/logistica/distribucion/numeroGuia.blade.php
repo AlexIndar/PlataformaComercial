@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="col-12 mt-2">
                                     <div class="row justify-content-between">
-                                        <div class="col-5 p-0">
+                                        <div class="col-5">
                                             <div class="row p-1" style="border: 1px solid gray;">
                                                 <div class="col-12">
                                                     <strong>2. Guía Conformada por:</strong>
@@ -91,7 +91,7 @@
                                                 <div class="col-12 p-0">
                                                     <div class="row" style="height: 270px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
                                                         <div class="col-12 table-responsive">
-                                                            <table class="table table-bordered" style="height: 200px;">
+                                                            <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Tipo</th>
@@ -115,7 +115,7 @@
                                             </div>
                                             <div class="row" style="border: 1px solid gray;">
                                                 <div class="col-8 p-0">
-                                                    <button type="button" class="btn btn-block btn-primary btn" style="border-radius:0px"><i class="fa-solid fa-file-arrow-up mr-3"></i>Capturar Facturas</button>
+                                                    <button type="button" class="btn btn-block btn-primary btn" style="border-radius:0px" onclick="logisticaController.CaptureInvoices()"><i class="fa-solid fa-file-arrow-up mr-3"></i>Capturar Facturas</button>
                                                 </div>
                                                 <div class="col-4 mt-1">
                                                     <strong>3 Embarques</strong>
@@ -125,7 +125,7 @@
                                                 <div class="col-12 p-0">
                                                     <div class="row" style="height: 270px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
                                                         <div class="col-12 table-responsive">
-                                                            <table class="table table-bordered" style="height: 200px;">
+                                                            <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Embarque</th>
@@ -146,21 +146,44 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-6 p-0">
+                                        <div class="col-7">
                                             <div class="row">
-                                                <div class="col-12 table-responsive">
-                                                    <table class="table table-bordered" style="height: 200px;">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Factura</th>
-                                                                <th>Cliente</th>
-                                                                <th>Embarque</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="table-content-embarque">
-                                                            
-                                                        </tbody>
-                                                    </table>
+                                                <div class="col-12">
+                                                    <div class="row" style="border: 1px solid gray;height: 345px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
+                                                        <div class="col-12 table-responsive p-0">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Factura</th>
+                                                                        <th>Cliente</th>
+                                                                        <th>Embarque</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="table-content-embarque-factura">
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="row" style="border: 1px solid gray;height: 348px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
+                                                        <div class="col-12 table-responsive p-0">
+                                                            <table class="table table-bordered" style="height: 200px;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Factura</th>
+                                                                        <th>Autorizado</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="">
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

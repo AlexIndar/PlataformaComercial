@@ -1819,7 +1819,7 @@ Route::get('/logistica/distribucion',function(){
     return view('intranet.logistica.distribucion.index',compact('token','permissions','username','userRol'));
 })->name('logistica.distribucion');
 // ************************* NUMERO GUIA ************************************** \\
-Route::get('/logistica/numeroGuia', function(){
+Route::get('/logistica/distribucion/numeroGuia', function(){
     $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
@@ -1842,12 +1842,20 @@ Route::get('/logistica/numeroGuia', function(){
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters'));
 })->name('logistica.numeroGuia');
-Route::get('/logistica/numeroGuia/existShipment', function(Request $request){
+Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
     }
     $response = LogisticaController::existShipment($token,json_encode($request->all()));
+    return $response;
+});
+Route::post('/logistica/distribucion/numeroGuia/captureInvoice', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::captureInvoice($token,json_encode($request->all()));
     return $response;
 });
 // ************************* CAPTURA GASTO FLETERA ***************************** \\
