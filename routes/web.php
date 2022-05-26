@@ -1532,16 +1532,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $userData = json_decode(MisSolicitudesController::getUserRol($token));
                     $username = $userData->typeUser;
                     $zonaInfo = MisSolicitudesController::getZone($token,$username);
-
+                   // dd($userData->permissions);
                     $zona = $zonaInfo->body();
-                    if((str_contains($zona, 'Bad Request"'))){
+                    if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN'){
                         $zona = 0;
-                    }if($userData->permissions=='ADMIN' ||  $username == 'jsamaue' ){
-                        //dd($userData);
+                    }elseif($userData->permissions == 'ADMIN'){
                         $zona = 'todo';
+                         //dd('entraaqui');
                     }else{
 
                         $zona = json_decode($zonaInfo->body())->description;
+
                     }
                     //dd($zonas,$zona);
                     //$user = MisSolicitudesController::getUser($token);
