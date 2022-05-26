@@ -192,6 +192,14 @@
                   </a>
                 </li>
                 @endif
+                @if(in_array('SolicitudesPendientes', $permissions))
+                <li class="nav-item">
+                  <a href="/SolicitudesPendientes" class="nav-link">
+                    <i class="fa-solid fa-calculator"></i>
+                    <p>Solicitudes Pendientes</p>
+                  </a>
+                </li>
+                @endif
               </ul>
             </li>
             @endif

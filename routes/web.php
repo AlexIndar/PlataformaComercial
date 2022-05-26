@@ -1350,7 +1350,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                     $user = MisSolicitudesController::getUserRol($token);
-                    //$auxUser = json_decode($user->body());
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                        return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                    }else{
+                        return redirect('/Intranet');
+                    }
                     //$userRol = [$auxUser->typeUser, $auxUser->permissions];
                     //$testUSer = "bgaribay";
                     //$listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
@@ -1358,7 +1364,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     //    return $time;
                     //}
                     // dd($user->body());
-                    return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    
                 });
 
                 Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
