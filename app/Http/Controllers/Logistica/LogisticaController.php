@@ -17,7 +17,7 @@ class LogisticaController extends Controller
         #region MESA CONTROL
             #region PLANEADO
             public static function getPlaneador($token){
-                $getPlaneador = Http::withToken($token)->get('https://localhost:44384/Logistica/GetPlaneador');
+                $getPlaneador = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetPlaneador');
                 $planeador = json_decode($getPlaneador->body());
                 $pedidos = array();
                 foreach ($planeador as $element) {
@@ -103,12 +103,12 @@ class LogisticaController extends Controller
                 return $pedidosAcomodados;
             }
             public static function getArrayPlaneador($token){
-                $getPlaneador = Http::withToken($token)->get('https://localhost:44384/Logistica/GetPlaneador');
+                $getPlaneador = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetPlaneador');
                 $planeador = json_decode($getPlaneador->body());
                 return $planeador;
             }
             public static function getCajasPendientes($token){
-                $getCajasPendientes = Http::withToken($token)->get('https://localhost:44384/Logistica/GetCajasPendientes');
+                $getCajasPendientes = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetCajasPendientes');
                 $cajasPendientes = json_decode($getCajasPendientes->body());
                 return $cajasPendientes;
             }

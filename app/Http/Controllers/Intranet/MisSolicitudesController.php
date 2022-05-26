@@ -21,99 +21,99 @@ class MisSolicitudesController extends Controller
 
 
     public static function getUser($token){
-        $getUSer = Http::withToken($token)->get('http://192.168.70.107:64444/Login/getUserby?token='.$token);
+        $getUSer = Http::withToken($token)->get(config('global.api_url').'/Login/getUserby?token='.$token);
         return $getUSer;
     }
 
     public static function getUserRol($token){
-        $getUserRol = Http::withToken($token)->get('http://192.168.70.107:64444/Login/getUserRol?token='.$token);
+        $getUserRol = Http::withToken($token)->get(config('global.api_url').'/Login/getUserRol?token='.$token);
         return $getUserRol;
     }
     
     public static function getZone($token, $user){
-        $getZone = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getZone?userName='.$user);
+        $getZone = Http::withToken($token)->get(config('global.api_url').'/Cyc/getZone?userName='.$user);
         return $getZone;
     }
 
     public static function getTableView($token, $zone){
         $zDescription = $zone->description;
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zDescription);
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/getTableView?zona='.$zDescription);
         return json_decode($solicitudes->body());
     }
 
     public static function getTableViewA($token, $zone){        
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTableView?zona='.$zone);
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/getTableView?zona='.$zone);
         return json_decode($solicitudes->body());
     }
 
     public static function getTableViewManager($token, $user){
-        $solicitudes = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetTableViewManager?username='.$user);
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetTableViewManager?username='.$user);
         return json_decode($solicitudes->body());
     }
 
     public static function getBusinessLines($token){
-        $businessLines = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetBusinessLines');
+        $businessLines = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetBusinessLines');
         return json_decode($businessLines->body());
     }
 
     public static function getInfoSol($token, $folio){
-        $solicitud = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getRequestDetail?fol='.$folio);
+        $solicitud = Http::withToken($token)->get(config('global.api_url').'/Cyc/getRequestDetail?fol='.$folio);
         return json_decode($solicitud->body());
     }
 
     public static function getCPData($token, $cp){
-        $data = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getCPData?cp='.$cp);
+        $data = Http::withToken($token)->get(config('global.api_url').'/Cyc/getCPData?cp='.$cp);
         return json_decode($data->body());
     }
 
     public static function getTransactionHistory($token, $folio){
-        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getTransactionHistory?fol='.$folio);
+        $history = Http::withToken($token)->get(config('global.api_url').'/Cyc/getTransactionHistory?fol='.$folio);
         return json_decode($history->body());
     }
 
     public static function reSendForm($token, $folio){
-        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/resendRequest?fol='.$folio);
+        $history = Http::withToken($token)->get(config('global.api_url').'/Cyc/resendRequest?fol='.$folio);
         return json_decode($history->body());
     }
 
     public static function getValidacionContactos($token, $folio){
-        $history = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionContactos?id='.$folio);
+        $history = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetValidacionContactos?id='.$folio);
         return json_decode($history->body());
     }
 
     public static function getValidationRequest($token, $folio){
-        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionSolicitud?id='.$folio);
+        $valSol = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetValidacionSolicitud?id='.$folio);
         return json_decode($valSol->body());
     }
 
     public static function getValidacionActConst($token, $folio){
-        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getValidacionActConst?id='.$folio);
+        $valSol = Http::withToken($token)->get(config('global.api_url').'/Cyc/getValidacionActConst?id='.$folio);
         return json_decode($valSol->body());
     }
 
     public static function getValidacionFacturas($token, $folio){
-        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionFacturas?id='.$folio);
+        $valSol = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetValidacionFacturas?id='.$folio);
         return json_decode($valSol->body());
     }
 
     public static function getValidacionReferencias($token, $folio){
-        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetValidacionReferencias?id='.$folio);
+        $valSol = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetValidacionReferencias?id='.$folio);
         return json_decode($valSol->body());
     }
 
     public static function getFiles($token, $folio){
-        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getFiles?id='.$folio);
+        $valSol = Http::withToken($token)->get(config('global.api_url').'/Cyc/getFiles?id='.$folio);
         return json_decode($valSol->body());
     }
 
     public static function getBills($token, $folio){
-        $valSol = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/getBills?id='.$folio);
+        $valSol = Http::withToken($token)->get(config('global.api_url').'/Cyc/getBills?id='.$folio);
         return json_decode($valSol->body());
     }
 
     public static function Update($token, $data){
         $json = json_decode($data);        
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Update', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/Update', [
             "Folio" => $json->Folio,
             "TypeForm" => $json->TypeForm,
             "Cliente" => $json->Cliente,
@@ -130,7 +130,7 @@ class MisSolicitudesController extends Controller
 
     public static function UpdateFile($token, $data){
         $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateFile', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/UpdateFile', [
             "Folio" => $json->Folio,
             "File" => $json->File,
         ]);
@@ -139,7 +139,7 @@ class MisSolicitudesController extends Controller
 
     public static function UpdateReferences($token, $data){
         $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateReferences', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/UpdateReferences', [
             "Folio" => $json->Folio,
             "Referencias" => $json->Referencias,
             "Facturas" => $json->Facturas,
@@ -150,7 +150,7 @@ class MisSolicitudesController extends Controller
 
     public static function UpdateConstAct($token, $data){
         $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/UpdateConstAct', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/UpdateConstAct', [
             "Folio" => $json->Folio,
             "ConsActs" => $json->ConsActs,
         ]);
@@ -158,7 +158,7 @@ class MisSolicitudesController extends Controller
     }
 
     public static function GetEmails($token, $zona){
-        $response = Http::withToken($token)->get('http://192.168.70.107:64444/Cyc/GetEmails?zona='.$zona);
+        $response = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetEmails?zona='.$zona);
         return json_decode($response->body());
     }
     
@@ -210,7 +210,7 @@ class MisSolicitudesController extends Controller
     public static function storeSolicitud($token, $data){
         
         $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Create', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/Create', [
             "folio" => $json->folio,
             "fecha" => $json->fecha,
             "tipo" => $json->tipo,
@@ -227,7 +227,7 @@ class MisSolicitudesController extends Controller
 
     public static function saveSolicitud($token, $data){
         $json = json_decode($data);
-        $response = Http::withToken($token)->post('http://192.168.70.107:64444/CyC/Save', [
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/Save', [
             "folio" => $json->folio,
             "fecha" => $json->fecha,
             "tipo" => $json->tipo,

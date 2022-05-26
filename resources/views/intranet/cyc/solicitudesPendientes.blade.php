@@ -39,6 +39,8 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
+                            <button onclick="envioMail()"></button>
+                            <button onclick="setReferenceModal('C018888','27724')"></button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -451,6 +453,10 @@
                                 <label class="mr-3 text-red"><input type="radio" name="credRevData" value="Rechazado" id="credRevData2">NO</label>
                             </div>
                         </div>
+                        <div class="row mb-3" id="showIneValidationSection" style="display: none;">
+                            <div class="col-md-4">Ine Validation</div>
+                            <div class="col-md-4" id="imgIneVal"><button class="btn btn-warning"><i class="far fa-eye"></i> SIN ARCHIVO</button></div>
+                        </div>
                         <div class="row mb-3">
                             <div class="col-sm-12 text-center">
                                 <h4>Observaciones</h4>
@@ -590,7 +596,8 @@
                             <span class="input-group-text" id="titlePictureEdit">Editar imagen</span>
                         </div>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile19" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            <!-- <input type="file" class="custom-file-input" id="inputGroupFile19" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> -->
+                            <input type="file" class="custom-file-input" id="inputGroupFile19">
                             <label class="custom-file-label" for="inputGroupFile19" id="label-inputGroupFile19">Fotografia a editar</label>
                         </div>
                     </div>
@@ -865,7 +872,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title" id="titleModalRef"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Agrega la referencia<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <h5 class="modal-title" id="titleModalRef"><i class="fa-solid fa-building-columns"></i> Agrega la referencia del Cliente: <span id="codCustomer"></span> <i class="fa-solid fa-building-columns"></i></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -876,7 +883,6 @@
                         <input type="text" id="referenceValue" placeholder="Referencia" class="form-control">
                     </div>
                 </div>
-                <input type="text" id="codCustomer" value="" hidden>
                 <input type="text" id="folRef" value="" hidden>
             </div>
             <div class="modal-footer">

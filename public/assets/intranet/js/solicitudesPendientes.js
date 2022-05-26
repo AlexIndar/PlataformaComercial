@@ -226,6 +226,8 @@ const reloadCycTable = (data) => {
 
         if (data[i].isOnIntelisis)
             actions += ` ` + `<div class="btn btn-danger btn-circle" title="Reactivación" onclick="showReact(` + folioRfc + `)"><i class="fas fa-skull"></i></div>`;
+        if (data[i].isOnIntelisis && data[i].isCredit)
+            actions += ` ` + `<div class="btn btn-outline-info btn-circle" title="Agregar Validación de INE" onclick="openUpdateIne(` + data[i].folio + `)"><i class="fa-solid fa-id-card"></i></div>`;
         if (data[i].status == 11 || data[i].status == 12)
             actions += ` ` + `<div class="btn btn-secondary btn-circle" title="Regresar Solicitud" onclick="rollbackSol(` + data[i].folio + `)"><i class="fas fa-undo"></i></div>`;
         if (data[i].isCredit && !data[i].haveReferencesFile && data[i].status == 11)
@@ -281,6 +283,7 @@ const showReferences = (folio) => {
 }
 
 const getInfoSol = (solObj, typeCyC) => {
+    $('#cargaModal').modal('show');
     if (solObj != null) {
         $.ajax({
             'headers': {
@@ -378,6 +381,7 @@ document.getElementById("inputGroupSelect01").addEventListener("change", functio
 });
 
 function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
+    $('#cargaModal').modal('hide');
     valSolicitud = data2;
     valContactos = valContac;
     valObser = data.observations;
@@ -401,6 +405,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     document.getElementById("refSection").style.display = "none";
     document.getElementById("factSection").style.display = "none";
     document.getElementById("observRef").style.display = "none";
+    document.getElementById("showIneValidationSection").style.display = "none";
     document.getElementById("moneySolT").hidden = true;
     document.getElementById("moneySol").innerHTML = "";
 
@@ -722,6 +727,9 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                 case 13:
                     getButtonImg("imgFSButton", filesList[i].fileStr);
                     break;
+                case 15:
+                    document.getElementById("showIneValidationSection").style.display = "flex";
+                    getButtonImg("imgIneVal", filesList[i].fileStr);
                 case 21:
                     getButtonImg("imgCDRButton", filesList[i].fileStr);
                     break;
@@ -1255,72 +1263,154 @@ function getJsonValidation(flag) {
     return ValidationValues;
 }
 
-
 function openUpdateFile(item) {
     fileEdit = '';
-    $('#label-inputGroupFile19').html("Archivo de Referencias");
+    document.getElementById("titleModalEdit").innerHTML = "Agregar Referencias";
+    document.getElementById("titlePictureEdit").innerHTML = "Agregar Referencias";
+    document.getElementById("label-inputGroupFile19").innerHTML = "Archivo de Referencias";
+    // $('#label-inputGroupFile19').html("Archivo de Referencias");
     let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
     buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
     document.getElementById("editConfirButtons").innerHTML = buttons;
     $('#editImageModal').modal('show');
 }
 
-function confirmUpdateFile(item) {
+function openUpdateIne(item) {
+    fileEdit = '';
+    $('#titleModalEdit').html("Agregar Validacion de INE");
+    $('#titlePictureEdit').html("Agregar Validacion de INE");
+    $('#label-inputGroupFile19').html("Validación de INE");
+    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateIne('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
+    document.getElementById("editConfirButtons").innerHTML = buttons;
+    $('#editImageModal').modal('show');
+}
+
+function confirmUpdateIne(item) {
     if (fileEdit != '') {
-        let type;
-        let folio;
         $('#cargaModal').modal('show');
-        if (item == 15) {
-            // folio = document.getElementById("").innerHTML;
-            type = item;
-        } else {
-            type = 14;
-            folio = item;
-        }
         let json = {
-            Folio: folio,
+            Folio: item,
             File: {
                 Id: 0,
                 FileStr: fileEdit,
-                Type: type,
+                Type: 15,
                 Subtype: null,
             }
         }
-        $.ajax({
-            'headers': {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'url': "MisSolicitudes/UpdateFile",
-            'type': 'POST',
-            'dataType': 'json',
-            'data': json,
-            'enctype': 'multipart/form-data',
-            'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
-                if (Number.isInteger(data)) {
-                    $('#cargaModal').modal('hide');
-                    document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
-                    $('#infoModal').modal('hide');
-                    realoadTableView();
-                } else {
-                    console.log(data);
-                    alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-                    $('#cargaModal').modal('hide');
-                }
-            },
-            error: function(error) {
-                console.log(error);
-                alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-                $('#cargaModal').modal('hide');
-            }
-        });
-        console.log(json);
-        console.log(JSON.stringify(json));
+        setFile(json);
     } else {
         console.log(fileEdit);
         alert("Seleccione un archivo");
     }
 }
+
+function confirmUpdateFile(item) {
+    if (fileEdit != '') {
+        $('#cargaModal').modal('show');
+        let json = {
+            Folio: item,
+            File: {
+                Id: 0,
+                FileStr: fileEdit,
+                Type: 14,
+                Subtype: null,
+            }
+        }
+        setFile(json);
+    } else {
+        console.log(fileEdit);
+        alert("Seleccione un archivo");
+    }
+}
+
+function setFile(json) {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "MisSolicitudes/UpdateFile",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': json,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            if (Number.isInteger(data)) {
+                $('#cargaModal').modal('hide');
+                document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
+                $('#infoModal').modal('hide');
+                realoadTableView();
+            } else {
+                console.log(data);
+                alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            $('#cargaModal').modal('hide');
+        }
+    });
+}
+
+// function confirmUpdateFile2(item) {
+//     if (fileEdit != '') {
+//         let type;
+//         let folio;
+//         $('#cargaModal').modal('show');
+//         if (item == 15) {
+//             // folio = document.getElementById("").innerHTML;
+//             type = item;
+//         } else {
+//             type = 14;
+//             folio = item;
+//         }
+//         let json = {
+//             Folio: folio,
+//             File: {
+//                 Id: 0,
+//                 FileStr: fileEdit,
+//                 Type: type,
+//                 Subtype: null,
+//             }
+//         }
+//         $.ajax({
+//             'headers': {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
+//             'url': "MisSolicitudes/UpdateFile",
+//             'type': 'POST',
+//             'dataType': 'json',
+//             'data': json,
+//             'enctype': 'multipart/form-data',
+//             'timeout': 2 * 60 * 60 * 1000,
+//             success: function(data) {
+//                 if (Number.isInteger(data)) {
+//                     $('#cargaModal').modal('hide');
+//                     document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
+//                     $('#infoModal').modal('hide');
+//                     realoadTableView();
+//                 } else {
+//                     console.log(data);
+//                     alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+//                     $('#cargaModal').modal('hide');
+//                 }
+//             },
+//             error: function(error) {
+//                 console.log(error);
+//                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+//                 $('#cargaModal').modal('hide');
+//             }
+//         });
+//         console.log(json);
+//         console.log(JSON.stringify(json));
+//     } else {
+//         console.log(fileEdit);
+//         alert("Seleccione un archivo");
+//     }
+// }
 
 function cancelEditForm() {
     $('#editImageModal').modal('hide');
@@ -1367,6 +1457,7 @@ function s2ab(s) {
 
 
 function saveValidation(flag) {
+    $('#cargaModal').modal('show');
     let auxJson = '';
     if (flag != null) {
         if (getValueChecks())
@@ -1388,6 +1479,7 @@ function saveValidation(flag) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(result) {
+                $('#cargaModal').modal('hide');
                 if (result && flag == null) {
                     $('#infoModal').modal('hide');
                     realoadTableView();
@@ -1520,10 +1612,10 @@ function valAcceptCredit() {
 
 function valAcceptCash() {
     let alertMsg = ``;
-    console.log("prueba file");
-    console.log(fileIneValidation);
-    console.log("prueba file end");
-    console.log(document.getElementById("typeSolCash").value);
+    // console.log("prueba file");
+    // console.log(fileIneValidation);
+    // console.log("prueba file end");
+    // console.log(document.getElementById("typeSolCash").value);
     if (document.getElementById("saleRoutesSelect").value == "-1") alertMsg += `<p>Ingresa la ruta de venta</p>`;
     if (document.getElementById("limitCash").value == "") alertMsg += `<p>Ingresa el limite de saldo</p>`;
     if (document.getElementById("maxDayCash").value == "") alertMsg += `<p>Ingresa los dias maximos</p>`;
@@ -1544,6 +1636,9 @@ function valAcceptCash() {
         if (document.getElementById("paqueteriaSelect2").value == "-1") alertMsg += `<p>Ingresa la paqueteria de Envio 3</p>`;
     }
 
+    if (document.getElementById("montoPagare").value == "")
+        document.getElementById("montoPagare").value = 0;
+
     if (document.getElementById("typeSolCash").value != "0") {
         if (fileIneValidation == '') alertMsg += `<p>Ingresa la imagen de la INE</p>`;
     }
@@ -1559,50 +1654,57 @@ function valAcceptCash() {
 
 function acceptCredit() {
     if (valAcceptCredit()) {
+        $('#cargaModal').modal('show');
+        let file = "";
         let jsonDatosIntelisis = {
-            FolioSolicitud: document.getElementById("folAcceptCredit").innerHTML,
-            ReferenciaBancaria: null,
-            CondicionesCoerciales: null,
-            ListaPrecios: document.getElementById("priceListSelectCredit").value,
-            CondicionPago: document.getElementById("commercialPaySelectCredit").value,
-            FormaEnvio: document.getElementById("shippingWaySelectCredit").value,
-            LimiteSaldo: document.getElementById("limitCredit").value,
-            DiasMaximos: document.getElementById("maxDayOfCredit").value,
-            IndarBonoCteNvo: false,
-            IndarRutaVenta: null,
-            IndarRuta: null,
-            PagareMonto: 0,
-            PagareNuevo: false,
-            Usuario: null,
-            IneValidacion: {
-                FileStr: "",
-                Type: "",
-                Subtype: null,
+            folioSolicitud: document.getElementById("folAcceptCredit").innerHTML,
+            referenciaBancaria: null,
+            condicionesComerciales: null,
+            listaPrecios: document.getElementById("priceListSelectCredit").value,
+            condicionPago: document.getElementById("commercialPaySelectCredit").value,
+            formaEnvio: document.getElementById("shippingWaySelectCredit").value,
+            limiteSaldo: document.getElementById("limitCredit").value,
+            diasMaximos: document.getElementById("maxDayOfCredit").value,
+            indarBonoCteNvo: false,
+            indarRutaVenta: null,
+            indarRuta: null,
+            pagareMonto: 0,
+            pagareNuevo: false,
+            usuario: null,
+            ineValidacion: {
+                "Id": 0,
+                "FileStr": null,
+                "Type": 19,
+                "SubType": null
             },
-            Status: 2,
-            CategoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
-            IndarFormaEnvioFiscal: null,
-            IndarPaqueteriaFiscal: null,
-            IndarFormaEnvio: null,
-            IndarPaqueteriaEnvio: null
+            status: 2,
+            categoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
+            indarFormaEnvioFiscal: null,
+            indarPaqueteriaFiscal: null,
+            indarFormaEnvio: null,
+            indarPaqueteriaEnvio: null
         }
+        console.log(jsonDatosIntelisis);
+        console.log(JSON.stringify(jsonDatosIntelisis));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            'url': "/SolicitudesPendientes/RollBackRequest",
+            'url': "/SolicitudesPendientes/AcceptRequest",
             'type': 'POST',
             'dataType': 'json',
             'data': jsonDatosIntelisis,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(response) {
+                console.log(response);
                 if (response != "") {
                     $('#acceptForCreditModal').modal('hide');
                     $('#infoModal').modal('hide');
                     sendMail(response);
-                    if (response.customerID != "YES")
+                    if (response.customerID != "YES") {
                         setReferenceModal(response.customerID, response.folio);
+                    }
                 } else {
                     $('#alertModal').modal('show');
                     let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
@@ -1621,7 +1723,8 @@ function acceptCredit() {
 
 function setReferenceModal(customerId, folio) {
     $('#setReferenceModal').modal('show');
-    document.getElementById("codCustomer").value = customerId;
+    document.getElementById("referenceValue").value = "";
+    document.getElementById("codCustomer").innerHTML = customerId;
     document.getElementById("folRef").value = folio;
 }
 
@@ -1629,7 +1732,7 @@ function setReference() {
     $('#cargaModal').modal('show');
     let referencia = document.getElementById("referenceValue").value;
     let folio = document.getElementById("folRef").value;
-    let customerId = document.getElementById("codCustomer").value;
+    let customerId = document.getElementById("codCustomer").innerHTML;
     if (referencia != "") {
         if (customerId != "" && folio != "") {
             let jsonReference = {
@@ -1637,11 +1740,13 @@ function setReference() {
                 CustomerID: customerId,
                 Reference: referencia
             }
+            console.log(jsonReference);
+            console.log(JSON.stringify(jsonReference));
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                'url': "/SolicitudesPendientes/AcceptRequest",
+                'url': "/SolicitudesPendientes/SetReference",
                 'type': 'POST',
                 'dataType': 'json',
                 'data': jsonReference,
@@ -1649,7 +1754,9 @@ function setReference() {
                 'timeout': 2 * 60 * 60 * 1000,
                 success: function(response) {
                     $('#cargaModal').modal('hide');
+                    console.log(response);
                     if (response) {
+                        $('#setReferenceModal').modal('hide');
                         alert("Referencia agregada exitosamente");
                     } else {
                         $('#alertModal').modal('show');
@@ -1705,34 +1812,35 @@ function clearList(id) {
 
 function acceptContado() {
     if (valAcceptCash()) {
-        // $('#cargaModal').modal('show');
+        $('#cargaModal').modal('show');
         let jsonDatosIntelisis = {
-            FolioSolicitud: document.getElementById("folAcceptCash").innerHTML,
-            ReferenciaBancaria: null,
-            CondicionesComerciales: document.getElementById("commercialTermsSelect").value,
-            ListaPrecios: document.getElementById("priceListSelect").value,
-            CondicionPago: null,
-            FormaEnvio: document.getElementById("shippingWaySelect").value,
-            LimiteSaldo: document.getElementById("limitCash").value,
-            DiasMaximos: document.getElementById("maxDayCash").value,
-            IndarBonoCteNvo: document.getElementById("defaultCheck2").checked,
-            IndarRutaVenta: document.getElementById("saleRoutesSelect").value,
-            IndarRuta: document.getElementById("routeSelect").value,
-            PagareMonto: document.getElementById("montoPagare").value,
-            PagareNuevo: document.getElementById("defaultCheck1").checked,
-            Usuario: document.getElementById("userCash").value,
-            IneValidacion: {
+            folioSolicitud: document.getElementById("folAcceptCash").innerHTML,
+            referenciaBancaria: null,
+            condicionesComerciales: document.getElementById("commercialTermsSelect").value,
+            listaPrecios: document.getElementById("priceListSelect").value,
+            condicionPago: null,
+            formaEnvio: document.getElementById("shippingWaySelect").value,
+            limiteSaldo: document.getElementById("limitCash").value,
+            diasMaximos: document.getElementById("maxDayCash").value,
+            indarBonoCteNvo: document.getElementById("defaultCheck2").checked,
+            indarRutaVenta: document.getElementById("saleRoutesSelect").value,
+            indarRuta: document.getElementById("routeSelect").value,
+            pagareMonto: parseInt(document.getElementById("montoPagare").value),
+            pagareNuevo: document.getElementById("defaultCheck1").checked,
+            usuario: document.getElementById("userCash").value,
+            ineValidacion: {
                 FileStr: fileIneValidation,
                 Type: 15,
                 Subtype: null,
             },
-            Status: 1,
-            CategoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
-            IndarFormaEnvioFiscal: document.getElementById("shippingWaySelect2").value,
-            IndarPaqueteriaFiscal: document.getElementById("paqueteriaSelect").value,
-            IndarFormaEnvio: document.getElementById("shippingWaySelect3").value,
-            IndarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
+            status: 1,
+            categoryId: document.getElementById("typeFormInf").value == 2 ? 8 : (document.getElementById("typeFormInf").value != 0 ? 7 : 9),
+            indarFormaEnvioFiscal: document.getElementById("shippingWaySelect2").value,
+            indarPaqueteriaFiscal: document.getElementById("paqueteriaSelect").value,
+            indarFormaEnvio: document.getElementById("shippingWaySelect3").value,
+            indarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
         }
+
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1745,6 +1853,7 @@ function acceptContado() {
             'timeout': 2 * 60 * 60 * 1000,
             success: function(response) {
                 // $('#cargaModal').modal('hide');
+                console.log(response);
                 if (response != "") {
                     $('#acceptForCreditModal').modal('hide');
                     $('#infoModal').modal('hide');
@@ -1815,4 +1924,56 @@ function setReactCli() {
         alert("ingresa el codigo de cliente");
     }
 
+}
+
+function envioMail2() {
+    $('#cargaModal').modal('show');
+    let mailJson = {
+        folio: 27626,
+        tipoSol: "CREDITO",
+        cliente: "P030537",
+        razonSocial: "MEDINA HERNANDEZ FRANCELIA",
+        rfc: "MEHF7704157T5",
+        zona: "Z656",
+        emails: [
+            "vrodriguez@indar.com.mx",
+            "adan.perez@indar.com.mx",
+            "salvador.cervantes@indar.com.mx",
+            "mamartinez@indar.com.mx",
+            "rlozano@indar.com.mx"
+        ],
+        customerID: "YES",
+        status: "Aceptada Credito",
+        result: false
+    };
+    console.log(mailJson);
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/sendmailSolicitud",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': mailJson,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function(data) {
+            console.log(data);
+            alert(data.success);
+            $('#infoModal').modal('hide');
+            $('#cargaModal').modal('hide');
+            realoadTableView();
+        },
+        error: function(error) {
+            console.log(error);
+            alert("Error al enviar los correos");
+            $('#cargaModal').modal('hide');
+            $('#infoModal').modal('hide');
+            realoadTableView();
+        }
+    });
+}
+
+function envioMail() {
+    alert("No tienes permisos");
 }
