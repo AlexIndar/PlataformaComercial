@@ -56,6 +56,11 @@ class ComisionesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function GetZonasGerente($token, $user){
+        $data = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetZonasGerente?user='.$user);
+        return json_decode($data->body());
+    }
+
     public static function getTotalVentasZona($token, $referencia,$fecha){
         $data = Http::withToken($token)->get(config('global.api_url').'/CobranzaZona/getTotalVentasZona?zona='.$referencia.'&fecha='.$fecha);
         return json_decode($data->body());

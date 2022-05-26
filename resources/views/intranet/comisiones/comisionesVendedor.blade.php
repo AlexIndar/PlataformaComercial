@@ -522,7 +522,7 @@
        $("body").addClass("sidebar-collapse");
        //Recibe Json
        var zonavar = {!! json_encode($zona) !!};
-       console.log(zonavar);
+       //console.log(zonavar);
        if(zonavar == 0){
        $('#zonas').append('<option value="0">No tiene Zona Asignada</option>');
        document.getElementById("btnConsultar").style.display = "none";
@@ -537,7 +537,17 @@
        $.each(zonas, function(id, name) {
            $selectZonas.append('<option value='+name.zona+'>'+name.zona+'</option>');
        });
-       }else{
+       }if(Array.isArray(zonavar)){
+        $('.js-example-basic-single').select2();
+
+        var $selectZonas = $('#zonas');
+       $.each(zonavar, function(id, name) {
+           //console.log(id,name);
+           $selectZonas.append('<option value='+name.description+'>'+name.description+'</option>');
+       });
+       }
+
+       else{
         $('#zonas').append('<option value='+zonavar+'>'+zonavar+'</option>');
        }
 
@@ -797,7 +807,7 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            console.log(data);
+            //console.log(data);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -1088,7 +1098,7 @@
         // remove the bs.modal data attribute from it
 
         // and empty the modal-content element
-       console.log('diasNoLaboradosModal');
+       //console.log('diasNoLaboradosModal');
     });
 
    //Función POST Parametro

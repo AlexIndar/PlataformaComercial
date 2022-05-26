@@ -1530,20 +1530,26 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $zonas = AplicarPagoController::getZonas($token);
                     $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    //$username = 'jramirez';
                     $username = $userData->typeUser;
                     $zonaInfo = MisSolicitudesController::getZone($token,$username);
-                   //dd($zonaInfo);
+                    $zonasgtes = ComisionesController::GetZonasGerente($token,$username);
                     $zona = $zonaInfo->body();
-                    if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN'){
+                    //dd($userData->permissions);
+                    if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN' && $userData->permissions != 'GERENTEVENTA'){
                         $zona = 0;
                     }elseif($userData->permissions == 'ADMIN'){
                         $zona = 'todo';
+                         //dd('entraaqui');
+                    }elseif(count($zonasgtes) != 0){
+                        $zona = $zonasgtes;
                          //dd('entraaqui');
                     }else{
 
                         $zona = json_decode($zonaInfo->body())->description;
 
                     }
+                    //dd($zona);
                     //dd($zonas,$zona);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
