@@ -1618,13 +1618,13 @@ function valAcceptCash() {
     // console.log(document.getElementById("typeSolCash").value);
     if (document.getElementById("saleRoutesSelect").value == "-1") alertMsg += `<p>Ingresa la ruta de venta</p>`;
     if (document.getElementById("limitCash").value == "") alertMsg += `<p>Ingresa el limite de saldo</p>`;
-    if (document.getElementById("maxDayCash").value == "") alertMsg += `<p>Ingresa los dias maximos</p>`;
+    if (document.getElementById("maxDayCash").value == "") document.getElementById("maxDayCash").value = 0;
 
     if (document.getElementById("commercialTermsSelect").value == "-1") alertMsg += `<p>Ingresa la condicion comercial</p>`;
     if (document.getElementById("priceListSelect").value == "-1") alertMsg += `<p>Ingresa la lista de precio</p>`;
     if (document.getElementById("userCash").value == "") alertMsg += `<p>Ingresa Tu usuario</p>`;
 
-    if (document.getElementById("defaultCheck2").check == "-1") alertMsg += `<p>Selecciona check de bono cliente Nuevo</p>`;
+    if (document.getElementById("defaultCheck2").checked == false) alertMsg += `<p>Selecciona check de bono cliente Nuevo</p>`;
 
     if (document.getElementById("shippingWaySelect").value == "-1") alertMsg += `<p>Ingresa la forma de envio</p>`;
     if (document.getElementById("routeSelect").value == "-1") alertMsg += `<p>Ingresa la ruta</p>`;
@@ -1634,6 +1634,9 @@ function valAcceptCash() {
     if (document.getElementById("sameDir").value == "false") {
         if (document.getElementById("shippingWaySelect3").value == "-1") alertMsg += `<p>Ingresa la forma de envio 3</p>`;
         if (document.getElementById("paqueteriaSelect2").value == "-1") alertMsg += `<p>Ingresa la paqueteria de Envio 3</p>`;
+    } else {
+        document.getElementById("shippingWaySelect3").value = document.getElementById("shippingWaySelect2").value;
+        document.getElementById("paqueteriaSelect2").value = document.getElementById("paqueteriaSelect").value;
     }
 
     if (document.getElementById("montoPagare").value == "")
@@ -1829,7 +1832,7 @@ function acceptContado() {
             pagareNuevo: document.getElementById("defaultCheck1").checked,
             usuario: document.getElementById("userCash").value,
             ineValidacion: {
-                FileStr: fileIneValidation,
+                FileStr: fileIneValidation == '' ? null : fileIneValidation,
                 Type: 15,
                 Subtype: null,
             },
@@ -1840,7 +1843,8 @@ function acceptContado() {
             indarFormaEnvio: document.getElementById("shippingWaySelect3").value,
             indarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
         }
-
+        console.log(jsonDatosIntelisis);
+        console.log(JSON.stringify(jsonDatosIntelisis));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1852,14 +1856,20 @@ function acceptContado() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(response) {
-                // $('#cargaModal').modal('hide');
+                $('#cargaModal').modal('hide');
                 console.log(response);
                 if (response != "") {
-                    $('#acceptForCreditModal').modal('hide');
-                    $('#infoModal').modal('hide');
-                    sendMail(response);
-                    if (response.customerID != "YES")
-                        setReferenceModal(response.customerID, response.folio);
+                    console.log(response.result);
+                    if (response.result != false) {
+                        $('#acceptForCashModal').modal('hide');
+                        sendMail(response);
+                        if (response.customerID != "YES" && response.customerID != "")
+                            setReferenceModal(response.customerID, response.folio);
+                    } else {
+                        $('#alertModal').modal('show');
+                        let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+                        document.getElementById("alertInfoModal").innerHTML = alertMsg;
+                    }
                 } else {
                     $('#alertModal').modal('show');
                     let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
@@ -1908,7 +1918,7 @@ function setReactCli() {
                     realoadTableView();
                 } else {
                     $('#alertModal').modal('show');
-                    let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+                    let alertMsg = `<p>Error en sistema, favor de reportarlo</p>`
                     document.getElementById("alertInfoModal").innerHTML = alertMsg;
                 }
             },
