@@ -316,7 +316,47 @@ const logisticaController = {
                 tablaTipo:tablaTipo,
                 facturasSelected:facturasSelected
             };
-            console.log(data);
+            $.ajax({
+                url: '/logistica/distribucion/numeroGuia/saveGuiaNumber',
+                type: 'POST',
+                data: data,
+                datatype: 'json',
+                success: function(data){
+                    if(data){
+                        Toast.fire({
+                            icon: 'success',
+                            title: '¡Se guardo el numero de guia exitosamente!'
+                        });
+                        arrayRowTableType = new Array();
+                        arrayRowsEmbarques = new Array();
+                        arrayEmbarquesFinal = new Array();
+                        arrayResultFacturas = new Array()
+                        arrayFacturasSelected = new Array();
+                        let fletera = $('#fletera').val('');
+                        let numGuia = $('#NumGuia').val('');
+                        $('#table-content-guia-type').empty();
+                        $('#table-content-embarque').empty();
+                        $('#table-content-embarque-factura').empty();
+                        $('#table-content-facturas-selected').empty();
+                        $('#importeTotal').val('0.00');
+                        $('#importeSeguro').val('0.00');
+                    }else{
+                        Toast.fire({
+                            icon: 'error',
+                            title: '¡Hubo un error al guard el numero de guia!'
+                        });
+                    }
+                },
+                error: function(){
+                    Toast.fire({
+                        icon: 'error',
+                        title: '¡Hubo un error al guard el numero de guia!'
+                    });
+                },
+                complete: function(){
+
+                }
+            })
         }
         
     },
@@ -326,7 +366,7 @@ const logisticaController = {
              '<tr id="rowType'+contRowTypeTable+'">'
             +'<td style="padding: 10px 0px 0px 0px;">'
             +'<select class="form-control" id="tipo'+contRowTypeTable+'" style="width: 100%;" data-row="'+contRowTypeTable+'" onchange="logisticaController.changeTypeSelect(this)">'
-            +'<option value="BULTO">BULTO</option>'
+            +'<option value="BULTO" selected>BULTO</option>'
             +'<option value="CAJA">CAJA</option>'
             +'<option value="TARIMA">TARIMA</option>'
             +'<option value="ATADO">ATADO</option>'
@@ -334,8 +374,8 @@ const logisticaController = {
             +'<option value="VOLUMEN">VOLUMEN</option>'
             +'</select>'
             +'</td>'
-            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeCount(this)" type="text" style="width: 100%;"></td>'
-            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeImport(this)" type="int" style="width: 100%;"></td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;"></td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;"></td>'
             +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+contRowTypeTable+'" data-table="tipos" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
             +'</tr>'
         );
@@ -359,34 +399,7 @@ const logisticaController = {
     changeTypeSelect: (e) => {
         let row = $(e).data('row');
         let tipo = $('#tipo'+row).val();
-        for(let a=0; a < arrayRowTableType.length; a++)
-        {
-            if(arrayRowTableType[a] != undefined)
-            {
-                if(arrayRowTableType[a].row == row)
-                {
-                    arrayRowTableType[a].tipo = tipo; 
-                }
-            }
-        }
-    },
-    changeTypeCount: (e) =>{
-        let row = $(e).data('row');
         let cantidad = $('#cantidad'+row).val();
-        for(let a=0; a < arrayRowTableType.length; a++)
-        {
-            if(arrayRowTableType[a] != undefined)
-            {
-                if(arrayRowTableType[a].row == row)
-                {
-                    arrayRowTableType[a].cantidad = cantidad; 
-                }
-            }
-        }
-    },
-    changeTypeImport: (e) => {
-        let row = $(e).data('row');
-        console.log(row);
         let importe = $('#importe'+row).val();
         for(let a=0; a < arrayRowTableType.length; a++)
         {
@@ -394,7 +407,9 @@ const logisticaController = {
             {
                 if(arrayRowTableType[a].row == row)
                 {
-                    arrayRowTableType[a].importe = importe; 
+                    arrayRowTableType[a].tipo = tipo; 
+                    arrayRowTableType[a].cantidad = cantidad;
+                    arrayRowTableType[a].importe = importe;
                 }
             }
         }

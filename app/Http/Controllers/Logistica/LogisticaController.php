@@ -143,6 +143,20 @@ class LogisticaController extends Controller
                 $exist = json_decode($existAnyBills);
                 return $exist;
             }
+            public static function saveGuiaNumber($token,$data){
+                $dataJson = json_decode($data);
+                $saveGuiaNumber = Http::withToken($token)->post(config('global.api_url').'/Logistica/SaveGuiaNumber',
+                [
+                    "facturas" => $dataJson->facturasSelected,
+                    "tipos" => $dataJson->tablaTipo,
+                    "fletera" => $dataJson->fletera,
+                    "importeSeguro" => $dataJson->importeSeguro,
+                    "importeTotal" => $dataJson->importeTotal,
+                    "numGuia" => $dataJson->numGuia
+                ]);
+                $save = json_decode($saveGuiaNumber);
+                return $save;
+            }
             #endregion
             #region CAPTURA GASTO FLETERA
             public static function getVendors($token){
