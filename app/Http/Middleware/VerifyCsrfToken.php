@@ -62,6 +62,7 @@ class VerifyCsrfToken extends Middleware
         '/SolicitudesPendientes/ReactiveClient',
         '/comisiones/postActualizarArticulosEspeciales',
         '/comisiones/postActualizarEspeciales',
-        '/Logistica/RegistroGuia'
+        '/Logistica/RegistroGuia',
+        '/logistica/distribucion/numeroGuia/saveGuiaNumber'
     ];
 }
