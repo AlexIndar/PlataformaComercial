@@ -1656,7 +1656,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                    //dd($referencia);
                    $data=ComisionesController::getHistoricoCobranzaZonaList($token,$fecha);
                    return $data;
-
+ 
                 });
 
                 Route::get('/comisiones/getExistePeriodoEjercicio', function (Request $request){
