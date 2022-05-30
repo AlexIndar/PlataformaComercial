@@ -35,7 +35,7 @@ class LoginController extends Controller
 
         // NOMBRES DE COOKIES 
 
-        /*
+        /* 
         
         _lt     -       token api back
         _fln    -       full name logged user

@@ -1,5 +1,4 @@
-
-.bg-blue{
+.bg-blue {
   background-color: #002868 !important;
   color: white !important;
   font-size: 20px;
@@ -13,7 +12,7 @@ img.img-item {
   cursor: pointer;
 }
 
-.bg-bo{
+.bg-bo {
   background-color: #fcbf49 !important;
   color: black !important;
   font-size: 20px;
@@ -25,7 +24,7 @@ img.img-item {
   width: auto;
 } */
 
-.title{
+.title {
   height: auto;
   width: 100%;
   padding: 0px 0px 0px 5px;
@@ -35,12 +34,12 @@ img.img-item {
   text-align: center;
 }
 
-.title p{
+.title p {
   margin-top: 10px;
   font-size: 18px;
 }
 
-.content{
+.content {
   border: 1px solid rgba(0, 0, 0, 0.2);
   width: 100%;
   height: auto;
@@ -48,20 +47,22 @@ img.img-item {
   padding: 50px;
 }
 
-h5, label{
+h5,
+label {
   font-size: 16px !important;
   font-weight: 500 !important;
 }
 
-input{
+input {
   width: 100%;
 }
 
-.rowPedido{
+.rowPedido {
   margin-top: 30px;
 }
 
-.selectPedido, .inputPedido{
+.selectPedido,
+.inputPedido {
   width: 100% !important;
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 30px;
@@ -70,24 +71,24 @@ input{
   display: inline-block;
 }
 
-input[type="text"]:disabled{
+input[type="text"]:disabled {
   background-color: #F2F2F2;
   height: 30px;
   border-radius: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.1);   
-  cursor: not-allowed; 
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: not-allowed;
 }
 
-#categoryCte{
+#categoryCte {
   color: #002868 !important;
 }
+
 /* -------------------------------------------------------------------------------------- TAGS INPUT PROMOCIONES ------------------------------------------------------------------------------------------------------------ */
 
-.tags-input 
-{
-  list-style : none;   
-  display:inline-block;
-  padding:5px;
+.tags-input {
+  list-style: none;
+  display: inline-block;
+  padding: 5px;
   height: auto !important;
   width: 100% !important;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -97,61 +98,55 @@ input[type="text"]:disabled{
   min-height: 55px !important;
 }
 
-.tags-input li
-{
-  float:left;
+.tags-input li {
+  float: left;
 }
 
-.tags
-{
+.tags {
   margin-top: 5px;
-  background:#5C6BC0;
+  background: #5C6BC0;
   color: white;
-  padding:5px 20px 5px 8px;
-  border-radius:3px;
+  padding: 5px 20px 5px 8px;
+  border-radius: 3px;
   margin-right: 5px;
   position: relative;
 }
 
-.tags i
-{
-position: absolute; 
-right:6px;
-top:3px;
-width: 8px;
-height: 8px;
-content:'';
-cursor:pointer;
-opacity: .7;
-font-size:12px;
+.tags i {
+  position: absolute;
+  right: 6px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  content: '';
+  cursor: pointer;
+  opacity: .7;
+  font-size: 12px;
 }
 
-.tags i:hover
-{
-opacity: 1;
+.tags i:hover {
+  opacity: 1;
 }
 
-.tags-new input[type="text"]
-{
-border:0;
-margin: 0;
-padding: 0 0 0 3px;
-font-size: 14px;
-margin-top: 5px;
-background:transparent;
+.tags-new input[type="text"] {
+  border: 0;
+  margin: 0;
+  padding: 0 0 0 3px;
+  font-size: 14px;
+  margin-top: 5px;
+  background: transparent;
 }
 
-.tags-new input[type="text"]:focus
-{
-  outline:none; 
+.tags-new input[type="text"]:focus {
+  outline: none;
 }
 
-.checkboxPedido{
-display:inline-block !important;
-width: auto !important;
-border: 1px solid rgba(0, 0, 0, 0.1) !important;
-border-radius: 2px;
-background-color: #F5F8F8 !important;
+.checkboxPedido {
+  display: inline-block !important;
+  width: auto !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 2px;
+  background-color: #F5F8F8 !important;
 }
 
 
@@ -159,86 +154,86 @@ background-color: #F5F8F8 !important;
 /* CUERPO PEDIDO  */
 
 /* ----------------------------------------------------------------------------------- TABLA CUERPO PEDIDO ---------------------------------------------------------------------------------- */
-.cuerpoPedido{ 
-border: 1px solid rgba(0, 0, 0, 0.1);
-padding: 10px 0 10px 0;
-} 
-
-.tablaPedido{
-border: 1px solid rgba(0, 0, 0, 0.1) !important;
-width: 100%;
-min-width: 1200px;
-overflow-x: scroll;
-transition: opacity .5s ease-in-out;
--moz-transition: opacity .5s ease-in-out;
--webkit-transition: opacity .5s ease-in-out;
-opacity: 1;
+.cuerpoPedido {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 0 10px 0;
 }
 
-.tablaPedido tr{
+.tablaPedido {
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  width: 100%;
+  min-width: 1200px;
+  overflow-x: scroll;
+  transition: opacity .5s ease-in-out;
+  -moz-transition: opacity .5s ease-in-out;
+  -webkit-transition: opacity .5s ease-in-out;
+  opacity: 1;
+}
+
+.tablaPedido tr {
   transition: all .2s ease-in-out;
   -moz-transition: all .2s ease-in-out;
   -webkit-transition: all .2s ease-in-out;
 }
 
-.customHeader{
-background-color: #002868 !important;
-color: white !important;
-width: auto !important;
+.customHeader {
+  background-color: #002868 !important;
+  color: white !important;
+  width: auto !important;
 }
 
-.col-descripcion{
+.col-descripcion {
   float: left;
   text-align: left !important;
   margin-left: 20px;
 }
 
-.col-codArticulo{
+.col-codArticulo {
   float: left;
   text-align: left !important;
 }
 
 
-.tablaPedido th{
-background-color: #002868;
-color: white; 
-padding: 2px;
-text-align: center;
-position: sticky;
-z-index: 10;
-top: 0;
-left: 0;
+.tablaPedido th {
+  background-color: #002868;
+  color: white;
+  padding: 2px;
+  text-align: center;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  left: 0;
 }
 
-.fadeOut{
+.fadeOut {
   opacity: 0;
 }
 
-.focusRow{
+.focusRow {
   background-color: #e6f595 !important;
 }
 
-.tablaPedido tr{
-padding: 20px 0px 20px 0px !important;
-background-color: #F5F8F8;
+.tablaPedido tr {
+  padding: 20px 0px 20px 0px !important;
+  background-color: #F5F8F8;
 }
 
-.tablaPedido td{
-padding: 5px;
-border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+.tablaPedido td {
+  padding: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
- 
-.totalFilas{
+
+.totalFilas {
   white-space: nowrap;
 }
 
-.tablaPedidoScrollable{
+.tablaPedidoScrollable {
   display: block;
   max-height: 50vh !important;
   overflow-y: scroll;
 }
 
-.input-switch{
+.input-switch {
   opacity: 0;
   display: block;
 }
@@ -268,51 +263,52 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 1px 3px 6px #666666;
 }
 
-.input-switch:checked + label {
+.input-switch:checked+label {
   background: #009900;
 }
 
-.input-switch:checked + label:after {
+.input-switch:checked+label:after {
   left: auto;
   right: 2px;
 }
-.text-inventario{
+
+.text-inventario {
   font-size: 13px !important;
   font-weight: 400 !important;
   white-space: nowrap !important;
   text-align: center !important;
 }
 
-.text-promo{
+.text-promo {
   font-size: 13px !important;
   font-weight: 500 !important;
   text-align: center !important;
 }
 
-.text-red{
+.text-red {
   color: #F00 !important;
   font-weight: 700 !important;
 }
 
-.text-blue{
+.text-blue {
   color: #0579c6 !important;
   font-weight: 700 !important;
 }
 
-.detalles-item-right{
+.detalles-item-right {
   float: right;
   text-align: right;
   white-space: nowrap !important;
 }
 
-.detalles-item{
+.detalles-item {
   font-size: 13px !important;
   font-weight: 500 !important;
   min-width: 180px;
   line-height: 3px !important;
 }
 
-.datos-pedidos-cliente{
+.datos-pedidos-cliente {
   font-size: 13px !important;
   font-weight: 500 !important;
   line-height: 1px !important;
@@ -320,29 +316,31 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   vertical-align: middle !important;
   white-space: nowrap !important;
 }
-#codArticulo{
+
+#codArticulo {
   font-size: 18px !important;
 }
-.datos-item{
+
+.datos-item {
   font-size: 13px !important;
   font-weight: 500 !important;
 }
 
-.detalles-item-descuentos{
+.detalles-item-descuentos {
   min-width: 250px !important;
 }
 
-.table-actions{
+.table-actions {
   width: 100%;
   text-align: center !important;
 }
 
-.detalles-green{
+.detalles-green {
   color: #139966 !important;
   margin-top: 5px !important;
 }
 
-.quantityBtn{
+.quantityBtn {
   background-color: #E9ECEF;
   border: 1px solid rgba(0, 0, 0, 0.1);
   width: 25px;
@@ -352,15 +350,15 @@ border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 
-.input-cantidad{
-background-color: #F2F2F2 !important;
-text-align: center !important;
-font-size: 14px !important;
-font-weight: 500 !important;
-height: 30px;
+.input-cantidad {
+  background-color: #F2F2F2 !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  height: 30px;
 }
 
-.select-descuento{
+.select-descuento {
   background-color: #F2F2F2 !important;
   height: 30px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -368,101 +366,103 @@ height: 30px;
   width: 100% !important;
 }
 
-.input-descuento{
+.input-descuento {
   background-color: #F2F2F2 !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   height: 30px !important;
 }
 
-.append-inventario{
+.append-inventario {
   height: 30px !important;
 }
 
-#unidad, #existencia, #multiplo{
+#unidad,
+#existencia,
+#multiplo {
   font-weight: 500;
   font-size: 15px;
 }
 
-#descripcion{
+#descripcion {
   font-size: 14px;
   /* text-align: left !important; */
 }
 
-.tablaInventatio td{
+.tablaInventatio td {
   text-align: center !important;
 }
 
-.td-center{
+.td-center {
   text-align: center !important;
   vertical-align: middle !important;
 }
 
-.td-right{
+.td-right {
   text-align: right !important;
   margin-right: 5px !important;
   vertical-align: middle !important;
 }
 
-#categoria-green{
-color: #139966;
-font-weight: 700;
+#categoria-green {
+  color: #139966;
+  font-weight: 700;
 }
 
-#categoria-red{
-color: #C82333;
-font-weight: 700;
+#categoria-red {
+  color: #C82333;
+  font-weight: 700;
 }
 
-.fa-delete{
-position: relative;
-color: #C82333 !important;
-padding: 5px !important;
-margin-top: -20px !important;
-cursor: pointer;
+.fa-delete {
+  position: relative;
+  color: #C82333 !important;
+  padding: 5px !important;
+  margin-top: -20px !important;
+  cursor: pointer;
 }
 
-.fa-delete-gift{
+.fa-delete-gift {
   display: inline;
   color: #C82333 !important;
   padding: 5px !important;
   margin-top: -20px !important;
   cursor: pointer;
-  }
+}
 
-.fa-gift{
+.fa-gift {
   display: inline;
   color: #f3aa17 !important;
   padding: 5px !important;
   margin-top: -20px !important;
   cursor: pointer;
-  }
+}
 
-.subpedido-desc td{
-background-color: #FFC61E;
-font-weight: 700;
+.subpedido-desc td {
+  background-color: #FFC61E;
+  font-weight: 700;
 }
 
 thead input {
-width: 100%;
+  width: 100%;
 }
 
 /* --------------------------------------------------------------------------------- SUBREGLAS TABLE --------------------------------------------------------------- */
 
-.textoSubreglas{
+.textoSubreglas {
   text-align: center !important;
 }
 
-.icons-subreglas{
+.icons-subreglas {
   cursor: pointer;
   margin-right: 20px !important;
   color: black !important;
 }
 
-.icons-subreglas:hover{
+.icons-subreglas:hover {
   color: rgb(63, 63, 63) !important;
 }
 
-.actions-subreglas{
+.actions-subreglas {
   display: flex;
   justify-content: center;
   border: none !important;
@@ -470,80 +470,82 @@ width: 100%;
 
 /* ---------------------------------------------------------------------------------- LOADING ----------------------------------------------------------------- */
 
-.loading{ 
-width: 100%;
-height: 100px;
-background-color: #002868;
-display: flex;
-justify-content: center;
-align-items: center;
-color: white;
+.loading {
+  width: 100%;
+  height: 100px;
+  background-color: #002868;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 /* ------------------------------------------------------------------------------- DIV CARGAR POR CODIGO --------------------------------------------------------- */
 
 fieldset.scheduler-border {
-border: 1px groove #ddd !important;
-padding: 0 1.4em 1.4em 1.4em !important;
-margin: 0 0 1.5em 0 !important;
--webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
-margin-top: 30px !important;
+  border: 1px groove #ddd !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  margin-top: 30px !important;
 }
 
 legend.scheduler-border {
-font-size: 1.2em !important;
-font-weight: bold !important;
-text-align: left !important;
-width: auto;
-padding: 0 10px;
-border-bottom: none;
-margin-top: -15px;
-background-color: white;
-color: black;
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  text-align: left !important;
+  width: auto;
+  padding: 0 10px;
+  border-bottom: none;
+  margin-top: -15px;
+  background-color: white;
+  color: black;
 }
 
-.btnCargarPorCodigo, .btnAgregarPorCodigo{
-background-color: #002868;
-color: white;
-text-align: center;
-width: 100%;
-padding: 10px;
-border-radius: 5px;
-border: 1px solid black;
-transition: all .1s ease;
+.btnCargarPorCodigo,
+.btnAgregarPorCodigo {
+  background-color: #002868;
+  color: white;
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+  transition: all .1s ease;
 }
 
-.btnAgregarPorCodigo:hover, .btnCargarPorCodigo:hover{
-background-color: #011a42;
-color: white !important;
+.btnAgregarPorCodigo:hover,
+.btnCargarPorCodigo:hover {
+  background-color: #011a42;
+  color: white !important;
 }
 
-.btn-group-buttons{
-background-color: #002868 !important;
-color: white !important;
-border-color: #007bff !important;
+.btn-group-buttons {
+  background-color: #002868 !important;
+  color: white !important;
+  border-color: #007bff !important;
 }
 
-.btn-group-buttons:hover{
-background-color: #011d49 !important;
-color: white !important;
+.btn-group-buttons:hover {
+  background-color: #011d49 !important;
+  color: white !important;
 }
 
 
-.tableCargarPorCodigo{
-display: none;
+.tableCargarPorCodigo {
+  display: none;
 }
 
 
 /* ------------------------------------------------------------------------------- MODAL IMAGEN AMPLIADA MD --------------------------------------------------------- */
-.containerImgProduct{
-  width:100%; 
-  height: 100vh; 
-  z-index: 100000; 
-  position: fixed; 
-  top:0; 
-  left:0;
+.containerImgProduct {
+  width: 100%;
+  height: 100vh;
+  z-index: 100000;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: none;
   justify-content: center;
   align-items: center;
@@ -553,14 +555,14 @@ display: none;
   transition: all ease .4s;
 }
 
-.containerImgProduct h4{
+.containerImgProduct h4 {
   color: white;
   text-align: center;
 }
 
-.magnify{
+.magnify {
   height: auto;
-  max-height: 90vh; 
+  max-height: 90vh;
   width: auto;
   max-width: 90%;
   position: relative;
@@ -569,7 +571,7 @@ display: none;
   align-items: center !important;
 }
 
-.closeImgProductMDIcon{
+.closeImgProductMDIcon {
   position: absolute;
   top: 0;
   right: 0;
@@ -581,18 +583,20 @@ display: none;
 }
 
 .large {
-	width: 200px; 
+  width: 200px;
   height: 200px;
-	position: absolute;
-	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85), 
-	0 0 1px 1px rgba(0, 0, 0, 0.25), 
-	inset 0 0 1px 1px rgba(0, 0, 0, 0.063);
-	display: none;
+  position: absolute;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85),
+    0 0 1px 1px rgba(0, 0, 0, 0.25),
+    inset 0 0 1px 1px rgba(0, 0, 0, 0.063);
+  display: none;
 }
 
-.small { display: block; }
+.small {
+  display: block;
+}
 
-.bigImageProduct{
+.bigImageProduct {
   object-fit: cover;
   border: 1px solid rgba(0, 0, 0, 0.165);
   width: auto;
@@ -601,9 +605,9 @@ display: none;
 
 /*----------------------------------------------------------------------------------- SKELETON --------------------------------------------------------- */
 
-.skeleton-input{
-  width: 100%; 
-  height: 30px; 
+.skeleton-input {
+  width: 100%;
+  height: 30px;
   background-color: #F5F8F8;
   border-radius: 2px;
   background: #eee;
@@ -634,43 +638,42 @@ display: none;
 
 
 .modal .modal-content-inventario {
-height: 95vh;
-overflow-y: scroll;
-border: 0;
-border-radius: 5px;
-padding: 0 20px 20px 20px;
-width: 100% !important;
+  height: 95vh;
+  overflow-y: scroll;
+  border: 0;
+  border-radius: 5px;
+  padding: 0 20px 20px 20px;
+  width: 100% !important;
 }
 
-.modal-xl{
-min-width: 95% !important;
+.modal-xl {
+  min-width: 95% !important;
 }
 
-table.dataTable td, table.dataTable tr {
-font-size: 13px !important;
+table.dataTable td,
+table.dataTable tr {
+  font-size: 13px !important;
 }
 
 table.dataTable tr.dtrg-level-0 td {
-font-size: 13px !important;
+  font-size: 13px !important;
 }
 
-.btn-add-product{
-color: #139966;
-border-radius: 3px;
-cursor: pointer;
+.btn-add-product {
+  color: #139966;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
-.hidden{
+.hidden {
   display: none !important;
 }
 
-#closeModalInventario{
+#closeModalInventario {
   cursor: pointer;
   position: absolute;
   margin-right: 15px;
   top: 30px;
   right: 0;
+  z-index: 1000;
 }
-
-
-
