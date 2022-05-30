@@ -1002,7 +1002,7 @@
                    '<td style="font-weight: bold; color:red" colspan="2"> -'+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                    '</td>'+
                    '<tr>' +
-                   '<td style="font-weight: bold" colspan="6"> Comision Integrada </td>' +
+                   '<td style="font-weight: bold" colspan="6"> Comisión Integrada </td>' +
                    '<td style="font-weight: bold" colspan="2">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
@@ -1047,6 +1047,7 @@
                      '</tr>';
             var vtasPorc = data[2].alcance/10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
+            var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
 
             if(data[2].hasOwnProperty('status')){
 
@@ -1074,9 +1075,13 @@
                      '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '</tr>'+
+                     '<tr style ="background-color: rgba(231, 235, 11, 0.705)">'+
+                     '<td style="font-weight: bold" colspan="5" >Comisión Integrada + Bonos </td>' +
+                     '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
             }
-
+   
 
 
             htmlEspeciales += '<tr>'+
