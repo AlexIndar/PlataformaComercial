@@ -1868,7 +1868,7 @@ Route::get('/logistica/distribucion/numeroGuia', function(){
 
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters'));
-})->name('logistica.numeroGuia');
+})->name('logistica.distribucion.numeroGuia');
 Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
@@ -1899,6 +1899,46 @@ Route::post('/logistica/distribucion/numeroGuia/saveGuiaNumber', function(Reques
         return redirect('/logout');
     }
     $response = LogisticaController::saveGuiaNumber($token,json_encode($request->all()));
+    return $response;
+});
+// ************************* VALIDAR SAD *************************************** \\
+Route::get('/logistica/distribucion/validarSad', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+
+    $level = "C";
+    if(isset($_COOKIE['_lv'])){
+        $level = $_COOKIE['_lv'];
+    }
+    $freighters = LogisticaController::getFreighters($token);
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+    return view('intranet.logistica.distribucion.validarSad', compact('token','permissions','username','userRol','freighters'));
+})->name('logistica.distribucion.validarSad');
+Route::get('/logistica/distribucion/validarSad/consultValidateSAD', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::consultValidateSAD($token);
+    return $response;
+});
+Route::post('/logistica/distribucion/validarSad/authoriceSad', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::authoriceSad($token,json_encode($request->all()));
     return $response;
 });
 // ************************* CAPTURA GASTO FLETERA ***************************** \\

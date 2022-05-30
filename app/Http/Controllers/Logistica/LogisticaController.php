@@ -158,6 +158,25 @@ class LogisticaController extends Controller
                 return $save;
             }
             #endregion
+            #region VALIDAR SAD
+            public static function consultValidateSAD($token){
+                $validateSAD = Http::withToken($token)->get(config('global.api_url').'/Logistica/ConsultValidateSAD');
+                $sad = json_decode($validateSAD->body());
+                foreach($sad as $validate){
+                    $fechaFactura = explode('T',$validate->fechaFactura)[0];
+                    $validate->fechaFactura = $fechaFactura == "0001-01-01" ? '' : $fechaFactura;
+                }
+                return $sad;
+            }
+            public static function authoriceSad($token,$data){
+                $dataJson = json_decode($data);
+                $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
+                $validateSAD = Http::withToken($token)->post(config('global.api_url').'/Logistica/AuthorizationSAD',[
+                    "sadID" => $dataJson->sadID,
+                    "username"=>$username
+                ]);
+            }
+            #endregion
             #region CAPTURA GASTO FLETERA
             public static function getVendors($token){
                 $getVendors = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetVendors');

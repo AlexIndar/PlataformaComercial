@@ -25,6 +25,9 @@ $(document).ready(function(){
                 placeholder: "0.00"
             });
             break;
+        case '/logistica/distribucion/validarSad':
+             logisticaController.consultValidateSAD();
+            break;
         case '/logistica/distribucion/capturaGastoFletera':
             //#region captura gasto fletera
             //Se inicializan los selectores que se encuentran en la vista 
@@ -172,13 +175,16 @@ $(document).ready(function(){
             //#endregion
             break;
             case '/logistica/reportes/interfazRecibo':
+            //#region Interfaz recibo
                 $('#fechas').daterangepicker({
                     singleDatePicker: true,
                   }, function(start, end, label) {
                       fechaInicio= start.format('YYYY-MM-DD');
-                  });      
+                  }); 
+                //#endregion
             break;
         case '/logistica/reportes/interfazFacturacion':
+            //#region interfaz facturacion
             $('#fechas').daterangepicker({
                 opens: 'left'
             }, function(start, end, label) {
@@ -252,8 +258,8 @@ $(document).ready(function(){
                   fechaInicio= start.format('DD/MM/YYYY');
                   fechaFin= end.format('DD/MM/YYYY');
               });
-            break;
-        
+            //#endregion
+            break;       
     }
 });
 //#region VARIABLES GLOBALES
@@ -852,6 +858,117 @@ const logisticaController = {
         }
     },
     //#endregion
+    //#region VALIDAR SAD
+    consultValidateSAD: () => {
+        $('.btn-consultar-validar-sad').prop('disabled',true);
+        $('.btn-consultar-validar-sad').empty();
+        $('.btn-consultar-validar-sad').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
+        $.ajax({
+            url: '/logistica/distribucion/validarSad/consultValidateSAD',
+            type: 'GET',
+            datatype: 'json',
+            success: function(data) {
+                let rows='';
+                $('.btn-consultar-validar-sad').prop('disabled',false);
+                $('.btn-consultar-validar-sad').empty();
+                $('.btn-consultar-validar-sad').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                $.each(data,function(key,value){
+                    rows += '<tr id="rowsadID'+value.sadID+'">'+
+                    +'<td>'+value.pedido+'</td>'
+                    +'<td>'+value.pedido+'</td>'
+                    +'<td>'+value.importePedido+'</td>'
+                    +'<td>'+value.cliente+'</td>'
+                    +'<td>'+value.nombre+'</td>'
+                    +'<td>'+value.fechaFactura+'</td>'
+                    +'<td>'+value.factura+'</td>'
+                    +'<td>'+value.importeFactura+'</td>'
+                    +'<td>'+value.descuentoTotalPP+'</td>'
+                    +'<td>'+value.importePP+'</td>'
+                    +'<td>'+value.excepcion+'</td>'
+                    +'<td>'+value.comentario+'</td>'
+                    +'<td>'+value.cxcComentario+'</td>'
+                    +'<td>'+value.cxcMonto+'</td>'
+                    +'<td>'
+                    +'<a class="btn  bg-success" data-sadid="'+value.sadID+'" onclick="logisticaController.authoriceSad(this)">'
+                    +'<i class="fa-solid fa-check"></i>'
+                    +'</a>'
+                    +'</td>'
+                    +'</tr>';
+                    
+                });
+                if(contTable != 0){
+                    $('#table-validar-sad').DataTable().destroy();
+                    $('#content-table-validar-sad').empty();
+                }
+                $('#content-table-validar-sad').append(rows);
+                $('#table-validar-sad').DataTable({
+                    // paging: true,
+                    responsive: true,
+                    // searching: true,
+                    processing: true,
+                    bSortClasses: false,
+                    fixedHeader: true,
+                    scrollY:        470,
+                    deferRender:    true,
+                    scroller:       true,
+                    language: {
+                        "emptyTable": "No hay información",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Mostrar _MENU_ Documentos",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "search": "Buscar:",
+                        "zeroRecords": "Sin resultados encontrados",
+                        "paginate": {
+                          "first": "Primero",
+                          "last": "Ultimo",
+                          "next": "Siguiente",
+                          "previous": "Anterior"
+                        }
+                      }
+                });
+                contTable = 1;
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.log(textStatus);
+            },
+            complete: function(){
+
+            }
+        })
+    },
+    authoriceSad: (e) => {
+        let sadID = $(e).data('sadid');
+        logisticaController.token();
+        $.ajax({
+            url:'/logistica/distribucion/validarSad/authoriceSad',
+            type: 'POST',
+            data: {sadID:sadID},
+            datatype: 'json',
+            success: function(data){
+                Toast.fire({
+                    icon: 'success',
+                    title: '¡Terminado!'
+                });
+                $('#rowsadID'+sadID).remove();
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                Toast.fire({
+                    icon: 'error',
+                    title: '¡Hubo un error en la consulta!'
+                });
+            },
+            complete: function(){
+                console.log(textStatus);
+            }
+        })
+    },
+    //#endregion
     //#region CAPTURA GASTO FLETERA
     initSelect2: ()=>{
         //Initialize Select2 Elements
@@ -1416,7 +1533,7 @@ const logisticaController = {
             data: data,
             datatype: 'json',
             success: function (data) {
-                console.log(data);
+                // console.log(data);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);     
@@ -1433,7 +1550,6 @@ const logisticaController = {
         $('.btn-consultar-factura').empty();
         $('.btn-consultar-factura').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
         let row = '';
-        console.log(contTable);
         contTable != 0 ?  (
             $('#table-facturas-embarque').DataTable().clear().draw()
         ): '';
@@ -1443,7 +1559,6 @@ const logisticaController = {
             data: {fechaInicio:fechaInicio, fechaFin: fechaFin},
             datatype: 'json',
             success: function (data) { 
-                console.log(data);
                 console.time();
                 ReporteFacturasPorEmbarcar = data;
                 $('#table-facturas-embarque').DataTable().clear().draw();
@@ -1543,7 +1658,6 @@ const logisticaController = {
             ];
             arrayRows.push(data);
         });
-        // console.log(arrayRows);
         csvContent = "data:text/csv;charset=utf-8,";
          /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
          arrayRows.forEach(function(rowArray){
@@ -1577,7 +1691,6 @@ const logisticaController = {
             type: 'GET',
             datatype: 'json',
             success: function (data) { 
-                console.log(data);
                 console.time();
                 ReporteGastoFleteras = data;
                 $('#table-gasto-fleteras').DataTable().clear().draw();
@@ -1643,7 +1756,6 @@ const logisticaController = {
             ];
             arrayRows.push(data);
         });
-        // console.log(arrayRows);
         csvContent = "data:text/csv;charset=utf-8,";
          /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
          arrayRows.forEach(function(rowArray){
@@ -1667,7 +1779,7 @@ const logisticaController = {
     //#endregion
     //#region INTERFAZ RECIBO 
     consultReceiptInterface: () => {
-        console.log(fechaInicio);
+        // console.log(fechaInicio);
     },
     //#endregion
     //#region INTERFAZ FACTURACION
@@ -1682,7 +1794,6 @@ const logisticaController = {
         type: 'GET',
         datatype: 'json',
         success: function (data) { 
-            console.log(data);
             console.time();
             $('#table-interfaz-facturacion').DataTable().clear().draw();
             $('#table-interfaz-facturacion').DataTable().rows.add(data).draw();
@@ -1818,7 +1929,6 @@ const logisticaController = {
             type: 'GET',
             datatype: 'json',
             success: function (data) { 
-                console.log(data);
                 let rows = '';
                 let area1='',area2='',area3='',area4='',area5='',area6='',area7='',area8='',area9='',area10='',area11='',area12='';
                 let styleA1='',styleA2='',styleA3='',styleA4='',styleA5='',styleA6='',styleA7='',styleA8='',styleA9='',styleA10='',styleA11='',styleA12='';
@@ -1925,7 +2035,6 @@ const logisticaController = {
         let numPedido = $(e).data('numpedido');
         let area = $(e).data('area');
         let pedidos = new Array();
-        console.log(arrayPlaneador);
         $.each(arrayPlaneador,function(index,val){
             if(val.numPedido == numPedido && val.area == area)
             {
@@ -1943,7 +2052,6 @@ const logisticaController = {
                 });
             }
         });
-        console.log(pedidos);
         $('#content-planeador-detail').empty();
         $('#modal-planeador-detail').modal('show');
         let rows = '';
