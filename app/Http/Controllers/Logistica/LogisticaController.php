@@ -124,9 +124,57 @@ class LogisticaController extends Controller
             }
             public static function existShipment($token,$data){
                 $dataJson = json_decode($data);
-                $existShipment = Http::withToken($token)->get('/Logistica/ExistShipment?embarque='.$dataJson->embarque);
+                $existShipment = Http::withToken($token)->get(config('global.api_url').'/Logistica/ExistShipment?embarque='.$dataJson->embarque);
                 $exist = json_decode($existShipment);
                 return $exist;
+            }
+            public static function captureInvoice($token,$data){
+                $dataJson = json_decode($data);
+                $captureInvoice = Http::withToken($token)->post(config('global.api_url').'/Logistica/returnBills',
+                [
+                    $dataJson->embarques[0]
+                ]);
+                $invoice = json_decode($captureInvoice);
+                return $invoice;
+            }
+            public static function existAnyBillsInAnyShipment($token,$data){
+                $dataJson = json_decode($data);
+                $existAnyBills = Http::withToken($token)->get(config('global.api_url').'/Logistica/ExistAnyBillsInAnyShipment?factura='.$dataJson->factura);
+                $exist = json_decode($existAnyBills);
+                return $exist;
+            }
+            public static function saveGuiaNumber($token,$data){
+                $dataJson = json_decode($data);
+                $saveGuiaNumber = Http::withToken($token)->post(config('global.api_url').'/Logistica/SaveGuiaNumber',
+                [
+                    "facturas" => $dataJson->facturasSelected,
+                    "tipos" => $dataJson->tablaTipo,
+                    "fletera" => $dataJson->fletera,
+                    "importeSeguro" => $dataJson->importeSeguro,
+                    "importeTotal" => $dataJson->importeTotal,
+                    "numGuia" => $dataJson->numGuia
+                ]);
+                $save = json_decode($saveGuiaNumber);
+                return $save;
+            }
+            #endregion
+            #region VALIDAR SAD
+            public static function consultValidateSAD($token){
+                $validateSAD = Http::withToken($token)->get(config('global.api_url').'/Logistica/ConsultValidateSAD');
+                $sad = json_decode($validateSAD->body());
+                foreach($sad as $validate){
+                    $fechaFactura = explode('T',$validate->fechaFactura)[0];
+                    $validate->fechaFactura = $fechaFactura == "0001-01-01" ? '' : $fechaFactura;
+                }
+                return $sad;
+            }
+            public static function authoriceSad($token,$data){
+                $dataJson = json_decode($data);
+                $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
+                $validateSAD = Http::withToken($token)->post(config('global.api_url').'/Logistica/AuthorizationSAD',[
+                    "sadID" => $dataJson->sadID,
+                    "username"=>$username
+                ]);
             }
             #endregion
             #region CAPTURA GASTO FLETERA

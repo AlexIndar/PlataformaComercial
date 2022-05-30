@@ -521,7 +521,14 @@
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
        //Recibe Json
-       var zonas = JSON.parse({!! json_encode($zonas) !!});
+       var zonavar = {!! json_encode($zona) !!};
+       //console.log(zonavar);
+       if(zonavar == 0){
+       $('#zonas').append('<option value="0">No tiene Zona Asignada</option>');
+       document.getElementById("btnConsultar").style.display = "none";
+       document.getElementById("fechaCliente").style.display = "none";
+       }if(zonavar=='todo'){
+        var zonas = JSON.parse({!! json_encode($zonas) !!});
        //Llena select zonas
        $('.js-example-basic-single').select2();
 
@@ -530,6 +537,20 @@
        $.each(zonas, function(id, name) {
            $selectZonas.append('<option value='+name.zona+'>'+name.zona+'</option>');
        });
+       }if(Array.isArray(zonavar)){
+        $('.js-example-basic-single').select2();
+
+        var $selectZonas = $('#zonas');
+       $.each(zonavar, function(id, name) {
+           //console.log(id,name);
+           $selectZonas.append('<option value='+name.description+'>'+name.description+'</option>');
+       });
+       }
+
+       else{
+        $('#zonas').append('<option value='+zonavar+'>'+zonavar+'</option>');
+       }
+
 
        //Inicia Ajax
        $(document).ajaxStart(function() {
@@ -786,7 +807,7 @@
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            console.log(data);
+            //console.log(data);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -1026,7 +1047,27 @@
                      '</tr>';
             var vtasPorc = data[2].alcance/10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
-            htmlVentas += '<tr>'+
+
+            if(data[2].hasOwnProperty('status')){
+
+                Swal.fire({
+                position: 'top',
+                icon: 'warning',
+                title: 'Error Al cargar Total de Ventas',
+                showConfirmButton: false,
+                timer: 5000
+                })
+
+                htmlVentas += '<tr>'+
+                     '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
+                     '<td style="font-weight: bold "> NA </td>' +
+                     '<td style="font-weight: bold" > NA </td>' +
+                     '<td style="font-weight: bold" > NA</td>' +
+                     '<td style="font-weight: bold" >NA </td>' +
+                     '<td style="font-weight: bold" >NA<td>' +
+                     '</tr>';
+            }else{
+                htmlVentas += '<tr>'+
                      '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
                      '<td style="font-weight: bold "> '+ data[2].vo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>' +
                      '<td style="font-weight: bold" > '+ data[2].le.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' </td>' +
@@ -1034,6 +1075,9 @@
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
+            }
+
+
 
             htmlEspeciales += '<tr>'+
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +
@@ -1061,10 +1105,9 @@
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
             $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);
             $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
-
-
            },
            error: function() {
+
                console.log("Error");
                alert('Error, Tiempo de espera agotado');
            }
@@ -1077,7 +1120,7 @@
         // remove the bs.modal data attribute from it
 
         // and empty the modal-content element
-       console.log('diasNoLaboradosModal');
+       //console.log('diasNoLaboradosModal');
     });
 
    //Función POST Parametro

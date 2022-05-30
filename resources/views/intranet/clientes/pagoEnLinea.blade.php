@@ -168,10 +168,10 @@
     </div>
 <!-- Modal Notas de Crédito-->
 <div class="modal fade" id="notasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
        <div class="modal-content">
           <div class="modal-header bg-indarBlue">
-            <h4 class="text-center title ml-auto">Agregar Nota de Crédito</h4>
+            <h4 id="headerNC" class="text-center title ml-auto">Agregar Nota de Crédito</h4>
              <input type="text" id="typeFormInf" value="" hidden>
              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
              <i class="fas fa-times"></i>
@@ -181,20 +181,24 @@
              <div class="row">
                 <div class="col-md-12">
                     <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">(Deberá Asignar el Total de la N.C a una ó varias Facturas)</h6>
-                </div>
-                <div class="col-md-12">
-                    <label for="">Selecciona la Factura a Asignar la N.C</label>
-                    <select class="form-control" name="" id="">
-                        <option value="1">813535</option>
-                        <option value="2">Ejemplo2</option>
-                    </select>
-                </div>
-                <div class="col-md-12">
-                    <label for="">Ingrese el monto a Abonar </label>
-                    <input class="form-control" type="number" name="" id="">
+                   {{--  <label for="">Selecciona la Factura a Asignar la N.C</label> --}}
+                    <table id="selectFacTable" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
+                        <thead style="background-color:#002868; color:white">
+                            <th></th>
+                            <th>Documento</th>
+                            <th>No.</th>
+                            <th>Monto</th>
+                            <th></th>
+
+                        </thead>
+                        <tbody id="bodyFacturasSelec">
+                        </tbody>
+                     </table>
                 </div>
              </div>
+             <h6 style="font-weight: bold">Monto de NC Restante : $ <span id="montoNC" style="font-size: 15px" class="badge badge-success"></span></h6>
           </div>
+
           <div class="modal-footer">
              <button id="agregarNc" type="submit" class="btn btn-success float-right" data-dismiss="modal">Agregar N.C</button>
              <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
@@ -238,7 +242,9 @@ var t = $('#example2').DataTable({
 var subTotal = 0;
 var descuento = 0;
 var total = 0;
+htmlSelectFact='';
  $('#example tbody').on('click', 'tr', function () {
+
 
     jQuery(this).toggle("scale");
      var data = table.row( this ).data();
@@ -268,15 +274,31 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
         data[5]
 
     ] ).draw();
+
+    htmlSelectFact += '<tr>'+
+        '<td>' + data[0]+ '</td>'+
+        '<td>' + data[1]+ '</td>'+
+        '<td>' + data[2]+ '</td>'+
+        '<td>$' + monto+ '</td>'+
+        '<td><input type="number" class="form-control" placeholder ="Ingrese el Monto a Descontar"></td>'+
+
+        '</tr>';
+    $('#selectFacTable').html(htmlSelectFact);
  } );
 
  $('#tableNotas tbody').on('click', 'tr', function () {
     //jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
     var data = tableNotas.row( this ).data();
+    var montoNC = data[3].replace(/,/g, "");
+    var headerNC = data[2];
+    $('#montoNC').text(montoNC);
+    $('#headerNC').html('Abonar Nota de Crédito No . '+headerNC);
+
     $('#notasModal').modal('show');
     var hide = jQuery(this);
      //Función Agregar NC
     $('#agregarNc').on('click', function(e) {
+
         hide.toggle("scale");
         e.preventDefault();
         console.log(data);
@@ -297,6 +319,8 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
             data[5]
 
         ], ).draw();
+
+
 
 
     });
