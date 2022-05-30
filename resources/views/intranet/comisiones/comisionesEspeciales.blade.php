@@ -346,7 +346,7 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
     //jsonEspeciales = JSON.parse(jsonEspeciales);
     json = jsonEspeciales;
     console.log(jsonEspeciales);
-    /* $.ajax({
+    $.ajax({
            'headers': {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
            },
@@ -378,7 +378,7 @@ function cargarEspecialesExcel(json, ejercicio, periodo) {
           })
         }
     });
- */
+
     document.getElementById("excelEspeciales").value = "";
 }
 
