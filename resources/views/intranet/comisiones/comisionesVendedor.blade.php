@@ -1105,10 +1105,9 @@
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
             $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);
             $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
-
-
            },
            error: function() {
+
                console.log("Error");
                alert('Error, Tiempo de espera agotado');
            }
