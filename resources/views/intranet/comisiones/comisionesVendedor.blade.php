@@ -1047,7 +1047,27 @@
                      '</tr>';
             var vtasPorc = data[2].alcance/10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
-            htmlVentas += '<tr>'+
+
+            if(data[2].hasOwnProperty('status')){
+
+                Swal.fire({
+                position: 'top',
+                icon: 'warning',
+                title: 'Error Al cargar Total de Ventas',
+                showConfirmButton: false,
+                timer: 5000
+                })
+
+                htmlVentas += '<tr>'+
+                     '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
+                     '<td style="font-weight: bold "> NA </td>' +
+                     '<td style="font-weight: bold" > NA </td>' +
+                     '<td style="font-weight: bold" > NA</td>' +
+                     '<td style="font-weight: bold" >NA </td>' +
+                     '<td style="font-weight: bold" >NA<td>' +
+                     '</tr>';
+            }else{
+                htmlVentas += '<tr>'+
                      '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
                      '<td style="font-weight: bold "> '+ data[2].vo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>' +
                      '<td style="font-weight: bold" > '+ data[2].le.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' </td>' +
@@ -1055,6 +1075,9 @@
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
+            }
+
+
 
             htmlEspeciales += '<tr>'+
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +

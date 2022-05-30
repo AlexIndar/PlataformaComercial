@@ -292,7 +292,7 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
     var montoNC = data[3].replace(/,/g, "");
     var headerNC = data[2];
     $('#montoNC').text(montoNC);
-    $('#headerNC').html('Abonar NC No . '+headerNC);
+    $('#headerNC').html('Abonar Nota de Crédito No . '+headerNC);
 
     $('#notasModal').modal('show');
     var hide = jQuery(this);
