@@ -181,6 +181,7 @@ $(document).ready(function () {
 
             document.getElementById('cliente_recogeSkeleton').classList.add('d-none');
             document.getElementById('cliente_recogeLabel').classList.remove('d-none');
+            document.getElementById('separar2000Label').classList.remove('d-none');
             document.getElementById('customerID').classList.remove('d-none');
             document.getElementById('customerIDLabel').classList.remove('d-none');
             document.getElementById('ordenCompra').classList.remove('d-none');
@@ -623,8 +624,7 @@ function prepareJsonSeparaPedidos(separa) { //acomoda arreglo con todos los item
 
 
 function separarPedidosPromo(json, separar) {  //envía json a back y recibe pedido separado
-    console.log(json);
-    console.log(JSON.stringify(json));
+
     if (separar && json == null) {
         tipoGetItemById = 0;
         setTimeout(prepareJsonSeparaPedidos(true), 1000);
@@ -636,6 +636,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
             for (var x = 0; x < json.length; x++) {
                 json[x]['cupon'] = cupon;
                 json[x]['CapturadoXcte'] = tipoPedido;
+                json[x]['Separa2000'] = document.getElementById("separar2000").checked ? 1 : 0;
             }
             json = JSON.stringify(json);
             $.ajaxSetup({
@@ -670,6 +671,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
             json = JSON.parse(json);
             for (var x = 0; x < json.length; x++) {
                 json[x]['CapturadoXcte'] = tipoPedido;
+                json[x]['Separa2000'] = document.getElementById("separar2000").checked ? 1 : 0;
             }
             json = JSON.stringify(json);
             $.ajaxSetup({
@@ -1597,6 +1599,19 @@ function validarMultiplo(multiplo, cant) {
 }
 
 function addItemCant(item, multiplo, cant, index) {
+    //en caso de que el pedido ya esté separado, hay que sumar todas las cantidades del mismo articuulo para saber cuánto es la cantidad total
+    var cantPedidoTotal = 0;
+    var x = 0;
+    while (x < pedido.length) {
+        var y = 0;
+        while (y < pedido[x]['items'].length) {
+            if (pedido[x]['items'][y]['itemid'] == item) {
+                cantPedidoTotal += parseInt(pedido[x]['items'][y]['cantidad']);
+            }
+            y++;
+        }
+        x++;
+    }
     var table = document.getElementById('tablaPedido');
     for (var x = 0; x < table.rows.length; x++) {
         if (table.rows[x].cells[1].innerText.indexOf(item) >= 0) {
@@ -1613,9 +1628,8 @@ function addItemCant(item, multiplo, cant, index) {
     newCant = newCant.split('.')[0];
     document.getElementById('cant-' + item + "-" + index).value = newCant;
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
-    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
     var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
-    pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
+    pedido[index]['items'][indexItem]['cantidad'] = cantPedidoTotal + multiploVenta;
     var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
     selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
     var jsonObj = JSON.parse(jsonItemsSeparar);
@@ -1626,13 +1640,23 @@ function addItemCant(item, multiplo, cant, index) {
 }
 
 function decreaseItemCant(item, multiplo, cant, index) {
-    console.log(pedido);
-    console.log(selectedItemsFromInventory);
-    console.log(jsonItemsSeparar);
+    //en caso de que el pedido ya esté separado, hay que sumar todas las cantidades del mismo articuulo para saber cuánto es la cantidad total
+    var cantPedidoTotal = 0;
+    var x = 0;
+    while (x < pedido.length) {
+        var y = 0;
+        while (y < pedido[x]['items'].length) {
+            if (pedido[x]['items'][y]['itemid'] == item) {
+                cantPedidoTotal += parseInt(pedido[x]['items'][y]['cantidad']);
+            }
+            y++;
+        }
+        x++;
+    }
 
-    if (cant - multiplo > 0) {
+    if (cantPedidoTotal - multiplo > 0) {
         itemToFocus = item;
-        var newCant = (parseFloat(cant - multiplo)).toLocaleString('en-US', {
+        var newCant = (parseFloat(cantPedidoTotal - multiplo)).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
         });
@@ -1640,7 +1664,6 @@ function decreaseItemCant(item, multiplo, cant, index) {
         newCant = newCant.split('.')[0];
         document.getElementById('cant-' + item + "-" + index).value = newCant;
         var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
-        var cantidad = pedido[index]['items'][indexItem]['cantidad'];
         var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
         var table = document.getElementById('tablaPedido');
         for (var x = 0; x < table.rows.length; x++) {
@@ -1648,9 +1671,9 @@ function decreaseItemCant(item, multiplo, cant, index) {
                 table.rows[x].classList.add('fadeOut');
             }
         }
-        pedido[index]['items'][indexItem]['cantidad'] = cantidad - multiploVenta;
+        pedido[index]['items'][indexItem]['cantidad'] = cantPedidoTotal - multiploVenta;
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
-        selectedItemsFromInventory[indexInventory]['cant'] = cantidad - multiploVenta;
+        selectedItemsFromInventory[indexInventory]['cant'] = cantPedidoTotal - multiploVenta;
         var jsonObj = JSON.parse(jsonItemsSeparar);
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString();
@@ -1746,7 +1769,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
         var listaPrecio = info[indexCustomerInfo]['priceList'];
 
         // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
-        dividir2000 = 0;
+        dividir2000 = document.getElementById("separar2000").checked ? 1 : 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
@@ -2002,7 +2025,7 @@ function saveNS() {
         var internalId = info[indexCustomerInfo]['internalID'];
 
         // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
-        dividir2000 = 0;
+        dividir2000 = document.getElementById("separar2000").checked ? 1 : 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
