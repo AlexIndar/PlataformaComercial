@@ -1941,6 +1941,38 @@ Route::post('/logistica/distribucion/validarSad/authoriceSad', function(Request 
     $response = LogisticaController::authoriceSad($token,json_encode($request->all()));
     return $response;
 });
+// ************************* REPORTE SAD *************************************** \\
+Route::get('/logistica/distribucion/reporteSad', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+
+    $level = "C";
+    if(isset($_COOKIE['_lv'])){
+        $level = $_COOKIE['_lv'];
+    }
+    $freighters = LogisticaController::getFreighters($token);
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+    return view('intranet.logistica.distribucion.reporteSad', compact('token','permissions','username','userRol','freighters'));
+})->name('logistica.distribucion.reporteSad');
+Route::get('/logistica/distribucion/getReportSad', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::getReportSad($token);
+    return $response;
+});
 // ************************* CAPTURA GASTO FLETERA ***************************** \\
 Route::get('/logistica/distribucion/capturaGastoFletera',function(){
     $token = TokenController::getToken();

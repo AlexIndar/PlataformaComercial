@@ -57,7 +57,7 @@
                   </div>
 
                   <div class="col-lg-2 col-md-4 col-sm-12">
-                    <a href="#" class="card-link">
+                    <a href="{{ route('logistica.distribucion.reporteSad') }}" class="card-link">
                       <div class="dashboard-cards">
                         <i class="fa-solid fa-newspaper fa-2x"></i><br>
                         <h6>Reporte SAD</h6>

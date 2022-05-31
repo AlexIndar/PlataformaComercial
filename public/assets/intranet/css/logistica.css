@@ -94,6 +94,9 @@ body::-webkit-scrollbar-thumb {
 .bg-success{
     border-radius: 30px;
 }
+.btn-outline-primary {
+    color: white!important;
+}
 /* thead{
     color: white;
     background-color: #002868;

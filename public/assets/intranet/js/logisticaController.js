@@ -28,6 +28,56 @@ $(document).ready(function(){
         case '/logistica/distribucion/validarSad':
              logisticaController.consultValidateSAD();
             break;
+        case '/logistica/distribucion/reporteSad':
+            $('#table-reporte-sad').DataTable({
+                paging: true,
+                responsive: true,
+                searching: true,
+                processing: true,
+                bSortClasses: false,
+                fixedHeader: true,
+                // scrollY:        400,
+                deferRender:    true,
+                scroller:       true,
+                columns: [
+                    { data:'name', visible:true},
+                    { data:'companyID', visible:true},
+                    { data:'zona', visible:true},
+                    { data:'pedido', visible:true},
+                    { data:'usuario', visible:true},
+                    { data:'fecha', visible:true},
+                    { data:'excepcion', visible:true},
+                    { data:'comentario', visible:true},
+                    { data:'factura', visible:true},
+                    { data:'cxcMonto', visible:true},
+                    { data:'cxcAgente', visible:true},
+                    { data:'cxcFecha', visible:true},
+                    { data:'cxcComentario', visible:true},
+                    { data:'validaAgente', visible:true},
+                    { data:'validaFecha', visible:true}
+                ],
+                language: {
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Documentos",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                    }
+                }
+             });
+             logisticaController.reportSad();
+            break;
         case '/logistica/distribucion/capturaGastoFletera':
             //#region captura gasto fletera
             //Se inicializan los selectores que se encuentran en la vista 
@@ -275,7 +325,7 @@ let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow,link='';
-let arrayRowTableType = new Array(),arraytable2 = new Array(),arrayResultFacturas = new Array(),arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array();
+let arrayRowTableType = new Array(),arraytable2 = new Array(),arrayResultFacturas = new Array(),arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array();
 let contRowTypeTable = 0,contRowEmbarqueTable = 0,contRowFacturasSelected = 0,contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 //#endregion
 
@@ -967,6 +1017,110 @@ const logisticaController = {
                 console.log(textStatus);
             }
         })
+    },
+    //#endregion
+    //#region REPORTE SAD
+    reportSad: () => {
+        $('.btn-consultar-reporte-sad').empty();
+        $('.btn-consultar-reporte-sad').append('<i class="fa-solid fa-cog fa-spin mr-1"></i> Consultando');
+        $('.btn-consultar-reporte-sad').prop('disabled',true);
+            $('.btn-excel').prop('disabled',true);
+        if(contTable != 0){
+            $('#table-reporte-sad').DataTable().clear().draw();
+        }
+        $.ajax({
+        url: '/logistica/distribucion/getReportSad',
+        type: 'GET',
+        datatype: 'json',
+        success: function (data) { 
+            console.time();
+            ReporteSad = data;
+            $('#table-reporte-sad').DataTable().clear().draw();
+            $('#table-reporte-sad').DataTable().rows.add(data).draw();
+            $('.btn-consultar-reporte-sad').prop('disabled',false);
+            $('.btn-excel').prop('disabled',false);
+            $('.btn-consultar-reporte-sad').empty();
+            $('.btn-consultar-reporte-sad').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+            contTable++;
+        },
+        complete:()=>{
+            console.timeEnd();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);     
+        }
+        });
+    },
+    exportExcelreportSad: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled',true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'NAME',
+            'COMPANY ID',
+            'ZONA',
+            'PEDIDO',
+            'USUARIO',
+            'FECHA',
+            'EXCEPCION',
+            'COMENTARIO',
+            'FACTURA',
+            'CXC MONTO',
+            'CXC AGENTE',
+            'CXC FECHA',
+            'CXC COMENTARIO',
+            'VALIDA AGENTE',
+            'VALIDA FECHA'
+        ]);
+        $.each(ReporteSad,function(key,value){
+            let excepcion =  value.excepcion == null ? '' : value.excepcion;
+            excepcion = excepcion.replace(/,/g,'');
+            excepcion = excepcion.replace(/[#]/g, '');
+            let comentario = value.comentario == null ? '' : value.comentario;
+            comentario = comentario.replace(/,/g,'');
+            comentario = comentario.replace(/[#]/g, '');
+            let cxcComentario = value.cxcComentario == null ? '' : value.cxcComentario;
+            cxcComentario = cxcComentario.replace(/,/g,'');
+            cxcComentario = cxcComentario.replace(/[#]/g, '');
+            let data = [
+                value.name,
+                value.companyID,
+                value.zona,
+                value.pedido,
+                value.usuario,
+                value.fecha,
+                excepcion.replace(/(\r\n|\n|\r)/gm,""),
+                comentario.replace(/(\r\n|\n|\r)/gm,""),
+                value.factura,
+                value.cxcMonto,
+                value.cxcAgente,
+                value.cxcFecha,
+                cxcComentario.replace(/(\r\n|\n|\r)/gm,""),
+                value.validaAgente,
+                value.validaFecha
+            ];
+            arrayRows.push(data);
+        });
+        csvContent = "data:text/csv;charset=utf-8,";
+         /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+         arrayRows.forEach(function(rowArray){
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+ 
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_SAD.csv");
+        document.getElementById('table-reporte-sad').appendChild(link);
+        link.click();
+        setTimeout(function(){
+            $('.btn-excel').empty();
+            $('.btn-excel').prop('disabled', false);
+            $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
+        },5000);
     },
     //#endregion
     //#region CAPTURA GASTO FLETERA

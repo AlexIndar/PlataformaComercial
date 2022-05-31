@@ -175,6 +175,22 @@ class LogisticaController extends Controller
                     "sadID" => $dataJson->sadID,
                     "username"=>$username
                 ]);
+                return $validateSAD;
+            }
+            #endregion
+            #region REPORTE SAD
+            public static function getReportSad($token){
+                $reportSad = Http::withToken($token)->get(config('global.api_url').'/Logistica/ReportSAD');
+                $sad = json_decode($reportSad);
+                foreach($sad as $report){
+                    $fecha = explode('T',$report->fecha)[0];
+                    $report->fecha = $fecha == "0001-01-01" ? '' : $fecha;
+                    $cxcFecha = explode('T',$report->cxcFecha)[0];
+                    $report->cxcFecha = $cxcFecha == "0001-01-01" ? '' : $cxcFecha;
+                    $validaFecha = explode('T',$report->validaFecha)[0];
+                    $report->validaFecha = $validaFecha == "0001-01-01" ? '' : $validaFecha;
+                }
+                return $sad;
             }
             #endregion
             #region CAPTURA GASTO FLETERA
