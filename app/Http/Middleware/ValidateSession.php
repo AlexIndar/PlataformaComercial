@@ -50,6 +50,9 @@ class ValidateSession
         if(strpos($url, "pendiente") !== false){
             $permissionNeeded = 'SolicitudesPendientes';
         }
+        if(strpos($url, "asignacionzonas") !== false){
+            $permissionNeeded = 'SolicitudesPendientes';
+        }
         
 
         // A intranet sí deja entrar a todos, siempre y cuando tengan un token activo
