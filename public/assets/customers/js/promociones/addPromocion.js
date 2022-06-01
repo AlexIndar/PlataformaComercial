@@ -50,7 +50,7 @@ $('document').ready(function () {
         no_results_text: "Sin resultados para",
         placeholder_text_single: "Buscar",
         placeholder_text_multiple: "Seleccione una o más opciones",
-        max_shown_results: 10,
+        max_shown_results: 11, //NÚMERO MÁXIMO DE RESULTADOS EN CADA SELECT PARA QUE AL FILTRAR SEA MÁS RÁPIDO
         hide_results_on_select: false,
     });
 
