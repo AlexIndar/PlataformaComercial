@@ -734,7 +734,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
 
 }
 
-function separarFilas(json) { //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
+function separarFilas(json) { //prepara arreglo de pedido para armar tabla, agregando encabezados de subpedidos y articulos a cada subpedido
     for (var i = 0; i < pedido.length; i++) {
         for (var z = 0; z < pedido[i]['items'].length; z++) {
             if (pedido[i]['items'][z]['addRegalo'] == 0) {
@@ -746,7 +746,7 @@ function separarFilas(json) { //prepara arreglo de pedido, agregando encabezados
         pedido = [];
         for (var x = 0; x < json.length; x++) {
             var art;
-            if (json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined) {
+            if (json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined) { //REVISAR SI EXISTEN PROMOS DE VOLUMEN Y OBTENER CUÁL APLICA SEGÚN LA CANTIDAD
                 art = items.find(o => o.itemid === json[x]['itemID']);
                 ofertasVolumen = "";
                 if (art != undefined) {
@@ -802,11 +802,11 @@ function separarFilas(json) { //prepara arreglo de pedido, agregando encabezados
                 pedido.push(rowPedido);
             }
             else {
-                var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
-                if (header != undefined) {
+                var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']); //BUSCAR SI EXISTE UNA FILA EN EL PEDIDO QUE YA TENGA MISMAS CONDICIONES (DESCUENTO, PLAZO, MARCA Y TIPO)
+                if (header != undefined) { //SI EXISTE, AGREGAR ITEM A ESA FILA (FORMA PARTE DEL MISMO SUBPEDIDO)
                     header['items'].push(item);
                 }
-                else {
+                else { //SI NO EXISTE, AGREGAR NUEVA FILA AL PEDIDO (CREAR UN NUEVO SUBPEDIDO)
                     var rowPedido = {
                         descuento: json[x]['descuento'],
                         plazo: json[x]['plazo'],
@@ -889,71 +889,6 @@ function getItemById(item, separa) {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
             },
             success: function (data) {
-
-                // ----------------------------------------------------------------- PREGUNTAR SI MULTIPLO SUBE O BAJA -----------------------------------------------------
-
-                // if(data.length>0){
-                //     var multiplo = data[0]['multiploVenta'];
-                //     var cant;
-                //     multiplo % cantidad == 0 ? cant = cantidad : cant = 0;
-                //     if(cantidad < multiplo && multiplo % cantidad > 0){
-                //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+multiplo+" piezas a tu pedido?");
-                //         answer ? cant = multiplo : cant = 0;
-                //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
-                //     }
-                //     if(cantidad > multiplo && multiplo % cantidad > 0){
-                //         var menos = (Math.trunc(cantidad/multiplo)) * multiplo;
-                //         var mas = (Math.trunc(cantidad/multiplo) + 1) * multiplo;
-                //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+mas+" piezas a tu pedido? Presiona cancelar para solo agregar "+menos);
-                //         answer ? cant = mas : cant = menos;
-                //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
-                //     }
-                //     if(cant > 0){
-                //         var itemSeparar = {
-                //             itemID: data[0]['itemid'],
-                //             codCustomer: entity,
-                //             quantity: cant,
-                //             plista: data[0]['price'],
-                //             punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
-                //             multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
-                //             regalo: 0,
-                //             existencia: data[0]['disponible']
-                //         };
-                //         cantItemsCargados ++;
-                //         if(cantItemsCargados == cantItemsPorCargar){
-                //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
-                //             separarPedidosPromo(jsonItemsSeparar, separa);
-                //             cantItemsCargados = 0;
-                //             cantItemsPorCargar = 0;
-                //         }
-                //         else{
-                //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
-                //         }
-                //     }    
-                //     else{
-                //         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === data[0]['itemid']);
-                //         selectedItemsFromInventory.splice(indexInventory, 1);
-                //         cantItemsPorCargar --;
-                //         if(cantItemsCargados == cantItemsPorCargar && cantItemsCargados > 1){
-                //             var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-                //             newJson = newJson + ']';
-                //             jsonItemsSeparar = newJson;
-                //             separarPedidosPromo(newJson, separa);
-                //             cantItemsCargados = 0;
-                //             cantItemsPorCargar = 0;
-                //         }
-                //     }
-                // }
-                // if(data.length==0 && (cantItemsCargados + 1) == cantItemsPorCargar){
-                //         var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-                //         newJson = newJson + ']';
-                //         jsonItemsSeparar = newJson;
-                //         separarPedidosPromo(newJson, separa);
-                //         cantItemsCargados = 0;
-                //         cantItemsPorCargar = 0;
-                // }
-
-
                 //  -------------------------------------------------------------- AJUSTAR MULTIPLO AUTOMÁTICAMENTE SIEMPRE HACIA ARRIBA ---------------------------------------
 
                 cantItemsCargados++;
@@ -1223,7 +1158,7 @@ function cargarInventario() {
     }
 }
 
-function activeSwitch(type) {
+function activeSwitch(type) { //remove scrollable class to tablePedido when constructing it
     var checkBox = document.getElementById("checkbox1");
     type == 1 ? flag = true : flag = false;
     if (pedido.length > 0) {
@@ -1242,7 +1177,7 @@ function reloadInventario() {
     document.getElementById('mostrarInventario').setAttribute('onclick', 'cargarInventario()');
 }
 
-function createTablePedido() {
+function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEPARADO, ENCABEZADOS, FILAS DE ARTICULOS Y REGALOS
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     activeSwitch(2);
@@ -1256,6 +1191,7 @@ function createTablePedido() {
     var totalPedido;
 
     var fila = 1;
+    console.log(pedido);
     for (var x = 0; x < pedido.length; x++) {
         var subtotal = 0;
         for (var y = 0; y < pedido[x]['items'].length; y++) {
@@ -1265,9 +1201,7 @@ function createTablePedido() {
             subtotal += parseFloat(importe);
         }
         subtotalPedido = subtotalPedido + subtotal;
-        if (pedido[x]['regalo'] == 0) {
-            addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
-        }
+        addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
         for (var y = 0; y < pedido[x]['items'].length; y++) {
             if (pedido[x]['items'][y]['regalo'] == 0) {
                 addRowPedido(pedido[x]['items'][y], fila, x);
@@ -1641,7 +1575,7 @@ function addItemCant(item, multiplo, cant, index) {
 }
 
 function decreaseItemCant(item, multiplo, cant, index) {
-    //en caso de que el pedido ya esté separado, hay que sumar todas las cantidades del mismo articuulo para saber cuánto es la cantidad total
+    //en caso de que el pedido ya esté separado, hay que sumar todas las cantidades del mismo articulo para saber cuánto es la cantidad total
     var cantPedidoTotal = 0;
     var x = 0;
     while (x < pedido.length) {
