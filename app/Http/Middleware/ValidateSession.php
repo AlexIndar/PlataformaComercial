@@ -52,12 +52,12 @@ class ValidateSession
         // }
         
 
-        // // A intranet sí deja entrar a todos, siempre y cuando tengan un token activo
+        // A intranet sí deja entrar a todos, siempre y cuando tengan un token activo
         // if(isset($_COOKIE["_lt"]) && strpos($url, "intranet") !== false){
         //     return $this->nocache($next($request));
         // }
 
-        // // Si la ruta no es intranet, validar que sea una ruta permitida
+        // Si la ruta no es intranet, validar que sea una ruta permitida
         // if(isset($_COOKIE["_lt"]) && in_array($permissionNeeded, $permissions)){
         //     return $this->nocache($next($request));
         // }
