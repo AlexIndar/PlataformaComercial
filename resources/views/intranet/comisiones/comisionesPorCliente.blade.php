@@ -345,8 +345,8 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  recibo_mes_actual + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  recibo_mes_actual_siniva + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + pendiente_saldar_mes_anteriorl_siniva + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + saldada_mes_actual_siniva + '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + pendiente_saldar_mes_actual + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + pendiente_saldar_mes_actual+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + saldada_mes_actual_siniva  + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + fechaFact + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + fechaDue + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + fechaSaldada + '</td>' +
@@ -364,8 +364,8 @@ $.ajax({
                             '<td style="font-weight: bold">' +  recibo_mes_actual + '</td>' +
                             '<td style="font-weight: bold">' +  recibo_mes_actual_siniva + '</td>' +
                             '<td style="font-weight: bold">' + pendiente_saldar_mes_anteriorl_siniva + '</td>' +
-                            '<td style="font-weight: bold">' + saldada_mes_actual_siniva + '</td>' +
-                            '<td style="font-weight: bold">' + pendiente_saldar_mes_actual + '</td>' +
+                            '<td style="font-weight: bold">' +  pendiente_saldar_mes_actual+ '</td>' +
+                            '<td style="font-weight: bold">' +saldada_mes_actual_siniva  + '</td>' +
                             '<td style="font-weight: bold">' + fechaFact + '</td>' +
                             '<td style="font-weight: bold">' + fechaDue + '</td>' +
                             '<td style="font-weight: bold">' + fechaSaldada + '</td>' +
