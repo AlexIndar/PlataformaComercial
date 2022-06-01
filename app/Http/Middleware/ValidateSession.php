@@ -19,49 +19,49 @@ class ValidateSession
      */
     public function handle(Request $request, Closure $next)
     {
-        $token = TokenController::getToken();
-        $permissions = LoginController::getPermissions($token);
+        // $token = TokenController::getToken();
+        // $permissions = LoginController::getPermissions($token);
 
-        $permissionNeeded = '';
+        // $permissionNeeded = '';
 
-        $url = strtolower($request->Url());
+        // $url = strtolower($request->Url());
 
-        if(strpos($url, "comisionesvendedor") !== false){
-            $permissionNeeded = 'Comisiones';
-        }
-        if(strpos($url, "comisionesespeciales") !== false){
-            $permissionNeeded = 'CargarEspeciales';
-        }
-        if(strpos($url, "comisionesresumen") !== false){
-            $permissionNeeded = 'ComisionesResumen';
-        }
-        if(strpos($url, "pedido") !== false){
-            $permissionNeeded = 'Pedidos';
-        }
-        if(strpos($url, "promociones") !== false){
-            $permissionNeeded = 'Promociones';
-        }
-        if(strpos($url, "missolicitudes") !== false){
-            $permissionNeeded = 'MisSolicitudes';
-        }
-        if(strpos($url, "estadistica") !== false){
-            $permissionNeeded = 'Estadistica Cliente';
-        }
-        if(strpos($url, "pendiente") !== false){
-            $permissionNeeded = 'SolicitudesPendientes';
-        }
-        if(strpos($url, "asignacionzonas") !== false){
-            $permissionNeeded = 'SolicitudesPendientes';
-        }
+        // if(strpos($url, "comisionesvendedor") !== false){
+        //     $permissionNeeded = 'Comisiones';
+        // }
+        // if(strpos($url, "comisionesespeciales") !== false){
+        //     $permissionNeeded = 'CargarEspeciales';
+        // }
+        // if(strpos($url, "comisionesresumen") !== false){
+        //     $permissionNeeded = 'ComisionesResumen';
+        // }
+        // if(strpos($url, "pedido") !== false){
+        //     $permissionNeeded = 'Pedidos';
+        // }
+        // if(strpos($url, "promociones") !== false){
+        //     $permissionNeeded = 'Promociones';
+        // }
+        // if(strpos($url, "missolicitudes") !== false){
+        //     $permissionNeeded = 'MisSolicitudes';
+        // }
+        // if(strpos($url, "estadistica") !== false){
+        //     $permissionNeeded = 'Estadistica Cliente';
+        // }
+        // if(strpos($url, "pendiente") !== false){
+        //     $permissionNeeded = 'SolicitudesPendientes';
+        // }
         
 
-        // A intranet sí deja entrar a todos, siempre y cuando tengan un token activo
-        if(isset($_COOKIE["_lt"]) && strpos($url, "intranet") !== false){
-            return $this->nocache($next($request));
-        }
+        // // A intranet sí deja entrar a todos, siempre y cuando tengan un token activo
+        // if(isset($_COOKIE["_lt"]) && strpos($url, "intranet") !== false){
+        //     return $this->nocache($next($request));
+        // }
 
-        // Si la ruta no es intranet, validar que sea una ruta permitida
-        if(isset($_COOKIE["_lt"]) && in_array($permissionNeeded, $permissions)){
+        // // Si la ruta no es intranet, validar que sea una ruta permitida
+        // if(isset($_COOKIE["_lt"]) && in_array($permissionNeeded, $permissions)){
+        //     return $this->nocache($next($request));
+        // }
+        if(isset($_COOKIE["_lt"])){
             return $this->nocache($next($request));
         }
         else{
