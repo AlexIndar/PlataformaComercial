@@ -633,6 +633,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
         var cupon = document.getElementById('cupon').value;
         if (cupon != '') {
             json = JSON.parse(json);
+            console.log(json);
             for (var x = 0; x < json.length; x++) {
                 json[x]['cupon'] = cupon;
                 json[x]['CapturadoXcte'] = tipoPedido;
@@ -672,6 +673,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
             for (var x = 0; x < json.length; x++) {
                 json[x]['CapturadoXcte'] = tipoPedido;
                 json[x]['Separa2000'] = document.getElementById("separar2000").checked ? 1 : 0;
+                json[x]['punitario'] = getPUnitario(json[x]);
             }
             json = JSON.stringify(json);
             $.ajaxSetup({
@@ -871,7 +873,6 @@ function getItemById(item, separa) {
         }
     }
     else {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1833,7 +1834,13 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
             var plazo = pedido[x]['plazo'];
             var marca = pedido[x]['marca'];
             var tipo = pedido[x]['tipo'];
-            var evento = pedido[x]['evento'];
+            var evento = "";
+            if (tipoPedido == 1) { //si el pedido es cargado por cliente, poner WEB antes del evento cuando se envía a LWS
+                evento = "WEB " + pedido[x]['evento'];
+            }
+            else {
+                evento = pedido[x]['evento'];
+            }
 
             for (var y = 0; y < pedido[x]['items'].length; y++) {
                 var item = {
@@ -2064,7 +2071,13 @@ function saveNS() {
             else if (pedidoSeparado.length > 0) {
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
-            var evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? pedidoSeparado[indexItemSeparado]['evento'] : "";
+            var evento = "";
+            if (tipoPedido == 1) { //si el pedido es cargado por cliente, poner WEB antes del evento cuando se envía a Netsuite
+                evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? "WEB " + pedidoSeparado[indexItemSeparado]['evento'] : "";
+            }
+            else {
+                evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? pedidoSeparado[indexItemSeparado]['evento'] : "";
+            }
             var username = "USERNAME";
             for (var y = 0; y < pedido[x]['items'].length; y++) {
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
@@ -2122,7 +2135,7 @@ function saveNS() {
                 comments: comentarios,
                 events: {
                     id: "0",
-                    txt: evento == undefined ? "" : evento
+                    txt: evento
                 },
                 plazoEvento: {
                     id: "0",
@@ -2856,4 +2869,31 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
     $('#selectEnvio').selectpicker('refresh');
     $('#fletera').val(packageDeliveries[indexDefaultShipping]);
     $('#correo').val(info[selected]['email']);
+}
+
+function getPUnitario(item) {
+    var art = items.find(o => o.itemid === item['itemID']);
+    var precioCliente = 0;
+    var cantidad = parseInt(item['quantity']);
+    if (art == undefined) {
+        precioCliente = item['plista'];
+    }
+    else {
+        if (art['promoART'] != null) {
+            var y = 0;
+            while (y < art['promoART'].length) {
+                if (cantidad >= art['promoART'][y]['cantidad']) {
+                    precioCliente = ((100 - art['promoART'][y]['descuento']) / 100) * art['price'];
+                }
+                y++;
+            }
+            if (precioCliente == 0)
+                precioCliente = ((100 - art['promoART'][0]['descuento']) / 100) * art['price'];
+        }
+        else
+            precioCliente = art['price'];
+    }
+
+
+    return parseFloat(precioCliente.toFixed(2));
 }

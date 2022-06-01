@@ -20,9 +20,9 @@
                     Cotización</button>
             </div>
             <br><br>
-            <a href="https://5327814.app.netsuite.com/core/media/media.nl?id=25510597&c=5327814&h=6Svz9s3L_QT_Sdjn6nb1o0W1zgJaIT1UzHNeGh1VQlBOgbBN&mv=l3ug84bc&_xt=.xml"
+            {{-- <a href="https://5327814.app.netsuite.com/core/media/media.nl?id=25510597&c=5327814&h=6Svz9s3L_QT_Sdjn6nb1o0W1zgJaIT1UzHNeGh1VQlBOgbBN&mv=l3ug84bc&_xt=.xml"
                 download> Descarga XML </a>
-            <br><br>
+            <br><br> --}}
             <div class="row">
                 <div class="col-6">
                     <select id="filterKey" name="filterKey" class="form-control selectpicker" data-live-search="true">
