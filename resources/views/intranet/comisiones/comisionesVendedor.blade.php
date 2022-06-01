@@ -451,38 +451,56 @@
              <div class="row">
                 <div class="col-md-12">
                     <div class="card-body table-responsive p-0">
-                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                        <table id="modalEspecialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                            <thead style="background-color:#002868; color:white">
                               <tr>
-                                 <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
+                                 <th id="headerMes" class="text-center" style="font-size:15px " colspan =5  >ESPECIALES DEL MES (15%)</th>
                               </tr>
                               <thead style="background-color:#002868; color:white">
                               <tr >
-                                 <th style="width:420px" >Especiales del Mes (15%)</th>
+                                 <th>Especial No.</th>
+                                 <th style="width:420px" >Especiales del Mes </th>
                                  <th >Cuota</th>
                                  <th>Real</th>
                                  <th>Avance</th>
                               </tr>
                            </thead>
-                           <tbody id="llenaEspeciales">
-                             <tr>
-                               <td>E01</td>
-                               <td >cuota</td>
-                               <td>Real</td>
-                               <td>Avance</td>
-                             </tr>
-                             <tr>
-                                 <td>E02</td>
-                                 <td >cuota</td>
-                                 <td>Real</td>
-                                 <td>Avance</td>
-                             </tr>
-                             <tr>
-                                 <td>E03</td>
-                                 <td>cuota</td>
-                                 <td>Real</td>
-                                 <td>Avance</td>
-                             </tr>
+                           <tbody id="llenaModalEspeciales">
+                           </tbody>
+                        </table>
+                     </div>
+                </div>
+             </div>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
+    </div>
+</div>
+<!-- Modal Detalle Especiales -->
+<div class="modal fade" id="modalDetalleEspeciales" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+             <h4 class="text-center title ml-auto">Detalle Especiales</h4>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+             <div class="row">
+                <div class="col-md-12">
+                    <div class="card-body table-responsive p-0">
+                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                              <thead style="background-color:#002868; color:white">
+                              <tr >
+                                 <th>Valor</th>
+                                 <th>Actual</th>
+                              </tr>
+                           </thead>
+                           <tbody id="llenaModalDetalleEspeciales">
                            </tbody>
                         </table>
                      </div>
@@ -496,7 +514,6 @@
     </div>
  </div>
 @endsection
-
 @section('js')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -512,9 +529,6 @@
 <link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
 <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
 <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
-
-
-
 
 <script>
    $(document).ready(function() {
@@ -803,11 +817,9 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function array(data){
-
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            //console.log(data);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -823,34 +835,25 @@
                 })
 
             }else{
-
                 var añoCalendar = data[0].detalle[0].fecha.slice(6,10);
                 var mesCalendar = data[0].detalle[0].fecha.slice(3,5);
                 var diaCalendar = data[0].detalle[0].fecha.slice(0,2);
                 inicioCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
-
-
             }
-
 
             events.push({title :'Inicio del Periodo' , start: data[0].fechaInicioPeriodo, backgroundColor: 'green'});
             events.push({title :'Fin del Periodo' , start: data[0].fechaFinPeriodo, backgroundColor: 'red'});
 
             for(var i =0; i < data[0].detalle.length; i++)
             {
-
                 añoCalendar = data[0].detalle[i].fecha.slice(6,10);
                 mesCalendar = data[0].detalle[i].fecha.slice(3,5);
                 diaCalendar = data[0].detalle[i].fecha.slice(0,2);
                 fechaCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
-
                 events.push( {title: data[0].detalle[i].codigo , start: fechaCalendar})
             }
 
-
-
             var calendarEl = document.getElementById('calendar');
-
             var calendar = new FullCalendar.Calendar(calendarEl, {
               plugins: [ 'dayGrid' ],
               defaultView: 'dayGridMonth',
@@ -870,8 +873,6 @@
             });
 
             calendar.render();
-            //console.log(data[0]);
-           // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
             var htmlModal = '';
             var htmlBonos = '';
@@ -881,6 +882,9 @@
             var htmlEspeciales = '';
             var htmlCtesNoVisitados = '';
             var htmlCtesNoActivos = '';
+            var htmlModalEspeciales = '';
+
+
 
             var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
             //console.log( comisionTot );
@@ -890,14 +894,12 @@
             }else{
                 vendedor = data[0].vendedor + ' | ' + data[0].zona;
             }
-
             var dataDetalle = data[0].detalle;
             var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
             var bonosPorc;
             var rawtData = data[0].detalle;//agrupar Clientes Visitados
             var rawtDataNoActivos = data[0].detalleVisitadosNoAct;//agrupar Clientes Visitados No Activos
-
             //Agrupar Clientes Visitados
             var groupBy = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
@@ -908,7 +910,6 @@
                }, {});
             }
             var resultData = Object.values(groupBy(rawtData,'codigo'));
-
             //Agrupar Clientes Visitados No Activos
             var groupNoAct = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
@@ -919,9 +920,6 @@
                }, {});
             }
             var resultNoAct = Object.values(groupNoAct(rawtDataNoActivos,'codigo'));
-            //console.log(resultNoAct);
-
-
 
             for (i = 0; i < resultData.length; i++) {
 
@@ -951,7 +949,6 @@
             }
 
             for (i = 0; i < bonoDetalle.length; i++) {
-
                 if(bonoDetalle[i].giro_id == 30 || bonoDetalle[i].giro_id == 45 ){
                     htmlModalnc += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
@@ -960,10 +957,7 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
                 }
-
-
-                }
-
+            }
 
             var show ;
             if(data[0].diasLaborados == 0){
@@ -1048,7 +1042,7 @@
             var vtasPorc = data[2].alcance/10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
             var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
-
+                console.log(data[2]);
             if(data[2].hasOwnProperty('status')){
 
                 Swal.fire({
@@ -1081,8 +1075,56 @@
                      '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
             }
-   
+            //Agrupar Especiales por cons
+            var rawtDataEspeciales = data[3];
+            var groupEspeciales = function (miarray, prop) {
+               return miarray.reduce(function(groups, item) {
+                  var val = item[prop];
+                  groups[val] = groups[val] || {conse: item.conse, total: item.total, cuota: item.cuota, especialesDelMes: item.especialesDelMes, avance: item.avance};
 
+                  return groups;
+               }, {});
+            }
+            var resultDataEspeciales = Object.values(groupEspeciales(rawtDataEspeciales,'conse'));
+            //console.log(resultDataEspeciales);
+            for(var i=0; i < resultDataEspeciales.length; i++){
+                htmlModalEspeciales += '<tr>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
+                     '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].avance.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' %</td>' +
+                     '</tr>';
+            }
+
+           /*  for(var i=0; i < data[3].length; i++){
+                htmlModalEspeciales += '<tr>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].especialesDelMes+'</td>'+
+                     '<td style="font-weight: bold ">'+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].avance.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '</tr>';
+            } */
+            $('#modalEspecialesTable tbody').on('click', 'tr', function () {
+                var htmlModalDetalleEspeciales = '';
+                var idEspecial = $(this).text();
+                var idEspecial = idEspecial.split(" ",1)
+                var idEspecial = String(idEspecial);
+                var detalleEspeciales= data[3];
+                for(var x=0; x < detalleEspeciales.length; x++){
+
+                  if(detalleEspeciales[x].conse == idEspecial){
+
+                    htmlModalDetalleEspeciales += '<tr>'+
+                        '<td>'+detalleEspeciales[x].valor+'</td>'+
+                        '<td>'+detalleEspeciales[x].actual+'</td>';
+                        '</tr>';
+                  }
+
+                }
+                $('#llenaModalDetalleEspeciales').html(htmlModalDetalleEspeciales);
+
+           });
 
             htmlEspeciales += '<tr>'+
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +
@@ -1105,6 +1147,7 @@
             $('#llenaNvosCtes').html(htmlNvosCtes);
             $('#llenaVentas').html(htmlVentas);
             $('#llenaEspeciales').html(htmlEspeciales);
+            $('#llenaModalEspeciales').html(htmlModalEspeciales);
             $('#clientesNvosModal').html(htmlModalnc);
             $('#zonareferencia').text(data[0].zona);
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
@@ -1112,7 +1155,6 @@
             $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
            },
            error: function() {
-
                console.log("Error");
                alert('Error, Tiempo de espera agotado');
            }
