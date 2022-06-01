@@ -44,6 +44,7 @@ use App\Exports\TemplateProveedores;
 use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
 use App\Http\Controllers\Clientes\ClientesController;
+use App\Http\Controllers\Intranet\AsignacionZonasController;
 use App\Http\Controllers\Intranet\SolicitudesPendientesController;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1485,6 +1486,32 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $zona = $request->zona;
                     $listSol = MisSolicitudesController::getTableViewManager($token, $zona);
                     return  $listSol;
+                });
+
+                //////// ASIGNACION DE ZONAS /////
+                Route::get('/AsignacionZonas', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                });
+
+                Route::get('/AsignacionZonas/GetTemplate', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = AsignacionZonasController::getTemplate($token);
+                    return  $data;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */

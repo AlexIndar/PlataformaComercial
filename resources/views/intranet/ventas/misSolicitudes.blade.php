@@ -212,7 +212,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="text" name="RazonSocial" id="rzInput" placeholder="Nombre o razon social" class="form-control" onfocusout="validaRZI()" maxlength="99">
-                                                    <span>Apellido Paterno - Materno - Nombres(s)</span>
+                                                    <span>Nombres(s) - Apellido Paterno - Materno</span>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="text" name="nombreComercial" id="nameComeInput" placeholder="Nombre Comercial" class="form-control" onfocusout="validaNameC()" maxlength="99">
