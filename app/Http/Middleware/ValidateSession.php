@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\LoginController;
 
- 
+
 class ValidateSession
 {
     /**
@@ -50,7 +50,7 @@ class ValidateSession
         // if(strpos($url, "pendiente") !== false){
         //     $permissionNeeded = 'SolicitudesPendientes';
         // }
-        
+
 
         // A intranet sí deja entrar a todos, siempre y cuando tengan un token activo
         // if(isset($_COOKIE["_lt"]) && strpos($url, "intranet") !== false){
@@ -68,7 +68,7 @@ class ValidateSession
             return redirect('/Intranet');
         }
     }
- 
+
 
 
     protected function nocache($response)

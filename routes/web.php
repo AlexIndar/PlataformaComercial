@@ -1354,7 +1354,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                        return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1365,7 +1365,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     //    return $time;
                     //}
                     // dd($user->body());
-                    
+
                 });
 
                 Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
@@ -1627,8 +1627,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                    $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
                    $dataBonos=ComisionesController::getCtesActivosMes($token,$zona,$fecha);
                    $dataVentas =ComisionesController::getTotalVentasZona($token,$zona,$fecha);
+                   $dataEspeciales = ComisionesController::getProductosVendidos($token,$fecha,$zona);
 
-                    return array($data, $dataBonos, $dataVentas);
+                    return array($data, $dataBonos, $dataVentas, $dataEspeciales);
 
                 });
 
@@ -1683,7 +1684,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                    //dd($referencia);
                    $data=ComisionesController::getHistoricoCobranzaZonaList($token,$fecha);
                    return $data;
- 
+
                 });
 
                 Route::get('/comisiones/getExistePeriodoEjercicio', function (Request $request){
