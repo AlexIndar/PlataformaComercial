@@ -1862,12 +1862,13 @@ Route::get('/logistica/distribucion/numeroGuia', function(){
         $level = $_COOKIE['_lv'];
     }
     $freighters = LogisticaController::getFreighters($token);
+    $drivers = LogisticaController::getDrivers($token);
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
 
     $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters'));
+    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers'));
 })->name('logistica.distribucion.numeroGuia');
 Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
     $token = TokenController::getToken();
@@ -1899,6 +1900,22 @@ Route::post('/logistica/distribucion/numeroGuia/saveGuiaNumber', function(Reques
         return redirect('/logout');
     }
     $response = LogisticaController::saveGuiaNumber($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/numeroGuia/costFletera', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::costFletera($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::cuentaBultosWMSManager($token,json_encode($request->all()));
     return $response;
 });
 // ************************* VALIDAR SAD *************************************** \\
@@ -1971,6 +1988,38 @@ Route::get('/logistica/distribucion/getReportSad', function(){
         return redirect('/logout');
     }
     $response = LogisticaController::getReportSad($token);
+    return $response;
+});
+// ************************* REPORTE EMBARQUE ********************************** \\
+Route::get('/logistica/distribucion/reporteEmbarque', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+
+    $level = "C";
+    if(isset($_COOKIE['_lv'])){
+        $level = $_COOKIE['_lv'];
+    }
+    $freighters = LogisticaController::getFreighters($token);
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+    return view('intranet.logistica.distribucion.reporteEmbarque', compact('token','permissions','username','userRol','freighters'));
+})->name('logistica.distribucion.reporteEmbarque');
+Route::get('/logistica/distribucion/reportShipment', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::reportShipment($token);
     return $response;
 });
 // ************************* CAPTURA GASTO FLETERA ***************************** \\

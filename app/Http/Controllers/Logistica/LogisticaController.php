@@ -122,6 +122,11 @@ class LogisticaController extends Controller
                 $freighters = json_decode($getFreighters->body());
                 return $freighters;
             }
+            public static function costFletera($token){
+                $costFletera = Http::withToken($token)->get(config('global.api_url').'/Logistica/CostFletera');
+                $cost = json_decode($costFletera->body());
+                return $cost;
+            }
             public static function existShipment($token,$data){
                 $dataJson = json_decode($data);
                 $existShipment = Http::withToken($token)->get(config('global.api_url').'/Logistica/ExistShipment?embarque='.$dataJson->embarque);
@@ -157,6 +162,22 @@ class LogisticaController extends Controller
                 $save = json_decode($saveGuiaNumber);
                 return $save;
             }
+            public static function cuentaBultosWMSManager($token, $data)
+            {
+                $dataJson = json_decode($data);
+                $consultaBultos = Http::withToken($token)->get(config('global.api_url').'/Logistica/CuentaBultosWMS',[
+                    "factura" => $dataJson->factura,
+                    "fletera" => $dataJson->fletera
+                ]);
+                $bultos = json_decode($consultaBultos->body());
+                return $bultos;
+            }
+            public static function getDrivers($token)
+            {
+                $getDrivers = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetDrivers');
+                $drivers = json_decode($getDrivers->body());
+                return $drivers;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){
@@ -191,6 +212,18 @@ class LogisticaController extends Controller
                     $report->validaFecha = $validaFecha == "0001-01-01" ? '' : $validaFecha;
                 }
                 return $sad;
+            }
+            #endregion
+            #region REPORTE EMBARQUE
+            public static function reportShipment($token){
+                $reportShipment = Http::withToken($token)->get(config('global.api_url').'/Logistica/ReportShipment');
+                $shipment = json_decode($reportShipment);
+                foreach($shipment as $report){
+                    $report->fecha = explode(' ',$report->fecha)[0];
+                    $report->fechaConcluido = explode(' ',$report->fechaConcluido)[0];
+                    $report->fechaHora = explode(' ',$report->fechaHora)[0];
+                }
+                return $shipment;
             }
             #endregion
             #region CAPTURA GASTO FLETERA
