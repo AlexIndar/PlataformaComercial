@@ -37,19 +37,28 @@ const getTemplate = () => {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function(result) {
-            if (result != null) {
-                console.log(result);
-                const blob = new Blob([s2ab(atob(result))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            console.log(result);
+            // if (result != null) {
+            //     console.log(result);
+            //     const blob = new Blob([s2ab(atob(result))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            //     const url = URL.createObjectURL(blob);
+            //     const enlace = document.createElement("a");
+            //     enlace.href = url;
+            //     enlace.download = "TemplateCyC.xlsx";
+            //     enlace.click();
+            // }
+        },
+        error: function(error) {
+            console.log(error);
+            if (error != null) {
+                console.log(error.responseText);
+                const blob = new Blob([s2ab(atob(error.responseText))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 const url = URL.createObjectURL(blob);
                 const enlace = document.createElement("a");
                 enlace.href = url;
                 enlace.download = "TemplateCyC.xlsx";
                 enlace.click();
             }
-
-        },
-        error: function(error) {
-            console.log(error + "Error");
         }
     });
 }
