@@ -20,8 +20,7 @@ class AsignacionZonasController extends Controller{
     }
 
     public static function getTemplate($token){
-        $businessLines = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetTemplate');
-        return $businessLines;
-        // return json_decode($businessLines->body());
+        $fileTemplate = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetTemplate');
+        return $fileTemplate;        
     }
 }
