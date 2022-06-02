@@ -271,8 +271,20 @@ $(document).ready(function () {
         var defaultShippingSelected = false;
         var indexDefaultShipping = 0;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            if (addresses[x]['defaultshipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
+
+            // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
+            console.log(addresses[x]);
+            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
+
+
+            if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
                 defaultShippingSelected = true;
                 indexDefaultShipping = x;
                 $('#sucursal').val(addresses[x]['addressID']);
@@ -281,7 +293,7 @@ $(document).ready(function () {
 
         if (!defaultShippingSelected) { //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']);
-        }
+        } sucursal
 
         $('#sucursal').selectpicker('refresh'); //el refresh debe ir después de todos los cambios
 
@@ -594,6 +606,7 @@ function cargarProductosExcel(json) {
     prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
+    // save(5); //pre guardar el pedido después de cargar excel
 }
 
 function validateEnter(e) {
@@ -1665,7 +1678,7 @@ function downloadPlantillaPedido() {
 //----------------------------------------------------------------------------  FUNCIÓN GUARDAR PEDIDO WEB  -------------------------------------------------------------------
 
 
-function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = ACTUALIZAR Y LEVANTAR PEDIDO
+function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = LEVANTAR PEDIDO (UPDATE AND SEND TO NETSUITE), 5 = PRE GUARDAR PEDIDO AL CARGAR POR EXCEL, CERRAR INVENTARIO O CARGAR POR CÓDIGO
     if (pedido.length == 0) {
         alert('Agrega artículos al pedido');
     }
@@ -1804,7 +1817,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
         }
 
         var json = {
-            idCotizacion: type == 2 || type == 4 ? document.getElementById('idCotizacion').value : 0,
+            idCotizacion: document.getElementById('idCotizacion').value == 'X' ? 0 : document.getElementById('idCotizacion').value,
             companyId: idCustomer,
             internalId: internalId,
             orderC: ordenCompra,
@@ -1842,6 +1855,11 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                     else if (type == 4) { //se está editando el pedido, ya tengo el numero de cotización en el html 
                         noCotizacionNS = document.getElementById('idCotizacion').value;
                         saveNS();
+                    }
+                    else if (type == 5) {
+                        console.log(data);
+                        noCotizacionNS = data['idCotizacion'];
+                        document.getElementById('idCotizacion').value = noCotizacionNS;
                     }
                     else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
                         window.location.href = '/pedidos';
@@ -2783,7 +2801,7 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
 
     for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
         $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-        if (addresses[x]['defaultshipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
+        if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
             defaultShippingSelected = true;
             indexDefaultShipping = x;
             $('#sucursal').val(addresses[x]['addressID']);
