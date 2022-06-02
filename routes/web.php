@@ -83,6 +83,11 @@ Route::get('/', function () {
 })->name('/');
 
 
+Route::get('/500', function () {
+    return view('errors.500');
+});
+
+
 Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::get('/main', function () {
@@ -631,6 +636,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $ordenCompra = $request->ordenCompra;
                                 $cliente = $request->cliente;
                                 $comentarios = $request->comentarios;
+                                $sucursal = $request->sucursal;
                                 $formaEnvio = $request->formaEnvio;
                                 $fletera = $request->fletera;
                                 $tranIds = $request->tranIds;
@@ -676,10 +682,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if( $correoUsuarioLevanta != $listaCorreos->vendedor && $correoUsuarioLevanta != $listaCorreos->apoyo && $correoUsuarioLevanta != $listaCorreos->gerente && $correoUsuarioLevanta != $listaCorreos->cliente && $correoUsuarioLevanta != $correo ) array_push($emails, $correoUsuarioLevanta);
                                 if($correoUsuarioLevanta == 'alejandro.jimenez@indar.com.mx'){
                                     $emailsTest = ["alejandro.jimenez@indar.com.mx", "ing.alejandrodv@gmail.com"];
-                                    Mail::to($emailsTest)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
+                                    Mail::to($emailsTest)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
                                 }
                                 else{
-                                    Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
+                                    Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
                                 }
                                  // check for failures
                                 if (Mail::failures()) {
@@ -723,6 +729,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $ordenCompra = $request->ordenCompra;
                                 $cliente = $request->cliente;
                                 $comentarios = $request->comentarios;
+                                $sucursal = $request->sucursal;
                                 $formaEnvio = $request->formaEnvio;
                                 $fletera = $request->fletera;
                                 $autoriza = $request->autoriza;
@@ -769,7 +776,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if ($autoriza == 'EOEGA') {array_push($emails, 'eortiz@indar.com.mx');}
                                 if ($autoriza == 'JSB') {array_push($emails, 'jsamaue@indar.com.mx');}
 
-                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedidoDesneg, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
+                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedidoDesneg, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar correo desneg'], 404);

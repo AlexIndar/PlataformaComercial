@@ -86,59 +86,6 @@ $(document).ready(function () {
         document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
     }
 
-    if (window.location.href.includes('pedido/editar')) { //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
-        fillShippingWaysList();
-        document.getElementById('loading-message').innerHTML = 'Cargando pedido ...';
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            type: "GET",
-            enctype: 'multipart/form-data',
-            url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
-            data: FormData,
-            'async': false,
-            headers: {
-                'X-CSRF-Token': '{{ csrf_token() }}',
-            },
-            success: function (data) {
-                $('#sucursal').val(data['addressId']); //Seleccionar la primera opcion
-                $('#sucursal').selectpicker('refresh');
-                var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === data['shippingWay']);
-                $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
-                $('#selectEnvio').selectpicker('refresh');
-                $('#fletera').val(data['packageDelivery']);
-                $('#correo').val(data['email']);
-
-                if (data['pickUp'] == 1) {
-                    $('#cliente_recoge').prop("checked", true);
-                }
-
-                if (data['divide'] == 1) {
-                    $('#dividir').prop("checked", true);
-                }
-
-                for (var x = 0; x < data['order'].length; x++) {
-                    for (var y = 0; y < data['order'][x]['items'].length; y++) {
-                        var art = selectedItemsFromInventory.find(o => o.item === data['order'][x]['items'][y]['itemid'].trim());
-                        if (art != undefined)
-                            art['cant'] = (parseInt(art['cant']) + parseInt(data['order'][x]['items'][y]['cantidad'])).toString();
-                        else
-                            selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
-                        cantItemsPorCargar++;
-                    }
-                }
-
-            },
-            error: function (error) {
-                alert('Error cargando pedido');
-            }
-        });
-    }
-
     const fileSelector = document.getElementById('excelCodes');
     fileSelector.addEventListener('change', (event) => {
         var input = event.target;
@@ -164,6 +111,7 @@ $(document).ready(function () {
         enctype: 'multipart/form-data',
         url: "nuevo/getInfoHeatWeb/" + entity,
         data: FormData,
+        'async': false,
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
@@ -204,6 +152,74 @@ $(document).ready(function () {
 
         }
     });
+
+    if (window.location.href.includes('pedido/editar')) { //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+        var addresses = info[0]['addresses'];
+        for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+            // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
+            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
+        }
+        $('#sucursal').selectpicker('refresh');
+
+        fillShippingWaysList();
+
+        document.getElementById('loading-message').innerHTML = 'Cargando pedido ...';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
+            data: FormData,
+            'async': false,
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function (data) {
+                $('#sucursal').val(data['addressId']); //Seleccionar la sucursal que se guardó en la cotizacion
+                $('#sucursal').selectpicker('refresh');
+                var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === data['shippingWay']);
+                $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera que corresponde a la sucursal guardada
+                $('#selectEnvio').selectpicker('refresh');
+                $('#fletera').val(data['packageDelivery']);
+                $('#correo').val(data['email']);
+
+                if (data['pickUp'] == 1) {
+                    $('#cliente_recoge').prop("checked", true);
+                }
+
+                if (data['divide'] == 1) {
+                    $('#dividir').prop("checked", true);
+                }
+
+                for (var x = 0; x < data['order'].length; x++) {
+                    for (var y = 0; y < data['order'][x]['items'].length; y++) {
+                        var art = selectedItemsFromInventory.find(o => o.item === data['order'][x]['items'][y]['itemid'].trim());
+                        if (art != undefined)
+                            art['cant'] = (parseInt(art['cant']) + parseInt(data['order'][x]['items'][y]['cantidad'])).toString();
+                        else
+                            selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
+                        cantItemsPorCargar++;
+                    }
+                }
+
+            },
+            error: function (error) {
+                alert('Error cargando pedido');
+            }
+        });
+    }
 
     $('#modalInventario').on('hidden.bs.modal', function () {
         prepareJsonSeparaPedidos(false);
@@ -273,7 +289,6 @@ $(document).ready(function () {
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
 
             // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
-            console.log(addresses[x]);
             if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
                 $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
             if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
@@ -287,13 +302,14 @@ $(document).ready(function () {
             if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
                 defaultShippingSelected = true;
                 indexDefaultShipping = x;
+                indexAddress = x;
                 $('#sucursal').val(addresses[x]['addressID']);
             }
         }
 
         if (!defaultShippingSelected) { //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']);
-        } sucursal
+        }
 
         $('#sucursal').selectpicker('refresh'); //el refresh debe ir después de todos los cambios
 
@@ -2230,6 +2246,7 @@ function sendEmail() {
     var cte = $('#customerID option:selected').text() == '' ? document.getElementById('customerID').value : $('#customerID option:selected').text();
     var formaEnvio = $('#selectEnvio option:selected').text() == 'Selecciona una forma de envío' ? document.getElementById('envio').value : $('#selectEnvio option:selected').text();
     var fletera = $("#fletera").val();
+    var sucursal = info[indexCustomer]['addresses'][indexAddress]['address'];
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2237,7 +2254,7 @@ function sendEmail() {
         'url': "/sendmail",
         'type': 'POST',
         'dataType': 'json',
-        'data': { pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, formaEnvio: formaEnvio, fletera: fletera, tranIds: tranIds },
+        'data': { pedido: pedido, email: correo, idCotizacion: numCotizacion, ordenCompra: ordenCompra, comentarios: comentarios, cliente: cte, sucursal: sucursal, formaEnvio: formaEnvio, fletera: fletera, tranIds: tranIds },
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
@@ -2800,7 +2817,17 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
     var indexDefaultShipping = 0;
 
     for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-        $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
+        // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
+        if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
+            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+        if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
+            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+        if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
+        if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
+
+
         if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
             defaultShippingSelected = true;
             indexDefaultShipping = x;
@@ -2822,6 +2849,7 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
     $('#fletera').val(packageDeliveries[indexDefaultShipping]);
     $('#correo').val(info[selected]['email']);
 }
+
 
 function getPUnitario(item) {
     var art = items.find(o => o.itemid === item['itemID']);

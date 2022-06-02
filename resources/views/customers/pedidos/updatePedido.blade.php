@@ -89,15 +89,7 @@
                                 <div class="skeleton-input"></div>
                                 <select id="sucursal" name="sucursal" class="form-control selectpicker d-none"
                                     data-live-search="true">
-                                    @if (count($data) == 1)
-                                        <option style="height: 30px !important;" value="none">Selecciona una sucursal
-                                        </option>
-                                        @for ($x = 0; $x < count($data[0]['addresses']); $x++)
-                                            <option style="height: 30px !important;"
-                                                value="{{ $data[0]['addresses'][$x]['addressID'] }}">
-                                                {{ $data[0]['addresses'][$x]['address'] }}</option>
-                                        @endfor
-                                    @endif
+                                    <option selected value="none">Selecciona una sucursal</option>
                                 </select>
                             </div>
                         </div>
@@ -342,7 +334,7 @@
                     <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(4)"><i
                             class="fas fa-check"></i> Levantar pedido</button>
                     <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-                    <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+                            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
                 </div>
 
                 <!---------------------------------------------------------------------------------------------------- FIN PIE PEDIDO ---------------------------------------------------------------------------------------------->
