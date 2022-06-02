@@ -54,3 +54,7 @@ const getEstadisticaTiempo = () => {
     console.log(dateIF[1]);
     document.getElementById("exportFileBtn").disabled = false;
 }
+
+const alterb = () =>{
+    alert("HOLA");
+}
