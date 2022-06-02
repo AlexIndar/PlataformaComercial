@@ -181,6 +181,7 @@ $(document).ready(function () {
 
             document.getElementById('cliente_recogeSkeleton').classList.add('d-none');
             document.getElementById('cliente_recogeLabel').classList.remove('d-none');
+            document.getElementById('separar2000Label').classList.remove('d-none');
             document.getElementById('customerID').classList.remove('d-none');
             document.getElementById('customerIDLabel').classList.remove('d-none');
             document.getElementById('ordenCompra').classList.remove('d-none');
@@ -270,8 +271,20 @@ $(document).ready(function () {
         var defaultShippingSelected = false;
         var indexDefaultShipping = 0;
         for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-            if (addresses[x]['defaultshipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
+
+            // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
+            console.log(addresses[x]);
+            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
+            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
+                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
+
+
+            if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
                 defaultShippingSelected = true;
                 indexDefaultShipping = x;
                 $('#sucursal').val(addresses[x]['addressID']);
@@ -280,7 +293,7 @@ $(document).ready(function () {
 
         if (!defaultShippingSelected) { //si ninguna dirección es defaultshipping, seleccionar la primera
             $('#sucursal').val(addresses[0]['addressID']);
-        }
+        } sucursal
 
         $('#sucursal').selectpicker('refresh'); //el refresh debe ir después de todos los cambios
 
@@ -593,6 +606,7 @@ function cargarProductosExcel(json) {
     prepareJsonSeparaPedidos(false);
 
     document.getElementById("excelCodes").value = "";
+    // save(5); //pre guardar el pedido después de cargar excel
 }
 
 function validateEnter(e) {
@@ -623,8 +637,7 @@ function prepareJsonSeparaPedidos(separa) { //acomoda arreglo con todos los item
 
 
 function separarPedidosPromo(json, separar) {  //envía json a back y recibe pedido separado
-    console.log(json);
-    console.log(JSON.stringify(json));
+
     if (separar && json == null) {
         tipoGetItemById = 0;
         setTimeout(prepareJsonSeparaPedidos(true), 1000);
@@ -633,9 +646,11 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
         var cupon = document.getElementById('cupon').value;
         if (cupon != '') {
             json = JSON.parse(json);
+            console.log(json);
             for (var x = 0; x < json.length; x++) {
                 json[x]['cupon'] = cupon;
                 json[x]['CapturadoXcte'] = tipoPedido;
+                json[x]['Separa2000'] = document.getElementById("separar2000").checked ? 1 : 0;
             }
             json = JSON.stringify(json);
             $.ajaxSetup({
@@ -670,6 +685,8 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
             json = JSON.parse(json);
             for (var x = 0; x < json.length; x++) {
                 json[x]['CapturadoXcte'] = tipoPedido;
+                json[x]['Separa2000'] = document.getElementById("separar2000").checked ? 1 : 0;
+                json[x]['punitario'] = getPUnitario(json[x]);
             }
             json = JSON.stringify(json);
             $.ajaxSetup({
@@ -730,7 +747,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
 
 }
 
-function separarFilas(json) { //prepara arreglo de pedido, agregando encabezados de subpedidos y articulos a cada subpedido
+function separarFilas(json) { //prepara arreglo de pedido para armar tabla, agregando encabezados de subpedidos y articulos a cada subpedido
     for (var i = 0; i < pedido.length; i++) {
         for (var z = 0; z < pedido[i]['items'].length; z++) {
             if (pedido[i]['items'][z]['addRegalo'] == 0) {
@@ -742,7 +759,7 @@ function separarFilas(json) { //prepara arreglo de pedido, agregando encabezados
         pedido = [];
         for (var x = 0; x < json.length; x++) {
             var art;
-            if (json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined) {
+            if (json[x]['itemID'] != '' && json[x]['itemID'] != null && json[x]['itemID'] != undefined) { //REVISAR SI EXISTEN PROMOS DE VOLUMEN Y OBTENER CUÁL APLICA SEGÚN LA CANTIDAD
                 art = items.find(o => o.itemid === json[x]['itemID']);
                 ofertasVolumen = "";
                 if (art != undefined) {
@@ -798,11 +815,11 @@ function separarFilas(json) { //prepara arreglo de pedido, agregando encabezados
                 pedido.push(rowPedido);
             }
             else {
-                var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']);
-                if (header != undefined) {
+                var header = pedido.find(o => o.descuento == json[x]['descuento'] && o.plazo == json[x]['plazo'] && o.marca == json[x]['marca'] && o.tipo == json[x]['tipo']); //BUSCAR SI EXISTE UNA FILA EN EL PEDIDO QUE YA TENGA MISMAS CONDICIONES (DESCUENTO, PLAZO, MARCA Y TIPO)
+                if (header != undefined) { //SI EXISTE, AGREGAR ITEM A ESA FILA (FORMA PARTE DEL MISMO SUBPEDIDO)
                     header['items'].push(item);
                 }
-                else {
+                else { //SI NO EXISTE, AGREGAR NUEVA FILA AL PEDIDO (CREAR UN NUEVO SUBPEDIDO)
                     var rowPedido = {
                         descuento: json[x]['descuento'],
                         plazo: json[x]['plazo'],
@@ -869,7 +886,6 @@ function getItemById(item, separa) {
         }
     }
     else {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -886,71 +902,6 @@ function getItemById(item, separa) {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
             },
             success: function (data) {
-
-                // ----------------------------------------------------------------- PREGUNTAR SI MULTIPLO SUBE O BAJA -----------------------------------------------------
-
-                // if(data.length>0){
-                //     var multiplo = data[0]['multiploVenta'];
-                //     var cant;
-                //     multiplo % cantidad == 0 ? cant = cantidad : cant = 0;
-                //     if(cantidad < multiplo && multiplo % cantidad > 0){
-                //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+multiplo+" piezas a tu pedido?");
-                //         answer ? cant = multiplo : cant = 0;
-                //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
-                //     }
-                //     if(cantidad > multiplo && multiplo % cantidad > 0){
-                //         var menos = (Math.trunc(cantidad/multiplo)) * multiplo;
-                //         var mas = (Math.trunc(cantidad/multiplo) + 1) * multiplo;
-                //         let answer = confirm("El múltiplo del producto "+data[0]['itemid']+" es de "+multiplo+"\n¿Deseas agregar "+mas+" piezas a tu pedido? Presiona cancelar para solo agregar "+menos);
-                //         answer ? cant = mas : cant = menos;
-                //         console.log('AGREGAR '+cant+" DE "+data[0]['itemid']);
-                //     }
-                //     if(cant > 0){
-                //         var itemSeparar = {
-                //             itemID: data[0]['itemid'],
-                //             codCustomer: entity,
-                //             quantity: cant,
-                //             plista: data[0]['price'],
-                //             punitario: parseFloat(((100 - parseFloat(data[0]['promo'])) * parseFloat(data[0]['price']) / 100).toFixed(2)),
-                //             multiplo: data[0]['multiploVenta'] != null ? data[0]['multiploVenta'] : 1,
-                //             regalo: 0,
-                //             existencia: data[0]['disponible']
-                //         };
-                //         cantItemsCargados ++;
-                //         if(cantItemsCargados == cantItemsPorCargar){
-                //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ']';
-                //             separarPedidosPromo(jsonItemsSeparar, separa);
-                //             cantItemsCargados = 0;
-                //             cantItemsPorCargar = 0;
-                //         }
-                //         else{
-                //             jsonItemsSeparar = jsonItemsSeparar + JSON.stringify(itemSeparar) + ',';
-                //         }
-                //     }    
-                //     else{
-                //         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === data[0]['itemid']);
-                //         selectedItemsFromInventory.splice(indexInventory, 1);
-                //         cantItemsPorCargar --;
-                //         if(cantItemsCargados == cantItemsPorCargar && cantItemsCargados > 1){
-                //             var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-                //             newJson = newJson + ']';
-                //             jsonItemsSeparar = newJson;
-                //             separarPedidosPromo(newJson, separa);
-                //             cantItemsCargados = 0;
-                //             cantItemsPorCargar = 0;
-                //         }
-                //     }
-                // }
-                // if(data.length==0 && (cantItemsCargados + 1) == cantItemsPorCargar){
-                //         var newJson = jsonItemsSeparar.substring(0, jsonItemsSeparar.length - 1);
-                //         newJson = newJson + ']';
-                //         jsonItemsSeparar = newJson;
-                //         separarPedidosPromo(newJson, separa);
-                //         cantItemsCargados = 0;
-                //         cantItemsPorCargar = 0;
-                // }
-
-
                 //  -------------------------------------------------------------- AJUSTAR MULTIPLO AUTOMÁTICAMENTE SIEMPRE HACIA ARRIBA ---------------------------------------
 
                 cantItemsCargados++;
@@ -1220,7 +1171,7 @@ function cargarInventario() {
     }
 }
 
-function activeSwitch(type) {
+function activeSwitch(type) { //remove scrollable class to tablePedido when constructing it
     var checkBox = document.getElementById("checkbox1");
     type == 1 ? flag = true : flag = false;
     if (pedido.length > 0) {
@@ -1239,7 +1190,7 @@ function reloadInventario() {
     document.getElementById('mostrarInventario').setAttribute('onclick', 'cargarInventario()');
 }
 
-function createTablePedido() {
+function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEPARADO, ENCABEZADOS, FILAS DE ARTICULOS Y REGALOS
     var table = document.getElementById('tablaPedido');
     var filas = table.rows.length - 1;
     activeSwitch(2);
@@ -1253,6 +1204,7 @@ function createTablePedido() {
     var totalPedido;
 
     var fila = 1;
+    console.log(pedido);
     for (var x = 0; x < pedido.length; x++) {
         var subtotal = 0;
         for (var y = 0; y < pedido[x]['items'].length; y++) {
@@ -1262,9 +1214,7 @@ function createTablePedido() {
             subtotal += parseFloat(importe);
         }
         subtotalPedido = subtotalPedido + subtotal;
-        if (pedido[x]['regalo'] == 0) {
-            addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
-        }
+        addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
         for (var y = 0; y < pedido[x]['items'].length; y++) {
             if (pedido[x]['items'][y]['regalo'] == 0) {
                 addRowPedido(pedido[x]['items'][y], fila, x);
@@ -1597,6 +1547,19 @@ function validarMultiplo(multiplo, cant) {
 }
 
 function addItemCant(item, multiplo, cant, index) {
+    //en caso de que el pedido ya esté separado, hay que sumar todas las cantidades del mismo articuulo para saber cuánto es la cantidad total
+    var cantPedidoTotal = 0;
+    var x = 0;
+    while (x < pedido.length) {
+        var y = 0;
+        while (y < pedido[x]['items'].length) {
+            if (pedido[x]['items'][y]['itemid'] == item) {
+                cantPedidoTotal += parseInt(pedido[x]['items'][y]['cantidad']);
+            }
+            y++;
+        }
+        x++;
+    }
     var table = document.getElementById('tablaPedido');
     for (var x = 0; x < table.rows.length; x++) {
         if (table.rows[x].cells[1].innerText.indexOf(item) >= 0) {
@@ -1613,9 +1576,8 @@ function addItemCant(item, multiplo, cant, index) {
     newCant = newCant.split('.')[0];
     document.getElementById('cant-' + item + "-" + index).value = newCant;
     var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
-    var cantidad = pedido[index]['items'][indexItem]['cantidad'];
     var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
-    pedido[index]['items'][indexItem]['cantidad'] = cantidad + multiploVenta;
+    pedido[index]['items'][indexItem]['cantidad'] = cantPedidoTotal + multiploVenta;
     var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
     selectedItemsFromInventory[indexInventory]['cant'] = parseInt(selectedItemsFromInventory[indexInventory]['cant']) + multiploVenta;
     var jsonObj = JSON.parse(jsonItemsSeparar);
@@ -1626,13 +1588,23 @@ function addItemCant(item, multiplo, cant, index) {
 }
 
 function decreaseItemCant(item, multiplo, cant, index) {
-    console.log(pedido);
-    console.log(selectedItemsFromInventory);
-    console.log(jsonItemsSeparar);
+    //en caso de que el pedido ya esté separado, hay que sumar todas las cantidades del mismo articulo para saber cuánto es la cantidad total
+    var cantPedidoTotal = 0;
+    var x = 0;
+    while (x < pedido.length) {
+        var y = 0;
+        while (y < pedido[x]['items'].length) {
+            if (pedido[x]['items'][y]['itemid'] == item) {
+                cantPedidoTotal += parseInt(pedido[x]['items'][y]['cantidad']);
+            }
+            y++;
+        }
+        x++;
+    }
 
-    if (cant - multiplo > 0) {
+    if (cantPedidoTotal - multiplo > 0) {
         itemToFocus = item;
-        var newCant = (parseFloat(cant - multiplo)).toLocaleString('en-US', {
+        var newCant = (parseFloat(cantPedidoTotal - multiplo)).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
         });
@@ -1640,7 +1612,6 @@ function decreaseItemCant(item, multiplo, cant, index) {
         newCant = newCant.split('.')[0];
         document.getElementById('cant-' + item + "-" + index).value = newCant;
         var indexItem = pedido[index]['items'].findIndex(o => o.itemid === item);
-        var cantidad = pedido[index]['items'][indexItem]['cantidad'];
         var multiploVenta = pedido[index]['items'][indexItem]['multiploVenta'];
         var table = document.getElementById('tablaPedido');
         for (var x = 0; x < table.rows.length; x++) {
@@ -1648,9 +1619,9 @@ function decreaseItemCant(item, multiplo, cant, index) {
                 table.rows[x].classList.add('fadeOut');
             }
         }
-        pedido[index]['items'][indexItem]['cantidad'] = cantidad - multiploVenta;
+        pedido[index]['items'][indexItem]['cantidad'] = cantPedidoTotal - multiploVenta;
         var indexInventory = selectedItemsFromInventory.findIndex(o => o.item === item);
-        selectedItemsFromInventory[indexInventory]['cant'] = cantidad - multiploVenta;
+        selectedItemsFromInventory[indexInventory]['cant'] = cantPedidoTotal - multiploVenta;
         var jsonObj = JSON.parse(jsonItemsSeparar);
         var indexjsonObj = jsonObj.findIndex(o => o.itemID === item);
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - multiploVenta).toString();
@@ -1707,7 +1678,7 @@ function downloadPlantillaPedido() {
 //----------------------------------------------------------------------------  FUNCIÓN GUARDAR PEDIDO WEB  -------------------------------------------------------------------
 
 
-function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = ACTUALIZAR Y LEVANTAR PEDIDO
+function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = LEVANTAR PEDIDO (UPDATE AND SEND TO NETSUITE), 5 = PRE GUARDAR PEDIDO AL CARGAR POR EXCEL, CERRAR INVENTARIO O CARGAR POR CÓDIGO
     if (pedido.length == 0) {
         alert('Agrega artículos al pedido');
     }
@@ -1746,7 +1717,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
         var listaPrecio = info[indexCustomerInfo]['priceList'];
 
         // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
-        dividir2000 = 0;
+        dividir2000 = document.getElementById("separar2000").checked ? 1 : 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
@@ -1810,7 +1781,13 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
             var plazo = pedido[x]['plazo'];
             var marca = pedido[x]['marca'];
             var tipo = pedido[x]['tipo'];
-            var evento = pedido[x]['evento'];
+            var evento = "";
+            if (tipoPedido == 1) { //si el pedido es cargado por cliente, poner WEB antes del evento cuando se envía a LWS
+                evento = "WEB " + pedido[x]['evento'];
+            }
+            else {
+                evento = pedido[x]['evento'];
+            }
 
             for (var y = 0; y < pedido[x]['items'].length; y++) {
                 var item = {
@@ -1840,7 +1817,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
         }
 
         var json = {
-            idCotizacion: type == 2 || type == 4 ? document.getElementById('idCotizacion').value : 0,
+            idCotizacion: document.getElementById('idCotizacion').value == 'X' ? 0 : document.getElementById('idCotizacion').value,
             companyId: idCustomer,
             internalId: internalId,
             orderC: ordenCompra,
@@ -1878,6 +1855,11 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                     else if (type == 4) { //se está editando el pedido, ya tengo el numero de cotización en el html 
                         noCotizacionNS = document.getElementById('idCotizacion').value;
                         saveNS();
+                    }
+                    else if (type == 5) {
+                        console.log(data);
+                        noCotizacionNS = data['idCotizacion'];
+                        document.getElementById('idCotizacion').value = noCotizacionNS;
                     }
                     else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
                         window.location.href = '/pedidos';
@@ -2002,7 +1984,7 @@ function saveNS() {
         var internalId = info[indexCustomerInfo]['internalID'];
 
         // dividir2000 = document.getElementById("dividir").checked ? 1 : 0;
-        dividir2000 = 0;
+        dividir2000 = document.getElementById("separar2000").checked ? 1 : 0;
         cteRecoge = document.getElementById("cliente_recoge").checked ? 1 : 0;
         correo = document.getElementById("correo").value;
         ordenCompra = document.getElementById("ordenCompra").value;
@@ -2041,7 +2023,13 @@ function saveNS() {
             else if (pedidoSeparado.length > 0) {
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
             }
-            var evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? pedidoSeparado[indexItemSeparado]['evento'] : "";
+            var evento = "";
+            if (tipoPedido == 1) { //si el pedido es cargado por cliente, poner WEB antes del evento cuando se envía a Netsuite
+                evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? "WEB " + pedidoSeparado[indexItemSeparado]['evento'] : "";
+            }
+            else {
+                evento = pedidoSeparado[indexItemSeparado]['evento'] != undefined ? pedidoSeparado[indexItemSeparado]['evento'] : "";
+            }
             var username = "USERNAME";
             for (var y = 0; y < pedido[x]['items'].length; y++) {
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
@@ -2099,7 +2087,7 @@ function saveNS() {
                 comments: comentarios,
                 events: {
                     id: "0",
-                    txt: evento == undefined ? "" : evento
+                    txt: evento
                 },
                 plazoEvento: {
                     id: "0",
@@ -2813,7 +2801,7 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
 
     for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
         $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '">' + addresses[x]['address'] + '</option>');
-        if (addresses[x]['defaultshipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
+        if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
             defaultShippingSelected = true;
             indexDefaultShipping = x;
             $('#sucursal').val(addresses[x]['addressID']);
@@ -2833,4 +2821,31 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
     $('#selectEnvio').selectpicker('refresh');
     $('#fletera').val(packageDeliveries[indexDefaultShipping]);
     $('#correo').val(info[selected]['email']);
+}
+
+function getPUnitario(item) {
+    var art = items.find(o => o.itemid === item['itemID']);
+    var precioCliente = 0;
+    var cantidad = parseInt(item['quantity']);
+    if (art == undefined) {
+        precioCliente = item['plista'];
+    }
+    else {
+        if (art['promoART'] != null) {
+            var y = 0;
+            while (y < art['promoART'].length) {
+                if (cantidad >= art['promoART'][y]['cantidad']) {
+                    precioCliente = ((100 - art['promoART'][y]['descuento']) / 100) * art['price'];
+                }
+                y++;
+            }
+            if (precioCliente == 0)
+                precioCliente = ((100 - art['promoART'][0]['descuento']) / 100) * art['price'];
+        }
+        else
+            precioCliente = art['price'];
+    }
+
+
+    return parseFloat(precioCliente.toFixed(2));
 }

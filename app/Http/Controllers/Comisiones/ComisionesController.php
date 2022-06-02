@@ -14,6 +14,11 @@ class ComisionesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function getProductosVendidos($token, $fecha,$zona){
+        $data = Http::withToken($token)->get(config('global.api_url').'/Especiales/getProductosVendidos?fecha='.$fecha.'&zona='.$zona);
+        return json_decode($data->body());
+    }
+
     public static function getDiasNoHabiles($token, $zona,$fecha){
         $data = Http::withToken($token)->get(config('global.api_url').'/CobranzaZona/getDiasNoHabiles?zona='.$zona.'&fecha='.$fecha);
         return json_decode($data->body());

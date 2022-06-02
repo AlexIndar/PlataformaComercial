@@ -1,440 +1,483 @@
-@extends('layouts.intranet.main', ['active' =>'Comisiones', 'permissions' => $permissions])
-@section('title') Indar | Comisiones @endsection
+@extends('layouts.intranet.main', ['active' => 'Comisiones', 'permissions' => $permissions])
+@section('title')
+    Indar | Comisiones
+@endsection
 @section('styles')
-<link rel="stylesheet" href="{{asset('assets/intranet/css/')}}">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="{{ asset('assets/intranet/css/') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
 @endsection
 @section('body')
-<div id = "hidde" class="content-wrapper" style="min-height: 2128.12px;">
-   <div class="content-header">
-      <div class="container-fluid">
-         <div class="row mb-2">
-            <div class="col-sm-6">
-               <h5 class="m-0">Comisiones | General </h5>
+    <div id="hidde" class="content-wrapper" style="min-height: 2128.12px;">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h5 class="m-0">Comisiones | General </h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Comisiones</a></li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 id="companyname" class="m-0"></h6>
+                        <h6 id="companyid" class="m-0"></h6>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6">
-               <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><a href="#">Comisiones</a></li>
-               </ol>
+        </div>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                </div>
+                            </div>
+                            <div id="divFiltroCli" class="card-body">
+                                <div class="col-lg-12">
+                                    <div class="row ">
+                                        <div class="col-md-2">
+                                            <select name="zonas" class="form-control js-example-basic-single"
+                                                id="zonas"></select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="month" name="fechaCliente" id="fechaCliente" class="form-control"
+                                                value="<?php echo date('Y-m'); ?>" max="<?php echo date('Y-m'); ?>">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="spinner-border text-secondary" style="display:none" id="btnSpinner">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary mb-3"
+                                                style="background-color:#002868" style="display: block"
+                                                onclick="consultar()" id="btnConsultar">Consultar </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body" id="tablaDiv" style="display: none">
+                                <div class="col-lg-12">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="comisionesTable" class="table table-striped table-bordered table-hover "
+                                            style="width:100% ; font-size:75% ;font-weight: bold">
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th id="headerMes" class="text-center" style="font-size:15px "
+                                                        colspan=12> </th>
+                                                </tr>
+                                                <tr>
+                                                    <th style="width:320px">Concepto</th>
+                                                    <th>Recibida en el Mes con IVA</th>
+                                                    <th>Cobrado en el Mes sin IVA</th>
+                                                    <th>Pendiente Saldar Mes Anterior sin IVA</th>
+                                                    <th>Pendiente Saldar Este Mes sin IVA</th>
+                                                    <th>Saldada en el Mes sin IVA</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaTable">
+                                            </tbody>
+                                            <tr>
+                                                <th class="text-center"
+                                                    style="background-color:#002868; color:white; font-size:15px "
+                                                    colspan=8> DIAS DE ATRASO EN LA COBRANZA PARA COMISIONES</th>
+                                            </tr>
+                                            <tr style="background-color:#002868; color:white">
+                                                <th colspan="2">Concepto</th>
+                                                <th>De 0 a 30 Días</th>
+                                                <th>De 31 a 60 Días </th>
+                                                <th>De 61 a 90 Días </th>
+                                                <th>Más de 90 Días</th>
+                                                <th>Total</th>
+                                                <th>Total Comisiones</th>
+                                            </tr>
+                                            <tbody id="llenaMN">
+                                            </tbody>
+                                            <tr style="background-color:#0744a7d2 ; color:white">
+                                                <th colspan="2">Factor MN</th>
+                                                <th>1.805 %</th>
+                                                <th>1.264 % </th>
+                                                <th>0.722 % </th>
+                                                <th>0.000 %</th>
+                                                <th>NA</th>
+                                                <th>NA</th>
+                                            </tr>
+                                            <tbody id="llenaMB">
+                                            </tbody>
+                                            <tr style="background-color:#0744a7d2 ; color:white">
+                                                <th colspan="2">Factor MB</th>
+                                                <th>0.903 %</th>
+                                                <th>0.632 %</th>
+                                                <th>0.361 %</th>
+                                                <th>0.000 %</th>
+                                                <th>NA</th>
+                                                <th>NA</th>
+                                            </tr>
+                                            <tbody id="llenaSubtotal">
+                                            </tbody>
+                                            <tr>
+                                                <th class="text-center"
+                                                    style="background-color:#002868; color:white; font-size:15px "
+                                                    colspan=8> DESCUENTOS A COMISIONES</th>
+                                            </tr>
+                                            <tr style="background-color:#002868; color:white">
+                                                <th colspan="4">Concepto</th>
+                                                <th>Importe</th>
+                                                <th>% de Descuento </th>
+                                                <th>Total </th>
+                                                <th>Neto a Descontar</th>
+                                            </tr>
+                                            <tbody id="llenadesComi">
+                                            </tbody>
+                                            <tr>
+                                                <th class="text-center"
+                                                    style="background-color:#002868; color:white; font-size:15px "
+                                                    colspan=8> PRESTACIONES</th>
+                                            </tr>
+                                            <tr style="background-color:#002868; color:white">
+                                                <th colspan="4">Concepto</th>
+                                                <th colspan="2"> % </th>
+                                                <th colspan="2">Importe </th>
+                                            </tr>
+                                            <tbody id="llenaDespensa">
+                                            </tbody>
+                                            <tr style="background-color:#002868; color:white">
+                                                <th colspan="2">Bono de Puntualidad (8.7%)</th>
+                                                <th>Valor Objetivo</th>
+                                                <th>Limite de Especificación</th>
+                                                <th>Real</th>
+                                                <th>% de Alcance </th>
+                                                <th colspan="2">Importe </th>
+                                            </tr>
+                                            <tbody id="llenaPuntualidad">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="bonosTable" class="table table-striped table-bordered table-hover "
+                                            style="width:100% ; font-size:75% ;font-weight: bold">
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th id="headerMes" class="text-center" style="font-size:15px "
+                                                        colspan=7> BONOS </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Clientes Activos (10%)</th>
+                                                    <th>Valor Objetivo</th>
+                                                    <th>Límite de Especificación</th>
+                                                    <th>Real</th>
+                                                    <th>% de Alcance</th>
+                                                    <th>Importe</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaBonos">
+                                            </tbody>
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th>Clientes Nuevos de Giros (5%)</th>
+                                                    <th>Valor Objetivo</th>
+                                                    <th>Límite de Especificación</th>
+                                                    <th>Real</th>
+                                                    <th>% de Alcance</th>
+                                                    <th>Importe</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaNvosCtes">
+                                            </tbody>
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th>Ventas (10%)</th>
+                                                    <th>Valor Objetivo</th>
+                                                    <th>Límite de Especificación</th>
+                                                    <th>Real</th>
+                                                    <th>% de Alcance</th>
+                                                    <th>Importe</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaVentas">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="bonosTable" class="table table-striped table-bordered table-hover "
+                                            style="width:100% ; font-size:75% ;font-weight: bold">
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th id="headerMes" class="text-center" style="font-size:15px "
+                                                        colspan=7>ESPECIALES</th>
+                                                </tr>
+                                                <thead style="background-color:#002868; color:white">
+                                                    <tr>
+                                                        <th>Resultado Especiales</th>
+                                                        <th>Valor Objetivo</th>
+                                                        <th>Límite de Especificación</th>
+                                                        <th>Real</th>
+                                                        <th>% de Alcance</th>
+                                                        <th>Importe</th>
+                                                    </tr>
+                                                </thead>
+                                            <tbody id="llenaEspeciales">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6">
-               <h6 id="companyname" class="m-0"></h6>
-               <h6 id="companyid" class="m-0"></h6>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="content">
-      <div class="container-fluid">
-         <div class="row">
-            <div class="col-lg-12">
-               <div class="card">
-                  <div class="card-header border-0">
-                     <div class="d-flex justify-content-between">
-                     </div>
-                  </div>
-                  <div  id="divFiltroCli" class="card-body">
-                     <div class="col-lg-12">
-                        <div class="row ">
-                           <div class="col-md-2">
-                              <select name="zonas"  class="form-control js-example-basic-single" id="zonas"></select>
-                           </div>
-                           <div class="col-sm-2">
-                              <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
-                           </div>
-                           <div class="col-md-4">
-                              <div class="spinner-border text-secondary" style="display:none" id="btnSpinner" ></div>
-                              <button type="submit" class="btn btn-primary mb-3" style="background-color:#002868" style="display: block" onclick="consultar()" id="btnConsultar">Consultar </button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div  class="card-body" id="tablaDiv" style="display: none">
-                     <div  class="col-lg-12">
-                        <div class="card-body table-responsive p-0">
-                           <table id="comisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =12>  </th>
-                                 </tr>
-                                 <tr >
-                                    <th style="width:320px">Concepto</th>
-                                    <th>Recibida en el Mes con IVA</th>
-                                    <th>Cobrado en el Mes sin IVA</th>
-                                    <th>Pendiente Saldar Mes Anterior sin IVA</th>
-                                    <th>Pendiente Saldar Este Mes sin IVA</th>
-                                    <th>Saldada en el Mes sin IVA</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaTable">
-                              </tbody>
-                              <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > DIAS DE ATRASO EN LA COBRANZA PARA COMISIONES</th>
-                              </tr>
-                              <tr style="background-color:#002868; color:white" >
-                                 <th colspan="2">Concepto</th>
-                                 <th>De 0 a 30 Días</th>
-                                 <th>De 31 a 60 Días </th>
-                                 <th>De 61 a 90 Días </th>
-                                 <th>Más de 90 Días</th>
-                                 <th>Total</th>
-                                 <th>Total Comisiones</th>
-                              </tr>
-                              <tbody id="llenaMN">
-                              </tbody>
-                              <tr style="background-color:#0744a7d2 ; color:white">
-                                 <th colspan="2">Factor MN</th>
-                                 <th>1.805 %</th>
-                                 <th>1.264 % </th>
-                                 <th>0.722 % </th>
-                                 <th>0.000 %</th>
-                                 <th>NA</th>
-                                 <th>NA</th>
-                              </tr>
-                              <tbody id="llenaMB">
-                              </tbody>
-                              <tr style="background-color:#0744a7d2 ; color:white">
-                                 <th colspan="2">Factor MB</th>
-                                 <th>0.903 %</th>
-                                 <th>0.632 %</th>
-                                 <th>0.361 %</th>
-                                 <th>0.000 %</th>
-                                 <th>NA</th>
-                                 <th>NA</th>
-                              </tr>
-                              <tbody id="llenaSubtotal">
-                              </tbody>
-                              <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > DESCUENTOS A COMISIONES</th>
-                              </tr>
-                              <tr style="background-color:#002868; color:white" >
-                                 <th colspan="4">Concepto</th>
-                                 <th>Importe</th>
-                                 <th>% de Descuento </th>
-                                 <th>Total </th>
-                                 <th>Neto a Descontar</th>
-                              </tr>
-                              <tbody id="llenadesComi">
-                              </tbody>
-                              <tr>
-                                 <th  class="text-center" style="background-color:#002868; color:white; font-size:15px " colspan =8  > PRESTACIONES</th>
-                              </tr>
-                              <tr style="background-color:#002868; color:white" >
-                                 <th colspan="4">Concepto</th>
-                                 <th colspan="2"> % </th>
-                                 <th colspan="2">Importe </th>
-                              </tr>
-                              <tbody id="llenaDespensa">
-                              </tbody>
-                              <tr style="background-color:#002868; color:white" >
-                                 <th colspan="2">Bono de Puntualidad (8.7%)</th>
-                                 <th>Valor Objetivo</th>
-                                 <th>Limite de Especificación</th>
-                                 <th>Real</th>
-                                 <th >% de Alcance </th>
-                                 <th colspan="2">Importe </th>
-                              </tr>
-                              <tbody id="llenaPuntualidad">
-                              </tbody>
-                           </table>
-                        </div>
-                     </div>
-                     <div   class="col-lg-12">
-                        <div class="card-body table-responsive p-0">
-                           <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  > BONOS </th>
-                                 </tr>
-                                 <tr >
-                                    <th>Clientes Activos (10%)</th>
-                                    <th>Valor Objetivo</th>
-                                    <th>Límite de Especificación</th>
-                                    <th>Real</th>
-                                    <th>%  de Alcance</th>
-                                    <th>Importe</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaBonos">
-                              </tbody>
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th>Clientes Nuevos de Giros (5%)</th>
-                                    <th>Valor Objetivo</th>
-                                    <th>Límite de Especificación</th>
-                                    <th>Real</th>
-                                    <th>%  de Alcance</th>
-                                    <th>Importe</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaNvosCtes">
-                              </tbody>
-                              <thead style="background-color:#002868; color:white">
-                                <tr>
-                                   <th>Ventas (10%)</th>
-                                   <th>Valor Objetivo</th>
-                                   <th>Límite de Especificación</th>
-                                   <th>Real</th>
-                                   <th>%  de Alcance</th>
-                                   <th>Importe</th>
-                                </tr>
-                             </thead>
-                             <tbody id="llenaVentas">
-                             </tbody>
-                           </table>
-                        </div>
-                     </div>
-                     <div   class="col-lg-12">
-                        <div class="card-body table-responsive p-0">
-                           <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
-                                 </tr>
-                                 <thead style="background-color:#002868; color:white">
-                                    <tr>
-                                       <th>Resultado Especiales</th>
-                                       <th>Valor Objetivo</th>
-                                       <th>Límite de Especificación</th>
-                                       <th>Real</th>
-                                       <th>%  de Alcance</th>
-                                       <th>Importe</th>
-                                    </tr>
-                                 </thead>
-                                 <tbody id="llenaEspeciales">
-                                 </tbody>
-                           </table>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- Modal Detalle Dias laborados -->
-<div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-         <div class="modal-header bg-indarBlue">
-            <h4 class="text-left title ml-auto">Detalle de Clientes</h4>
-            <h6 id ="vendedor" class="text-center title ml-auto"></h6>
-            <input type="text" id="typeFormInf" value="" hidden>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-            </button>
-         </div>
-         <div class="modal-body text-indarBlue" id="modal2">
-            <div class="card card-primary card-outline card-tabs">
-               <div class="card-header p-0 pt-1 border-bottom-0">
-                  <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                     <li class="nav-item">
-                        <a class="nav-link active" id="custom-tabs-three-visit-tab" data-toggle="pill" href="#custom-tabs-three-visit" role="tab" aria-controls="custom-tabs-three-visit" aria-selected="true"><p id="clientesVis"></p></a>
-                     </li>
-                     <li class="nav-item">
-                        <a class="nav-link" id="custom-tabs-three-novisit-tab" style="color: red" data-toggle="pill" href="#custom-tabs-three-novisit" role="tab" aria-controls="custom-tabs-three-novisit" aria-selected="false"><p id="clientesNoVis"></p> </a>
-                     </li>
-                     <li class="nav-item">
-                        <a class="nav-link" id="custom-tabs-three-noactive-tab" data-toggle="pill" href="#custom-tabs-three-noactive" role="tab" aria-controls="custom-tabs-three-noactive" aria-selected="false"><p id="clientesNoAct"></p></a>
-                     </li>
-                  </ul>
-               </div>
-               <div class="card-body">
-                  <div class="tab-content" id="custom-tabs-three-tabContent">
-                     <div class="tab-pane fade active show" id="custom-tabs-three-visit" role="tabpanel" aria-labelledby="custom-tabs-three-visit-tab">
-                        <div class="card-body table-responsive p-0">
-                           <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th>Nombre de Cliente</th>
-                                    <th>Código</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaModal">
-                              </tbody>
-                           </table>
-                        </div>
-                     </div>
-                     <div class="tab-pane fade" id="custom-tabs-three-novisit" role="tabpanel" aria-labelledby="custom-tabs-three-novisit-tab">
-                        <div class="card-body table-responsive p-0">
-                           <table id="ctesNoVistadosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th>Nombre del Cliente</th>
-                                    <th>Código</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaCtesNoVisitados">
-                              </tbody>
-                           </table>
-                        </div>
-                     </div>
-                     <div class="tab-pane fade" id="custom-tabs-three-noactive" role="tabpanel" aria-labelledby="custom-tabs-three-noactive-tab">
-                        <div class="card-body table-responsive p-0">
-                           <table id="ctesNoActivosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                              <thead style="background-color:#002868; color:white">
-                                 <tr>
-                                    <th>Nombre de Cliente</th>
-                                    <th>Código</th>
-                                 </tr>
-                              </thead>
-                              <tbody id="llenaCtesNoActivos">
-                              </tbody>
-                           </table>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- Modal Detalle Dias NO laborados -->
-<div class="modal fade" id="diasNoLaboradosModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-       <div class="modal-content">
-          <div class="modal-header bg-indarBlue">
-             <h3 class="text-center title ml-auto">Detalle Días No Laborados</h3>
-             <h6 id ="vendedor" class="text-center title ml-auto"></h6>
-             <input type="text" id="typeFormInf" value="" hidden>
-             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-             <i class="fas fa-times"></i>
-             </button>
-          </div>
-          <div class="modal-body text-indarBlue" id="modal2">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="card-body table-responsive p-0">
-                     <div id='calendar'></div>
-                  </div>
-               </div>
-            </div>
-         </div>
-          <div class="modal-footer">
-             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-          </div>
-       </div>
+        </div>
     </div>
- </div>
-<!-- Modal Detalle Descuentos -->
-<div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-         <div class="modal-header bg-indarBlue">
-            Descuentos</h3>
-            <h6 id ="vendedordes" class="text-center title ml-auto"></h6>
-            <input type="text" id="typeFormInf" value="" hidden>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-            </button>
-         </div>
-         <div class="modal-body text-indarBlue" id="modal2">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="card-body table-responsive p-0">
-                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:70% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
-                           <tr >
-                              <th>Id</th>
-                              <th>Cliente</th>
-                              <th>Id Documento</th>
-                              <th>Recibida en el mes con IVA</th>
-                              <th>Cobrado en el mes sin IVA</th>
-                              <th>Pendiente Saldar mes anterior sin IVA</th>
-                              <th>Pendiente de saldar este mes sin IVA</th>
-                              <th>Sal dada en el mes sin IVA</th>
-                              <th>Desc Neg</th>
-                              <th>Desc. Fuera de Tiempo </th>
-                              <th>Nota de Credito por Incobra bilidad</th>
-                              <th>Incobra bilidad </th>
-                              <th>Comisión Base</th>
-                           </tr>
-                        </thead>
-                        <tbody id="llenaDescModal">
-                        </tbody>
-                     </table>
-                  </div>
-               </div>
+    <!-- Modal Detalle Dias laborados -->
+    <div class="modal fade" id="diasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-indarBlue">
+                    <h4 class="text-left title ml-auto">Detalle de Clientes</h4>
+                    <h6 id="vendedor" class="text-center title ml-auto"></h6>
+                    <input type="text" id="typeFormInf" value="" hidden>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body text-indarBlue" id="modal2">
+                    <div class="card card-primary card-outline card-tabs">
+                        <div class="card-header p-0 pt-1 border-bottom-0">
+                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="custom-tabs-three-visit-tab" data-toggle="pill"
+                                        href="#custom-tabs-three-visit" role="tab" aria-controls="custom-tabs-three-visit"
+                                        aria-selected="true">
+                                        <p id="clientesVis"></p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-three-novisit-tab" style="color: red"
+                                        data-toggle="pill" href="#custom-tabs-three-novisit" role="tab"
+                                        aria-controls="custom-tabs-three-novisit" aria-selected="false">
+                                        <p id="clientesNoVis"></p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-three-noactive-tab" data-toggle="pill"
+                                        href="#custom-tabs-three-noactive" role="tab"
+                                        aria-controls="custom-tabs-three-noactive" aria-selected="false">
+                                        <p id="clientesNoAct"></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-three-tabContent">
+                                <div class="tab-pane fade active show" id="custom-tabs-three-visit" role="tabpanel"
+                                    aria-labelledby="custom-tabs-three-visit-tab">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="modalTable" class="table table-striped table-bordered table-hover "
+                                            style="width:100% ; font-size:75% ;font-weight: bold ">
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th>Nombre de Cliente</th>
+                                                    <th>Código</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaModal">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="custom-tabs-three-novisit" role="tabpanel"
+                                    aria-labelledby="custom-tabs-three-novisit-tab">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="ctesNoVistadosTable"
+                                            class="table table-striped table-bordered table-hover "
+                                            style="width:100% ; font-size:75% ;font-weight: bold ">
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th>Nombre del Cliente</th>
+                                                    <th>Código</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaCtesNoVisitados">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="custom-tabs-three-noactive" role="tabpanel"
+                                    aria-labelledby="custom-tabs-three-noactive-tab">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="ctesNoActivosTable"
+                                            class="table table-striped table-bordered table-hover "
+                                            style="width:100% ; font-size:75% ;font-weight: bold ">
+                                            <thead style="background-color:#002868; color:white">
+                                                <tr>
+                                                    <th>Nombre de Cliente</th>
+                                                    <th>Código</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="llenaCtesNoActivos">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- Modal Clientes Nuevos-->
-<div class="modal fade" id="nvosclientesModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-         <div class="modal-header bg-indarBlue">
-            <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
-            <h6 id ="vendedorbon" class="text-center title ml-auto"></h6>
-            <input type="text" id="typeFormInf" value="" hidden>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-            </button>
-         </div>
-         <div class="modal-body text-indarBlue" id="modal2">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="card-body table-responsive p-0">
-                     <table id="modalTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
-                           <tr >
-                              <th>Código cliente</th>
-                              <th style="width:320px">Nombre</th>
-                              <th>Zona</th>
-                              <th>Fecha</th>
-                           </tr>
-                        </thead>
-                        <tbody id="clientesNvosModal">
-                        </tbody>
-                     </table>
-                  </div>
-               </div>
+        </div>
+    </div>
+    <!-- Modal Detalle Dias NO laborados -->
+    <div class="modal fade" id="diasNoLaboradosModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-indarBlue">
+                    <h3 class="text-center title ml-auto">Detalle Días No Laborados</h3>
+                    <h6 id="vendedor" class="text-center title ml-auto"></h6>
+                    <input type="text" id="typeFormInf" value="" hidden>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body text-indarBlue" id="modal2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body table-responsive p-0">
+                                <div id='calendar'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- Modal Editar VO-->
-<div class="modal fade" id="editarVo" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-sm modal-dialog-scrollable">
-      <div class="modal-content">
-         <div class="modal-header bg-indarBlue">
-            <h3 class="text-center title ml-auto">Editar Parametro Clientes Activos</h3>
-            <h6 id ="zonareferencia" class="text-center title ml-auto"></h6>
-            <input type="text" id="typeFormInf" value="" hidden>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-            </button>
-         </div>
-         <div class="modal-body text-indarBlue" id="modal2">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="card-body table-responsive p-0">
-                     <label for="">Nuevo Parametro  :</label>
-                     <input class="form-control" type="number" name="parametro" id="parametro" placeholder="Ingrese nuevo Parametro">
-                  </div>
-               </div>
+        </div>
+    </div>
+    <!-- Modal Detalle Descuentos -->
+    <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-indarBlue">
+                    Descuentos</h3>
+                    <h6 id="vendedordes" class="text-center title ml-auto"></h6>
+                    <input type="text" id="typeFormInf" value="" hidden>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body text-indarBlue" id="modal2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body table-responsive p-0">
+                                <table id="modalTable" class="table table-striped table-bordered table-hover "
+                                    style="width:100% ; font-size:70% ;font-weight: bold ">
+                                    <thead style="background-color:#002868; color:white">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Cliente</th>
+                                            <th>Id Documento</th>
+                                            <th>Recibida en el mes con IVA</th>
+                                            <th>Cobrado en el mes sin IVA</th>
+                                            <th>Pendiente Saldar mes anterior sin IVA</th>
+                                            <th>Pendiente de saldar este mes sin IVA</th>
+                                            <th>Sal dada en el mes sin IVA</th>
+                                            <th>Desc Neg</th>
+                                            <th>Desc. Fuera de Tiempo </th>
+                                            <th>Nota de Credito por Incobra bilidad</th>
+                                            <th>Incobra bilidad </th>
+                                            <th>Comisión Base</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="llenaDescModal">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
-         </div>
-         <div class="modal-footer">
-            <button id="submitParametro" type="submit" class="btn btn-success float-right" data-dismiss="modal">Guardar</button>
-            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-         </div>
-      </div>
-   </div>
-</div>
+        </div>
+    </div>
+    <!-- Modal Clientes Nuevos-->
+    <div class="modal fade" id="nvosclientesModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-indarBlue">
+                    <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
+                    <h6 id="vendedorbon" class="text-center title ml-auto"></h6>
+                    <input type="text" id="typeFormInf" value="" hidden>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body text-indarBlue" id="modal2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body table-responsive p-0">
+                                <table id="modalTable" class="table table-striped table-bordered table-hover "
+                                    style="width:100% ; font-size:75% ;font-weight: bold ">
+                                    <thead style="background-color:#002868; color:white">
+                                        <tr>
+                                            <th>Código cliente</th>
+                                            <th style="width:320px">Nombre</th>
+                                            <th>Zona</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clientesNvosModal">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Editar VO-->
+    <div class="modal fade" id="editarVo" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-indarBlue">
+                    <h3 class="text-center title ml-auto">Editar Parametro Clientes Activos</h3>
+                    <h6 id="zonareferencia" class="text-center title ml-auto"></h6>
+                    <input type="text" id="typeFormInf" value="" hidden>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body text-indarBlue" id="modal2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body table-responsive p-0">
+                                <label for="">Nuevo Parametro :</label>
+                                <input class="form-control" type="number" name="parametro" id="parametro"
+                                    placeholder="Ingrese nuevo Parametro">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitParametro" type="submit" class="btn btn-success float-right"
+                        data-dismiss="modal">Guardar</button>
+                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <!-- Modal Especiales -->
 <div class="modal fade" id="modalEspeciales" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -451,38 +494,56 @@
              <div class="row">
                 <div class="col-md-12">
                     <div class="card-body table-responsive p-0">
-                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                        <table id="modalEspecialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                            <thead style="background-color:#002868; color:white">
                               <tr>
-                                 <th id="headerMes" class="text-center" style="font-size:15px " colspan =7  >ESPECIALES</th>
+                                 <th id="headerMes" class="text-center" style="font-size:15px " colspan =5  >ESPECIALES DEL MES (15%)</th>
                               </tr>
                               <thead style="background-color:#002868; color:white">
                               <tr >
-                                 <th style="width:420px" >Especiales del Mes (15%)</th>
+                                 <th>Especial No.</th>
+                                 <th style="width:420px" >Especiales del Mes </th>
                                  <th >Cuota</th>
                                  <th>Real</th>
                                  <th>Avance</th>
                               </tr>
                            </thead>
-                           <tbody id="llenaEspeciales">
-                             <tr>
-                               <td>E01</td>
-                               <td >cuota</td>
-                               <td>Real</td>
-                               <td>Avance</td>
-                             </tr>
-                             <tr>
-                                 <td>E02</td>
-                                 <td >cuota</td>
-                                 <td>Real</td>
-                                 <td>Avance</td>
-                             </tr>
-                             <tr>
-                                 <td>E03</td>
-                                 <td>cuota</td>
-                                 <td>Real</td>
-                                 <td>Avance</td>
-                             </tr>
+                           <tbody id="llenaModalEspeciales">
+                           </tbody>
+                        </table>
+                     </div>
+                </div>
+             </div>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
+    </div>
+</div>
+<!-- Modal Detalle Especiales -->
+<div class="modal fade" id="modalDetalleEspeciales" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+             <h4 class="text-center title ml-auto">Detalle Especiales</h4>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+             <div class="row">
+                <div class="col-md-12">
+                    <div class="card-body table-responsive p-0">
+                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                              <thead style="background-color:#002868; color:white">
+                              <tr >
+                                 <th>Valor</th>
+                                 <th>Actual</th>
+                              </tr>
+                           </thead>
+                           <tbody id="llenaModalDetalleEspeciales">
                            </tbody>
                         </table>
                      </div>
@@ -498,26 +559,26 @@
 @endsection
 
 @section('js')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
-<!-- Buttons -->
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
-<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
-<!-- SWAL -->
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- FULLCALENDAR-->
-<link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
-<link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
-<script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
-<script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+    <!-- Buttons -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <!-- SWAL -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- FULLCALENDAR-->
+    <link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
+    <link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
+    <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+    <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
 
 
 
 
-<script>
-   $(document).ready(function() {
+    <script>
+ $(document).ready(function() {
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
        //Recibe Json
@@ -672,7 +733,7 @@
 
                    }
                }
-               sumaDescneg = sumaDescneg*(-1) ;
+               sumaDescneg = sumaDescneg ;
 
                sumaMNtotal = sumaMN30 + sumaMN60 + sumaMN90 + sumaMN90mas;
                sumaMBtotal = sumaMB30 + sumaMB60 + sumaMB90 + sumaMB90mas;
@@ -803,11 +864,9 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function array(data){
-
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
-            //console.log(data);
             if(data[0].detalle.length === 0 ){
                 var añoCalendar = data[0].fechaFinPeriodo.slice(0,4);
                 var mesCalendar = data[0].fechaFinPeriodo.slice(5,7);
@@ -823,34 +882,25 @@
                 })
 
             }else{
-
                 var añoCalendar = data[0].detalle[0].fecha.slice(6,10);
                 var mesCalendar = data[0].detalle[0].fecha.slice(3,5);
                 var diaCalendar = data[0].detalle[0].fecha.slice(0,2);
                 inicioCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
-
-
             }
-
 
             events.push({title :'Inicio del Periodo' , start: data[0].fechaInicioPeriodo, backgroundColor: 'green'});
             events.push({title :'Fin del Periodo' , start: data[0].fechaFinPeriodo, backgroundColor: 'red'});
 
             for(var i =0; i < data[0].detalle.length; i++)
             {
-
                 añoCalendar = data[0].detalle[i].fecha.slice(6,10);
                 mesCalendar = data[0].detalle[i].fecha.slice(3,5);
                 diaCalendar = data[0].detalle[i].fecha.slice(0,2);
                 fechaCalendar = añoCalendar + '-' + mesCalendar+'-'+diaCalendar;
-
                 events.push( {title: data[0].detalle[i].codigo , start: fechaCalendar})
             }
 
-
-
             var calendarEl = document.getElementById('calendar');
-
             var calendar = new FullCalendar.Calendar(calendarEl, {
               plugins: [ 'dayGrid' ],
               defaultView: 'dayGridMonth',
@@ -870,8 +920,6 @@
             });
 
             calendar.render();
-            //console.log(data[0]);
-           // console.log(data.porcAlcanzado);
             var htmlPuntualidad = '';
             var htmlModal = '';
             var htmlBonos = '';
@@ -881,6 +929,9 @@
             var htmlEspeciales = '';
             var htmlCtesNoVisitados = '';
             var htmlCtesNoActivos = '';
+            var htmlModalEspeciales = '';
+
+
 
             var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
             //console.log( comisionTot );
@@ -890,14 +941,12 @@
             }else{
                 vendedor = data[0].vendedor + ' | ' + data[0].zona;
             }
-
             var dataDetalle = data[0].detalle;
             var bonoDetalle = data[1].ctesNuevoMesDetalle;
             var i ;
             var bonosPorc;
             var rawtData = data[0].detalle;//agrupar Clientes Visitados
             var rawtDataNoActivos = data[0].detalleVisitadosNoAct;//agrupar Clientes Visitados No Activos
-
             //Agrupar Clientes Visitados
             var groupBy = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
@@ -908,7 +957,6 @@
                }, {});
             }
             var resultData = Object.values(groupBy(rawtData,'codigo'));
-
             //Agrupar Clientes Visitados No Activos
             var groupNoAct = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
@@ -919,9 +967,6 @@
                }, {});
             }
             var resultNoAct = Object.values(groupNoAct(rawtDataNoActivos,'codigo'));
-            //console.log(resultNoAct);
-
-
 
             for (i = 0; i < resultData.length; i++) {
 
@@ -951,7 +996,6 @@
             }
 
             for (i = 0; i < bonoDetalle.length; i++) {
-
                 if(bonoDetalle[i].giro_id == 30 || bonoDetalle[i].giro_id == 45 ){
                     htmlModalnc += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
@@ -960,10 +1004,7 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
                 }
-
-
-                }
-
+            }
 
             var show ;
             if(data[0].diasLaborados == 0){
@@ -999,10 +1040,10 @@
                    '<td style="font-weight: bold" colspan="4" > Días No Reportados </td>' +
                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
                    '<td style="font-weight: bold"> NA </td>' +
-                   '<td style="font-weight: bold; color:red" colspan="2"> -'+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                   '<td style="font-weight: bold; color:red" colspan="2"> '+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                    '</td>'+
                    '<tr>' +
-                   '<td style="font-weight: bold" colspan="6"> Comision Integrada </td>' +
+                   '<td style="font-weight: bold" colspan="6"> Comisión Integrada </td>' +
                    '<td style="font-weight: bold" colspan="2">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
 
@@ -1047,6 +1088,7 @@
                      '</tr>';
             var vtasPorc = data[2].alcance/10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
+            var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
 
             if(data[2].hasOwnProperty('status')){
 
@@ -1074,16 +1116,85 @@
                      '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '</tr>'+
+                     '<tr style ="background-color: rgba(231, 235, 11, 0.705)">'+
+                     '<td style="font-weight: bold" colspan="5" >Comisión Integrada + Bonos </td>' +
+                     '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
             }
+            //Agrupar Especiales por cons
+            var rawtDataEspeciales = data[3];
+
+            var groupEspeciales = function (miarray, prop) {
+               return miarray.reduce(function(groups, item) {
+                  var val = item[prop];
+                  groups[val] = groups[val] || {conse: item.conse, total: item.total, cuota: item.cuota, especialesDelMes: item.especialesDelMes, avance: item.avance};
+
+                  return groups;
+               }, {});
+            }
+            var resultDataEspeciales = Object.values(groupEspeciales(rawtDataEspeciales,'conse'));
+
+            var avanceEspeciales=0 ;
+            var sumaRealEspeciales=0;
+            for(var i=0; i < resultDataEspeciales.length-2; i++){
+
+                if(resultDataEspeciales[i].avance >= 100){
+                    avanceEspeciales = 100;
+                }
+                else{
+                    avanceEspeciales = resultDataEspeciales[i].avance;
+                }
+                htmlModalEspeciales += '<tr>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
+                     '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+avanceEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' %</td>' +
+                     '</tr>';
+                     sumaRealEspeciales =sumaRealEspeciales + avanceEspeciales;
+
+            }
+            sumaRealEspeciales=sumaRealEspeciales/200;
+            //console.log(sumaRealEspeciales);
 
 
+
+           /*  for(var i=0; i < data[3].length; i++){
+                htmlModalEspeciales += '<tr>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].especialesDelMes+'</td>'+
+                     '<td style="font-weight: bold ">'+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].avance.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '</tr>';
+            } */
+
+            $('#modalEspecialesTable tbody').on('click', 'tr', function () {
+                var htmlModalDetalleEspeciales = '';
+                var idEspecial = $(this).text();
+                var idEspecial = idEspecial.split(" ",1)
+                var idEspecial = String(idEspecial);
+                var detalleEspeciales= data[3];
+                for(var x=0; x < detalleEspeciales.length; x++){
+
+                  if(detalleEspeciales[x].conse == idEspecial){
+
+                    htmlModalDetalleEspeciales += '<tr>'+
+                        '<td>'+ detalleEspeciales[x].valor+'</td>'+
+                        '<td>'+ detalleEspeciales[x].actual+'</td>';
+                        '</tr>';
+
+                  }
+
+                }
+                $('#llenaModalDetalleEspeciales').html(htmlModalDetalleEspeciales);
+           });
 
             htmlEspeciales += '<tr>'+
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +
-                     '<td style="font-weight: bold "> Vo </td>' +
-                     '<td style="font-weight: bold" > Le </td>' +
-                     '<td style="font-weight: bold" > Real </td>' +
+                     '<td style="font-weight: bold "> 75 % </td>' +
+                     '<td style="font-weight: bold" > 25 % </td>' +
+                     '<td style="font-weight: bold" >'+ sumaRealEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'% </td>' +//suma de porcentajes  entre 2000
                      '<td style="font-weight: bold" >% </td>' +
                      '<td style="font-weight: bold" >Importe</td>' +
                      '</tr>';
@@ -1100,6 +1211,7 @@
             $('#llenaNvosCtes').html(htmlNvosCtes);
             $('#llenaVentas').html(htmlVentas);
             $('#llenaEspeciales').html(htmlEspeciales);
+            $('#llenaModalEspeciales').html(htmlModalEspeciales);
             $('#clientesNvosModal').html(htmlModalnc);
             $('#zonareferencia').text(data[0].zona);
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
@@ -1107,7 +1219,6 @@
             $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
            },
            error: function() {
-
                console.log("Error");
                alert('Error, Tiempo de espera agotado');
            }
@@ -1249,6 +1360,5 @@
        });
     }
 
-
-</script>
+    </script>
 @endsection
