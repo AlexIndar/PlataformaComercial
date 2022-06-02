@@ -386,8 +386,8 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaRMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSMASI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaPSEMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">NA</td>'+
