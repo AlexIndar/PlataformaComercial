@@ -157,7 +157,8 @@ class LogisticaController extends Controller
                     "fletera" => $dataJson->fletera,
                     "importeSeguro" => $dataJson->importeSeguro,
                     "importeTotal" => $dataJson->importeTotal,
-                    "numGuia" => $dataJson->numGuia
+                    "numGuia" => $dataJson->numGuia,
+                    "chofer" => $dataJson->chofer
                 ]);
                 $save = json_decode($saveGuiaNumber);
                 return $save;

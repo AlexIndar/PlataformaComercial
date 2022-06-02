@@ -49,10 +49,6 @@
                                             <div class="col-3 p-0">
                                                 <strong>1. Ingrese Información</strong>
                                             </div>
-                                            <div class="col-3">
-                                                <label for="">Importe Total</label>
-                                                <input class="form-control" type="text" id="importeTotal" disabled>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -78,13 +74,13 @@
                                                 @endforeach
                                             </select>
                                             </div>
-                                            <div class="col-3">
-                                                <label for="">Num. Folio</label>
-                                                <input class="form-control" type="text" id="NumFolio">
-                                            </div>
                                             <div class="col-2">
                                                 <label for="">Num. de Guía</label>
                                                 <input class="form-control" type="text" id="NumGuia">
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="">Importe Total</label>
+                                                <input class="form-control" type="text" id="importeTotal" value="0.00" disabled>
                                             </div>
                                             <div class="col-1 mt-2">
                                                 <label for=""></label>

@@ -399,7 +399,8 @@ const logisticaController = {
         let fletera = $('#fletera').val();
         let numGuia = $('#NumGuia').val();
         let importeTotal = $('#importeTotal').val();
-        let importeSeguro = $('#importeSeguro').val();
+        let chofer = $('#chofer').val();
+        let importeSeguro = 0.00;
         let bandera=0,bandera2=0;
         for(let a=0; a< tablaTipo.length; a++){
             if(tablaTipo[a] != undefined)
@@ -429,7 +430,8 @@ const logisticaController = {
                 importeTotal:importeTotal,
                 importeSeguro:importeSeguro,
                 tablaTipo:tablaTipo,
-                facturasSelected:facturasSelected
+                facturasSelected:facturasSelected,
+                chofer: chofer
             };
             $.ajax({
                 url: '/logistica/distribucion/numeroGuia/saveGuiaNumber',
@@ -454,7 +456,8 @@ const logisticaController = {
                         $('#table-content-embarque-factura').empty();
                         $('#table-content-facturas-selected').empty();
                         $('#importeTotal').val('0.00');
-                        $('#importeSeguro').val('0.00');
+                        $('#fletera').prop('disabled',false);
+                        $('#chofer').prop('disabled', false);
                     }else{
                         Toast.fire({
                             icon: 'error',
@@ -531,6 +534,24 @@ const logisticaController = {
                 }
             }
         }
+        logisticaController.calculateImportTotal();  
+    },
+    calculateImportTotal: () =>{
+        let importeTotal = 0.00;
+        let bandera = 0;
+        for(let a=0; a < arrayRowTableType.length; a++)
+        {
+            if(arrayRowTableType[a] != undefined)
+            {
+                importeTotal += parseFloat(arrayRowTableType[a].importe);
+                $('#importeTotal').val(importeTotal);
+                bandera++;
+            }
+        }
+        if(bandera == 0)
+        {
+            $('#importeTotal').val(0.00);
+        }
     },
     deleteRowTable: (e) => {
         let idrow = $(e).data('idrow');
@@ -576,6 +597,7 @@ const logisticaController = {
                     }
                 }
             }
+            logisticaController.calculateImportTotal();
         }
         if(table == 'embarques'){
             for(let a = 0; a < arrayRowsEmbarques.length; a++)
@@ -615,6 +637,7 @@ const logisticaController = {
             }
             logisticaController.acomodateTableEmbarqueFactura();
             logisticaController.acomodateTableFacturasSelected();
+            logisticaController.calculateImportTotal();
         }
         if(table == 'tipos'){
             for(let a=0; a < arrayRowTableType.length; a++)
@@ -627,6 +650,7 @@ const logisticaController = {
                     }
                 }
             }
+            logisticaController.calculateImportTotal();
         }
     },
     acomodateTableEmbarqueFactura: () => {
@@ -885,6 +909,7 @@ const logisticaController = {
             success: function(data){
                 if(data != "" || data != [] || data.length != 0)
                 {
+                    //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRRAY DE LOS BULTOS QUE REGRESA
                     let embarque = '';
                     for(let a=0;a < arrayResultFacturas.length; a++)
                     {
@@ -1005,9 +1030,9 @@ const logisticaController = {
                                 let importeLock = '';
                                 if(fletera == "" || data[a].importe == 0)
                                 {
-                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>'
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>';
                                 }else{
-                                    importeLock = +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>'
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>';
                                 }
                                 $('#table-content-guia-type').append(
                                     '<tr id="rowType'+lasRow+'">'
@@ -1040,6 +1065,7 @@ const logisticaController = {
                                     'factura' : factura,
                                     'embarque' : embarque
                                 });
+                                logisticaController.calculateImportTotal();
                             }
                         }
                     }else{
@@ -1111,9 +1137,9 @@ const logisticaController = {
                             let importeLock = '';
                             if(fletera == "" || data[a].importe == 0)
                             {
-                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>'
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>';
                             }else{
-                                importeLock = +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>'
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>';
                             }
                             $('#table-content-guia-type').append(
                                 '<tr id="rowType'+contRowTypeTable+'">'
@@ -1146,6 +1172,7 @@ const logisticaController = {
                                 'factura': factura,
                                 'embarque' : embarque
                             });
+                            logisticaController.calculateImportTotal();
                         }
                     }
                 }
