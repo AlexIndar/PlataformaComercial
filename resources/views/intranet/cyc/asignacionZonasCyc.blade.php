@@ -16,7 +16,7 @@
                 <div class="col-md-10 text-center">
                 </div>
                 <div class="col-md-2 text-center">
-                    <button type="button" class="btn btn-outline-info" onclick="file()"><i class="fas fa-cloud-download-alt"></i> Descargar Plantilla</button>
+                    <button type="button" class="btn btn-outline-info" onclick="getTemplate()"><i class="fas fa-cloud-download-alt"></i> Descargar Plantilla</button>
                 </div>
             </div>
         </div>

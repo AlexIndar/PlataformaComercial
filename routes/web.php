@@ -1512,6 +1512,24 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $data = AsignacionZonasController::getTemplate($token);
                     return  $data;
+                    dd($data);
+                });
+
+                //////// ASIGNACION DE ZONAS /////
+                Route::get('/EstadisticaSolicitudTiempo', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                    }else{
+                        return redirect('/Intranet');
+                    }
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
