@@ -969,61 +969,36 @@ const logisticaController = {
                                     case 'Bulto':
                                         select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
                                                 +'<option value="Bulto" selected>Bulto</option>'
-                                                +'<option value="Caja">Caja</option>'
-                                                +'<option value="Tarima">Tarima</option>'
-                                                +'<option value="Atado">Atado</option>'
-                                                +'<option value="Peso">Peso</option>'
-                                                +'<option value="Volumen">Volumen</option>'
                                                 +'</select>';
                                         break;
                                     case 'Caja':
                                         select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                                +'<option value="Bulto">Bulto</option>'
                                                 +'<option value="Caja" selected>Caja</option>'
-                                                +'<option value="Tarima">Tarima</option>'
-                                                +'<option value="Atado">Atado</option>'
-                                                +'<option value="Peso">Peso</option>'
-                                                +'<option value="Volumen">Volumen</option>'
                                                 +'</select>';
                                         break;
                                     case 'Tarima':
                                         select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                                +'<option value="Bulto">Bulto</option>'
-                                                +'<option value="Caja">Caja</option>'
                                                 +'<option value="Tarima" selected>Tarima</option>'
-                                                +'<option value="Atado">Atado</option>'
-                                                +'<option value="Peso">Peso</option>'
-                                                +'<option value="Volumen">Volumen</option>'
                                                 +'</select>';
                                         break;
                                     case 'Atado':
                                         select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                                +'<option value="Bulto">Bulto</option>'
-                                                +'<option value="Caja">Caja</option>'
-                                                +'<option value="Tarima">Tarima</option>'
                                                 +'<option value="Atado" selected>Atado</option>'
-                                                +'<option value="Peso">Peso</option>'
-                                                +'<option value="Volumen">Volumen</option>'
                                                 +'</select>';
                                         break;
                                     case 'Peso':
                                         select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                                +'<option value="Bulto">Bulto</option>'
-                                                +'<option value="Caja">Caja</option>'
-                                                +'<option value="Tarima">Tarima</option>'
-                                                +'<option value="Atado">Atado</option>'
                                                 +'<option value="Peso" selected>Peso</option>'
-                                                +'<option value="Volumen">Volumen</option>'
                                                 +'</select>';
                                         break;
                                     case 'Volumen':
                                         select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                                +'<option value="Bulto">Bulto</option>'
-                                                +'<option value="Caja">Caja</option>'
-                                                +'<option value="Tarima">Tarima</option>'
-                                                +'<option value="Atado">Atado</option>'
-                                                +'<option value="Peso">Peso</option>'
                                                 +'<option value="Volumen" selected>Volumen</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Cubeta':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Cubeta" selected>Cubeta</option>'
                                                 +'</select>';
                                         break;
                                 }
@@ -1074,65 +1049,40 @@ const logisticaController = {
                             let select = '';
                             switch(data[a].tipoAtado){
                                 case 'Bulto':
-                                    select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                            +'<option value="Bulto" selected>Bulto</option>'
-                                            +'<option value="Caja">Caja</option>'
-                                            +'<option value="Tarima">Tarima</option>'
-                                            +'<option value="Atado">Atado</option>'
-                                            +'<option value="Peso">Peso</option>'
-                                            +'<option value="Volumen">Volumen</option>'
-                                            +'</select>';
-                                    break;
-                                case 'Caja':
-                                    select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                            +'<option value="Bulto">Bulto</option>'
-                                            +'<option value="Caja" selected>Caja</option>'
-                                            +'<option value="Tarima">Tarima</option>'
-                                            +'<option value="Atado">Atado</option>'
-                                            +'<option value="Peso">Peso</option>'
-                                            +'<option value="Volumen">Volumen</option>'
-                                            +'</select>';
-                                    break;
-                                case 'Tarima':
-                                    select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                            +'<option value="Bulto">Bulto</option>'
-                                            +'<option value="Caja">Caja</option>'
-                                            +'<option value="Tarima" selected>Tarima</option>'
-                                            +'<option value="Atado">Atado</option>'
-                                            +'<option value="Peso">Peso</option>'
-                                            +'<option value="Volumen">Volumen</option>'
-                                            +'</select>';
-                                    break;
-                                case 'Atado':
-                                    select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                            +'<option value="Bulto">Bulto</option>'
-                                            +'<option value="Caja">Caja</option>'
-                                            +'<option value="Tarima">Tarima</option>'
-                                            +'<option value="Atado" selected>Atado</option>'
-                                            +'<option value="Peso">Peso</option>'
-                                            +'<option value="Volumen">Volumen</option>'
-                                            +'</select>';
-                                    break;
-                                case 'Peso':
-                                    select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                            +'<option value="Bulto">Bulto</option>'
-                                            +'<option value="Caja">Caja</option>'
-                                            +'<option value="Tarima">Tarima</option>'
-                                            +'<option value="Atado">Atado</option>'
-                                            +'<option value="Peso" selected>Peso</option>'
-                                            +'<option value="Volumen">Volumen</option>'
-                                            +'</select>';
-                                    break;
-                                case 'Volumen':
-                                    select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
-                                            +'<option value="Bulto">Bulto</option>'
-                                            +'<option value="Caja">Caja</option>'
-                                            +'<option value="Tarima">Tarima</option>'
-                                            +'<option value="Atado">Atado</option>'
-                                            +'<option value="Peso">Peso</option>'
-                                            +'<option value="Volumen" selected>Volumen</option>'
-                                            +'</select>';
-                                    break;
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Bulto" selected>Bulto</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Caja':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Caja" selected>Caja</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Tarima':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Tarima" selected>Tarima</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Atado':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Atado" selected>Atado</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Peso':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Peso" selected>Peso</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Volumen':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Volumen" selected>Volumen</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Cubeta':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Cubeta" selected>Cubeta</option>'
+                                                +'</select>';
+                                        break;
                             }
                             let importeLock = '';
                             if(fletera == "" || data[a].importe == 0)
@@ -1239,15 +1189,42 @@ const logisticaController = {
                         datatype: 'json',
                         success: function(data){
                             if(data){
+                                arrayFacturasSelected.push({
+                                    'factura' : factura,
+                                    'autorizado' : 'No pertenece a los embarques',
+                                    'embarque': ''
+                                });
                                 Toast.fire({
                                     icon: 'error',
                                     title: '¡Esta Factura no Pertence a los embarques señalados!'
                                 });  
                             }else{
+                                arrayFacturasSelected.push({
+                                    'factura' : factura,
+                                    'autorizado' : 'No esta embarcada aún',
+                                    'embarque': ''
+                                });
                                 Toast.fire({
                                     icon: 'error',
                                     title: '¡Esta factura nunca a sido embarcada!'
                                 });
+                            }
+                            $('#table-content-facturas-selected').empty();
+                            for(let b = 0;  b < arrayFacturasSelected.length; b ++){
+                                if(arrayFacturasSelected[b] != undefined)
+                                {
+                                    contRowFacturasSelected++
+                                    $('#rowFactura'+arrayFacturasSelected[b].factura).css('background-color','#50ff50');
+                                    $('#table-content-facturas-selected').append(
+                                        '<tr id="rowFacturaSelected'+contRowFacturasSelected+'">'
+                                        +'<td>'+arrayFacturasSelected[b].factura+'</td>'
+                                        +'<td>'+arrayFacturasSelected[b].embarque+'</td>'
+                                        +'<td>'+arrayFacturasSelected[b].autorizado+'</td>'
+                                        // +'<td><input class="form-control" id="autorizado'+contRowFacturasSelected+'" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" onkeyup="logisticaController.changeAuthoriceBills(this)" value="'+arrayFacturasSelected[b].autorizado+'" /></td>'
+                                        +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" data-table="facturasSelected" data-idrow="rowFacturaSelected'+contRowFacturasSelected+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                                        +'</tr>'
+                                    );   
+                                }
                             }
                         },
                         error: function(jqXHR, textStatus, errorThrown){

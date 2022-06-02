@@ -33,9 +33,9 @@
                                         <div class="col-3 mt-2">
                                             <h3 class="card-title">Numero Guía</h3>
                                         </div>
-                                        <div class="col-2">
+                                        {{-- <div class="col-2">
                                             <button type="button" class="btn btn-block btn-outline-primary" onclick="logisticaController.showModalLogin()"><i class="fa-solid fa-pen-to-square"></i>Actualizar Importes</button>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
