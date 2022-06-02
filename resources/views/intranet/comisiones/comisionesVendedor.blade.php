@@ -733,7 +733,7 @@
 
                    }
                }
-               sumaDescneg = sumaDescneg*(-1) ;
+               sumaDescneg = sumaDescneg ;
 
                sumaMNtotal = sumaMN30 + sumaMN60 + sumaMN90 + sumaMN90mas;
                sumaMBtotal = sumaMB30 + sumaMB60 + sumaMB90 + sumaMB90mas;
@@ -1040,7 +1040,7 @@
                    '<td style="font-weight: bold" colspan="4" > Días No Reportados </td>' +
                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#diasNoLaboradosModal"><u>'+ data[0].diasNoLAborados +'</u></td>' +
                    '<td style="font-weight: bold"> NA </td>' +
-                   '<td style="font-weight: bold; color:red" colspan="2"> -'+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                   '<td style="font-weight: bold; color:red" colspan="2"> '+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                    '</td>'+
                    '<tr>' +
                    '<td style="font-weight: bold" colspan="6"> Comisión Integrada </td>' +
@@ -1089,7 +1089,7 @@
             var vtasPorc = data[2].alcance/10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
             var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
-                console.log(data[2]);
+
             if(data[2].hasOwnProperty('status')){
 
                 Swal.fire({
@@ -1124,7 +1124,7 @@
             }
             //Agrupar Especiales por cons
             var rawtDataEspeciales = data[3];
-            //console.log(data[3]);
+
             var groupEspeciales = function (miarray, prop) {
                return miarray.reduce(function(groups, item) {
                   var val = item[prop];
@@ -1134,17 +1134,31 @@
                }, {});
             }
             var resultDataEspeciales = Object.values(groupEspeciales(rawtDataEspeciales,'conse'));
-            //console.log(resultDataEspeciales);
-            for(var i=0; i < resultDataEspeciales.length; i++){
+
+            var avanceEspeciales=0 ;
+            var sumaRealEspeciales=0;
+            for(var i=0; i < resultDataEspeciales.length-2; i++){
+
+                if(resultDataEspeciales[i].avance >= 100){
+                    avanceEspeciales = 100;
+                }
+                else{
+                    avanceEspeciales = resultDataEspeciales[i].avance;
+                }
                 htmlModalEspeciales += '<tr>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
                      '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                      '<td style="font-weight: bold" > '+resultDataEspeciales[i].total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
-                     '<td style="font-weight: bold" > '+resultDataEspeciales[i].avance.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' %</td>' +
+                     '<td style="font-weight: bold" > '+avanceEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' %</td>' +
                      '</tr>';
+                     sumaRealEspeciales =sumaRealEspeciales + avanceEspeciales;
+
             }
-            console.log(htmlModalEspeciales);
+            sumaRealEspeciales=sumaRealEspeciales/200;
+            //console.log(sumaRealEspeciales);
+
+
 
            /*  for(var i=0; i < data[3].length; i++){
                 htmlModalEspeciales += '<tr>'+
@@ -1154,6 +1168,7 @@
                      '<td style="font-weight: bold" > '+resultDataEspeciales[i].avance.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                      '</tr>';
             } */
+
             $('#modalEspecialesTable tbody').on('click', 'tr', function () {
                 var htmlModalDetalleEspeciales = '';
                 var idEspecial = $(this).text();
@@ -1177,9 +1192,9 @@
 
             htmlEspeciales += '<tr>'+
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +
-                     '<td style="font-weight: bold "> Vo </td>' +
-                     '<td style="font-weight: bold" > Le </td>' +
-                     '<td style="font-weight: bold" > Real </td>' +
+                     '<td style="font-weight: bold "> 75 % </td>' +
+                     '<td style="font-weight: bold" > 25 % </td>' +
+                     '<td style="font-weight: bold" >'+ sumaRealEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'% </td>' +//suma de porcentajes  entre 2000
                      '<td style="font-weight: bold" >% </td>' +
                      '<td style="font-weight: bold" >Importe</td>' +
                      '</tr>';
