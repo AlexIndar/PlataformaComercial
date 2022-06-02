@@ -30,6 +30,10 @@ class ItemsController extends Controller
 
         $bestSellers = json_decode($getProducts->body());
 
+        if($bestSellers == null){
+            return view('errors.500');
+        }
+
         foreach($bestSellers as $item){
             $item->itemid = strtr($item->itemid, " ", "_");
         }

@@ -18,6 +18,7 @@ class ConfirmarPedidoDesneg extends Mailable
     public $cliente;
     public $comentarios;
     public $ordenCompra;
+    public $sucursal;
     public $formaEnvio;
     public $fletera;
     public $asunto;
@@ -26,7 +27,7 @@ class ConfirmarPedidoDesneg extends Mailable
     public $descuento;
     public $username;
     public $fecha;
-    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha)
+    public function __construct($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha)
     {   
         $this->pedido = $pedido;
         $this->detallesPedido = $detallesPedido;
@@ -34,6 +35,7 @@ class ConfirmarPedidoDesneg extends Mailable
         $this->cliente = $cliente;
         $this->comentarios = $comentarios;
         $this->ordenCompra = $ordenCompra;
+        $this->sucursal = $sucursal;
         $this->formaEnvio = $formaEnvio;
         $this->fletera = $fletera;
         $this->asunto = $asunto;
