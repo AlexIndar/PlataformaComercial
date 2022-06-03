@@ -53,15 +53,15 @@ class LoginController extends Controller
                 $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username);
                 $permissions = (json_decode(json_decode($typeUser->body())->permissions));
                 $fullname = (json_decode($typeUser->body())->name);
-                setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24, '/');
-                setcookie("_fln", encrypt($fullname, "7Ind4r7"), time()+60*60*24, '/');
-                setcookie("_usn", encrypt($username, "7Ind4r7"), time()+60*60*24, '/');
+                setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24*5, '/');
+                setcookie("_fln", encrypt($fullname, "7Ind4r7"), time()+60*60*24*5, '/');
+                setcookie("_usn", encrypt($username, "7Ind4r7"), time()+60*60*24*5, '/');
                 if(json_decode($typeUser->body())->typeUser == "C"){
-                    setcookie("_lv", "C", time()+60*60*24, '/');
+                    setcookie("_lv", "C", time()+60*60*24*5, '/');
                     return redirect('/');
                 }
                 else  if(json_decode($typeUser->body())->typeUser == "E"){
-                    setcookie("_lv", "E", time()+60*60*24, '/');
+                    setcookie("_lv", "E", time()+60*60*24*5, '/');
                     return redirect('/Intranet');
                 }
         } 
@@ -72,17 +72,17 @@ class LoginController extends Controller
     }
 
     public function logout(){
-        setcookie("_lt", "", time()-60*60*24, '/');
-        setcookie("_rfs", "", time()- 60*60*24, '/');
-        setcookie("_fln", "", time()- 60*60*24, '/');
-        setcookie("_usn", "", time()- 60*60*24, '/');
-        setcookie("_lv", "", time()- 60*60*24, '/');
+        setcookie("_lt", "", time()-60*60*24*5, '/');
+        setcookie("_rfs", "", time()- 60*60*24*5, '/');
+        setcookie("_fln", "", time()- 60*60*24*5, '/');
+        setcookie("_usn", "", time()- 60*60*24*5, '/');
+        setcookie("_lv", "", time()- 60*60*24*5, '/');
         setcookie("_la", "", time()- 60*60*24*365, '/');
-        setcookie("laravel-token", "", time()-60*60*24, '/');
-        setcookie("refresh", "", time()- 60*60*24, '/');
-        setcookie("fullname", "", time()- 60*60*24, '/');
-        setcookie("username", "", time()- 60*60*24, '/');
-        setcookie("level", "", time()- 60*60*24, '/');
+        setcookie("laravel-token", "", time()-60*60*24*5, '/');
+        setcookie("refresh", "", time()- 60*60*24*5, '/');
+        setcookie("fullname", "", time()- 60*60*24*5, '/');
+        setcookie("username", "", time()- 60*60*24*5, '/');
+        setcookie("level", "", time()- 60*60*24*5, '/');
         Artisan::call('cache:clear');
         return redirect('/');
     }
