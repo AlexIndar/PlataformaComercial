@@ -35,7 +35,7 @@ class TokenController extends Controller
             $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username); //ejecutar y ver si responde Unauthoraized
             if($typeUser->getStatusCode() == 401){//si responde error 401 Unauthorized, entonces el token no es válido
                 $token = "expired";
-                setcookie("_lt", "", time()-60*60*24, '/');
+                setcookie("_lt", "", time()-60*60*24*5, '/');
                 setcookie("_lt", "expired", time()+900, '/');
                 setcookie("_ep", time(), time()+60*60*24*365, '/');
             }
