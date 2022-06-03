@@ -1225,10 +1225,22 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
         var subtotal = 0;
         for (var y = 0; y < pedido[x]['items'].length; y++) {
             var cantidad = pedido[x]['items'][y]['cantidad'];
-            var pUnitario = ((100 - parseFloat(pedido[x]['items'][y]['promo'])) * parseFloat(pedido[x]['items'][y]['price']) / 100).toFixed(2);
+            var price = 0;
+            if (pedido[x]['items'][y]['regalo'] == 1)
+                price = 0.01;
+            else
+                price = parseFloat(pedido[x]['items'][y]['price']);
+            var pUnitario = ((100 - parseFloat(pedido[x]['items'][y]['promo'])) * price / 100).toFixed(2);
             var importe = (cantidad * pUnitario).toFixed(2);
+            console.log(cantidad);
+            console.log('Cantidad: ' + parseFloat(pedido[x]['items'][y]['cantidad']));
+            console.log('Promo: ' + parseFloat(pedido[x]['items'][y]['promo']));
+            console.log('Price: ' + parseFloat(pedido[x]['items'][y]['price']));
+            console.log('PUnitario: ' + pUnitario);
+            console.log('Importe: ' + importe);
             subtotal += parseFloat(importe);
         }
+        console.log(subtotal);
         subtotalPedido = subtotalPedido + subtotal;
         addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
         for (var y = 0; y < pedido[x]['items'].length; y++) {
