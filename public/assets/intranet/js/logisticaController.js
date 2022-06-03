@@ -3,6 +3,10 @@ $(document).ready(function(){
     switch(window.location.pathname)
     {
         case '/logistica/distribucion/numeroGuia':
+            $('#fletera').select2();
+            $('#chofer').select2();
+            $('.select2-selection').css('height','39px');
+            $('.select2-selection').css('width','100%');
             $('[data-toggle="tooltip"]').tooltip();
             $("#importeTotal").inputmask({
                 alias:"decimal",
@@ -24,6 +28,13 @@ $(document).ready(function(){
                 digitsOptional: false,
                 placeholder: "0.00"
             });
+            $('#fletera').on('change', function(){
+                $('#chofer').prop('disabled', true);
+            });
+            $('#chofer').on('change', function(){
+                $('#fletera').prop('disabled', true);
+            });
+            logisticaController.costFletera();
             break;
         case '/logistica/distribucion/validarSad':
              logisticaController.consultValidateSAD();
@@ -77,6 +88,54 @@ $(document).ready(function(){
                 }
              });
              logisticaController.reportSad();
+            break;
+        case '/logistica/distribucion/reporteEmbarque':
+            $('#table-reporte-embarque').DataTable({
+                paging: true,
+                responsive: true,
+                searching: true,
+                processing: true,
+                bSortClasses: false,
+                fixedHeader: true,
+                // scrollY:        400,
+                deferRender:    true,
+                scroller:       true,
+                columns: [
+                    { data:'diEmbarque', visible:true},
+                    { data:'fecha', visible:true},
+                    { data:'paqueteria', visible:true},
+                    { data:'comentarios', visible:true},
+                    { data:'estatus', visible:true},
+                    { data:'asignado', visible:true},
+                    { data:'factura', visible:true},
+                    { data:'estado', visible:true},
+                    { data:'persona', visible:true},
+                    { data:'fechaHora', visible:true},
+                    { data:'comentariosFactura', visible:true},
+                    { data:'usuarioConfirma', visible:true},
+                    { data:'fechaConfirmaPostVenta', visible:true}
+                ],
+                language: {
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Documentos",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                    }
+                }
+             });
+            logisticaController.reportShipment();
             break;
         case '/logistica/distribucion/capturaGastoFletera':
             //#region captura gasto fletera
@@ -224,7 +283,7 @@ $(document).ready(function(){
              logisticaController.consultFreightExpense();
             //#endregion
             break;
-            case '/logistica/reportes/interfazRecibo':
+        case '/logistica/reportes/interfazRecibo':
             //#region Interfaz recibo
                 $('#fechas').daterangepicker({
                     singleDatePicker: true,
@@ -325,7 +384,7 @@ let mount = d.getMonth()+1;
 mount = mount >= 10 ? mount : '0'+mount;
 let dNow = d.getFullYear()+'-'+mount+'-'+d.getDate();
 let porcentajeGlobal = 1,contShowguia = 1,autorizadoUsuario = '',fechaInicio=dNow,fechaFin=dNow,link='';
-let arrayRowTableType = new Array(),arraytable2 = new Array(),arrayResultFacturas = new Array(),arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array();
+let arrayCostoFletera = new Array(),arrayRowTableType = new Array(),arraytable2 = new Array(),arrayResultFacturas = new Array(),arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array();
 let contRowTypeTable = 0,contRowEmbarqueTable = 0,contRowFacturasSelected = 0,contTable=0,contArea1=0,contArea2=0,contArea3=0,contArea4=0,contArea5=0,contArea6=0,contArea7=0,contArea8=0,contArea9=0,contArea10=0,contArea11=0,contArea12=0;
 //#endregion
 
@@ -340,7 +399,8 @@ const logisticaController = {
         let fletera = $('#fletera').val();
         let numGuia = $('#NumGuia').val();
         let importeTotal = $('#importeTotal').val();
-        let importeSeguro = $('#importeSeguro').val();
+        let chofer = $('#chofer').val();
+        let importeSeguro = 0.00;
         let bandera=0,bandera2=0;
         for(let a=0; a< tablaTipo.length; a++){
             if(tablaTipo[a] != undefined)
@@ -370,7 +430,8 @@ const logisticaController = {
                 importeTotal:importeTotal,
                 importeSeguro:importeSeguro,
                 tablaTipo:tablaTipo,
-                facturasSelected:facturasSelected
+                facturasSelected:facturasSelected,
+                chofer: chofer
             };
             $.ajax({
                 url: '/logistica/distribucion/numeroGuia/saveGuiaNumber',
@@ -395,7 +456,8 @@ const logisticaController = {
                         $('#table-content-embarque-factura').empty();
                         $('#table-content-facturas-selected').empty();
                         $('#importeTotal').val('0.00');
-                        $('#importeSeguro').val('0.00');
+                        $('#fletera').prop('disabled',false);
+                        $('#chofer').prop('disabled', false);
                     }else{
                         Toast.fire({
                             icon: 'error',
@@ -420,6 +482,7 @@ const logisticaController = {
         contRowTypeTable++;
         $('#table-content-guia-type').append(
              '<tr id="rowType'+contRowTypeTable+'">'
+            +'<td></td>'
             +'<td style="padding: 10px 0px 0px 0px;">'
             +'<select class="form-control" id="tipo'+contRowTypeTable+'" style="width: 100%;" data-row="'+contRowTypeTable+'" onchange="logisticaController.changeTypeSelect(this)">'
             +'<option value="BULTO" selected>BULTO</option>'
@@ -431,7 +494,7 @@ const logisticaController = {
             +'</select>'
             +'</td>'
             +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;"></td>'
-            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;"></td>'
+            +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-importe="0" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;"></td>'
             +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+contRowTypeTable+'" data-table="tipos" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
             +'</tr>'
         );
@@ -449,7 +512,9 @@ const logisticaController = {
             'tipo': '',
             'cantidad':'',
             'importe': '',
-            'row': contRowTypeTable
+            'row': contRowTypeTable,
+            'idOrdenEmbarque': '',
+            'consolidado' : ''
         });
     },
     changeTypeSelect: (e) => {
@@ -469,6 +534,24 @@ const logisticaController = {
                 }
             }
         }
+        logisticaController.calculateImportTotal();  
+    },
+    calculateImportTotal: () =>{
+        let importeTotal = 0.00;
+        let bandera = 0;
+        for(let a=0; a < arrayRowTableType.length; a++)
+        {
+            if(arrayRowTableType[a] != undefined)
+            {
+                importeTotal += parseFloat(arrayRowTableType[a].importe);
+                $('#importeTotal').val(importeTotal);
+                bandera++;
+            }
+        }
+        if(bandera == 0)
+        {
+            $('#importeTotal').val(0.00);
+        }
     },
     deleteRowTable: (e) => {
         let idrow = $(e).data('idrow');
@@ -479,6 +562,19 @@ const logisticaController = {
         if(table == 'facturasSelected')
         {
             let factura = $(e).data('factura');
+            //BORRAR BULTO DE LA TABLA DE BULTOS EN ARRAY Y EN ROW
+            for(let a=0; a < arrayRowTableType.length; a++)
+            {
+                if(arrayRowTableType[a] != undefined)
+                {
+                    if(arrayRowTableType[a].factura == factura)
+                    {
+                        $('#rowType'+arrayRowTableType[a].row).remove();
+                        delete arrayRowTableType[a];
+                    }
+                }
+            }
+            //BORRAR FACTURA DE LA TABLA FACTURAS SELECTED
             for(let a= 0; a < arrayFacturasSelected.length; a++)
             {
                 if(arrayFacturasSelected[a] != undefined)
@@ -501,9 +597,9 @@ const logisticaController = {
                     }
                 }
             }
+            logisticaController.calculateImportTotal();
         }
         if(table == 'embarques'){
-            
             for(let a = 0; a < arrayRowsEmbarques.length; a++)
             {
                 if(arrayRowsEmbarques[a] != undefined)
@@ -527,12 +623,21 @@ const logisticaController = {
                                 }
                             }
                         }
+                        for(let d=0; d < arrayRowTableType.length; d++){
+                            if(arrayRowTableType[d] != undefined){
+                                if(arrayRowTableType[d].factura == arrayResultFacturas[b].factura){
+                                    $('#rowType'+arrayRowTableType[d].row).remove();
+                                    delete arrayRowTableType[d];
+                                }
+                            }
+                        }
                         delete arrayResultFacturas[b];
                     }
                 }
             }
             logisticaController.acomodateTableEmbarqueFactura();
             logisticaController.acomodateTableFacturasSelected();
+            logisticaController.calculateImportTotal();
         }
         if(table == 'tipos'){
             for(let a=0; a < arrayRowTableType.length; a++)
@@ -545,6 +650,7 @@ const logisticaController = {
                     }
                 }
             }
+            logisticaController.calculateImportTotal();
         }
     },
     acomodateTableEmbarqueFactura: () => {
@@ -554,7 +660,7 @@ const logisticaController = {
             let check = '';
             if(arrayResultFacturas[c] != undefined)
             {
-                if(arrayResultFacturas[c].check == '1'){
+                if(arrayResultFacturas[c].check == '1' || arrayResultFacturas[c].guia != ''){
                     check='background-color:#50ff50';
                 }
                 $('#table-content-embarque-factura').append(
@@ -726,6 +832,7 @@ const logisticaController = {
                 data: {embarques:arrayEmbarquesFinal},
                 datatype: 'json',
                 success: function(data){
+                    console.log(data);
                     $('#table-content-embarque-factura').empty();
                     if(data == "")
                     {
@@ -762,7 +869,7 @@ const logisticaController = {
                             let check = '';
                             if(arrayResultFacturas[a] != undefined)
                             {
-                                if(arrayResultFacturas[a].check == '1'){
+                                if(arrayResultFacturas[a].check == '1' || arrayResultFacturas[a].guia != ''){
                                     check='background-color:#50ff50';
                                 }
                                 $('#table-content-embarque-factura').append(
@@ -792,104 +899,367 @@ const logisticaController = {
     },
     searchBills: () => {
         let factura = $('#searchFactura').val();
-        let bandera = 0;
-        if(arrayResultFacturas.length != 0){
-            for(let a = 0; a < arrayResultFacturas.length; a++){
-                if(arrayResultFacturas[a] != undefined)
+        let fletera = $('select[name="fletera"] option:selected').text();
+        fletera = fletera == 'Seleccione una fletera' ? "" : fletera;
+        $.ajax({
+            url:'/logistica/distribucion/numeroGuia/cuentaBultosWMSManager',
+            type: 'GET',
+            data: {factura:factura,fletera:fletera},
+            datatype: 'json',
+            success: function(data){
+                if(data != "" || data != [] || data.length != 0)
                 {
-                    if(arrayResultFacturas[a].factura == factura)
+                    //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRRAY DE LOS BULTOS QUE REGRESA
+                    let embarque = '';
+                    for(let a=0;a < arrayResultFacturas.length; a++)
                     {
-                        bandera = 1;
-                        if(arrayFacturasSelected.length != 0)
+                        if(arrayResultFacturas[a] != undefined)
                         {
-                            let bandera2 = 0;
-                            for(let c = 0; c < arrayFacturasSelected.length; c++){
-                                if(arrayFacturasSelected[c] != undefined)
+                            if(arrayResultFacturas[a].factura == factura)
+                            {
+                                embarque = arrayResultFacturas[a].embarque;
+                                break;
+                            }
+                        }
+                    }
+                    let lasRow = 0;
+                    if(arrayRowTableType.length != 0){
+                        for(let a=0; a < arrayRowTableType.length; a++)
+                        {
+                            if(arrayRowTableType[a] != undefined)
+                            {
+                                lasRow = arrayRowTableType[a].row;
+                            }
+                        }
+                        let validacion = 0;
+                        for(let a=0; a < arrayRowTableType.length; a++)
+                        {
+                            for(let b=0; b < data.length; b++)
+                            {
+                                if(arrayRowTableType[a] != undefined)
                                 {
-                                    //VALIDAR QUE NO ESTE REPETIDO LA MISMA FACTURA EN LA ULTIMA TABLA
-                                    if(arrayFacturasSelected[c].factura == factura){
-                                        bandera2 = 1;
-                                        break; 
+                                    if(data[b].idOrdenEmbarque != "")
+                                    {
+                                        if(arrayRowTableType[a].idOrdenEmbarque == data[b].idOrdenEmbarque)
+                                        {
+                                            //Validamos que no venga repetido el idOrdenEmbarque o Consolidado
+                                            validacion = 1;
+                                            break;
+                                        }   
+                                    }
+                                    if(data[b].consolidado != ""){
+                                        if(arrayRowTableType[a].consolidado == data[b].consolidado)
+                                        {
+                                            //Validamos que no venga repetido el idOrdenEmbarque o Consolidado
+                                            validacion = 1;
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                            if(bandera2 == 1){
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: '¡Ya esta seleccionada esta factura!'
+                        }
+                        if(validacion == 0){
+                            for(let a=0; a < data.length; a++)
+                            {
+                                lasRow++
+                                //IR ACTUALIZANDO LA VARIABLE CONTROWTYPETABLE PARA CUANDO LO USE OTRA FUNCION MANTENGA EL RENGLON CORRECTO QUE CORRESPONDE
+                                contRowTypeTable = lasRow;
+                                let select = '';
+                                switch(data[a].tipoAtado){
+                                    case 'Bulto':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Bulto" selected>Bulto</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Caja':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Caja" selected>Caja</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Tarima':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Tarima" selected>Tarima</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Atado':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Atado" selected>Atado</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Peso':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Peso" selected>Peso</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Volumen':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Volumen" selected>Volumen</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Cubeta':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Cubeta" selected>Cubeta</option>'
+                                                +'</select>';
+                                        break;
+                                }
+                                let importeLock = '';
+                                if(fletera == "" || data[a].importe == 0)
+                                {
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>';
+                                }else{
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>';
+                                }
+                                $('#table-content-guia-type').append(
+                                    '<tr id="rowType'+lasRow+'">'
+                                    +'<td>'+factura+'</td>'
+                                    +'<td style="padding: 10px 0px 0px 0px;">'
+                                    + select
+                                    +'</td>'
+                                    +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;" value="'+data[a].cantidad+'" disabled></td>'
+                                    +importeLock
+                                    +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+lasRow+'" data-table="tipos" data-idrow="rowType'+lasRow+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                                    +'</tr>'
+                                );
+                                $('#importe'+lasRow).inputmask({
+                                    alias:"decimal",
+                                    radixPoint: ".", 
+                                    autoGroup: true, 
+                                    groupSeparator: ".",
+                                    digits:2,
+                                    allowMinus:false,        
+                                    digitsOptional: false,
+                                    placeholder: "0.00"
                                 });
+                                arrayRowTableType.push({
+                                    'tipo': data[a].tipoAtado,
+                                    'cantidad':data[a].cantidad,
+                                    'importe': data[a].importe,
+                                    'row': lasRow,
+                                    'idOrdenEmbarque': data[a].idOrdenEmbarque,
+                                    'consolidado' : data[a].consolidado,
+                                    'factura' : factura,
+                                    'embarque' : embarque
+                                });
+                                logisticaController.calculateImportTotal();
+                            }
+                        }
+                    }else{
+                        for(let a=0; a < data.length; a++)
+                        {
+                            let select = '';
+                            switch(data[a].tipoAtado){
+                                case 'Bulto':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Bulto" selected>Bulto</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Caja':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Caja" selected>Caja</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Tarima':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Tarima" selected>Tarima</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Atado':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Atado" selected>Atado</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Peso':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Peso" selected>Peso</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Volumen':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Volumen" selected>Volumen</option>'
+                                                +'</select>';
+                                        break;
+                                    case 'Cubeta':
+                                        select = '<select class="form-control" id="tipo'+lasRow+'" style="width: 100%;" data-row="'+lasRow+'" onchange="logisticaController.changeTypeSelect(this)" disabled>'
+                                                +'<option value="Cubeta" selected>Cubeta</option>'
+                                                +'</select>';
+                                        break;
+                            }
+                            let importeLock = '';
+                            if(fletera == "" || data[a].importe == 0)
+                            {
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>';
+                            }else{
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>';
+                            }
+                            $('#table-content-guia-type').append(
+                                '<tr id="rowType'+contRowTypeTable+'">'
+                                +'<td>'+factura+'</td>'
+                                +'<td style="padding: 10px 0px 0px 0px;">'
+                                +select
+                                +'</td>'
+                                +'<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;" value="'+data[a].cantidad+'" disabled></td>'
+                                +importeLock
+                                +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="'+contRowTypeTable+'" data-table="tipos" data-idrow="rowType'+contRowTypeTable+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                                +'</tr>'
+                            );
+                            $('#importe'+contRowTypeTable).inputmask({
+                                alias:"decimal",
+                                radixPoint: ".", 
+                                autoGroup: true, 
+                                groupSeparator: ".",
+                                digits:2,
+                                allowMinus:false,        
+                                digitsOptional: false,
+                                placeholder: "0.00"
+                            });
+                            arrayRowTableType.push({
+                                'tipo': data[a].tipoAtado,
+                                'cantidad':data[a].cantidad,
+                                'importe': data[a].importe,
+                                'row': contRowTypeTable++,
+                                'idOrdenEmbarque': data[a].idOrdenEmbarque,
+                                'consolidado' : data[a].consolidado,
+                                'factura': factura,
+                                'embarque' : embarque
+                            });
+                            logisticaController.calculateImportTotal();
+                        }
+                    }
+                }
+            },
+            error: function(){
+
+            },
+            complete: function(){
+
+            }
+        })
+        let bandera = 0;
+            if(arrayResultFacturas.length != 0){
+                for(let a = 0; a < arrayResultFacturas.length; a++){
+                    if(arrayResultFacturas[a] != undefined)
+                    {
+                        if(arrayResultFacturas[a].factura == factura)
+                        {
+                            bandera = 1;
+                            if(arrayFacturasSelected.length != 0)
+                            {
+                                let bandera2 = 0;
+                                for(let c = 0; c < arrayFacturasSelected.length; c++){
+                                    if(arrayFacturasSelected[c] != undefined)
+                                    {
+                                        //VALIDAR QUE NO ESTE REPETIDO LA MISMA FACTURA EN LA ULTIMA TABLA
+                                        if(arrayFacturasSelected[c].factura == factura){
+                                            bandera2 = 1;
+                                            break; 
+                                        }
+                                    }
+                                }
+                                if(bandera2 == 1){
+                                    Toast.fire({
+                                        icon: 'error',
+                                        title: '¡Ya esta seleccionada esta factura!'
+                                    });
+                                }else{
+                                    arrayResultFacturas[a].check = "1";
+                                    arrayFacturasSelected.push({
+                                        'factura' : arrayResultFacturas[a].factura,
+                                        'autorizado' : arrayResultFacturas[a].guia,
+                                        'embarque': arrayResultFacturas[a].embarque
+                                    });
+                                }
                             }else{
                                 arrayResultFacturas[a].check = "1";
                                 arrayFacturasSelected.push({
                                     'factura' : arrayResultFacturas[a].factura,
-                                    'autorizado' : '',
+                                    'autorizado' : arrayResultFacturas[a].guia,
                                     'embarque': arrayResultFacturas[a].embarque
                                 });
                             }
-                        }else{
-                            arrayResultFacturas[a].check = "1";
-                            arrayFacturasSelected.push({
-                                'factura' : arrayResultFacturas[a].factura,
-                                'autorizado' : '',
-                                'embarque': arrayResultFacturas[a].embarque
-                            });
+                            break;
                         }
-                        break;
                     }
                 }
-            }
-            if(bandera == 0)
-            {
-                $.ajax({
-                    url: '/logistica/distribucion/numeroGuia/existAnyBillsInAnyShipment',
-                    type: 'GET',
-                    data: {factura:factura},
-                    datatype: 'json',
-                    success: function(data){
-                        if(data){
-                            Toast.fire({
-                                icon: 'error',
-                                title: '¡Esta Factura no Pertence a los embarques señalados!'
-                            });  
-                        }else{
-                            Toast.fire({
-                                icon: 'error',
-                                title: '¡Esta factura nunca a sido embarcada!'
-                            });
+                if(bandera == 0)
+                {
+                    $.ajax({
+                        url: '/logistica/distribucion/numeroGuia/existAnyBillsInAnyShipment',
+                        type: 'GET',
+                        data: {factura:factura},
+                        datatype: 'json',
+                        success: function(data){
+                            if(data){
+                                arrayFacturasSelected.push({
+                                    'factura' : factura,
+                                    'autorizado' : 'No pertenece a los embarques',
+                                    'embarque': ''
+                                });
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: '¡Esta Factura no Pertence a los embarques señalados!'
+                                });  
+                            }else{
+                                arrayFacturasSelected.push({
+                                    'factura' : factura,
+                                    'autorizado' : 'No esta embarcada aún',
+                                    'embarque': ''
+                                });
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: '¡Esta factura nunca a sido embarcada!'
+                                });
+                            }
+                            $('#table-content-facturas-selected').empty();
+                            for(let b = 0;  b < arrayFacturasSelected.length; b ++){
+                                if(arrayFacturasSelected[b] != undefined)
+                                {
+                                    contRowFacturasSelected++
+                                    $('#rowFactura'+arrayFacturasSelected[b].factura).css('background-color','#50ff50');
+                                    $('#table-content-facturas-selected').append(
+                                        '<tr id="rowFacturaSelected'+contRowFacturasSelected+'">'
+                                        +'<td>'+arrayFacturasSelected[b].factura+'</td>'
+                                        +'<td>'+arrayFacturasSelected[b].embarque+'</td>'
+                                        +'<td>'+arrayFacturasSelected[b].autorizado+'</td>'
+                                        // +'<td><input class="form-control" id="autorizado'+contRowFacturasSelected+'" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" onkeyup="logisticaController.changeAuthoriceBills(this)" value="'+arrayFacturasSelected[b].autorizado+'" /></td>'
+                                        +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" data-table="facturasSelected" data-idrow="rowFacturaSelected'+contRowFacturasSelected+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                                        +'</tr>'
+                                    );   
+                                }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+    
+                        },
+                        complete: function(){
+    
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown){
-
-                    },
-                    complete: function(){
-
+                    })
+                }else{
+                    $('#table-content-facturas-selected').empty();
+                    for(let b = 0;  b < arrayFacturasSelected.length; b ++){
+                        if(arrayFacturasSelected[b] != undefined)
+                        {
+                            contRowFacturasSelected++
+                            $('#rowFactura'+arrayFacturasSelected[b].factura).css('background-color','#50ff50');
+                            $('#table-content-facturas-selected').append(
+                                '<tr id="rowFacturaSelected'+contRowFacturasSelected+'">'
+                                +'<td>'+arrayFacturasSelected[b].factura+'</td>'
+                                +'<td>'+arrayFacturasSelected[b].embarque+'</td>'
+                                +'<td>'+arrayFacturasSelected[b].autorizado+'</td>'
+                                // +'<td><input class="form-control" id="autorizado'+contRowFacturasSelected+'" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" onkeyup="logisticaController.changeAuthoriceBills(this)" value="'+arrayFacturasSelected[b].autorizado+'" /></td>'
+                                +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" data-table="facturasSelected" data-idrow="rowFacturaSelected'+contRowFacturasSelected+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                                +'</tr>'
+                            );   
+                        }
                     }
-                })
+                }
             }else{
-                $('#table-content-facturas-selected').empty();
-                for(let b = 0;  b < arrayFacturasSelected.length; b ++){
-                    if(arrayFacturasSelected[b] != undefined)
-                    {
-                        contRowFacturasSelected++
-                        $('#rowFactura'+arrayFacturasSelected[b].factura).css('background-color','#50ff50');
-                        $('#table-content-facturas-selected').append(
-                            '<tr id="rowFacturaSelected'+contRowFacturasSelected+'">'
-                            +'<td>'+arrayFacturasSelected[b].factura+'</td>'
-                            +'<td>'+arrayFacturasSelected[b].embarque+'</td>'
-                            // +'<td><input class="form-control" id="autorizado'+contRowFacturasSelected+'" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" onkeyup="logisticaController.changeAuthoriceBills(this)" value="'+arrayFacturasSelected[b].autorizado+'" /></td>'
-                            +'<td><button type="button" class="btn btn-block btn-danger btn-sm" data-factura="'+arrayFacturasSelected[b].factura+'" data-row="'+contRowFacturasSelected+'" data-table="facturasSelected" data-idrow="rowFacturaSelected'+contRowFacturasSelected+'"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
-                            +'</tr>'
-                        );   
-                    }
-                }
+                Toast.fire({
+                    icon: 'error',
+                    title: '¡Ingrese algun embarque para posterior obtener una captura de facturas!'
+                });
             }
-        }else{
-            Toast.fire({
-                icon: 'error',
-                title: '¡Ingrese algun embarque para posterior obtener una captura de facturas!'
-            });
-        }
-        $('#searchFactura').val('');
+            $('#searchFactura').val('');
     },
     changeAuthoriceBills: (e) => {
         let row = $(e).data('row');
@@ -906,6 +1276,27 @@ const logisticaController = {
                 }
             }
         }
+    },
+    showModalLogin: () => {
+        $('#modal-autorizacion').modal('show');
+    },
+    costFletera: () => {
+        $.ajax({
+            url: '/logistica/distribucion/numeroGuia/costFletera',
+            type: 'GET',
+            datatype:'json',
+            success: function (data) {
+                arrayCostoFletera = data;
+
+                console.log(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                
+            },
+            complete: function(){
+
+            }
+        });
     },
     //#endregion
     //#region VALIDAR SAD
@@ -1121,6 +1512,24 @@ const logisticaController = {
             $('.btn-excel').prop('disabled', false);
             $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
         },5000);
+    },
+    //#endregion
+    //#region REPORTE EMBARQUE
+    reportShipment: () => {
+        $.ajax({
+            url: '/logistica/distribucion/reportShipment',
+            type: 'GET',
+            datatype: 'json',
+            success: function(data) {
+                console.log(data);
+            },
+            error: function() {
+
+            },
+            complete: function(){
+
+            }
+        });
     },
     //#endregion
     //#region CAPTURA GASTO FLETERA
@@ -1439,13 +1848,20 @@ const logisticaController = {
                             icon: 'success',
                             title: 'Petición para autorización: ¡Exitosa!'
                         });
-                        if($('#importeGuias').val() == $('#importeSinIva').val())
-                        {
-                            $('#btnRegistrarNet').prop('disabled',false);
+                        let pathWeb = window.location.pathname;
+                        if(pathWeb == '/logistica/distribucion/numeroGuia'){
+                            //Mostrar modal y llamar el array global de los costos por fletera
+                            
+                        }else{
+                            if($('#importeGuias').val() == $('#importeSinIva').val())
+                            {
+                                $('#btnRegistrarNet').prop('disabled',false);
+                            }
+                            $('.btn-aut').prop('disabled',true);
+                            $('#acreedor').prop('disabled',false);
+                            $('#btnAgregarGuia').prop('disabled',false);
                         }
-                        $('.btn-aut').prop('disabled',true);
-                        $('#acreedor').prop('disabled',false);
-                        $('#btnAgregarGuia').prop('disabled',false);
+                        
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

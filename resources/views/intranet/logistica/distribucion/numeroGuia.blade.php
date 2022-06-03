@@ -29,7 +29,14 @@
                         <div class="card-header title-table">
                             <div class="row">
                                 <div class="col-12">
-                                    <h3 class="card-title">Numero Guía</h3>
+                                    <div class="row justify-content-between">
+                                        <div class="col-3 mt-2">
+                                            <h3 class="card-title">Numero Guía</h3>
+                                        </div>
+                                        {{-- <div class="col-2">
+                                            <button type="button" class="btn btn-block btn-outline-primary" onclick="logisticaController.showModalLogin()"><i class="fa-solid fa-pen-to-square"></i>Actualizar Importes</button>
+                                        </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -37,28 +44,43 @@
                         <div class="card-body ">
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-12 p-0">
-                                        <strong>1. Ingrese Información</strong>
+                                    <div class="col-12">
+                                        <div class="row justify-content-between">
+                                            <div class="col-3 p-0">
+                                                <strong>1. Ingrese Información</strong>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="row mt-2">
                                     <div class="col-12 p-0">
                                         <div class="row">
-                                            <div class="col-2 p-0">
+                                            <div class="col-3">
                                                 <label for="">Fletera</label>
                                                 <select class="form-control" name="fletera" id="fletera">
+                                                        <option value="" selected disabled>Seleccione una fletera</option>
                                                     @foreach($freighters as $freighter)
-                                                        <option value="{{$freighter->lisT_ID}}">{{$freighter->lisT_ID}} | {{ $freighter->lisT_ITEM_NAME }}</option>
+                                                        <option value="{{$freighter->lisT_ID}}"> {{ $freighter->lisT_ITEM_NAME }}</option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                            <div class="col-3 p-0">
+                                                <label for="">Chofer:</label>
+                                                <select class="form-control" name="chofer" id="chofer">
+                                                    <option value="" selected disabled>Seleccione un chofer</option>
+                                                @foreach($drivers as $driver)
+                                                    <option value="{{$driver->id}}">{{ $driver->nombre }}</option>
+                                                @endforeach
+                                            </select>
                                             </div>
                                             <div class="col-2">
                                                 <label for="">Num. de Guía</label>
                                                 <input class="form-control" type="text" id="NumGuia">
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-3">
                                                 <label for="">Importe Total</label>
-                                                <input class="form-control" type="text" id="importeTotal">
+                                                <input class="form-control" type="text" id="importeTotal" value="0.00" disabled>
                                             </div>
                                             <div class="col-1 mt-2">
                                                 <label for=""></label>
@@ -68,10 +90,13 @@
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-secondary btn" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fa-solid fa-repeat"></i></button>
                                             </div> --}}
-                                            <div class="col-2">
+                                            {{-- <div class="col-2">
                                                 <label for="">Importe seguro</label>
                                                 <input class="form-control" type="text" id="importeSeguro">
-                                            </div>
+                                            </div> --}}
+                                        </div>
+                                        <hr>
+                                        <div class="row justify-content-end">
                                             <div class="col-2">
                                                 <label for="">Facturas</label>
                                                 <input class="form-control" type="text" id="searchFactura">
@@ -93,12 +118,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="row" style="border: 1px solid gray;">
-                                                    <div class="col-12 ">
+                                                    <div class="col-12">
                                                         <div class="row" id="divrow" style="height: 270px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
-                                                            <div class="col-12 table-responsive">
+                                                            <div class="col-12 table-responsive p-0">
                                                                 <table class="table table-bordered">
                                                                     <thead>
                                                                         <tr>
+                                                                            <th>Factura</th>
                                                                             <th>Tipo</th>
                                                                             <th>Cantidad</th>
                                                                             <th>Importe</th>
@@ -129,7 +155,7 @@
                                                 <div class="row" style="border: 1px solid gray;">
                                                     <div class="col-12">
                                                         <div class="row" id="divrow" style="height: 270px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
-                                                            <div class="col-12 table-responsive">
+                                                            <div class="col-12 table-responsive p-0">
                                                                 <table class="table table-bordered">
                                                                     <thead>
                                                                         <tr>
@@ -181,6 +207,7 @@
                                                                         <tr>
                                                                             <th>Factura</th>
                                                                             <th>Embarque</th>
+                                                                            <th>Autoriza</th>
                                                                             <th></th>
                                                                         </tr>
                                                                     </thead>
@@ -204,6 +231,43 @@
             </div>
         </div>
     </section>
+</div>
+<div class="modal fade" id="modal-autorizacion">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+        <div class="modal-header title-table">
+            <h4 class="modal-title ">Autorización</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="usuarioSAI">Usuario SAI:</label>
+                        <input type="text" class="form-control" id="usuarioSAI">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="contrasenaSAI">Contraseña:</label>
+                        <input type="password" class="form-control" id="contrasenaSAI">
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center" hidden id="divMessage"></div>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-plataform" onclick="logisticaController.formAutho()">Autorizar</button>
+        </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 @endsection
 @section('js')
