@@ -1,0 +1,16 @@
+table{
+    cursor:pointer;
+}
+thead{
+    font-size: 239%;
+    font-family: Arial,helvetic;
+    font-weight: bold;
+}
+tbody{
+    font-size: 239%;
+    font-family:Arial,helvetic;
+}
+img.resize {
+  max-width:10%;
+  max-height:10%;
+}

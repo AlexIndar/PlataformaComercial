@@ -13,6 +13,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Http\Controllers\Logistica\LogisticaController;
+use App\Http\Controllers\Almacen\AlmacenController;
 use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
@@ -81,6 +82,11 @@ Route::get('/', function () {
     return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
 
 })->name('/');
+
+
+Route::get('/500', function () {
+    return view('errors.500');
+});
 
 
 Route::get('/login', [LoginController::class, 'authenticate']);
@@ -631,6 +637,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $ordenCompra = $request->ordenCompra;
                                 $cliente = $request->cliente;
                                 $comentarios = $request->comentarios;
+                                $sucursal = $request->sucursal;
                                 $formaEnvio = $request->formaEnvio;
                                 $fletera = $request->fletera;
                                 $tranIds = $request->tranIds;
@@ -676,10 +683,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if( $correoUsuarioLevanta != $listaCorreos->vendedor && $correoUsuarioLevanta != $listaCorreos->apoyo && $correoUsuarioLevanta != $listaCorreos->gerente && $correoUsuarioLevanta != $listaCorreos->cliente && $correoUsuarioLevanta != $correo ) array_push($emails, $correoUsuarioLevanta);
                                 if($correoUsuarioLevanta == 'alejandro.jimenez@indar.com.mx'){
                                     $emailsTest = ["alejandro.jimenez@indar.com.mx", "ing.alejandrodv@gmail.com"];
-                                    Mail::to($emailsTest)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
+                                    Mail::to($emailsTest)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
                                 }
                                 else{
-                                    Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
+                                    Mail::to($emails)->send(new ConfirmarPedido($pedido, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $tranIds, $fullName));
                                 }
                                  // check for failures
                                 if (Mail::failures()) {
@@ -723,6 +730,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $ordenCompra = $request->ordenCompra;
                                 $cliente = $request->cliente;
                                 $comentarios = $request->comentarios;
+                                $sucursal = $request->sucursal;
                                 $formaEnvio = $request->formaEnvio;
                                 $fletera = $request->fletera;
                                 $autoriza = $request->autoriza;
@@ -769,7 +777,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if ($autoriza == 'EOEGA') {array_push($emails, 'eortiz@indar.com.mx');}
                                 if ($autoriza == 'JSB') {array_push($emails, 'jsamaue@indar.com.mx');}
 
-                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedidoDesneg, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
+                                Mail::to($emails)->send(new ConfirmarPedidoDesneg($pedidoDesneg, $detallesPedido, $idCotizacion, $cliente, $comentarios, $ordenCompra, $sucursal, $formaEnvio, $fletera, $asunto, $autoriza, $tipoDescuento, $descuento, $username, $fecha));
                                  // check for failures
                                 if (Mail::failures()) {
                                     return response()->json(['error' => 'Error al enviar correo desneg'], 404);
@@ -1915,12 +1923,13 @@ Route::get('/logistica/distribucion/numeroGuia', function(){
         $level = $_COOKIE['_lv'];
     }
     $freighters = LogisticaController::getFreighters($token);
+    $drivers = LogisticaController::getDrivers($token);
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
 
     $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters'));
+    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers'));
 })->name('logistica.distribucion.numeroGuia');
 Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
     $token = TokenController::getToken();
@@ -1952,6 +1961,22 @@ Route::post('/logistica/distribucion/numeroGuia/saveGuiaNumber', function(Reques
         return redirect('/logout');
     }
     $response = LogisticaController::saveGuiaNumber($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/numeroGuia/costFletera', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::costFletera($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::cuentaBultosWMSManager($token,json_encode($request->all()));
     return $response;
 });
 // ************************* VALIDAR SAD *************************************** \\
@@ -2024,6 +2049,38 @@ Route::get('/logistica/distribucion/getReportSad', function(){
         return redirect('/logout');
     }
     $response = LogisticaController::getReportSad($token);
+    return $response;
+});
+// ************************* REPORTE EMBARQUE ********************************** \\
+Route::get('/logistica/distribucion/reporteEmbarque', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $rama1 = RamasController::getRama1();
+    $rama2 = RamasController::getRama2();
+    $rama3 = RamasController::getRama3();
+
+    $level = "C";
+    if(isset($_COOKIE['_lv'])){
+        $level = $_COOKIE['_lv'];
+    }
+    $freighters = LogisticaController::getFreighters($token);
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+    return view('intranet.logistica.distribucion.reporteEmbarque', compact('token','permissions','username','userRol','freighters'));
+})->name('logistica.distribucion.reporteEmbarque');
+Route::get('/logistica/distribucion/reportShipment', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::reportShipment($token);
     return $response;
 });
 // ************************* CAPTURA GASTO FLETERA ***************************** \\
@@ -2226,3 +2283,14 @@ Route::get('/pedidos-exporta',function(){
     }
     return view('exporta.pedidos');
 })->name('pedidos-exporta');
+//****************************** ALMACEN ***************************************\\
+//****************************** CONSOLIDADO PANTALLA **************************\\
+Route::get('/almacen/consolidadoPantalla', function(){
+    $consolidado = AlmacenController::consolidadoPantalla();
+    // dd($consolidado);
+    return view('almacen.consolidadoPantalla',compact('consolidado'));
+})->name('almacen.consolidadoPantalla');
+Route::GET('/almacen/getConsolidado', function(){
+    $consolidado = AlmacenController::consolidadoPantalla();
+    return $consolidado;
+});
