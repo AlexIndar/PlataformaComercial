@@ -1499,7 +1499,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1526,7 +1526,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1561,16 +1561,23 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 //******************************************* Comisiones ********************************************************
 
-                Route::get('/comisionesPorCliente', function(){
+                Route::get('/comisionesPorCliente/{id}/{date}', function($id,$date){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
                     }
+                    //$date = date("m-d-Y",$date);
+
+                    $mes = substr($date, 0, 2);
+                    $año = substr($date, 6, 10);
+
+                    $date = $año.'-'.$mes;
+                    $id= base64_decode($id);
                     $zonas = AplicarPagoController::getZonas($token);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
+                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'id'=> $id, 'date'=>$date]);
                 });
 
                 Route::get('/comisionesVendedor', function(){

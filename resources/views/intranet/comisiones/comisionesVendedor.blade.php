@@ -212,7 +212,7 @@
                                                 </tr>
                                                 <thead style="background-color:#002868; color:white">
                                                     <tr>
-                                                        <th>Resultado Especiales</th>
+                                                        <th>Resultado Especiales (15 %)</th>
                                                         <th>Valor Objetivo</th>
                                                         <th>Límite de Especificación</th>
                                                         <th>Real</th>
@@ -745,12 +745,12 @@
                var sumaCBtotal = sumaMNCB+sumaMBCB;
                totalComision = sumaCBtotal;
                var despensa = sumaCBtotal * 0.10 ;
-
+               var urlzona= btoa(id);
 
                if(html == ''){
                    html += '<tr>' +
-                   '<td style="font-weight: bold; cursor: pointer" ><a href="/comisionesPorCliente" target="_blank"> Cobranza</a> </td>' +
-                   '<td style="font-weight: bold; cursor: pointer "><a href="/comisionesPorCliente" target="_blank">' + sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</a></td>' +
+                   '<td style="font-weight: bold; cursor: pointer" ><a href="/comisionesPorCliente/'+urlzona+'/'+date+'" target="_blank"> Cobranza</a> </td>' +
+                   '<td style="font-weight: bold; cursor: pointer "><a href="/comisionesPorCliente/'+urlzona+'/'+date+'" target="_blank">' + sumaRMCI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</a></td>' +
                    '<td style="font-weight: bold">' + sumaRMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaPSMASI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaPSEMSI.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -1030,7 +1030,7 @@
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
                    '<td style="font-weight: bold" >'+ data[0].totalClientes  +'</td>' +
-                   '<td style="font-weight: bold">'+ porClientesVisitados +'</td>' +
+                   '<td style="font-weight: bold">'+ porClientesVisitados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                    show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold" colspan="2">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
@@ -1042,7 +1042,7 @@
                    '<td style="font-weight: bold"> NA </td>' +
                    '<td style="font-weight: bold; color:red" colspan="2"> '+ importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                    '</td>'+
-                   '<tr>' +
+                   '<tr style="background-color:rgba(231, 235, 11, 0.705)">' +
                    '<td style="font-weight: bold" colspan="6"> Comisión Integrada </td>' +
                    '<td style="font-weight: bold" colspan="2">'+ comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
                    '</tr>';
@@ -1117,7 +1117,7 @@
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>'+
-                     '<tr style ="background-color: rgba(231, 235, 11, 0.705)">'+
+                     '<tr style ="background-color:rgba(231, 235, 11, 0.705)">'+
                      '<td style="font-weight: bold" colspan="5" >Comisión Integrada + Bonos </td>' +
                      '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
@@ -1145,19 +1145,67 @@
                 else{
                     avanceEspeciales = resultDataEspeciales[i].avance;
                 }
-                htmlModalEspeciales += '<tr>'+
+                if(resultDataEspeciales[i].conse == 1 && resultDataEspeciales[20].cuota != 0){
+                    var avance1 ;
+                    if(resultDataEspeciales[20].cuota > 4 ){
+                        avance1 = 0;
+                    }else{
+                        avance1 = 100;
+                    }
+                    htmlModalEspeciales += '<tr>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
+                     '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[20].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+avance1+' %</td>' +
+                     '</tr>';
+                     avanceEspeciales = avanceEspeciales + avance1;
+                }else{
+                    if(resultDataEspeciales[i].conse == 2 && resultDataEspeciales[21].cuota != 0){
+                        var avance2 ;
+                    if(resultDataEspeciales[21].cuota > 4 ){
+                        avance2 = 0;
+                    }else{
+                        avance2 = 100;
+                    }
+                    htmlModalEspeciales += '<tr>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
+                    '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
+                     '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+resultDataEspeciales[21].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+avance2+' %</td>' +
+                     '</tr>';
+                     avanceEspeciales = avanceEspeciales + avance2;
+                }else{
+                    htmlModalEspeciales += '<tr>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
                      '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                      '<td style="font-weight: bold" > '+resultDataEspeciales[i].total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                      '<td style="font-weight: bold" > '+avanceEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' %</td>' +
                      '</tr>';
-                     sumaRealEspeciales =sumaRealEspeciales + avanceEspeciales;
+                }
+                }
 
+
+                     sumaRealEspeciales =sumaRealEspeciales + avanceEspeciales;
+                     //console.log(resultDataEspeciales[20].conse);
             }
             sumaRealEspeciales=sumaRealEspeciales/200;
-            //console.log(sumaRealEspeciales);
-
+            sumaRealEspeciales = sumaRealEspeciales*10;
+            var alcanceEspeciales = (sumaRealEspeciales - 25)/50;
+            alcanceEspeciales = alcanceEspeciales * 100;
+            var porcImporteEspeciales;
+            var importeEspeciales;
+            var comisionTotal;
+            porcImporteEspeciales = 15 * alcanceEspeciales;
+            porcImporteEspeciales = porcImporteEspeciales/10000;
+            importeEspeciales = porcImporteEspeciales * parseFloat(comisionTot);
+            if(importeEspeciales < 0){
+               importeEspeciales = 0;
+           }
+           console.log(totalBonos, importeEspeciales);
+            comisionTotal = totalBonos + importeEspeciales;
 
 
            /*  for(var i=0; i < data[3].length; i++){
@@ -1195,8 +1243,12 @@
                      '<td style="font-weight: bold "> 75 % </td>' +
                      '<td style="font-weight: bold" > 25 % </td>' +
                      '<td style="font-weight: bold" >'+ sumaRealEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'% </td>' +//suma de porcentajes  entre 2000
-                     '<td style="font-weight: bold" >% </td>' +
-                     '<td style="font-weight: bold" >Importe</td>' +
+                     '<td style="font-weight: bold" >'+ alcanceEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'%</td>' +
+                     '<td style="font-weight: bold" >'+ importeEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '</tr>'+
+                     '<tr style ="background-color:#02F4A7 ">'+
+                     '<td style="font-weight: bold" colspan="5" >Comisión TOTAL </td>' +
+                     '<td style="font-weight: bold; font-size: 17px" >'+ comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
 
             $('#llenaPuntualidad').html(htmlPuntualidad);
@@ -1217,6 +1269,7 @@
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
             $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);
             $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
+
            },
            error: function() {
                console.log("Error");
