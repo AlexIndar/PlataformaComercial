@@ -13,6 +13,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Http\Controllers\Logistica\LogisticaController;
+use App\Http\Controllers\Almacen\AlmacenController;
 use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
@@ -2275,3 +2276,14 @@ Route::get('/pedidos-exporta',function(){
     }
     return view('exporta.pedidos');
 })->name('pedidos-exporta');
+//****************************** ALMACEN ***************************************\\
+//****************************** CONSOLIDADO PANTALLA **************************\\
+Route::get('/almacen/consolidadoPantalla', function(){
+    $consolidado = AlmacenController::consolidadoPantalla();
+    // dd($consolidado);
+    return view('almacen.consolidadoPantalla',compact('consolidado'));
+})->name('almacen.consolidadoPantalla');
+Route::GET('/almacen/getConsolidado', function(){
+    $consolidado = AlmacenController::consolidadoPantalla();
+    return $consolidado;
+});
