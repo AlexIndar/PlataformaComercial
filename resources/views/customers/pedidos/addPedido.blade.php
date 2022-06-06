@@ -340,7 +340,7 @@
                          <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i
                                  class="fas fa-paper-plane"></i> Levantar pedido</button>
                          <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-                                                                                                    <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+                                                                                                        <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
                      </div>
                  </div>
 
