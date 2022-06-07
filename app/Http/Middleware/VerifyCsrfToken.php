@@ -64,6 +64,9 @@ class VerifyCsrfToken extends Middleware
         '/comisiones/postActualizarEspeciales',
         '/Logistica/RegistroGuia',
         '/logistica/distribucion/numeroGuia/saveGuiaNumber',
-        '/logistica/distribucion/validarSad/authoriceSad'
+        '/logistica/distribucion/validarSad/authoriceSad',
+        '/logistica/distribucion/capturaGastoFletera/registerNet',
+        '/almacen/capturaErrores/createError',
+        '/almacen/capturaErrores/updateError'
     ];
 }
