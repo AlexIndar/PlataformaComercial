@@ -40,11 +40,13 @@
                    <div  id="divFiltroCli" class="card-body">
                     <div class="col-lg-12">
                         <div class="row ">
+
                             <div class="col-sm-4">
-                                <select name="zonas"  class="form-control js-example-basic-single" id="zonas"></select>
+                                <input id="zonas" name="zonas" class="form-control" type="text" readonly value="{{ $id }}">
+                                {{-- <select name="zonas" value="{{ $id }}" class="form-control js-example-basic-single" id="zonas" readonly></select> --}}
                             </div>
                             <div class="col-sm-4">
-                                <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="<?php echo date("Y-m");?>" max = "<?php echo date("Y-m");?>">
+                                <input type="month" name="fechaCliente" id="fechaCliente" class="form-control" value="{{ $date }}" max = "<?php echo date("Y-m");?>">
                             </div>
                             <div class="col-md-4">
                                 <div class="spinner-border text-secondary" style="display:none" id="btnSpinner" ></div>
@@ -148,6 +150,7 @@
 
 <script>
 $(document).ready(function() {
+
 
     //Collapse sideBar
     $("body").addClass("sidebar-collapse");
