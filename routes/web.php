@@ -1533,11 +1533,33 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA"){
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);    
                     }else{
                         return redirect('/Intranet');
                     }
+                });
+
+                Route::post('/EstadisticaSolicitudTiempo/GetGerencia', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = $request->User;
+                    $gerencia = EstadisticasClientesController::getGerencia($token,$user);
+                    return $gerencia;
+                });
+
+                Route::post('/EstadisticaSolicitudTiempo/GetTimeReport', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $typeRequest = $request->TypeR;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $solicitudesTime = EstadisticasClientesController::getTimeReport($token,$typeRequest,$ini,$end);
+                    return $solicitudesTime;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
