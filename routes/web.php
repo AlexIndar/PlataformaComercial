@@ -1629,9 +1629,33 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
+                    $zonas = AplicarPagoController::getZonas($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    //$username = 'jramirez';
+                    $username = $userData->typeUser;
+                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                    $zonasgtes = ComisionesController::GetZonasGerente($token,$username);
+                    $zona = $zonaInfo->body();
+                    //dd($userData->permissions);
+                    if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN' && $userData->permissions != 'GERENTEVENTA'){
+                        $zona = 0;
+                    }elseif($userData->permissions == 'ADMIN'){
+                        $zona = 'todo';
+                         //dd('entraaqui');
+                    }elseif(count($zonasgtes) != 0){
+                        $zona = $zonasgtes;
+                         //dd('entraaqui');
+                    }else{
+
+                        $zona = json_decode($zonaInfo->body())->description;
+
+                    }
+                    //dd($zona);
+                    //dd($zonas,$zona);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions]);
+                    return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zona'=> $zona]);
+
                 });
 
 
@@ -1663,6 +1687,23 @@ Route::middleware([ValidateSession::class])->group(function(){
                    $dataEspeciales = ComisionesController::getProductosVendidos($token,$fecha,$zona);
 
                     return array($data, $dataBonos, $dataVentas, $dataEspeciales);
+
+                });
+                Route::get('/comisiones/getResumen', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $zona = $request->zona;
+                   $fecha = $request->fecha;
+                   $referencia = $zona;
+                   $dataprincipal=ComisionesController::getInfoCobranzaZonaWeb($token,$referencia,$fecha);
+                   $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
+                   $dataBonos=ComisionesController::getCtesActivosMes($token,$zona,$fecha);
+                   $dataVentas =ComisionesController::getTotalVentasZona($token,$zona,$fecha);
+                   $dataEspeciales = ComisionesController::getProductosVendidos($token,$fecha,$zona);
+
+                    return array($data, $dataBonos, $dataVentas, $dataEspeciales,$dataprincipal);
 
                 });
 
