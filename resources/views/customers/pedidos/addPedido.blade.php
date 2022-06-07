@@ -340,7 +340,7 @@
                          <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i
                                  class="fas fa-paper-plane"></i> Levantar pedido</button>
                          <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-                                                                                                        <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+                                                                                                                            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
                      </div>
                  </div>
 
@@ -356,9 +356,8 @@
                              <input type="text" id="empty" value="yes" hidden>
                              <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario"
                                  style="cursor: pointer; margin-top: -8px;" onclick="closeModalInventario()"></i>
-                             <div
-                                 class="checkSoloExistencias row d-flex flex-row justify-content-end align-items-center mb-3 mt-3">
-                                 <div class="col-lg-8 col-md-6 col-12">
+                             <div class="checkSoloExistencias row d-flex flex-row align-items-center mb-3 mt-3">
+                                 <div class="col-lg-8 col-md-6 col-10">
                                      <select id="filterInventario" name="filterInventario"
                                          class="form-control selectpicker" data-live-search="true">
                                          <option selected value="none">Ordenar</option>
