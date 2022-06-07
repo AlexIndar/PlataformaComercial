@@ -1154,7 +1154,7 @@ function cargarInventario() {
                 arr.push(descuentos);
                 arr.push(promociones);
                 arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " min=" + items[x]['multiploVenta'] + " step=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-" + items[x]['itemid'] + "'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
-                arr.push(items[x]['price']);
+                arr.push(precioIVA); //CAMPO PARA ORDENAR POR PRECIO
                 dataset.push(arr);
             }
             x++;
@@ -1237,7 +1237,7 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
         }
         subtotalPedido = subtotalPedido + subtotal;
         addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
-        for (var y = 0; y < pedido[x]['items'].length; y++) {
+        for (var y = 0; y < pedido[x]['items'].length; y++) { //NO CONSIDERAR LAS LÍNEAS QUE SEAN REGALO Y TENGAN EL ADDREGALO EN 0 (QUE SE HAYAN ELIMINADO)
             if (pedido[x]['items'][y]['regalo'] == 0) {
                 addRowPedido(pedido[x]['items'][y], fila, x);
             }
@@ -1812,16 +1812,18 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
             }
 
             for (var y = 0; y < pedido[x]['items'].length; y++) {
-                var item = {
-                    id: pedido[x]['items'][y]['id'],
-                    itemid: pedido[x]['items'][y]['itemid'],
-                    cantidad: pedido[x]['items'][y]['cantidad'],
-                    desneg: pedido[x]['items'][y]['desneg'],
-                    desgar: pedido[x]['items'][y]['desgar'],
-                    autorizaDesneg: pedido[x]['items'][y]['autorizaDesneg'],
-                    autorizaDesgar: pedido[x]['items'][y]['autorizaDesgar'],
-                };
-                itemsJson.push(item);
+                if (pedido[x]['items'][y]['regalo'] == 0 || pedido[x]['items'][y]['addRegalo'] == 1) { //NO CONSIDERAR LAS LÍNEAS QUE SEAN REGALO Y TENGAN EL ADDREGALO EN 0 (QUE SE HAYAN ELIMINADO)
+                    var item = {
+                        id: pedido[x]['items'][y]['id'],
+                        itemid: pedido[x]['items'][y]['itemid'],
+                        cantidad: pedido[x]['items'][y]['cantidad'],
+                        desneg: pedido[x]['items'][y]['desneg'],
+                        desgar: pedido[x]['items'][y]['desgar'],
+                        autorizaDesneg: pedido[x]['items'][y]['autorizaDesneg'],
+                        autorizaDesgar: pedido[x]['items'][y]['autorizaDesgar'],
+                    };
+                    itemsJson.push(item);
+                }
             }
             var items = itemsJson;
             var temp = {
@@ -1870,6 +1872,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
                 success: function (data) {
+                    console.log(data);
                     if (type == 3) { //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
                         noCotizacionNS = data['idCotizacion'];
                         saveNS();
@@ -2051,11 +2054,6 @@ function saveNS() {
             var username = "USERNAME";
             for (var y = 0; y < pedido[x]['items'].length; y++) {
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
-                var item = {
-                    itemid: pedido[x]['items'][y]['itemid'],
-                    quantity: pedido[x]['items'][y]['cantidad'],
-                    listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
-                };
                 if (pedido[x]['items'][y]['desneg'] != 0) {
                     desneg = pedido[x]['items'][y]['desneg'];
                     specialAuthorization = pedido[x]['items'][y]['autorizaDesneg'];
@@ -2064,7 +2062,14 @@ function saveNS() {
                     desgar = pedido[x]['items'][y]['desgar'];
                     specialAuthorization = pedido[x]['items'][y]['autorizaDesgar'];
                 }
-                lineItems.push(item);
+                if (pedido[x]['items'][y]['regalo'] == 0 || pedido[x]['items'][y]['addRegalo'] == 1) { //NO CONSIDERAR LAS LÍNEAS QUE SEAN REGALO Y TENGAN EL ADDREGALO EN 0 (QUE SE HAYAN ELIMINADO)
+                    var item = {
+                        itemid: pedido[x]['items'][y]['itemid'],
+                        quantity: pedido[x]['items'][y]['cantidad'],
+                        listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
+                    };
+                    lineItems.push(item);
+                }
             }
             var temp = {
                 internalId: 0,
