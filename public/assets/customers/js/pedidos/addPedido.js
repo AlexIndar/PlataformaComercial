@@ -2136,6 +2136,7 @@ function saveNS() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (data) {
+                console.log(data);
                 var error = 0;
                 for (var x = 0; x < data.length; x++) {
                     if (data[x]['status'] == 'OK') {
@@ -2165,6 +2166,7 @@ function saveNS() {
                 // window.location.href = '/pedidos';
             },
             error: function (error) {
+                console.log(error);
                 alert('Error al enviar pedido a Netsuite');
                 // sendEmail();
                 // window.location.href = '/pedidos';
