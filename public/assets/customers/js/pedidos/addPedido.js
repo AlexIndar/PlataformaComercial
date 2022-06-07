@@ -223,6 +223,7 @@ $(document).ready(function () {
 
     $('#modalInventario').on('hidden.bs.modal', function () {
         prepareJsonSeparaPedidos(false);
+        // save(5) //pre guardar el pedido después de cargar excel
     })
 
     $('#modalNetsuiteLoading').on('hidden.bs.modal', function () {
@@ -600,6 +601,7 @@ function cargarProductosPorCodigo() {
     table.classList.add('inactive');
     document.getElementById('btnCargarPorCodigo').classList.add('d-none');
     prepareJsonSeparaPedidos(false);
+    // save(5); //pre guardar el pedido después de cargar excel
 }
 
 function cargarProductosExcel(json) {
@@ -662,7 +664,6 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
         var cupon = document.getElementById('cupon').value;
         if (cupon != '') {
             json = JSON.parse(json);
-            console.log(json);
             for (var x = 0; x < json.length; x++) {
                 json[x]['cupon'] = cupon;
                 json[x]['CapturadoXcte'] = tipoPedido;
@@ -1232,15 +1233,8 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
                 price = parseFloat(pedido[x]['items'][y]['price']);
             var pUnitario = ((100 - parseFloat(pedido[x]['items'][y]['promo'])) * price / 100).toFixed(2);
             var importe = (cantidad * pUnitario).toFixed(2);
-            console.log(cantidad);
-            console.log('Cantidad: ' + parseFloat(pedido[x]['items'][y]['cantidad']));
-            console.log('Promo: ' + parseFloat(pedido[x]['items'][y]['promo']));
-            console.log('Price: ' + parseFloat(pedido[x]['items'][y]['price']));
-            console.log('PUnitario: ' + pUnitario);
-            console.log('Importe: ' + importe);
             subtotal += parseFloat(importe);
         }
-        console.log(subtotal);
         subtotalPedido = subtotalPedido + subtotal;
         addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
         for (var y = 0; y < pedido[x]['items'].length; y++) {
@@ -1887,7 +1881,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                     else if (type == 5) {
                         console.log(data);
                         noCotizacionNS = data['idCotizacion'];
-                        document.getElementById('idCotizacion').value = noCotizacionNS;
+                        document.getElementById('idCotizacion').setAttribute("value", data['idCotizacion']);
                     }
                     else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
                         window.location.href = '/pedidos';
@@ -2037,10 +2031,6 @@ function saveNS() {
             var desgar = 0;
             var specialAuthorization = "";
             var indexItemSeparado;
-            console.log('PEDIDO');
-            console.log(pedido);
-            console.log('PEDIDO SEPARADO');
-            console.log(pedidoSeparado);
 
             if (pedido[x]['items'][0]['desneg'] != 0 && pedidoSeparado.length > 0) {
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
@@ -2146,6 +2136,7 @@ function saveNS() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (data) {
+                console.log(data);
                 var error = 0;
                 for (var x = 0; x < data.length; x++) {
                     if (data[x]['status'] == 'OK') {
@@ -2175,6 +2166,7 @@ function saveNS() {
                 // window.location.href = '/pedidos';
             },
             error: function (error) {
+                console.log(error);
                 alert('Error al enviar pedido a Netsuite');
                 // sendEmail();
                 // window.location.href = '/pedidos';

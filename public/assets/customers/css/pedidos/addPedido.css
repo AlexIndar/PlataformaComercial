@@ -163,12 +163,14 @@ input[type="text"]:disabled {
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   width: 100%;
   min-width: 1200px;
-  overflow-x: scroll;
+  overflow-y: scroll;
   transition: opacity .5s ease-in-out;
   -moz-transition: opacity .5s ease-in-out;
   -webkit-transition: opacity .5s ease-in-out;
   opacity: 1;
 }
+
+
 
 .tablaPedido tr {
   transition: all .2s ease-in-out;
@@ -639,11 +641,18 @@ legend.scheduler-border {
 
 .modal .modal-content-inventario {
   height: 95vh;
-  overflow-y: scroll;
   border: 0;
   border-radius: 5px;
   padding: 0 20px 20px 20px;
   width: 100% !important;
+}
+
+.dataTables_wrapper {
+  overflow: scroll !important;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  margin-right: 10px !important;
 }
 
 .modal-xl {
