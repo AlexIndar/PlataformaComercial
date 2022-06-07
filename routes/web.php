@@ -1507,7 +1507,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1533,11 +1533,33 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $user]);    
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA"){
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);    
                     }else{
                         return redirect('/Intranet');
                     }
+                });
+
+                Route::post('/EstadisticaSolicitudTiempo/GetGerencia', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = $request->User;
+                    $gerencia = EstadisticasClientesController::getGerencia($token,$user);
+                    return $gerencia;
+                });
+
+                Route::post('/EstadisticaSolicitudTiempo/GetTimeReport', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $typeRequest = $request->TypeR;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $solicitudesTime = EstadisticasClientesController::getTimeReport($token,$typeRequest,$ini,$end);
+                    return $solicitudesTime;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
@@ -1569,16 +1591,23 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 //******************************************* Comisiones ********************************************************
 
-                Route::get('/comisionesPorCliente', function(){
+                Route::get('/comisionesPorCliente/{id}/{date}', function($id,$date){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
                     if($token == 'error'){
                         return redirect('/logout');
                     }
+                    //$date = date("m-d-Y",$date);
+
+                    $mes = substr($date, 0, 2);
+                    $año = substr($date, 6, 10);
+
+                    $date = $año.'-'.$mes;
+                    $id= base64_decode($id);
                     $zonas = AplicarPagoController::getZonas($token);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas]);
+                    return view('intranet.comisiones.comisionesPorCliente',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'id'=> $id, 'date'=>$date]);
                 });
 
                 Route::get('/comisionesVendedor', function(){
@@ -1622,9 +1651,33 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error'){
                         return redirect('/logout');
                     }
+                    $zonas = AplicarPagoController::getZonas($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    //$username = 'jramirez';
+                    $username = $userData->typeUser;
+                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                    $zonasgtes = ComisionesController::GetZonasGerente($token,$username);
+                    $zona = $zonaInfo->body();
+                    //dd($userData->permissions);
+                    if(str_contains($zona, 'Bad Request')  && $userData->permissions != 'ADMIN' && $userData->permissions != 'GERENTEVENTA'){
+                        $zona = 0;
+                    }elseif($userData->permissions == 'ADMIN'){
+                        $zona = 'todo';
+                         //dd('entraaqui');
+                    }elseif(count($zonasgtes) != 0){
+                        $zona = $zonasgtes;
+                         //dd('entraaqui');
+                    }else{
+
+                        $zona = json_decode($zonaInfo->body())->description;
+
+                    }
+                    //dd($zona);
+                    //dd($zonas,$zona);
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
-                    return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions]);
+                    return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zona'=> $zona]);
+
                 });
 
 
@@ -1656,6 +1709,23 @@ Route::middleware([ValidateSession::class])->group(function(){
                    $dataEspeciales = ComisionesController::getProductosVendidos($token,$fecha,$zona);
 
                     return array($data, $dataBonos, $dataVentas, $dataEspeciales);
+
+                });
+                Route::get('/comisiones/getResumen', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $zona = $request->zona;
+                   $fecha = $request->fecha;
+                   $referencia = $zona;
+                   $dataprincipal=ComisionesController::getInfoCobranzaZonaWeb($token,$referencia,$fecha);
+                   $data=ComisionesController::getDiasNoHabiles($token,$zona,$fecha);
+                   $dataBonos=ComisionesController::getCtesActivosMes($token,$zona,$fecha);
+                   $dataVentas =ComisionesController::getTotalVentasZona($token,$zona,$fecha);
+                   $dataEspeciales = ComisionesController::getProductosVendidos($token,$fecha,$zona);
+
+                    return array($data, $dataBonos, $dataVentas, $dataEspeciales,$dataprincipal);
 
                 });
 

@@ -223,6 +223,7 @@ $(document).ready(function () {
 
     $('#modalInventario').on('hidden.bs.modal', function () {
         prepareJsonSeparaPedidos(false);
+        // save(5) //pre guardar el pedido después de cargar excel
     })
 
     $('#modalNetsuiteLoading').on('hidden.bs.modal', function () {
@@ -600,6 +601,7 @@ function cargarProductosPorCodigo() {
     table.classList.add('inactive');
     document.getElementById('btnCargarPorCodigo').classList.add('d-none');
     prepareJsonSeparaPedidos(false);
+    // save(5); //pre guardar el pedido después de cargar excel
 }
 
 function cargarProductosExcel(json) {
@@ -662,7 +664,6 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
         var cupon = document.getElementById('cupon').value;
         if (cupon != '') {
             json = JSON.parse(json);
-            console.log(json);
             for (var x = 0; x < json.length; x++) {
                 json[x]['cupon'] = cupon;
                 json[x]['CapturadoXcte'] = tipoPedido;
@@ -1153,7 +1154,7 @@ function cargarInventario() {
                 arr.push(descuentos);
                 arr.push(promociones);
                 arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " min=" + items[x]['multiploVenta'] + " step=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-" + items[x]['itemid'] + "'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
-                arr.push(items[x]['price']);
+                arr.push(precioIVA); //CAMPO PARA ORDENAR POR PRECIO
                 dataset.push(arr);
             }
             x++;
@@ -1232,18 +1233,11 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
                 price = parseFloat(pedido[x]['items'][y]['price']);
             var pUnitario = ((100 - parseFloat(pedido[x]['items'][y]['promo'])) * price / 100).toFixed(2);
             var importe = (cantidad * pUnitario).toFixed(2);
-            console.log(cantidad);
-            console.log('Cantidad: ' + parseFloat(pedido[x]['items'][y]['cantidad']));
-            console.log('Promo: ' + parseFloat(pedido[x]['items'][y]['promo']));
-            console.log('Price: ' + parseFloat(pedido[x]['items'][y]['price']));
-            console.log('PUnitario: ' + pUnitario);
-            console.log('Importe: ' + importe);
             subtotal += parseFloat(importe);
         }
-        console.log(subtotal);
         subtotalPedido = subtotalPedido + subtotal;
         addHeaderPedido(pedido[x]['descuento'], pedido[x]['plazo'], pedido[x]['tipo'], pedido[x]['evento'], subtotal);
-        for (var y = 0; y < pedido[x]['items'].length; y++) {
+        for (var y = 0; y < pedido[x]['items'].length; y++) { //NO CONSIDERAR LAS LÍNEAS QUE SEAN REGALO Y TENGAN EL ADDREGALO EN 0 (QUE SE HAYAN ELIMINADO)
             if (pedido[x]['items'][y]['regalo'] == 0) {
                 addRowPedido(pedido[x]['items'][y], fila, x);
             }
@@ -1818,16 +1812,18 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
             }
 
             for (var y = 0; y < pedido[x]['items'].length; y++) {
-                var item = {
-                    id: pedido[x]['items'][y]['id'],
-                    itemid: pedido[x]['items'][y]['itemid'],
-                    cantidad: pedido[x]['items'][y]['cantidad'],
-                    desneg: pedido[x]['items'][y]['desneg'],
-                    desgar: pedido[x]['items'][y]['desgar'],
-                    autorizaDesneg: pedido[x]['items'][y]['autorizaDesneg'],
-                    autorizaDesgar: pedido[x]['items'][y]['autorizaDesgar'],
-                };
-                itemsJson.push(item);
+                if (pedido[x]['items'][y]['regalo'] == 0 || pedido[x]['items'][y]['addRegalo'] == 1) { //NO CONSIDERAR LAS LÍNEAS QUE SEAN REGALO Y TENGAN EL ADDREGALO EN 0 (QUE SE HAYAN ELIMINADO)
+                    var item = {
+                        id: pedido[x]['items'][y]['id'],
+                        itemid: pedido[x]['items'][y]['itemid'],
+                        cantidad: pedido[x]['items'][y]['cantidad'],
+                        desneg: pedido[x]['items'][y]['desneg'],
+                        desgar: pedido[x]['items'][y]['desgar'],
+                        autorizaDesneg: pedido[x]['items'][y]['autorizaDesneg'],
+                        autorizaDesgar: pedido[x]['items'][y]['autorizaDesgar'],
+                    };
+                    itemsJson.push(item);
+                }
             }
             var items = itemsJson;
             var temp = {
@@ -1876,6 +1872,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
                 success: function (data) {
+                    console.log(data);
                     if (type == 3) { //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
                         noCotizacionNS = data['idCotizacion'];
                         saveNS();
@@ -1887,7 +1884,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                     else if (type == 5) {
                         console.log(data);
                         noCotizacionNS = data['idCotizacion'];
-                        document.getElementById('idCotizacion').value = noCotizacionNS;
+                        document.getElementById('idCotizacion').setAttribute("value", data['idCotizacion']);
                     }
                     else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
                         window.location.href = '/pedidos';
@@ -2037,10 +2034,6 @@ function saveNS() {
             var desgar = 0;
             var specialAuthorization = "";
             var indexItemSeparado;
-            console.log('PEDIDO');
-            console.log(pedido);
-            console.log('PEDIDO SEPARADO');
-            console.log(pedidoSeparado);
 
             if (pedido[x]['items'][0]['desneg'] != 0 && pedidoSeparado.length > 0) {
                 indexItemSeparado = pedidoSeparado.findIndex(o => o.descuento == (pedido[x]['descuento'] - pedido[x]['items'][0]['desneg']) && o.marca == pedido[x]['marca'] && o.plazo == pedido[x]['plazo'] && o.tipo == pedido[x]['tipo']);
@@ -2061,11 +2054,6 @@ function saveNS() {
             var username = "USERNAME";
             for (var y = 0; y < pedido[x]['items'].length; y++) {
                 var listaPrecio = info[indexCustomerInfo]['priceList'];
-                var item = {
-                    itemid: pedido[x]['items'][y]['itemid'],
-                    quantity: pedido[x]['items'][y]['cantidad'],
-                    listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
-                };
                 if (pedido[x]['items'][y]['desneg'] != 0) {
                     desneg = pedido[x]['items'][y]['desneg'];
                     specialAuthorization = pedido[x]['items'][y]['autorizaDesneg'];
@@ -2074,7 +2062,14 @@ function saveNS() {
                     desgar = pedido[x]['items'][y]['desgar'];
                     specialAuthorization = pedido[x]['items'][y]['autorizaDesgar'];
                 }
-                lineItems.push(item);
+                if (pedido[x]['items'][y]['regalo'] == 0 || pedido[x]['items'][y]['addRegalo'] == 1) { //NO CONSIDERAR LAS LÍNEAS QUE SEAN REGALO Y TENGAN EL ADDREGALO EN 0 (QUE SE HAYAN ELIMINADO)
+                    var item = {
+                        itemid: pedido[x]['items'][y]['itemid'],
+                        quantity: pedido[x]['items'][y]['cantidad'],
+                        listprice: pedido[x]['items'][y]['regalo'] == 0 ? listaPrecio : -1,
+                    };
+                    lineItems.push(item);
+                }
             }
             var temp = {
                 internalId: 0,
@@ -2146,6 +2141,7 @@ function saveNS() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (data) {
+                console.log(data);
                 var error = 0;
                 for (var x = 0; x < data.length; x++) {
                     if (data[x]['status'] == 'OK') {
@@ -2175,6 +2171,7 @@ function saveNS() {
                 // window.location.href = '/pedidos';
             },
             error: function (error) {
+                console.log(error);
                 alert('Error al enviar pedido a Netsuite');
                 // sendEmail();
                 // window.location.href = '/pedidos';
