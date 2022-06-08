@@ -2370,3 +2370,24 @@ Route::GET('/almacen/getConsolidado', function(){
     $consolidado = AlmacenController::consolidadoPantalla();
     return $consolidado;
 });
+//***************************** CAPTURA ERRORES **********************************\\
+Route::get('/almacen/capturaErrores', function(){
+    $errores = AlmacenController::capturaErrores();
+    return view('almacen.capturaErrores', compact('errores'));
+})->name('almacen.capturaErrores');
+Route::get('/almacen/getErrores', function(){
+    $errores = AlmacenController::capturaErrores();
+    return $errores;
+});
+Route::get('/almacen/capturaErrores/consultaCaptura', function(){
+    $consultaCaptura = AlmacenController::consultaCaptura();
+    return $consultaCaptura;
+});
+Route::post('/almacen/capturaErrores/createError', function(Request $request){
+    $createError = AlmacenController::createError(json_encode($request->all()));
+    return $createError;
+});
+Route::post('/almacen/capturaErrores/updateError', function(Request $request){
+    $updateError = AlmacenController::updateError(json_encode($request->all()));
+    return $updateError;
+});
