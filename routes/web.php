@@ -1562,6 +1562,19 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $solicitudesTime;
                 });
 
+                Route::post('/EstadisticaSolicitudTiempo/GetManagementTimeReport', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $idArea = $request->IdArea;
+                    $typeRequest = $request->TypeR;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $solicitudesTime = EstadisticasClientesController::getManagementTimeReport($token,$idArea,$typeRequest,$ini,$end);
+                    return $solicitudesTime;
+                });
+
                 /* ********************************************* END INDARNET ************************************************ */
 
                 //CXC
