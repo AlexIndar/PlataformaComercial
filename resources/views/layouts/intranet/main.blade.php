@@ -417,7 +417,7 @@
                             </li>
                         @endif
 
-                        @if ($userRol == 'ADMIN')
+                        @if (in_array('HSBC', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'HSBC')
                                     <a href="#" class="nav-link active">
