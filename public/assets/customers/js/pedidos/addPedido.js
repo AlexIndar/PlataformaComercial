@@ -1892,6 +1892,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                 },
                 error: function (error) {
                     alert('Error al guardar pedido');
+                    console.log(error);
                     // window.location.href = '/pedidos';
                 }
             });
