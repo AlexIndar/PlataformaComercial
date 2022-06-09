@@ -23,4 +23,9 @@ class HeatMapController extends Controller
         $items = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetItemSearchMap');
         return json_decode($items->body());
     }
+
+    public static function getListCustomer($token,$fechaIni, $fechaEnd, $gerencia, $zona, $idShippingWay){
+        $customerList = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetListCustomer?fechaIni='.$fechaIni.'&fechaFin='.$fechaEnd.'&descGerencia='.$gerencia.'&descZona='.$zona.'&IdShippingWay='.$idShippingWay);
+        return $customerList;
+    }
 }
