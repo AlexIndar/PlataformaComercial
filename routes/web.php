@@ -46,6 +46,7 @@ use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\Intranet\AsignacionZonasController;
+use App\Http\Controllers\Intranet\HeatMapController;
 use App\Http\Controllers\Intranet\SolicitudesPendientesController;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1573,6 +1574,32 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $end = $request->End;
                     $solicitudesTime = EstadisticasClientesController::getManagementTimeReport($token,$idArea,$typeRequest,$ini,$end);
                     return $solicitudesTime;
+                });
+
+                //////// HeatMap /////
+                Route::get('/HeatMap', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "ADMIN"){
+                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);    
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                });
+
+                Route::get('/HeatMap/GetItemSearchMap', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = HeatMapController::getItemSearchMap($token);
+                    return $data;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
