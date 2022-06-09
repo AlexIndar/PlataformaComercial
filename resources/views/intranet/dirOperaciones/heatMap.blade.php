@@ -108,10 +108,10 @@
 </div>
 
 <div class="modal" tabindex="-1" id="infoReport">
-    <div class="modal-dialog">
+    <div class="modal-dialog text-center">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titleModalInfoReport">Aviso</h5>
+                <h5 class="modal-title" id="titleModalInfoReport"><i class="fa-solid fa-triangle-exclamation"></i> Aviso <i class="fa-solid fa-triangle-exclamation"></i></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -124,6 +124,22 @@
         </div>
     </div>
 </div>
+
+<!-- CARGA MODAL -->
+<div class="modal" tabindex="-1" id="cargaModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="titleCargaModal"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Enviando información <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="bodyCargaModal"><i class="fa fa-spinner" aria-hidden="true"></i></div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('js')
