@@ -201,14 +201,70 @@
                                             </a>
                                         </li>
                                     @endif
+                                </ul>
+                            </li>
+                        @endif
+                        @if (in_array('SolicitudesPendientes', $permissions))
+                            <li class="nav-item">
+                                @if ($active == 'CyC')
+                                    <a href="#" class="nav-link active">
+                                    @else
+                                        <a href="#" class="nav-link">
+                                @endif
+                                <i class="nav-icon fas fa-comment-dollar"></i>
+                                <p>Credito y Cobranza<i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview">
                                     @if (in_array('SolicitudesPendientes', $permissions))
                                         <li class="nav-item">
                                             <a href="/SolicitudesPendientes" class="nav-link">
-                                                <i class="fa-solid fa-calculator"></i>
+                                                <i class="fa-solid fa-calculator nav-icon"></i>
                                                 <p>Solicitudes Pendientes</p>
                                             </a>
                                         </li>
                                     @endif
+                                    @if (in_array('EstadisticaSolicitud', $permissions))
+                                        <li class="nav-item">
+                                            <a href="/EstadisticaSolicitudTiempo" class="nav-link">
+                                            <i class="far fa-clock nav-icon"></i>
+                                                <p>Estadistica Tiempo</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                        @endif
+                        @if (in_array('HeatMap', $permissions) || in_array('AsignaZonasCyc', $permissions))
+                            <li class="nav-item">
+                                @if ($active == 'Operaciones')
+                                    <a href="#" class="nav-link active">
+                                    @else
+                                        <a href="#" class="nav-link">
+                                @endif
+                                <i class="nav-icon fas fa-globe-americas"></i>
+                                <p>
+                                    Operaciones
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    @if (in_array('HeatMap', $permissions))
+                                        <li class="nav-item">
+                                            <a href="/HeatMap" class="nav-link">
+                                                <i class="fas fa-map-marker-alt nav-icon"></i>
+                                                <p>HeatMap</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (in_array('AsignaZonasCyc', $permissions))
+                                        <li class="nav-item">
+                                            <a href="/AsignacionZonas" class="nav-link">
+                                            <i class="fas fa-map nav-icon"></i>
+                                                <p>Asignar zonas a CyC</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    
                                 </ul>
                             </li>
                         @endif

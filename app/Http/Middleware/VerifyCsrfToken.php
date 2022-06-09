@@ -68,6 +68,11 @@ class VerifyCsrfToken extends Middleware
         '/logistica/distribucion/validarSad/authoriceSad',
         '/logistica/distribucion/capturaGastoFletera/registerNet',
         '/almacen/capturaErrores/createError',
-        '/almacen/capturaErrores/updateError' 
+        '/almacen/capturaErrores/updateError',
+        '/EstadisticaSolicitudTiempo/GetManagementTimeReport',
+        '/EstadisticaSolicitudTiempo/GetTimeReport',
+        '/EstadisticaSolicitudTiempo/GetGerencia',
+        '/GetTableView',
+        '/HeatMap/GetListCustomer'
     ];
 }
