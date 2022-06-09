@@ -27,7 +27,7 @@
                     <div class="containerMap">
                         <div id="floating-panel" style="display: none;">
                             <button id="toggle-heatmap">Alternar Mapa de Calor</button>
-                            <button id="change-gradient">Alternar Ronalidad</button>
+                            <button id="change-gradient">Alternar Tonalidad</button>
                             <button id="change-radius">Alternar Radio</button>
                             <button id="change-opacity">Alternar Opacidad</button>
                         </div>
@@ -75,7 +75,7 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupGerencia">GERENCIA</label>
                                 </div>
-                                <select id="inputGroupGerencia" name="inputGroupGerencia" class="form-control selectpicker" data-size="7" data-live-search="true">
+                                <select id="inputGroupGerencia" name="inputGroupGerencia" class="form-control selectpicker" data-size="7" data-live-search="true" onchange="changeGerencia()">
                                 </select>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupZonas">ZONAS</label>
                                 </div>
-                                <select id="inputGroupZonas" name="inputGroupZonas" class="form-control selectpicker" data-size="7" data-live-search="true">
+                                <select id="inputGroupZonas" name="inputGroupZonas" class="form-control selectpicker" data-size="7" data-live-search="true" onchange="getCustomerList()">
                                 </select>
                             </div>
                         </div>
@@ -93,12 +93,12 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupEnvio">ENVIO</label>
                                 </div>
-                                <select id="inputGroupEnvio" name="inputGroupEnvio" class="form-control selectpicker" data-size="7" data-live-search="true">
+                                <select id="inputGroupEnvio" name="inputGroupEnvio" class="form-control selectpicker" data-size="7" data-live-search="true" onchange="getCustomerList()">
                                 </select>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <button class="btn btn-outline-info" onclick="search()">Actualizar</button>
+                            <button class="btn btn-outline-info" onclick="getCustomerList()">Actualizar</button>
                         </div>
                     </div>
                 </div>
