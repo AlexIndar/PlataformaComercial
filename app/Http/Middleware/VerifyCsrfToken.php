@@ -30,6 +30,7 @@ class VerifyCsrfToken extends Middleware
         '/sendmailDesneg',
         '/pedidosAnteriores/RegresaEstadoPedido',
         '/pedidosAnteriores/getDetalleFacturado',
+        'pedidosAnteriores/descargarDocumento',
         '/promociones/storePromo',
         '/promociones/editar',
         '/promociones/eliminar',
@@ -67,6 +68,6 @@ class VerifyCsrfToken extends Middleware
         '/logistica/distribucion/validarSad/authoriceSad',
         '/logistica/distribucion/capturaGastoFletera/registerNet',
         '/almacen/capturaErrores/createError',
-        '/almacen/capturaErrores/updateError'
+        '/almacen/capturaErrores/updateError' 
     ];
 }
