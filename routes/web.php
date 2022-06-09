@@ -367,6 +367,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return $saleOrders;
                             });
 
+                            Route::post('pedidosAnteriores/descargarDocumento', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                return redirect('/logout');
+                                }
+                                $url = SaleOrdersController::descargarDocumento($token, $request);
+                                return $url;
+                            });
+
                             // Route::get('/pedido/nuevo/{entity}', function ($entity){
                             //     $token = TokenController::getToken();
                             //     if($token == 'error'){
@@ -828,9 +837,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
 
                                 $level = "C";
                                 if(isset($_COOKIE['_lv'])){
@@ -843,7 +849,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 $promociones = PromoController::getAllEvents($token);
                                 $permissions = LoginController::getPermissions($token);
-                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
+                                return view('customers.promociones.promociones', ['token' => $token, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::post('/promociones/editar', function (Request $request){
@@ -1017,6 +1023,43 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 return $response;
                             });
+
+                // HSBC ------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                 Route::get('/pagos', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.hsbc.pagos', ['token' => $token, 'level' => $level, 'permissions' =>$permissions, 'username' => $username, 'userRol' => $userRol]);
+                 });
+
+                 Route::get('/pagos/validar', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                    return redirect('/logout');
+                    }
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                    $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.hsbc.validarPago', ['token' => $token, 'level' => $level, 'permissions' =>$permissions,'username' => $username, 'userRol' => $userRol]);
+                 });
+
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
