@@ -1868,27 +1868,34 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                 'url': "storePedido",
                 'type': 'POST',
                 'dataType': 'json',
+                'async': false,
                 'data': json,
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
                 success: function (data) {
                     console.log(data);
-                    if (type == 3) { //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
-                        noCotizacionNS = data['idCotizacion'];
-                        saveNS();
+                    console.log('Num Cotizacion: ' + data['idCotizacion']);
+                    if (data['idCotizacion'] != undefined) { //Si es undefined significa que hubo algún error
+                        if (type == 3) { //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
+                            noCotizacionNS = data['idCotizacion'];
+                            setTimeout(saveNS(), 2000);
+                        }
+                        else if (type == 4) { //se está editando el pedido, ya tengo el numero de cotización en el html 
+                            noCotizacionNS = document.getElementById('idCotizacion').value;
+                            setTimeout(saveNS(), 2000);
+                        }
+                        else if (type == 5) {
+                            noCotizacionNS = data['idCotizacion'];
+                            document.getElementById('idCotizacion').setAttribute("value", data['idCotizacion']);
+                        }
+                        else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
+                            // window.location.href = '/pedidos';
+                        }
                     }
-                    else if (type == 4) { //se está editando el pedido, ya tengo el numero de cotización en el html 
-                        noCotizacionNS = document.getElementById('idCotizacion').value;
-                        saveNS();
+                    else {
+                        alert('Error al guardar pedido');
                     }
-                    else if (type == 5) {
-                        console.log(data);
-                        noCotizacionNS = data['idCotizacion'];
-                        document.getElementById('idCotizacion').setAttribute("value", data['idCotizacion']);
-                    }
-                    else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
-                        window.location.href = '/pedidos';
-                    }
+
                 },
                 error: function (error) {
                     alert('Error al guardar pedido');
@@ -1975,12 +1982,14 @@ function updatePedidoDesneg(itemid, select, index) {
 // FUNCIÓN ENVIAR A NETSUITE
 
 function saveNS() {
+    console.log('Guardando en Netsuite');
     levantandoPedidoLoading();
 
     if (pedido.length == 0) {
         alert('Agrega artículos al pedido');
     }
     else {
+        console.log(noCotizacionNS);
         var numCotizacion = noCotizacionNS;
         var idCustomer; //id
         var correo; //texto
