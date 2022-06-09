@@ -87,7 +87,6 @@ function initMap() {
         data: itemCoord,
         map: map,
     });
-    console.log(heatmap.data);
     document
         .getElementById("toggle-heatmap")
         .addEventListener("click", toggleHeatmap);
@@ -135,28 +134,12 @@ function changeOpacity() {
     heatmap.set("opacity", heatmap.get("opacity") ? null : 0.2);
 }
 
-// Heatmap data: 500 Points
-function getPoints() {
-    return [
-        new google.maps.LatLng(20.59182468845927, -103.28489825073832),
-        new google.maps.LatLng(20.59182468845927, -103.28489825073832),
-        new google.maps.LatLng(20.59182468845927, -103.28489825073832),
-        new google.maps.LatLng(20.59182468845927, -103.28489825073832),
-        new google.maps.LatLng(20.59182468845927, -103.28489825073832),
-    ];
-}
-
-function search() {
-    initMap();
-}
-
-function prueba() {
-    // moment( new Date(this.periodEnd)).format('DD/MMM/YYYY');
-    // $('#cargaModal').modal('show');
+function getData() {
+    $('#cargaModal').modal('show');    
     let fechaIni = document.getElementById("periodIni").value;
-    fechaIni = fechaIni == "" ? "" : moment( new Date(fechaIni)).format('DD/MMM/YYYY');
+    fechaIni = fechaIni == "" ? "" : moment(new Date(fechaIni)).format('DD/MMM/YYYY');
     let fechaEnd = document.getElementById("periodEnd").value;
-    fechaEnd = fechaEnd == "" ? "" : moment( new Date(fechaEnd)).format('DD/MMM/YYYY');
+    fechaEnd = fechaEnd == "" ? "" : moment(new Date(fechaEnd)).format('DD/MMM/YYYY');
 
     let objSearch = {
         FechaIni: fechaIni,
@@ -165,33 +148,32 @@ function prueba() {
         Zona: document.getElementById("inputGroupZonas").value,
         IdShippingWay: document.getElementById("inputGroupEnvio").value
     }
-    console.log(objSearch);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         'url': "/HeatMap/GetListCustomer",
         'type': 'POST',
-        // 'async': false,
         'dataType': 'json',
         'data': objSearch,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            console.log(data);
+            $('#cargaModal').modal('hide');
             if (data.length > 0) {
                 itemCoord = [];
                 for (let i = 0; i < data.length; i++) {
                     itemCoord.push(new google.maps.LatLng(data[i].latitud, data[i].longitud));
                 }
+                // itemCoord.push(new google.maps.LatLng(24.356336, 54.533224));
                 initMap();
-                console.log(itemCoord);
-            }else{
+            } else {                
                 $("#infoReport").modal('show');
             }
         },
         error: function (error) {
-            console.log(error);
+            $('#cargaModal').modal('hide');
+            alert(error);
         }
     });
 }
@@ -213,7 +195,6 @@ function getCustomerList() {
         document.getElementById("alertDate").style.display = "flex";
     else {
         document.getElementById("alertDate").style.display = "none";
-        // initMap();
-        prueba();
+        getData();
     }
 }
