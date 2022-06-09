@@ -1602,6 +1602,20 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $data;
                 });
 
+                Route::post('/HeatMap/GetListCustomer', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fechaIni = $request->FechaIni;
+                    $fechaEnd = $request->FechaEnd;
+                    $gerencia = $request->IdGerencia;
+                    $zona = $request->Zona;
+                    $idShippingWay = $request->IdShippingWay;
+                    $customerList = HeatMapController::getListCustomer($token,$fechaIni,$fechaEnd,$gerencia,$zona,$idShippingWay);
+                    return $customerList;
+                });
+
                 /* ********************************************* END INDARNET ************************************************ */
 
                 //CXC
