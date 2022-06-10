@@ -30,12 +30,13 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="row justify-content-between">
-                                        <div class="col-3 mt-2">
-                                            <h3 class="card-title">Numero Guía</h3>
+                                        <div class="col-12 mt-2">
+                                            <h3 class="card-title mt-3 mr-2">Numero Guía</h3>
+                                            <input type="file" id="fileTampleteImport" hidden>
+                                            <a type="button" class="btn btn-outline-primary" href="{{asset('templates/Template_NumeroGuia.xlsx')}}" download="Template_NumeroGuia"><i class="fa-solid fa-file-arrow-down mr-2"></i>Descargar Template</a>
+                                            <label type="button" class="btn btn-outline-primary mt-2" for="fileTampleteImport" onchange="logisticaController.importTemplateNumGuia()"><i class="fa-solid fa-file-arrow-down mr-2"></i>Importar Template</label>
+                                            <button type="button" class="btn btn-outline-primary" onclick="logisticaController.showModalLogin()"><i class="fa-solid fa-pen-to-square mr-2"></i>Actualizar Importes</button>
                                         </div>
-                                        {{-- <div class="col-2">
-                                            <button type="button" class="btn btn-block btn-outline-primary" onclick="logisticaController.showModalLogin()"><i class="fa-solid fa-pen-to-square"></i>Actualizar Importes</button>
-                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +112,7 @@
                                 <div class="row">
                                     <div class="col-12 mt-2 p-0">
                                         <div class="row justify-content-between">
-                                            <div class="col-5">
+                                            <div class="col-6">
                                                 <div class="row p-1" style="border: 1px solid gray;">
                                                     <div class="col-12">
                                                         <strong>2. Guía Conformada por:</strong>
@@ -177,7 +178,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-7">
+                                            <div class="col-6">
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="row" id="divrow" style="border: 1px solid gray;height: 345px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">

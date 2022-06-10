@@ -909,7 +909,7 @@ const logisticaController = {
             success: function(data){
                 if(data != "" || data != [] || data.length != 0)
                 {
-                    //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRRAY DE LOS BULTOS QUE REGRESA
+                    //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRAY DE LOS BULTOS QUE REGRESA
                     let embarque = '';
                     for(let a=0;a < arrayResultFacturas.length; a++)
                     {
@@ -1003,11 +1003,13 @@ const logisticaController = {
                                         break;
                                 }
                                 let importeLock = '';
+                                let importeXcantidad = data[a].cantidad * data[a].importe;
                                 if(fletera == "" || data[a].importe == 0)
                                 {
-                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>';
+                                    let importeXcantidad = 0;
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" ></td>';
                                 }else{
-                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>';
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" value="'+importeXcantidad+'" disabled></td>';
                                 }
                                 $('#table-content-guia-type').append(
                                     '<tr id="rowType'+lasRow+'">'
@@ -1033,7 +1035,7 @@ const logisticaController = {
                                 arrayRowTableType.push({
                                     'tipo': data[a].tipoAtado,
                                     'cantidad':data[a].cantidad,
-                                    'importe': data[a].importe,
+                                    'importe': importeXcantidad,
                                     'row': lasRow,
                                     'idOrdenEmbarque': data[a].idOrdenEmbarque,
                                     'consolidado' : data[a].consolidado,
@@ -1085,11 +1087,13 @@ const logisticaController = {
                                         break;
                             }
                             let importeLock = '';
+                            let importeXcantidad = data[a].cantidad * data[a].importe;
                             if(fletera == "" || data[a].importe == 0)
                             {
-                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" ></td>';
+                                importeXcantidad = 0;
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" ></td>';
                             }else{
-                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+data[a].importe+'" value="'+data[a].importe+'" disabled></td>';
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" value="'+importeXcantidad+'" disabled></td>';
                             }
                             $('#table-content-guia-type').append(
                                 '<tr id="rowType'+contRowTypeTable+'">'
@@ -1115,7 +1119,7 @@ const logisticaController = {
                             arrayRowTableType.push({
                                 'tipo': data[a].tipoAtado,
                                 'cantidad':data[a].cantidad,
-                                'importe': data[a].importe,
+                                'importe': importeXcantidad,
                                 'row': contRowTypeTable++,
                                 'idOrdenEmbarque': data[a].idOrdenEmbarque,
                                 'consolidado' : data[a].consolidado,

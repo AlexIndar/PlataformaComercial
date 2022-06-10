@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Http\Controllers\Logistica\LogisticaController;
 use App\Http\Controllers\Almacen\AlmacenController;
+use App\Http\Controllers\Exporta\ExportaController;
 use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
@@ -2337,7 +2338,7 @@ Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',fun
 });
 
 //******************************* EXPORTA  ************************************\\
-Route::get('/pedidos-exporta',function(){
+Route::get('/exporta/pedidos',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
@@ -2345,7 +2346,17 @@ Route::get('/pedidos-exporta',function(){
         return redirect('/logout');
     }
     return view('exporta.pedidos');
-})->name('pedidos-exporta');
+})->name('exporta.pedidos');
+Route::get('/exporta/precios', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $precios = ExportaController::precios($token);
+    return $precios;
+});
 //****************************** ALMACEN ***************************************\\
 //****************************** CONSOLIDADO PANTALLA **************************\\
 Route::get('/almacen/consolidadoPantalla', function(){
