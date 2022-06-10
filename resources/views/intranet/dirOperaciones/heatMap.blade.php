@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Intranet', 'permissions' => $permissions])
+@extends('layouts.intranet.main', ['active' => 'Operaciones', 'permissions' => $permissions])
 
 @section('title') Indar - HeatMap @endsection
 

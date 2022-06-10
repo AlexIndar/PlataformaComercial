@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Intranet', 'permissions' => $permissions])
+@extends('layouts.intranet.main', ['active' => 'CyC', 'permissions' => $permissions])
 
 @section('title') Indar - Solicitudes Pendientes @endsection
 
