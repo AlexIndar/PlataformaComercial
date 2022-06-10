@@ -1310,6 +1310,8 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
 }
 
 
+
+
 function addRowPedido(item, fila, indexPedido) {
     var table = document.getElementById('tablaPedido');
     var row = table.insertRow(table.rows.length);
@@ -1889,7 +1891,8 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                             document.getElementById('idCotizacion').setAttribute("value", data['idCotizacion']);
                         }
                         else { // No se va a levantar el pedido, solo se guardó, retornar a pantalla de pedidos
-                            // window.location.href = '/pedidos';
+                            alert('Pedido guardado correctamente');
+                            window.location.href = '/pedidos';
                         }
                     }
                     else {
@@ -2146,7 +2149,6 @@ function saveNS() {
             },
             'url': "storePedidoNS",
             'type': 'POST',
-            'dataType': 'json',
             'data': { json: listNS },
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
@@ -2362,35 +2364,57 @@ function eliminarCotizacion(type) {
     }
 }
 
-function exportTableToExcel(tableID, filename = '') {
-    var downloadLink;
-    var dataType = 'application/vnd.ms-excel';
-    var tableSelect = document.getElementById(tableID);
-    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+function exportTableToExcel(tableID, filename) {
+    var arrayRows = [];
+    arrayRows.push([
+        '#',
+        'ARTÍCULO',
+        'CANTIDAD',
+        'UNIDAD',
+        'DESCRIPCIÓN',
+        'MÚLTIPLO',
+        'PRECIO LISTA',
+        'PROMO',
+        'PRECIO UNITARIO',
+        'IMPORTE',
+    ]);
 
-    // Specify file name
-    filename = filename ? filename + '.xls' : 'excel_data.xls';
-
-    // Create download link element
-    downloadLink = document.createElement("a");
-
-    document.body.appendChild(downloadLink);
-
-    if (navigator.msSaveOrOpenBlob) {
-        var blob = new Blob(['\ufeff', tableHTML], {
-            type: dataType
+    $.each(pedido, function (key, value) {
+        $.each(value['items'], function (key, value) {
+            var pUnitario = ((100 - parseFloat(value.promo)) * parseFloat(value.price) / 100).toFixed(2);
+            var importe = (value.cantidad * pUnitario).toFixed(2);
+            var descripcion = value.purchasedescription.replaceAll(',', ' ');
+            let data = [
+                key + 1,
+                value.itemid,
+                value.cantidad,
+                value.unidad,
+                descripcion,
+                value.multiploVenta,
+                value.price,
+                value.promo,
+                pUnitario,
+                importe,
+            ];
+            arrayRows.push(data);
         });
-        navigator.msSaveOrOpenBlob(blob, filename);
-    } else {
-        // Create a link to the file
-        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-        // Setting the file name
-        downloadLink.download = filename;
+    });
 
-        //triggering the function
-        downloadLink.click();
-    }
+    var CsvString = "";
+    arrayRows.forEach(function (RowItem, RowIndex) {
+        RowItem.forEach(function (ColItem, ColIndex) {
+            CsvString += ColItem + ',';
+        });
+        CsvString += "\r\n";
+    });
+    var x = document.createElement("A");
+    x.setAttribute("href", 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(CsvString));
+    x.setAttribute("download", filename + '.csv');
+    document.body.appendChild(x);
+    x.click();
+
 }
+
 
 function clearNetsuiteModal() {
     $('#container-netsuite-loading').empty();

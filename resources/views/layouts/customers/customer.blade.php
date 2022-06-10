@@ -1,77 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js" integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
-        <!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <link rel="icon" type="image/png" href="/assets/customers/img/png/favicon.png">
-        <link rel="stylesheet" href="{{asset('assets/customers/css/index.css')}}">
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js"
+        integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
+    <!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <link rel="icon" type="image/png" href="/assets/customers/img/png/favicon.png">
+    <link rel="stylesheet" href="{{ asset('assets/customers/css/index.css') }}">
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
-        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
-        <script src="{{asset('assets/customers/js/index.js')}}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/blazy/1.8.2/blazy.min.js" integrity="sha512-Yrd3VqXNBUzyCQWVBlL65mTdE1snypc9E3XnGJba0zJmxweyJAqDNp6XSARxxAO6hWdwMpKQOIGE5uvGdG0+Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script src="https://unpkg.com/scrollreveal"></script>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 
 
 
-
-        <!-- DataTables  & Plugins -->
-        <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-        <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script> <!-- LIBRERÍA NECESARIA PARA FILTRO POR COLUMNA -->
-        <!-- Ionicons -->
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-        <!-- Tempusdominus Bootstrap 4 -->
-        <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
-        <!-- iCheck -->
-        <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
-        <!-- JQVMap -->
-        <link rel="stylesheet" href="{{asset('plugins/jqvmap/jqvmap.min.css')}}">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
-        <!-- overlayScrollbars -->
-        <link rel="stylesheet" href="{{asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
-        <!-- Daterange picker -->
-        <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
-        <!-- summernote -->
-        <link rel="stylesheet" href="{{asset('plugins/summernote/summernote-bs4.min.css')}}">
-
-        <!-- DATEPICKER -->
-
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-        <!-- CHOSEN SELECT -->
-        <script type="text/javascript" src="{{asset('plugins/chosen/chosen.jquery.js')}}"></script>
-        <link rel="stylesheet" type="text/css" href="{{asset('plugins/chosen/chosen.min.css')}}" />
-
-        <!-- xlsx reader  -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.8/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script src="{{ asset('assets/customers/js/index.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blazy/1.8.2/blazy.min.js"
+        integrity="sha512-Yrd3VqXNBUzyCQWVBlL65mTdE1snypc9E3XnGJba0zJmxweyJAqDNp6XSARxxAO6hWdwMpKQOIGE5uvGdG0+Yw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-        <title>@yield('title')</title>
-        <!-- Custom Styles -->
-        @yield('assets')
+
+
+    <!-- DataTables  & Plugins -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script> <!-- LIBRERÍA NECESARIA PARA FILTRO POR COLUMNA -->
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet"
+        href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+
+    <!-- DATEPICKER -->
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- CHOSEN SELECT -->
+    <script type="text/javascript" src="{{ asset('plugins/chosen/chosen.jquery.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/chosen/chosen.min.css') }}" />
+
+    <!-- xlsx reader  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.8/xlsx.full.min.js"></script>
+
+
+    <title>@yield('title')</title>
+    <!-- Custom Styles -->
+    @yield('assets')
 </head>
+
 <body>
 
 
@@ -79,15 +92,22 @@
     <!-- LOGIN OPTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------->
     <div class="login-options">
         <h5>Síguenos en </h5>
-        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i style="color: #002868; margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>
-        <a style="margin-top: -2px !important;" target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a>
-        <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a>
-        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a>
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i
+                style="color: #002868; margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>
+        <a style="margin-top: -2px !important;" target="blank"
+            href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i
+                style="color: #002868; margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a>
+        <a style="margin-top: -2px !important;" target="blank"
+            href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i
+                style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a>
+        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank"
+            href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i
+                style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a>
 
-        @if($token && $token != 'error' && $token != 'expired')
+        @if ($token && $token != 'error' && $token != 'expired')
             <h5 onclick="navigate('/logout', false)">Cerrar sesión</h5>
         @else
-            <h5 onclick="activeModal(2)">Regístrate  &nbsp;&nbsp;|</h5>
+            <h5 onclick="activeModal(2)">Regístrate &nbsp;&nbsp;|</h5>
             <h5 onclick="activeModal(1)">Iniciar sesion</h5>
         @endif
         <h5 onclick="navigate('/faq', false)">Ayuda</h5>
@@ -97,10 +117,10 @@
     <!-- NAVBAR MOBILE ------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
     <label for="check" class="hamburguer">
-      <input type="checkbox" class="checkboxHamburguer" id="check"/>
-      <span></span>
-      <span></span>
-      <span></span>
+        <input type="checkbox" class="checkboxHamburguer" id="check" />
+        <span></span>
+        <span></span>
+        <span></span>
     </label>
 
     <div class="navbar-mobile" id="navmobile">
@@ -110,39 +130,40 @@
                     <div class="menu-item" onclick="activeRama1('cuenta', this)">
                         <h5>Cuenta</h5> <i class="fas fa-angle-down submenu-icon"></i>
                     </div>
-                                @if($token && $token != 'error' && $token != 'expired')
-                                    <div class="rama-1 rama-cuenta">
-                                        <h5 onclick="navigate('/logout', false)">Cerrar Sesión</h5>
-                                    </div>
-                                @else
-                                    <div class="rama-1 rama-cuenta">
-                                        <h5 onclick="activeModal(2)">Regístrate</h5>
-                                    </div>
-                                    <div class="rama-1 rama-cuenta">
-                                        <h5 onclick="activeModal(1)">Iniciar sesión</h5>
-                                    </div>
-                                @endif
+                    @if ($token && $token != 'error' && $token != 'expired')
+                        <div class="rama-1 rama-cuenta">
+                            <h5 onclick="navigate('/logout', false)">Cerrar Sesión</h5>
+                        </div>
+                    @else
+                        <div class="rama-1 rama-cuenta">
+                            <h5 onclick="activeModal(2)">Regístrate</h5>
+                        </div>
+                        <div class="rama-1 rama-cuenta">
+                            <h5 onclick="activeModal(1)">Iniciar sesión</h5>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="col-12">
                     <div class="menu-item" onclick="activeRama1('productos', this)">
-                        <h5>Productos</h5>  <i class="fas fa-angle-down submenu-icon"></i>
+                        <h5>Productos</h5> <i class="fas fa-angle-down submenu-icon"></i>
                     </div>
-                                 @for($i = 0; $i < count($rama1); $i ++)
-                                        <div class="rama-1 rama-productos" onclick="activeRama2('{{$rama1[$i]}}', this)">
-                                            <h5>{{$rama1[$i]}}</h5>  <i class="fas fa-caret-down submenu-icon"></i>
-                                        </div>
-                                        @for($x = 0; $x < count($rama2[$i]); $x ++)
-                                            <div class="rama-2 rama-{{$rama1[$i]}}" onclick="activeRama3('{{$rama2[$i][$x]}}', this)">
-                                                <h5>{{$rama2[$i][$x]}}</h5>  <i class="fas fa-plus fa-xs submenu-icon"></i>
-                                            </div>
-                                                @for($y = 0; $y < count($rama3[$i][$x]); $y ++)
-                                                    <div class="rama-3 rama-{{$rama2[$i][$x]}}">
-                                                        <h5>{{$rama3[$i][$x][$y]}}</h5>
-                                                    </div>
-                                                @endfor
-                                        @endfor
-                                @endfor
+                    @for ($i = 0; $i < count($rama1); $i++)
+                        <div class="rama-1 rama-productos" onclick="activeRama2('{{ $rama1[$i] }}', this)">
+                            <h5>{{ $rama1[$i] }}</h5> <i class="fas fa-caret-down submenu-icon"></i>
+                        </div>
+                        @for ($x = 0; $x < count($rama2[$i]); $x++)
+                            <div class="rama-2 rama-{{ $rama1[$i] }}"
+                                onclick="activeRama3('{{ $rama2[$i][$x] }}', this)">
+                                <h5>{{ $rama2[$i][$x] }}</h5> <i class="fas fa-plus fa-xs submenu-icon"></i>
+                            </div>
+                            @for ($y = 0; $y < count($rama3[$i][$x]); $y++)
+                                <div class="rama-3 rama-{{ $rama2[$i][$x] }}">
+                                    <h5>{{ $rama3[$i][$x][$y] }}</h5>
+                                </div>
+                            @endfor
+                        @endfor
+                    @endfor
                 </div>
 
                 <div class="col-12">
@@ -162,15 +183,15 @@
                         <h5>Empresa</h5> <i class="fas fa-angle-down submenu-icon"></i>
                     </div>
 
-                                <div class="rama-1 rama-empresa">
-                                    <h5>Nosotros</h5>
-                                </div>
-                                <div class="rama-1 rama-empresa">
-                                    <h5>Centros de cruce</h5>
-                                </div>
-                                <div class="rama-1 rama-empresa">
-                                    <h5>Servicio postventa</h5>
-                                </div>
+                    <div class="rama-1 rama-empresa">
+                        <h5>Nosotros</h5>
+                    </div>
+                    <div class="rama-1 rama-empresa">
+                        <h5>Centros de cruce</h5>
+                    </div>
+                    <div class="rama-1 rama-empresa">
+                        <h5>Servicio postventa</h5>
+                    </div>
                 </div>
 
                 <div class="col-12">
@@ -181,7 +202,7 @@
 
                 <div class="col-12">
                     <div class="menu-item">
-                        @if ($level == ('E'))
+                        @if ($level == 'E')
                             <h5><a href="/Intranet" style="color: #002868;">Intranet</a></h5>
                         @endif
                     </div>
@@ -196,23 +217,31 @@
     <div class="brand-logo">
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12 row-logo">
-                <img onclick="navigate('/', false)" class="logo appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="150">
+                <img onclick="navigate('/', false)" class="logo appear-500"
+                    src="{{ asset('assets/customers/img/png/indar.png') }}" alt="Login image" width="150">
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div class="input-group mb-3 mt-3">
                     <div class="input-group-prepend">
                         <div class="btn-group">
-                            <button class="btn btn-secondary dropdown-toggle input-indar" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle input-indar" type="button"
+                                id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true"
+                                aria-expanded="false">
                                 Filtrar por
                             </button>
-                            <ul class="dropdown-menu w-100" aria-labelledby="defaultDropdown" style="transform: translate(0px, 38px) !important; padding: 0 !important;">
-                                <li><a class="dropdown-item" href="#">Artículo <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item" href="#">Marca <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item" href="#">Proveedor <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                            <ul class="dropdown-menu w-100" aria-labelledby="defaultDropdown"
+                                style="transform: translate(0px, 38px) !important; padding: 0 !important;">
+                                <li><a class="dropdown-item" href="#">Artículo <i
+                                            class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item" href="#">Marca <i
+                                            class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
+                                <li><a class="dropdown-item" href="#">Proveedor <i
+                                            class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
                             </ul>
                         </div>
                     </div>
-                    <input type="text" class="form-control input-indar" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control input-indar" placeholder="Buscar" aria-label="Buscar"
+                        aria-describedby="basic-addon2">
                     <div class="input-group-append">
                         <button class="btn btn-indar" type="button"><i class="fas fa-search fa-lg"></i></button>
                     </div>
@@ -231,52 +260,70 @@
     <div class="navbar">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
+                                id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Productos</a>
                             <ul class="dropdown-menu dropdown-menu-main" aria-labelledby="navbarDropdownMenuLink">
-                                @for($i = 0; $i < count($rama1); $i ++)
-                                    <li><a class="dropdown-item dropdown-item-main" href="#">{{$rama1[$i]}} <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                        @for($x = 0; $x < count($rama2[$i]); $x ++)
-                                            @if($x == 0) <ul class="submenu dropdown-menu"> @endif
-                                            <li><a class="dropdown-item dropdown-item-2" href="#">{{$rama2[$i][$x]}} <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
-                                                @for($y = 0; $y < count($rama3[$i][$x]); $y ++)
-                                                    @if($y == 0)<ul class="submenu submenu-2 dropdown-menu"> @endif
-                                                    <li><a class="dropdown-item" href="{{$rama3[$i][$x][$y]}}">{{$rama3[$i][$x][$y]}}</a></li>
-                                                @endfor
-                                                </ul>
-                                            </li>
-                                        @endfor
-                                        </ul>
-                                    </li>
+                                @for ($i = 0; $i < count($rama1); $i++)
+                                    <li><a class="dropdown-item dropdown-item-main" href="#">{{ $rama1[$i] }} <i
+                                                class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                        @for ($x = 0; $x < count($rama2[$i]); $x++)
+                                            @if ($x == 0)
+                                                <ul class="submenu dropdown-menu">
+                                            @endif
+                                    <li><a class="dropdown-item dropdown-item-2" href="#">{{ $rama2[$i][$x] }} <i
+                                                class="fas fa-chevron-right fa-xs fa-menu"></i></a>
+                                        @for ($y = 0; $y < count($rama3[$i][$x]); $y++)
+                                            @if ($y == 0)
+                                                <ul class="submenu submenu-2 dropdown-menu">
+                                            @endif
+                                    <li><a class="dropdown-item"
+                                            href="{{ $rama3[$i][$x][$y] }}">{{ $rama3[$i][$x][$y] }}</a></li>
                                 @endfor
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Catálogo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Ferreimpulsos</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  data-bs-toggle="dropdown" aria-expanded="false">
+                        @endfor
+                    </ul>
+                    </li>
+                    @endfor
+                    </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Ferreimpulsos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Empresa
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-empresa dropdown-menu-main" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="about"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
-                            <li><a class="dropdown-item" href="centros"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Centros de cruce </a></li>
-                            <li><a class="dropdown-item" href="postventa"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
+                        <ul class="dropdown-menu dropdown-menu-empresa dropdown-menu-main"
+                            style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="about"><i style="color: #002868; margin-right: 5px;"
+                                        class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
+                            <li><a class="dropdown-item" href="centros"><i style="color: #002868; margin-right: 5px;"
+                                        class="fas fa-caret-right fa-xs"></i> Centros de cruce </a></li>
+                            <li><a class="dropdown-item" href="postventa"><i style="color: #002868; margin-right: 5px;"
+                                        class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
                         </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contacto">Contacto</a>
-                        </li>
-                        <li class="nav-item">
-                        @if($level == ('E'))<h5><a class="nav-link" href="/Intranet">Intranet</a></h5> @endif
-                        </li>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        @if ($level == 'E')
+                            <h5><a class="nav-link" href="/Intranet">Intranet</a></h5>
+                        @endif
+                    </li>
                     </ul>
                 </div>
             </div>
@@ -297,7 +344,7 @@
 
 
 
-     <!-- SUPPLIERS STATIC ---------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- SUPPLIERS STATIC ---------------------------------------------------------------------------------------------------------------------------------------------------->
 
     <!-- <div class="suppliers">
         <div class="row suppliers-logos">
@@ -322,16 +369,21 @@
     <div class="footer">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 contact-footer">
-                        <img class="logo-footer appear-500" src="{{asset('assets/customers/img/png/indar.png')}}" alt="Login image" width="250">
+                <img class="logo-footer appear-500" src="{{ asset('assets/customers/img/png/indar.png') }}"
+                    alt="Login image" width="250">
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center flex-row">
-              <div class="social-media-icons appear-500">
-                        <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i class="fab fa-facebook-square fa-2x"></i></a>
-                        <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i class="fab fa-youtube-square fa-2x"></i> </a>
-                        <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a>
-                        <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i class="fab fa-linkedin fa-2x"></i></a>
+                <div class="social-media-icons appear-500">
+                    <a target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i
+                            class="fab fa-facebook-square fa-2x"></i></a>
+                    <a target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA"
+                        class=""><i class="fab fa-youtube-square fa-2x"></i> </a>
+                    <a target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0"
+                        class=""><i class="fab fa-whatsapp-square fa-2x"></i> </a>
+                    <a target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo"
+                        class=""><i class="fab fa-linkedin fa-2x"></i></a>
+                </div>
             </div>
-        </div>
         </div>
         <br><br><br>
         <div class="row">
@@ -370,7 +422,8 @@
     <!-- COPYRIGHT ------------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
     <div class="copyright">
-        <h5>* 1987-2021 <span class="black-strong">Ferretería Indar, S.A. de C.V.</span>  * Dudas o aclaraciones sobre esta página: indarweb@indar.com.mx</h5>
+        <h5>* 1987-2021 <span class="black-strong">Ferretería Indar, S.A. de C.V.</span> * Dudas o aclaraciones sobre
+            esta página: indarweb@indar.com.mx</h5>
     </div>
 
 
@@ -387,18 +440,22 @@
                     @csrf
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Usuario o Correo electrónico" required></div>
+                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email"
+                                placeholder="Usuario o Correo electrónico" required></div>
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Password">Contraseña:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>
+                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password"
+                                placeholder="Contraseña" required></div>
                     </div>
                     <br>
-                    <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> Recordar credenciales</label><br>
+                    <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me"
+                            value="remember_me"> Recordar credenciales</label><br>
                     <div class="login-buttons">
                         <button class="btn login-btn" type="submit" value="Login">Iniciar Sesión</button>
                     </div>
-                    <br> <hr class="hr-indar"> <br>
+                    <br>
+                    <hr class="hr-indar"> <br>
                     <div class="modal-links">
                         <a href="#">Registrar cliente</a> <br>
                         <a href="#">Recuperar usuario y contraseña</a>
@@ -409,9 +466,9 @@
         </div>
     </div>
 
-     <!-- REGISTER MODAL ----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!-- REGISTER MODAL ----------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
-     <div class="modal-background" id="registerModal">
+    <div class="modal-background" id="registerModal">
         <div class="modal-indar">
             <div class="modal-header">
                 <h4>Regístrate</h4>
@@ -421,18 +478,22 @@
                 <form action="#">
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Codigo">Código cliente:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="codigo" name="codigo" placeholder="Código de cliente" required></div>
+                        <div class="col-lg-9 col-md-12"><input type="text" id="codigo" name="codigo"
+                                placeholder="Código de cliente" required></div>
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Usuario">Usuario:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email" placeholder="Correo electrónico" required></div>
+                        <div class="col-lg-9 col-md-12"><input type="text" id="email" name="email"
+                                placeholder="Correo electrónico" required></div>
                     </div> <br>
                     <div class="modal-inputs row">
                         <div class="col-lg-3 col-md-12"><label for="Password">Contraseña:</label></div>
-                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password" placeholder="Contraseña" required></div>
+                        <div class="col-lg-9 col-md-12"><input type="password" id="password" name="password"
+                                placeholder="Contraseña" required></div>
                     </div>
                     <br>
-                    <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me" value="remember_me"> No cerrar sesión</label><br>
+                    <label class="remember-login"><input class="checkbox" type="checkbox" id="remember-me"
+                            value="remember_me"> No cerrar sesión</label><br>
                     <div class="login-buttons">
                         <button class="btn login-btn" type="submit">Regístrate</button>
                     </div>
@@ -444,4 +505,5 @@
 
 
 </body>
+
 </html>

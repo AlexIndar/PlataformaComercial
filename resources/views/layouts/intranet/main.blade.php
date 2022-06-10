@@ -424,17 +424,18 @@
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
-                                <i class="nav-icon fas fa-search-dollar"></i>
+                                <i class="nav-icon fas fa-credit-card"></i>
                                 <p>
-                                    HSBC
+                                    Pagos
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="/pagos" class="nav-link">
-                                            <i class="fas fa-file-invoice-dollar nav-icon"></i>
-                                            <p>Pagos</p>
+                                        <a href="/pagos/HSBC" class="nav-link">
+                                            <img src="{{ asset('assets/customers/img/png/hsbc.png') }}"
+                                                style="width: 25px; height: auto; margin-right: 5px" alt="" srcset="">
+                                            <p>HSBC</p>
                                         </a>
                                     </li>
                                 </ul>

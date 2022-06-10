@@ -3,5 +3,5 @@ function nuevoPago() {
 }
 
 function validarPago() {
-    window.location.href = "pagos/validar";
+    window.location.href = "HSBC/validar";
 }

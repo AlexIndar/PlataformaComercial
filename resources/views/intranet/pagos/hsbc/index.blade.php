@@ -1,13 +1,13 @@
 @extends('layouts.intranet.main', ['active' => 'HSBC'])
 
 @section('title')
-    HSBC - Pagos
+    Pagos - HSBC
 @endsection
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/customers/css/promociones/promociones.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/intranet/css/misSolicitudes.css') }}">
-    <script src="{{ asset('assets/hsbc/js/pagos/pagos.js') }}"></script>
+    <script src="{{ asset('assets/pagos/hsbc/js/pagos.js') }}"></script>
 @endsection
 
 @section('body')

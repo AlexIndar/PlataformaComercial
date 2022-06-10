@@ -480,7 +480,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['_lv'])){
                                     $level = $_COOKIE['_lv'];
                                 }
-                                return $response;
+                                return $response; 
                             });
 
                             Route::post('/pedido/storePedidoGetID', function (Request $request){
@@ -1028,7 +1028,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
 
-                 Route::get('/pagos', function(){
+                 Route::get('/pagos/HSBC', function(){
                     $token = TokenController::getToken();
                     if($token == 'error'){
                         return redirect('/logout');
@@ -1041,10 +1041,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $username = $userData->typeUser;
                     $userRol = $userData->permissions;
                     $permissions = LoginController::getPermissions($token);
-                    return view('intranet.hsbc.pagos', ['token' => $token, 'level' => $level, 'permissions' =>$permissions, 'username' => $username, 'userRol' => $userRol]);
+                    return view('intranet.pagos.hsbc.index', ['token' => $token, 'level' => $level, 'permissions' =>$permissions, 'username' => $username, 'userRol' => $userRol]);
                  });
 
-                 Route::get('/pagos/validar', function(){
+                 Route::get('/pagos/HSBC/validar', function(){
                     $token = TokenController::getToken();
                     if($token == 'error'){
                     return redirect('/logout');
@@ -1057,7 +1057,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $username = $userData->typeUser;
                     $userRol = $userData->permissions;
                     $permissions = LoginController::getPermissions($token);
-                    return view('intranet.hsbc.validarPago', ['token' => $token, 'level' => $level, 'permissions' =>$permissions,'username' => $username, 'userRol' => $userRol]);
+                    return view('intranet.pagos.hsbc.validarPago', ['token' => $token, 'level' => $level, 'permissions' =>$permissions,'username' => $username, 'userRol' => $userRol]);
                  });
 
 
