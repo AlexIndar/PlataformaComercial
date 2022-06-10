@@ -4,7 +4,6 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
-<link rel="stylesheet" href="{{asset('plugins/bs-stepper/css/bs-stepper.min.css')}}">
 @endsection
 
 @section('body')
@@ -44,7 +43,7 @@
         <div class="row text-center" id="btnSuccesFile" style="display: none;">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-outline-success" onclick="file()"><i class="fas fa-upload"></i> Reasignar Zonas</button>
+                <button type="button" class="btn btn-outline-success" onclick="updateZonesCyc()"><i class="fas fa-upload"></i> Reasignar Zonas</button>
             </div>
             <div class="col-md-3"></div>
         </div>

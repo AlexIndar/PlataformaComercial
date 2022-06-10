@@ -23,4 +23,13 @@ class AsignacionZonasController extends Controller{
         $fileTemplate = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetTemplate');
         return $fileTemplate;        
     }
+
+    public static function updateZonesCyc($token, $data){
+        $json = json_decode($data);
+        $response = Http::withToken($token)->post(config('global.api_url').'/CyC/UpdateZonesCyc', [
+            "id" => $json->Id,
+            "description" => $json->Description
+        ]);
+        return $response;
+    }
 }
