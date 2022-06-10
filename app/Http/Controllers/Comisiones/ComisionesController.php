@@ -15,7 +15,8 @@ class ComisionesController extends Controller
     }
 
     public static function getProductosVendidos($token, $fecha,$zona){
-        $data = Http::withToken($token)->get(config('global.api_url').'/Especiales/getProductosVendidos?fecha='.$fecha.'&zona='.$zona);
+        //$var = 1;
+        $data = Http::withToken($token)->get(config('global.api_url').'/Especiales/getProductosVendidos?fecha='.$fecha.'&zona='.$zona.'&query=1');
         return json_decode($data->body());
     }
 

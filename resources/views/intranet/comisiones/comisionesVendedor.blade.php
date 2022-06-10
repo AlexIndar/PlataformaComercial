@@ -864,6 +864,7 @@
            'enctype': 'multipart/form-data',
            'timeout': 4 * 60 * 60 * 1000,
            success: function array(data){
+
             var events = []; //The array
             var fechaCalendar;
             var inicioCalendar;
@@ -1204,7 +1205,7 @@
             if(importeEspeciales < 0){
                importeEspeciales = 0;
            }
-           console.log(totalBonos, importeEspeciales);
+
             comisionTotal = totalBonos + importeEspeciales;
 
 
@@ -1229,7 +1230,7 @@
 
                     htmlModalDetalleEspeciales += '<tr>'+
                         '<td>'+ detalleEspeciales[x].valor+'</td>'+
-                        '<td>'+ detalleEspeciales[x].actual+'</td>';
+                        '<td>'+ detalleEspeciales[x].actual.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>';
                         '</tr>';
 
                   }
