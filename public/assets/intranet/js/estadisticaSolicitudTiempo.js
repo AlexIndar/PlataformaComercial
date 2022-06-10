@@ -1,7 +1,5 @@
 var idGerencia = '';
 
-var startDate = '';
-var endDate = '';
 $(document).ready(function() {
     if(document.getElementById("userR").value == "GERENTEVENTA"){
         let data = { User: document.getElementById("userP").value };
@@ -88,8 +86,6 @@ document.getElementById("typeForms").addEventListener("change", function(e) {
 });
 
 const getEstadisticaTiempo = () => {
-    console.log(startDate);
-    console.log(endDate);
     var fecha = $('#reservation').daterangepicker()[0].value;
     var dateIF = fecha.split('-').map(s => s.trim());
     let typeFol = document.getElementById("typeForms").value;
@@ -131,7 +127,7 @@ const getTimeReport = (typeRequest, ini, end) =>{
 }
 
 const getManagementTimeReport = (idArea, typeRequest, ini, end) =>{
-    let jsonTimeReport ={
+    let jsonTimeReport = {
         IdArea: idArea,
         TypeR: typeRequest,
         Ini: ini,
@@ -147,8 +143,9 @@ const getManagementTimeReport = (idArea, typeRequest, ini, end) =>{
         'data': jsonTimeReport,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(report) {
-            console.log(report);
+        success: function(response) {
+            console.log(response);
+            cargarTableCyc(response);
         },
         error: function(error) {            
             console.log(error);

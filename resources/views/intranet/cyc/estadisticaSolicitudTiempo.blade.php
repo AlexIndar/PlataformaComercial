@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Intranet', 'permissions' => $permissions])
+@extends('layouts.intranet.main', ['active' => 'CyC', 'permissions' => $permissions])
 
 @section('title') Indar - Estadistica Solicitudes Clientes @endsection
 
@@ -36,7 +36,8 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-center">
-                    <button class="btn btn-outline-success" id="exportFileBtn" onclick="getEstadisticaTiempo()"><i class="fas fa-download"></i> Exportar documento</button>
+                    <button class="btn btn-outline-success" id="exportFileBtn" onclick="getEstadisticaTiempo()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                    <!-- <button class="btn btn-outline-success" id="exportFileBtn" onclick="getEstadisticaTiempo()"><i class="fas fa-download"></i> Exportar documento</button> -->
                 </div>
                 <div class="col-md-4 text-center">
                     <div class="form-group">
@@ -76,7 +77,7 @@
                                         <th>Autorización</th>
                                         <th>Status</th>
                                         <th>Fecha de Registro</th>
-                                        <th>Actions</th>
+                                        <th>V</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -91,7 +92,7 @@
                                         <th>Autorización</th>
                                         <th>Status</th>
                                         <th>Fecha de Registro</th>
-                                        <th>Actions</th>
+                                        <th>V</th>
                                     </tr>
                                 </tfoot>
                             </table>

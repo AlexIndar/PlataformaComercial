@@ -53,4 +53,9 @@ class EstadisticasClientesController extends Controller
         $solicitudesTime = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetTimeReport?typeRequest='.$typeRequest.'&ini='.$ini.'&end='.$end);
         return $solicitudesTime;
     }
+
+    public static function getManagementTimeReport($token,$id, $typeRequest, $ini, $end){
+        $solicitudesTime = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetManagementTimeReport?id='.$id.'&typeRequest='.$typeRequest.'&ini='.$ini.'&end='.$end);
+        return $solicitudesTime;
+    }
 }

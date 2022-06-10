@@ -310,7 +310,7 @@
                          <button type="button" id="downloadPlantilla" class="btn btn-group-buttons"
                              onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
                          <button type="button" id="importarCodigos" class="btn btn-group-buttons"
-                             onclick="triggerInputFile()"><i class="fas fa-file-excel"></i> Importar</button>
+                             onclick="triggerInputFile()"><i class="fas fa-upload"></i> Importar</button>
                          <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
                          <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i
                                  class="fas fa-save"></i> Guardar</button>
@@ -328,8 +328,11 @@
                          <button type="button" id="borrarCotizacion" class="btn btn-group-buttons"
                              onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
                          <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i
-                                 class="fas fa-share-square"></i> Enviar cotización</button>
-                         <!-- <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacionExcel')"><i class="fas fa-file-download"></i> Descargar cotización</button> -->
+                                 class="fas fa-envelope"></i> Enviar cotización</button>
+                         <button type="button" id="exportToExcel" class="btn btn-group-buttons"
+                             onclick="exportTableToExcel('tablaPedido', 'cotizacion')"><i class="fas fa-download"></i>
+                             Descargar
+                             cotización</button>
                      </div>
                      <br><br>
                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -340,7 +343,7 @@
                          <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i
                                  class="fas fa-paper-plane"></i> Levantar pedido</button>
                          <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-                                                                                                                            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+                                                                                                                                                                                                                                            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
                      </div>
                  </div>
 
@@ -438,6 +441,8 @@
                      aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                      <div class="modal-dialog modal-xl">
                          <div class="modal-content modal-content-inventario" id="modal-netsuite-loading">
+                             <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario"
+                                 style="cursor: pointer; margin-top: -8px;" onclick="closeModalNetsuiteLoading()"></i>
                              <div class="text-center">
                                  <h4>Levantando Pedido</h4>
                              </div>

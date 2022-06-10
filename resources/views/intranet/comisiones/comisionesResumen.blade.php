@@ -12,7 +12,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h5 class="m-0">Comisiones | Resumen     </h5>
+                        <h5 class="m-0">Comisiones | Resumen </h5>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -103,12 +103,7 @@
        });
 
        //Func Termina Ajax
-       $(document).ajaxStop(function() {
-           //Esconde y muestra DIV
-           document.getElementById("btnSpinner").style.display = "none";
-           document.getElementById("btnConsultar").style.display = "block";
 
-       } );
 
    });
    function consultar() {
@@ -125,19 +120,38 @@
    //console.log(loopZonas);
    var loopZonas = JSON.parse({!! json_encode($zonas) !!});
        //Llena select zonas
-       for (i=0 ; i<loopZonas.length ; i++){
-         var  idzona = loopZonas[i].zona;
-         $.ajax({
-  'headers': {
+    var suma = 0;
+    for (var i=0 ; i<loopZonas.length ; i++){
+        var tamaño = loopZonas.length;
+        var  idzona = loopZonas[i].zona;
+        $.ajax({
+      'headers': {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   },
   'url': "/comisiones/getResumen",
   'type': 'GET',
   'dataType': 'json',
-  'data': {zona:idzona, fecha : date},
+  'data': {zona:idzona, fecha : date, suma: suma,tamaño : tamaño },
   'enctype': 'multipart/form-data',
   'timeout': 4 * 60 * 60 * 1000,
   success: function array(data){
+    suma = suma + 1;
+      if(suma < tamaño){
+        Swal.fire({
+                position: 'top',
+                icon: 'success',
+                title: 'Se cargaron Correctamente Los importes de Comisiónes',
+                showConfirmButton: false,
+                timer: 5000
+                })
+          console.log('contador',suma);
+          console.log('tamaño',tamaño);
+
+      }else{
+        console.log('terminaste');
+        document.getElementById("btnSpinner").style.display = "none";
+        document.getElementById("btnConsultar").style.display = "block";
+        }
         var sumaRMCI = 0;
         var sumaRMSI = 0;
         var sumaPSMASI = 0;

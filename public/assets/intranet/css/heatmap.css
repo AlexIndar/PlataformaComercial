@@ -1,0 +1,146 @@
+#map {
+    height: 100%;
+}
+
+.containerMap{
+    width: 95%;
+    height: 500px;
+    margin: auto;
+    margin-top: 50px;
+}
+
+#floating-panel {
+    position: absolute;
+    top: 10px;
+    left: 15%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 1px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: "Roboto", "sans-serif";
+    line-height: 30px;
+    padding-left: 10px;
+}
+
+#floating-panel {
+    background-color: #fff;
+    border: 1px solid #999;
+    left: 15%;
+    padding: 1px;
+    position: absolute;
+    top: 10px;
+    z-index: 5;
+}
+
+.bg-indarBlue {
+    background-color: #002868 !important;
+    color: #fff !important;
+}
+
+.bg-indarYellow {
+    background-color: #FFC61E !important;
+    color: #000;
+}
+
+.icon-indar {
+    color: white !important;
+}
+
+.icon-indar:hover {
+    color: rgb(208, 208, 208) !important;
+}
+
+.text-indarBlue {
+    color: #002868;
+}
+
+.bs-stepper-header {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+.bs-stepper-content hr {
+    background: #FFC61E;
+    height: 3px;
+}
+
+.input-group-prepend span {
+    background: #002868;
+    color: #fff;
+}
+
+.input-group-prepend label {
+    background: #002868;
+    color: #fff;
+}
+
+.hr-indarYellow {
+    background-color: #FFC61E;
+    height: 3px;
+    width: 60%;
+}
+
+#headCash {
+    display: none;
+}
+
+#bodyCash {
+    display: none;
+}
+
+.imageModal {
+    width: 100%;
+}
+
+.warningText {
+    border: 1px solid red !important;
+}
+
+
+/*SHOW INFO HELP*/
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+#creditoInput {
+    text-align: right;
+    font-size: 25px;
+}
+
+.checkForm {
+    margin-left: 25px;
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
