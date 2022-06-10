@@ -343,7 +343,7 @@
                          <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i
                                  class="fas fa-paper-plane"></i> Levantar pedido</button>
                          <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-                                                                                                                                                                                                        <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+                                                                                                                                                                                                                                            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
                      </div>
                  </div>
 
@@ -441,6 +441,8 @@
                      aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                      <div class="modal-dialog modal-xl">
                          <div class="modal-content modal-content-inventario" id="modal-netsuite-loading">
+                             <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario"
+                                 style="cursor: pointer; margin-top: -8px;" onclick="closeModalNetsuiteLoading()"></i>
                              <div class="text-center">
                                  <h4>Levantando Pedido</h4>
                              </div>
