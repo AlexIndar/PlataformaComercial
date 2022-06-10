@@ -1567,6 +1567,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                     dd($data);
                 });
 
+                Route::post('/AsignacionZonas/UpdateZonesCyc', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $response = AsignacionZonasController::updateZonesCyc($token, json_encode($request->all()));
+                    return $response;
+                });
+
                 //////// ASIGNACION DE ZONAS /////
                 Route::get('/EstadisticaSolicitudTiempo', function(){
                     $token = TokenController::getToken();
