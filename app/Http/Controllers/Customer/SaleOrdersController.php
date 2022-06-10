@@ -27,6 +27,15 @@ class SaleOrdersController extends Controller
         return $saleOrders;
     } 
 
+    public static function descargarDocumento($token, $info){
+        $factura = $info->numFactura;
+        $type = $info->type;
+        $getUrl = Http::withToken($token)->get(config('global.api_url').'/EstadoCuentaCte/getDocumentCFDI?type=CustInvc&folio='.$factura.'&formato='.$type);
+        $url = $getUrl->body();
+        return $url;
+    }
+
+
     public static function getInfoHeatWeb($token, $entity){
         $entity = strtoupper($entity);
         $response = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/getInfoHeatWeb?entity='.$entity);

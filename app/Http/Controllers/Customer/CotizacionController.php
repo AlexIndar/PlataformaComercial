@@ -54,7 +54,7 @@ class CotizacionController extends Controller
             "packageDelivery" => $json->packageDelivery,
             "divide" => $json->divide,
             "pickUp" => $json->pickUp,
-            "order" => $json->order,
+            "order" => $json->order, 
             "comments" => $json->comments,
             "enviado" => $json->enviado,
             "usuario" => $username,

@@ -46,6 +46,7 @@ use App\Exports\TemplateArticulos;
 use App\Exports\TemplatePedido;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\Intranet\AsignacionZonasController;
+use App\Http\Controllers\Intranet\HeatMapController;
 use App\Http\Controllers\Intranet\SolicitudesPendientesController;
 use App\Mail\SolicitudClienteMail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -366,6 +367,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 return $saleOrders;
                             });
 
+                            Route::post('pedidosAnteriores/descargarDocumento', function (Request $request){
+                                $token = TokenController::getToken();
+                                if($token == 'error'){
+                                return redirect('/logout');
+                                }
+                                $url = SaleOrdersController::descargarDocumento($token, $request);
+                                return $url;
+                            });
+
                             // Route::get('/pedido/nuevo/{entity}', function ($entity){
                             //     $token = TokenController::getToken();
                             //     if($token == 'error'){
@@ -470,7 +480,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['_lv'])){
                                     $level = $_COOKIE['_lv'];
                                 }
-                                return $response;
+                                return $response; 
                             });
 
                             Route::post('/pedido/storePedidoGetID', function (Request $request){
@@ -827,9 +837,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if($token == 'error'){
                                     return redirect('/logout');
                                 }
-                                $rama1 = RamasController::getRama1();
-                                $rama2 = RamasController::getRama2();
-                                $rama3 = RamasController::getRama3();
 
                                 $level = "C";
                                 if(isset($_COOKIE['_lv'])){
@@ -842,7 +849,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 $promociones = PromoController::getAllEvents($token);
                                 $permissions = LoginController::getPermissions($token);
-                                return view('customers.promociones.promociones', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
+                                return view('customers.promociones.promociones', ['token' => $token, 'level' => $level, 'promociones' => $promociones, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol]);
                             });
 
                             Route::post('/promociones/editar', function (Request $request){
@@ -1016,6 +1023,43 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 return $response;
                             });
+
+                // HSBC ------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                 Route::get('/pagos/HSBC', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.pagos.hsbc.index', ['token' => $token, 'level' => $level, 'permissions' =>$permissions, 'username' => $username, 'userRol' => $userRol]);
+                 });
+
+                 Route::get('/pagos/HSBC/validar', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                    return redirect('/logout');
+                    }
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                    $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.pagos.hsbc.validarPago', ['token' => $token, 'level' => $level, 'permissions' =>$permissions,'username' => $username, 'userRol' => $userRol]);
+                 });
+
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1523,6 +1567,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                     dd($data);
                 });
 
+                Route::post('/AsignacionZonas/UpdateZonesCyc', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $response = AsignacionZonasController::updateZonesCyc($token, json_encode($request->all()));
+                    return $response;
+                });
+
                 //////// ASIGNACION DE ZONAS /////
                 Route::get('/EstadisticaSolicitudTiempo', function(){
                     $token = TokenController::getToken();
@@ -1560,6 +1613,59 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $end = $request->End;
                     $solicitudesTime = EstadisticasClientesController::getTimeReport($token,$typeRequest,$ini,$end);
                     return $solicitudesTime;
+                });
+
+                Route::post('/EstadisticaSolicitudTiempo/GetManagementTimeReport', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $idArea = $request->IdArea;
+                    $typeRequest = $request->TypeR;
+                    $ini = $request->Ini;
+                    $end = $request->End;
+                    $solicitudesTime = EstadisticasClientesController::getManagementTimeReport($token,$idArea,$typeRequest,$ini,$end);
+                    return $solicitudesTime;
+                });
+
+                //////// HeatMap /////
+                Route::get('/HeatMap', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "ADMIN"){
+                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);    
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                });
+
+                Route::get('/HeatMap/GetItemSearchMap', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $data = HeatMapController::getItemSearchMap($token);
+                    return $data;
+                });
+
+                Route::post('/HeatMap/GetListCustomer', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $fechaIni = $request->FechaIni;
+                    $fechaEnd = $request->FechaEnd;
+                    $gerencia = $request->IdGerencia;
+                    $zona = $request->Zona;
+                    $idShippingWay = $request->IdShippingWay;
+                    $customerList = HeatMapController::getListCustomer($token,$fechaIni,$fechaEnd,$gerencia,$zona,$idShippingWay);
+                    return $customerList;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
@@ -2356,4 +2462,25 @@ Route::get('/almacen/consolidadoPantalla', function(){
 Route::GET('/almacen/getConsolidado', function(){
     $consolidado = AlmacenController::consolidadoPantalla();
     return $consolidado;
+});
+//***************************** CAPTURA ERRORES **********************************\\
+Route::get('/almacen/capturaErrores', function(){
+    $errores = AlmacenController::capturaErrores();
+    return view('almacen.capturaErrores', compact('errores'));
+})->name('almacen.capturaErrores');
+Route::get('/almacen/getErrores', function(){
+    $errores = AlmacenController::capturaErrores();
+    return $errores;
+});
+Route::get('/almacen/capturaErrores/consultaCaptura', function(){
+    $consultaCaptura = AlmacenController::consultaCaptura();
+    return $consultaCaptura;
+});
+Route::post('/almacen/capturaErrores/createError', function(Request $request){
+    $createError = AlmacenController::createError(json_encode($request->all()));
+    return $createError;
+});
+Route::post('/almacen/capturaErrores/updateError', function(Request $request){
+    $updateError = AlmacenController::updateError(json_encode($request->all()));
+    return $updateError;
 });
