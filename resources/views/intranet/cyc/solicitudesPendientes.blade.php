@@ -40,7 +40,7 @@
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
                             <button onclick="envioMail()"></button>
-                            <button onclick="setReferenceModal('C018888','27724')"></button>
+                            <button onclick="prueba()"></button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

@@ -37,6 +37,7 @@
                 </div>
                 <div class="col-md-4 text-center">
                     <button class="btn btn-outline-success" id="exportFileBtn" onclick="getEstadisticaTiempo()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                    <button class="btn btn-outline-success" id="exportFileBtn2" onclick="exportTableToExcel()"><i class="fa-solid fa-magnifying-glass"></i> Exporta</button>
                     <!-- <button class="btn btn-outline-success" id="exportFileBtn" onclick="getEstadisticaTiempo()"><i class="fas fa-download"></i> Exportar documento</button> -->
                 </div>
                 <div class="col-md-4 text-center">
@@ -58,7 +59,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-            <div class="col-12">
+                <div class="col-12">
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Estadistica Tiempo de Solicitudes</h3>
@@ -72,12 +73,19 @@
                                         <th>Zona</th>
                                         <th>Total</th>
                                         <th>Vendedor</th>
+                                        <th>CYC</th>
+                                        @if($userRol != "GERENTEVENTA")
                                         <th>Revisión</th>
                                         <th>Referencias</th>
                                         <th>Autorización</th>
-                                        <th>Status</th>
                                         <th>Fecha de Registro</th>
-                                        <th>V</th>
+                                        @else
+                                        <th>Alta NetSuite</th>
+                                        <th>1ra Compra</ht>
+                                        <th>Importe</th>
+                                        @endif
+                                        <th>Status</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -87,12 +95,19 @@
                                         <th>Zona</th>
                                         <th>Total</th>
                                         <th>Vendedor</th>
+                                        <th>CYC</th>
+                                        @if($userRol != "GERENTEVENTA")
                                         <th>Revisión</th>
                                         <th>Referencias</th>
                                         <th>Autorización</th>
-                                        <th>Status</th>
                                         <th>Fecha de Registro</th>
-                                        <th>V</th>
+                                        @else
+                                        <th>Alta NetSuite</th>
+                                        <th>1ra Compra</ht>
+                                        <th>Importe</th>
+                                        @endif
+                                        <th>Status</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -121,6 +136,45 @@
             </div>
             <div class="modal-footer">
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HISTORIAL DE SOLICITUD-->
+<div class="modal fade" id="infoClienteModal" tabindex="-1" aria-labelledby="infoClienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-indarBlue">
+                <h3 class="text-center title ml-auto">INFO CLIENTE</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body text-indarBlue">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="infoClienteList"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CARGA MODAL -->
+<div class="modal" tabindex="-1" id="cargaModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="titleCargaModal"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Enviando información <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center" id="bodyCargaModal"><i class="fa fa-spinner" aria-hidden="true"></i></div>
         </div>
     </div>
 </div>

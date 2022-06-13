@@ -20,7 +20,6 @@ class EstadisticasTiempoController extends Controller
     }
 
     public static function getGerencia($token, $user){
-        dd("SILLEGAMOS");
         $gerencia = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetGerencia?username='.$user);
         return $gerencia;
     }
