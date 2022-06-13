@@ -218,7 +218,7 @@
                                     @if (in_array('SolicitudesPendientes', $permissions))
                                         <li class="nav-item">
                                             <a href="/SolicitudesPendientes" class="nav-link">
-                                                <i class="fa-solid fa-calculator nav-icon"></i>
+                                                <i class="fas fa-calculator nav-icon"></i>
                                                 <p>Solicitudes Pendientes</p>
                                             </a>
                                         </li>
