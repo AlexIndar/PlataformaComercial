@@ -29,8 +29,8 @@ class ItemsController extends Controller
         ]);
 
         $bestSellers = json_decode($getProducts->body());
-
-        if($bestSellers == null){
+        
+        if(isset($bestSellers['errors'])){
             return view('errors.500');
         }
 

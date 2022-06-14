@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'HSBC'])
+@extends('layouts.intranet.main', ['active' => 'Pagos'])
 
 @section('title')
     Pagos - HSBC

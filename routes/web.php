@@ -73,7 +73,7 @@ Route::get('/', function () {
 
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+    $rama3 = RamasController::getRama3(); 
 
     $level = "C";
     if(isset($_COOKIE['_lv'])){
@@ -1058,6 +1058,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $userRol = $userData->permissions;
                     $permissions = LoginController::getPermissions($token);
                     return view('intranet.pagos.hsbc.validarPago', ['token' => $token, 'level' => $level, 'permissions' =>$permissions,'username' => $username, 'userRol' => $userRol]);
+                 });
+
+                 Route::get('/pagos/HSBC/nuevo', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.pagos.hsbc.nuevoPago', ['token' => $token, 'level' => $level, 'permissions' => $permissions,'username' => $username, 'userRol' => $userRol]);
                  });
 
 

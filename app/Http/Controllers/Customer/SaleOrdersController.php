@@ -35,7 +35,6 @@ class SaleOrdersController extends Controller
         return $url;
     }
 
-
     public static function getInfoHeatWeb($token, $entity){
         $entity = strtoupper($entity);
         $response = Http::withToken($token)->get(config('global.api_url').'/SaleOrder/getInfoHeatWeb?entity='.$entity);

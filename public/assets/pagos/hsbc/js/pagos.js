@@ -1,5 +1,5 @@
 function nuevoPago() {
-    alert('Nuevo Pago');
+    window.location.href = "HSBC/nuevo";
 }
 
 function validarPago() {
