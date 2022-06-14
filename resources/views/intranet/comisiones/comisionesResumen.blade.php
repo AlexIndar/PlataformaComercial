@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main', ['active' => 'Comisiones', 'permissions' => $permissions])
 @section('title')
-    Indar | Comisiones
+    Indar | Comisiones Resumen
 @endsection
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/intranet/css/') }}">
@@ -59,9 +59,12 @@
                                          <thead style="background-color:#002868; color:white">
                                             <tr >
                                                <th>Zona</th>
+                                               <th>No.Empleado</th>
                                                <th>Nombre  </th>
                                                <th>Comisión Base</th>
+                                               <th>Descuentos a comisiones</th>
                                                <th>Prestaciones</th>
+                                               <th>Bonos</th>
                                                <th>Comisión Integrada</th>
                                             </tr>
                                          </thead>
@@ -71,7 +74,6 @@
                                    </div>
                                 </div>
                              </div>
-
                         </div>
                     </div>
                 </div>
@@ -135,8 +137,35 @@
   'enctype': 'multipart/form-data',
   'timeout': 4 * 60 * 60 * 1000,
   success: function array(data){
+
     suma = suma + 1;
       if(suma < tamaño){
+
+          console.log('contador',suma);
+          console.log('tamaño',tamaño);
+
+      }else{
+        $('#resumenComisionesTable').dataTable( {
+            dom : 'Brtip',
+            paging:false,
+            fixedHeader:true,
+            ordering: false,
+            scrollY:320,
+            scrollX: true,
+            scrollCollapse: true,
+            buttons: [
+                {
+                    extend:    'excel',
+                    text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+                    titleAttr: 'Descargar Excel'
+                }
+            ],
+            initComplete: function () {
+            var btns = $('.dt-button');
+            btns.addClass('btn btn-success ');
+            btns.removeClass('dt-button');
+            },
+        });
         Swal.fire({
                 position: 'top',
                 icon: 'success',
@@ -144,10 +173,6 @@
                 showConfirmButton: false,
                 timer: 5000
                 })
-          console.log('contador',suma);
-          console.log('tamaño',tamaño);
-
-      }else{
         console.log('terminaste');
         document.getElementById("btnSpinner").style.display = "none";
         document.getElementById("btnConsultar").style.display = "block";
@@ -243,12 +268,16 @@ var comisionTot = sumaCBtotal;
    var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
    //console.log( comisionTot );
 var vendedornombre;
+var nempleado;
+nempleado = data[0].numEmpVend;
+console.log(data[0]);
    if( data[0].vendedor == null){
        var vendedor = " ";
        var vendedornombre="Sin Vendedor Asignado";
    }else{
        vendedor = data[0].vendedor + ' | ' + data[0].zona;
        vendedornombre = data[0].vendedor;
+
    }
    var dataDetalle = data[0].detalle;
    var bonoDetalle = data[1].ctesNuevoMesDetalle;
@@ -294,7 +323,10 @@ var vendedornombre;
    var importdiasNoLaborados;
    var comisionXdia = comisionTot / 30;
    importdiasNoLaborados = data[0].diasNoLAborados * comisionXdia;
-   comisionInt = comisionInt - importdiasNoLaborados;
+   if(importePunt < importdiasNoLaborados){
+                importdiasNoLaborados=0
+            }
+    comisionInt = comisionInt - importdiasNoLaborados;
    //console.log(importdiasNoLaborados, comisionInt);
 
 
@@ -403,17 +435,28 @@ var vendedornombre;
    if(importeEspeciales < 0){
       importeEspeciales = 0;
   }
-   comisionTotal = totalBonos + importeEspeciales;
+
 
 
     var vendedorzona=data[4][0].zona;
+
+
     var prestaciones;
-    prestaciones = comisionTotal- comisionTot;
+    var descuentosComisiones;
+    var bonos;
+    bonos = bonoImp+ importCtesNvos+ vtasImporte + importeEspeciales;
+    descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
+    prestaciones = despensa + importePunt - importdiasNoLaborados -descuentosComisiones;
+    comisionTotal = comisionTot + prestaciones + bonos - descuentosComisiones;
+
     $('#llenaResumen').append('<tr>'+
         '<td>'+vendedorzona+'</td>'+
+        '<td>'+nempleado+'</td>'+
         '<td>'+vendedornombre+'</td>'+
         '<td>'+comisionTot.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+descuentosComisiones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+prestaciones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+bonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
   },
