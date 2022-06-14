@@ -1307,6 +1307,7 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
     for (var x = 0; x < btnActions.length; x++) {
         btnActions[x].disabled = false;
     }
+
 }
 
 
@@ -2192,6 +2193,10 @@ function saveNS() {
     }
 }
 
+function closeModalNetsuiteLoading() {
+    $('#modalNetsuiteLoading').modal('hide');
+}
+
 function updatePrecioIVA(itemid) {
     var desc = document.getElementById('inputDescuentoInventario-' + itemid).value;
     var cant = document.getElementById('inputPrecioCliente-' + itemid).value;
@@ -2412,7 +2417,6 @@ function exportTableToExcel(tableID, filename) {
     x.setAttribute("download", filename + '.csv');
     document.body.appendChild(x);
     x.click();
-
 }
 
 
