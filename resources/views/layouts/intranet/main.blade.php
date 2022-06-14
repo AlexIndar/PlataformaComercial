@@ -218,7 +218,7 @@
                                     @if (in_array('SolicitudesPendientes', $permissions))
                                         <li class="nav-item">
                                             <a href="/SolicitudesPendientes" class="nav-link">
-                                                <i class="fa-solid fa-calculator nav-icon"></i>
+                                                <i class="fas fa-calculator nav-icon"></i>
                                                 <p>Solicitudes Pendientes</p>
                                             </a>
                                         </li>
@@ -239,15 +239,12 @@
                                 @if ($active == 'Operaciones')
                                     <a href="#" class="nav-link active">
                                     @else
-                                        <a href="#" class="nav-link">
+                                    <a href="#" class="nav-link">
                                 @endif
-                                <i class="nav-icon fas fa-globe-americas"></i>
-                                <p>
-                                    Operaciones
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                                </a>
-                                <ul class="nav nav-treeview">
+                                    <i class="nav-icon fas fa-globe-americas"></i>
+                                    <p>Operaciones<i class="right fas fa-angle-left"></i></p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
                                     @if (in_array('HeatMap', $permissions))
                                         <li class="nav-item">
                                             <a href="/HeatMap" class="nav-link">
