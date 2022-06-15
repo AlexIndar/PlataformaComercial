@@ -226,7 +226,7 @@
                                     @if (in_array('EstadisticaSolicitud', $permissions))
                                         <li class="nav-item">
                                             <a href="/EstadisticaSolicitudTiempo" class="nav-link">
-                                            <i class="far fa-clock nav-icon"></i>
+                                                <i class="far fa-clock nav-icon"></i>
                                                 <p>Estadistica Tiempo</p>
                                             </a>
                                         </li>
@@ -256,7 +256,7 @@
                                     @if (in_array('AsignaZonasCyc', $permissions))
                                         <li class="nav-item">
                                             <a href="/AsignacionZonas" class="nav-link">
-                                            <i class="fas fa-map nav-icon"></i>
+                                                <i class="fas fa-map nav-icon"></i>
                                                 <p>Asignar zonas a CyC</p>
                                             </a>
                                         </li>
@@ -480,7 +480,7 @@
 
                         @if (in_array('HSBC', $permissions))
                             <li class="nav-item">
-                                @if ($active == 'HSBC')
+                                @if ($active == 'Pagos')
                                     <a href="#" class="nav-link active">
                                     @else
                                         <a href="#" class="nav-link">

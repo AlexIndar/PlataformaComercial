@@ -39,8 +39,7 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
-                            <button onclick="envioMail()"></button>
-                            <button onclick="prueba()"></button>
+                            <button onclick="realoadTableView()">A</button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

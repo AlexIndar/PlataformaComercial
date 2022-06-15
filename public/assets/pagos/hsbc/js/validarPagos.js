@@ -11,6 +11,7 @@ $('document').ready(function () {
                 // By lines
                 var lines = this.result.split('\n');
                 var cadenaRespuesta = '';
+                var lineRespuesta = 1;
                 for (var line = 0; line < lines.length - 1; line++) {
                     if (line == 0) {
                         console.log('-------------------------------- Encabezado ----------------------------------');
@@ -42,8 +43,75 @@ $('document').ready(function () {
                         }
                         console.log('Beneficiario: ' + nombreBeneficiario.trim());
                         console.log('Importe: ' + importe);
+
+                        console.log('-----------------------------------------------------------------------------');
+                        // MOSTRAR RESPUESTA EN PANTALLA
+
+                        var container = document.getElementById('respuesta');
+                        var row = document.createElement('div');
+                        row.setAttribute('class', 'row mt-2');
+
+                        var div1 = document.createElement('div');
+                        div1.setAttribute('class', 'col-lg-4 col-md-4 col-12');
+                        var beneficiario = document.createElement('h5');
+                        beneficiario.innerHTML = nombreBeneficiario.trim();
+                        div1.appendChild(beneficiario);
+
+                        var div2 = document.createElement('div');
+                        div2.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-right');
+                        var importeh5 = document.createElement('h5');
+                        importeh5.innerHTML = importe;
+                        div2.appendChild(importeh5);
+
+                        var div3 = document.createElement('div');
+                        div3.setAttribute('class', 'col-lg-2 col-md-2 col-12 text-center');
+                        var codigo = document.createElement('h5');
+                        codigo.innerHTML = codRechazo;
+                        div3.appendChild(codigo);
+
+                        var div4 = document.createElement('div');
+                        div4.setAttribute('class', 'col-lg-3 col-md-3 col-12');
+                        var div5 = document.createElement('div');
+                        div5.setAttribute('class', 'col-lg-1 col-md-1 col-12 text-center');
+                        div5.setAttribute('style', 'display: flex; justify-content: space-between;')
+
+                        if (codRechazo != '00000') {
+                            var descripcion = document.createElement('h5');
+                            descripcion.innerHTML = descRechazo.trim();
+                            div4.appendChild(descripcion);
+
+                            var check = document.createElement('img');
+                            check.src = '/assets/customers/img/png/cross.png';
+                            check.setAttribute('style', 'width: 20px; height: 20px;')
+                        }
+                        else {
+                            var cveRastreoh5 = document.createElement('h5');
+                            cveRastreoh5.innerHTML = cveRastreo.trim();
+                            div4.appendChild(cveRastreoh5);
+                            var check = document.createElement('img');
+                            check.src = '/assets/customers/img/png/check.png';
+                            check.setAttribute('style', 'width: 20px; height: 20px;')
+                        }
+
+                        div5.appendChild(check);
+
+                        row.appendChild(div1);
+                        row.appendChild(div2);
+                        row.appendChild(div3);
+                        row.appendChild(div4);
+                        row.appendChild(div5);
+
+                        container.appendChild(row);
+                        lineRespuesta++;
                     }
                 }
+
+
+
+
+
+
+
             };
             reader.readAsText(files[x]);
             x++;

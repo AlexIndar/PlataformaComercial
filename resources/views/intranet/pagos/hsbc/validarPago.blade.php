@@ -1,4 +1,4 @@
-@extends('layouts.intranet.main', ['active' => 'Ventas', 'permissions' => $permissions])
+@extends('layouts.intranet.main', ['active' => 'Pagos', 'permissions' => $permissions])
 
 @section('title')
     HSBC - Validar Pagos
@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ asset('assets/customers/css/promociones/addPromocion.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/intranet/css/misSolicitudes.css') }}">
     <script src="{{ asset('assets/pagos/hsbc/js/validarPagos.js') }}"></script>
-    <!-- <script src="{{ asset('assets/customers/js/index.js') }}"></script> -->
 @endsection
 
 @section('body')
@@ -32,12 +31,12 @@
                         </div>
                     </div>
                 </div>
-
-                <div id="respuesta">
-
-                </div>
+            </div>
+            <br>
+            <div id="respuesta">
 
             </div>
+
         </div>
     </div>
 @endsection
