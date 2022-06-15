@@ -282,10 +282,10 @@
                                 <tr id="row0">
                                     <td>0</td>
                                     <td style="background-color: #04d1db" id="prod0" data-row="0" onclick="exportaController.showInputProd(this)" width="10%">
-                                        <input type="text" id="inputProd0" style="width: 100%;height: 100%;" class="form-control" data-row="0" onchange="exportaController.changeProducto(this)" onkeyup="this.value = this.value.toUpperCase()" style="width: 100%;height: 24px;" hidden>
+                                        <input type="text" id="inputProd0" style="width: 100%;height: 50px;" class="form-control" data-row="0" onchange="exportaController.changeProducto(this)" onkeyup="this.value = this.value.toUpperCase()" hidden>
                                     </td>
                                     <td style="background-color: #04d1db" id="cant0" data-row="0" onclick="exportaController.showInputCant(this)" width="5%">
-                                        <input type="number" id="inputCant0" data-row="0" onchange="exportaController.changeCant(this)" class="form-control" style="width: 100%!important;height: 100%;" hidden>
+                                        <input type="number" id="inputCant0" style="width: 100%" class="form-control" data-row="0" onchange="exportaController.changeCant(this)"   hidden>
                                     </td>
                                     <td id="unidad0"></td>
                                     <td id="emp0"></td>
@@ -351,6 +351,7 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('assets/exporta/js/exportaController.js')}}"></script>
 
 </body>

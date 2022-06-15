@@ -5,16 +5,23 @@
 @section('styles')
 @endsection
 @section('css')
+
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ env('APP_URL') }}plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="{{ env('APP_URL') }}plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <link rel="stylesheet" href="{{ env('APP_URL') }}assets/intranet/css/logistica.css">
 <!-- SweetAlert2 -->
 <link rel="stylesheet" href="{{ env('APP_URL') }}plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+<!-- DataTables -->
+<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
 <!-- Toastr -->
 <link rel="stylesheet" href="{{ env('APP_URL') }}plugins/toastr/toastr.min.css">
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ env('APP_URL') }}plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('body')
@@ -32,10 +39,12 @@
                                     <div class="row justify-content-between">
                                         <div class="col-12 mt-2">
                                             <h3 class="card-title mt-3 mr-2">Numero Guía</h3>
-                                            <input type="file" id="fileTampleteImport" hidden>
                                             <a type="button" class="btn btn-outline-primary" href="{{asset('templates/Template_NumeroGuia.xlsx')}}" download="Template_NumeroGuia"><i class="fa-solid fa-file-arrow-down mr-2"></i>Descargar Template</a>
-                                            <label type="button" class="btn btn-outline-primary mt-2" for="fileTampleteImport" onchange="logisticaController.importTemplateNumGuia()"><i class="fa-solid fa-file-arrow-down mr-2"></i>Importar Template</label>
+                                            <label type="button" class="btn btn-outline-primary mt-2" for="fileTempleteImport"><i class="fa-solid fa-file-arrow-down mr-2"></i>Importar Template</label>
                                             <button type="button" class="btn btn-outline-primary" onclick="logisticaController.showModalLogin()"><i class="fa-solid fa-pen-to-square mr-2"></i>Actualizar Importes</button>
+                                            <form enctype="multipart/form-data">
+                                                <input type="file" id="fileTempleteImport" onchange="logisticaController.importDataNumGuia()" hidden>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -129,6 +138,7 @@
                                                                             <th>Tipo</th>
                                                                             <th>Cantidad</th>
                                                                             <th>Importe</th>
+                                                                            <th>CP</th>
                                                                             <th></th>
                                                                         </tr>
                                                                     </thead>
@@ -236,35 +246,210 @@
 <div class="modal fade" id="modal-autorizacion">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-        <div class="modal-header title-table">
-            <h4 class="modal-title ">Autorización</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <div class="modal-header title-table">
+                <h4 class="modal-title ">Autorización</h4>
+                {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">&times;</span>
+                </button> --}}
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="usuarioSAI">Usuario SAI:</label>
+                            <input type="text" class="form-control" id="usuarioSAI">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="contrasenaSAI">Contraseña:</label>
+                            <input type="password" class="form-control" id="contrasenaSAI">
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center" hidden id="divMessage"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-plataform" onclick="logisticaController.formAutho()">Autorizar</button>
+            </div>
         </div>
-        <div class="modal-body">
-            <div class="row">
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-importes-fleteras">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header title-table">
+                <h4 class="modal-title ">Importes Fleteras</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
                 <div class="col-12">
-                    <div class="form-group">
-                        <label for="usuarioSAI">Usuario SAI:</label>
-                        <input type="text" class="form-control" id="usuarioSAI">
+                    <div class="row">
+                        <div class="col-12">
+                            <form id="formAddGuia">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="fleteraImporteAdd">Fleteras:</label>
+                                            <select class="form-control" id="fleteraImporte" name="fleteraImporte">
+                                                <option value="" selected>Seleccione una fletera</option>
+                                                @foreach($freighters as $freighter)
+                                                    <option value="{{$freighter->lisT_ITEM_NAME}}"> {{ $freighter->lisT_ITEM_NAME }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="estadoImporte">Estado:</label>
+                                            <select class="form-control" id="estadoImporte" name="estadoImporte">
+                                                <option value="" selected>Seleccione un estado</option>
+                                                @foreach($states as $state)
+                                                <option value="{{ $state->largo }}">{{ $state->largo }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group mt-4">
+                                            <label for=""></label>
+                                            <button class="btn btn-plataform mt-2" onclick="logisticaController.consultFreighterImport(); return false">Consultar</button>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-sm" id="table-importe" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>CP</th>
+                                            <th>Fletera</th>
+                                            <th>Estado</th>
+                                            <th>Municipio</th>
+                                            <th>Zona</th>
+                                            <th>Caja</th>
+                                            <th>Atado</th>
+                                            <th>Bulto</th>
+                                            <th>Cubeta</th>
+                                            <th>Tarima</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-content-import">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-editar-importes">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header title-table">
+                <h4 class="modal-title ">Editar Importes Fletera</h4>
+                {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">&times;</span>
+                </button> --}}
+            </div>
+            <div class="modal-body">
                 <div class="col-12">
-                    <div class="form-group">
-                        <label for="contrasenaSAI">Contraseña:</label>
-                        <input type="password" class="form-control" id="contrasenaSAI">
+                    <div class="row">
+                        <div class="col-12">
+                            <form id="formAddImport">
+                                <div class="row">
+                                    <input type="text" id="idImporteFactura" hidden>
+                                    <input type="text" id="zonaUpdate" hidden>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="fleteraImporteUpdate">Fleteras:</label>
+                                            <select class="form-control" id="fleteraImporteUpdate" name="fleteraImporteUpdate">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="codigoPostalUpdate">Codigo Postal:</label>
+                                            <input type="number" class="form-control" id="codigoPostalUpdate" name="codigoPostalUpdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="cajaUpdate">Caja:</label>
+                                            <input type="text" class="form-control" id="cajaUpdate" name="cajaUpdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="atadoUpdate">Atado:</label>
+                                            <input type="text" class="form-control" id="atadoUpdate" name="atadoUpdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="bultoUpdate">Bulto:</label>
+                                            <input type="text" class="form-control" id="bultoUpdate" name="bultoUpdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="cubetaUpdate">Cubeta:</label>
+                                            <input type="text" class="form-control" id="cubetaUpdate" name="cubetaUpdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="tarimaUpdate">Tarima:</label>
+                                            <input type="text" class="form-control" id="tarimaUpdate" name="tarimaUpdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="fechaInicioUpdate">Fecha Inicio:</label>
+                                            <input type="date" class="form-control" id="fechaInicioUpdate" name="fechaInicioUpdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="fechaFinUpdate">Fecha Fin:</label>
+                                            <input type="date" class="form-control" id="fechaFinUpdate" name="fechaFinUpdate">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center" hidden id="divMessage"></div>
-        </div>
-        <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-plataform" onclick="logisticaController.formAutho()">Autorizar</button>
-        </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" onclick="logisticaController.exitModalImportUpdate()">Cerrar</button>
+                <button type="button" class="btn btn-plataform" onclick="logisticaController.updateImport()">Editar</button>
+            </div>
         </div>
         <!-- /.modal-content -->
     </div>
@@ -280,8 +465,24 @@
 <script src="{{ env('APP_URL')}}plugins/toastr/toastr.min.js"></script>
 <!-- Select2 -->
 <script src="{{ env('APP_URL')}}plugins/select2/js/select2.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>  
+
 <script src="{{ env('APP_URL')}}assets/intranet/js/logisticaController.js"></script>
 <!-- jquery-validation -->
 <script src="{{ env('APP_URL')}}plugins/jquery-validation/jquery.validate.min.js"></script>
 <script src="{{ env('APP_URL')}}plugins/jquery-validation/additional-methods.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="{{ env('APP_URL')}}plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/jszip/jszip.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/pdfmake/pdfmake.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/pdfmake/vfs_fonts.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 @endsection

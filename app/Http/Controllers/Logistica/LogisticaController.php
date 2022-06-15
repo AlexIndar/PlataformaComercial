@@ -179,6 +179,57 @@ class LogisticaController extends Controller
                 $drivers = json_decode($getDrivers->body());
                 return $drivers;
             }
+            public static function getStates($token)
+            {
+                $getStates = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetStates');
+                $states = json_decode($getStates->body());
+                return $states;
+            }
+            public static function getCitiesByState($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $getCities = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetCitiesByState',[
+                    "state" => $dataJson->estado
+                ]);
+                $cities = json_decode($getCities->body());
+                return $cities;
+            }
+            public static function getFreightersImports($token, $data)
+            {
+                $dataJson = json_decode($data);
+                $getFreightersImports = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetFreightersImports',[
+                    "freighter" => $dataJson->fletera,
+                    "state" => $dataJson->estado
+                ]);
+                $imports = json_decode($getFreightersImports->body());
+                return $imports;
+            }
+            public static function getImportsByFreighter($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $getImportsByFreighter = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetImportsByFreighter?id='.$dataJson->id);
+                $imports = json_decode($getImportsByFreighter->body());
+                return $imports;
+            }
+            public static function updateImportsByFreighter($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $updateImportsByFreighter = Http::withToken($token)->put(config('global.api_url').'/Logistica/UpdateImportsByFreighter',[
+                    "id" => $dataJson->id,
+                    "cp" => $dataJson->cp,
+                    "fletera" => $dataJson->fletera,
+                    "zona" => $dataJson->zona,
+                    "caja" => $dataJson->caja,
+                    "atado" => $dataJson->atado,
+                    "bulto" => $dataJson->bulto,
+                    "cubeta" => $dataJson->cubeta,
+                    "tarima" => $dataJson->tarima,
+                    "fechaInicio" => $dataJson->fechaInicio,
+                    "fechaFin" => $dataJson->fechaFin
+                ]);
+                $update = json_decode($updateImportsByFreighter->body());
+                return $update;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){

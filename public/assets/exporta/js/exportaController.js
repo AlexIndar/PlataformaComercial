@@ -56,6 +56,13 @@ $(document).ready(function(){
         }
     });
 });
+var Toast = Swal.mixin({
+    toast: true,
+    position: 'top-start',
+    showConfirmButton: false,
+    timer: 8000,
+    timerProgressBar: false
+});
 let arrayPrecios = new Array(), arrayPedidos = new Array();
 let contRows=0;
 let exportaController = {
@@ -106,12 +113,6 @@ let exportaController = {
     deleteRow: (e) => {
         let row = $(e).data('row');
         $('#row'+row).remove();
-        // arrayPedidos.forEach(element => {
-        //     if(element.row == row)
-        //     {
-        //         delete element;
-        //     }
-        // });
         for(let a=0; a < arrayPedidos.length; a++)
         {
             if(arrayPedidos[a] != undefined)
@@ -195,6 +196,7 @@ let exportaController = {
             +'<input type="text" id="inputProd'+row+'" style="width: 100%;height:100%;" class="form-control" data-row="'+row+'" onchange="exportaController.changeProducto(this)" style="width: 100%;height: 24px;" value="'+articulo+'" hidden>'
         );
         let categoria='',importe='',claveFabricante='',descripcion='',empaque='',existencias='',familia='',iva='',moneda='',multiplo='',precioLista='',precio2='',precio3='',precio4='',precio7='',precio8='',promocion='',proveedor='',unidad='';
+        bandera = 0;
         arrayPrecios.forEach(element => {
             if(element.articulo == articulo)
             {
@@ -217,115 +219,130 @@ let exportaController = {
                 promocion = element.promocion;
                 proveedor = element.proveedor;
                 unidad = element.unidad;
+
+                
+                let precioVenta = precioLista - promocion;
+                let cantidad = $('#inputCant'+row).val();
+                if(cantidad == ''){
+                    cantidad = 0;
+                }
+                importe = precioVenta * cantidad;
+                arrayPedidos.forEach(element => {
+                    if(element.row == row)
+                    {
+                        element.cantidad = '';
+                        element.descripcion = descripcion;
+                        element.emp= empaque;
+                        element.existencia = existencias;
+                        element.importe = importe;
+                        element.iva = iva;
+                        element.observaciones = '';
+                        element.pp = '';
+                        element.precioLista = precioVenta;
+                        element.precioVenta = precio2;
+                        element.producto = articulo;
+                        element.promo = promocion;
+                        element.unidad = unidad;
+                    }
+                });
+                $('#unidad'+row).empty();
+                $('#emp'+row).empty();
+                $('#existencia'+row).empty();
+                $('#descripcion'+row).empty();
+                $('#precioLista'+row).empty();
+                $('#promo'+row).empty();
+                $('#precioventa'+row).empty();
+                $('#importe'+row).empty();
+                $('#iva'+row).empty();
+                $('#pp'+row).empty();
+                $('#observaciones'+row).empty();
+                
+                $('#unidad'+row).append('<strong>'+unidad+'</strong>');
+                $('#emp'+row).append('<strong>'+empaque+'</strong>');
+                $('#existencia'+row).append('<strong>'+existencias+'</strong>');
+                $('#descripcion'+row).append('<strong>'+descripcion+'</strong>');
+                $('#precioLista'+row).append('<strong>'+precioLista.toFixed(2)+'</strong>');
+                $('#promo'+row).append('<strong>'+promocion+'</strong>');
+                $('#precioventa'+row).append('<strong>'+precioVenta.toFixed(2)+'</strong>');
+                $('#importe'+row).append('<strong>'+importe+'</strong>');
+                $('#iva'+row).append('<strong>'+iva+'</strong>');
+                $('#pp'+row).append('<strong>0.00</strong>');
+                $('#observaciones'+row).append('<strong></strong>');
+                bandera = 1;
+                return;
             }
         });
-        let textExistencia = '';
-        if(existencias == 0){
-            textExistencia = 'NO HAY';
-        }else{
-            textExistencia = 'OK';
+        if(bandera == 0)
+        {
+            Toast.fire({
+                icon: 'error',
+                title: '¡Este producto no existe!'
+            });
+            $('#inputProd'+row).val('');
+            $('#inputProd'+row).prop('hidden', true);
+            $('#textProd'+row).empty();
+            $('#textProd'+row).prop('hidden',false);
         }
-        let precioVenta = precioLista - promocion;
-        let cantidad = $('#inputCant'+row).val();
-        if(cantidad == ''){
-            cantidad = 0;
-        }
-        importe = precioVenta * cantidad;
-        arrayPedidos.forEach(element => {
-            if(element.row == row)
-            {
-                element.cantidad = '';
-                element.descripcion = descripcion;
-                element.emp= empaque;
-                element.existencia = existencias;
-                element.importe = importe;
-                element.iva = iva;
-                element.observaciones = '';
-                element.pp = '';
-                element.precioLista = precioVenta;
-                element.precioVenta = precio2;
-                element.producto = articulo;
-                element.promo = promocion;
-                element.unidad = unidad;
-            }
-        });
-        $('#unidad'+row).empty();
-        $('#emp'+row).empty();
-        $('#existencia'+row).empty();
-        $('#descripcion'+row).empty();
-        $('#precioLista'+row).empty();
-        $('#promo'+row).empty();
-        $('#precioventa'+row).empty();
-        $('#importe'+row).empty();
-        $('#iva'+row).empty();
-        $('#pp'+row).empty();
-        $('#observaciones'+row).empty();
-        
-        $('#unidad'+row).append('<strong>'+unidad+'</strong>');
-        $('#emp'+row).append('<strong>'+empaque+'</strong>');
-        $('#existencia'+row).append('<strong>'+textExistencia+'</strong>');
-        $('#descripcion'+row).append('<strong>'+descripcion+'</strong>');
-        $('#precioLista'+row).append('<strong>'+precioLista.toFixed(2)+'</strong>');
-        $('#promo'+row).append('<strong>'+promocion+'</strong>');
-        $('#precioventa'+row).append('<strong>'+precioVenta.toFixed(2)+'</strong>');
-        $('#importe'+row).append('<strong>'+importe+'</strong>');
-        $('#iva'+row).append('<strong>'+iva+'</strong>');
-        $('#pp'+row).append('<strong>0.00</strong>');
-        $('#observaciones'+row).append('<strong></strong>');
     },
     changeCant: (e) => {
         let row =  $(e).data('row');
         let cantidad = $('#inputCant'+row).val();
-        $('#cant'+row).empty();
-        $('#cant'+row).append(
-            '<strong id="textCant'+row+'">'+cantidad+'</strong>'
-            +'<input type="text" id="inputCant'+row+'" style="width: 100%;height: 100%;" class="form-control" data-row="'+row+'" onchange="exportaController.changeCant(this)" style="width: 100%;height: 24px;" value="'+cantidad+'" hidden>'
-        );
-        for(let a=0; a < arrayPedidos.length; a++)
+        let articulo = $('#inputProd'+row).val();
+        if(articulo != '' || 0)
         {
-            if(arrayPedidos[a] != undefined)
+            $('#cant'+row).empty();
+            $('#cant'+row).append(
+                '<strong id="textCant'+row+'">'+cantidad+'</strong>'
+                +'<input type="text" id="inputCant'+row+'" style="width: 100%;height: 100%;" class="form-control" data-row="'+row+'" onchange="exportaController.changeCant(this)" style="width: 100%;height: 24px;" value="'+cantidad+'" hidden>'
+            );
+            for(let a=0; a < arrayPedidos.length; a++)
             {
-                if(arrayPedidos[a].row == row)
+                if(arrayPedidos[a] != undefined)
                 {
-                    console.log(arrayPedidos);
-                    $('#unidad'+row).empty();
-                    $('#emp'+row).empty();
-                    $('#existencia'+row).empty();
-                    $('#descripcion'+row).empty();
-                    $('#precioLista'+row).empty();
-                    $('#promo'+row).empty();
-                    $('#precioventa'+row).empty();
-                    $('#importe'+row).empty();
-                    $('#iva'+row).empty();
-                    $('#pp'+row).empty();
-                    $('#observaciones'+row).empty();
-                    let textExistencia = '';
-                    if(arrayPedidos[a].existencia == 0)
+                    if(arrayPedidos[a].row == row)
                     {
-                        textExistencia = 'NO HAY';
-                    }else{
-                        textExistencia = 'OK'
+                        $('#unidad'+row).empty();
+                        $('#emp'+row).empty();
+                        $('#existencia'+row).empty();
+                        $('#descripcion'+row).empty();
+                        $('#precioLista'+row).empty();
+                        $('#promo'+row).empty();
+                        $('#precioventa'+row).empty();
+                        $('#importe'+row).empty();
+                        $('#iva'+row).empty();
+                        $('#pp'+row).empty();
+                        $('#observaciones'+row).empty();
+                        let precioLista = arrayPedidos[a].precioLista;
+                        let precioVenta = arrayPedidos[a].precioVenta;
+                        cantidad = cantidad == '' ? 0 : cantidad;
+                        let importe = precioVenta * cantidad;
+                        let updateExistencias = arrayPedidos[a].existencia - cantidad;
+                        $('#unidad'+row).append('<strong>'+arrayPedidos[a].unidad+'</strong>');
+                        $('#emp'+row).append('<strong>'+arrayPedidos[a].emp+'</strong>');
+                        $('#existencia'+row).append('<strong>'+updateExistencias+'</strong>');
+                        $('#descripcion'+row).append('<strong>'+arrayPedidos[a].descripcion+'</strong>');
+                        $('#precioLista'+row).append('<strong>'+precioLista.toFixed(2)+'</strong>');
+                        $('#promo'+row).append('<strong>'+arrayPedidos[a].promo+'</strong>');
+                        $('#precioventa'+row).append('<strong>'+precioVenta.toFixed(2)+'</strong>');
+                        $('#importe'+row).append('<strong>'+exportaController.replaceNumberWithCommas(importe.toFixed(2))+'</strong>');
+                        $('#iva'+row).append('<strong>'+arrayPedidos[a].iva+'</strong>');
+                        $('#pp'+row).append('<strong>0.00</strong>');
+                        $('#observaciones'+row).append('<strong></strong>');
+                        arrayPedidos[a].importe = importe;
+                        break;
                     }
-                    let precioLista = arrayPedidos[a].precioLista;
-                    let precioVenta = arrayPedidos[a].precioVenta;
-                    cantidad = cantidad == '' ? 0 : cantidad;
-                    let importe = precioVenta * cantidad;
-                    $('#unidad'+row).append('<strong>'+arrayPedidos[a].unidad+'</strong>');
-                    $('#emp'+row).append('<strong>'+arrayPedidos[a].emp+'</strong>');
-                    $('#existencia'+row).append('<strong>'+textExistencia+'</strong>');
-                    $('#descripcion'+row).append('<strong>'+arrayPedidos[a].descripcion+'</strong>');
-                    $('#precioLista'+row).append('<strong>'+precioLista.toFixed(2)+'</strong>');
-                    $('#promo'+row).append('<strong>'+arrayPedidos[a].promo+'</strong>');
-                    $('#precioventa'+row).append('<strong>'+precioVenta.toFixed(2)+'</strong>');
-                    $('#importe'+row).append('<strong>'+exportaController.replaceNumberWithCommas(importe.toFixed(2))+'</strong>');
-                    $('#iva'+row).append('<strong>'+arrayPedidos[a].iva+'</strong>');
-                    $('#pp'+row).append('<strong>0.00</strong>');
-                    $('#observaciones'+row).append('<strong></strong>');
-                    arrayPedidos[a].importe = importe;
                 }
             }
+        }else{
+            Toast.fire({
+                icon: 'error',
+                title: '¡Ingrese primero un producto!'
+            });
+            $('#inputCant'+row).val('');
+            $('#inputCant'+row).prop('hidden', true);
+            $('#textCant'+row).prop('hidden',false);
         }
-        exportaController.contTotal();
+        
     },
     replaceNumberWithCommas: (numero) => {
         //Seperates the components of the number
