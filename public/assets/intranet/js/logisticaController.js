@@ -2,38 +2,7 @@ $(document).ready(function () {
     //Se inicializa validando en que vista se encuentra para ejecutar ciertas funciones
     switch (window.location.pathname) {
         case '/logistica/distribucion/numeroGuia':
-            $('#fletera').select2();
-            $('#chofer').select2();
-            $('.select2-selection').css('height', '39px');
-            $('.select2-selection').css('width', '100%');
-            $('[data-toggle="tooltip"]').tooltip();
-            $("#importeTotal").inputmask({
-                alias: "decimal",
-                radixPoint: ".",
-                autoGroup: true,
-                groupSeparator: ".",
-                digits: 2,
-                allowMinus: false,
-                digitsOptional: false,
-                placeholder: "0.00"
-            });
-            $("#importeSeguro").inputmask({
-                alias: "decimal",
-                radixPoint: ".",
-                autoGroup: true,
-                groupSeparator: ".",
-                digits: 2,
-                allowMinus: false,
-                digitsOptional: false,
-                placeholder: "0.00"
-            });
-            $('#fletera').on('change', function () {
-                $('#chofer').prop('disabled', true);
-            });
-            $('#chofer').on('change', function () {
-                $('#fletera').prop('disabled', true);
-            });
-            logisticaController.costFletera();
+            logisticaController.initNumGuia();
             break;
         case '/logistica/distribucion/validarSad':
             logisticaController.consultValidateSAD();
@@ -373,7 +342,7 @@ $(document).ready(function () {
 //#region VARIABLES GLOBALES
 var Toast = Swal.mixin({
     toast: true,
-    position: 'top-start',
+    position: 'top-end',
     showConfirmButton: false,
     timer: 8000,
     timerProgressBar: false
@@ -383,7 +352,7 @@ let mount = d.getMonth() + 1;
 mount = mount >= 10 ? mount : '0' + mount;
 let dNow = d.getFullYear() + '-' + mount + '-' + d.getDate();
 let porcentajeGlobal = 1, contShowguia = 1, autorizadoUsuario = '', fechaInicio = dNow, fechaFin = dNow, link = '';
-let arrayCostoFletera = new Array(), arrayRowTableType = new Array(), arraytable2 = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array();
+let arrayRowTableType = new Array(), arraytable2 = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array();
 let contRowTypeTable = 0, contRowEmbarqueTable = 0, contRowFacturasSelected = 0, contTable = 0, contArea1 = 0, contArea2 = 0, contArea3 = 0, contArea4 = 0, contArea5 = 0, contArea6 = 0, contArea7 = 0, contArea8 = 0, contArea9 = 0, contArea10 = 0, contArea11 = 0, contArea12 = 0;
 //#endregion
 
@@ -392,6 +361,450 @@ const logisticaController = {
 
     //#region SCRIPTS DISTRIBUCION
     //#region NUMERO GUIA
+    initNumGuia: () => {
+        $('#fletera').select2();
+            $('#chofer').select2();
+            $('#fleteraImporte').select2();
+            $('#estadoImporte').select2();
+            $('.select2-selection').css('height', '39px');
+            $('.select2-selection').css('width', '100%');
+            $('[data-toggle="tooltip"]').tooltip();
+        $("#importeTotal").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $("#importeSeguro").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $("#cajaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $("#atadoUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $("#bultoUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $("#cubetaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $("#tarimaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $('#fletera').on('change', function () {
+            $('#chofer').prop('disabled', true);
+        });
+        $('#chofer').on('change', function () {
+            $('#fletera').prop('disabled', true);
+        });
+        $('#table-importe').DataTable({
+            paging: true,
+            responsive: true,
+            searching: true,
+            processing: false,
+            bSortClasses: false,
+            fixedHeader: false,
+            scrollY: 350,
+            scrollCollapse: true,
+            deferRender: true,
+            scroller: true,
+            columns: [
+                { data: 'id', visible:false },
+                { data: 'cp', visible: true },
+                { data: 'fletera', visible: true },
+                { data: 'estado', visible: true },
+                { data: 'municipio', visible: true },
+                { data: 'zona', visible: true },
+                { data: 'caja', visible: true },
+                { data: 'atado', visible: true },
+                { data: 'bulto', visible: true },
+                { data: 'cubeta', visible: true },
+                { data: 'tarima', visible: true },
+                { data: 'fechaInicio', visible: true },
+                { data: 'fechaFin', visible: true },
+                { data: 'id', render: function(data){
+                    return '<button class="btn btn-warning mt-2" style="color:white" data-id="'+data+'" onclick="logisticaController.openModalUpdateNumGuia(this)"><i class="fa-solid fa-pen-to-square"></i></button>'
+                }}
+            ],
+            language: {
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Documentos",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: 'Exportar Template',
+                    action: function ( e, dt, node, config ) {
+                        let url = '/Templates/Template_Importes_NumeroGuia.xlsx';
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'Template_Importes_NumeroGuia';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }
+                },
+                {
+                    text: 'Importar Template',
+                    action: function(e,dt,node,config){
+                        $('#fileTempleteImportImportesFleteras').click();
+                    }
+                }
+            ]
+        });
+    },
+    importDataImportsFreighters: () => {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;  
+        /*Checks whether the file is a valid excel file*/  
+        if (regex.test($("#fileTempleteImportImportesFleteras").val().toLowerCase())) {  
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/  
+            if ($("#fileTempleteImportImportesFleteras").val().toLowerCase().indexOf(".xlsx") > 0) {  
+                xlsxflag = true;  
+            }  
+            /*Checks whether the browser supports HTML5*/  
+            if (typeof (FileReader) != "undefined") {  
+                var reader = new FileReader();  
+                reader.onload = function (e) {  
+                    var data = e.target.result;  
+                    /*Converts the excel data in to object*/  
+                    if (xlsxflag) {  
+                        var workbook = XLSX.read(data, { type: 'binary' });  
+                    }  
+                    else {  
+                        var workbook = XLS.read(data, { type: 'binary' });  
+                    }  
+                   //  console.log(workbook);
+                    
+                    /*Gets all the sheetnames of excel in to a variable*/  
+                    var sheet_name_list = workbook.SheetNames;  
+                    let  exceljson = new Array();
+                    sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/  
+                        /*Convert the cell value to Json*/  
+                        if (xlsxflag) {  
+                           exceljson.push(XLSX.utils.sheet_to_json(workbook.Sheets[y]));  
+                        }  
+                        else {  
+                           exceljson.push(XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]));  
+                        }  
+                    });
+                    console.log(exceljson[0]);
+                    console.log(JSON.stringify(exceljson[0]));
+                    logisticaController.token();
+                    $.ajax({
+                        url:'/logistica/distribucion/numeroGuia/bulkLoadImports',
+                        type: 'POST',
+                        data: {json:JSON.stringify(exceljson[0])},
+                        datatype: 'json',
+                        success: function(data){
+                            console.log(data);
+                            if(data){
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: '¡Se importaron correctamente los importes de las fleteras!'
+                                });
+                                logisticaController.consultFreighterImport();
+                            }else{
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: '¡Hubo un error al capturar los importes de las fleteras!'
+                                });
+                            }
+                        },
+                        error: function(error){
+                            console.log(error);
+                        },
+                        complete: function(){
+
+                        }
+                    })
+                }  
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/  
+                    reader.readAsArrayBuffer($("#fileTempleteImportImportesFleteras")[0].files[0]);  
+                }  
+                else {  
+                    reader.readAsBinaryString($("#fileTempleteImportImportesFleteras")[0].files[0]);  
+                }  
+            }  
+            else {  
+                alert("Sorry! Your browser does not support HTML5!");  
+            }  
+        }  
+        else {  
+            alert("Please upload a valid Excel file!");  
+        }  
+    },
+    openModalUpdateNumGuia: (e) => {
+        let idImport = $(e).data('id');
+        logisticaController.token();
+        $.ajax({
+            url: '/logisitica/distribucion/numeroGuia/getImportsByFreighter',
+            type: 'GET',
+            data: {id:idImport},
+            datatype: 'json',
+            success: function(data){
+                if(data.length != 0)
+                {
+                    let importes = data[0];
+                    $('#fleteraImporteUpdate').empty();
+                    $('#fleteraImporteUpdate').append(
+                        '<option value="'+importes.fletera+'" selected disabled>'+importes.fletera+'</option>'
+                    );
+                    $('#codigoPostalUpdate').val(importes.cp);
+                    $('#cajaUpdate').val(importes.caja);
+                    $('#atadoUpdate').val(importes.atado);
+                    $('#bultoUpdate').val(importes.bulto);
+                    $('#cubetaUpdate').val(importes.cubeta);
+                    $('#tarimaUpdate').val(importes.tarima);
+                    $('#fechaInicioUpdate').val(importes.fechaInicio);
+                    $('#fechaFinUpdate').val(importes.fechaFin);
+                    $('#idImporteFactura').val(importes.id);
+                    $('#zonaUpdate').val(importes.zona);
+                }
+            },
+            error: function(error){
+
+            },
+            complete: function(){
+                $('#modal-importes-fleteras').modal('toggle');
+                $('#modal-editar-importes').modal({backdrop: 'static', keyboard: false});
+                $('#modal-editar-importes').modal('show');
+            }
+        });
+    },
+    updateImport: () => {
+        let data = {
+            id: $('#idImporteFactura').val(),
+            cp: $('#codigoPostalUpdate').val(),
+            fletera: $('#fleteraImporteUpdate option:selected').val(),
+            zona: $('#zonaUpdate').val(),
+            caja: $('#cajaUpdate').val(),
+            atado: $('#atadoUpdate').val(),
+            bulto: $('#bultoUpdate').val(),
+            cubeta: $('#cubetaUpdate').val(),
+            tarima: $('#tarimaUpdate').val(),
+            fechaInicio: $('#fechaInicioUpdate').val(),
+            fechaFin: $('#fechaFinUpdate').val()
+        };
+        $.ajax({
+            url: '/logistica/distribucion/numeroGuia/updateImportsByFreighter',
+            type: 'PUT',
+            data: data,
+            datatype: 'json',
+            success: function(data){
+                console.log(data);
+                if(data)
+                {
+                    Toast.fire({
+                        icon: 'success',
+                        title: '¡Se actualizaron correctamente los importes de la fletera!'
+                    });
+                    $('#modal-editar-importes').modal('toggle');
+                    $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+                    $('#modal-importes-fleteras').modal('show');
+                    logisticaController.consultFreighterImport();
+                }else{
+                    Toast.fire({
+                        icon: 'error',
+                        title: '¡Hubo un error al actualizar los importes de la fletera!'
+                    });
+                }
+            },
+            error: function(error){
+
+            },
+            complete: function(){
+
+            }
+        });
+        console.log(data);
+    },
+    importDataNumGuia: () => {  
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;  
+        /*Checks whether the file is a valid excel file*/  
+        if (regex.test($("#fileTempleteImport").val().toLowerCase())) {  
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/  
+            if ($("#fileTempleteImport").val().toLowerCase().indexOf(".xlsx") > 0) {  
+                xlsxflag = true;  
+            }  
+            /*Checks whether the browser supports HTML5*/  
+            if (typeof (FileReader) != "undefined") {  
+                var reader = new FileReader();  
+                reader.onload = function (e) {  
+                    var data = e.target.result;  
+                    /*Converts the excel data in to object*/  
+                    if (xlsxflag) {  
+                        var workbook = XLSX.read(data, { type: 'binary' });  
+                    }  
+                    else {  
+                        var workbook = XLS.read(data, { type: 'binary' });  
+                    }  
+                   //  console.log(workbook);
+                    
+                    /*Gets all the sheetnames of excel in to a variable*/  
+                    var sheet_name_list = workbook.SheetNames;  
+     
+                    var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/  
+                    let  exceljson = new Array();
+                    sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/  
+                        /*Convert the cell value to Json*/  
+                        if (xlsxflag) {  
+                           exceljson.push(XLSX.utils.sheet_to_json(workbook.Sheets[y]));  
+                        }  
+                        else {  
+                           exceljson.push(XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]));  
+                        }  
+                    });
+                    logisticaController.asyncRequestNumGuia(exceljson);
+                   
+                }  
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/  
+                    reader.readAsArrayBuffer($("#fileTempleteImport")[0].files[0]);  
+                }  
+                else {  
+                    reader.readAsBinaryString($("#fileTempleteImport")[0].files[0]);  
+                }  
+            }  
+            else {  
+                alert("Sorry! Your browser does not support HTML5!");  
+            }  
+        }  
+        else {  
+            alert("Please upload a valid Excel file!");  
+        }  
+    },
+    asyncRequestNumGuia: async (exceljson) => {
+        console.log(exceljson);
+        await logisticaController.acomodeDataImport(exceljson);
+        await logisticaController.CaptureInvoices();
+        await logisticaController.acomodateFacturasSelectedImport(exceljson);
+        
+    },
+    acomodateFacturasSelectedImport: (exceljson) => {
+        return new Promise((resolve,reject)=> {
+            setTimeout(()=>{
+                console.log(arrayResultFacturas);
+                let facturasSelected = exceljson[2];
+                for(let a=0; a < facturasSelected.length; a++)
+                {
+                    $('#searchFactura').val(facturasSelected[a].Factura);
+                    logisticaController.searchBills();
+                }
+            },2000);
+            resolve();
+        });
+    },
+    acomodeDataImport: (exceljson) => {
+        return new Promise ((resolve,reject) => {
+            let datos = exceljson[0];
+            let fletera = datos[0].Fletera == undefined ? '' : datos[0].Fletera;
+            let chofer = datos[0].Chofer == undefined ? '' : datos[0].Chofer;
+            let numGuia = datos[0].NumGuia == undefined ? '' : datos[0].NumGuia;
+            if(fletera != '')
+            {
+                $('#fletera').prop('disabled', true);
+                $('#chofer').prop('disabled', true);
+                $('#fletera').empty();
+                $('#fletera').append(
+                    '<option value="" selected>'+fletera+'</option>'
+                );
+                
+            }
+            if(chofer != '')
+            {
+                $('#chofer').prop('disabled', true);
+                $('#fletera').prop('disabled', true);
+                $('#chofer').empty();
+                $('#chofer').append(
+                    '<option value="" selected>'+chofer+'</option>'
+                );
+            } 
+            if(numGuia != '')
+            {
+                $('#NumGuia').val('');
+                $('#NumGuia').val(numGuia);
+            }
+            let embarques = exceljson[1];
+            for(let a=0; a  < embarques.length; a++)
+            {
+                contRowEmbarqueTable++;
+                $('#table-content-embarque').append(
+                    '<tr id="rowEmbarque' + contRowEmbarqueTable + '">'
+                    + '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" onchange="logisticaController.onChangeRowEmbarque(this)" id="embarque' + contRowEmbarqueTable + '" data-idembarque="' + contRowEmbarqueTable + '" type="text" style="width: 100%;" value="'+embarques[a].Embarque+'"></td>'
+                    + '<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="' + contRowEmbarqueTable + '" data-table="embarques" data-idrow="rowEmbarque' + contRowEmbarqueTable + '"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
+                    + '</tr>'
+                );
+                let idembarque = 'embarque'+contRowEmbarqueTable;
+                let embarque = embarques[a].Embarque;
+                logisticaController.existShipment(contRowEmbarqueTable,idembarque,embarque);   
+            }
+            setTimeout(()=>{
+                resolve();
+            },1500);
+        });
+    },
     addNumGuia: () => {
         let tablaTipo = arrayRowTableType;
         let facturasSelected = arrayFacturasSelected;
@@ -674,15 +1087,18 @@ const logisticaController = {
         let idembarque = 'embarque' + rowembarque;
         let embarque = $('#' + idembarque).val();
         // console.log(rowembarque,idembarque,embarque);
-        let dato = [];
-        let repetido = 0;
-        let modificado = 0;
+        
+        logisticaController.existShipment(rowembarque,idembarque,embarque);
+    },
+    existShipment: (rowembarque,idembarque,embarque) => {
         $.ajax({
             url: '/logistica/distribucion/numeroGuia/existShipment',
             type: 'GET',
             data: { embarque: embarque },
             datatype: 'json',
             success: function (data) {
+                let repetido = 0;
+                let modificado = 0;
                 if (data != 0) {
                     Toast.fire({
                         icon: 'success',
@@ -774,81 +1190,83 @@ const logisticaController = {
         });
     },
     CaptureInvoices: () => {
-        let data = '';
-        let arrayEmbarquesFinal = new Array()
-        if (arrayRowsEmbarques.length != 0) {
-            for (let a = 0; a < arrayRowsEmbarques.length; a++) {
-                if (arrayRowsEmbarques[a] != undefined) {
-                    if (arrayRowsEmbarques[a].disponible) {
-                        data += arrayRowsEmbarques[a].embarque + ',';
+        return new Promise ((resolve,reject)=>{
+            let data = '';
+            let arrayEmbarquesFinal = new Array()
+            if (arrayRowsEmbarques.length != 0) {
+                for (let a = 0; a < arrayRowsEmbarques.length; a++) {
+                    if (arrayRowsEmbarques[a] != undefined) {
+                        if (arrayRowsEmbarques[a].disponible) {
+                            data += arrayRowsEmbarques[a].embarque + ',';
+                        }
                     }
                 }
-            }
-            arrayEmbarquesFinal.push(data.substring(0, data.length - 1));
-            logisticaController.token();
-            $.ajax({
-                url: '/logistica/distribucion/numeroGuia/captureInvoice',
-                type: 'POST',
-                data: { embarques: arrayEmbarquesFinal },
-                datatype: 'json',
-                success: function (data) {
-                    console.log(data);
-                    $('#table-content-embarque-factura').empty();
-                    if (data == "") {
-                        $('#table-content-embarque-factura').append(
-                            '<tr>'
-                            + '<td class="text-center" colspan="3">No se encontraron resultados</td>'
-                            + '</tr>'
-                        );
-                    } else {
-                        if (arrayResultFacturas.length == 0) {
-                            arrayResultFacturas = data;
+                arrayEmbarquesFinal.push(data.substring(0, data.length - 1));
+                logisticaController.token();
+                $.ajax({
+                    url: '/logistica/distribucion/numeroGuia/captureInvoice',
+                    type: 'POST',
+                    data: { embarques: arrayEmbarquesFinal },
+                    datatype: 'json',
+                    success: function (data) {
+                        $('#table-content-embarque-factura').empty();
+                        if (data == "") {
+                            $('#table-content-embarque-factura').append(
+                                '<tr>'
+                                + '<td class="text-center" colspan="3">No se encontraron resultados</td>'
+                                + '</tr>'
+                            );
                         } else {
-                            for (let b = 0; b < data.length; b++) {
-                                let bandera = 0;
-                                for (let c = 0; c < arrayResultFacturas.length; c++) {
-                                    if (arrayResultFacturas[c] != undefined) {
-                                        if (data[b].factura == arrayResultFacturas[c].factura) {
-                                            bandera = 1;
-                                            break;
+                            if (arrayResultFacturas.length == 0) {
+                                arrayResultFacturas = data;
+                            } else {
+                                for (let b = 0; b < data.length; b++) {
+                                    let bandera = 0;
+                                    for (let c = 0; c < arrayResultFacturas.length; c++) {
+                                        if (arrayResultFacturas[c] != undefined) {
+                                            if (data[b].factura == arrayResultFacturas[c].factura) {
+                                                bandera = 1;
+                                                break;
+                                            }
                                         }
                                     }
+                                    if (bandera == 0) {
+                                        arrayResultFacturas.push(data[b]);
+                                    }
                                 }
-                                if (bandera == 0) {
-                                    arrayResultFacturas.push(data[b]);
+                            }
+                            for (let a = 0; a < arrayResultFacturas.length; a++) {
+                                let check = '';
+                                if (arrayResultFacturas[a] != undefined) {
+                                    if (arrayResultFacturas[a].check == '1' || arrayResultFacturas[a].guia != '') {
+                                        check = 'background-color:#50ff50';
+                                    }
+                                    $('#table-content-embarque-factura').append(
+                                        '<tr id="rowFactura' + arrayResultFacturas[a].factura + '" style="' + check + '">'
+                                        + '<td>' + arrayResultFacturas[a].factura + '</td>'
+                                        + '<td>' + arrayResultFacturas[a].cliente + '</td>'
+                                        + '<td>' + arrayResultFacturas[a].embarque + '</td>'
+                                        + '</tr>'
+                                    );
                                 }
                             }
                         }
-                        for (let a = 0; a < arrayResultFacturas.length; a++) {
-                            let check = '';
-                            if (arrayResultFacturas[a] != undefined) {
-                                if (arrayResultFacturas[a].check == '1' || arrayResultFacturas[a].guia != '') {
-                                    check = 'background-color:#50ff50';
-                                }
-                                $('#table-content-embarque-factura').append(
-                                    '<tr id="rowFactura' + arrayResultFacturas[a].factura + '" style="' + check + '">'
-                                    + '<td>' + arrayResultFacturas[a].factura + '</td>'
-                                    + '<td>' + arrayResultFacturas[a].cliente + '</td>'
-                                    + '<td>' + arrayResultFacturas[a].embarque + '</td>'
-                                    + '</tr>'
-                                );
-                            }
-                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+    
+                    },
+                    complete: function () {
+    
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
-                },
-                complete: function () {
-
-                }
-            })
-        } else {
-            Toast.fire({
-                icon: 'error',
-                title: '¡Ingrese al menos un embarque para la captura de facturas!'
-            });
-        }
+                })
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: '¡Ingrese al menos un embarque para la captura de facturas!'
+                });
+            }
+            resolve();
+        })
     },
     searchBills: () => {
         let factura = $('#searchFactura').val();
@@ -859,9 +1277,11 @@ const logisticaController = {
             type: 'GET',
             data: { factura: factura, fletera: fletera },
             datatype: 'json',
-            success: function (data) {
-                if (data != "" || data != [] || data.length != 0) {
-                    //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRRAY DE LOS BULTOS QUE REGRESA
+            success: function(data){
+                console.log(data);
+                if(data != "" || data != [] || data.length != 0)
+                {
+                    //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRAY DE LOS BULTOS QUE REGRESA
                     let embarque = '';
                     for (let a = 0; a < arrayResultFacturas.length; a++) {
                         if (arrayResultFacturas[a] != undefined) {
@@ -943,10 +1363,13 @@ const logisticaController = {
                                         break;
                                 }
                                 let importeLock = '';
-                                if (fletera == "" || data[a].importe == 0) {
-                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe' + lasRow + '" data-row="' + lasRow + '" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="' + data[a].importe + '" ></td>';
-                                } else {
-                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe' + lasRow + '" data-row="' + lasRow + '" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="' + data[a].importe + '" value="' + data[a].importe + '" disabled></td>';
+                                let importeXcantidad = data[a].cantidad * data[a].importe;
+                                if(fletera == "" || data[a].importe == 0)
+                                {
+                                    let importeXcantidad = 0;
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" ></td>';
+                                }else{
+                                    importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+lasRow+'" data-row="'+lasRow+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" value="'+importeXcantidad+'" disabled></td>';
                                 }
                                 $('#table-content-guia-type').append(
                                     '<tr id="rowType' + lasRow + '">'
@@ -956,6 +1379,7 @@ const logisticaController = {
                                     + '</td>'
                                     + '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad' + lasRow + '" data-row="' + lasRow + '" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;" value="' + data[a].cantidad + '" disabled></td>'
                                     + importeLock
+                                    + '<td>'+data[a].cp+'</td>'
                                     + '<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="' + lasRow + '" data-table="tipos" data-idrow="rowType' + lasRow + '"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
                                     + '</tr>'
                                 );
@@ -971,8 +1395,8 @@ const logisticaController = {
                                 });
                                 arrayRowTableType.push({
                                     'tipo': data[a].tipoAtado,
-                                    'cantidad': data[a].cantidad,
-                                    'importe': data[a].importe,
+                                    'cantidad':data[a].cantidad,
+                                    'importe': importeXcantidad,
                                     'row': lasRow,
                                     'idOrdenEmbarque': data[a].idOrdenEmbarque,
                                     'consolidado': data[a].consolidado,
@@ -1023,10 +1447,13 @@ const logisticaController = {
                                     break;
                             }
                             let importeLock = '';
-                            if (fletera == "" || data[a].importe == 0) {
-                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe' + contRowTypeTable + '" data-row="' + contRowTypeTable + '" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="' + data[a].importe + '" ></td>';
-                            } else {
-                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe' + contRowTypeTable + '" data-row="' + contRowTypeTable + '" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="' + data[a].importe + '" value="' + data[a].importe + '" disabled></td>';
+                            let importeXcantidad = data[a].cantidad * data[a].importe;
+                            if(fletera == "" || data[a].importe == 0)
+                            {
+                                importeXcantidad = 0;
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" ></td>';
+                            }else{
+                                importeLock = '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="importe'+contRowTypeTable+'" data-row="'+contRowTypeTable+'" onkeyup="logisticaController.changeTypeSelect(this)" type="text" style="width: 100%;" data-importe="'+importeXcantidad+'" value="'+importeXcantidad+'" disabled></td>';
                             }
                             $('#table-content-guia-type').append(
                                 '<tr id="rowType' + contRowTypeTable + '">'
@@ -1036,6 +1463,7 @@ const logisticaController = {
                                 + '</td>'
                                 + '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad' + contRowTypeTable + '" data-row="' + contRowTypeTable + '" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;" value="' + data[a].cantidad + '" disabled></td>'
                                 + importeLock
+                                + '<td>'+data[a].cp+'</td>'
                                 + '<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="' + contRowTypeTable + '" data-table="tipos" data-idrow="rowType' + contRowTypeTable + '"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
                                 + '</tr>'
                             );
@@ -1051,8 +1479,8 @@ const logisticaController = {
                             });
                             arrayRowTableType.push({
                                 'tipo': data[a].tipoAtado,
-                                'cantidad': data[a].cantidad,
-                                'importe': data[a].importe,
+                                'cantidad':data[a].cantidad,
+                                'importe': importeXcantidad,
                                 'row': contRowTypeTable++,
                                 'idOrdenEmbarque': data[a].idOrdenEmbarque,
                                 'consolidado': data[a].consolidado,
@@ -1205,25 +1633,38 @@ const logisticaController = {
         }
     },
     showModalLogin: () => {
+        $('#modal-autorizacion').modal({backdrop: 'static', keyboard: false});
         $('#modal-autorizacion').modal('show');
     },
-    costFletera: () => {
+    consultFreighterImport: () => {
+        let fletera = $('#fleteraImporte').val();
+        let estado = $('#estadoImporte').val();
+        let data = {
+            fletera:fletera,
+            estado:estado
+        };
         $.ajax({
-            url: '/logistica/distribucion/numeroGuia/costFletera',
+            url: '/logistica/distribucion/numeroGuia/getFreightersImports',
             type: 'GET',
+            data: data,
             datatype: 'json',
-            success: function (data) {
-                arrayCostoFletera = data;
-
+            success: function(data){
                 console.log(data);
+                $('#table-importe').DataTable().clear().draw();
+                $('#table-importe').DataTable().rows.add(data).draw();
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function(error){
 
             },
-            complete: function () {
+            complete: function(){
 
             }
         });
+    },
+    exitModalImportUpdate: () => {
+        $('#modal-editar-importes').modal('toggle');
+        $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+        $('#modal-importes-fleteras').modal('show');
     },
     //#endregion
     //#region VALIDAR SAD
@@ -1768,7 +2209,8 @@ const logisticaController = {
                         let pathWeb = window.location.pathname;
                         if (pathWeb == '/logistica/distribucion/numeroGuia') {
                             //Mostrar modal y llamar el array global de los costos por fletera
-
+                            $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+                            $('#modal-importes-fleteras').modal('show');
                         } else {
                             if ($('#importeGuias').val() == $('#importeSinIva').val()) {
                                 $('#btnRegistrarNet').prop('disabled', false);

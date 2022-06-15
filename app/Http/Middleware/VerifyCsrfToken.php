@@ -68,6 +68,8 @@ class VerifyCsrfToken extends Middleware
         '/logistica/distribucion/numeroGuia/saveGuiaNumber',
         '/logistica/distribucion/validarSad/authoriceSad',
         '/logistica/distribucion/capturaGastoFletera/registerNet',
+        '/logistica/distribucion/numeroGuia/updateImportsByFreighter',
+        '/logistica/distribucion/numeroGuia/bulkLoadImports',
         '/almacen/capturaErrores/createError',
         '/almacen/capturaErrores/updateError',
         '/EstadisticaSolicitudTiempo/GetManagementTimeReport',
