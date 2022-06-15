@@ -938,12 +938,12 @@ function addPromoRules(rules) {
         document.getElementById('mensaje-proveedores').classList.add('red');
     }
 
-    if (!incluyeArticulos) { //si se guardó con proveedores como lista negra, mostrar los que no se incluyen
+    if (!incluyeArticulos) { //si se guardó con articulos como lista negra, mostrar los que no se incluyen
         let tempArticulosReglas = [...reglas[7]];
         for (let x = 0; x < tempArticulosReglas.length; x++) {
             tempArticulosReglas[x] = tempArticulosReglas[x].split(']')[0].substring(1);
         };
-        articulos = tempArticulosReglas.filter(x => !rules['clientesId'].includes(x));
+        articulos = tempArticulosReglas.filter(x => !articulos.includes(x));
         $('#listaArticulos').val('negra');
         $('#listaArticulos').selectpicker('refresh');
         document.getElementById('mensaje-articulos').innerHTML = "Estos articulos <strong>no participan</strong> en la promoción";
@@ -951,7 +951,7 @@ function addPromoRules(rules) {
         document.getElementById('mensaje-articulos').classList.add('red');
     }
 
-    if (!incluyeMarcas) { //si se guardó con proveedores como lista negra, mostrar los que no se incluyen
+    if (!incluyeMarcas) { //si se guardó con marcas como lista negra, mostrar los que no se incluyen
         marcas = reglas[6].filter(x => !marcas.includes(x))
         $('#listaMarcas').val('negra');
         $('#listaMarcas').selectpicker('refresh');

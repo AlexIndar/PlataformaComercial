@@ -207,6 +207,7 @@ const reloadCycTable = (data) => {
     let dataTableCyc = [];
     for (let i = 0; i < data.length; i++) {
         let aux = [];
+        console.log(data[i]);
         aux.push(data[i].claveP);
         aux.push(data[i].razonSocial);
         aux.push(getTimeOfDate(data[i].fechaAlta));
@@ -227,7 +228,7 @@ const reloadCycTable = (data) => {
         if (data[i].isOnIntelisis)
             actions += ` ` + `<div class="btn btn-danger btn-circle" title="Reactivación" onclick="showReact(` + folioRfc + `)"><i class="fas fa-skull"></i></div>`;
         if (data[i].isOnIntelisis && data[i].isCredit)
-            actions += ` ` + `<div class="btn btn-outline-info btn-circle" title="Agregar Validación de INE" onclick="openUpdateIne(` + data[i].folio + `)"><i class="fa-solid fa-id-card"></i></div>`;
+            actions += ` ` + `<div class="btn btn-outline-info btn-circle" title="Agregar Validación de INE" onclick="openUpdateIne(` + data[i].folio + `)"><i class="fas fa-id-card"></i></div>`;
         if (data[i].status == 11 || data[i].status == 12)
             actions += ` ` + `<div class="btn btn-secondary btn-circle" title="Regresar Solicitud" onclick="rollbackSol(` + data[i].folio + `)"><i class="fas fa-undo"></i></div>`;
         if (data[i].isCredit && !data[i].haveReferencesFile && data[i].status == 11)
@@ -1123,6 +1124,7 @@ function getValueChecks() {
     }
 
     if (alertMsg != ``) {
+        $('#cargaModal').modal('hide');
         $('#alertModal').modal('show');
         document.getElementById("alertInfoModal").innerHTML = alertMsg;
         return false;
@@ -1269,8 +1271,8 @@ function openUpdateFile(item) {
     document.getElementById("titlePictureEdit").innerHTML = "Agregar Referencias";
     document.getElementById("label-inputGroupFile19").innerHTML = "Archivo de Referencias";
     // $('#label-inputGroupFile19').html("Archivo de Referencias");
-    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Imagen</button>`;
-    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Imagen</button>`;
+    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i>Guardar Archivo</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i>Cancelar Archivo</button>`;
     document.getElementById("editConfirButtons").innerHTML = buttons;
     $('#editImageModal').modal('show');
 }
@@ -1479,12 +1481,14 @@ function saveValidation(flag) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function(result) {
+                console.log(result);
                 $('#cargaModal').modal('hide');
                 if (result && flag == null) {
                     $('#infoModal').modal('hide');
                     realoadTableView();
                 } else if (result.result && flag != null) {
                     sendMail(result);
+                    realoadTableView();
                 } else {
                     console.log("Error, enviar correo a adan.perez@indar.com.mx");
                 }
@@ -1549,7 +1553,7 @@ function rollbackSol(folio) {
     $('#confirModal').modal('show');
     document.getElementById("titleModalConfirm").innerHTML = `¿Desea regresar al proceso anterio la solicitud con folio. ${folio}?`;
     var buttons = `<button class="btn btn-success btn-circle" onclick="confirmRollback('` + folio + `')"><i class="fas fa-paper-plane"></i> Si, Reenviar</button>`;
-    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelRollback('` + folio + `')" style="margin-left: 10px;"><i class="fas fa-times"></i> No, Cancelar</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelRollback()" style="margin-left: 10px;"><i class="fas fa-times"></i> No, Cancelar</button>`;
     document.getElementById("bodyModalConfirm").innerHTML = buttons;
 }
 
@@ -1584,7 +1588,15 @@ function confirmRollback(folio) {
 }
 
 function realoadTableView() {
-    getSolicitudesPendientes(document.getElementById("inputGroupSelect01").value);
+    if(document.getElementById("userP").value == "CYC"){
+        getSolicitudesPendientes(document.getElementById("userName").value);
+    }else{
+        getSolicitudesPendientes(document.getElementById("inputGroupSelect01").value);
+    }
+}
+
+function cancelRollback(){
+    $('#confirModal').modal('hide');
 }
 
 function initialQuestionTrue(flag) {
@@ -1743,8 +1755,8 @@ function setReference() {
                 CustomerID: customerId,
                 Reference: referencia
             }
-            console.log(jsonReference);
-            console.log(JSON.stringify(jsonReference));
+            // console.log(jsonReference);
+            // console.log(JSON.stringify(jsonReference));
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1766,6 +1778,7 @@ function setReference() {
                         let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
                         document.getElementById("alertInfoModal").innerHTML = alertMsg;
                     }
+                    realoadTableView();
                 },
                 error: function(error) {
                     console.log(error);
@@ -1986,4 +1999,12 @@ function envioMail2() {
 
 function envioMail() {
     alert("No tienes permisos");
+}
+
+function prueba() {
+    if(document.getElementById("userP").value == "CYC"){
+        getSolicitudesPendientes(document.getElementById("userName").value);
+    }else{
+        getSolicitudesPendientes(document.getElementById("inputGroupSelect01").value);
+    }
 }

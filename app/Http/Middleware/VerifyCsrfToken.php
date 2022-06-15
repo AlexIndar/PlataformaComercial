@@ -63,6 +63,7 @@ class VerifyCsrfToken extends Middleware
         '/SolicitudesPendientes/ReactiveClient',
         '/comisiones/postActualizarArticulosEspeciales',
         '/comisiones/postActualizarEspeciales',
+        '/comisiones/postComisionesResumenRH',
         '/Logistica/RegistroGuia',
         '/logistica/distribucion/numeroGuia/saveGuiaNumber',
         '/logistica/distribucion/validarSad/authoriceSad',

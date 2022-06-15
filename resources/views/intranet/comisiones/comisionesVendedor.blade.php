@@ -413,7 +413,7 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header bg-indarBlue">
-                    <h3 class="text-center title ml-auto">Detalle de Clientes Nuevos</h3>
+                    <h4 class="text-left title ml-auto">Detalle de Clientes Nuevos</h4>
                     <h6 id="vendedorbon" class="text-center title ml-auto"></h6>
                     <input type="text" id="typeFormInf" value="" hidden>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -421,10 +421,49 @@
                     </button>
                 </div>
                 <div class="modal-body text-indarBlue" id="modal2">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card-body table-responsive p-0">
-                                <table id="modalTable" class="table table-striped table-bordered table-hover "
+                    <div class="card card-primary card-outline card-tabs">
+                        <div class="card-header p-0 pt-1 border-bottom-0">
+                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="custom-tabs-three-nuevos-tab" data-toggle="pill"
+                                        href="#custom-tabs-three-nuevos" role="tab" aria-controls="custom-tabs-three-nuevos"
+                                        aria-selected="true">
+                                        <p>Clientes Nuevos Refa o T de P</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-three-nuevostotal-tab" style="color: red"
+                                        data-toggle="pill" href="#custom-tabs-three-nuevostotal" role="tab"
+                                        aria-controls="custom-tabs-three-nuevostotal" aria-selected="false">
+                                        <p >Clientes Nuevos Total</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-three-tabContent">
+                                <div class="tab-pane fade active show" id="custom-tabs-three-nuevos" role="tabpanel"
+                                    aria-labelledby="custom-tabs-three-nuevos-tab">
+                                    <div class="card-body table-responsive p-0">
+                                        <table id="modalTable" class="table table-striped table-bordered table-hover "
+                                        style="width:100% ; font-size:75% ;font-weight: bold ">
+                                        <thead style="background-color:#002868; color:white">
+                                            <tr>
+                                                <th>Código cliente</th>
+                                                <th style="width:320px">Nombre</th>
+                                                <th>Zona</th>
+                                                <th>Fecha</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="clientesNvosModal">
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="custom-tabs-three-nuevostotal" role="tabpanel"
+                                    aria-labelledby="custom-tabs-three-nuevostotal-tab">
+                                    <div class="card-body table-responsive p-0">
+                                    <table id="modalnuevosTotalTable" class="table table-striped table-bordered table-hover "
                                     style="width:100% ; font-size:75% ;font-weight: bold ">
                                     <thead style="background-color:#002868; color:white">
                                         <tr>
@@ -434,9 +473,11 @@
                                             <th>Fecha</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="clientesNvosModal">
+                                    <tbody id="clientesNvosModalTotal">
                                     </tbody>
                                 </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -447,8 +488,8 @@
             </div>
         </div>
     </div>
-    <!-- Modal Editar VO-->
-    <div class="modal fade" id="editarVo" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+<!-- Modal Editar VO-->
+<div class="modal fade" id="editarVo" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header bg-indarBlue">
@@ -840,7 +881,10 @@
                    $('#llenadesComi').html(htmldescComi);
                    $('#llenaDespensa').html(htmlDespensa);
                 }
-                myCallback(sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                var descuentosComisiones;
+                descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
+                sumaCBtotal = sumaCBtotal ;
+                myCallback(sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}), descuentosComisiones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
            },
            error: function() {
                console.log("Error");
@@ -848,9 +892,10 @@
            }
         });
    //
-        function myCallback(response) {
-
+        function myCallback(response,descuentos) {
+        var descuentosComisiones =  descuentos.replace(',','')
          var comisionTot = response.replace(',','');
+          descuentosComisiones = parseFloat(descuentosComisiones);
 
           //AJAX Detalle Días
           $.ajax({
@@ -925,6 +970,7 @@
             var htmlModal = '';
             var htmlBonos = '';
             var htmlModalnc = '';
+            var htmlModalnctotal = '';
             var htmlNvosCtes = '';
             var htmlVentas='';
             var htmlEspeciales = '';
@@ -1007,6 +1053,15 @@
                 }
             }
 
+            for (i = 0; i < bonoDetalle.length; i++) {
+
+                    htmlModalnctotal += '<tr>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
+                            '</tr>';
+            }
             var show ;
             if(data[0].diasLaborados == 0){
                 show =   '<td style="font-weight: bold">';
@@ -1025,13 +1080,18 @@
             var importdiasNoLaborados;
             var comisionXdia = comisionTot / 30;
             importdiasNoLaborados = data[0].diasNoLAborados * comisionXdia;
-            comisionInt = comisionInt - importdiasNoLaborados;
+
             //console.log(importdiasNoLaborados, comisionInt);
+            if(importePunt < importdiasNoLaborados){
+                importdiasNoLaborados=0
+            }
+
+            comisionInt = comisionInt - importdiasNoLaborados - descuentosComisiones;
 
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
                    '<td style="font-weight: bold" >'+ data[0].totalClientes  +'</td>' +
-                   '<td style="font-weight: bold">'+ porClientesVisitados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                   '<td style="font-weight: bold">'+ Math.round(porClientesVisitados) +'</td>' +
                    show + '<u>'+ data[0].totalClientesVisitados +'</u></td>' +
                    '<td style="font-weight: bold">'+ data[0].porcAlcanzado +'%</td>' +
                    '<td style="font-weight: bold" colspan="2">'+ importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>' +
@@ -1059,7 +1119,7 @@
             var ctesnvos ;
             var le = data[1].le;
             //var le = data[1].real -  data[1].nuevosMesActualRoTP;
-            if(data[1].nuevosMesActualRoTP == 0){
+            if(data[1].nuevosMesActualRoTP == 0 && data[1].nuevosMesActual  == 0){
                 ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActualRoTP+ '</u></td>';
             } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActualRoTP+ '</u></td>';
             htmlBonos += '<tr>'+
@@ -1087,9 +1147,11 @@
                      '<td style="font-weight: bold" >' + porCtesNvos + ' % </td>' +
                      '<td style="font-weight: bold" >' + importCtesNvos + '</td>' +
                      '</tr>';
-            var vtasPorc = data[2].alcance/10;
+            var vtasPorc = data[2].real/data[2].vo;
+            vtasPorc = vtasPorc *10;
             var vtasImporte = (vtasPorc/100) * comisionTot;
             var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
+
 
             if(data[2].hasOwnProperty('status')){
 
@@ -1112,9 +1174,9 @@
             }else{
                 htmlVentas += '<tr>'+
                      '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
-                     '<td style="font-weight: bold "> '+ data[2].vo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>' +
-                     '<td style="font-weight: bold" > '+ data[2].le.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' </td>' +
-                     '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '<td style="font-weight: bold "> '+ data[2].vo.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) +' </td>' +
+                     '<td style="font-weight: bold" > '+ data[2].le.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) + ' </td>' +
+                     '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) +'</td>' +
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>'+
@@ -1238,7 +1300,9 @@
                 }
                 $('#llenaModalDetalleEspeciales').html(htmlModalDetalleEspeciales);
            });
-
+           if(alcanceEspeciales <=0){
+               alcanceEspeciales = 0;
+           }
             htmlEspeciales += '<tr>'+
                      '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#modalEspeciales" >Especiales Cumplidos</td>' +
                      '<td style="font-weight: bold "> 75 % </td>' +
@@ -1266,6 +1330,7 @@
             $('#llenaEspeciales').html(htmlEspeciales);
             $('#llenaModalEspeciales').html(htmlModalEspeciales);
             $('#clientesNvosModal').html(htmlModalnc);
+            $('#clientesNvosModalTotal').html(htmlModalnctotal);
             $('#zonareferencia').text(data[0].zona);
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
             $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);

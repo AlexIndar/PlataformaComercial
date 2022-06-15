@@ -2013,6 +2013,8 @@ function saveNS() {
         }
         else {
             idCustomer = entityCte;
+            console.log('Index Customer: '+indexCustomer);
+            console.log('Index Address: '+indexAddress);
             idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
             shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() : $("#envio").val();
             packageDelivery = $("#fletera").val();
@@ -2878,6 +2880,7 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
         if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
             defaultShippingSelected = true;
             indexDefaultShipping = x;
+            indexAddress = x;
             $('#sucursal').val(addresses[x]['addressID']);
         }
     }

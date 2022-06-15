@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main', ['active' => 'Comisiones', 'permissions' => $permissions])
 @section('title')
-    Indar | Comisiones
+    Indar | Comisiones Resumen
 @endsection
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/intranet/css/') }}">
@@ -59,10 +59,18 @@
                                          <thead style="background-color:#002868; color:white">
                                             <tr >
                                                <th>Zona</th>
+                                               <th>No.Empleado</th>
                                                <th>Nombre  </th>
                                                <th>Comisión Base</th>
+                                               <th>DES - NEG</th>
+                                               <th>DES - FT</th>
+                                               <th>DES - INCOB</th>
                                                <th>Prestaciones</th>
                                                <th>Comisión Integrada</th>
+                                               <th>Bono Clientes Nuevos</th>
+                                               <th>Bono Ventas</th>
+                                               <th>Bono Especiales / Ctes act</th>
+                                               <th>Comisión Total</th>
                                             </tr>
                                          </thead>
                                          <tbody id="llenaResumen">
@@ -71,7 +79,6 @@
                                    </div>
                                 </div>
                              </div>
-
                         </div>
                     </div>
                 </div>
@@ -82,16 +89,16 @@
 @endsection
 
 @section('js')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
-    <!-- Buttons -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
-    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
-    <!-- SWAL -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+<!-- Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
  $(document).ready(function() {
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
@@ -122,21 +129,48 @@
        //Llena select zonas
     var suma = 0;
     for (var i=0 ; i<loopZonas.length ; i++){
-        var tamaño = loopZonas.length;
+        var tamanio = loopZonas.length;
         var  idzona = loopZonas[i].zona;
-        $.ajax({
-      'headers': {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+$.ajax({
+'headers': {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   },
   'url': "/comisiones/getResumen",
   'type': 'GET',
   'dataType': 'json',
-  'data': {zona:idzona, fecha : date, suma: suma,tamaño : tamaño },
+  'data': {zona:idzona, fecha : date, suma: suma,tamanio : tamanio },
   'enctype': 'multipart/form-data',
   'timeout': 4 * 60 * 60 * 1000,
   success: function array(data){
+
     suma = suma + 1;
-      if(suma < tamaño){
+      if(suma < tamanio){
+
+        console.log('contador',suma);
+          console.log('tamanio',tamanio);
+
+      }else{
+        $('#resumenComisionesTable').dataTable( {
+            dom : 'Brtip',
+            paging:false,
+            fixedHeader:true,
+            ordering: false,
+            scrollY:320,
+            scrollX: true,
+            scrollCollapse: true,
+            buttons: [
+                {
+                    extend:    'excel',
+                    text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+                    titleAttr: 'Descargar Excel'
+                }
+            ],
+            initComplete: function () {
+            var btns = $('.dt-button');
+            btns.addClass('btn btn-success ');
+            btns.removeClass('dt-button');
+            },
+        });
         Swal.fire({
                 position: 'top',
                 icon: 'success',
@@ -144,10 +178,6 @@
                 showConfirmButton: false,
                 timer: 5000
                 })
-          console.log('contador',suma);
-          console.log('tamaño',tamaño);
-
-      }else{
         console.log('terminaste');
         document.getElementById("btnSpinner").style.display = "none";
         document.getElementById("btnConsultar").style.display = "block";
@@ -243,12 +273,16 @@ var comisionTot = sumaCBtotal;
    var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
    //console.log( comisionTot );
 var vendedornombre;
+var nempleado;
+nempleado = data[0].numEmpVend;
+//console.log(data[0]);
    if( data[0].vendedor == null){
        var vendedor = " ";
        var vendedornombre="Sin Vendedor Asignado";
    }else{
        vendedor = data[0].vendedor + ' | ' + data[0].zona;
        vendedornombre = data[0].vendedor;
+
    }
    var dataDetalle = data[0].detalle;
    var bonoDetalle = data[1].ctesNuevoMesDetalle;
@@ -294,7 +328,10 @@ var vendedornombre;
    var importdiasNoLaborados;
    var comisionXdia = comisionTot / 30;
    importdiasNoLaborados = data[0].diasNoLAborados * comisionXdia;
-   comisionInt = comisionInt - importdiasNoLaborados;
+   if(importePunt < importdiasNoLaborados){
+                importdiasNoLaborados=0
+            }
+    comisionInt = comisionInt - importdiasNoLaborados;
    //console.log(importdiasNoLaborados, comisionInt);
 
 
@@ -403,19 +440,37 @@ var vendedornombre;
    if(importeEspeciales < 0){
       importeEspeciales = 0;
   }
-   comisionTotal = totalBonos + importeEspeciales;
+
 
 
     var vendedorzona=data[4][0].zona;
+
+
     var prestaciones;
-    prestaciones = comisionTotal- comisionTot;
+    var descuentosComisiones;
+    var bonos;
+    bonos = bonoImp + importCtesNvos+ vtasImporte + importeEspeciales;
+    descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
+    prestaciones = despensa + importePunt - importdiasNoLaborados -descuentosComisiones;
+    comisionTotal = comisionTot + prestaciones + bonos - descuentosComisiones;
+    var bonoEspecificos = bonoImp  + importeEspeciales;
     $('#llenaResumen').append('<tr>'+
         '<td>'+vendedorzona+'</td>'+
+        '<td>'+nempleado+'</td>'+
         '<td>'+vendedornombre+'</td>'+
         '<td>'+comisionTot.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+prestaciones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+importCtesNvos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+bonoEspecificos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
+        myCallback(vendedorzona,vendedornombre,comisionTot,prestaciones,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
+        importCtesNvos,vtasImporte,bonoEspecificos,mes,año, comisionTotal);
   },
   error: function() {
       console.log("Error");
@@ -423,6 +478,52 @@ var vendedornombre;
   }
 });
 }
+}
+
+function myCallback(zona,nombre,comisionBase,prestaciones,comisionInt,desneg,desft,incobrabilidad,bonoClientesNuevos,
+bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal){
+
+    var jsonResumen = [];
+    jsonResumen.push({ zona: zona, nombre: nombre, comisionBase: comisionBase, prestaciones: prestaciones,
+        comisionIntegrada: comisionInt, ejercicio: ejercicio, periodo: periodo, diferenciaPrecio: desneg,
+        incobrabilidad: incobrabilidad, descuFueraTiempo: desft,bonoVentas:bonoVentas, bonoEspecificos: bonoEspecificos,
+        bonoClientesNuevos: bonoClientesNuevos, comisionTotal: comisionTotal });
+
+    jsonResumen = JSON.stringify(jsonResumen);
+    jsonResumen = jsonResumen.slice(1,-1);
+    console.log(jsonResumen);
+    $.ajax({
+           'headers': {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           'url': "/comisiones/postComisionesResumenRH",
+           'type': 'POST',
+           'dataType': 'json',
+           'data': {ResumenModel : jsonResumen},
+           'enctype': 'multipart/form-data',
+           'timeout': 4 * 60 * 60 * 1000,
+           success: function (data){
+            console.log(data);
+           /*  Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: 'Se cargó el Resumen Correctamente',
+            showConfirmButton: false,
+            timer: 5000
+          }) */
+
+        },
+        error: function() {
+            console.log(data);
+            Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Error Vuelva a cargar la página',
+            showConfirmButton: false,
+            timer: 5000
+          })
+        }
+    });
 }
 
     </script>

@@ -74,7 +74,7 @@ Route::get('/', function () {
 
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+    $rama3 = RamasController::getRama3(); 
 
     $level = "C";
     if(isset($_COOKIE['_lv'])){
@@ -481,7 +481,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['_lv'])){
                                     $level = $_COOKIE['_lv'];
                                 }
-                                return $response; 
+                                return $response;
                             });
 
                             Route::post('/pedido/storePedidoGetID', function (Request $request){
@@ -1061,6 +1061,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return view('intranet.pagos.hsbc.validarPago', ['token' => $token, 'level' => $level, 'permissions' =>$permissions,'username' => $username, 'userRol' => $userRol]);
                  });
 
+                 Route::get('/pagos/HSBC/nuevo', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.pagos.hsbc.nuevoPago', ['token' => $token, 'level' => $level, 'permissions' => $permissions,'username' => $username, 'userRol' => $userRol]);
+                 });
+
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1502,6 +1518,23 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
+                //////// SOLICITUDES PENDIENTES/////
+                Route::get('/SolicitudesConsulta', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                        return view('intranet.cyc.solicitudesConsulta',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                });
+
                 //////////Prueba MisSolicitudes Admin-Gerente ////
                 Route::get('/MisSolicitudesAdmin', function(){
                     $token = TokenController::getToken();
@@ -1577,7 +1610,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $response;
                 });
 
-                //////// ASIGNACION DE ZONAS /////
+                //////// ESTADISTICA SOLICITUD TIEMPO /////
                 Route::get('/EstadisticaSolicitudTiempo', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
@@ -1588,7 +1621,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA"){
-                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);    
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1640,7 +1673,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "ADMIN"){
-                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);    
+                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1836,6 +1869,18 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::post('/comisiones/postComisionesResumenRH', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $json = $request->ResumenModel;
+                   $data=ComisionesController::postComisionesResumenRH($token,$json);
+                    return $data;
+                });
+
+
+
                 Route::post('/comisiones/postParametroCtesZona', function (Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error'){
@@ -1931,6 +1976,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                    $json = $request->ArtEspeciales;
+
                    $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
                     //dd($data);
                     return $data;

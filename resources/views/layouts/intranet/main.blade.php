@@ -218,7 +218,7 @@
                                     @if (in_array('SolicitudesPendientes', $permissions))
                                         <li class="nav-item">
                                             <a href="/SolicitudesPendientes" class="nav-link">
-                                                <i class="fa-solid fa-calculator nav-icon"></i>
+                                                <i class="fas fa-calculator nav-icon"></i>
                                                 <p>Solicitudes Pendientes</p>
                                             </a>
                                         </li>
@@ -226,7 +226,7 @@
                                     @if (in_array('EstadisticaSolicitud', $permissions))
                                         <li class="nav-item">
                                             <a href="/EstadisticaSolicitudTiempo" class="nav-link">
-                                            <i class="far fa-clock nav-icon"></i>
+                                                <i class="far fa-clock nav-icon"></i>
                                                 <p>Estadistica Tiempo</p>
                                             </a>
                                         </li>
@@ -239,15 +239,12 @@
                                 @if ($active == 'Operaciones')
                                     <a href="#" class="nav-link active">
                                     @else
-                                        <a href="#" class="nav-link">
+                                    <a href="#" class="nav-link">
                                 @endif
-                                <i class="nav-icon fas fa-globe-americas"></i>
-                                <p>
-                                    Operaciones
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                                </a>
-                                <ul class="nav nav-treeview">
+                                    <i class="nav-icon fas fa-globe-americas"></i>
+                                    <p>Operaciones<i class="right fas fa-angle-left"></i></p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
                                     @if (in_array('HeatMap', $permissions))
                                         <li class="nav-item">
                                             <a href="/HeatMap" class="nav-link">
@@ -259,12 +256,12 @@
                                     @if (in_array('AsignaZonasCyc', $permissions))
                                         <li class="nav-item">
                                             <a href="/AsignacionZonas" class="nav-link">
-                                            <i class="fas fa-map nav-icon"></i>
+                                                <i class="fas fa-map nav-icon"></i>
                                                 <p>Asignar zonas a CyC</p>
                                             </a>
                                         </li>
                                     @endif
-                                    
+
                                 </ul>
                             </li>
                         @endif
@@ -441,8 +438,16 @@
                                     @if (in_array('ComisionesResumen', $permissions))
                                         <li class="nav-item">
                                             <a href="/comisionesResumen" class="nav-link">
+                                                <i class="nav-icon fas fa-chart-simple"></i>
+                                                <p>Cargar Resumen</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (in_array('ComisionesConsultarResumen', $permissions))
+                                        <li class="nav-item">
+                                            <a href="/comisionesConsultarResumen" class="nav-link">
                                                 <i class="nav-icon fas fa-chart-line"></i>
-                                                <p>Resumen Por Vendedor</p>
+                                                <p>Consultar Resumen</p>
                                             </a>
                                         </li>
                                     @endif
@@ -475,7 +480,7 @@
 
                         @if (in_array('HSBC', $permissions))
                             <li class="nav-item">
-                                @if ($active == 'HSBC')
+                                @if ($active == 'Pagos')
                                     <a href="#" class="nav-link active">
                                     @else
                                         <a href="#" class="nav-link">
