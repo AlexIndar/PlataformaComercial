@@ -73,7 +73,7 @@ Route::get('/', function () {
 
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3(); 
+    $rama3 = RamasController::getRama3();
 
     $level = "C";
     if(isset($_COOKIE['_lv'])){
@@ -1816,6 +1816,51 @@ Route::middleware([ValidateSession::class])->group(function(){
                     //$user = MisSolicitudesController::getUser($token);
                     //$zone = MisSolicitudesController::getZone($token,$user->body());
                     return view('intranet.comisiones.comisionesResumen',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zona'=> $zona]);
+
+                });
+
+                Route::get('/comisionesConsultarResumen', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zonas = AplicarPagoController::getZonas($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    //$username = 'jramirez';
+                    $username = $userData->typeUser;
+                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                    $zonasgtes = ComisionesController::GetZonasGerente($token,$username);
+                    $zona = $zonaInfo->body();
+
+                    //dd($userData->permissions);
+                    if($userData->permissions == 'ADMIN'){
+                        $zonasarr= 'todo';
+                         //dd('entraaqui');
+                    }elseif(count($zonasgtes) != 0){
+                        $zona = $zonasgtes;
+                        foreach($zona as $values){
+                            $zonasarr[]=$values->description;
+                        }
+                         //dd('entraaqui');
+                    }else{
+                        $zonasarr=0;
+                    }
+
+                    return view('intranet.comisiones.comisionesConsultarResumen',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zonasarr'=> $zonasarr]);
+
+                });
+
+                Route::get('/comisiones/getConsultaComisionesResumenRH', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $fecha = $request->fecha;
+                   //dd($fecha);
+                   $data = ComisionesController::getConsultaComisionesResumenRH($token,$fecha);
+
+                    return $data;
 
                 });
 

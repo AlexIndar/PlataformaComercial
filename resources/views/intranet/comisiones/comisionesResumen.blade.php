@@ -47,7 +47,7 @@
                                             </div>
                                             <button type="submit" class="btn btn-primary mb-3"
                                                 style="background-color:#002868" style="display: block"
-                                                onclick="consultar()" id="btnConsultar">Consultar </button>
+                                                onclick="consultar()" id="btnConsultar">Cargar Resumen </button>
                                         </div>
                                     </div>
                                 </div>
