@@ -207,6 +207,8 @@ const reloadCycTable = (data) => {
     let dataTableCyc = [];
     for (let i = 0; i < data.length; i++) {
         let aux = [];
+        if(data[i].folio == 27896 || data[i].folio == 27856)
+            console.log(data[i]);
         aux.push(data[i].claveP);
         aux.push(data[i].razonSocial);
         aux.push(getTimeOfDate(data[i].fechaAlta));
@@ -227,7 +229,7 @@ const reloadCycTable = (data) => {
         if (data[i].isOnIntelisis)
             actions += ` ` + `<div class="btn btn-danger btn-circle" title="Reactivación" onclick="showReact(` + folioRfc + `)"><i class="fas fa-skull"></i></div>`;
         if (data[i].isOnIntelisis && data[i].isCredit)
-            actions += ` ` + `<div class="btn btn-outline-info btn-circle" title="Agregar Validación de INE" onclick="openUpdateIne(` + data[i].folio + `)"><i class="fa-solid fa-id-card"></i></div>`;
+            actions += ` ` + `<div class="btn btn-outline-info btn-circle" title="Agregar Validación de INE" onclick="openUpdateIne(` + data[i].folio + `)"><i class="fas fa-id-card"></i></div>`;
         if (data[i].status == 11 || data[i].status == 12)
             actions += ` ` + `<div class="btn btn-secondary btn-circle" title="Regresar Solicitud" onclick="rollbackSol(` + data[i].folio + `)"><i class="fas fa-undo"></i></div>`;
         if (data[i].isCredit && !data[i].haveReferencesFile && data[i].status == 11)
