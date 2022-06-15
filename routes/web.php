@@ -1517,6 +1517,23 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
+                //////// SOLICITUDES PENDIENTES/////
+                Route::get('/SolicitudesConsulta', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $user = MisSolicitudesController::getUserRol($token);
+                    $auxUser = json_decode($user->body());
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                        return view('intranet.cyc.solicitudesConsulta',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                });
+
                 //////////Prueba MisSolicitudes Admin-Gerente ////
                 Route::get('/MisSolicitudesAdmin', function(){
                     $token = TokenController::getToken();
@@ -1592,7 +1609,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $response;
                 });
 
-                //////// ASIGNACION DE ZONAS /////
+                //////// ESTADISTICA SOLICITUD TIEMPO /////
                 Route::get('/EstadisticaSolicitudTiempo', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
