@@ -470,7 +470,7 @@ nempleado = data[0].numEmpVend;
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
         myCallback(vendedorzona,vendedornombre,comisionTot,prestaciones,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
-        importCtesNvos,vtasImporte,bonoEspecificos,mes,año, comisionTotal);
+        importCtesNvos,vtasImporte,bonoEspecificos,año,mes, comisionTotal);
   },
   error: function() {
       console.log("Error");
