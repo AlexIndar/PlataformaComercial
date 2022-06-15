@@ -207,8 +207,7 @@ const reloadCycTable = (data) => {
     let dataTableCyc = [];
     for (let i = 0; i < data.length; i++) {
         let aux = [];
-        if(data[i].folio == 27896 || data[i].folio == 27856)
-            console.log(data[i]);
+        console.log(data[i]);
         aux.push(data[i].claveP);
         aux.push(data[i].razonSocial);
         aux.push(getTimeOfDate(data[i].fechaAlta));
