@@ -1754,8 +1754,8 @@ function setReference() {
                 CustomerID: customerId,
                 Reference: referencia
             }
-            console.log(jsonReference);
-            console.log(JSON.stringify(jsonReference));
+            // console.log(jsonReference);
+            // console.log(JSON.stringify(jsonReference));
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1777,6 +1777,7 @@ function setReference() {
                         let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
                         document.getElementById("alertInfoModal").innerHTML = alertMsg;
                     }
+                    realoadTableView();
                 },
                 error: function(error) {
                     console.log(error);
