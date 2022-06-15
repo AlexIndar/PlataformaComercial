@@ -293,6 +293,9 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12">
+                            <form enctype="multipart/form-data">
+                                <input type="file" id="fileTempleteImportImportesFleteras" onchange="logisticaController.importDataImportsFreighters()" hidden>
+                            </form>
                             <form id="formAddGuia">
                                 <div class="row">
                                     <div class="col-5">
@@ -322,7 +325,6 @@
                                             <label for=""></label>
                                             <button class="btn btn-plataform mt-2" onclick="logisticaController.consultFreighterImport(); return false">Consultar</button>
                                         </div>
-                                       
                                     </div>
                                 </div>
                             </form>
@@ -465,8 +467,7 @@
 <script src="{{ env('APP_URL')}}plugins/toastr/toastr.min.js"></script>
 <!-- Select2 -->
 <script src="{{ env('APP_URL')}}plugins/select2/js/select2.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>  
+
 
 <script src="{{ env('APP_URL')}}assets/intranet/js/logisticaController.js"></script>
 <!-- jquery-validation -->
@@ -485,4 +486,7 @@
 <script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ env('APP_URL')}}plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>  
 @endsection

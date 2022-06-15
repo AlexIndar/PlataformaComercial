@@ -2227,6 +2227,14 @@ Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', functi
     $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
     return $response;
 });
+Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirec('/logout');
+    }
+    $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
+    return $response;
+});
 // ************************* VALIDAR SAD *************************************** \\
 Route::get('/logistica/distribucion/validarSad', function(){
     $token = TokenController::getToken();

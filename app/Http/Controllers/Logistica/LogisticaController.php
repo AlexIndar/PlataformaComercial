@@ -230,6 +230,15 @@ class LogisticaController extends Controller
                 $update = json_decode($updateImportsByFreighter->body());
                 return $update;
             }
+            public static function bulkLoadImports($token,$data)
+            {
+                $dataJson = json_decode($data);
+                //dd($dataJson->json);
+                // dd($json);
+                $bulkLoadImports = Http::withToken($token)->post(config('global.api_url').'/Logistica/BulkLoadImports',json_decode($dataJson->json));
+                $bulkLoad = json_decode($bulkLoadImports->body());
+                return $bulkLoad;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){

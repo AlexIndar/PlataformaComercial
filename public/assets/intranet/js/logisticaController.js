@@ -510,11 +510,91 @@ const logisticaController = {
                 {
                     text: 'Importar Template',
                     action: function(e,dt,node,config){
-
+                        $('#fileTempleteImportImportesFleteras').click();
                     }
                 }
             ]
         });
+    },
+    importDataImportsFreighters: () => {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;  
+        /*Checks whether the file is a valid excel file*/  
+        if (regex.test($("#fileTempleteImportImportesFleteras").val().toLowerCase())) {  
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/  
+            if ($("#fileTempleteImportImportesFleteras").val().toLowerCase().indexOf(".xlsx") > 0) {  
+                xlsxflag = true;  
+            }  
+            /*Checks whether the browser supports HTML5*/  
+            if (typeof (FileReader) != "undefined") {  
+                var reader = new FileReader();  
+                reader.onload = function (e) {  
+                    var data = e.target.result;  
+                    /*Converts the excel data in to object*/  
+                    if (xlsxflag) {  
+                        var workbook = XLSX.read(data, { type: 'binary' });  
+                    }  
+                    else {  
+                        var workbook = XLS.read(data, { type: 'binary' });  
+                    }  
+                   //  console.log(workbook);
+                    
+                    /*Gets all the sheetnames of excel in to a variable*/  
+                    var sheet_name_list = workbook.SheetNames;  
+                    let  exceljson = new Array();
+                    sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/  
+                        /*Convert the cell value to Json*/  
+                        if (xlsxflag) {  
+                           exceljson.push(XLSX.utils.sheet_to_json(workbook.Sheets[y]));  
+                        }  
+                        else {  
+                           exceljson.push(XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]));  
+                        }  
+                    });
+                    console.log(exceljson[0]);
+                    console.log(JSON.stringify(exceljson[0]));
+                    logisticaController.token();
+                    $.ajax({
+                        url:'/logistica/distribucion/numeroGuia/bulkLoadImports',
+                        type: 'POST',
+                        data: {json:JSON.stringify(exceljson[0])},
+                        datatype: 'json',
+                        success: function(data){
+                            console.log(data);
+                            if(data){
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: '¡Se importaron correctamente los importes de las fleteras!'
+                                });
+                                logisticaController.consultFreighterImport();
+                            }else{
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: '¡Hubo un error al capturar los importes de las fleteras!'
+                                });
+                            }
+                        },
+                        error: function(error){
+                            console.log(error);
+                        },
+                        complete: function(){
+
+                        }
+                    })
+                }  
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/  
+                    reader.readAsArrayBuffer($("#fileTempleteImportImportesFleteras")[0].files[0]);  
+                }  
+                else {  
+                    reader.readAsBinaryString($("#fileTempleteImportImportesFleteras")[0].files[0]);  
+                }  
+            }  
+            else {  
+                alert("Sorry! Your browser does not support HTML5!");  
+            }  
+        }  
+        else {  
+            alert("Please upload a valid Excel file!");  
+        }  
     },
     openModalUpdateNumGuia: (e) => {
         let idImport = $(e).data('id');
