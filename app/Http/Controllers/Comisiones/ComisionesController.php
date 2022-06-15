@@ -30,9 +30,20 @@ class ComisionesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function postComisionesResumenRH($token, $json){
+        //dd($json);
+        $json = json_decode($json);
+
+        $data = Http::withToken($token)->post(config('global.api_url').'/CobranzaZona/postComisionesResumenRH',[
+            "ResumenModel" => $json
+        ]);
+        return json_decode($data->body());
+    }
+
     public static function  postActualizarArticulosEspeciales($token, $json){
         //dd(json_encode($json));
         $json = json_decode($json);
+
         $data = Http::withToken($token)->post(config('global.api_url').'/Especiales/postActualizarArticulosEspeciales',[
             "ArtEspeciales" => $json
         ]);

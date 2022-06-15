@@ -261,7 +261,7 @@
                                             </a>
                                         </li>
                                     @endif
-                                    
+
                                 </ul>
                             </li>
                         @endif
@@ -438,8 +438,16 @@
                                     @if (in_array('ComisionesResumen', $permissions))
                                         <li class="nav-item">
                                             <a href="/comisionesResumen" class="nav-link">
+                                                <i class="nav-icon fas fa-chart-simple"></i>
+                                                <p>Cargar Resumen</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (in_array('ComisionesConsultarResumen', $permissions))
+                                        <li class="nav-item">
+                                            <a href="/comisionesConsultarResumen" class="nav-link">
                                                 <i class="nav-icon fas fa-chart-line"></i>
-                                                <p>Resumen Por Vendedor</p>
+                                                <p>Consultar Resumen</p>
                                             </a>
                                         </li>
                                     @endif
