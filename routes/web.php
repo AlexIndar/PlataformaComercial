@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Http\Controllers\Logistica\LogisticaController;
 use App\Http\Controllers\Almacen\AlmacenController;
+use App\Http\Controllers\Exporta\ExportaController;
 use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
@@ -73,7 +74,7 @@ Route::get('/', function () {
 
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3(); 
+    $rama3 = RamasController::getRama3();
 
     $level = "C";
     if(isset($_COOKIE['_lv'])){
@@ -480,7 +481,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(isset($_COOKIE['_lv'])){
                                     $level = $_COOKIE['_lv'];
                                 }
-                                return $response; 
+                                return $response;
                             });
 
                             Route::post('/pedido/storePedidoGetID', function (Request $request){
@@ -1620,7 +1621,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA"){
-                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);    
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1672,7 +1673,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "ADMIN"){
-                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);    
+                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1819,6 +1820,51 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 });
 
+                Route::get('/comisionesConsultarResumen', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $zonas = AplicarPagoController::getZonas($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    //$username = 'jramirez';
+                    $username = $userData->typeUser;
+                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                    $zonasgtes = ComisionesController::GetZonasGerente($token,$username);
+                    $zona = $zonaInfo->body();
+
+                    //dd($userData->permissions);
+                    if($userData->permissions == 'ADMIN'){
+                        $zonasarr= 'todo';
+                         //dd('entraaqui');
+                    }elseif(count($zonasgtes) != 0){
+                        $zona = $zonasgtes;
+                        foreach($zona as $values){
+                            $zonasarr[]=$values->description;
+                        }
+                         //dd('entraaqui');
+                    }else{
+                        $zonasarr=0;
+                    }
+
+                    return view('intranet.comisiones.comisionesConsultarResumen',['token' => $token, 'permissions' => $permissions, 'zonas' => $zonas, 'zonasarr'=> $zonasarr]);
+
+                });
+
+                Route::get('/comisiones/getConsultaComisionesResumenRH', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $fecha = $request->fecha;
+                   //dd($fecha);
+                   $data = ComisionesController::getConsultaComisionesResumenRH($token,$fecha);
+
+                    return $data;
+
+                });
+
 
                 //Get primera informacion detalle
                 Route::get('/comisiones/getInfoCobranzaZonaWeb', function (Request $request){
@@ -1867,6 +1913,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return array($data, $dataBonos, $dataVentas, $dataEspeciales,$dataprincipal);
 
                 });
+
+                Route::post('/comisiones/postComisionesResumenRH', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                   $json = $request->ResumenModel;
+                   $data=ComisionesController::postComisionesResumenRH($token,$json);
+                    return $data;
+                });
+
+
 
                 Route::post('/comisiones/postParametroCtesZona', function (Request $request){
                     $token = TokenController::getToken();
@@ -1963,6 +2021,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/logout');
                     }
                    $json = $request->ArtEspeciales;
+
                    $data=ComisionesController::postActualizarArticulosEspeciales($token,$json);
                     //dd($data);
                     return $data;
@@ -2129,9 +2188,9 @@ Route::get('/logistica/distribucion/numeroGuia', function(){
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
-
+    $states = LogisticaController::getStates($token); 
     $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers'));
+    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers','states'));
 })->name('logistica.distribucion.numeroGuia');
 Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
     $token = TokenController::getToken();
@@ -2179,6 +2238,46 @@ Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function
         return redirect('/logout');
     }
     $response = LogisticaController::cuentaBultosWMSManager($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirec('/logout');
+    }
+    $response = LogisticaController::getCitiesByState($token, json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/numeroGuia/getFreightersImports', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirec('/logout');
+    }
+    $response = LogisticaController::getFreightersImports($token,json_encode($request->all()));
+    return $response;
+});
+Route::get('/logisitica/distribucion/numeroGuia/getImportsByFreighter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }
+    $response = LogisticaController::getImportsByFreighter($token,json_encode($request->all()));
+    return $response;
+});
+Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirec('/logout');
+    }
+    $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
+    return $response;
+});
+Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirec('/logout');
+    }
+    $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
     return $response;
 });
 // ************************* VALIDAR SAD *************************************** \\
@@ -2476,7 +2575,7 @@ Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',fun
 });
 
 //******************************* EXPORTA  ************************************\\
-Route::get('/pedidos-exporta',function(){
+Route::get('/exporta/pedidos',function(){
     $token = TokenController::getToken();
     if($token == 'error'){
         return redirect('/logout');
@@ -2484,7 +2583,17 @@ Route::get('/pedidos-exporta',function(){
         return redirect('/logout');
     }
     return view('exporta.pedidos');
-})->name('pedidos-exporta');
+})->name('exporta.pedidos');
+Route::get('/exporta/precios', function(){
+    $token = TokenController::getToken();
+    if($token == 'error'){
+        return redirect('/logout');
+    }else if(empty($token)){
+        return redirect('/logout');
+    }
+    $precios = ExportaController::precios($token);
+    return $precios;
+});
 //****************************** ALMACEN ***************************************\\
 //****************************** CONSOLIDADO PANTALLA **************************\\
 Route::get('/almacen/consolidadoPantalla', function(){

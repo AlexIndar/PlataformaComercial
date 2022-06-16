@@ -47,7 +47,7 @@
                                             </div>
                                             <button type="submit" class="btn btn-primary mb-3"
                                                 style="background-color:#002868" style="display: block"
-                                                onclick="consultar()" id="btnConsultar">Consultar </button>
+                                                onclick="consultar()" id="btnConsultar">Cargar Resumen </button>
                                         </div>
                                     </div>
                                 </div>
@@ -62,10 +62,15 @@
                                                <th>No.Empleado</th>
                                                <th>Nombre  </th>
                                                <th>Comisión Base</th>
-                                               <th>Descuentos a comisiones</th>
+                                               <th>DES - NEG</th>
+                                               <th>DES - FT</th>
+                                               <th>DES - INCOB</th>
                                                <th>Prestaciones</th>
-                                               <th>Bonos</th>
                                                <th>Comisión Integrada</th>
+                                               <th>Bono Clientes Nuevos</th>
+                                               <th>Bono Ventas</th>
+                                               <th>Bono Especiales / Ctes act</th>
+                                               <th>Comisión Total</th>
                                             </tr>
                                          </thead>
                                          <tbody id="llenaResumen">
@@ -84,16 +89,16 @@
 @endsection
 
 @section('js')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
-    <!-- Buttons -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
-    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
-    <!-- SWAL -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+<!-- Buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
  $(document).ready(function() {
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
@@ -124,25 +129,25 @@
        //Llena select zonas
     var suma = 0;
     for (var i=0 ; i<loopZonas.length ; i++){
-        var tamaño = loopZonas.length;
+        var tamanio = loopZonas.length;
         var  idzona = loopZonas[i].zona;
-        $.ajax({
-      'headers': {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+$.ajax({
+'headers': {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   },
   'url': "/comisiones/getResumen",
   'type': 'GET',
   'dataType': 'json',
-  'data': {zona:idzona, fecha : date, suma: suma,tamaño : tamaño },
+  'data': {zona:idzona, fecha : date, suma: suma,tamanio : tamanio },
   'enctype': 'multipart/form-data',
   'timeout': 4 * 60 * 60 * 1000,
   success: function array(data){
 
     suma = suma + 1;
-      if(suma < tamaño){
+      if(suma < tamanio){
 
-          console.log('contador',suma);
-          console.log('tamaño',tamaño);
+        console.log('contador',suma);
+          console.log('tamanio',tamanio);
 
       }else{
         $('#resumenComisionesTable').dataTable( {
@@ -270,7 +275,7 @@ var comisionTot = sumaCBtotal;
 var vendedornombre;
 var nempleado;
 nempleado = data[0].numEmpVend;
-console.log(data[0]);
+//console.log(data[0]);
    if( data[0].vendedor == null){
        var vendedor = " ";
        var vendedornombre="Sin Vendedor Asignado";
@@ -442,23 +447,28 @@ console.log(data[0]);
 
 
     var prestaciones;
-    var descuentosComisiones;
     var bonos;
-    bonos = bonoImp+ importCtesNvos+ vtasImporte + importeEspeciales;
-    descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
-    prestaciones = despensa + importePunt - importdiasNoLaborados -descuentosComisiones;
-    comisionTotal = comisionTot + prestaciones + bonos - descuentosComisiones;
-
+    bonos = bonoImp + importCtesNvos+ vtasImporte + importeEspeciales;
+    prestaciones = despensa + importePunt - importdiasNoLaborados;
+    comisionTotal = comisionTot + prestaciones + bonos ;
+    var bonoEspecificos = bonoImp  + importeEspeciales;
     $('#llenaResumen').append('<tr>'+
         '<td>'+vendedorzona+'</td>'+
         '<td>'+nempleado+'</td>'+
         '<td>'+vendedornombre+'</td>'+
         '<td>'+comisionTot.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td style="color:red">'+descuentosComisiones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+prestaciones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+bonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+importCtesNvos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+bonoEspecificos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
+        myCallback(vendedorzona,vendedornombre,comisionTot,prestaciones,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
+        importCtesNvos,vtasImporte,bonoEspecificos,año,mes, comisionTotal, nempleado);
   },
   error: function() {
       console.log("Error");
@@ -466,6 +476,52 @@ console.log(data[0]);
   }
 });
 }
+}
+
+function myCallback(zona,nombre,comisionBase,prestaciones,comisionInt,desneg,desft,incobrabilidad,bonoClientesNuevos,
+bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal, nempleado){
+
+    var jsonResumen = [];
+    jsonResumen.push({ zona: zona, nombre: nombre, comisionBase: comisionBase, prestaciones: prestaciones,
+        comisionIntegrada: comisionInt, ejercicio: ejercicio, periodo: periodo, diferenciaPrecio: desneg,
+        incobrabilidad: incobrabilidad, descuFueraTiempo: desft,bonoVentas:bonoVentas, bonoEspecificos: bonoEspecificos,
+        bonoClientesNuevos: bonoClientesNuevos, comisionTotal: comisionTotal });
+
+    jsonResumen = JSON.stringify(jsonResumen);
+    jsonResumen = jsonResumen.slice(1,-1);
+    console.log(jsonResumen);
+    $.ajax({
+           'headers': {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           'url': "/comisiones/postComisionesResumenRH",
+           'type': 'POST',
+           'dataType': 'json',
+           'data': {ResumenModel : jsonResumen},
+           'enctype': 'multipart/form-data',
+           'timeout': 4 * 60 * 60 * 1000,
+           success: function (data){
+            console.log(data);
+           /*  Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: 'Se cargó el Resumen Correctamente',
+            showConfirmButton: false,
+            timer: 5000
+          }) */
+
+        },
+        error: function() {
+            console.log(data);
+            Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Error Vuelva a cargar la página',
+            showConfirmButton: false,
+            timer: 5000
+          })
+        }
+    });
 }
 
     </script>
