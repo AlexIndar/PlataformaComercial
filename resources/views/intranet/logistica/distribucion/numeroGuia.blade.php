@@ -25,6 +25,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('body')
+<div id="cover-spin"><img src="{{env('APP_URL')}}assets/intranet/images/loading.gif" alt="loading" style="margin-top: 13%;"></div>
 <input type="text" id="token" hidden value="{{ $token }}">
 <input type="text" id="usuario" hidden value="{{ $username }}">
 <div class="content-wrapper">
