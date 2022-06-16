@@ -567,10 +567,10 @@ const logisticaController = {
                 {
                     text: 'Exportar Template',
                     action: function ( e, dt, node, config ) {
-                        let url = '/Templates/Template_Importes_NumeroGuia.xlsx';
+                        let url = '/Templates/Template_Importes_Fleteras.xlsx';
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'Template_Importes_NumeroGuia';
+                        a.download = 'Template_Importes_Fleteras';
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
@@ -759,6 +759,9 @@ const logisticaController = {
                         type: 'POST',
                         data: {json:JSON.stringify(exceljson[0])},
                         datatype: 'json',
+                        beforeSend: function() {
+                            $('#cover-spin').show(0);
+                        },
                         success: function(data){
                             console.log(data);
                             if(data){
@@ -778,7 +781,7 @@ const logisticaController = {
                             console.log(error);
                         },
                         complete: function(){
-
+                            $('#cover-spin').hide();
                         }
                     })
                 }  
@@ -1742,6 +1745,9 @@ const logisticaController = {
             type: 'GET',
             data: { embarque: embarque },
             datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 let repetido = 0;
                 let modificado = 0;
@@ -1828,6 +1834,7 @@ const logisticaController = {
                 }
             },
             complete: function () {
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -1931,6 +1938,9 @@ const logisticaController = {
                 type: 'POST',
                 data: { embarques: arrayEmbarquesFinal },
                 datatype: 'json',
+                beforeSend: function() {
+                    $('#cover-spin').show(0);
+                },
                 success: function (data) {
                     $('#table-content-embarque-factura').empty();
                     if (data == "") {
@@ -1979,6 +1989,7 @@ const logisticaController = {
 
                 },
                 complete: function () {
+                    $('#cover-spin').hide();
                 }
             })
         } else {
@@ -1997,6 +2008,9 @@ const logisticaController = {
             type: 'GET',
             data: { factura: factura, fletera: fletera },
             datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
             success: function(data){
                 console.log(data);
                 if(data != "" || data != [] || data.length != 0)
@@ -2216,7 +2230,7 @@ const logisticaController = {
 
             },
             complete: function () {
-
+                $('#cover-spin').hide();
             }
         })
         let bandera = 0;
