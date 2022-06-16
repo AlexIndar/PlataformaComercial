@@ -47,7 +47,8 @@
                                             </div>
                                             <button type="submit" class="btn btn-primary mb-3"
                                                 style="background-color:#002868" style="display: block"
-                                                onclick="consultar()" id="btnConsultar">Consultar </button>
+                                                onclick="consultar()" id="btnConsultar">Cargar Resumen </button>
+                                            <a href="/comisionesResumen"><button  class="btn btn-primary mb-3" style=" display: none"  style="background-color:#002868"  id="btnRefresh">Cargar Otro Mes </button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -103,19 +104,13 @@
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
 
-       //Inicia Ajax
-       $(document).ajaxStart(function() {
-           document.getElementById("btnSpinner").style.display = "block";
-           document.getElementById("btnConsultar").style.display = "none";
-       });
-
-       //Func Termina Ajax
-
 
    });
    function consultar() {
       // $.fn.dataTable.ext.errMode = 'none';
-
+   $("#resumenComisionesTable").dataTable().fnDestroy();
+   document.getElementById("btnSpinner").style.display = "block";
+   document.getElementById("btnConsultar").style.display = "none";
    var pfecha = document.getElementById("fechaCliente").value;
    var mes = pfecha.slice(5,7);
    var año = pfecha.slice(0,4);
@@ -176,11 +171,11 @@ $.ajax({
                 icon: 'success',
                 title: 'Se cargaron Correctamente Los importes de Comisiónes',
                 showConfirmButton: false,
-                timer: 5000
+                timer: 100000
                 })
         console.log('terminaste');
         document.getElementById("btnSpinner").style.display = "none";
-        document.getElementById("btnConsultar").style.display = "block";
+        document.getElementById("btnRefresh").style.display = "block";
         }
         var sumaRMCI = 0;
         var sumaRMSI = 0;
@@ -447,12 +442,10 @@ nempleado = data[0].numEmpVend;
 
 
     var prestaciones;
-    var descuentosComisiones;
     var bonos;
     bonos = bonoImp + importCtesNvos+ vtasImporte + importeEspeciales;
-    descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
-    prestaciones = despensa + importePunt - importdiasNoLaborados -descuentosComisiones;
-    comisionTotal = comisionTot + prestaciones + bonos - descuentosComisiones;
+    prestaciones = despensa + importePunt - importdiasNoLaborados;
+    comisionTotal = comisionTot + prestaciones + bonos ;
     var bonoEspecificos = bonoImp  + importeEspeciales;
     $('#llenaResumen').append('<tr>'+
         '<td>'+vendedorzona+'</td>'+
@@ -470,18 +463,26 @@ nempleado = data[0].numEmpVend;
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
         myCallback(vendedorzona,vendedornombre,comisionTot,prestaciones,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
-        importCtesNvos,vtasImporte,bonoEspecificos,mes,año, comisionTotal);
+        importCtesNvos,vtasImporte,bonoEspecificos,año,mes, comisionTotal, nempleado);
   },
   error: function() {
       console.log("Error");
-      alert('Error, Tiempo de espera agotado');
+      Swal.fire({
+        position: 'top',
+        icon: 'warning',
+        title: 'Error al Cargar el Resumen De Comisiones',
+        showConfirmButton: false,
+        timer: 50000
+    })
+    location.reload();
+
   }
 });
 }
 }
 
 function myCallback(zona,nombre,comisionBase,prestaciones,comisionInt,desneg,desft,incobrabilidad,bonoClientesNuevos,
-bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal){
+bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal, nempleado){
 
     var jsonResumen = [];
     jsonResumen.push({ zona: zona, nombre: nombre, comisionBase: comisionBase, prestaciones: prestaciones,

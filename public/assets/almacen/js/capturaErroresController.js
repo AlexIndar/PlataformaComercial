@@ -11,7 +11,6 @@ var Toast = Swal.mixin({
 let capturaErroresController = {
     modalError: (e) => {
         let idError = $(e).data('iderror');
-        console.log(idError);
         $('#titulo-incidencia').empty();
         $('#titulo-incidencia').text('Concluir incidencia #'+idError);
         $('#idErrorInput').val(idError);
@@ -98,43 +97,43 @@ let capturaErroresController = {
         if(articulo == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Ingrese el articulo!'
             });
         }
         else if(cantidad == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Ingrese la cantidad!'
             });
         }
         else if(pedido == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Ingrese el pedido!'
             });
         }
         else if(surtidor == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Ingrese el surtidor!'
             });
         }
         else if(tipoError == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Seleccione el error!'
             });
         }
         else if(mesa == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Ingrese la mesa!'
             });
         }
         else if(usuario == ""){
             Toast.fire({
                 icon: 'error',
-                title: '¡Falta datos por llenar!'
+                title: '¡Ingrese el usuario!'
             });
         }else{
             let data = {

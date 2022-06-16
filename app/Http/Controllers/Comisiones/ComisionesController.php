@@ -40,6 +40,12 @@ class ComisionesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function getConsultaComisionesResumenRH($token, $fecha){
+
+        $data = Http::withToken($token)->get(config('global.api_url').'/CobranzaZona/getConsultaComisionesResumenRH?Fecha='.$fecha);
+        return json_decode($data->body());
+    }
+
     public static function  postActualizarArticulosEspeciales($token, $json){
         //dd(json_encode($json));
         $json = json_decode($json);
