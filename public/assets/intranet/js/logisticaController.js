@@ -645,7 +645,6 @@ const logisticaController = {
     },
     openModalQuestionDeleteImport: (e) => {
         let idImport = $(e).data('id');
-        console.log(idImport);
         logisticaController.getDataImportsFreghter(idImport).then(()=>{
             Swal.fire({
                 title: '¿Esta seguro de eliminar los importes de la fletera '+dataImportsFreghter[0].fletera+'?',
@@ -665,7 +664,6 @@ const logisticaController = {
                         data: {id:idImport},
                         datatype: 'json',
                         success: function(data){
-                            console.log(data);
                             if(data){
                                 Swal.fire({
                                     title: '¡Eliminado!',
@@ -751,8 +749,6 @@ const logisticaController = {
                            exceljson.push(XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]));  
                         }  
                     });
-                    console.log(exceljson[0]);
-                    console.log(JSON.stringify(exceljson[0]));
                     logisticaController.token();
                     $.ajax({
                         url:'/logistica/distribucion/numeroGuia/bulkLoadImports',
@@ -763,7 +759,6 @@ const logisticaController = {
                             $('#cover-spin').show(0);
                         },
                         success: function(data){
-                            console.log(data);
                             if(data){
                                 Toast.fire({
                                     icon: 'success',
@@ -858,7 +853,6 @@ const logisticaController = {
             data: data,
             datatype: 'json',
             success: function(data){
-                console.log(data);
                 if(data)
                 {
                     Toast.fire({
@@ -964,7 +958,6 @@ const logisticaController = {
                     data: { factura: factura, fletera: fletera },
                     datatype: 'json',
                     success: function(data){
-                        console.log(data);
                         if(data != "" || data != [] || data.length != 0)
                         {
                             //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRAY DE LOS BULTOS QUE REGRESA
@@ -2012,7 +2005,6 @@ const logisticaController = {
                 $('#cover-spin').show(0);
             },
             success: function(data){
-                console.log(data);
                 if(data != "" || data != [] || data.length != 0)
                 {
                     //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRAY DE LOS BULTOS QUE REGRESA
@@ -2383,7 +2375,6 @@ const logisticaController = {
             data: data,
             datatype: 'json',
             success: function(data){
-                console.log(data);
                 $('#table-importe').DataTable().clear().draw();
                 $('#table-importe').DataTable().rows.add(data).draw();
             },
@@ -2623,7 +2614,6 @@ const logisticaController = {
             type: 'GET',
             datatype: 'json',
             success: function (data) {
-                console.log(data);
             },
             error: function () {
 
