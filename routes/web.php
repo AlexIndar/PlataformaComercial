@@ -2243,7 +2243,7 @@ Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function
 Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
-        return redirec('/logout');
+        return redirect('/logout');
     }
     $response = LogisticaController::getCitiesByState($token, json_encode($request->all()));
     return $response;
@@ -2251,7 +2251,7 @@ Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Reque
 Route::get('/logistica/distribucion/numeroGuia/getFreightersImports', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
-        return redirec('/logout');
+        return redirect('/logout');
     }
     $response = LogisticaController::getFreightersImports($token,json_encode($request->all()));
     return $response;
@@ -2267,7 +2267,7 @@ Route::get('/logisitica/distribucion/numeroGuia/getImportsByFreighter', function
 Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
-        return redirec('/logout');
+        return redirect('/logout');
     }
     $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
     return $response;
@@ -2275,9 +2275,18 @@ Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', functi
 Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error'){
-        return redirec('/logout');
+        return redirect('/logout');
     }
     $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
+    return $response;
+});
+Route::delete('/logistica/distribucion/numeroGuia/deleteImportsOfFregihter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error')
+    {
+        return  redirect('/logout');
+    }
+    $response = LogisticaController::deleteImportsOfFregihter($token,json_encode($request->all()));
     return $response;
 });
 // ************************* VALIDAR SAD *************************************** \\

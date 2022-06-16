@@ -489,6 +489,7 @@ const logisticaController = {
                             +'</div>'; 
                 }}
             ],
+            order: [1,'asc'],
             language: {
                 "emptyTable": "No hay información",
                 "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
@@ -533,7 +534,7 @@ const logisticaController = {
     },
     openModalQuestionDeleteImport: (e) => {
         let idImport = $(e).data('id');
-        
+        console.log(idImport);
         logisticaController.getDataImportsFreghter(idImport).then(()=>{
             Swal.fire({
                 title: '¿Esta seguro de eliminar los importes de la fletera '+dataImportsFreghter[0].fletera+'?',
@@ -546,11 +547,38 @@ const logisticaController = {
                 confirmButtonText: 'Si'
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire(
-                        '¡Eliminado!',
-                        'Los importes de la fletera '+dataImportsFreghter[0].fletera+' con periodo '+dataImportsFreghter[0].fechaInicio+'--'+dataImportsFreghter[0].fechaFin+ 'con Código Posta : '+dataImportsFreghter[0].cp,
-                        'success'
-                    )
+                    logisticaController.token();
+                    $.ajax({
+                        url: '/logistica/distribucion/numeroGuia/deleteImportsOfFregihter',
+                        type: 'DELETE',
+                        data: {id:idImport},
+                        datatype: 'json',
+                        success: function(data){
+                            console.log(data);
+                            if(data){
+                                Swal.fire({
+                                    title: '¡Eliminado!',
+                                    text: 'Los importes de la fletera '+dataImportsFreghter[0].fletera+' con periodo '+dataImportsFreghter[0].fechaInicio+'--'+dataImportsFreghter[0].fechaFin+' con Código Posta : '+dataImportsFreghter[0].cp,
+                                    icon: 'success'
+                                }).then(() => {
+                                    logisticaController.consultFreighterImport();
+                                });
+
+                            }else{
+                                Swal.fire({
+                                    title:'¡Error!',
+                                    text:'Hubo un error al eliminar los importes de la fletera'+dataImportsFreghter[0].fletera,
+                                    icon:'error'
+                                });
+                            }
+                        },
+                        error: function(error){
+
+                        },
+                        complete: function(){
+
+                        }
+                    })
                 }
               })
             }

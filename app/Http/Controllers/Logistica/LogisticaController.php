@@ -239,6 +239,12 @@ class LogisticaController extends Controller
                 $bulkLoad = json_decode($bulkLoadImports->body());
                 return $bulkLoad;
             }
+            public static function deleteImportsOfFregihter($token,$data){
+                $dataJson = json_decode($data);
+                $deleteImportsOfFregihter = Http::withToken($token)->delete(config('global.api_url').'/Logistica/DeleteImportsOfFreighter?Id='.$dataJson->id);
+                $delete = json_decode($deleteImportsOfFregihter->body());
+                return $delete;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){
