@@ -55,7 +55,7 @@
                             <div  class="card-body" id="resumenTable">
                                 <div  class="col-lg-12">
                                    <div class="card-body table-responsive p-0">
-                                      <table id="resumenComisionesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                                      <table id="comisionesConsultarResumenTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                                          <thead style="background-color:#002868; color:white">
                                             <tr >
                                                <th>Zona</th>
@@ -111,6 +111,28 @@
     });
     //Func Termina Ajax
     $(document).ajaxStop(function() {
+        $('#comisionesConsultarResumenTable').dataTable( {
+            dom : 'Brtip',
+            paging:false,
+            fixedHeader:true,
+            ordering: false,
+            scrollY:320,
+            scrollX: true,
+            scrollCollapse: true,
+            buttons: [
+                {
+                    extend:    'excel',
+                    text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+                    titleAttr: 'Descargar Excel'
+                }
+            ],
+            initComplete: function () {
+            var btns = $('.dt-button');
+            btns.addClass('btn btn-success ');
+            btns.removeClass('dt-button');
+            },
+        });
+
         document.getElementById("btnSpinner").style.display = "none";
         document.getElementById("btnConsultar").style.display = "block";
     });

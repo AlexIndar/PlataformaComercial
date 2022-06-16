@@ -447,12 +447,10 @@ nempleado = data[0].numEmpVend;
 
 
     var prestaciones;
-    var descuentosComisiones;
     var bonos;
     bonos = bonoImp + importCtesNvos+ vtasImporte + importeEspeciales;
-    descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
-    prestaciones = despensa + importePunt - importdiasNoLaborados -descuentosComisiones;
-    comisionTotal = comisionTot + prestaciones + bonos - descuentosComisiones;
+    prestaciones = despensa + importePunt - importdiasNoLaborados;
+    comisionTotal = comisionTot + prestaciones + bonos ;
     var bonoEspecificos = bonoImp  + importeEspeciales;
     $('#llenaResumen').append('<tr>'+
         '<td>'+vendedorzona+'</td>'+
@@ -470,7 +468,7 @@ nempleado = data[0].numEmpVend;
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
         myCallback(vendedorzona,vendedornombre,comisionTot,prestaciones,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
-        importCtesNvos,vtasImporte,bonoEspecificos,año,mes, comisionTotal);
+        importCtesNvos,vtasImporte,bonoEspecificos,año,mes, comisionTotal, nempleado);
   },
   error: function() {
       console.log("Error");
@@ -481,7 +479,7 @@ nempleado = data[0].numEmpVend;
 }
 
 function myCallback(zona,nombre,comisionBase,prestaciones,comisionInt,desneg,desft,incobrabilidad,bonoClientesNuevos,
-bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal){
+bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal, nempleado){
 
     var jsonResumen = [];
     jsonResumen.push({ zona: zona, nombre: nombre, comisionBase: comisionBase, prestaciones: prestaciones,

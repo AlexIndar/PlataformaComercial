@@ -356,7 +356,7 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].diasDiferencia + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + importe_factura + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].saldo+ '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].diferencias_precio+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].descneg+ '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].descuento_fuera_tiempo+ '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].incobrabilidad+ '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + comisionBase + '</td>' +
@@ -376,7 +376,7 @@ $.ajax({
                             '<td style="font-weight: bold">' + importe_factura + '</td>' +
                             '<td style="font-weight: bold">' + data[i].saldo+ '</td>' +
                             '<td style="font-weight: bold">' + data[i].diferencias_precio+ '</td>' +
-                            '<td style="font-weight: bold">' + data[i].descuento_fuera_tiempo+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].descneg+ '</td>' +
                             '<td style="font-weight: bold">' + incobrabilidad+ '</td>' +
                             '<td style="font-weight: bold">' + comisionBase + '</td>' +
                             '</tr>';
