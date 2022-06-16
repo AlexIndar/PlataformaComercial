@@ -1537,7 +1537,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
-                //////// SOLICITUDES PENDIENTES/////
+                //////// SOLICITUDES CONSULTA/////
                 Route::get('/SolicitudesConsulta', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
@@ -1552,6 +1552,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }else{
                         return redirect('/Intranet');
                     }
+                });
+
+                Route::post('/SolicitudesConsulta/GetCYCTableShow', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $listSol = MisSolicitudesController::getCYCTableShow($token, $request->User);
+                    return $listSol;
                 });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////

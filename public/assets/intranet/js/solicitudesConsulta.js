@@ -6,6 +6,22 @@ const TIPOSCONTACTOS = {
     4:'ADMON',
     5:'EMERGENCIA'
 }
+
+const HISTORIALTRANS = {
+    1:'Solicitud Guardada',
+    2:'Solicitud Enviada',
+    3:'Validación Guardada',
+    4:'Aceptada Contado',
+    5:'Aceptado Contado (Pendiente Credito)',
+    6:'Aceptada Credito',
+    7:'Rechazada',
+    8:'Rechazada Credito (Aceptada Contado)',
+    9:'Solicitud Reenviada',
+    10:'Solicitud Cancelada',
+    11:'Revisión Referencias',
+    12:'Proceso autorizado'
+}
+
 $(document).ready(function () {
     console.log(document.getElementById("userName").value);
     $.ajax({
@@ -33,7 +49,7 @@ $(document).ready(function () {
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        'url': "/SolicitudesPendientes/GetCycTableView",
+        'url': "/SolicitudesConsulta/GetCYCTableShow",
         'type': 'POST',
         'dataType': 'json',
         'data': objUser,
@@ -83,7 +99,7 @@ const reloadCycTable = (data) => {
         aux.push(data[i].claveP);
         aux.push(data[i].razonSocial);
         aux.push(dateFilter(data[i].fechaAlta));
-        aux.push(data[i].status)
+        aux.push(HISTORIALTRANS[data[i].status]);
         aux.push(data[i].zona.description);
         let actions = ``;
         actions += `<div class="btn btn-info btn-circle" title="Validar" onclick="getInfoDetalleSol(` + data[i].folio + `)"><i class="fas fa-exclamation-circle"></i></div>`;
@@ -578,4 +594,145 @@ const showIMG = (itemIMG) =>{
     var imgen = "data:image/jpg;base64," + itemIMG;
     var img = `<img src="` + imgen + `" alt="imagen muestra" class="imageModal">`
     document.getElementById("showIMGBody").innerHTML = img;
+}
+
+const getTransactionHistory = (folio) =>{
+    if (folio != null) {
+        let data = { Item: folio };
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/getTransactionHistory",
+            'type': 'POST',
+            'dataType': 'json',
+            'data': data,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function (historyList) {
+                showHistoryModal(historyList);
+            },
+            error: function (error) {
+                console.log(error + "Error");
+            }
+        });
+    }    
+}
+
+const showHistoryModal = (data) => {
+    if (data != null) {
+        document.getElementById("titleHistory").innerHTML = "Historial de transacciones de la solicitud " + data[0].folioSol;
+        let historyList = "";
+        for (let i = 0; i < data.length; i++) {
+            historyList += `<div class="row mb-3">
+                                <div class="col-md-6 text-bold">` + data[i].fecha + `</div>
+                                <div class="col-md-6">` + data[i].tipo + `</div>
+                            </div>`;
+        }
+        document.getElementById("historyList").innerHTML = historyList;
+        $('#historialModal').modal('show');
+    }
+}
+
+const openUpdateFile = (item) => {
+    fileEdit = '';
+    document.getElementById("titleModalEdit").innerHTML = "Agregar Referencias";
+    document.getElementById("titlePictureEdit").innerHTML = "Agregar Referencias";
+    document.getElementById("label-inputGroupFile19").innerHTML = "Archivo de Referencias";
+    // $('#label-inputGroupFile19').html("Archivo de Referencias");
+    let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i> Guardar Archivo</button>`;
+    buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i> Cancelar Archivo</button>`;
+    document.getElementById("editConfirButtons").innerHTML = buttons;
+    $('#editImageModal').modal('show');
+}
+
+const confirmUpdateFile = (item) => {
+    if (fileEdit != '') {
+        $('#cargaModal').modal('show');
+        let json = {
+            Folio: item,
+            File: {
+                Id: 0,
+                FileStr: fileEdit,
+                Type: 14,
+                Subtype: null,
+            }
+        }
+        setFile(json);
+    } else {
+        console.log(fileEdit);
+        alert("Seleccione un archivo");
+    }
+}
+
+const setFile = (json) => {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "MisSolicitudes/UpdateFile",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': json,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function (data) {
+            if (Number.isInteger(data)) {
+                $('#cargaModal').modal('hide');
+                document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
+                $('#infoModal').modal('hide');
+                realoadTableView();
+            } else {
+                console.log(data);
+                alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                $('#cargaModal').modal('hide');
+            }
+        },
+        error: function (error) {
+            console.log(error);
+            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            $('#cargaModal').modal('hide');
+        }
+    });
+}
+
+const cancelEditForm = () =>{
+    $('#editImageModal').modal('hide');
+}
+
+const getReferencesFile = (folio) => {
+    let json = {
+        Folio: folio,
+        Type: 14
+    }
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/SolicitudesPendientes/getFile",
+        'type': 'POST',
+        'dataType': 'json',
+        'data': json,
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function (result) {
+            console.log(result);
+            const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = URL.createObjectURL(blob);
+            const enlace = document.createElement("a");
+            enlace.href = url;
+            enlace.download = "Referencias.xlsx";
+            enlace.click();
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+const s2ab = (s) =>{
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i != s.length; ++i) { view[i] = s.charCodeAt(i) & 0xFF; }
+    return buf;
 }
