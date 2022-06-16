@@ -366,6 +366,7 @@ const logisticaController = {
             $('#chofer').select2();
             $('#fleteraImporte').select2();
             $('#estadoImporte').select2();
+            $('#fleteraImporteCreate').select2();
             $('.select2-selection').css('height', '39px');
             $('.select2-selection').css('width', '100%');
             $('[data-toggle="tooltip"]').tooltip();
@@ -389,7 +390,27 @@ const logisticaController = {
             digitsOptional: false,
             placeholder: "0.00"
         });
+        $('#cajaCreate').inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
         $("#cajaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $('#atadoCreate').inputmask({
             alias: "decimal",
             radixPoint: ".",
             autoGroup: true,
@@ -409,6 +430,16 @@ const logisticaController = {
             digitsOptional: false,
             placeholder: "0.00"
         });
+        $('#bultoCreate').inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
         $("#bultoUpdate").inputmask({
             alias: "decimal",
             radixPoint: ".",
@@ -419,7 +450,27 @@ const logisticaController = {
             digitsOptional: false,
             placeholder: "0.00"
         });
+        $('#cubetaCreate').inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
         $("#cubetaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $('#tarimaCreate').inputmask({
             alias: "decimal",
             radixPoint: ".",
             autoGroup: true,
@@ -440,9 +491,11 @@ const logisticaController = {
             placeholder: "0.00"
         });
         $('#fletera').on('change', function () {
+            $('#chofer').select2('destroy');
             $('#chofer').prop('disabled', true);
         });
         $('#chofer').on('change', function () {
+            $('#fletera').select2('destroy');
             $('#fletera').prop('disabled', true);
         });
         $('#table-importe').DataTable({
@@ -528,8 +581,66 @@ const logisticaController = {
                     action: function(e,dt,node,config){
                         $('#fileTempleteImportImportesFleteras').click();
                     }
+                },
+                {
+                    text: 'Agregar Importes',
+                    action: function(e,dt,node,config){
+                        $('#modal-importes-fleteras').modal('toggle');
+                        $('#modal-agregar-importes').modal({backdrop: 'static', keyboard: false});
+                        $('#modal-agregar-importes').modal('show');
+                    }
                 }
             ]
+        });
+    },
+    exitModalImportCreate:() => {
+        $('#modal-agregar-importes').modal('toggle');
+        $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+        $('#modal-importes-fleteras').modal('show');
+    },
+    createImport: () => {
+        let data = {
+            cp: $('#codigoPostalCreate').val(),
+            fletera: $('#fleteraImporteCreate option:selected').text(),
+            zona: $('#zonaCreate').val(),
+            caja: $('#cajaCreate').val(),
+            atado: $('#atadoCreate').val(),
+            bulto: $('#bultoCreate').val(),
+            cubeta: $('#cubetaCreate').val(),
+            tarima: $('#tarimaCreate').val(),
+            fechaInicio: $('#fechaInicioCreate').val(),
+            fechaFin: $('#fechaFinCreate').val()
+        };
+        logisticaController.token();
+        $.ajax({
+            url: '/logistica/distribucion/numeroGuia/createImportsOfFreighter',
+            type: 'POST',
+            data: data,
+            datatype: 'json',
+            success: function(data){
+                if(data)
+                {
+                    Toast.fire({
+                        icon: 'success',
+                        title: '¡Se agregaron correctamente los importes de la fletera!'
+                    });
+                    $('#modal-agregar-importes').modal('toggle');
+                    $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+                    $('#modal-importes-fleteras').modal('show');
+                    logisticaController.consultFreighterImport();
+                }else{
+                    Toast.fire({
+                        icon: 'error',
+                        title: '¡Hubo un error al actualizar los importes de la fletera!'
+                    });
+                }
+            },
+            error: function(error){
+
+            },
+            complete: function(){
+
+            }
         });
     },
     openModalQuestionDeleteImport: (e) => {
@@ -769,7 +880,6 @@ const logisticaController = {
 
             }
         });
-        console.log(data);
     },
     importDataNumGuia: () => {  
         var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;  
@@ -1718,7 +1828,6 @@ const logisticaController = {
                 }
             },
             complete: function () {
-                resolve();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -1870,7 +1979,6 @@ const logisticaController = {
 
                 },
                 complete: function () {
-                    resolve();
                 }
             })
         } else {

@@ -245,6 +245,24 @@ class LogisticaController extends Controller
                 $delete = json_decode($deleteImportsOfFregihter->body());
                 return $delete;
             }
+            public static function createImportsOfFreighter($token, $data){
+                $importes = array();
+                $dataJson = json_decode($data);
+                array_push($importes,[
+                    "cp" => $dataJson->cp,
+                    "fletera" => $dataJson->fletera,
+                    "caja" => $dataJson->caja,
+                    "atado" => $dataJson->atado,
+                    "bulto" => $dataJson->bulto,
+                    "cubeta" => $dataJson->cubeta,
+                    "tarima" => $dataJson->tarima,
+                    "fechaInicio" => $dataJson->fechaInicio,
+                    "fechaFin" => $dataJson->fechaFin
+                ]);
+                $createImportsOfFreighter = Http::withToken($token)->post(config('global.api_url').'/Logistica/BulkLoadImports',$importes);
+                $create = json_decode($createImportsOfFreighter->body());
+                return $create;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){

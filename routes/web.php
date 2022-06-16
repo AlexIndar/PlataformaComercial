@@ -2289,6 +2289,15 @@ Route::delete('/logistica/distribucion/numeroGuia/deleteImportsOfFregihter', fun
     $response = LogisticaController::deleteImportsOfFregihter($token,json_encode($request->all()));
     return $response;
 });
+Route::post('/logistica/distribucion/numeroGuia/createImportsOfFreighter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error')
+    {
+        return redirect('/logout');
+    }
+    $response = LogisticaController::createImportsOfFreighter($token, json_encode($request->all()));
+    return $response;
+});
 // ************************* VALIDAR SAD *************************************** \\
 Route::get('/logistica/distribucion/validarSad', function(){
     $token = TokenController::getToken();
