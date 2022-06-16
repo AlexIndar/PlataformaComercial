@@ -1707,7 +1707,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
     if (pedido.length == 0) {
         alert('Agrega artículos al pedido');
     }
-    else if (type == 3 && pedido.length == 1 && pedido[0]['descuento'] == 0 && pedido[0]['marca'] == "" && pedido[0]['evento'] == "" && pedido[0]['plazo'] == 0 && pedido[0]['tipo'] == "") { //si va a levantar pedido y no está separado
+    else if ((type == 3 || type == 4) && pedido.length == 1 && pedido[0]['descuento'] == 0 && pedido[0]['marca'] == "" && pedido[0]['evento'] == "" && pedido[0]['plazo'] == 0 && pedido[0]['tipo'] == "") { //si va a levantar pedido y no está separado ya sea que el pedido sea nuevo o editado
         alert('Separa Pedido');
         $('#modalNetsuiteLoading').modal('hide');
     }
