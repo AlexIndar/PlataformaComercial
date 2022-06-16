@@ -65,7 +65,8 @@ class ValidateSession
             return $this->nocache($next($request));
         }
         else{
-            return redirect('/Intranet');
+            setcookie("_lte", "expired", time() + 900, '/');
+            return redirect('/logout');
         }
     }
 

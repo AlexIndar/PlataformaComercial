@@ -1,31 +1,31 @@
 
 // VARIABLES GLOBALES ENCABEZADO ---------------------------------------------------------------------------------------------------------------------------------------
-
-var tpo_registro = "01";
-var num_lote = "01".padStart(5, '0');;
-var num_secuencia = "00001";
+var num_lote = '00001'; //DE PRUEBA, EN REALIDAD ES AUTOINCREMENTABLE Y LO RETORNA EL BACK
+var num_secuencia = 1; //padStart(5, "0");
 var now = new Date();
 var fec_aplicacion = moment(now).format('YYYYMMDD');
+var num_movtos = 0; //padStart(5, "0");
+
+var tpo_registro = "01";
 var cve_bco_ord = "00021";
 var ord_tpo_cta = "01";
-var ord_num_cta = "4050561075".padStart(20, '0'); // NUM CUENTA HSBC INDAR --------------------------------------------------------------------------------------------
-var ord_nombre = "FERRETERIA INDAR, S.A. DE C.V.".padEnd(40, ' '); // RAZON SOCIAL INDAR ------------------------------------------------------------------------------
-var ord_curp_rfc = "FIN870710Q40".padEnd(18, ' '); // RFC INDAR  ------------------------------------------------------------------------------------------------------
-var cve_proceso = "00003"
-var cve_producto = "00002"; 
+var ord_num_cta = "4050561075".padStart(20, '0');
+var ord_nombre = "FERRETERIA INDAR, S.A. DE C.V.".padEnd(40, ' ');
+var ord_curp_rfc = "FIN870710Q40".padEnd(18, ' ');
+var cve_proceso = "00003";
+var cve_producto = "00002";
 var cod_instruccion = "01";
 var cod_moneda = "01";
 var leyenda_cargo = "".padEnd(40, ' ');
-var num_movtos = 0; //ANTES DE GENERAR ARCHIVO HACER padStart(5, '0');
-var imp_total = 0;
+var imp_total = ""; //padStart(17, "0");
 var cve_canal = "BUZONES ";
 var cod_rechazo = "00000";
 var des_rechazo = "".padEnd(50, ' ');
 var tp_code = "FERREINDARSIP1".padEnd(15, ' ');
 var uso_futuro = "".padEnd(391, ' ');
 
-
-var pagos = [];
+var encabezado = [];
+var detalle = [];
 
 
 
@@ -159,12 +159,22 @@ function formatImporte(input){
     }   
 }
 
-function downloadFile(){
+function generateFile(){
     console.log(fec_aplicacion);
     var encabezado = '';
+    var fileText = '';
     if (validarCampos()){
-        // si todo está correcto, aquí se debe de insertar el encabezado en la base de datos para que me retornen el número de lote que debe de llevar el detalle
-        encabezado += tpo_registro;
+        generaEncabezado(num_secuencia);
+        // si todo está correcto, aquí !!! se debe de cambiar el número de lote por el que retornen del back
+        encabezado += tpo_registro+''+num_lote+''+num_secuencia.toString().padStart(5, "0")+''+fec_aplicacion+''+cve_bco_ord+''+ord_tpo_cta+''+ord_num_cta+''+ord_nombre+''+ord_curp_rfc+''+cve_proceso+''+cve_producto+''+cod_instruccion+''+cod_moneda+''+leyenda_cargo+''+num_movtos.toString().padStart(5, "0")+''+imp_total.toString().padStart(17, "0")+''+cve_canal+''+cod_rechazo+''+des_rechazo+''+tp_code+''+uso_futuro+'|';
+        fileText += encabezado+'\n';
+        num_secuencia ++;
+        for(var x=0; x < num_movtos; x++){
+            obtenerPago(num_secuencia);
+            num_secuencia ++ ;
+        }
+
+        downloadFile('MXFERREINDARSIP-'+fec_aplicacion+'-'+num_lote+'.txt', fileText);
     }
 }
 
@@ -271,13 +281,15 @@ function validarCampos(){
 
     // ACTIVAR MODAL SI HAY CAMPOS POR VALIDAR
 
-    if (!save) {
-        document.getElementById('bodyValidations').innerHTML = bodyValidations;
-        var modal = document.getElementById('validateModal');
-        modal.style.opacity = 1;
-        modal.style.zIndex = 1000;
-        modal.classList.add("active-modal");
-    }
+    // if (!save) {
+    //     document.getElementById('bodyValidations').innerHTML = bodyValidations;
+    //     var modal = document.getElementById('validateModal');
+    //     modal.style.opacity = 1;
+    //     modal.style.zIndex = 1000;
+    //     modal.classList.add("active-modal");
+    //     return false;
+    // }
+    return true;
 }
 
 function closeModal(){
@@ -290,3 +302,80 @@ function closeModal(){
     activeModal.style.zIndex = -1000;
     activeModal.classList.remove("active-modal");
 }
+
+
+function generaEncabezado(num_secuencia){
+
+    var importeTotal = 0;
+
+    for(var x=1; x <= num_movtos; x++){
+        var importe = document.getElementById('importe_orden'+x).value;
+        importe = importe.replace(',', ''); //quitar coma del importe
+        importe = importe.replace('.', ''); //quitar punto del importe
+        importeTotal += parseInt(importe);
+    }
+
+    var jsonEncabezado = {
+        tpo_registro: tpo_registro,
+        num_secuencia: num_secuencia.toString().padStart(5, "0"),
+        fec_aplicacion: fec_aplicacion,
+        cve_bco_ord: cve_bco_ord,
+        ord_tpo_cta: ord_tpo_cta,
+        ord_num_cta: ord_num_cta,
+        ord_nombre: ord_nombre,
+        ord_curp_rfc: ord_curp_rfc,
+        cve_proceso: cve_proceso,
+        cve_producto: cve_producto,
+        cod_instruccion: cod_instruccion,
+        cod_moneda: cod_moneda,
+        leyenda_cargo: leyenda_cargo,
+        num_movtos: num_movtos.toString().padStart(5, "0"),
+        imp_total: importeTotal.toString().padStart(17, '0'),
+        cve_canal: cve_canal,
+        cod_rechazo: cod_rechazo,
+        des_rechazo: des_rechazo,
+        tp_code: tp_code,
+        uso_futuro: uso_futuro
+    };
+
+    imp_total = importeTotal;
+
+    console.log(jsonEncabezado);
+}
+
+function obtenerPago(num_secuencia){
+
+    console.log('Generar linea de pago '+num_secuencia);
+
+    // var pagos = [];
+    // for(var x=1; x <= num_movtos; x++){
+    //     var json = {
+    //         concepto: document.getElementById('leyenda_abono'+x),
+    //         referencia: document.getElementById('ref_numerica'+x),
+    //         importe: document.getElementById('importe_orden'+x)
+    //     };
+    //     pagos.push(json);
+    // }
+
+    // var jsonDetalle = {
+    //     num_lote: 0, //cambiar después de que se inserte el encabezado
+    //     tpo_registro: "02",
+    //     num_secuencia: 1
+    // };
+}
+
+function downloadFile(filename, text) {
+    var element = document.createElement('a');
+    console.log(filename);
+    console.log(text);
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+  }
+  

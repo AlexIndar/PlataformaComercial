@@ -6,6 +6,7 @@
 
 @section('assets')
     <link rel="stylesheet" href="{{ asset('assets/customers/css/pedidos/addPedido.css') }}">
+    <script src="{{ asset('assets/session/validaToken.js') }}"></script>
     <script src="{{ asset('assets/customers/js/pedidos/addPedido.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}">
 @endsection
