@@ -144,7 +144,7 @@ $('document').ready(function () {
           });
         }
       }
-      if (getCookie("_ep") && getCookie("_la") && !getCookie("_lt")) {
+      if (getCookie("_ep") && getCookie("_lte")) {
         var toast = Swal.mixin({
           toast: true,
           icon: 'warning',

@@ -47,7 +47,7 @@
                 <div class="row">
                    <div class="col-6 table-responsive" id="facturasDiv">
                     <p class="lead">Seleccione La Factura a Pagar:</p>
-                    <button style = "display:none" class="form-control btn-primary" onclick="mostrarNotas()" id="btnMostrarNotas">Abonar Notas de Crédito</button>
+                    <button style = "display:none" class="form-control btn-success" onclick="mostrarNotas()" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fa fa-arrow-right  "></i></button>
                     <table id="example" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
                         <thead>
                            <tr>
@@ -74,7 +74,7 @@
                      </table>
                    </div>
                    <div class="col-6 table-responsive" id="notasDiv" style="display:none">
-                    <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-primary" onclick="mostrarFacturas()" id="btnMostrarFacturas">Regresar a Facturas</button>
+                    <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-primary" onclick="mostrarFacturas()" id="btnMostrarFacturas"><i class="fa fa-arrow-left"></i> &nbsp; Regresar a Facturas</button>
                     <table id="tableNotas" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
                         <thead>
                            <tr>
@@ -154,12 +154,12 @@
                 </div>
                 <div class="row no-print">
                    <div class="col-12">
-                      <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                      <button type="button" class="btn btn-success float-right" onclick="window.print();"><i class="far fa-credit-card"></i> Generar Ficha de Pago
+                     {{--  <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a> --}}
+                      <button  type="button" class="btn btn-success float-right" style="display:none" onclick="window.print();"><i class="far fa-credit-card"></i> Generar Intención de Pago
                       </button>
-                      <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                     {{--  <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
                       <i class="fas fa-download"></i> Descargar PDF
-                      </button>
+                      </button> --}}
                    </div>
                 </div>
              </div>

@@ -111,6 +111,11 @@ class MisSolicitudesController extends Controller
         return json_decode($valSol->body());
     }
 
+    public static function GetCYCTableShow($token, $username){
+        $solicitudes = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetCYCTableShow?username='.$username);
+        return json_decode($solicitudes->body());
+    }
+
     public static function Update($token, $data){
         $json = json_decode($data);        
         $response = Http::withToken($token)->post(config('global.api_url').'/CyC/Update', [

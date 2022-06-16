@@ -28,14 +28,14 @@
             <div class="content-datos-generales">
                 <div class="row text-center">
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Razón Social:</h5></div>
-                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_nombre" name="ord_nombre" maxlength="40" value="FERRETERIA INDAR, S.A. DE C.V." required></div>
+                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_nombre" name="ord_nombre" maxlength="40" value="FERRETERIA INDAR, S.A. DE C.V." required readonly></div>
                 </div>
                 <br>
                 <div class="row text-center">
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>No. Cuenta:</h5></div>
-                    <div class="col-lg-4 col-md-3 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_num_cta" name="ord_num_cta" maxlength="20" value="4050561075" required></div>
+                    <div class="col-lg-4 col-md-3 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_num_cta" name="ord_num_cta" maxlength="20" value="4050561075" required readonly></div>
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>RFC:</h5></div>
-                    <div class="col-lg-4 col-md-3 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_curp_rfc" name="ord_curp_rfc" maxlength="18" value="FIN870710Q40" required></div>
+                    <div class="col-lg-4 col-md-3 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_curp_rfc" name="ord_curp_rfc" maxlength="18" value="FIN870710Q40" required readonly></div>
                 </div>
                 <br>
                 <div class="row text-center">
@@ -102,7 +102,7 @@
                 <br><br>
                 <div class="row-12">
                     <button class="btn btn-blue btnActions w-100" id="btn-add" onclick="addRowNewPago()">Agregar Pago</button>
-                    <button class="btn btn-blue w-100 mt-3" id="btn-download" onclick="downloadFile()" disabled>Generar archivo</button> 
+                    <button class="btn btn-blue w-100 mt-3" id="btn-download" onclick="generateFile()" disabled>Generar archivo</button> 
                 </div>
 
             </div>
