@@ -56,6 +56,7 @@ class LoginController extends Controller
                 setcookie("_lt", encrypt($token, "7Ind4r7"), time()+60*60*24*5, '/');
                 setcookie("_fln", encrypt($fullname, "7Ind4r7"), time()+60*60*24*5, '/');
                 setcookie("_usn", encrypt($username, "7Ind4r7"), time()+60*60*24*5, '/');
+                setcookie("_lte", encrypt($username, "7Ind4r7"), time()-60*60*24*5, '/');
                 if(json_decode($typeUser->body())->typeUser == "C"){
                     setcookie("_lv", "C", time()+60*60*24*5, '/');
                     return redirect('/');
@@ -71,7 +72,7 @@ class LoginController extends Controller
         }
     }
 
-    public function logout(){
+    public static function logout(){
         setcookie("_lt", "", time()-60*60*24*5, '/');
         setcookie("_rfs", "", time()- 60*60*24*5, '/');
         setcookie("_fln", "", time()- 60*60*24*5, '/');

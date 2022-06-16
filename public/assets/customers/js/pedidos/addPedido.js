@@ -1704,6 +1704,7 @@ function downloadPlantillaPedido() {
 
 
 function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPDATE), 3 = LEVANTAR PEDIDO (SAVE AND SEND TO NETSUITE), 4 = LEVANTAR PEDIDO (UPDATE AND SEND TO NETSUITE), 5 = PRE GUARDAR PEDIDO AL CARGAR POR EXCEL, CERRAR INVENTARIO O CARGAR POR CÓDIGO
+    validarToken();
     if (pedido.length == 0) {
         alert('Agrega artículos al pedido');
     }
@@ -1879,6 +1880,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                     console.log(data);
                     console.log('Num Cotizacion: ' + data['idCotizacion']);
                     if (data['idCotizacion'] != undefined) { //Si es undefined significa que hubo algún error
+                        alert('Enviando pedido a Netsuite. Guarda el siguiente número de cotización para cualquier aclaración con tu pedido.\nCotización #'+data['idCotizacion']);
                         if (type == 3) { //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
                             noCotizacionNS = data['idCotizacion'];
                             setTimeout(saveNS(), 2000);
@@ -1896,7 +1898,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                             window.location.href = '/pedidos';
                         }
                     }
-                    else {
+                    else { //si el número de cotización es indefinido
                         alert('Error al guardar pedido');
                     }
 

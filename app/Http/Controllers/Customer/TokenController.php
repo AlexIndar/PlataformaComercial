@@ -22,33 +22,79 @@ class TokenController extends Controller
         //
     }
 
-    public static function getToken(){
+    public static function getToken()
+    {
         $token = "";
-        if(isset($_COOKIE["_lt"]) && $_COOKIE["_lt"] != 'error' && $_COOKIE["_lt"] != 'expired'){
+        if (isset($_COOKIE["_lt"]) && $_COOKIE["_lt"] != 'error' && $_COOKIE["_lt"] != 'expired') {
             $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
-            try{ //cuando token es error o expired lanza excepción porque no puede hacer decrypt de un string que no está encriptado
+            try { //cuando token es error o expired lanza excepción porque no puede hacer decrypt de un string que no está encriptado
                 $token = decrypt($_COOKIE["_lt"], "7Ind4r7");
-            }
-            catch (DecryptException $e) {
+            } catch (DecryptException $e) {
                 $token = "expired";
             }
-            $typeUser = Http::withToken($token)->get(config('global.api_url').'/login/getListMenu?user='.$username); //ejecutar y ver si responde Unauthoraized
-            if($typeUser->getStatusCode() == 401){//si responde error 401 Unauthorized, entonces el token no es válido
+            $typeUser = Http::withToken($token)->get(config('global.api_url') . '/login/getListMenu?user=' . $username); //ejecutar y ver si responde Unauthoraized
+            if ($typeUser->getStatusCode() == 401) { //si responde error 401 Unauthorized, entonces el token no es válido
                 $token = "expired";
-                setcookie("_lt", "", time()-60*60*24*5, '/');
-                setcookie("_lt", "expired", time()+900, '/');
-                setcookie("_ep", time(), time()+60*60*24*365, '/');
+                setcookie("_lt", "", time() - 60 * 60 * 24 * 5, '/');
+                setcookie("_lt", "expired", time() + 900, '/');
+                setcookie("_ep", time(), time() + 60 * 60 * 24 * 365, '/');
             }
-
-        }
-        else{
-            setcookie("_ep", time(), time()+60*60*24*365, '/');
+        } else {
+            setcookie("_ep", time(), time() + 60 * 60 * 24 * 365, '/');
             $token = "expired";
         }
         return $token;
     }
 
-    public function encrypt($token, $key){
+    public static function refreshToken()
+    {
+        $token = "";
+        if (isset($_COOKIE["_lt"]) && $_COOKIE["_lt"] != 'error' && $_COOKIE["_lt"] != 'expired') {
+            $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
+            try { //cuando token es error o expired lanza excepción porque no puede hacer decrypt de un string que no está encriptado
+                $token = decrypt($_COOKIE["_lt"], "7Ind4r7");
+            } catch (DecryptException $e) {
+                $token = "expired";
+            }
+            $typeUser = Http::withToken($token)->get(config('global.api_url') . '/login/getListMenu?user=' . $username); //ejecutar y ver si responde Unauthoraized
+            if ($typeUser->getStatusCode() == 401) { //si responde error 401 Unauthorized, entonces el token no es válido
+                $token = "expired";
+                setcookie("_lt", "", time() - 60 * 60 * 24 * 5, '/');
+                setcookie("_lt", "expired", time() + 900, '/');
+                setcookie("_ep", time(), time() + 60 * 60 * 24 * 365, '/');
+            } else {
+                $refresh = Http::withToken($token)->post(config('global.api_url') . '/login/RefreshToken'); //refresh token
+                if ($refresh->getStatusCode() == 200) {
+                    $token = $refresh->body();
+                    $fullname = decrypt($_COOKIE["_fln"], "7Ind4r7");
+                    $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
+                    $level = $_COOKIE["_lv"];
+
+                    setcookie("_lt", encrypt($token, "7Ind4r7"), time() - 60 * 60 * 24 * 5, '/');
+                    setcookie("_fln", encrypt($fullname, "7Ind4r7"), time() - 60 * 60 * 24 * 5, '/');
+                    setcookie("_usn", encrypt($username, "7Ind4r7"), time() - 60 * 60 * 24 * 5, '/');
+                    setcookie("_lv", $level , time() - 60 * 60 * 24 * 5, '/');
+                    setcookie("_la", time(), time()- 60*60*24*365, '/');
+
+                    setcookie("_lt", encrypt($token, "7Ind4r7"), time() + 60 * 60 * 24 * 5, '/');
+                    setcookie("_fln", encrypt($fullname, "7Ind4r7"), time() + 60 * 60 * 24 * 5, '/');
+                    setcookie("_usn", encrypt($username, "7Ind4r7"), time() + 60 * 60 * 24 * 5, '/');
+                    setcookie("_lv", $level , time() + 60 * 60 * 24 * 5, '/');
+                    setcookie("_la", time(), time()+60*60*24*365, '/');
+                }
+                else{
+                    $token = 'expired';
+                }
+            }
+        } else {
+            setcookie("_ep", time(), time() + 60 * 60 * 24 * 365, '/');
+            $token = "expired";
+        }
+        return $token;
+    }
+
+    public function encrypt($token, $key)
+    {
         // Store the cipher method
         $ciphering = "AES-128-CTR";
         $options = 0;
@@ -57,12 +103,13 @@ class TokenController extends Controller
         // Store the encryption key
         $encryption_key = $key;
         // Use openssl_encrypt() function to encrypt the data
-        $encryption = openssl_encrypt($token, $ciphering,$encryption_key, $options, $encryption_iv);
+        $encryption = openssl_encrypt($token, $ciphering, $encryption_key, $options, $encryption_iv);
         return $encryption;
     }
 
-    public function decrypt($encrypt, $key){
-         // Store the cipher method
+    public function decrypt($encrypt, $key)
+    {
+        // Store the cipher method
         $ciphering = "AES-128-CTR";
         $options = 0;
         // Non-NULL Initialization Vector for decryption
@@ -70,7 +117,7 @@ class TokenController extends Controller
         // Store the decryption key
         $decryption_key = $key;
         // Use openssl_decrypt() function to decrypt the data
-        $decryption=openssl_decrypt ($encrypt, $ciphering, $decryption_key, $options, $decryption_iv);
+        $decryption = openssl_decrypt($encrypt, $ciphering, $decryption_key, $options, $decryption_iv);
         return $decryption;
     }
 }
