@@ -332,12 +332,12 @@
                                 </ul>
                             </li>
                         @endif
-                        @if (in_array('Planeador', $permissions))
+                        @if(in_array('Logistica', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Logistica')
                                     <a href="#" class="nav-link active">
                                     @else
-                                        <a href="#" class="nav-link">
+                                    <a href="#" class="nav-link">
                                 @endif
 
                                 <i class="fas fa-boxes nav-icon"></i>
@@ -346,6 +346,7 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                                 </a>
+                                @if(in_array('LogisticaMesaControl', $permissions))
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="{{ route('logistica.mesaControl.planeador') }}"
@@ -355,6 +356,8 @@
                                         </a>
                                     </li>
                                 </ul>
+                                @endif
+                                @if(in_array('LogisticaDistribucion',$permissions))
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="{{ route('logistica.distribucion') }}" class="nav-link">
@@ -363,6 +366,8 @@
                                         </a>
                                     </li>
                                 </ul>
+                                @endif
+                                @if(in_array('LogisticaReportes',$permissions))
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="{{ route('logistica.reportes') }}" class="nav-link">
@@ -371,9 +376,9 @@
                                         </a>
                                     </li>
                                 </ul>
+                                @endif
                             </li>
                         @endif
-
                         @if (in_array('CXC', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'CXC')
