@@ -415,7 +415,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::post('/pedido/nuevo', function (Request $request){
                                 ini_set('memory_limit', '-1');
                                 $token = TokenController::refreshToken();
-                                if($token == 'error' || $token == 'expired'){
+                                if($token == 'error' || $token == 'expired' || $token == ''){
                                     LoginController::logout();
                                 }
                                 $rama1 = RamasController::getRama1();
@@ -1537,7 +1537,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
-                //////// SOLICITUDES PENDIENTES/////
+                //////// SOLICITUDES CONSULTA/////
                 Route::get('/SolicitudesConsulta', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
@@ -1552,6 +1552,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }else{
                         return redirect('/Intranet');
                     }
+                });
+
+                Route::post('/SolicitudesConsulta/GetCYCTableShow', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $listSol = MisSolicitudesController::getCYCTableShow($token, $request->User);
+                    return $listSol;
                 });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////
@@ -2297,6 +2306,22 @@ Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Reque
         LoginController::logout();
     }
     $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
+    return $response;
+});
+Route::delete('/logistica/distribucion/numeroGuia/deleteImportsOfFregihter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::deleteImportsOfFregihter($token,json_encode($request->all()));
+    return $response;
+});
+Route::post('/logistica/distribucion/numeroGuia/createImportsOfFreighter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::createImportsOfFreighter($token, json_encode($request->all()));
     return $response;
 });
 // ************************* VALIDAR SAD *************************************** \\

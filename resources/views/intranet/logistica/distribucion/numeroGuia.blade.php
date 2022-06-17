@@ -458,6 +458,101 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="modal-agregar-importes">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header title-table">
+                <h4 class="modal-title ">Agregar Importes Fletera</h4>
+                {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">&times;</span>
+                </button> --}}
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <form id="formAddImport">
+                                <div class="row">
+                                    <input type="text" id="idImporteFactura" hidden>
+                                    <input type="text" id="zonaUpdate" hidden>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="fleteraImporteCreate">Fleteras:</label>
+                                            <select class="form-control" name="fleteraImporteCreate" id="fleteraImporteCreate">
+                                                <option value="" selected disabled>Seleccione una fletera</option>
+                                                @foreach($freighters as $freighter)
+                                                    <option value="{{$freighter->lisT_ID}}"> {{ $freighter->lisT_ITEM_NAME }}</option>
+                                                @endforeach
+                                        </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="codigoPostalCreate">Codigo Postal:</label>
+                                            <input type="number" class="form-control" id="codigoPostalCreate" name="codigoPostalCreate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="cajaCreate">Caja:</label>
+                                            <input type="text" class="form-control" id="cajaCreate" name="cajaCreate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="atadoCreate">Atado:</label>
+                                            <input type="text" class="form-control" id="atadoCreate" name="atadoCreate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="bultoCreate">Bulto:</label>
+                                            <input type="text" class="form-control" id="bultoCreate" name="bultoCreate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="cubetaCreate">Cubeta:</label>
+                                            <input type="text" class="form-control" id="cubetaCreate" name="cubetaCreate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="tarimaCreate">Tarima:</label>
+                                            <input type="text" class="form-control" id="tarimaCreate" name="tarimaCreate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="fechaInicioCreate">Fecha Inicio:</label>
+                                            <input type="date" class="form-control" id="fechaInicioCreate" name="fechaInicioCreate">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="fechaFinCreate">Fecha Fin:</label>
+                                            <input type="date" class="form-control" id="fechaFinCreate" name="fechaFinCreate">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" onclick="logisticaController.exitModalImportCreate()">Cerrar</button>
+                <button type="button" class="btn btn-plataform" onclick="logisticaController.createImport()">Agregar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 @endsection
 @section('js')
 <script type='text/javascript' src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>

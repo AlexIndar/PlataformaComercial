@@ -1,4 +1,4 @@
-export let articulosBloqueadosCCIFletera = [
+const articulosBloqueadosCCIFletera = [ 
     "P4 8218",
     "C0 028800",
     "C0 028856",
