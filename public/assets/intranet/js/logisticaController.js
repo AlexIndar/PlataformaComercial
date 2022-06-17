@@ -505,7 +505,7 @@ const logisticaController = {
             processing: false,
             bSortClasses: false,
             fixedHeader: false,
-            scrollY: 350,
+            scrollY: 260,
             scrollCollapse: true,
             deferRender: true,
             scroller: true,
@@ -1920,6 +1920,7 @@ const logisticaController = {
             for (let a = 0; a < arrayRowsEmbarques.length; a++) {
                 if (arrayRowsEmbarques[a] != undefined) {
                     if (arrayRowsEmbarques[a].disponible) {
+                        $('#embarque'+arrayRowsEmbarques[a].row).prop('disabled', true);
                         data += arrayRowsEmbarques[a].embarque + ',';
                     }
                 }
