@@ -415,7 +415,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             Route::post('/pedido/nuevo', function (Request $request){
                                 ini_set('memory_limit', '-1');
                                 $token = TokenController::refreshToken();
-                                if($token == 'error' || $token == 'expired'){
+                                if($token == 'error' || $token == 'expired' || $token == ''){
                                     LoginController::logout();
                                 }
                                 $rama1 = RamasController::getRama1();

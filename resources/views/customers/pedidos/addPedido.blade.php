@@ -9,6 +9,7 @@
      <link rel="stylesheet" href="{{ asset('assets/customers/css/animations/spinner.css') }}">
      <script src="{{ asset('assets/session/validaToken.js') }}"></script>
      <script src="{{ asset('assets/customers/js/pedidos/addPedido.js') }}"></script>
+     <script src="{{ asset('assets/customers/js/pedidos/articulosBloqueadosCCIFletera.js') }}"></script>
      <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}">
  @endsection
 

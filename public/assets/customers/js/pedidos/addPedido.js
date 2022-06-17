@@ -339,7 +339,7 @@ $(document).ready(function () {
         } else {
             indexAddress = selected;
             var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[selected]);
-            $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera por default
+            $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según la forma de envío
             $('#selectEnvio').selectpicker('refresh');
             $('#fletera').val(packageDeliveries[selected]);
         }
@@ -351,6 +351,7 @@ $(document).ready(function () {
     $('#selectEnvio').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
         $('#fletera').val(shippingWaysList[selected]['paqueteria']);
+        prepareJsonSeparaPedidos(true);
     });
 
     // ZOOM EFFECT
@@ -641,16 +642,30 @@ function validateTab(e) {
     }
 }
 
-function prepareJsonSeparaPedidos(separa) { //acomoda arreglo con todos los items cargados en json para enviarlo al back
+function prepareJsonSeparaPedidos(separa) { //Convierte arreglo con todos los items cargados en JSON para enviarlo al back a separar pedido
     if (!separa) {
         tipoGetItemById = 1;
     }
+    /*var formaEnvío = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() : $("#envio").val();
+    if(formaEnvío == 'CCI FLETERA'){ //si la forma de envío es CCI FLETERA validar que no tenga artículos que NO pueden venderse por esta fletera
+        for(var x = 0; x < selectedItemsFromInventory.length; x++){
+            console.log(selectedItemsFromInventory[x]['item']);
+            if(articulosBloqueadosCCIFletera.includes(selectedItemsFromInventory[x]['item'])){
+                alert('No se puede vender el articulo '+selectedItemsFromInventory[x]['item']);
+                selectedItemsFromInventory.splice(x, 1); //quitar el artículo que no puede venderse
+                x--; //restar a variable de loop para que termine de recorrer items seleccionados
+            }
+        }
+    }*/
     cantItemsPorCargar = selectedItemsFromInventory.length;
-    jsonItemsSeparar = "[";
-    for (var x = 0; x < selectedItemsFromInventory.length; x++) {
-        var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
-        getItemById(item, separa);
+    if(selectedItemsFromInventory.length > 0){
+        jsonItemsSeparar = "[";
+        for (var x = 0; x < selectedItemsFromInventory.length; x++) {
+            var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
+            getItemById(item, separa);
+        }
     }
+ 
 }
 
 
