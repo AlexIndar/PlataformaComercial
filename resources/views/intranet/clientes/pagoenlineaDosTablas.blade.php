@@ -45,10 +45,11 @@
                 </div>
                 <hr>
                 <div class="row">
-                   <div class="col-12 table-responsive" id="facturasDiv">
+                   <div class="col-6 table-responsive" id="facturasDiv">
                     <p class="lead">Seleccione La Factura a Pagar:</p>
+                    <button style = "display:none" class="form-control btn-success" onclick="mostrarNotas()" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fa fa-arrow-right  "></i></button>
                     <table id="example" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
+                        <thead>
                            <tr>
                             <th></th>
                             <th>Documento</th>
@@ -61,23 +62,21 @@
                         <tbody>
                             @foreach ( $data as $value )
                             <tr>
-                                <td><input class="facturas" type="checkbox" value="" id=""></td>
-                                <td> <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2">Factura</td>
-                                <td> <a href="#" class="text-muted">{{ $value->tranid }}</a></td>
-                                <td class="text-center">{{ number_format($value->saldo, 2) }}</td>
-                                <td class="text-center">{{ substr($value->fechaFactura, 0, 10) }}</td>
-                                <td class="text-center">{{ substr($value->dueDate, 0, 10)  }}</td>
+                                <td> <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
+                                <td>Factura</td>
+                                  <td> <a href="#" class="text-muted">{{ $value->tranid }}</a></td>
+                                  <td class="text-center">{{ number_format($value->saldo, 2) }}</td>
+                                  <td class="text-center">{{ substr($value->fechaFactura, 0, 10) }}</td>
+                                  <td class="text-center">{{ substr($value->dueDate, 0, 10)  }}</td>
                             </tr>
                         @endforeach
                         </tbody>
                      </table>
-                     <br>
-                     <button style = "display:none;" class="mx-auto btn btn-success btn-lg" onclick="mostrarNotas()" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fas fa-money-bill"></i></button>
                    </div>
-                   <div class="col-12 table-responsive" id="notasDiv" style="display:none">
+                   <div class="col-6 table-responsive" id="notasDiv" style="display:none">
                     <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-primary" onclick="mostrarFacturas()" id="btnMostrarFacturas"><i class="fa fa-arrow-left"></i> &nbsp; Regresar a Facturas</button>
                     <table id="tableNotas" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
+                        <thead>
                            <tr>
                             <th></th>
                             <th>Documento</th>
@@ -101,10 +100,10 @@
                         </tbody>
                      </table>
                    </div>
-                   <div class="col-12 table-responsive">
+                   <div class="col-6 table-responsive">
                     <p class="lead">Documentos a Pagar:</p>
                     <table id="example2" class="table table-hover" style="font-size:90% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
+                        <thead>
                            <tr>
                               <th></th>
                               <th>Documento</th>
@@ -122,7 +121,7 @@
                 </div>
                 <br>
                 <div class="row">
-                   <div class="col-4">
+                   <div class="col-6">
                       <p class="lead">Metodos de Pago:</p>
                       <img src="{{ asset('dist/img/credit/visa.png') }}" alt="Visa">
                       <img src="{{ asset('dist/img/credit/mastercard.png') }}" alt="Mastercard">
@@ -132,7 +131,7 @@
                          Nota : solo se puede pagar ......
                       </p>
                    </div>
-                   <div class="col-8">
+                   <div class="col-6">
                       <div class="table-responsive">
                          <table class="table">
                             <tbody>
@@ -225,171 +224,29 @@ $(document).ready(function() {
 
 $("body").addClass("sidebar-collapse");
 
+var table = $('#example').DataTable({
+        dom : 'Brt',
 
-var table = $('#example').dataTable( {
-    dom : 'Brtip',
-    paging:false,
-    fixedHeader:true,
-    ordering: false,
-    scrollY:320,
-    scrollX: true,
-    scrollCollapse: true,
-    buttons: [
-        {
-            extend:    'excel',
-            text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            titleAttr: 'Descargar Excel'
-        }
-    ],
-    initComplete: function () {
-    var btns = $('.dt-button');
-    btns.addClass('btn btn-success ');
-    btns.removeClass('dt-button');
-    },
-});
+    } );
 
-var tableNotas =$('#tableNotas').dataTable( {
-    dom : 'Brtip',
-    paging:false,
-    fixedHeader:true,
-    ordering: false,
-    scrollY:320,
-    scrollX: true,
-    scrollCollapse: true,
-    buttons: [
-        {
-            extend:    'excel',
-            text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            titleAttr: 'Descargar Excel'
-        }
-    ],
-    initComplete: function () {
-    var btns = $('.dt-button');
-    btns.addClass('btn btn-success ');
-    btns.removeClass('dt-button');
-    },
-});
+var tableNotas = $('#tableNotas').DataTable({
+    dom : 'Brt',
+} );
 
-var t =$('#example').dataTable( {
-    dom : 'Brtip',
-    paging:false,
-    fixedHeader:true,
-    ordering: false,
-    scrollY:320,
-    scrollX: true,
-    scrollCollapse: true,
-    buttons: [
-        {
-            extend:    'excel',
-            text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            titleAttr: 'Descargar Excel'
-        }
-    ],
-    initComplete: function () {
-    var btns = $('.dt-button');
-    btns.addClass('btn btn-success ');
-    btns.removeClass('dt-button');
-    },
+var t = $('#example2').DataTable({
+    dom : 'Brt',
     rowCallback: function(row, data, index){
         $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
     }
-});
+} );
 var subTotal = 0;
 var descuento = 0;
 var total = 0;
 htmlSelectFact='';
-
-$("input:checkbox.facturas").click(function() {
-    if(!$(this).is(":checked")){
-        $('#example tbody').on('click', 'tr', function () {
-
-         var data = table.row( this ).data();
-        // Mostrar Boton de NC
-        document.getElementById("btnMostrarNotas").style.display = "block";
-
-        if(data[1]=='Factura'){
-        data[3] = data[3].replace(/,/g, "");
-        subTotal += parseFloat(data[3]);
-        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-        else{
-        descuento += parseFloat(data[3]);
-        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-
-        total = subTotal - descuento;
-        $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-        t.row.add( [
-           data[0],
-           data[1],
-            data[2],
-            monto,
-            data[4],
-            data[5]
-
-        ] ).draw();
-
-        htmlSelectFact += '<tr>'+
-            '<td>' + data[0]+ '</td>'+
-            '<td>' + data[1]+ '</td>'+
-            '<td>' + data[2]+ '</td>'+
-            '<td>$' + monto+ '</td>'+
-            '<td><input type="number" class="form-control" placeholder ="Ingrese el Monto a Descontar"></td>'+
-
-            '</tr>';
-        $('#selectFacTable').html(htmlSelectFact);
-        } );
-    }
-    if($(this).is(":checked")){
-        $('#example tbody').on('click', 'tr', function () {
-        //jQuery(this).toggle("scale"); Elimina la Fila
-         var data = table.row( this ).data();
-        // Mostrar Boton de NC
-        document.getElementById("btnMostrarNotas").style.display = "block";
-
-        if(data[1]=='Factura'){
-        data[3] = data[3].replace(/,/g, "");
-        subTotal += parseFloat(data[3]);
-        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-        else{
-        descuento += parseFloat(data[3]);
-        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-
-        total = subTotal - descuento;
-        $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-        t.row.add( [
-           data[0],
-           data[1],
-            data[2],
-            monto,
-            data[4],
-            data[5]
-
-        ] ).draw();
-
-        htmlSelectFact += '<tr>'+
-            '<td>' + data[0]+ '</td>'+
-            '<td>' + data[1]+ '</td>'+
-            '<td>' + data[2]+ '</td>'+
-            '<td>$' + monto+ '</td>'+
-            '<td><input type="number" class="form-control" placeholder ="Ingrese el Monto a Descontar"></td>'+
-
-            '</tr>';
-        $('#selectFacTable').html(htmlSelectFact);
-        } );
-    }
-});
-
-/* $('#example tbody').on('click', 'tr', function () {
+ $('#example tbody').on('click', 'tr', function () {
 
 
-    //jQuery(this).toggle("scale"); Elimina la Fila
+    jQuery(this).toggle("scale");
      var data = table.row( this ).data();
     // Mostrar Boton de NC
     document.getElementById("btnMostrarNotas").style.display = "block";
@@ -427,7 +284,7 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
 
         '</tr>';
     $('#selectFacTable').html(htmlSelectFact);
-} ); */
+ } );
 
  $('#tableNotas tbody').on('click', 'tr', function () {
     //jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );

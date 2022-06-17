@@ -2207,7 +2207,7 @@ Route::get('/logistica/distribucion/numeroGuia', function(){
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
-    $states = LogisticaController::getStates($token); 
+    $states = LogisticaController::getStates($token);
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers','states'));
 })->name('logistica.distribucion.numeroGuia');
@@ -2262,7 +2262,7 @@ Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function
 Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::getCitiesByState($token, json_encode($request->all()));
     return $response;
@@ -2270,7 +2270,7 @@ Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Reque
 Route::get('/logistica/distribucion/numeroGuia/getFreightersImports', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::getFreightersImports($token,json_encode($request->all()));
     return $response;
@@ -2286,7 +2286,7 @@ Route::get('/logisitica/distribucion/numeroGuia/getImportsByFreighter', function
 Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
     return $response;
@@ -2294,7 +2294,7 @@ Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', functi
 Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
     return $response;

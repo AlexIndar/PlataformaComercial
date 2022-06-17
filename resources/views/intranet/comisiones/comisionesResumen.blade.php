@@ -48,7 +48,7 @@
                                             <button type="submit" class="btn btn-primary mb-3"
                                                 style="background-color:#002868" style="display: block"
                                                 onclick="consultar()" id="btnConsultar">Cargar Resumen </button>
-                                            <a href="/comisionesResumen"><button  class="btn btn-primary mb-3" style=" display: none"  style="background-color:#002868"  id="btnRefresh">Cargar Otro Mes </button></a>
+                                            <a href="/comisionesResumen"><button  class="btn btn-primary mb-3" style=" display: none"  style="background-color:#002868" onclick="refresh()"  id="btnRefresh">Cargar Otro Mes </button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -229,7 +229,7 @@ $.ajax({
 
             sumaImpD += data[4][i].desNegSinCalcular;
             sumaImpF += data[4][i].descFueraTiempoSinCalcular;
-            sumaImpI += data[4][i].incobrabilidadSinCalcular;
+            sumaImpI += data[4][i].incobrabilidadADescontar;
 
             if( data[4][i].margen== "MN"){
                 sumaMN30 += data[4][i].de0a30;
@@ -248,8 +248,9 @@ $.ajax({
 
             }
         }
-        sumaDescneg = sumaDescneg ;
 
+        sumaImpI = sumaImpI ;
+        sumaDescneg = sumaDescneg ;
         sumaMNtotal = sumaMN30 + sumaMN60 + sumaMN90 + sumaMN90mas;
         sumaMBtotal = sumaMB30 + sumaMB60 + sumaMB90 + sumaMB90mas;
         sumaTotal30= sumaMN30 + sumaMB30;
@@ -259,18 +260,25 @@ $.ajax({
         sumaTotalImporte = sumaMBtotal + sumaMNtotal;
         var sumaCBtotal = sumaMNCB+sumaMBCB;
         totalComision = sumaCBtotal;
+
+        var desneg;
+        var desft;
+        var desinc;
+        var descuentosComisiones;
+        descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
+        sumaIncob = sumaImpI * .2149;
+        sumaDesFT = sumaImpF * .2149;
+        sumaCBtotal = sumaCBtotal - descuentosComisiones;
         var despensa = sumaCBtotal * 0.10 ;
 
+        var comisionTot = sumaCBtotal;
 
-
-var comisionTot = sumaCBtotal;
-
-   var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
-   //console.log( comisionTot );
-var vendedornombre;
-var nempleado;
-nempleado = data[0].numEmpVend;
-//console.log(data[0]);
+         var importePunt = (comisionTot * data[0].porcAlcanzado)/100;
+    //console.log( comisionTot );
+    var vendedornombre;
+    var nempleado;
+    nempleado = data[0].numEmpVend;
+    //console.log(data[0]);
    if( data[0].vendedor == null){
        var vendedor = " ";
        var vendedornombre="Sin Vendedor Asignado";
@@ -323,10 +331,7 @@ nempleado = data[0].numEmpVend;
    var importdiasNoLaborados;
    var comisionXdia = comisionTot / 30;
    importdiasNoLaborados = data[0].diasNoLAborados * comisionXdia;
-   if(importePunt < importdiasNoLaborados){
-                importdiasNoLaborados=0
-            }
-    comisionInt = comisionInt - importdiasNoLaborados;
+   comisionInt = comisionInt - importdiasNoLaborados;
    //console.log(importdiasNoLaborados, comisionInt);
 
 
@@ -525,6 +530,10 @@ bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal, nempleado){
           })
         }
     });
+}
+
+function refresh(){
+    location.reload();
 }
 
     </script>

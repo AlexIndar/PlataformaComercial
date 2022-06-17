@@ -755,7 +755,7 @@
 
                    sumaImpD += data[i].desNegSinCalcular;
                    sumaImpF += data[i].descFueraTiempoSinCalcular;
-                   sumaImpI += data[i].incobrabilidadSinCalcular;
+                   sumaImpI += data[i].incobrabilidadADescontar;
 
                    if( data[i].margen== "MN"){
                        sumaMN30 += data[i].de0a30;
@@ -774,6 +774,8 @@
 
                    }
                }
+
+               sumaImpI = sumaImpI ;
                sumaDescneg = sumaDescneg ;
 
                sumaMNtotal = sumaMN30 + sumaMN60 + sumaMN90 + sumaMN90mas;
@@ -785,7 +787,7 @@
                sumaTotalImporte = sumaMBtotal + sumaMNtotal;
                var sumaCBtotal = sumaMNCB+sumaMBCB;
                totalComision = sumaCBtotal;
-               var despensa = sumaCBtotal * 0.10 ;
+
                var urlzona= btoa(id);
 
                if(html == ''){
@@ -830,6 +832,12 @@
                 var desneg;
                 var desft;
                 var desinc;
+                var descuentosComisiones;
+                descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
+                sumaIncob = sumaImpI * .2149;
+                sumaDesFT = sumaImpF * .2149;
+                sumaCBtotal = sumaCBtotal - descuentosComisiones;
+                var despensa = sumaCBtotal * 0.10 ;
 
                  if(sumaDescneg == 0){
                     desneg = '<tr>';
@@ -866,6 +874,10 @@
                    '<td style="font-weight: bold">21.49 %</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' + sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                   '</tr>'+
+                   '<tr style ="background-color: rgba(231, 235, 11, 0.705)">'+
+                   '<td style="font-weight: bold" colspan="7">Comisión Base</td>' +
+                   '<td style="font-weight: bold" >' + sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '</tr>';
 
                    htmlDespensa += '<tr>' +
@@ -881,9 +893,8 @@
                    $('#llenadesComi').html(htmldescComi);
                    $('#llenaDespensa').html(htmlDespensa);
                 }
-                var descuentosComisiones;
-                descuentosComisiones = sumaDescneg + sumaDesFT + sumaIncob;
-                sumaCBtotal = sumaCBtotal ;
+
+
                 myCallback(sumaCBtotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}), descuentosComisiones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
            },
            error: function() {
@@ -1082,11 +1093,8 @@
             importdiasNoLaborados = data[0].diasNoLAborados * comisionXdia;
 
             //console.log(importdiasNoLaborados, comisionInt);
-            if(importePunt < importdiasNoLaborados){
-                importdiasNoLaborados=0
-            }
 
-            comisionInt = comisionInt - importdiasNoLaborados - descuentosComisiones;
+            comisionInt = comisionInt - importdiasNoLaborados;
 
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
@@ -1149,6 +1157,9 @@
                      '</tr>';
             var vtasPorc = data[2].real/data[2].vo;
             vtasPorc = vtasPorc *10;
+            if(vtasPorc > 10){
+                vtasPorc = 10;
+            }
             var vtasImporte = (vtasPorc/100) * comisionTot;
             var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
 
@@ -1179,11 +1190,8 @@
                      '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) +'</td>' +
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
                      '<td style="font-weight: bold" >'+ vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
-                     '</tr>'+
-                     '<tr style ="background-color:rgba(231, 235, 11, 0.705)">'+
-                     '<td style="font-weight: bold" colspan="5" >Comisión Integrada + Bonos </td>' +
-                     '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
+
             }
             //Agrupar Especiales por cons
             var rawtDataEspeciales = data[3];
@@ -1310,6 +1318,10 @@
                      '<td style="font-weight: bold" >'+ sumaRealEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'% </td>' +//suma de porcentajes  entre 2000
                      '<td style="font-weight: bold" >'+ alcanceEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'%</td>' +
                      '<td style="font-weight: bold" >'+ importeEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '</tr>'+
+                     '<tr style ="background-color:rgba(231, 235, 11, 0.705)">'+
+                     '<td style="font-weight: bold" colspan="5" >Comisión Integrada + Bonos </td>' +
+                     '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>'+
                      '<tr style ="background-color:#02F4A7 ">'+
                      '<td style="font-weight: bold" colspan="5" >Comisión TOTAL </td>' +

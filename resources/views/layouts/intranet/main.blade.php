@@ -421,12 +421,12 @@
                                 </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    {{-- <li class="nav-item">
-                        <a href="/comisionesVendedor" class="nav-link">
-                            <i class="nav-icon fas fa-cash-register"></i>
-                            <p>Comisiones</p>
-                        </a>
-                    </li> --}}
+                                    <li class="nav-item">
+                                        <a href="/comisionesVendedor" class="nav-link">
+                                        <i class="nav-icon fas fa-cash-register"></i>
+                                        <p>Comisiones</p>
+                                        </a>
+                                    </li>
                                     @if (in_array('CargarEspeciales', $permissions))
                                         <li class="nav-item">
                                             <a href="/comisionesEspeciales" class="nav-link">
@@ -436,12 +436,12 @@
                                         </li>
                                     @endif
                                     @if (in_array('ComisionesResumen', $permissions))
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a href="/comisionesResumen" class="nav-link">
                                                 <i class="nav-icon fas fa-chart-simple"></i>
                                                 <p>Cargar Resumen</p>
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     @endif
                                     @if (in_array('ComisionesConsultarResumen', $permissions))
                                         <li class="nav-item">
