@@ -1537,7 +1537,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
-                //////// SOLICITUDES PENDIENTES/////
+                //////// SOLICITUDES CONSULTA/////
                 Route::get('/SolicitudesConsulta', function(){
                     $token = TokenController::getToken();
                     $permissions = LoginController::getPermissions($token);
@@ -1552,6 +1552,15 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }else{
                         return redirect('/Intranet');
                     }
+                });
+
+                Route::post('/SolicitudesConsulta/GetCYCTableShow', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error'){
+                        return redirect('/logout');
+                    }
+                    $listSol = MisSolicitudesController::getCYCTableShow($token, $request->User);
+                    return $listSol;
                 });
 
                 //////////Prueba MisSolicitudes Admin-Gerente ////
@@ -2262,7 +2271,7 @@ Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function
 Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::getCitiesByState($token, json_encode($request->all()));
     return $response;
@@ -2270,7 +2279,7 @@ Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Reque
 Route::get('/logistica/distribucion/numeroGuia/getFreightersImports', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::getFreightersImports($token,json_encode($request->all()));
     return $response;
@@ -2286,7 +2295,7 @@ Route::get('/logisitica/distribucion/numeroGuia/getImportsByFreighter', function
 Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
     return $response;
@@ -2294,9 +2303,25 @@ Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', functi
 Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
     $token = TokenController::getToken();
     if($token == 'error' || $token == 'expired'){
-        return redirec('/logout');
+        LoginController::logout();
     }
     $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
+    return $response;
+});
+Route::delete('/logistica/distribucion/numeroGuia/deleteImportsOfFregihter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::deleteImportsOfFregihter($token,json_encode($request->all()));
+    return $response;
+});
+Route::post('/logistica/distribucion/numeroGuia/createImportsOfFreighter', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::createImportsOfFreighter($token, json_encode($request->all()));
     return $response;
 });
 // ************************* VALIDAR SAD *************************************** \\

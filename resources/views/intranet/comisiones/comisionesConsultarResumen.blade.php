@@ -139,6 +139,7 @@
 
    });
 function consultar() {
+    $("#comisionesConsultarResumenTable").dataTable().fnDestroy();
     var tipo;
     var zonasarr = {!! json_encode($zonasarr) !!};
     if(zonasarr == 'todo'){
@@ -174,6 +175,13 @@ $.ajax({
   'enctype': 'multipart/form-data',
   'timeout': 4 * 60 * 60 * 1000,
   success: function array(data){
+    Swal.fire({
+        position: 'top',
+        icon: 'success',
+        title: 'Se Cargó Correctamente el Resumen De Comisiones',
+        showConfirmButton: false,
+        timer: 100000
+    })
     var htmlllenaResumen='';
     console.log(date, arrzonas, tipo);
     console.log(data);
@@ -218,8 +226,14 @@ $.ajax({
   }
 },
   error: function() {
-      console.log("Error");
-      alert('Error, Tiempo de espera agotado');
+      console.log("Error Resumen");
+      Swal.fire({
+        position: 'top',
+        icon: 'warning',
+        title: 'Error al Cargar el Resumen De Comisiones',
+        showConfirmButton: false,
+        timer: 50000
+    })
   }
 });
 

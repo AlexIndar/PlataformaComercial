@@ -28,7 +28,7 @@ var valObser = [];
 //INE validation
 var fileIneValidation = '';
 
-$(document).ready(function() {
+$(document).ready(function () {
     console.log(document.getElementById("userName").value);
     $.ajax({
         'headers': {
@@ -39,10 +39,10 @@ $(document).ready(function() {
         'dataType': 'json',
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             businessLines = data;
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error + "Error");
         }
     });
@@ -56,7 +56,7 @@ $(document).ready(function() {
         'dataType': 'json',
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             addSelectListItems(data.shippingWays, "#shippingWaySelect");
             addSelectListItems(data.commercialTerms, "#commercialTermsSelect");
             addSelectListItems(data.priceList, "#priceListSelect");
@@ -72,7 +72,7 @@ $(document).ready(function() {
             addSelectListItems(data.paymentTerms, "#commercialPaySelectCredit");
             addSelectListItems(data.priceList, "#priceListSelectCredit");
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -87,7 +87,7 @@ $(document).ready(function() {
             'dataType': 'json',
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 cobUsernamesList = data;
                 let itemSelectorOption = $('#inputGroupSelect01 option');
                 itemSelectorOption.remove();
@@ -103,7 +103,7 @@ $(document).ready(function() {
                 $('#inputGroupSelect01').selectpicker("refresh");
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
             }
@@ -128,16 +128,16 @@ $(document).ready(function() {
             'data': objUser,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 reloadCycTable(data);
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
             }
         });
     }
 
-    $(function() {
+    $(function () {
         $("#tableCyc").DataTable({
             "responsive": true,
             "lengthChange": true,
@@ -152,13 +152,13 @@ $(document).ready(function() {
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
 
-    $('#inputGroupFile19').change(function(e) {
+    $('#inputGroupFile19').change(function (e) {
         var fileName = e.target.files[0].name;
         toBase64Edit(e.target.files[0]);
         $('#label-inputGroupFile19').html(fileName);
     });
 
-    $('#ineValidationFile').change(function(e) {
+    $('#ineValidationFile').change(function (e) {
         var fileN = e.target.files[0].name;
         toBase64IneValidation(e.target.files[0]);
         $('#label-ineValidationFile').html(fileN);
@@ -168,7 +168,7 @@ $(document).ready(function() {
 const addSelectListItems = (data, idItem) => {
     let itemSelectorOption = $(idItem + ' option');
     itemSelectorOption.remove(); -
-    $(idItem).selectpicker('refresh');
+        $(idItem).selectpicker('refresh');
     $(idItem).append('<option value="-1">Selecciona un opcion</option>');
     for (let i = 0; i < data.length; i++) {
         $(idItem).append('<option value="' + data[i]['listId'] + '">' + data[i]['listItemName'] + '</option>');
@@ -194,10 +194,10 @@ const getSolicitudesPendientes = (user) => {
         'data': objUser,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             reloadCycTable(data);
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -296,7 +296,7 @@ const getInfoSol = (solObj, typeCyC) => {
             'data': solObj,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 $.ajax({
                     'headers': {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -307,7 +307,7 @@ const getInfoSol = (solObj, typeCyC) => {
                     'data': solObj,
                     'enctype': 'multipart/form-data',
                     'timeout': 2 * 60 * 60 * 1000,
-                    success: function(data2) {
+                    success: function (data2) {
                         $.ajax({
                             'headers': {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -318,7 +318,7 @@ const getInfoSol = (solObj, typeCyC) => {
                             'data': solObj,
                             'enctype': 'multipart/form-data',
                             'timeout': 2 * 60 * 60 * 1000,
-                            success: function(valContac) {
+                            success: function (valContac) {
                                 $.ajax({
                                     'headers': {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -329,7 +329,7 @@ const getInfoSol = (solObj, typeCyC) => {
                                     'data': solObj,
                                     'enctype': 'multipart/form-data',
                                     'timeout': 2 * 60 * 60 * 1000,
-                                    success: function(filesList) {
+                                    success: function (filesList) {
                                         $.ajax({
                                             'headers': {
                                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -340,44 +340,44 @@ const getInfoSol = (solObj, typeCyC) => {
                                             'data': solObj,
                                             'enctype': 'multipart/form-data',
                                             'timeout': 2 * 60 * 60 * 1000,
-                                            success: function(factList) {
+                                            success: function (factList) {
                                                 showInfoModal(data, data2, valContac, filesList, factList, typeCyC);
                                             },
-                                            error: function(error) {
+                                            error: function (error) {
                                                 console.log(error + "Error");
                                             }
                                         });
                                     },
-                                    error: function(error) {
+                                    error: function (error) {
                                         console.log(error + "Error");
                                     }
                                 });
                             },
-                            error: function(error) {
+                            error: function (error) {
                                 console.log(error + "Error");
                             }
                         });
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log(error + "Error");
                     }
                 });
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error + "Error");
             }
         });
     }
 }
 
-document.getElementById("shippingWaySelect").addEventListener("change", function(e) {
+document.getElementById("shippingWaySelect").addEventListener("change", function (e) {
     let val = e.target.value;
     $('#shippingWaySelect2').val(val);
     $('#shippingWaySelect2').selectpicker("refresh");
 });
 
 
-document.getElementById("inputGroupSelect01").addEventListener("change", function(e) {
+document.getElementById("inputGroupSelect01").addEventListener("change", function (e) {
     getSolicitudesPendientes(e.target.value);
 });
 
@@ -861,10 +861,10 @@ function getTransactionHistory(folio) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(historyList) {
+            success: function (historyList) {
                 showHistoryModal(historyList);
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error + "Error");
             }
         });
@@ -901,10 +901,10 @@ function acceptForCash(folio) {
         'data': solObj,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(response) {
+        success: function (response) {
             showModalAcceptForCash(response);
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error + "Error");
         }
     });
@@ -928,7 +928,7 @@ function showModalAcceptForCash(item) {
     if (!isSameAddress(item.cliente.datosF.domicilio, item.cliente.datosE.domicilio)) {
         document.getElementById("sameDir").value = false;
         let auxAddrE = item.cliente.datosE.domicilio;
-        let addressE = `${auxAddrE.calle} #${auxAddrE.noExt} ${auxAddrE.noInt != null ? 'Int. # '+auxAddrE.noInt : ''}, ${auxAddrE.colonia}, ${auxAddrE.ciudad}, ${auxAddrE.estado}, C.P. ${auxAddrE.cp}`;
+        let addressE = `${auxAddrE.calle} #${auxAddrE.noExt} ${auxAddrE.noInt != null ? 'Int. # ' + auxAddrE.noInt : ''}, ${auxAddrE.colonia}, ${auxAddrE.ciudad}, ${auxAddrE.estado}, C.P. ${auxAddrE.cp}`;
         document.getElementById("addresEntrega").style.display = "flex";
         document.getElementById("dirE").innerHTML = addressE;
     } else {
@@ -942,11 +942,11 @@ function showModalAcceptForCash(item) {
 function toBase64Edit(file) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         fileEdit = reader.result.split(',')[1];
         // fileEdit = result;
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -954,10 +954,10 @@ function toBase64Edit(file) {
 function toBase64IneValidation(file) {
     let reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         fileIneValidation = reader.result.split(',')[1];
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -982,10 +982,10 @@ function getvalidacionActa(folio) {
         'data': objFolio,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             info = data;
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error + "Error");
         }
     });
@@ -1006,10 +1006,10 @@ function getValidacionFactura(folio) {
         'data': objFolio,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             info = data;
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -1030,10 +1030,10 @@ function getValidacionReferencias(folio) {
         'data': objFolio,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             info = data;
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -1102,7 +1102,7 @@ function getValueChecks() {
             //Acta Constitutiva
             if (actaConstCount != 0) {
                 for (let i = 0; i < actaConstCount; i++) {
-                    if ($('input[name="actaConstId' + i + '"]:checked').val() == undefined) alertMsg += `<p>Valida la acta Const ${i+1}</p>`;
+                    if ($('input[name="actaConstId' + i + '"]:checked').val() == undefined) alertMsg += `<p>Valida la acta Const ${i + 1}</p>`;
                 }
             }
         }
@@ -1112,11 +1112,11 @@ function getValueChecks() {
             if ($('input[name="picCRRef"]:checked').val() == undefined) alertMsg += `<p>Valida Carta Responsiva</p>`;
         } else if (referenciasCount != 0) {
             for (let i = 0; i < referenciasCount; i++) {
-                if ($('input[name="refStel' + i + '"]:checked').val() == undefined) alertMsg += `<p>Valida la referencia ${i+1}</p>`;
+                if ($('input[name="refStel' + i + '"]:checked').val() == undefined) alertMsg += `<p>Valida la referencia ${i + 1}</p>`;
             }
         } else if (facturasCount != 0) {
             for (let i = 0; i < facturasCount; i++) {
-                if ($('input[name="factRefId' + i + '"]:checked').val() == undefined) alertMsg += `<p>Valida la Factura No. ${i+1}</p>`;
+                if ($('input[name="factRefId' + i + '"]:checked').val() == undefined) alertMsg += `<p>Valida la Factura No. ${i + 1}</p>`;
             }
         } else if (caratulaCount != 0) {
             if ($('input[name="picCaratulaRef"]:checked').val() == undefined) alertMsg += `<p>Valida la Caratula</p>`;
@@ -1337,7 +1337,7 @@ function setFile(json) {
         'data': json,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             if (Number.isInteger(data)) {
                 $('#cargaModal').modal('hide');
                 document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
@@ -1349,7 +1349,7 @@ function setFile(json) {
                 $('#cargaModal').modal('hide');
             }
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
             alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             $('#cargaModal').modal('hide');
@@ -1433,7 +1433,7 @@ function getReferencesFile(folio) {
         'data': json,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(result) {
+        success: function (result) {
             console.log(result);
             const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             // const url = window.URL.createObjectURL(blob);
@@ -1444,7 +1444,7 @@ function getReferencesFile(folio) {
             enlace.download = "Referencias.xlsx";
             enlace.click();
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -1480,7 +1480,7 @@ function saveValidation(flag) {
             'data': auxJson,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(result) {
+            success: function (result) {
                 console.log(result);
                 $('#cargaModal').modal('hide');
                 if (result && flag == null) {
@@ -1493,7 +1493,7 @@ function saveValidation(flag) {
                     console.log("Error, enviar correo a adan.perez@indar.com.mx");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
             }
         });
@@ -1530,14 +1530,14 @@ function sendMail(objMail) {
         'data': mailJson,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             console.log(data);
             alert(data.success);
             $('#infoModal').modal('hide');
             $('#cargaModal').modal('hide');
             realoadTableView();
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
             alert("Error al enviar los correos");
             $('#cargaModal').modal('hide');
@@ -1571,7 +1571,7 @@ function confirmRollback(folio) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(response) {
+            success: function (response) {
                 if (response) {
                     alert("Enviado Correctamente");
                     realoadTableView();
@@ -1580,7 +1580,7 @@ function confirmRollback(folio) {
                 }
 
             },
-            error: function(error) {
+            error: function (error) {
                 alert(error + "Error");
             }
         });
@@ -1588,14 +1588,14 @@ function confirmRollback(folio) {
 }
 
 function realoadTableView() {
-    if(document.getElementById("userP").value == "CYC"){
+    if (document.getElementById("userP").value == "CYC") {
         getSolicitudesPendientes(document.getElementById("userName").value);
-    }else{
+    } else {
         getSolicitudesPendientes(document.getElementById("inputGroupSelect01").value);
     }
 }
 
-function cancelRollback(){
+function cancelRollback() {
     $('#confirModal').modal('hide');
 }
 
@@ -1711,7 +1711,7 @@ function acceptCredit() {
             'data': jsonDatosIntelisis,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 if (response != "") {
                     $('#acceptForCreditModal').modal('hide');
@@ -1726,7 +1726,7 @@ function acceptCredit() {
                     document.getElementById("alertInfoModal").innerHTML = alertMsg;
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 $('#alertModal').modal('show');
                 let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
@@ -1767,7 +1767,7 @@ function setReference() {
                 'data': jsonReference,
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
-                success: function(response) {
+                success: function (response) {
                     $('#cargaModal').modal('hide');
                     console.log(response);
                     if (response) {
@@ -1780,7 +1780,7 @@ function setReference() {
                     }
                     realoadTableView();
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error);
                     $('#alertModal').modal('show');
                     let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
@@ -1868,7 +1868,7 @@ function acceptContado() {
             'data': jsonDatosIntelisis,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(response) {
+            success: function (response) {
                 $('#cargaModal').modal('hide');
                 console.log(response);
                 if (response != "") {
@@ -1889,7 +1889,7 @@ function acceptContado() {
                     document.getElementById("alertInfoModal").innerHTML = alertMsg;
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 $('#alertModal').modal('show');
                 $('#cargaModal').modal('hide');
@@ -1924,7 +1924,7 @@ function setReactCli() {
             'data': jsonReactive,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(response) {
+            success: function (response) {
                 $('#cargaModal').modal('hide');
                 if (response) {
                     $('#reactiveClieModal').modal('hide');
@@ -1935,7 +1935,7 @@ function setReactCli() {
                     document.getElementById("alertInfoModal").innerHTML = alertMsg;
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 $('#alertModal').modal('show');
                 $('#cargaModal').modal('hide');
@@ -1953,10 +1953,10 @@ function envioMail2() {
     $('#cargaModal').modal('show');
     let mailJson = {
         folio: 27626,
-        tipoSol: "CREDITO",
-        cliente: "P030537",
-        razonSocial: "MEDINA HERNANDEZ FRANCELIA",
-        rfc: "MEHF7704157T5",
+        tipoSol: "PRUEBA",
+        cliente: "P0PRUEBA",
+        razonSocial: "PRUEBA",
+        rfc: "MEHF770PRUEBA",
         zona: "Z656",
         emails: [
             "vrodriguez@indar.com.mx",
@@ -1969,6 +1969,23 @@ function envioMail2() {
         status: "Aceptada Credito",
         result: false
     };
+
+   /* mailJson = {
+        folio: 27910, 
+        tipoSol: "CREDITO", 
+        cliente: "P030926", 
+        razonSocial: "CRISPINA ARROYO DIAZ", 
+        rfc: "AODC621205EW3", 
+        zona: "Z415", 
+        emails: [
+            "vrodriguez@indar.com.mx",
+            "adan.perez@indar.com.mx",
+            "gregorio.salinas@indar.com.mx",
+            "claudia.munoz@indar.com.mx",
+            "jose.pavon@indar.com.mx"
+        ], 
+        status: "Aceptada Contado (Pendiente Credito)"        
+    }*/
     console.log(mailJson);
     $.ajax({
         'headers': {
@@ -1980,14 +1997,14 @@ function envioMail2() {
         'data': mailJson,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             console.log(data);
             alert(data.success);
             $('#infoModal').modal('hide');
             $('#cargaModal').modal('hide');
             realoadTableView();
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
             alert("Error al enviar los correos");
             $('#cargaModal').modal('hide');
@@ -2002,9 +2019,49 @@ function envioMail() {
 }
 
 function prueba() {
-    if(document.getElementById("userP").value == "CYC"){
+    if (document.getElementById("userP").value == "CYC") {
         getSolicitudesPendientes(document.getElementById("userName").value);
-    }else{
+    } else {
         getSolicitudesPendientes(document.getElementById("inputGroupSelect01").value);
+    }
+}
+
+function simularReferencia() {
+    let response = {
+        "folio": 27958,
+        "tipoSol": "CONTADO",
+        "claveP": "P031063",
+        "razonSocial": "ARMANDO GARCIA NUÑEZ",
+        "rfc": "GANA7005057U3",
+        "zona": "Z145",
+        "status": "Aceptada Contado",
+        "emails": [
+            "vrodriguez@indar.com.mx",
+            "adan.perez@indar.com.mx",
+            "andrea.leon@indar.com.mx",
+            "claudia.munoz@indar.com.mx",
+            "jramirez@indar.com.mx"
+        ],
+        "customerID": "C018999",
+        "result": true
+    }
+    // console.log(response);
+    if (response != "") {
+        // console.log(response.result);
+        if (response.result != false) {
+            $('#acceptForCashModal').modal('hide');
+            sendMail(response);
+            console.log("enviado");
+            if (response.customerID != "YES" && response.customerID != "")
+                setReferenceModal(response.customerID, response.folio);
+        } else {
+            $('#alertModal').modal('show');
+            let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+            document.getElementById("alertInfoModal").innerHTML = alertMsg;
+        }
+    } else {
+        $('#alertModal').modal('show');
+        let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+        document.getElementById("alertInfoModal").innerHTML = alertMsg;
     }
 }

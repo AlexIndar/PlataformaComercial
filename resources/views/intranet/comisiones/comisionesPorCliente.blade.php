@@ -115,7 +115,7 @@
                                         <th>Días</th>
                                         <th>Importe Factura</th>
                                         <th>Saldo</th>
-                                        <th>Dif. en Precio</th>
+                                        <th>Desc. Neg</th>
                                         <th>Desc. Fuera de Tiempo</th>
                                         <th>Incob.</th>
                                         <th>Comis. Base</th>
@@ -226,7 +226,6 @@ $.ajax({
                    groups[val].incobrabilidad += item.incobrabilidad;
                    groups[val].descneg += item.descneg;
                    groups[val].comision_base +=  item.comision_base;
-
                    return groups;
                }, {});
             }
@@ -317,6 +316,7 @@ $.ajax({
                         var sumaSaldo= 0;
                         var sumaCB = 0;
                         var sumaInc =0;
+                        var sumaDesneg= 0;
 
                         for (i = 0; i < data.length; i++) {
 
@@ -329,6 +329,8 @@ $.ajax({
                             sumaSaldo = sumaSaldo + data[i].saldo;
                             sumaCB = sumaCB + data[i].comision_base;
                             sumaInc = sumaInc + data[i].incobrabilidad;
+                            var desNeg = data[i].descneg * -1;
+                            sumaDesneg = sumaDesneg + desNeg;
 
                             var fechaFact = moment(new Date(data[i].fechaFactura)).format('DD/MM/YYYY');
                             var fechaDue = moment(new Date(data[i].dueDate)).format('DD/MM/YYYY');
@@ -356,9 +358,9 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].diasDiferencia + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + importe_factura + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].saldo+ '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].descneg+ '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].descuento_fuera_tiempo+ '</td>' +
-                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].incobrabilidad+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + desNeg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].descuento_fuera_tiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' + data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' + comisionBase + '</td>' +
                             '</tr>';
                             }else{
@@ -374,10 +376,10 @@ $.ajax({
                             '<td style="font-weight: bold">' + fechaSaldada + '</td>' +
                             '<td style="font-weight: bold">' + data[i].diasDiferencia + '</td>' +
                             '<td style="font-weight: bold">' + importe_factura + '</td>' +
-                            '<td style="font-weight: bold">' + data[i].saldo+ '</td>' +
-                            '<td style="font-weight: bold">' + data[i].diferencias_precio+ '</td>' +
-                            '<td style="font-weight: bold">' + data[i].descneg+ '</td>' +
-                            '<td style="font-weight: bold">' + incobrabilidad+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].saldo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                            '<td style="font-weight: bold">' + desNeg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].diferencias_precio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                            '<td style="font-weight: bold">' + incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                             '<td style="font-weight: bold">' + comisionBase + '</td>' +
                             '</tr>';
                             }
@@ -397,7 +399,7 @@ $.ajax({
                             '<td style="font-weight: bold; background-color:#7fffbf"> </td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaIFac.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaSaldo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-                            '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
+                            '<td style="font-weight: bold; background-color:#7fffbf">'+sumaDesneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">0</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+ sumaInc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>'+
                             '<td style="font-weight: bold; background-color:#7fffbf">'+sumaCB.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>';

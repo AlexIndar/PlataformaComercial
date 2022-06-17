@@ -40,7 +40,8 @@
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
                             <button onclick="realoadTableView()">A</button>
-                            <!-- <button onclick="envioMail2()">B</button> -->
+                            <button onclick="envioMail2()">B</button>
+                            <button onclick="simularReferencia()">C</button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

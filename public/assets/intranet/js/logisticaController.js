@@ -366,6 +366,7 @@ const logisticaController = {
             $('#chofer').select2();
             $('#fleteraImporte').select2();
             $('#estadoImporte').select2();
+            $('#fleteraImporteCreate').select2();
             $('.select2-selection').css('height', '39px');
             $('.select2-selection').css('width', '100%');
             $('[data-toggle="tooltip"]').tooltip();
@@ -389,7 +390,27 @@ const logisticaController = {
             digitsOptional: false,
             placeholder: "0.00"
         });
+        $('#cajaCreate').inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
         $("#cajaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $('#atadoCreate').inputmask({
             alias: "decimal",
             radixPoint: ".",
             autoGroup: true,
@@ -409,6 +430,16 @@ const logisticaController = {
             digitsOptional: false,
             placeholder: "0.00"
         });
+        $('#bultoCreate').inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
         $("#bultoUpdate").inputmask({
             alias: "decimal",
             radixPoint: ".",
@@ -419,7 +450,27 @@ const logisticaController = {
             digitsOptional: false,
             placeholder: "0.00"
         });
+        $('#cubetaCreate').inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
         $("#cubetaUpdate").inputmask({
+            alias: "decimal",
+            radixPoint: ".",
+            autoGroup: true,
+            groupSeparator: ".",
+            digits: 2,
+            allowMinus: false,
+            digitsOptional: false,
+            placeholder: "0.00"
+        });
+        $('#tarimaCreate').inputmask({
             alias: "decimal",
             radixPoint: ".",
             autoGroup: true,
@@ -440,9 +491,11 @@ const logisticaController = {
             placeholder: "0.00"
         });
         $('#fletera').on('change', function () {
+            $('#chofer').select2('destroy');
             $('#chofer').prop('disabled', true);
         });
         $('#chofer').on('change', function () {
+            $('#fletera').select2('destroy');
             $('#fletera').prop('disabled', true);
         });
         $('#table-importe').DataTable({
@@ -452,7 +505,7 @@ const logisticaController = {
             processing: false,
             bSortClasses: false,
             fixedHeader: false,
-            scrollY: 350,
+            scrollY: 260,
             scrollCollapse: true,
             deferRender: true,
             scroller: true,
@@ -489,6 +542,7 @@ const logisticaController = {
                             +'</div>'; 
                 }}
             ],
+            order: [1,'asc'],
             language: {
                 "emptyTable": "No hay información",
                 "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
@@ -513,10 +567,10 @@ const logisticaController = {
                 {
                     text: 'Exportar Template',
                     action: function ( e, dt, node, config ) {
-                        let url = '/Templates/Template_Importes_NumeroGuia.xlsx';
+                        let url = '/Templates/Template_Importes_Fleteras.xlsx';
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'Template_Importes_NumeroGuia';
+                        a.download = 'Template_Importes_Fleteras';
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
@@ -527,13 +581,70 @@ const logisticaController = {
                     action: function(e,dt,node,config){
                         $('#fileTempleteImportImportesFleteras').click();
                     }
+                },
+                {
+                    text: 'Agregar Importes',
+                    action: function(e,dt,node,config){
+                        $('#modal-importes-fleteras').modal('toggle');
+                        $('#modal-agregar-importes').modal({backdrop: 'static', keyboard: false});
+                        $('#modal-agregar-importes').modal('show');
+                    }
                 }
             ]
         });
     },
+    exitModalImportCreate:() => {
+        $('#modal-agregar-importes').modal('toggle');
+        $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+        $('#modal-importes-fleteras').modal('show');
+    },
+    createImport: () => {
+        let data = {
+            cp: $('#codigoPostalCreate').val(),
+            fletera: $('#fleteraImporteCreate option:selected').text(),
+            zona: $('#zonaCreate').val(),
+            caja: $('#cajaCreate').val(),
+            atado: $('#atadoCreate').val(),
+            bulto: $('#bultoCreate').val(),
+            cubeta: $('#cubetaCreate').val(),
+            tarima: $('#tarimaCreate').val(),
+            fechaInicio: $('#fechaInicioCreate').val(),
+            fechaFin: $('#fechaFinCreate').val()
+        };
+        logisticaController.token();
+        $.ajax({
+            url: '/logistica/distribucion/numeroGuia/createImportsOfFreighter',
+            type: 'POST',
+            data: data,
+            datatype: 'json',
+            success: function(data){
+                if(data)
+                {
+                    Toast.fire({
+                        icon: 'success',
+                        title: '¡Se agregaron correctamente los importes de la fletera!'
+                    });
+                    $('#modal-agregar-importes').modal('toggle');
+                    $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
+                    $('#modal-importes-fleteras').modal('show');
+                    logisticaController.consultFreighterImport();
+                }else{
+                    Toast.fire({
+                        icon: 'error',
+                        title: '¡Hubo un error al actualizar los importes de la fletera!'
+                    });
+                }
+            },
+            error: function(error){
+
+            },
+            complete: function(){
+
+            }
+        });
+    },
     openModalQuestionDeleteImport: (e) => {
         let idImport = $(e).data('id');
-        
         logisticaController.getDataImportsFreghter(idImport).then(()=>{
             Swal.fire({
                 title: '¿Esta seguro de eliminar los importes de la fletera '+dataImportsFreghter[0].fletera+'?',
@@ -546,11 +657,37 @@ const logisticaController = {
                 confirmButtonText: 'Si'
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire(
-                        '¡Eliminado!',
-                        'Los importes de la fletera '+dataImportsFreghter[0].fletera+' con periodo '+dataImportsFreghter[0].fechaInicio+'--'+dataImportsFreghter[0].fechaFin+ 'con Código Posta : '+dataImportsFreghter[0].cp,
-                        'success'
-                    )
+                    logisticaController.token();
+                    $.ajax({
+                        url: '/logistica/distribucion/numeroGuia/deleteImportsOfFregihter',
+                        type: 'DELETE',
+                        data: {id:idImport},
+                        datatype: 'json',
+                        success: function(data){
+                            if(data){
+                                Swal.fire({
+                                    title: '¡Eliminado!',
+                                    text: 'Los importes de la fletera '+dataImportsFreghter[0].fletera+' con periodo '+dataImportsFreghter[0].fechaInicio+'--'+dataImportsFreghter[0].fechaFin+' con Código Posta : '+dataImportsFreghter[0].cp,
+                                    icon: 'success'
+                                }).then(() => {
+                                    logisticaController.consultFreighterImport();
+                                });
+
+                            }else{
+                                Swal.fire({
+                                    title:'¡Error!',
+                                    text:'Hubo un error al eliminar los importes de la fletera'+dataImportsFreghter[0].fletera,
+                                    icon:'error'
+                                });
+                            }
+                        },
+                        error: function(error){
+
+                        },
+                        complete: function(){
+
+                        }
+                    })
                 }
               })
             }
@@ -612,16 +749,16 @@ const logisticaController = {
                            exceljson.push(XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]));  
                         }  
                     });
-                    console.log(exceljson[0]);
-                    console.log(JSON.stringify(exceljson[0]));
                     logisticaController.token();
                     $.ajax({
                         url:'/logistica/distribucion/numeroGuia/bulkLoadImports',
                         type: 'POST',
                         data: {json:JSON.stringify(exceljson[0])},
                         datatype: 'json',
+                        beforeSend: function() {
+                            $('#cover-spin').show(0);
+                        },
                         success: function(data){
-                            console.log(data);
                             if(data){
                                 Toast.fire({
                                     icon: 'success',
@@ -639,7 +776,7 @@ const logisticaController = {
                             console.log(error);
                         },
                         complete: function(){
-
+                            $('#cover-spin').hide();
                         }
                     })
                 }  
@@ -716,7 +853,6 @@ const logisticaController = {
             data: data,
             datatype: 'json',
             success: function(data){
-                console.log(data);
                 if(data)
                 {
                     Toast.fire({
@@ -741,7 +877,6 @@ const logisticaController = {
 
             }
         });
-        console.log(data);
     },
     importDataNumGuia: () => {  
         var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;  
@@ -823,7 +958,6 @@ const logisticaController = {
                     data: { factura: factura, fletera: fletera },
                     datatype: 'json',
                     success: function(data){
-                        console.log(data);
                         if(data != "" || data != [] || data.length != 0)
                         {
                             //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRAY DE LOS BULTOS QUE REGRESA
@@ -1604,6 +1738,9 @@ const logisticaController = {
             type: 'GET',
             data: { embarque: embarque },
             datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 let repetido = 0;
                 let modificado = 0;
@@ -1690,7 +1827,7 @@ const logisticaController = {
                 }
             },
             complete: function () {
-                resolve();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -1783,6 +1920,7 @@ const logisticaController = {
             for (let a = 0; a < arrayRowsEmbarques.length; a++) {
                 if (arrayRowsEmbarques[a] != undefined) {
                     if (arrayRowsEmbarques[a].disponible) {
+                        $('#embarque'+arrayRowsEmbarques[a].row).prop('disabled', true);
                         data += arrayRowsEmbarques[a].embarque + ',';
                     }
                 }
@@ -1794,6 +1932,9 @@ const logisticaController = {
                 type: 'POST',
                 data: { embarques: arrayEmbarquesFinal },
                 datatype: 'json',
+                beforeSend: function() {
+                    $('#cover-spin').show(0);
+                },
                 success: function (data) {
                     $('#table-content-embarque-factura').empty();
                     if (data == "") {
@@ -1842,7 +1983,7 @@ const logisticaController = {
 
                 },
                 complete: function () {
-                    resolve();
+                    $('#cover-spin').hide();
                 }
             })
         } else {
@@ -1861,8 +2002,10 @@ const logisticaController = {
             type: 'GET',
             data: { factura: factura, fletera: fletera },
             datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
             success: function(data){
-                console.log(data);
                 if(data != "" || data != [] || data.length != 0)
                 {
                     //OBTENER EL EMBARQUE PARA AGREGARLO AL ARRAY DE LOS BULTOS QUE REGRESA
@@ -2080,7 +2223,7 @@ const logisticaController = {
 
             },
             complete: function () {
-
+                $('#cover-spin').hide();
             }
         })
         let bandera = 0;
@@ -2233,7 +2376,6 @@ const logisticaController = {
             data: data,
             datatype: 'json',
             success: function(data){
-                console.log(data);
                 $('#table-importe').DataTable().clear().draw();
                 $('#table-importe').DataTable().rows.add(data).draw();
             },
@@ -2473,7 +2615,6 @@ const logisticaController = {
             type: 'GET',
             datatype: 'json',
             success: function (data) {
-                console.log(data);
             },
             error: function () {
 
