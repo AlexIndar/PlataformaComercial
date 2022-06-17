@@ -2216,7 +2216,7 @@ Route::get('/logistica/distribucion/numeroGuia', function(){
     $userData = json_decode(MisSolicitudesController::getUserRol($token));
     $username = $userData->typeUser;
     $userRol = $userData->permissions;
-    $states = LogisticaController::getStates($token); 
+    $states = LogisticaController::getStates($token);
     $permissions = LoginController::getPermissions($token);
     return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers','states'));
 })->name('logistica.distribucion.numeroGuia');

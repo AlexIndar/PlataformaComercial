@@ -232,6 +232,12 @@ $.ajax({
             //console.log(groupBy(rawtData,'companyname'));
             var resultData = Object.values(groupBy(rawtData,'companyid'));
             console.log(resultData);
+            var comisionesbase = 0;
+            for(i=0; i< resultData.length; i++){
+            resultData[i].comision_base = resultData[i].comision_base - resultData[i].descneg - resultData[i].descuento_fuera_tiempo - resultData[i].incobrabilidad;
+
+            }
+
             var table = $('#comisionesTable').dataTable( {
                 dom : 'Brtip',
                 paging: false,
@@ -378,7 +384,7 @@ $.ajax({
                             '<td style="font-weight: bold">' + importe_factura + '</td>' +
                             '<td style="font-weight: bold">' + data[i].saldo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                             '<td style="font-weight: bold">' + desNeg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
-                            '<td style="font-weight: bold">' + data[i].diferencias_precio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
+                            '<td style="font-weight: bold">' + data[i].descuento_fuera_tiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                             '<td style="font-weight: bold">' + incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+ '</td>' +
                             '<td style="font-weight: bold">' + comisionBase + '</td>' +
                             '</tr>';
