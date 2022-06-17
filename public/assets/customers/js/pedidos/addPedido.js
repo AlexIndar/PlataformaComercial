@@ -430,6 +430,7 @@ function checkItems() {
         if (window.location.href.includes('pedido/editar')) { //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
             prepareJsonSeparaPedidos(false);
         }
+        cargarInventario();
     } else {
         document.getElementById('pedido').style.display = "none";
         document.getElementById('loading').style.display = "block";
@@ -646,7 +647,7 @@ function prepareJsonSeparaPedidos(separa) { //Convierte arreglo con todos los it
     if (!separa) {
         tipoGetItemById = 1;
     }
-    /*var formaEnvío = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() : $("#envio").val();
+    var formaEnvío = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() : $("#envio").val();
     if(formaEnvío == 'CCI FLETERA'){ //si la forma de envío es CCI FLETERA validar que no tenga artículos que NO pueden venderse por esta fletera
         for(var x = 0; x < selectedItemsFromInventory.length; x++){
             console.log(selectedItemsFromInventory[x]['item']);
@@ -656,7 +657,7 @@ function prepareJsonSeparaPedidos(separa) { //Convierte arreglo con todos los it
                 x--; //restar a variable de loop para que termine de recorrer items seleccionados
             }
         }
-    }*/
+    }
     cantItemsPorCargar = selectedItemsFromInventory.length;
     if(selectedItemsFromInventory.length > 0){
         jsonItemsSeparar = "[";
@@ -1063,7 +1064,8 @@ function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
 }
 
-function cargarInventario() {
+async function cargarInventario() {
+    console.log('creando datatable');
     var empty = document.getElementById('empty').value;
     document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
     $('#mostrar_existencias').prop("checked", false);
@@ -1175,10 +1177,14 @@ function cargarInventario() {
             x++;
         }
 
+        console.log('terminó de acomodar info');
+
         $('#tablaInventario thead tr:eq(1) th').each(function () {
             var title = $(this).text();
             $(this).html('<input type="text" placeholder="' + title + '" class="column_search" />');
         });
+
+        console.log('Pasando info a tabla');
 
         var table = $("#tablaInventario").DataTable({
             data: dataset,
@@ -1199,7 +1205,6 @@ function cargarInventario() {
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
             table.column($(this).parent().index()).search(this.value).draw();
         });
-
     }
 }
 

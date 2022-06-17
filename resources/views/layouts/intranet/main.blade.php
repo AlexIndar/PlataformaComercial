@@ -266,7 +266,7 @@
                             </li>
                         @endif
 
-                        @if (in_array('Promociones', $permissions) || in_array('Pedidos', $permissions))
+                        @if (in_array('Promociones', $permissions) || in_array('Pedidos', $permissions) || in_array('ForzarPedidos', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Ventas')
                                     <a href="#" class="nav-link active">
