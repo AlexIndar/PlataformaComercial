@@ -14,7 +14,7 @@
                     <div class="col-sm-6">
                         <h5 class="m-0">Comisiones | Resumen </h5>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6">  
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Comisiones</a></li>
                         </ol>
@@ -48,7 +48,7 @@
                                             <button type="submit" class="btn btn-primary mb-3"
                                                 style="background-color:#002868" style="display: block"
                                                 onclick="consultar()" id="btnConsultar">Cargar Resumen </button>
-                                            <a href="/comisionesResumen"><button  class="btn btn-primary mb-3" style=" display: none"  style="background-color:#002868" onclick="refresh()"  id="btnRefresh">Cargar Otro Mes </button></a>
+                                            <button  class="btn btn-primary mb-3" style=" display: none"  style="background-color:#002868" onclick="refresh()"  id="btnRefresh">Cargar Otro Mes </button>
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,6 @@
  $(document).ready(function() {
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
-
 
    });
    function consultar() {
