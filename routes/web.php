@@ -2090,7 +2090,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
-                    $cliente= 'C004955';
+                    $cliente= 'C002620';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
                     //dd($general)
                     $general = $general[0];
