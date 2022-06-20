@@ -306,46 +306,27 @@
                  <!---------------------------------------------------------------------------------------------------- PIE PEDIDO ---------------------------------------------------------------------------------------------->
                  <div id="divActions">
                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                         <button type="button" id="mostrarInventario" onclick="cargarInventario()"
-                             class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i
-                                 class="fab fa-searchengin"></i> Buscar</button>
-                         <button type="button" id="downloadPlantilla" class="btn btn-group-buttons"
-                             onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
-                         <button type="button" id="importarCodigos" class="btn btn-group-buttons"
-                             onclick="triggerInputFile()"><i class="fas fa-upload"></i> Importar</button>
+                         <button type="button" id="mostrarInventario" onclick="cargarInventario()" class="btn btn-group-buttons" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fab fa-searchengin"></i> Buscar</button>
+                         <button type="button" id="downloadPlantilla" class="btn btn-group-buttons" onclick="downloadPlantillaPedido()"><i class="fas fa-file-download"></i> Plantilla</button>
+                         <button type="button" id="importarCodigos" class="btn btn-group-buttons" onclick="triggerInputFile()"><i class="fas fa-upload"></i> Importar</button>
                          <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
-                         <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i
-                                 class="fas fa-save"></i> Guardar</button>
-                         <button type="button" id="separarPedido" class="btn btn-group-buttons"
-                             onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar
-                             Pedido</button>
-                         <div class="spinner-border text-secondary"
-                             style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;"
-                             id="btnSpinner"></div>
+                         <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i class="fas fa-save"></i> Guardar</button>
+                         <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
+                         <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner"></div>
                      </div>
                      <br><br>
                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                         <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons"
-                             onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
-                         <button type="button" id="borrarCotizacion" class="btn btn-group-buttons"
-                             onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
-                         <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i
-                                 class="fas fa-envelope"></i> Enviar cotización</button>
-                         <button type="button" id="exportToExcel" class="btn btn-group-buttons"
-                             onclick="exportTableToExcel('tablaPedido', 'cotizacion')"><i class="fas fa-download"></i>
-                             Descargar
-                             cotización</button>
+                         <button type="button" id="nuevaCotizacion" class="btn btn-group-buttons" onclick="nuevaCotizacion()"><i class="fas fa-file"></i> Nueva cotización</button>
+                         <button type="button" id="borrarCotizacion" class="btn btn-group-buttons" onclick="activarEliminarModal()"><i class="fas fa-trash"></i> Borrar cotización</button>
+                         <button type="button" id="enviarCotizacion" class="btn btn-group-buttons" onclick="sendEmail()"><i class="fas fa-envelope"></i> Enviar cotización</button>
+                         <button type="button" id="exportToExcel" class="btn btn-group-buttons" onclick="exportTableToExcel('tablaPedido', 'cotizacion')"><i class="fas fa-download"></i> Descargar cotización</button>
                      </div>
                      <br><br>
                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                         <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons"
-                             onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
-                         <button type="button" id="pedidosClientes" class="btn btn-group-buttons"
-                             onclick="pedidosClientes()"><i class="fas fa-user"></i> Pedidos clientes</button>
-                         <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i
-                                 class="fas fa-paper-plane"></i> Levantar pedido</button>
-                         <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>
-                                                                                                                                                                                                                                            <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
+                         <button type="button" id="pedidosAnteriores" class="btn btn-group-buttons" onclick="pedidosAnteriores()"><i class="fas fa-history"></i> Pedidos anteriores</button>
+                         <button type="button" id="pedidosClientes" class="btn btn-group-buttons" onclick="pedidosClientes()"><i class="fas fa-user"></i> Pedidos clientes</button>
+                         <button type="button" id="levantarPedido" class="btn btn-group-buttons" onclick="save(3)"><i class="fas fa-paper-plane"></i> Levantar pedido</button>
+                         <!-- <button type="button" id="pedidosClientes" class="btn btn-group-buttons"><i class="fas fa-user"></i> Pedidos clientes</button>                                                                                                                                                                                                                  <button type="button" id="pedidosPendientes" class="btn btn-group-buttons"><i class="fas fa-clock"></i> Pedidos pendientes</button> -->
                      </div>
                  </div>
 
