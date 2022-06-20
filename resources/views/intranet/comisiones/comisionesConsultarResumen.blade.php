@@ -55,7 +55,7 @@
                             <div  class="card-body" id="resumenTable">
                                 <div  class="col-lg-12">
                                    <div class="card-body table-responsive p-0">
-                                      <table id="comisionesConsultarResumenTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                                      <table id="comisionesConsultarResumenTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:65% ;font-weight: bold">
                                          <thead style="background-color:#002868; color:white">
                                             <tr >
                                                <th>Zona</th>
@@ -132,6 +132,7 @@
             btns.removeClass('dt-button');
             },
         });
+
 
         document.getElementById("btnSpinner").style.display = "none";
         document.getElementById("btnConsultar").style.display = "block";

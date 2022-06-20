@@ -45,9 +45,9 @@
                 </div>
                 <hr>
                 <div class="row">
-                   <div class="col-12 table-responsive" id="facturasDiv">
+                   <div class="col-md-12 table-responsive" id="facturasDiv">
                     <p class="lead">Seleccione La Factura a Pagar:</p>
-                    <table id="example" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
+                    <table id="example" class="display" style="width:100%">
                         <thead style="background-color:#002868; color:white">
                            <tr>
                             <th></th>
@@ -61,8 +61,8 @@
                         <tbody>
                             @foreach ( $data as $value )
                             <tr>
-                                <td><input class="facturas" type="checkbox" value="" id=""></td>
-                                <td> <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2">Factura</td>
+                                <td><img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
+                                <td>Factura</td>
                                 <td> <a href="#" class="text-muted">{{ $value->tranid }}</a></td>
                                 <td class="text-center">{{ number_format($value->saldo, 2) }}</td>
                                 <td class="text-center">{{ substr($value->fechaFactura, 0, 10) }}</td>
@@ -72,12 +72,12 @@
                         </tbody>
                      </table>
                      <br>
-                     <button style = "display:none;" class="mx-auto btn btn-success btn-lg" onclick="mostrarNotas()" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fas fa-money-bill"></i></button>
+                     <button style = "display:none" class="form-control btn-success" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fa fa-arrow-right  "></i></button>
                    </div>
-                   <div class="col-12 table-responsive" id="notasDiv" style="display:none">
+                   <div class="col-md-12 table-responsive" id="notasDiv" style="display:none">
                     <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-primary" onclick="mostrarFacturas()" id="btnMostrarFacturas"><i class="fa fa-arrow-left"></i> &nbsp; Regresar a Facturas</button>
                     <table id="tableNotas" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
+                        <thead>
                            <tr>
                             <th></th>
                             <th>Documento</th>
@@ -101,10 +101,10 @@
                         </tbody>
                      </table>
                    </div>
-                   <div class="col-12 table-responsive">
+                   <div class="col-md-12 table-responsive">
                     <p class="lead">Documentos a Pagar:</p>
                     <table id="example2" class="table table-hover" style="font-size:90% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
+                        <thead>
                            <tr>
                               <th></th>
                               <th>Documento</th>
@@ -122,7 +122,7 @@
                 </div>
                 <br>
                 <div class="row">
-                   <div class="col-4">
+                   <div class="col-6">
                       <p class="lead">Metodos de Pago:</p>
                       <img src="{{ asset('dist/img/credit/visa.png') }}" alt="Visa">
                       <img src="{{ asset('dist/img/credit/mastercard.png') }}" alt="Mastercard">
@@ -132,7 +132,7 @@
                          Nota : solo se puede pagar ......
                       </p>
                    </div>
-                   <div class="col-8">
+                   <div class="col-6">
                       <div class="table-responsive">
                          <table class="table">
                             <tbody>
@@ -169,7 +169,7 @@
     </div>
 <!-- Modal Notas de Crédito-->
 <div class="modal fade" id="notasModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog modal-md modal-dialog-scrollable">
        <div class="modal-content">
           <div class="modal-header bg-indarBlue">
             <h4 id="headerNC" class="text-center title ml-auto">Agregar Nota de Crédito</h4>
@@ -181,23 +181,13 @@
           <div class="modal-body text-indarBlue" id="modal2">
              <div class="row">
                 <div class="col-md-12">
-                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">(Deberá Asignar el Total de la N.C a una ó varias Facturas)</h6>
+                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">(Asigne a una Factura Su Nota de Crédito)</h6>
                    {{--  <label for="">Selecciona la Factura a Asignar la N.C</label> --}}
-                    <table id="selectFacTable" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
-                        <thead style="background-color:#002868; color:white">
-                            <th></th>
-                            <th>Documento</th>
-                            <th>No.</th>
-                            <th>Monto</th>
-                            <th></th>
-
-                        </thead>
-                        <tbody id="bodyFacturasSelec">
-                        </tbody>
-                     </table>
+                   <select class="form-control" name="" id="selectFact"placeholder="Seleccione una Factura"></select>
                 </div>
              </div>
-             <h6 style="font-weight: bold">Monto de NC Restante : $ <span id="montoNC" style="font-size: 15px" class="badge badge-success"></span></h6>
+             <br>
+             <h6 style="font-weight: bold">Monto de la Nota de Crédito : $ <span id="montoNC" style="font-size: 15px" class="badge badge-success"></span></h6>
           </div>
 
           <div class="modal-footer">
@@ -220,176 +210,54 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
 
 $("body").addClass("sidebar-collapse");
 
+var table = $('#example').DataTable({
+    dom : 'Brt',
+} );
 
-var table = $('#example').dataTable( {
-    dom : 'Brtip',
-    paging:false,
-    fixedHeader:true,
-    ordering: false,
-    scrollY:320,
-    scrollX: true,
-    scrollCollapse: true,
-    buttons: [
-        {
-            extend:    'excel',
-            text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            titleAttr: 'Descargar Excel'
-        }
-    ],
-    initComplete: function () {
-    var btns = $('.dt-button');
-    btns.addClass('btn btn-success ');
-    btns.removeClass('dt-button');
-    },
-});
+    $('#example tbody').on('click', 'tr', function () {
+        $(this).toggleClass('selected');
+        document.getElementById("btnMostrarNotas").style.display = "block";
 
-var tableNotas =$('#tableNotas').dataTable( {
-    dom : 'Brtip',
-    paging:false,
-    fixedHeader:true,
-    ordering: false,
-    scrollY:320,
-    scrollX: true,
-    scrollCollapse: true,
-    buttons: [
-        {
-            extend:    'excel',
-            text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            titleAttr: 'Descargar Excel'
-        }
-    ],
-    initComplete: function () {
-    var btns = $('.dt-button');
-    btns.addClass('btn btn-success ');
-    btns.removeClass('dt-button');
-    },
-});
+    });
 
-var t =$('#example').dataTable( {
-    dom : 'Brtip',
-    paging:false,
-    fixedHeader:true,
-    ordering: false,
-    scrollY:320,
-    scrollX: true,
-    scrollCollapse: true,
-    buttons: [
-        {
-            extend:    'excel',
-            text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-            titleAttr: 'Descargar Excel'
+    $('#btnMostrarNotas').click(function () {
+        var data = table.rows('.selected').data();
+        arregloFact=[];
+        for(i=0; i< data.length; i++){
+            data[i][3] = data[i][3].replace(/,/g, "");
+            arregloFact.push(data[i]);
         }
-    ],
-    initComplete: function () {
-    var btns = $('.dt-button');
-    btns.addClass('btn btn-success ');
-    btns.removeClass('dt-button');
-    },
+        console.log(arregloFact);
+
+        document.getElementById("notasDiv").style.display = "block";
+        document.getElementById("facturasDiv").style.display = "none";
+    });
+
+var tableNotas = $('#tableNotas').DataTable({
+    dom : 'Brt',
+} );
+
+var t = $('#example2').DataTable({
+    dom : 'Brt',
     rowCallback: function(row, data, index){
         $('td', row).css('background-color', 'rgba(251, 255, 20, 0.603)');
     }
-});
+} );
 var subTotal = 0;
 var descuento = 0;
 var total = 0;
 htmlSelectFact='';
+montosFac=[];
+/*  $('#example tbody').on('click', 'tr', function () {
 
-$("input:checkbox.facturas").click(function() {
-    if(!$(this).is(":checked")){
-        $('#example tbody').on('click', 'tr', function () {
-
-         var data = table.row( this ).data();
-        // Mostrar Boton de NC
-        document.getElementById("btnMostrarNotas").style.display = "block";
-
-        if(data[1]=='Factura'){
-        data[3] = data[3].replace(/,/g, "");
-        subTotal += parseFloat(data[3]);
-        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-        else{
-        descuento += parseFloat(data[3]);
-        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-
-        total = subTotal - descuento;
-        $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-        t.row.add( [
-           data[0],
-           data[1],
-            data[2],
-            monto,
-            data[4],
-            data[5]
-
-        ] ).draw();
-
-        htmlSelectFact += '<tr>'+
-            '<td>' + data[0]+ '</td>'+
-            '<td>' + data[1]+ '</td>'+
-            '<td>' + data[2]+ '</td>'+
-            '<td>$' + monto+ '</td>'+
-            '<td><input type="number" class="form-control" placeholder ="Ingrese el Monto a Descontar"></td>'+
-
-            '</tr>';
-        $('#selectFacTable').html(htmlSelectFact);
-        } );
-    }
-    if($(this).is(":checked")){
-        $('#example tbody').on('click', 'tr', function () {
-        //jQuery(this).toggle("scale"); Elimina la Fila
-         var data = table.row( this ).data();
-        // Mostrar Boton de NC
-        document.getElementById("btnMostrarNotas").style.display = "block";
-
-        if(data[1]=='Factura'){
-        data[3] = data[3].replace(/,/g, "");
-        subTotal += parseFloat(data[3]);
-        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-        else{
-        descuento += parseFloat(data[3]);
-        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        }
-
-        total = subTotal - descuento;
-        $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-        t.row.add( [
-           data[0],
-           data[1],
-            data[2],
-            monto,
-            data[4],
-            data[5]
-
-        ] ).draw();
-
-        htmlSelectFact += '<tr>'+
-            '<td>' + data[0]+ '</td>'+
-            '<td>' + data[1]+ '</td>'+
-            '<td>' + data[2]+ '</td>'+
-            '<td>$' + monto+ '</td>'+
-            '<td><input type="number" class="form-control" placeholder ="Ingrese el Monto a Descontar"></td>'+
-
-            '</tr>';
-        $('#selectFacTable').html(htmlSelectFact);
-        } );
-    }
-});
-
-/* $('#example tbody').on('click', 'tr', function () {
-
-
-    //jQuery(this).toggle("scale"); Elimina la Fila
+    jQuery(this).toggle("scale");
      var data = table.row( this ).data();
     // Mostrar Boton de NC
     document.getElementById("btnMostrarNotas").style.display = "block";
@@ -407,7 +275,11 @@ else{
 total = subTotal - descuento;
 $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+if(montosFac.includes(monto)){
 
+}else{
+    montosFac.push(parseFloat(data[3]));
+}
     t.row.add( [
        data[0],
        data[1],
@@ -427,17 +299,35 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
 
         '</tr>';
     $('#selectFacTable').html(htmlSelectFact);
-} ); */
+ } ); */
+
 
  $('#tableNotas tbody').on('click', 'tr', function () {
+   $('#selectFact').empty();
+    var facturamayor = 0;
+    for (i=0; i< arregloFact.length; i++){
+        console.log(arregloFact[i][3]);
+        if(parseFloat(arregloFact[i][3]) > facturamayor){
+            facturamayor = parseFloat(arregloFact[i][3]);
+        }
+    }
+    console.log(facturamayor);
     //jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
     var data = tableNotas.row( this ).data();
     var montoNC = data[3].replace(/,/g, "");
     var headerNC = data[2];
+    if(montoNC < facturamayor ){
+
     $('#montoNC').text(montoNC);
     $('#headerNC').html('Abonar Nota de Crédito No . '+headerNC);
-
     $('#notasModal').modal('show');
+
+    for(i=0; i<arregloFact.length; i++){
+        montoNC = parseFloat(montoNC);
+       if(montoNC < parseFloat(arregloFact[i][3])){
+        $('#selectFact').append('<option value='+arregloFact[i][1]+'>Factura No. : '+arregloFact[i][2]+' Monto:  $'+parseFloat(arregloFact[i][3])+'</option>');
+        }
+    }
     var hide = jQuery(this);
      //Función Agregar NC
     $('#agregarNc').on('click', function(e) {
@@ -463,10 +353,18 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
 
         ], ).draw();
 
-
-
-
     });
+    }else{
+        Swal.fire({
+        position: 'top',
+        icon: 'info',
+        title: 'Debe de Existir una Factura Mayor a la N.C Seleccionada',
+        showConfirmButton: false,
+        timer: 50000
+        })
+
+    }
+
 
  } );
 
@@ -516,10 +414,6 @@ var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2
 
 });
 
-function mostrarNotas() {
-  document.getElementById("notasDiv").style.display = "block";
-  document.getElementById("facturasDiv").style.display = "none";
-}
 
 function mostrarFacturas() {
   document.getElementById("notasDiv").style.display = "none";

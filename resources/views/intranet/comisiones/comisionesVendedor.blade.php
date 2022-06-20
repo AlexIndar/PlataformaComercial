@@ -1095,7 +1095,7 @@
             //console.log(importdiasNoLaborados, comisionInt);
 
             comisionInt = comisionInt - importdiasNoLaborados;
-
+            console.log(data[0].diasNoLAborados);
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
                    '<td style="font-weight: bold" >'+ data[0].totalClientes  +'</td>' +
@@ -1277,7 +1277,7 @@
            }
 
             comisionTotal = totalBonos + importeEspeciales;
-
+           var bonosTotal = importeEspeciales +vtasImporte + importCtesNvos + bonoImp;
 
            /*  for(var i=0; i < data[3].length; i++){
                 htmlModalEspeciales += '<tr>'+
@@ -1320,11 +1320,11 @@
                      '<td style="font-weight: bold" >'+ importeEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>'+
                      '<tr style ="background-color:rgba(231, 235, 11, 0.705)">'+
-                     '<td style="font-weight: bold" colspan="5" >Comisión Integrada + Bonos </td>' +
-                     '<td style="font-weight: bold" >'+ totalBonos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
+                     '<td style="font-weight: bold" colspan="5" >Total de Bonos </td>' +
+                     '<td style="font-weight: bold" >'+ bonosTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>'+
                      '<tr style ="background-color:#02F4A7 ">'+
-                     '<td style="font-weight: bold" colspan="5" >Comisión TOTAL </td>' +
+                     '<td style="font-weight: bold" colspan="5" >Comisión TOTAL (Comisión Integrada + Bonos) </td>' +
                      '<td style="font-weight: bold; font-size: 17px" >'+ comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +'</td>' +
                      '</tr>';
 
