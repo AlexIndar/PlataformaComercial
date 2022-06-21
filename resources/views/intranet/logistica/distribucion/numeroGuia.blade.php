@@ -140,6 +140,7 @@
                                                                             <th>Cantidad</th>
                                                                             <th>Importe</th>
                                                                             <th>CP</th>
+                                                                            <th>Habilitar</th>
                                                                             <th></th>
                                                                         </tr>
                                                                     </thead>
