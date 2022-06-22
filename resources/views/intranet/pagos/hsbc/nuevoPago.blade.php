@@ -37,11 +37,6 @@
                     <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>RFC:</h5></div>
                     <div class="col-lg-4 col-md-3 col-sm-12 col-12"><input class="input-promociones" type="text" id="ord_curp_rfc" name="ord_curp_rfc" maxlength="18" value="FIN870710Q40" required readonly></div>
                 </div>
-                <br>
-                <div class="row text-center">
-                    <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Leyenda Emisor:</h5></div>
-                    <div class="col-lg-10 col-md-9 col-sm-12 col-12"><input class="input-promociones" type="text" id="ref_servicio_emisor" name="ref_servicio_emisor" maxlength="40" placeholder="Alfanumérico. Máximo 40 caracteres." required></div>
-                </div>
             </div>
         </div>
 
