@@ -524,6 +524,7 @@
                         <div class="acRow" id="factList">
 
                         </div>
+                        <div class="row mb-3" id="totalFacturas"></div>
                     </div>
                 </div>
                 <div class="row" id="observRef" style="display: none;">
