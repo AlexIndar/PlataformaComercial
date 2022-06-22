@@ -593,6 +593,20 @@ const logisticaController = {
             ]
         });
     },
+    DisableImports: (e) => {
+        let row = $(e).data('row');
+        console.log(row);
+        let checkbox = $('#checkbox'+row).is(":checked");
+        if(checkbox){
+            $('#tipo'+row).prop('disabled',false);
+            $('#cantidad'+row).prop('disabled',false);
+            $('#importe'+row).prop('disabled',false);
+        }else{
+            $('#tipo'+row).prop('disabled',true);
+            $('#cantidad'+row).prop('disabled',true);
+            $('#importe'+row).prop('disabled',true);
+        }
+    },
     exitModalImportCreate:() => {
         $('#modal-agregar-importes').modal('toggle');
         $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
@@ -1344,12 +1358,14 @@ const logisticaController = {
                 );
                 let idembarque = 'embarque'+contRowEmbarqueTable;
                 let embarque = embarques[a].Embarque;
+                let contRow = 0;
                 $.ajax({
                     url: '/logistica/distribucion/numeroGuia/existShipment',
                     type: 'GET',
                     data: { embarque: embarque },
                     datatype: 'json',
                     success: function (data) {
+                        contRow++;
                         let repetido = 0;
                         let modificado = 0;
                         if (data != 0) {
@@ -1363,28 +1379,18 @@ const logisticaController = {
                                         //validamos si el renglon agregado ya esta repetido
                                         repetido = 1;
                                         break;
-                                    } else {
-                                        //validamos si quieren modificar el mismo renglon
-                                        if (arrayRowsEmbarques[a].row == contRowEmbarqueTable) {
-                                            arrayRowsEmbarques[a].embarque = embarque;
-                                            arrayRowsEmbarques[a].disponible = true;
-                                            arrayRowsEmbarques[a].row = contRowEmbarqueTable;
-                                            modificado = 1;
-                                            break;
-                                        }
-                                    }
+                                    } 
                                 }
                             }
+                            
                             if (!repetido) {
-                                if (!modificado) {
-                                    arrayRowsEmbarques.push({
-                                        'embarque': embarque,
-                                        'disponible': true,
-                                        'row': contRowEmbarqueTable
-                                    });
-                                }
+                                arrayRowsEmbarques.push({
+                                    'embarque': embarque,
+                                    'disponible': true,
+                                    'row': contRow
+                                });
                             } else {
-                                $('#rowEmbarque' + contRowEmbarqueTable).remove();
+                                $('#rowEmbarque' + contRow).remove();
                                 Toast.fire({
                                     icon: 'error',
                                     title: '¡No se pueden repetir los embarques!'
@@ -1403,28 +1409,17 @@ const logisticaController = {
                                         //validamos si el renglon agregado ya esta repetido
                                         repetido = 1;
                                         break;
-                                    } else {
-                                        //validamos si quieren modificar el mismo renglon
-                                        if (arrayRowsEmbarques[a].row == contRowEmbarqueTable) {
-                                            arrayRowsEmbarques[a].embarque = embarque;
-                                            arrayRowsEmbarques[a].disponible = false;
-                                            arrayRowsEmbarques[a].row = contRowEmbarqueTable;
-                                            modificado = 1;
-                                            break;
-                                        }
                                     }
                                 }
                             }
                             if (!repetido) {
-                                if (!modificado) {
-                                    arrayRowsEmbarques.push({
-                                        'embarque': embarque,
-                                        'disponible': false,
-                                        'row': contRowEmbarqueTable
-                                    });
-                                }
+                                arrayRowsEmbarques.push({
+                                    'embarque': embarque,
+                                    'disponible': false,
+                                    'row': contRow
+                                });
                             } else {
-                                $('#rowEmbarque' + contRowEmbarqueTable).remove();
+                                $('#rowEmbarque' + contRow).remove();
                                 Toast.fire({
                                     icon: 'error',
                                     title: '¡No se pueden repetir los embarques!'
@@ -1435,16 +1430,16 @@ const logisticaController = {
                         }
                     },
                     complete: function () {
-                        
+                        console.log(arrayRowsEmbarques);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(textStatus);
                     }
                 });
             }
-            setTimeout(() => {
+            setTimeout(function(){
                 resolve();
-            },2000);
+            },10000)
         });
     },
     addNumGuia: () => {
@@ -2107,6 +2102,7 @@ const logisticaController = {
                                     + '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad' + lasRow + '" data-row="' + lasRow + '" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;" value="' + data[a].cantidad + '" disabled></td>'
                                     + importeLock
                                     + '<td>'+data[a].cp+'</td>'
+                                    +'<td><input type="checkbox" data-row="' + lasRow + '" id="checkbox'+lasRow+'" onchange="logisticaController.DisableImports(this);" ></td>'
                                     + '<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="' + lasRow + '" data-table="tipos" data-idrow="rowType' + lasRow + '"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
                                     + '</tr>'
                                 );
@@ -2191,6 +2187,7 @@ const logisticaController = {
                                 + '<td style="padding: 10px 0px 0px 0px;"><input class="form-control" id="cantidad' + contRowTypeTable + '" data-row="' + contRowTypeTable + '" onkeyup="logisticaController.changeTypeSelect(this)" type="number" style="width: 100%;" value="' + data[a].cantidad + '" disabled></td>'
                                 + importeLock
                                 + '<td>'+data[a].cp+'</td>'
+                                +'<td><input type="checkbox" data-row="' + lasRow + '" id="checkbox'+lasRow+'" onchange="logisticaController.DisableImports(this);" ></td>'
                                 + '<td><button type="button" class="btn btn-block btn-danger btn-sm" data-row="' + contRowTypeTable + '" data-table="tipos" data-idrow="rowType' + contRowTypeTable + '"onclick="logisticaController.deleteRowTable(this)"><i class="fa-solid fa-xmark"></i></button></td>'
                                 + '</tr>'
                             );

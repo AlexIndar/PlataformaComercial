@@ -1,6 +1,6 @@
 
 // VARIABLES GLOBALES ENCABEZADO ---------------------------------------------------------------------------------------------------------------------------------------
-var num_lote = '00001'; //DE PRUEBA, EN REALIDAD ES AUTOINCREMENTABLE Y LO RETORNA EL BACK
+var num_lote = '00090'; //DE PRUEBA, EN REALIDAD ES AUTOINCREMENTABLE Y LO RETORNA EL BACK
 var num_secuencia = 1; //padStart(5, "0");
 var now = new Date();
 var fec_aplicacion = moment(now).format('YYYYMMDD');
@@ -24,7 +24,8 @@ var des_rechazo = "".padEnd(50, ' ');
 var tp_code = "FERREINDARSIP1".padEnd(15, ' ');
 var uso_futuro = "".padEnd(391, ' ');
 
-var encabezado = [];
+
+// HSBC_SPEI_detalle
 var detalle = [];
 
 
@@ -167,12 +168,20 @@ function generateFile(){
         generaEncabezado(num_secuencia);
         // si todo está correcto, aquí !!! se debe de cambiar el número de lote por el que retornen del back
         encabezado += tpo_registro+''+num_lote+''+num_secuencia.toString().padStart(5, "0")+''+fec_aplicacion+''+cve_bco_ord+''+ord_tpo_cta+''+ord_num_cta+''+ord_nombre+''+ord_curp_rfc+''+cve_proceso+''+cve_producto+''+cod_instruccion+''+cod_moneda+''+leyenda_cargo+''+num_movtos.toString().padStart(5, "0")+''+imp_total.toString().padStart(17, "0")+''+cve_canal+''+cod_rechazo+''+des_rechazo+''+tp_code+''+uso_futuro+'|';
-        fileText += encabezado+'\n';
+        fileText += encabezado;
         num_secuencia ++;
         for(var x=0; x < num_movtos; x++){
             obtenerPago(num_secuencia);
             num_secuencia ++ ;
         }
+        for(var x=0; x < detalle.length; x++){
+            var detalleLine = '';
+            // si todo está correcto, aquí !!! se debe de cambiar el número de lote por el que retornen del back
+            detalleLine += detalle[x]['tpo_registro'] + detalle[x]['num_lote'].toString().padStart(5, '0') + detalle[x]['num_secuencia'] + detalle[x]['fec_aplicacion'] + detalle[x]['cve_bco_ord'] + detalle[x]['ord_tpo_cta'] + detalle[x]['ord_num_cta'] + detalle[x]['ord_nombre'] + detalle[x]['ord_curp_rfc'] + detalle[x]['cve_bco_ben'] + detalle[x]['ben_tpo_cta'] + detalle[x]['ben_num_cta'] + detalle[x]['ben_nombre'] + detalle[x]['ben_curp_rfc'] + detalle[x]['vos_tpo_cta'] + detalle[x]['vos_num_cta'] + detalle[x]['vos_nombre'] + detalle[x]['vos_curp_rfc'] + detalle[x]['cod_movto'] + detalle[x]['tpo_pago'] + detalle[x]['leyenda_abono'] + detalle[x]['importe_orden'] + detalle[x]['importe_iva'] + detalle[x]['ref_numerica'] + detalle[x]['ref_cobranza'] + detalle[x]['cve_pago'] + detalle[x]['tpo_operacion'] + detalle[x]['ref_unica_cliente'] + detalle[x]['ref_servicio_emisor'] + detalle[x]['nom_titular_servicio'] + detalle[x]['fec_expiracion'] + detalle[x]['cod_status'] + detalle[x]['cod_usuario'] + detalle[x]['num_serial'] + detalle[x]['num_folio'] + detalle[x]['cod_servicio'] + detalle[x]['uso_futuro'] + detalle[x]['cve_rastreo'] + detalle[x]['cod_rechazo'] + detalle[x]['des_rechazo'] + detalle[x]['uso_futuro_resp'];
+            fileText += "\n"+detalleLine;
+        }
+
+        console.log(detalle);
 
         downloadFile('MXFERREINDARSIP-'+fec_aplicacion+'-'+num_lote+'.txt', fileText);
     }
@@ -212,16 +221,6 @@ function validarCampos(){
     else {
         document.getElementById('ord_curp_rfc').classList.remove('invalid-input');
         document.getElementById('ord_curp_rfc').classList.add('valid-input');
-    }
-
-    if (document.getElementById('ref_servicio_emisor').value == '') {
-        save = false;
-        document.getElementById('ref_servicio_emisor').classList.add('invalid-input');
-        bodyValidations += '<h5>Ordenante: Ingresa Leyenda</h5>';
-    }
-    else {
-        document.getElementById('ref_servicio_emisor').classList.remove('invalid-input');
-        document.getElementById('ref_servicio_emisor').classList.add('valid-input');
     }
 
     // VALIDACIÓN DETALLE (BENEFICIARIO)
@@ -347,21 +346,58 @@ function obtenerPago(num_secuencia){
 
     console.log('Generar linea de pago '+num_secuencia);
 
-    // var pagos = [];
-    // for(var x=1; x <= num_movtos; x++){
-    //     var json = {
-    //         concepto: document.getElementById('leyenda_abono'+x),
-    //         referencia: document.getElementById('ref_numerica'+x),
-    //         importe: document.getElementById('importe_orden'+x)
-    //     };
-    //     pagos.push(json);
-    // }
+    var num_abono = num_secuencia - 1;
+    var importe = document.getElementById('importe_orden'+num_abono).value;
+    importe = importe.replace(',', ''); //quitar coma del importe
+    importe = importe.replace('.', ''); //quitar punto del importe
 
-    // var jsonDetalle = {
-    //     num_lote: 0, //cambiar después de que se inserte el encabezado
-    //     tpo_registro: "02",
-    //     num_secuencia: 1
-    // };
+    var jsonDetalle = {
+        num_lote: '00090', //cambiar después de que se inserte el encabezado
+        tpo_registro: "02",
+        num_secuencia: num_secuencia.toString().padStart(5, '0'),
+        fec_aplicacion: fec_aplicacion,
+        cve_bco_ord: cve_bco_ord,
+        ord_tpo_cta: ord_tpo_cta,
+        ord_num_cta: ord_num_cta,
+        ord_nombre: ord_nombre,
+        ord_curp_rfc: ord_curp_rfc,
+        cve_bco_ben: $('#cve_bco_ben option:selected').val().padStart(5, '0'),
+        ben_tpo_cta: $('#ben_tpo_cta option:selected').val(),
+        ben_num_cta: document.getElementById('ben_num_cta').value.padStart(20, '0'),
+        ben_nombre: document.getElementById('ben_nombre').value.padEnd(40, ' '),
+        ben_curp_rfc: "".padEnd(18, ' '),
+        vos_tpo_cta: "00",
+        vos_num_cta: "".padStart(20, '0'),
+        vos_nombre: "".padEnd(40, ' '),
+        vos_curp_rfc: "".padEnd(18, ' '),
+        cod_movto: "01",
+        tpo_pago: $('#cve_bco_ben option:selected').text() == 'HSBC' ? "00" : "01", //00 CUENTAS HSBC 01 OTROS BANCOS
+        leyenda_abono: document.getElementById('leyenda_abono'+num_abono).value.padEnd(40, ' '),
+        importe_orden: importe.padStart(15, '0'),
+        importe_iva: "".padStart(15, '0'),
+        ref_numerica: document.getElementById('ref_numerica'+num_abono).value.padStart(7, '0'),
+        ref_cobranza: "".padEnd(40, ' '), 
+        cve_pago: "".padEnd(10, ' '),
+        tpo_operacion: "00",
+        ref_unica_cliente: document.getElementById('leyenda_abono'+num_abono).value.padEnd(30, ' '),
+        ref_servicio_emisor: document.getElementById('leyenda_abono'+num_abono).value.padEnd(40, ' '),
+        nom_titular_servicio:  "".padEnd(40, ' '),
+        fec_expiracion: "00000000",
+        cod_status: "00",
+        cod_usuario: "".padEnd(8, ' '),
+        num_serial: "".padStart(10, '0'),
+        num_folio: "".padStart(7, '0'),
+        cod_servicio: "00",
+        uso_futuro: "".padEnd(10, ' '),
+        cve_rastreo: "".padEnd(30, ' '),
+        cod_rechazo: "00000",
+        des_rechazo: "".padEnd(50, ' '),
+        uso_futuro_resp: "".padEnd(5, ' ')
+    };
+
+    detalle.push(jsonDetalle);
+
+    console.log(jsonDetalle);
 }
 
 function downloadFile(filename, text) {

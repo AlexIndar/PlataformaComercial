@@ -233,6 +233,7 @@ $(document).ready(function () {
         document.getElementById('cupon').value = ''; //limpiar campo cupon
         document.getElementById('comments').value = ''; //limpiar campo comentarios
         document.getElementById('ordenCompra').value = ''; //limpiar campo orden compra
+        $('#separar2000').prop("checked", false);
         createTablePedido(); //limpiar tabla pedido
         clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
     })
