@@ -464,6 +464,8 @@ function startForm() {
     $('#typeRentado').prop('checked', true);
     $('#typeMoral').prop('checked', true);
     tipoForm = "credit";
+    changeTipoPersona('Moral');
+    changeTipoLocal('Rentado');
     valiteTypeForm();
 }
 
@@ -2784,7 +2786,6 @@ function continueModal(facturas, archivos, data) {
     document.getElementById(idTypeP).checked = true;
     let auxTypeP = idTypeP == "typeMoral" ? 'Moral' : 'Fisica';
     changeTipoPersona(auxTypeP);
-
     var idTypeL = data.cliente.tipoLocal == true ? "typePropio" : "typeRentado";
     document.getElementById(idTypeL).checked = true;
     let auxTypeL = idTypeL == "typePropio" ? 'Propio' : 'Rentado';

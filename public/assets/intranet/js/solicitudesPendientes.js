@@ -661,7 +661,9 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                 document.getElementById("factSection").style.display = "flex";
                 let objFactura = ``;
                 facturasCount = factList.length;
+                let totalFacturas = 0;
                 for (let i = 0; i < factList.length; i++) {
+                    totalFacturas += factList[i].importe;
                     objFactura += `<div class="row mb-3">
                             <div class="col-md-3">No. ${(i + 1)} - Importe: ${factList[i].importe}</div>
                             <div class="col-md-3">
@@ -681,6 +683,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                 for (let i = 0; i < valFacturasList.length; i++) {
                     getValidationRadio("factRefId" + i, "factRefId2" + i, valFacturasList[i].archivo);
                 }
+                document.getElementById("totalFacturas").innerHTML = `<div class="col-md-3"> Total de Facturas $${totalFacturas}</div>`;
             }
             // getAlert("alertRef", data.observations.referencias);
         }
