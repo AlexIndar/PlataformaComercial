@@ -79,6 +79,8 @@ class VerifyCsrfToken extends Middleware
         '/EstadisticaSolicitudTiempo/GetTimeReport',
         '/EstadisticaSolicitudTiempo/GetGerencia',
         '/GetTableView',
-        '/HeatMap/GetListCustomer'
+        '/HeatMap/GetListCustomer',
+        '/AsignacionZonas/UpdateZonesCyc',
+        '/SolicitudesConsulta/GetCYCTableShow'
     ];
 }
