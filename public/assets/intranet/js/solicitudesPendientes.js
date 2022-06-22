@@ -614,10 +614,12 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                             </div>`;
                         }
                         document.getElementById("acRow").innerHTML = fileActa;
-                        valActaConst = getvalidacionActa(data.folio);
-                        for (let i = 0; i < valActaConst.length; i++) {
-                            getValidationRadio("actaConstId" + i, "actaConstId2" + i, valActaConst[i].archivo);
-                        }
+                        getvalidacionActa(data.folio);
+                        // valActaConst = getvalidacionActa(data.folio);
+                        // console.log(valActaConst);
+                        // for (let i = 0; i < valActaConst.length; i++) {
+                        //     getValidationRadio("actaConstId" + i, "actaConstId2" + i, valActaConst[i].archivo);
+                        // }
                         setAlert("obsActaConst", data.observations.actaConstitutiva);
                     }
                 }
@@ -651,11 +653,11 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                         </div>`;
                 }
                 document.getElementById("refList").innerHTML = fileRef;
-
-                valReferences = getValidacionReferencias(data.folio);
-                for (let i = 0; i < valReferences.length; i++) {
-                    getValidationRadio("refSectionR" + i, "refSectionR2" + i, valReferences[i].telefono);
-                }
+                getValidacionReferencias(data.folio);
+                // valReferences = getValidacionReferencias(data.folio);
+                // for (let i = 0; i < valReferences.length; i++) {
+                //     getValidationRadio("refSectionR" + i, "refSectionR2" + i, valReferences[i].telefono);
+                // }
             }
             if (factList.length > 0) {
                 document.getElementById("factSection").style.display = "flex";
@@ -679,10 +681,12 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                         </div>`;
                 }
                 document.getElementById("factList").innerHTML = objFactura;
-                valFacturasList = getValidacionFactura(data.folio);
-                for (let i = 0; i < valFacturasList.length; i++) {
-                    getValidationRadio("factRefId" + i, "factRefId2" + i, valFacturasList[i].archivo);
-                }
+                getValidacionFactura(data.folio);
+                // valFacturasList = getValidacionFactura(data.folio);
+                // console.log(valFacturasList);
+                // for (let i = 0; i < valFacturasList.length; i++) {
+                //     getValidationRadio("factRefId" + i, "factRefId2" + i, valFacturasList[i].archivo);
+                // }
                 document.getElementById("totalFacturas").innerHTML = `<div class="col-md-3"> Total de Facturas $${totalFacturas}</div>`;
             }
             // getAlert("alertRef", data.observations.referencias);
@@ -868,7 +872,7 @@ function getTransactionHistory(folio) {
                 showHistoryModal(historyList);
             },
             error: function (error) {
-                console.log(error + "Error");
+                console.log(error);
             }
         });
     }
@@ -973,50 +977,62 @@ function isSameAddress(addr1, addr2) {
 
 function getvalidacionActa(folio) {
     let objFolio = { Item: folio };
-    let info = [];
+    // let info = [];
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         'url': "/MisSolicitudes/getValidacionActConst",
         'type': 'POST',
-        'async': false,
+        // 'async': false,
         'dataType': 'json',
         'data': objFolio,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            info = data;
+            valActaConst = data;
+            if (valActaConst != null) {
+                for (let i = 0; i < valActaConst.length; i++) {
+                    getValidationRadio("actaConstId" + i, "actaConstId2" + i, valActaConst[i].archivo);
+                }
+            } else {
+                console.log("Ocurrio un problema en Val ActaConst");
+            }
         },
         error: function (error) {
-            console.log(error + "Error");
+            console.log(error);
         }
     });
-    return info;
 }
 
 function getValidacionFactura(folio) {
     let objFolio = { Item: folio };
-    let info = [];
+    // let info = [];
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         'url': "/MisSolicitudes/GetValidacionFacturas",
         'type': 'POST',
-        'async': false,
+        // 'async': false,
         'dataType': 'json',
         'data': objFolio,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            info = data;
+            valFacturasList = data;
+            if (valFacturasList != null) {
+                for (let i = 0; i < valFacturasList.length; i++) {
+                    getValidationRadio("factRefId" + i, "factRefId2" + i, valFacturasList[i].archivo);
+                }
+            } else
+                console.log("Error en validación facturas");
         },
         error: function (error) {
             console.log(error);
         }
     });
-    return info;
+    // return info;
 }
 
 function getValidacionReferencias(folio) {
@@ -1028,13 +1044,16 @@ function getValidacionReferencias(folio) {
         },
         'url': "/MisSolicitudes/GetValidacionReferencias",
         'type': 'POST',
-        'async': false,
+        // 'async': false,
         'dataType': 'json',
         'data': objFolio,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            info = data;
+            valReferences = data;
+            for (let i = 0; i < valReferences.length; i++) {
+                getValidationRadio("refSectionR" + i, "refSectionR2" + i, valReferences[i].telefono);
+            }
         },
         error: function (error) {
             console.log(error);
@@ -1973,22 +1992,22 @@ function envioMail2() {
         result: false
     };
 
-   /* mailJson = {
-        folio: 27910, 
-        tipoSol: "CREDITO", 
-        cliente: "P030926", 
-        razonSocial: "CRISPINA ARROYO DIAZ", 
-        rfc: "AODC621205EW3", 
-        zona: "Z415", 
-        emails: [
-            "vrodriguez@indar.com.mx",
-            "adan.perez@indar.com.mx",
-            "gregorio.salinas@indar.com.mx",
-            "claudia.munoz@indar.com.mx",
-            "jose.pavon@indar.com.mx"
-        ], 
-        status: "Aceptada Contado (Pendiente Credito)"        
-    }*/
+    /* mailJson = {
+         folio: 27910, 
+         tipoSol: "CREDITO", 
+         cliente: "P030926", 
+         razonSocial: "CRISPINA ARROYO DIAZ", 
+         rfc: "AODC621205EW3", 
+         zona: "Z415", 
+         emails: [
+             "vrodriguez@indar.com.mx",
+             "adan.perez@indar.com.mx",
+             "gregorio.salinas@indar.com.mx",
+             "claudia.munoz@indar.com.mx",
+             "jose.pavon@indar.com.mx"
+         ], 
+         status: "Aceptada Contado (Pendiente Credito)"        
+     }*/
     console.log(mailJson);
     $.ajax({
         'headers': {
