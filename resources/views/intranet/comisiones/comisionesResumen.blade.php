@@ -66,11 +66,14 @@
                                                <th>DES - NEG</th>
                                                <th>DES - FT</th>
                                                <th>DES - INCOB</th>
-                                               <th>Prestaciones</th>
+                                               <th>Despensa</th>
+                                               <th>Puntualidad</th>
+                                               <th>Días No Reportados</th>
                                                <th>Comisión Integrada</th>
+                                               <th>Bono Clientes Activos</th>
                                                <th>Bono Clientes Nuevos</th>
                                                <th>Bono Ventas</th>
-                                               <th>Bono Especiales / Ctes act</th>
+                                               <th>Bono Especiales</th>
                                                <th>Comisión Total</th>
                                             </tr>
                                          </thead>
@@ -359,8 +362,12 @@ $.ajax({
    }
    importCtesNvos = ( comisionTot * porCtesNvos)/100;
 
-   var vtasPorc = data[2].alcance/10;
-   var vtasImporte = (vtasPorc/100) * comisionTot;
+   var vtasPorc = data[2].real/data[2].vo;
+    vtasPorc = vtasPorc *10;
+    if(vtasPorc > 10){
+         vtasPorc = 10;
+    }
+    var vtasImporte = (vtasPorc/100) * comisionTot;
    var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
 
    if(data[2].hasOwnProperty('status')){
@@ -459,15 +466,18 @@ $.ajax({
         '<td style="color:red">'+sumaDescneg.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td style="color:red">'+sumaDesFT.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td style="color:red">'+sumaIncob.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+prestaciones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+importePunt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td style="color:red">'+importdiasNoLaborados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+comisionInt.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+bonoImp.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+importCtesNvos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+vtasImporte.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+bonoEspecificos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+importeEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>');
-        myCallback(vendedorzona,vendedornombre,comisionTot,prestaciones,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
-        importCtesNvos,vtasImporte,bonoEspecificos,año,mes, comisionTotal, nempleado);
+        myCallback(vendedorzona,vendedornombre,comisionTot,comisionInt,sumaDescneg,sumaDesFT,sumaIncob,
+        importCtesNvos,vtasImporte,año,mes, comisionTotal, nempleado,despensa,importdiasNoLaborados,importePunt, bonoImp, importeEspeciales );
   },
   error: function() {
       console.log("Error");
@@ -485,18 +495,18 @@ $.ajax({
 }
 }
 
-function myCallback(zona,nombre,comisionBase,prestaciones,comisionInt,desneg,desft,incobrabilidad,bonoClientesNuevos,
-bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal, nempleado){
+function myCallback(zona,nombre,comisionBase,comisionInt,desneg,desft,incobrabilidad,bonoClientesNuevos,
+bonoVentas,ejercicio,periodo, comisionTotal, nempleado,despensa,importdiasNoLaborados,importePunt,bonoImp, importeEspeciales){
 
     var jsonResumen = [];
-    jsonResumen.push({ zona: zona, nombre: nombre, comisionBase: comisionBase, prestaciones: prestaciones,
+    jsonResumen.push({ zona: zona, nombre: nombre, comisionBase: comisionBase,
         comisionIntegrada: comisionInt, ejercicio: ejercicio, periodo: periodo, diferenciaPrecio: desneg,
-        incobrabilidad: incobrabilidad, descuFueraTiempo: desft,bonoVentas:bonoVentas, bonoEspecificos: bonoEspecificos,
-        bonoClientesNuevos: bonoClientesNuevos, comisionTotal: comisionTotal });
+        incobrabilidad: incobrabilidad, descuFueraTiempo: desft,despensa: despensa, puntualidad: importePunt,bonoVentas:bonoVentas, bonoEspecificiales: importeEspeciales,
+        bonoClientesNuevos: bonoClientesNuevos, comisionTotal: comisionTotal,diasNoReportados: importdiasNoLaborados, bonoCtesActivos: bonoImp, numEmpleado: nempleado });
 
     jsonResumen = JSON.stringify(jsonResumen);
     jsonResumen = jsonResumen.slice(1,-1);
-    console.log(jsonResumen);
+    //console.log(jsonResumen);
     $.ajax({
            'headers': {
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -519,7 +529,7 @@ bonoVentas,bonoEspecificos,ejercicio,periodo, comisionTotal, nempleado){
 
         },
         error: function() {
-            console.log(data);
+            //console.log(data);
             Swal.fire({
             position: 'top',
             icon: 'warning',

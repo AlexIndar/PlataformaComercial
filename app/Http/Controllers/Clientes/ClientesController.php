@@ -17,6 +17,7 @@ class ClientesController extends Controller
 
     public static function getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin){
         $data = Http::withToken($token)->get(config('global.api_url').'/EstadoCuentaCte/getFacturasCtesOpen?cte='.$cliente.'&fechaini='.$fechaini.'&fechafin='.$fechafin);
+        //dd($data->body());
         return json_decode($data->body());
     }
 

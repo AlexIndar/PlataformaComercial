@@ -46,8 +46,47 @@
                 <hr>
                 <div class="row">
                    <div class="col-md-12 table-responsive" id="facturasDiv">
-                    <p class="lead">Seleccione La Factura a Pagar:</p>
+                    <p class="lead"> <strong> Seleccione La Factura a Pagar:</strong></p>
                     <table id="example" class="display" style="width:100%">
+                        <thead style="background-color:#002868; color:white">
+                           <tr>
+                            <th></th>
+                            <th>Documento</th>
+                            <th>No.</th>
+                            <th>Fecha Facturación</th>
+                            <th>Fecha Vencimiento</th>
+                            <th>Imp. Factura con IVA</th>
+                            <th>Imp. Factura sin IVA</th>
+                            <th>Desc. Aplicado</th>
+                            <th>Porc. Aplicado</th>
+                            <th>Imp. Fact. con IVA menos Descuento</th>
+                            <th>Saldo</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ( $data as $value )
+                        <tr>
+                            <td><img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
+                            <td>Factura</td>
+                            <td> <a href="#" class="text-muted">{{ $value->tranid }}</a></td>
+                            <td class="text-center">{{ substr($value->fechaFactura, 0, 10) }}</td>
+                            <td class="text-center">{{ substr($value->dueDate, 0, 10)  }}</td>
+                            <td class="text-center">{{ number_format($value->importe_factura_snDescontar, 2)}}</td>
+                            <td class="text-center">{{ number_format($value->importe_factura, 2)}}</td>
+                            <td class="text-center">{{ number_format($value->descuento_aplicado, 2)}}</td>
+                            <td class="text-center">{{ number_format($value->porcentaje_Descuento_Aplicado, 2)}}%</td>
+                            <td class="text-center">{{ number_format($value->importe_factura_menos_descuento, 2)}}</td>
+                            <td class="text-center" > {{ number_format($value->saldo, 2) }}</td>
+                        </tr>
+                        @endforeach
+                        </tbody>
+                     </table>
+                     <br>
+                     <button style = "display:none" class="form-control btn-success" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fa fa-arrow-right  "></i></button>
+                   </div>
+                   <div class="col-md-12 table-responsive" id="notasDiv" style="display:none">
+                    <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-secondary" onclick="mostrarFacturas()" id="btnMostrarFacturas"><i class="fa fa-arrow-left"></i> &nbsp; Regresar a Facturas</button>
+                    <table id="tableNotas" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
                         <thead style="background-color:#002868; color:white">
                            <tr>
                             <th></th>
@@ -59,36 +98,8 @@
                            </tr>
                         </thead>
                         <tbody>
-                            @foreach ( $data as $value )
-                            <tr>
-                                <td><img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
-                                <td>Factura</td>
-                                <td> <a href="#" class="text-muted">{{ $value->tranid }}</a></td>
-                                <td class="text-center">{{ number_format($value->saldo, 2) }}</td>
-                                <td class="text-center">{{ substr($value->fechaFactura, 0, 10) }}</td>
-                                <td class="text-center">{{ substr($value->dueDate, 0, 10)  }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                     </table>
-                     <br>
-                     <button style = "display:none" class="form-control btn-success" id="btnMostrarNotas">Continuar con el Pago &nbsp; <i class="fa fa-arrow-right  "></i></button>
-                   </div>
-                   <div class="col-md-12 table-responsive" id="notasDiv" style="display:none">
-                    <p class="lead">Seleccione Nota de Crédito a Abonar:</p><button class="form-control btn-primary" onclick="mostrarFacturas()" id="btnMostrarFacturas"><i class="fa fa-arrow-left"></i> &nbsp; Regresar a Facturas</button>
-                    <table id="tableNotas" class="table table-striped table-hover" style="width:90% ; font-size:90% ;font-weight: bold ">
-                        <thead>
-                           <tr>
-                            <th></th>
-                            <th>Documento</th>
-                            <th>No.</th>
-                            <th>Monto</th>
-                            <th>Fecha Facturación</th>
-                            <th>Vencimiento</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ( $notas as $nota )
+                        @foreach ( $notas as $nota )
+                            @if($nota->status == 'Open')
                             <tr>
                                 <td> <img  src="{{asset('dist/img/nota.png')}}" alt="Nota" class="img-size-32 mr-2"></td>
                                 <td>Nota de Crédito</td>
@@ -97,21 +108,26 @@
                                   <td class="text-center">{{ substr($nota->fecha_nota, 0, 10) }}</td>
                                   <td class="text-center"> NA </td>
                             </tr>
+                            @endif
                         @endforeach
                         </tbody>
                      </table>
                    </div>
-                   <div class="col-md-12 table-responsive">
-                    <p class="lead">Documentos a Pagar:</p>
-                    <table id="example2" class="table table-hover" style="font-size:90% ;font-weight: bold ">
-                        <thead>
+                   <div id="resumenPago" style="display:none"class="col-md-12 table-responsive">
+                    <p  class="lead" >Resumen de Pago:</p>
+                    <table id="example2" class="table table-hover" style="font-size:90% ;font-weight: bold">
+                        <thead style="background-color:#002868; color:white">
                            <tr>
-                              <th></th>
-                              <th>Documento</th>
-                              <th>No.</th>
-                              <th>Monto</th>
-                              <th>Fecha Fact</th>
-                              <th>Fecha Venc</th>
+                              <th>No. Factura</th>
+                              <th>Vencimiento</th>
+                              <th>Imp Con IVA</th>
+                              <th>Imp Sin IVA</th>
+                              <th>Porciento Descuento</th>
+                              <th>Imp Con Iva con Descuento</th>
+                              <th>Saldo</th>
+                              <th style="background-color:#fa5d48e5">No. NC</th>
+                              <th style="background-color:#fa5d48e5">Monto</th>
+                              <th style="background-color:#3de65fb5">TOTAL</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -141,7 +157,7 @@
                                   <td id="subtotal"></td>
                                </tr>
                                <tr>
-                                  <th>Descuentos </th>
+                                  <th>Descuentos:  </th>
                                   <td id="descuento"></td>
                                </tr>
                                <tr>
@@ -172,7 +188,7 @@
     <div class="modal-dialog modal-md modal-dialog-scrollable">
        <div class="modal-content">
           <div class="modal-header bg-indarBlue">
-            <h4 id="headerNC" class="text-center title ml-auto">Agregar Nota de Crédito</h4>
+            <h4 id="headerNC" class="text-center title ml-auto">Aplicar Nota de Crédito</h4>
              <input type="text" id="typeFormInf" value="" hidden>
              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
              <i class="fas fa-times"></i>
@@ -191,7 +207,7 @@
           </div>
 
           <div class="modal-footer">
-             <button id="agregarNc" type="submit" class="btn btn-success float-right" data-dismiss="modal">Agregar N.C</button>
+             <button id="agregarNc" type="submit" class="btn btn-success float-right" data-dismiss="modal">Aplicar N.C</button>
              <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
           </div>
        </div>
@@ -218,12 +234,37 @@ $(document).ready(function() {
 $("body").addClass("sidebar-collapse");
 
 var table = $('#example').DataTable({
-    dom : 'Brt',
+    dom : 'Brtip',
+    paging:false,
+    fixedHeader:true,
+    ordering: false,
+    scrollY:320,
+    scrollX: true,
+    scrollCollapse: true
 } );
+
 
     $('#example tbody').on('click', 'tr', function () {
         $(this).toggleClass('selected');
         document.getElementById("btnMostrarNotas").style.display = "block";
+        var datos = table.rows('.selected').data()
+        var subTotal=0;
+        var descuento=0;
+        arregloFac=[];
+        for(i=0; i< datos.length; i++){
+            datos[i][10] = datos[i][10].replace(/,/g, "");
+            datos[i][7] = datos[i][7].replace(/,/g, "");
+            arregloFac.push(datos[i]);
+            subTotal += parseFloat(datos[i][10]);
+            descuento += parseFloat(datos[i][7]);
+        }
+
+        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+        console.log(arregloFac);
+        if(arregloFac.length == 0){
+            document.getElementById("btnMostrarNotas").style.display = "none";
+        }
 
     });
 
@@ -231,7 +272,7 @@ var table = $('#example').DataTable({
         var data = table.rows('.selected').data();
         arregloFact=[];
         for(i=0; i< data.length; i++){
-            data[i][3] = data[i][3].replace(/,/g, "");
+            data[i][10] = data[i][10].replace(/,/g, "");
             arregloFact.push(data[i]);
         }
         console.log(arregloFact);
@@ -263,22 +304,22 @@ montosFac=[];
     document.getElementById("btnMostrarNotas").style.display = "block";
 
 if(data[1]=='Factura'){
-    data[3] = data[3].replace(/,/g, "");
-    subTotal += parseFloat(data[3]);
+    data[10] = data[10].replace(/,/g, "");
+    subTotal += parseFloat(data[10]);
     $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 }
 else{
-    descuento += parseFloat(data[3]);
+    descuento += parseFloat(data[10]);
     $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 }
 
 total = subTotal - descuento;
 $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+var monto = parseFloat(data[10]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
 if(montosFac.includes(monto)){
 
 }else{
-    montosFac.push(parseFloat(data[3]));
+    montosFac.push(parseFloat(data[10]));
 }
     t.row.add( [
        data[0],
@@ -306,9 +347,9 @@ if(montosFac.includes(monto)){
    $('#selectFact').empty();
     var facturamayor = 0;
     for (i=0; i< arregloFact.length; i++){
-        console.log(arregloFact[i][3]);
-        if(parseFloat(arregloFact[i][3]) > facturamayor){
-            facturamayor = parseFloat(arregloFact[i][3]);
+        console.log(arregloFact[i][10]);
+        if(parseFloat(arregloFact[i][10]) > facturamayor){
+            facturamayor = parseFloat(arregloFact[i][10]);
         }
     }
     console.log(facturamayor);
@@ -316,6 +357,7 @@ if(montosFac.includes(monto)){
     var data = tableNotas.row( this ).data();
     var montoNC = data[3].replace(/,/g, "");
     var headerNC = data[2];
+    console.log(montoNC, facturamayor);
     if(montoNC < facturamayor ){
 
     $('#montoNC').text(montoNC);
@@ -324,25 +366,25 @@ if(montosFac.includes(monto)){
 
     for(i=0; i<arregloFact.length; i++){
         montoNC = parseFloat(montoNC);
-       if(montoNC < parseFloat(arregloFact[i][3])){
-        $('#selectFact').append('<option value='+arregloFact[i][1]+'>Factura No. : '+arregloFact[i][2]+' Monto:  $'+parseFloat(arregloFact[i][3])+'</option>');
+       if(montoNC < parseFloat(arregloFact[i][10])){
+        $('#selectFact').append('<option value='+arregloFact[i][1]+'>Factura No. : '+arregloFact[i][2]+' Monto:  $'+parseFloat(arregloFact[i][10])+'</option>');
         }
     }
     var hide = jQuery(this);
      //Función Agregar NC
     $('#agregarNc').on('click', function(e) {
-
+        document.getElementById("resumenPago").style.display = "block";
         hide.toggle("scale");
         e.preventDefault();
         console.log(data);
-        data[3] = data[3].replace(/,/g, "");
-        descuento += parseFloat(data[3]);
+        data[10] = data[10].replace(/,/g, "");
+        descuento += parseFloat(data[10]);
         $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
 
 
         total = subTotal - descuento;
         $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+        var monto = parseFloat(data[10]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
         t.row.add( [
            data[0],
            data[1],
@@ -374,17 +416,17 @@ if(montosFac.includes(monto)){
     jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
      var data = t.row( this ).data();
     if(data[1]=='Factura'){
-        data[3] = data[3] = data[3].replace(/,/g, "");
-        subTotal -=  parseFloat(data[3]);
+        data[10] = data[10] = data[10].replace(/,/g, "");
+        subTotal -=  parseFloat(data[10]);
         $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
     }else{
-        descuento -= parseFloat(data[3]);
+        descuento -= parseFloat(data[10]);
         $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
     }
 
     total = subTotal - descuento;
     $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    var monto = parseFloat(data[3]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+    var monto = parseFloat(data[10]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
 
     if(data[1]=='Factura'){
         table.row.add( [

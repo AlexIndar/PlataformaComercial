@@ -66,10 +66,10 @@
                 <hr>
                 <div id="divEspeciales" style="display:none" class="row">
                     <div class="col-md-auto">
-                        <a href="{{ asset('plantillas/plantillaespeciales.xlsx') }}" download="plantillaespeciales.xlsx"><button class="btn btn-primary"> Descargar Plantilla Especiales</button></a>&nbsp;
+                        <a href="{{ asset('templates/plantillasEspeciales/plantillaespeciales.xlsx') }}" download="plantillaespeciales.xlsx"><button class="btn btn-primary"> Descargar Plantilla Especiales</button></a>&nbsp;
                         <button type="button" id="importarCodigos" class="btn btn-success" onclick="triggerInputEsp()"><i class="fas fa-file-excel"></i> Importar Especiales </button> &nbsp; &nbsp;
                         <input type="file" name="excelEspeciales" id="excelEspeciales" accept=".csv, .xls, .xlsx" hidden>
-                        <a href="{{ asset('plantillas/plantillaarticulos.xlsx') }}" download="plantillaarticulos.xlsx"><button class="btn btn-primary"> Descargar Plantilla Artículos</button></a>
+                        <a href="{{ asset('templates/plantillasEspeciales/plantillaarticulos.xlsx') }}" download="plantillaarticulos.xlsx"><button class="btn btn-primary"> Descargar Plantilla Artículos</button></a>
                         <button type="button" id="importarCodigos" class="btn btn-success" onclick="triggerInputArt()"><i class="fas fa-file-excel"></i> Importar Artículos</button>
                         <input type="file" name="excelArticulos" id="excelArticulos" accept=".csv, .xls, .xlsx" hidden>
                     </div>
