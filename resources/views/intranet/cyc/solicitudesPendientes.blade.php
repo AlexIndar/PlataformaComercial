@@ -39,9 +39,9 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
-                            <button onclick="realoadTableView()">A</button>
-                            <button onclick="envioMail2()">B</button>
-                            <button onclick="simularReferencia()">C</button>
+                            <button onclick="realoadTableView()">Ac</button>
+                            <!-- <button onclick="envioMail2()">B</button> -->
+                            <!-- <button onclick="simularReferencia()">C</button> -->
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -524,6 +524,7 @@
                         <div class="acRow" id="factList">
 
                         </div>
+                        <div class="row mb-3" id="totalFacturas"></div>
                     </div>
                 </div>
                 <div class="row" id="observRef" style="display: none;">
