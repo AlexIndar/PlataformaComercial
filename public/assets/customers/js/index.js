@@ -2,7 +2,14 @@
  * GLOBAL VARS
  * -------------------------- */
 // The date you want to count down to
-var targetDate = new Date("2021/12/03 23:59:59");
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+today = yyyy + '/' + mm + '/' + dd;
+var targetDate = new Date(today + ' 19:59:59');
+
 
 // Other date related variables
 // var days;

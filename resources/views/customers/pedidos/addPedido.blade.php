@@ -379,17 +379,17 @@
                                          <th>Precio</th>
                                      </tr>
                                      <tr>
-                                         <th>Img</th>
-                                         <th>Categoría</th>
-                                         <th>Fabricante</th>
-                                         <th>Familia</th>
-                                         <th>Artículo</th>
-                                         <th>Descripción</th>
-                                         <th>Detalles</th>
-                                         <th>Descuentos</th>
-                                         <th>Promo Vol</th>
-                                         <th>Acciones</th>
-                                         <th>Precio</th>
+                                         <th id="donotsearch">Img</th>
+                                         <th id="search">Categoría</th>
+                                         <th id="search">Fabricante</th>
+                                         <th id="search">Familia</th>
+                                         <th id="search">Artículo</th>
+                                         <th id="search">Descripción</th>
+                                         <th id="donotsearch">Detalles</th>
+                                         <th id="donotsearch">Descuentos</th>
+                                         <th id="donotsearch">Promo Vol</th>
+                                         <th id="donotsearch">Acciones</th>
+                                         <th id="search">Precio</th>
                                      </tr>
                                  </thead>
 
