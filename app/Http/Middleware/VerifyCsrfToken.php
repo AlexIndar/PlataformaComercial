@@ -81,6 +81,10 @@ class VerifyCsrfToken extends Middleware
         '/GetTableView',
         '/HeatMap/GetListCustomer',
         '/AsignacionZonas/UpdateZonesCyc',
-        '/SolicitudesConsulta/GetCYCTableShow'
+        '/SolicitudesConsulta/GetCYCTableShow',
+        '/MisSolicitudes/GetValidacionFacturas',
+        '/MisSolicitudes/getValidacionActConst',
+        '/MisSolicitudes/GetValidacionReferencias',
+        '/SolicitudesPendientes/getFile',
     ];
 }

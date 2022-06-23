@@ -1254,17 +1254,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
-                Route::post('/SolicitudesPendientes/getFile', function (Request $request){
-                    $token = TokenController::getToken();
-                    if($token == 'error' || $token == 'expired'){
-                        LoginController::logout();
-                    }
-                    $fol = $request->Folio;
-                    $type = $request->Type;
-                    $data = SolicitudesPendientesController::getFile($token, $fol, $type);
-                    return  $data;
-                });
-
                 Route::post('/MisSolicitudes/getBills', function (Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
@@ -1537,6 +1526,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $noC = $request->NoC;
                     $isCredit = $request->IsCredit;
                     $data = SolicitudesPendientesController::reactiveClient($token, $noC, $folio, $isCredit);
+                    return  $data;
+                });
+
+                Route::post('/SolicitudesPendientes/getFile', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $fol = $request->Folio;
+                    $type = $request->Type;
+                    $data = SolicitudesPendientesController::getFile($token, $fol, $type);
                     return  $data;
                 });
 
