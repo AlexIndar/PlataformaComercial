@@ -84,6 +84,7 @@ class VerifyCsrfToken extends Middleware
         '/SolicitudesConsulta/GetCYCTableShow',
         '/MisSolicitudes/GetValidacionFacturas',
         '/MisSolicitudes/getValidacionActConst',
-        '/MisSolicitudes/GetValidacionReferencias'
+        '/MisSolicitudes/GetValidacionReferencias',
+        '/SolicitudesPendientes/getFile',
     ];
 }
