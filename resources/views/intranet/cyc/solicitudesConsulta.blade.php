@@ -27,9 +27,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header bg-indarYellow">
-                            <h3 class="card-title text-indarBlue">Solicitudes</h3>
-                            <button onclick=""></button>
-                            <button onclick=""></button>
+                            <!-- <h3 class="card-title text-indarBlue">Solicitudes</h3> -->
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
