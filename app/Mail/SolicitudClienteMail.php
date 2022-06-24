@@ -30,9 +30,9 @@ class SolicitudClienteMail extends Mailable
 
     public function build()
     {
-        return $this->from('mailing@sndr.indar.com.mx', 'indarnet@indar.com.mx')
-        ->replyTo('mailing@sndr.indar.com.mx', 'indarnet@indar.com.mx')
-        ->subject('Nueva Solicitud')
+        return $this->from('mailing@sndr.indar.com.mx', 'INDARNET')
+        ->replyTo('mailing@sndr.indar.com.mx', 'INDARNET')
+        ->subject($this->status)
         ->view('mails.solicitudFolioMail');
     }
 }
