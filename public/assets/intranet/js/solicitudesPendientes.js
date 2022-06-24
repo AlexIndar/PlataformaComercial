@@ -29,7 +29,6 @@ var valObser = [];
 var fileIneValidation = '';
 
 $(document).ready(function () {
-    console.log(document.getElementById("userName").value);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -43,7 +42,7 @@ $(document).ready(function () {
             businessLines = data;
         },
         error: function (error) {
-            console.log(error + "Error");
+            console.log(error);
         }
     });
 
@@ -207,7 +206,6 @@ const reloadCycTable = (data) => {
     let dataTableCyc = [];
     for (let i = 0; i < data.length; i++) {
         let aux = [];
-        console.log(data[i]);
         aux.push(data[i].claveP);
         aux.push(data[i].razonSocial);
         aux.push(getTimeOfDate(data[i].fechaAlta));
@@ -344,27 +342,27 @@ const getInfoSol = (solObj, typeCyC) => {
                                                 showInfoModal(data, data2, valContac, filesList, factList, typeCyC);
                                             },
                                             error: function (error) {
-                                                console.log(error + "Error");
+                                                console.log(error);
                                             }
                                         });
                                     },
                                     error: function (error) {
-                                        console.log(error + "Error");
+                                        console.log(error);
                                     }
                                 });
                             },
                             error: function (error) {
-                                console.log(error + "Error");
+                                console.log(error);
                             }
                         });
                     },
                     error: function (error) {
-                        console.log(error + "Error");
+                        console.log(error);
                     }
                 });
             },
             error: function (error) {
-                console.log(error + "Error");
+                console.log(error);
             }
         });
     }
@@ -912,7 +910,7 @@ function acceptForCash(folio) {
             showModalAcceptForCash(response);
         },
         error: function (error) {
-            console.log(error + "Error");
+            console.log(error);
         }
     });
 }
@@ -1155,24 +1153,6 @@ function getValueChecks() {
     }
 }
 
-
-
-function printTextArea() {
-    console.log(document.getElementById("obsDatGen").value);
-    console.log(document.getElementById("obsFiscal").value);
-    console.log(document.getElementById("obsEntrea").value);
-    console.log(document.getElementById("obsNegocio").value);
-    console.log(document.getElementById("obsContacto").value);
-    console.log(document.getElementById("obsCredito").value);
-    console.log(document.getElementById("obsActaConst").value);
-    console.log(document.getElementById("obsReferencias").value);
-
-    console.log("Prueba");
-    let obsRef = document.getElementById("obsCredito").value;
-    document.getElementById("obsNegocio").value = obsRef;
-    console.log(document.getElementById("obsNegocio").value);
-}
-
 function convertToBool(item) {
     if ($('input[name="' + item + '"]:checked').val() != undefined)
         return $('input[name="' + item + '"]:checked').val() == "Aceptado" ? true : false;
@@ -1367,74 +1347,17 @@ function setFile(json) {
                 realoadTableView();
             } else {
                 console.log(data);
-                alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                alert("Error de solicitud, informar a adan.perez@indar.com.mx");
                 $('#cargaModal').modal('hide');
             }
         },
         error: function (error) {
             console.log(error);
-            alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            alert("Ocurrió un problema en el servidor, enviar correo a adan.perez@indar.com.mx");
             $('#cargaModal').modal('hide');
         }
     });
 }
-
-// function confirmUpdateFile2(item) {
-//     if (fileEdit != '') {
-//         let type;
-//         let folio;
-//         $('#cargaModal').modal('show');
-//         if (item == 15) {
-//             // folio = document.getElementById("").innerHTML;
-//             type = item;
-//         } else {
-//             type = 14;
-//             folio = item;
-//         }
-//         let json = {
-//             Folio: folio,
-//             File: {
-//                 Id: 0,
-//                 FileStr: fileEdit,
-//                 Type: type,
-//                 Subtype: null,
-//             }
-//         }
-//         $.ajax({
-//             'headers': {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//             },
-//             'url': "MisSolicitudes/UpdateFile",
-//             'type': 'POST',
-//             'dataType': 'json',
-//             'data': json,
-//             'enctype': 'multipart/form-data',
-//             'timeout': 2 * 60 * 60 * 1000,
-//             success: function(data) {
-//                 if (Number.isInteger(data)) {
-//                     $('#cargaModal').modal('hide');
-//                     document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
-//                     $('#infoModal').modal('hide');
-//                     realoadTableView();
-//                 } else {
-//                     console.log(data);
-//                     alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-//                     $('#cargaModal').modal('hide');
-//                 }
-//             },
-//             error: function(error) {
-//                 console.log(error);
-//                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-//                 $('#cargaModal').modal('hide');
-//             }
-//         });
-//         console.log(json);
-//         console.log(JSON.stringify(json));
-//     } else {
-//         console.log(fileEdit);
-//         alert("Seleccione un archivo");
-//     }
-// }
 
 function cancelEditForm() {
     $('#editImageModal').modal('hide');
@@ -1457,13 +1380,11 @@ function getReferencesFile(folio) {
         'timeout': 2 * 60 * 60 * 1000,
         success: function (result) {
             console.log(result);
-            const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            // const url = window.URL.createObjectURL(blob);
-            // window.open(url);
+            const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });            
             const url = URL.createObjectURL(blob);
             const enlace = document.createElement("a");
             enlace.href = url;
-            enlace.download = "Referencias.xlsx";
+            enlace.download = "ReferenciasNo_"+folio+".xlsx";
             enlace.click();
         },
         error: function (error) {
@@ -1490,8 +1411,8 @@ function saveValidation(flag) {
         auxJson = getJsonValidation(flag);
 
     if (auxJson != '') {
-        console.log(auxJson);
-        console.log(JSON.stringify(auxJson));
+        // console.log(auxJson);
+        // console.log(JSON.stringify(auxJson));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1503,7 +1424,6 @@ function saveValidation(flag) {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (result) {
-                console.log(result);
                 $('#cargaModal').modal('hide');
                 if (result && flag == null) {
                     $('#infoModal').modal('hide');
@@ -1540,8 +1460,6 @@ function sendMail(objMail) {
     // $('#cargaModal').modal('hide');
     // realoadTableView();
     //EndDatos Prueba
-
-    console.log(mailJson);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1553,15 +1471,14 @@ function sendMail(objMail) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            console.log(data);
-            alert(data.success);
+            console.log(data);            
             $('#infoModal').modal('hide');
             $('#cargaModal').modal('hide');
             realoadTableView();
         },
         error: function (error) {
-            console.log(error);
             alert("Error al enviar los correos");
+            console.log(error);
             $('#cargaModal').modal('hide');
             $('#infoModal').modal('hide');
             realoadTableView();
@@ -1646,10 +1563,6 @@ function valAcceptCredit() {
 
 function valAcceptCash() {
     let alertMsg = ``;
-    // console.log("prueba file");
-    // console.log(fileIneValidation);
-    // console.log("prueba file end");
-    // console.log(document.getElementById("typeSolCash").value);
     if (document.getElementById("saleRoutesSelect").value == "-1") alertMsg += `<p>Ingresa la ruta de venta</p>`;
     if (document.getElementById("limitCash").value == "") alertMsg += `<p>Ingresa el limite de saldo</p>`;
     if (document.getElementById("maxDayCash").value == "") document.getElementById("maxDayCash").value = 0;
@@ -1721,8 +1634,8 @@ function acceptCredit() {
             indarFormaEnvio: null,
             indarPaqueteriaEnvio: null
         }
-        console.log(jsonDatosIntelisis);
-        console.log(JSON.stringify(jsonDatosIntelisis));
+        // console.log(jsonDatosIntelisis);
+        // console.log(JSON.stringify(jsonDatosIntelisis));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1734,7 +1647,6 @@ function acceptCredit() {
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (response) {
-                console.log(response);
                 if (response != "") {
                     $('#acceptForCreditModal').modal('hide');
                     $('#infoModal').modal('hide');
@@ -1744,14 +1656,14 @@ function acceptCredit() {
                     }
                 } else {
                     $('#alertModal').modal('show');
-                    let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+                    let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`;
                     document.getElementById("alertInfoModal").innerHTML = alertMsg;
                 }
             },
             error: function (error) {
                 console.log(error);
                 $('#alertModal').modal('show');
-                let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+                let alertMsg = `<p>Error de servidor, intentelo mas tarde.</p>`;
                 document.getElementById("alertInfoModal").innerHTML = alertMsg;
             }
         });
@@ -1791,13 +1703,12 @@ function setReference() {
                 'timeout': 2 * 60 * 60 * 1000,
                 success: function (response) {
                     $('#cargaModal').modal('hide');
-                    console.log(response);
                     if (response) {
                         $('#setReferenceModal').modal('hide');
                         alert("Referencia agregada exitosamente");
                     } else {
                         $('#alertModal').modal('show');
-                        let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+                        let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`;
                         document.getElementById("alertInfoModal").innerHTML = alertMsg;
                     }
                     realoadTableView();
@@ -1805,7 +1716,7 @@ function setReference() {
                 error: function (error) {
                     console.log(error);
                     $('#alertModal').modal('show');
-                    let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
+                    let alertMsg = `<p>Error de serve, intentelo mas tarde.</p>`;
                     document.getElementById("alertInfoModal").innerHTML = alertMsg;
                 }
             });
@@ -1878,8 +1789,8 @@ function acceptContado() {
             indarFormaEnvio: document.getElementById("shippingWaySelect3").value,
             indarPaqueteriaEnvio: document.getElementById("paqueteriaSelect2").value
         }
-        console.log(jsonDatosIntelisis);
-        console.log(JSON.stringify(jsonDatosIntelisis));
+        // console.log(jsonDatosIntelisis);
+        // console.log(JSON.stringify(jsonDatosIntelisis));
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1892,9 +1803,9 @@ function acceptContado() {
             'timeout': 2 * 60 * 60 * 1000,
             success: function (response) {
                 $('#cargaModal').modal('hide');
-                console.log(response);
+                // console.log(response);
                 if (response != "") {
-                    console.log(response.result);
+                    // console.log(response.result);
                     if (response.result != false) {
                         $('#acceptForCashModal').modal('hide');
                         sendMail(response);
@@ -2008,7 +1919,6 @@ function envioMail2() {
          ], 
          status: "Aceptada Contado (Pendiente Credito)"        
      }*/
-    console.log(mailJson);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2020,7 +1930,6 @@ function envioMail2() {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            console.log(data);
             alert(data.success);
             $('#infoModal').modal('hide');
             $('#cargaModal').modal('hide');
@@ -2073,7 +1982,6 @@ function simularReferencia() {
         if (response.result != false) {
             $('#acceptForCashModal').modal('hide');
             sendMail(response);
-            console.log("enviado");
             if (response.customerID != "YES" && response.customerID != "")
                 setReferenceModal(response.customerID, response.folio);
         } else {
