@@ -1218,7 +1218,7 @@ async function cargarInventario() {
         });
         $('.dataTables_filter input').off().on('keyup', function() {
             table.column('4').order('asc').draw();
-            $('#tablaInventario').DataTable().search(this.value.trim(), false, false).draw();
+            $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
        });   
     }
 }
@@ -2667,7 +2667,7 @@ function mostrarSoloExistencias() {
         });
         $('.dataTables_filter input').off().on('keyup', function() {
             newTable.column('4').order('asc').draw();
-            $('#tablaInventario').DataTable().search(this.value.trim(), false, false).draw();
+            $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
         });  
     } else {
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
@@ -2705,7 +2705,7 @@ function mostrarSoloExistencias() {
         });
         $('.dataTables_filter input').off().on('keyup', function() {
             newTable.column('4').order('asc').draw();
-            $('#tablaInventario').DataTable().search(this.value.trim(), false, false).draw();
+            $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
         });  
     }
 }
