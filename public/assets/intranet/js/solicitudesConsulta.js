@@ -23,7 +23,6 @@ const HISTORIALTRANS = {
 }
 
 $(document).ready(function () {
-    console.log(document.getElementById("userName").value);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -37,10 +36,9 @@ $(document).ready(function () {
             businessLines = data;
         },
         error: function (error) {
-            console.log(error + "Error");
+            console.log(error);
         }
     });
-    console.log(businessLines);
 
     let objUser = {
         User: document.getElementById("userName").value,
@@ -206,27 +204,27 @@ const getInfoDetalleSol = (item) => {
                                                 showInfoModal(data, data2, valContac, filesList, factList);
                                             },
                                             error: function (error) {
-                                                console.log(error + "Error");
+                                                console.log(error);
                                             }
                                         });
                                     },
                                     error: function (error) {
-                                        console.log(error + "Error");
+                                        console.log(error);
                                     }
                                 });
                             },
                             error: function (error) {
-                                console.log(error + "Error");
+                                console.log(error);
                             }
                         });
                     },
                     error: function (error) {
-                        console.log(error + "Error");
+                        console.log(error);
                     }
                 });
             },
             error: function (error) {
-                console.log(error + "Error");
+                console.log(error);
             }
         });
     }
@@ -613,7 +611,7 @@ const getTransactionHistory = (folio) =>{
                 showHistoryModal(historyList);
             },
             error: function (error) {
-                console.log(error + "Error");
+                console.log(error);
             }
         });
     }    
@@ -716,12 +714,11 @@ const getReferencesFile = (folio) => {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (result) {
-            console.log(result);
             const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             const url = URL.createObjectURL(blob);
             const enlace = document.createElement("a");
             enlace.href = url;
-            enlace.download = "Referencias.xlsx";
+            enlace.download = "ReferenciasNo_"+folio+".xlsx";
             enlace.click();
         },
         error: function (error) {

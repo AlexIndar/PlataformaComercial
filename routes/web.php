@@ -1433,7 +1433,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "SUPERVISORCYC" || $userRol[1] == "ADMIN"){
                         return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
@@ -1550,7 +1550,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "SUPERVISORCYC" || $userRol[1] == "ADMIN"){
                         return view('intranet.cyc.solicitudesConsulta',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
@@ -1585,7 +1585,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                             return redirect('/Intranet');
                         }
                         $listSol = MisSolicitudesController::getTableView($token, json_decode($zone->body()));
-                    }else if($userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA" || $userRol[1] == "CYC" || $userRol[1] == "GERENTECYC"){
+                    }else if($userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA" || $userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "SUPERVISORCYC"){
                         $zone = "";
                         $listSol = MisSolicitudesController::getTableViewManager($token, $userRol[0]);
                     }else{
@@ -1615,7 +1615,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN"){
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "SUPERVISORCYC"){
                         return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
                     }else{
                         return redirect('/Intranet');
@@ -1651,7 +1651,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "GERENTEVENTA"){
+                    if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "SUPERVISORCYC"){
                         return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');

@@ -231,6 +231,14 @@
                                             </a>
                                         </li>
                                     @endif
+                                    @if (in_array('ConsultaSolicitudes', $permissions))
+                                        <li class="nav-item">
+                                            <a href="/SolicitudesConsulta" class="nav-link">
+                                            <i class="fas fa-search-dollar nav-icon"></i>
+                                                <p>Consulta Solicitudes</p>
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </li>
                         @endif
