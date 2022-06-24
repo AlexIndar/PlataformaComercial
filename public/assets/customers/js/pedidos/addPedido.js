@@ -1182,7 +1182,13 @@ async function cargarInventario() {
 
         $('#tablaInventario thead tr:eq(1) th').each(function () {
             var title = $(this).text();
-            $(this).html('<input type="text" placeholder="' + title + '" class="column_search" />');
+            var id = $(this).attr('id');
+            if(id == 'search'){
+                $(this).html('<input type="text" placeholder="' + title + '" class="column_search" />');
+            }
+            else{
+                $(this).html('');
+            }
         });
 
         console.log('Pasando info a tabla');
@@ -1195,17 +1201,25 @@ async function cargarInventario() {
             deferRender: true,
             lengthMenu: [[5, 10, 20, 100], [5, 10, 20, 100]],
             'columnDefs': [
-                { "targets": 0, "className": "td-center" },
+                { "targets": 0, "className": "td-center", "orderable": false },
                 { "targets": 1, "className": "td-center" },
                 { "targets": 2, "className": "td-center" },
                 { "targets": 3, "className": "td-center" },
                 { "targets": 4, "className": "td-center" },
-                { "targets": 10, "visible": false }
+                { "targets": 6, "searchable": false, "orderable": false },
+                { "targets": 7, "searchable": false, "orderable": false },
+                { "targets": 8, "searchable": false, "orderable": false },
+                { "targets": 9, "searchable": false, "orderable": false },
+                { "targets": 10, "visible": false, "searchable": false, "orderable": false }
             ]
         });
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
             table.column($(this).parent().index()).search(this.value).draw();
         });
+        $('.dataTables_filter input').off().on('keyup', function() {
+            table.column('4').order('asc').draw();
+            $('#tablaInventario').DataTable().search(this.value.trim(), false, false).draw();
+       });   
     }
 }
 
@@ -2634,22 +2648,27 @@ function mostrarSoloExistencias() {
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
             },
             'columnDefs': [
-                { "targets": 0, "className": "td-center" },
+                { "targets": 0, "className": "td-center", "orderable": false },
                 { "targets": 1, "className": "td-center" },
                 { "targets": 2, "className": "td-center" },
                 { "targets": 3, "className": "td-center" },
                 { "targets": 4, "className": "td-center" },
-                { "targets": 10, "visible": false }
+                { "targets": 6, "searchable": false, "orderable": false },
+                { "targets": 7, "searchable": false, "orderable": false },
+                { "targets": 8, "searchable": false, "orderable": false },
+                { "targets": 9, "searchable": false, "orderable": false },
+                { "targets": 10, "visible": false, "searchable": false, "orderable": false }
             ]
         });
 
         newTable.search(currentFilter);
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
-            newTable
-                .column($(this).parent().index())
-                .search(this.value)
-                .draw();
+            newTable.column($(this).parent().index()).search(this.value).draw();
         });
+        $('.dataTables_filter input').off().on('keyup', function() {
+            newTable.column('4').order('asc').draw();
+            $('#tablaInventario').DataTable().search(this.value.trim(), false, false).draw();
+        });  
     } else {
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
         let currentTable = $('#tablaInventario').DataTable();
@@ -2668,21 +2687,26 @@ function mostrarSoloExistencias() {
                 $("#tablaInventario").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
             },
             'columnDefs': [
-                { "targets": 0, "className": "td-center" },
+                { "targets": 0, "className": "td-center", "orderable": false },
                 { "targets": 1, "className": "td-center" },
                 { "targets": 2, "className": "td-center" },
                 { "targets": 3, "className": "td-center" },
                 { "targets": 4, "className": "td-center" },
-                { "targets": 10, "visible": false }
+                { "targets": 6, "searchable": false, "orderable": false },
+                { "targets": 7, "searchable": false, "orderable": false },
+                { "targets": 8, "searchable": false, "orderable": false },
+                { "targets": 9, "searchable": false, "orderable": false },
+                { "targets": 10, "visible": false, "searchable": false, "orderable": false }
             ]
         });
         newTable.search(currentFilter).draw();
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
-            newTable
-                .column($(this).parent().index())
-                .search(this.value)
-                .draw();
+            newTable.column($(this).parent().index()).search(this.value).draw();
         });
+        $('.dataTables_filter input').off().on('keyup', function() {
+            newTable.column('4').order('asc').draw();
+            $('#tablaInventario').DataTable().search(this.value.trim(), false, false).draw();
+        });  
     }
 }
 

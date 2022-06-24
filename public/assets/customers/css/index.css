@@ -132,7 +132,6 @@ button:focus {
     margin-left: 50px !important;
     font-weight: 500 !important;
     letter-spacing: 1px;
-    color: white !important;
     float: right !important;
     text-transform: uppercase;
     margin-top: 4px;
@@ -144,7 +143,7 @@ button:focus {
 
 .navbar-nav ul{
     position: fixed !important;
-    top: 133.5px !important;
+    top: 130px !important;
     background-color: #F5F8F8;
     padding: 0px !important;
     min-width: 300px;
@@ -527,11 +526,31 @@ button:focus {
     color: rgb(255, 227, 142); 
 }
 
-.supplier-relampago img{
+.zoom{
+    position: relative;
+	overflow: hidden !important;
+	width: 100%;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.zoom img{
     max-width: 100%;
     width: 100%;
     height: auto;
     cursor: pointer;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    -ms-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.zoom:hover img {
+	-moz-transform: scale(1.05);
+	-webkit-transform: scale(1.05);
+	transform: scale(1.05);
 }
 
 
@@ -547,15 +566,13 @@ button{
 }
 
 .new-products-title{
-    width: 90%;
-    margin-left: 5%;
+    width: 100%;
     border-bottom: 5px solid rgb(251, 198, 33);
     padding: 10px;
 }
 
 .new-products-title h3{
     color: #002868 !important;
-    margin-left: 100px;
     font-weight: 700;
 }
 
@@ -580,10 +597,9 @@ button{
   
   ul#countdown {
     position: relative;
-    top: 50%;
+    top: 20%;
     transform: translateY(-50%);
-    width: 50%;
-    margin: 0 auto;
+    width: 100%;
     padding: 15px 0 20px 0;
     color: #000;
     border-width: 1px 0;
@@ -597,16 +613,14 @@ button{
     padding: 0;
     display: inline-block;
     width: 33%;
-    font-size: 72px;
-    font-size: 6vw;
+    font-size: 3vw;
     text-align: center;
   }
 
 
   ul#countdown li .label {
     color: #adafb2;
-    font-size: 18px;
-    font-size: 1.5vw;
+    font-size: .8vw;
     text-transform: uppercase;
   }
 

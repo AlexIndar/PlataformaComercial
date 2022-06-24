@@ -67,11 +67,14 @@ use PHPUnit\Framework\Constraint\Count;
 */
 Route::get('/', function () {
     $token = TokenController::getToken();
+    $status = '';
     if($token && $token != 'error' && $token != 'expired'){
         $bestSellers = ItemsController::getBestSellers($token);
+        $status = 'active';
     }
     else{
         $bestSellers = ItemsController::getBestSellers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM");
+        $status = 'inactive';
     }
 
     $rama1 = RamasController::getRama1();
@@ -83,7 +86,7 @@ Route::get('/', function () {
         $level = $_COOKIE['_lv'];
     }
 
-    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status]);
 
 })->name('/');
 
@@ -1251,17 +1254,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return  $data;
                 });
 
-                Route::post('/SolicitudesPendientes/getFile', function (Request $request){
-                    $token = TokenController::getToken();
-                    if($token == 'error' || $token == 'expired'){
-                        LoginController::logout();
-                    }
-                    $fol = $request->Folio;
-                    $type = $request->Type;
-                    $data = SolicitudesPendientesController::getFile($token, $fol, $type);
-                    return  $data;
-                });
-
                 Route::post('/MisSolicitudes/getBills', function (Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
@@ -1534,6 +1526,17 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $noC = $request->NoC;
                     $isCredit = $request->IsCredit;
                     $data = SolicitudesPendientesController::reactiveClient($token, $noC, $folio, $isCredit);
+                    return  $data;
+                });
+
+                Route::post('/SolicitudesPendientes/getFile', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $fol = $request->Folio;
+                    $type = $request->Type;
+                    $data = SolicitudesPendientesController::getFile($token, $fol, $type);
                     return  $data;
                 });
 
@@ -2107,8 +2110,6 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $data = ClientesController::getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin);
                     $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
-
-                    //dd($notas);
                     return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
                 });
 

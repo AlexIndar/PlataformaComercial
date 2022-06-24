@@ -821,7 +821,7 @@
                    '</tr>';
 
                    htmlsubtotal += '<tr style ="background-color: rgba(231, 235, 11, 0.705)">' +
-                   '<td style="font-weight: bold" colspan="2"> Cobrado </td>' +
+                   '<td style="font-weight: bold" colspan="2"> Cobrado </td>' + 
                    '<td style="font-weight: bold">' +sumaTotal30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +

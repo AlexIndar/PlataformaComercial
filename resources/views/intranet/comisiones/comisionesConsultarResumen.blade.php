@@ -64,11 +64,14 @@
                                                <th>DES - NEG</th>
                                                <th>DES - FT</th>
                                                <th>DES - INCOB</th>
-                                               <th>Prestaciones</th>
+                                               <th>Despensa</th>
+                                               <th>Puntualidad</th>
+                                               <th>Días No Reportados</th>
                                                <th>Comisión Integrada</th>
+                                               <th>Bono Clientes Activos</th>
                                                <th>Bono Clientes Nuevos</th>
                                                <th>Bono Ventas</th>
-                                               <th>Bono Especiales / Ctes act</th>
+                                               <th>Bono Especiales</th>
                                                <th>Comisión Total</th>
                                             </tr>
                                          </thead>
@@ -191,15 +194,19 @@ $.ajax({
             htmlllenaResumen += '<tr>'+
         '<td>'+data[i].zona+'</td>'+
         '<td>'+data[i].nombre+'</td>'+
+        '<td>'+data[i].numEmpleado+'</td>'+
         '<td>'+data[i].comisionBase.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td style="color:red">'+data[i].diferenciaPrecio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td style="color:red">'+data[i].descuFueraTiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td style="color:red">'+data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].prestaciones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+data[i].despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+data[i].puntualidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+data[i].diasNoReportados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+data[i].comisionIntegrada.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+data[i].bonoCtesActivos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+data[i].bonoClientesNuevos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+data[i].bonoVentas.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].bonoEspecificos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+        '<td>'+data[i].bonoEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '<td>'+data[i].comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
         '</tr>'
         }
@@ -214,13 +221,16 @@ $.ajax({
                 '<td style="color:red">'+data[i].diferenciaPrecio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td style="color:red">'+data[i].descuFueraTiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td style="color:red">'+data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-                '<td>'+data[i].prestaciones.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                '<td>'+data[i].despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                '<td>'+data[i].puntualidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                '<td>'+data[i].diasNoReportados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td>'+data[i].comisionIntegrada.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                '<td>'+data[i].bonoCtesActivos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td>'+data[i].bonoClientesNuevos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td>'+data[i].bonoVentas.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-                '<td>'+data[i].bonoEspecificos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                '<td>'+data[i].bonoEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td>'+data[i].comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-                '</tr>'
+                '</tr>';
             }
     }
     $('#llenaResumen').html(htmlllenaResumen);
