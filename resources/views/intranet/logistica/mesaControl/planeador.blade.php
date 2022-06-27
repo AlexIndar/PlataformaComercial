@@ -7,10 +7,10 @@
 @endsection
 @section('css')
 <!-- DataTables -->
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ env('APP_URL') }}assets/intranet/css/logistica.css">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 @endsection
 @section('body')
 
@@ -139,5 +139,5 @@
 @endsection
 @section('js')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ env('APP_URL')}}assets/intranet/js/logisticaController.js"></script>
+<script src="{{ asset('assets/intranet/js/logisticaController.js') }}"></script>
 @endsection
