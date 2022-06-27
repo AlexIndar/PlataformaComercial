@@ -68,7 +68,7 @@
                                     <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-3">
-                                                <label for="">Fletera</label>
+                                                <label for="">Fletera:</label>
                                                 <select class="form-control" name="fletera" id="fletera">
                                                         <option value="" selected disabled>Seleccione una fletera</option>
                                                     @foreach($freighters as $freighter)
@@ -86,16 +86,20 @@
                                             </select>
                                             </div>
                                             <div class="col-2">
-                                                <label for="">Num. de Guía</label>
+                                                <label for="">Num. de Guía:</label>
                                                 <input class="form-control" type="text" id="NumGuia">
                                             </div>
-                                            <div class="col-3">
-                                                <label for="">Importe Total</label>
+                                            <div class="col-2">
+                                                <label for="">Importe Total:</label>
                                                 <input class="form-control" type="text" id="importeTotal" value="0.00" disabled>
                                             </div>
                                             <div class="col-1 mt-2">
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-plataform btn" onclick="logisticaController.addNumGuia()" data-toggle="tooltip" data-placement="top" title="Guardar"><i class="fa-solid fa-floppy-disk"></i></button>
+                                            </div>
+                                            <div class="col-1 mt-2">
+                                                <label for=""></label>
+                                                <button type="button" class="btn btn-block btn-plataform btn" onclick="location.reload();" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fa-solid fa-arrows-rotate"></i></button>
                                             </div>
                                             {{-- <div style="border: 1px solid black;width: 0%;max-width: 0%;padding: 0px;">
                                                 <label for=""></label>
@@ -109,13 +113,20 @@
                                         <hr>
                                         <div class="row justify-content-end">
                                             <div class="col-2">
-                                                <label for="">Facturas</label>
-                                                <input class="form-control" type="text" id="searchFactura">
+                                               <!-- Default switch -->
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="isOficinas" onchange="logisticaController.isOficinaFacturaGuia()">
+                                                    <label class="custom-control-label" for="isOficinas">Envio a oficinas</label>
+                                                </div>
                                             </div>
-                                            <div class="col-1 mt-2">
+                                            <div class="col-2">
+                                                <label for="">Facturas:</label>
+                                                <input class="form-control" type="text" id="searchFactura" onchange="logisticaController.searchBills()">
+                                            </div>
+                                            {{-- <div class="col-1 mt-2">
                                                 <label for=""></label>
-                                                <button type="button" class="btn btn-block btn-plataform btn" onclick="logisticaController.searchBills()" data-toggle="tooltip" data-placement="top" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
-                                            </div>
+                                                <button type="button" class="btn btn-block btn-plataform btn" onclick="" data-toggle="tooltip" data-placement="top" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -157,17 +168,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row" style="border: 1px solid gray;">
+                                                {{-- <div class="row" style="border: 1px solid gray;">
                                                     <div class="col-8 p-0">
                                                         <button type="button" class="btn btn-block btn-plataform btn" style="border-radius:0px" onclick="logisticaController.CaptureInvoices()"><i class="fa-solid fa-file-arrow-up mr-3"></i>Capturar Facturas</button>
                                                     </div>
                                                     <div class="col-4 mt-1">
                                                         <strong>3 Embarques</strong>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="row" style="border: 1px solid gray;">
                                                     <div class="col-12">
-                                                        <div class="row" id="divrow" style="height: 270px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
+                                                        <div class="row" id="divrow" style="height: 310px; overflow:scroll;overflow-x: hidden;overflow-y: auto;">
                                                             <div class="col-12 table-responsive p-0">
                                                                 <table class="table table-bordered">
                                                                     <thead>
