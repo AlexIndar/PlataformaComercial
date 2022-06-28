@@ -2057,6 +2057,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
                         </div>`;
                     }
                     document.getElementById("acRow").innerHTML = fileActa;
+                    getAlert("alertAC", data.observations.actaConstitutiva);
                 }
 
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;
