@@ -3,7 +3,7 @@
 @section('title') Indar @endsection
 
 @section('styles')
-<link rel="stylesheet" href="{{asset('assets/intranet/css/main.css')}}">
+<link rel="stylesheet" href="{{ asset('assets/intranet/css/main.css') }}">
 @endsection
 
 @section('body')
