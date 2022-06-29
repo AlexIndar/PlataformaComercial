@@ -1651,7 +1651,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $data = AsignacionZonasController::getTemplate($token);
                     return  $data;
-                    dd($data);
                 });
 
                 Route::post('/AsignacionZonas/UpdateZonesCyc', function (Request $request){
@@ -1661,6 +1660,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $response = AsignacionZonasController::updateZonesCyc($token, json_encode($request->all()));
                     return $response;
+                });
+
+                Route::get('/GetExcelPrueba', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $data = AsignacionZonasController::getExcelPrueba($token);
+                    return  $data;
+                    dd($data);
                 });
 
                 //////// ESTADISTICA SOLICITUD TIEMPO /////

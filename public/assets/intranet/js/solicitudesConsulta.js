@@ -134,13 +134,12 @@ const dateFilter = (date) => {
     let dateIF = date.split('T').map(s => s.trim());
     let aux1 = dateIF[0].split('-').map(s => s.trim());
     let aux2 = dateIF[1].split(':').map(s => s.trim());
-    return aux1[2] + "/" + aux1[1] + "/" + aux1[0] + " " + timeFilter(aux2);
+    return aux1[0] + "/" + aux1[1] + "/" + aux1[2] + " " + timeFilter(aux2);
 }
 
 const timeFilter = (time) => {
-    let one = time[0] > 12 ? time[0] - 12 : time[0];
     let ls = time[0] > 12 ? " pm" : " am";
-    return one + ":" + time[1] + ":" + time[2].split('.').map(s => s.trim())[0] + ls;
+    return time[0] + ":" + time[1] + ":" + time[2].split('.').map(s => s.trim())[0] + ls;
 }
 
 const getInfoDetalleSol = (item) => {

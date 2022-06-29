@@ -261,7 +261,7 @@ const reloadCycTable = (data) => {
 const getDateF = (date) => {
     let auxD = date.split('T')[0].split('-');
     let auxT = date.split('T')[1].split('.')[0].split(':');
-    return auxD[0][2] + auxD[0][3] + "/" + auxD[1] + "/" + auxD[2] + " " + timeFilter(auxT);
+    return auxD[0] + "/" + auxD[1] + "/" + auxD[2] + " " + timeFilter(auxT);
 }
 
 const timeFilter = (time) => {
@@ -403,6 +403,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     caratulaCount = 0;
     facturasCount = 0;
     cartaResponsivaCount = 0;
+    actaConstCount = 0;
     referenciasCount = 0;
     clearTextArea();
     permiso = typeCyC;
@@ -1859,6 +1860,7 @@ function showReact(folio) {
     $('#reactiveClieModal').modal('show');
     document.getElementById("folReact").innerHTML = folio.split('-')[0];
     document.getElementById("rfcReact").innerHTML = folio.split('-')[1];
+    document.getElementById("reactiveClieValue").value = "";
 }
 
 function setReactCli() {
@@ -2016,4 +2018,32 @@ function simularReferencia() {
         let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
         document.getElementById("alertInfoModal").innerHTML = alertMsg;
     }
+}
+
+function getDocumentoP() {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/GetExcelPrueba",
+        'type': 'GET',
+        'dataType': 'json',
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function (result) {
+            console.log(result);
+            if (result != null) {
+                console.log(result);
+                const blob = new Blob([s2ab(atob(result.description))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = URL.createObjectURL(blob);
+                const enlace = document.createElement("a");
+                enlace.href = url;
+                enlace.download = "TemplateCyC.xlsx";
+                enlace.click();
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }
