@@ -164,20 +164,16 @@ button:focus {
     min-height: 500px;
     border-radius: 0px !important;
     margin-left: 18px;
-    border: 1px solid #F5F8F8;
+    border: none;
+    border-top: 2px solid #002868;
+    -moz-box-shadow:    0px 0px 0px 0px #fff;
+    -webkit-box-shadow: 0px 0px 0px 0px #fff;
+    box-shadow:         0px 0px 0px 0px #fff;
 }
 
 .dropdown-menu-empresa{
-    margin-left: 497px !important;
+    margin-left: 540px !important;
     min-height: auto !important;
-}
-
-.main-ul:first-child{
-    background-color: black !important;
-}
-
-.fa-main{
-    color: #002868 !important;
 }
 
 .dropdown-item{

@@ -22,7 +22,9 @@ class PortalController extends Controller
     } 
 
     public static function busquedaGeneralItem($token, $filter){
-        $response = Http::withToken($token)->get(config('global.api_url').'/Portal/BusquedaGeneralItem?busqueda='.$filter);
+        $response = Http::withToken($token)->post(config('global.api_url').'/Portal/BusquedaGeneralItem', [
+            "busqueda" => $filter
+        ]);
         $data = $response->body();
         return json_decode($data);
     }

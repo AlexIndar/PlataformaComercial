@@ -191,7 +191,7 @@
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div class="input-group mb-3 mt-3">
-                    <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2" disabled>
                     <div class="input-group-append">
                         <button class="btn btn-indar" type="button"><i class="fas fa-search fa-lg"></i></button>
                     </div>

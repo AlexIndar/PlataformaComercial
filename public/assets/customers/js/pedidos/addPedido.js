@@ -67,7 +67,6 @@ $(document).ready(function () {
 
     //Func Termina Ajax
     $(document).ajaxStop(function () {
-        //Esconde y muestra DIVISORES
         document.getElementById("btnSpinner").style.display = "none";
         var btnActions = document.getElementsByClassName('btn-group-buttons');
         for (var x = 0; x < btnActions.length; x++) {

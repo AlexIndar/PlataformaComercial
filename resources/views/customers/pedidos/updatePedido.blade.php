@@ -7,7 +7,6 @@
 @section('assets')
     <link rel="stylesheet" href="{{ asset('assets/customers/css/pedidos/addPedido.css') }}">
     <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}">
     <script src="{{ asset('assets/session/validaToken.js') }}"></script>
     <script src="{{ asset('assets/customers/js/pedidos/addPedido.js') }}"></script>
     <script src="{{ asset('assets/customers/js/pedidos/articulosBloqueadosCCIFletera.js') }}"></script>

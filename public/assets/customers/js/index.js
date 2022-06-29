@@ -149,6 +149,7 @@ $('document').ready(function () {
             title: '¡Bienvenido de nuevo!',
             icon: 'success'
           });
+          document.getElementById('buscador').removeAttribute('disabled');
         }
       }
       if (getCookie("_ep") && getCookie("_lte")) {
@@ -209,31 +210,31 @@ $('document').ready(function () {
 
   $('li.dropdown').hover(
     function () {
-      $(".overlayDropdown").fadeIn('500');
+      $(".overlayDropdown").fadeIn();
     }
   );
 
   $('a.dropdown-item').hover(
     function () {
-      $(".overlayDropdown").fadeIn('500');
+      $(".overlayDropdown").fadeIn();
     }
   );
 
   $('.overlayDropdown').hover(
     function () {
-      $(".overlayDropdown").fadeOut('500');
+      $(".overlayDropdown").fadeOut();
     }
   );
 
   $('li.notDropdown').hover(
     function () {
-      $(".overlayDropdown").fadeOut('500');
+      $(".overlayDropdown").fadeOut();
     }
   );
 
   $('.brand-logo').hover(
     function () {
-      $(".overlayDropdown").fadeOut('500');
+      $(".overlayDropdown").fadeOut();
     }
   );
 

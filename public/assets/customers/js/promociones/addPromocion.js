@@ -16,18 +16,12 @@ $('document').ready(function () {
 
     //Func Termina Ajax
     $(document).ajaxStop(function () {
-        //Esconde y muestra DIVISORES
         document.getElementById('div-loading').style.opacity = '0';
         var btnActions = document.getElementsByClassName('btnActions');
         for (var x = 0; x < btnActions.length; x++) {
             btnActions[x].disabled = false;
         }
     });
-
-    // $('.modal-background').click(function() {
-    //     closeModal();
-    // });
-
 
     $.ajax({
         'headers': {
@@ -37,6 +31,7 @@ $('document').ready(function () {
         'type': 'GET',
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
+        'async': false,
         success: function (data) {
             reglas = data;
         },
@@ -511,6 +506,7 @@ function checkRules() {
                 'type': 'GET',
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
+                'async': false,
                 success: function (data) {
                     addPromoRules(data);
                 },
@@ -759,15 +755,20 @@ function validarPromo() {
             'data': json,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
+            'async': false,
             success: function (data) {
                 if (data['status'] != undefined) {
+                    console.log(data);
                     alert(Object.entries(data['errors']));
                 }
                 else {
+                    alert('Promoción guardada correctamente');
                     window.location.href = '/promociones';
                 }
             },
             error: function (error) {
+                console.log(error);
+                alert('Error guardando promoción');
                 // window.location.href = '/promociones';
             }
         });

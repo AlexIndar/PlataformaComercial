@@ -1100,7 +1100,8 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                 // PORTAL ------------------------------------------------------------------------------------------------------------------------------------------------
                 
-                Route::get('/portal/busquedaGeneralItem/{data}', function ($data){
+                Route::post('/portal/busquedaGeneralItem/', function (Request $request){
+                    $data = $request->data;
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
@@ -1108,6 +1109,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $result = PortalController::busquedaGeneralItem($token, $data);
                     return $result;
                 });
+
+                Route::get('/portal/busqueda/{busqueda}', function ($busqueda){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $result = PortalController::busquedaGeneralItem($token, $busqueda);
+                    dd($result);
+                    return $result;
+                });
+
+
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 /* ********************************************* INDARNET ************************************************ */
