@@ -12,6 +12,7 @@ use App\Http\Controllers\Customer\RamasController;
 use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
+use App\Http\Controllers\Customer\PortalController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Http\Controllers\Logistica\LogisticaController;
@@ -1097,6 +1098,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                  });
 
 
+                // PORTAL ------------------------------------------------------------------------------------------------------------------------------------------------
+                
+                Route::get('/portal/busquedaGeneralItem/{data}', function ($data){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $result = PortalController::busquedaGeneralItem($token, $data);
+                    return $result;
+                });
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 /* ********************************************* INDARNET ************************************************ */

@@ -3,9 +3,9 @@
 @section('title') Ventas - Promociones @endsection
 
 @section('styles') 
-<link rel="stylesheet" href="{{asset('assets/customers/css/promociones/promociones.css')}}">
-<link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
-<script src="{{asset('assets/customers/js/promociones/promociones.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/promociones.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
+    <script src="{{asset('assets/customers/js/promociones/promociones.js')}}"></script>
 @endsection
 
 @section('body')

@@ -19,6 +19,8 @@ html{
 
 
 
+
+
 /* FIRST GRAY BAR --------------------------------------------------------------------------------------------------------------------------------------- */
 .login-options{
     position: fixed;
@@ -126,6 +128,18 @@ button:focus {
     top: 90px !important;
 }
 
+.overlayDropdown{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    margin-top: 130px;
+    width: 100%;
+    z-index: 600;
+    background-color: rgba(0, 0, 0, 0.508);
+    display: none;
+}
+
 .nav-link{
     color: white !important;
     font-size: 13px !important;
@@ -148,11 +162,9 @@ button:focus {
     padding: 0px !important;
     min-width: 300px;
     min-height: 500px;
-    border-left: 1px solid white !important;
-    border-bottom: 10px solid #F5F8F8 !important;
-    border-right: 10px solid #F5F8F8 !important;
     border-radius: 0px !important;
     margin-left: 18px;
+    border: 1px solid #F5F8F8;
 }
 
 .dropdown-menu-empresa{
@@ -166,10 +178,6 @@ button:focus {
 
 .fa-main{
     color: #002868 !important;
-}
-
-.dropdown-item-main{
-    background-color: #F5F8F8 !important;
 }
 
 .dropdown-item{
@@ -197,6 +205,7 @@ button:focus {
 
 .dropdown-menu-main{
     background-color: #F5F8F8 !important;
+    color: white !important;
 }
 
 .navbar-nav > li:hover > .dropdown-menu {
@@ -462,11 +471,6 @@ button:focus {
 }
 
 
-
-
-
-
-
 .left{
     float: left;
 }
@@ -486,19 +490,14 @@ button:focus {
     backdrop-filter: blur(5px);
 }
 
-
-
 .carousel-inner{
     min-width: 100% !important;
 }
 
-
-
-/* .ferreimpulsos-hero{
-    background-image: url("../img/jpg/ferreimpulsos.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-} */
+.carousel-control-prev-icon, 
+.carousel-control-next-icon{
+    height: 30px !important;
+}
 
 /* PRODUCT CATEGORIES -------------------------------------------------------------------------------------------------------------------- */
 
@@ -854,59 +853,6 @@ button{
     filter: brightness(0) invert(1);
     max-height: 70px;
 }
-
-/* RECLUTAMIENTO ------------------------------------------------------------------------------------------- */
-
-.anchor{
-    position: relative;
-    height: 500px;
-    padding: 200px 0px 0px 0px; 
-}
-
-.reclutamiento{
-    background-image: url("../img/jpg/reclutamiento.jpg");
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    width: 100%;
-    height: 300px;
-    position: relative;
-    z-index: 1;
-    padding: 50px;
-}
-
-.overlay{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: -1;
-}
-
-.reclutamiento h3, .reclutamiento p{
-    width: 100%;
-    text-align: center;
-    color: white;
-}
-
-.btn-reclutamiento{
-    background-color: transparent;
-    color: white;
-    padding: 5px 10px 5px 10px;
-    border-radius: 10px;
-    border: 1px solid white;
-    transition: all .5s ease;
-    z-index: 10;
-}
-
-.btn-reclutamiento:hover{
-    color: black;
-    background-color: white;
-}
-
 
 
 /* FOOTER -------------------------------------------------------------------------------------------------- */
@@ -1318,12 +1264,12 @@ button{
 	.nav-item .submenu{ 
 		display: none;
 		position: fixed !important;
-        margin-left: 305px;
+        margin-left: 317px;
 	}
     .nav-item .submenu-2{ 
 		display: none;
 		position: fixed !important;
-        margin-left: 590px;
+        margin-left: 616px;
 	}
     .navbar-nav .dropdown-menu{
         display: none;

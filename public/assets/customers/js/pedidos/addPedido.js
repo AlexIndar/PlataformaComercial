@@ -1025,13 +1025,14 @@ function getItems(entity, async) {
         },
         'url': "nuevo/getItems/all",
         'type': 'POST',
-        'dataType': 'json',
         'data': data,
         'enctype': 'multipart/form-data',
         'async': async,
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            items = data;
+            console.log(data);
+            items = JSON.parse(data);
+            console.log(items);
             var empty = document.getElementById('empty').value;
             if (empty == 'no')
                 reloadInventario();
@@ -1092,7 +1093,6 @@ async function cargarInventario() {
                 }
                 else
                     precioCliente = items[x]['price'];
-
                 var precioLista = (items[x]['price']).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',

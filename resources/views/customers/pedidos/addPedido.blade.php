@@ -5,12 +5,18 @@
  @endsection
 
  @section('assets')
-     <link rel="stylesheet" href="{{ asset('assets/customers/css/pedidos/addPedido.css') }}">
-     <link rel="stylesheet" href="{{ asset('assets/customers/css/animations/spinner.css') }}">
-     <script src="{{ asset('assets/session/validaToken.js') }}"></script>
-     <script src="{{ asset('assets/customers/js/pedidos/addPedido.js') }}"></script>
-     <script src="{{ asset('assets/customers/js/pedidos/articulosBloqueadosCCIFletera.js') }}"></script>
-     <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customers/css/pedidos/addPedido.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customers/css/animations/spinner.css') }}">
+    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}">
+    <script src="{{ asset('assets/session/validaToken.js') }}"></script>
+
+    <script src="{{ asset('assets/customers/js/pedidos/addPedido.js') }}"></script>
+    <script src="{{ asset('assets/customers/js/pedidos/articulosBloqueadosCCIFletera.js') }}"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script> <!-- LIBRERÍA NECESARIA PARA FILTRO POR COLUMNA -->
+    {{-- ZLIB --}}
  @endsection
 
  @section('body')
@@ -484,7 +490,7 @@
 
              </div> <!-- Cierre Pedido -->
          </div> <!-- Cierre content -->
-     </div> <!-- Cierre container-fluid -->
+     </div> <!-- Cierre container-fluid --> 
 
      <!-- FORM OCULTO PARA NUEVA COTIZACIÓN -->
 
@@ -519,15 +525,13 @@
      <!-- DIV PARA MOSTRAR IMAGEN DEL PRODUCTO AMPLIADA -->
 
      <div class="containerImgProduct" id="containerImgProduct">
-         <h4 id='codigoArticuloMD'>CÓDIGO ARTICULO</h5>
-             <h4 id='descripcionArticuloMD'>DESCRIPCIÓN ARTICULO</h5>
-                 <div class="magnify">
-                     <div class="large" id="zoom"></div>
-                     <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">
-                 </div>
-
-                 <i class="fa-solid fa-xmark closeImgProductMDIcon" id="closeImgProductMDIcon"
-                     onclick="closeImgProductMD()"></i>
+        <h4 id='codigoArticuloMD'>CÓDIGO ARTICULO</h4>
+        <h4 id='descripcionArticuloMD'>DESCRIPCIÓN ARTICULO</h4>
+        <div class="magnify">
+            <div class="large" id="zoom"></div>
+            <img src="" alt="" class="imgProductMD small bigImageProduct gallery" id="imgProductMD">
+        </div>
+        <i class="fa-solid fa-xmark closeImgProductMDIcon" id="closeImgProductMDIcon" onclick="closeImgProductMD()"></i>
      </div>
 
  @endsection

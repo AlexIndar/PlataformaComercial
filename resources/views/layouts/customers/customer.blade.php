@@ -2,67 +2,70 @@
 <html lang="en">
 
 <head>
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-SGWQQRQ15Y"></script>
     <meta charset="utf-8">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js" integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
-    <!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="description" content="Somos el principal mayorista ferretero en la región Centro-Occidente de la República Mexicana.">
+    <meta property="og:url" content="http://indarweb.dyndns.org:8080">
+    <meta property="og:title" content="Indar - Mayorista Ferretero">
+    <meta property="og:discription" content="Somos el principal mayorista ferretero en la región Centro-Occidente de la República Mexicana.">
+    <meta property="og:site_name" content="Indar">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="http://indarweb.dyndns.org:8080/assets/customers/img/jpg/hero-1.jpg">
+    <link rel="canonical" href="http://indarweb.dyndns.org:8080">
+
     <link rel="icon" type="image/png" href="/assets/customers/img/png/favicon.png">
     <link rel="stylesheet" href="{{ asset('assets/customers/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customers/css/buscador/buscador.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.8.5/jquery-ui.min.js" integrity="sha256-fOse6WapxTrUSJOJICXXYwHRJOPa6C1OUQXi7C9Ddy8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
     <script src="{{ asset('assets/customers/js/index.js') }}"></script>
+    <script src="{{ asset('assets/customers/js/portal/buscador.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blazy/1.8.2/blazy.min.js" integrity="sha512-Yrd3VqXNBUzyCQWVBlL65mTdE1snypc9E3XnGJba0zJmxweyJAqDNp6XSARxxAO6hWdwMpKQOIGE5uvGdG0+Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- DataTables  & Plugins -->
-    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script> <!-- LIBRERÍA NECESARIA PARA FILTRO POR COLUMNA -->
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
+    
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
     <!-- DATEPICKER -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <!-- CHOSEN SELECT -->
     <script type="text/javascript" src="{{ asset('plugins/chosen/chosen.jquery.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/chosen/chosen.min.css') }}" />
+
     <!-- xlsx reader  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.8/xlsx.full.min.js"></script>
-    <title>@yield('title')</title>
+
+    
     <!-- Custom Styles -->
     @yield('assets')
 </head>
 
 <body>
+    <div class="overlayBusqueda"></div>
+    <div class="overlayDropdown"></div>
+
+
     <!-- LOGIN OPTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------->
     <div class="login-options">
         <h5>Síguenos en </h5>
@@ -188,19 +191,47 @@
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div class="input-group mb-3 mt-3">
-                    <div class="input-group-prepend">
-                        <div class="btn-group">
-                            <button class="btn btn-secondary dropdown-toggle input-indar" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false"> Filtrar por</button>
-                            <ul class="dropdown-menu w-100" aria-labelledby="defaultDropdown" style="transform: translate(0px, 38px) !important; padding: 0 !important;">
-                                <li><a class="dropdown-item" href="#">Artículo <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item" href="#">Marca <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                                <li><a class="dropdown-item" href="#">Proveedor <i class="fas fa-chevron-right fa-xs fa-menu"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control input-indar" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2">
                     <div class="input-group-append">
                         <button class="btn btn-indar" type="button"><i class="fas fa-search fa-lg"></i></button>
+                    </div>
+                </div>
+                <div class="resultadoBusqueda">
+                    <div class="cuadrante cuadrante1">
+                        <div class="tituloCuadrante">
+                            <h5>Sugerencia por Artículo - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesArticulo"></span></h5>
+                        </div>
+                        <div class="listSugerencias" id="listSugerenciasArticulo">
+                            {{-- <div class="lineSugerencia sugerenciaArticulo">
+                                <h5 class="h5Sugerencia"> <span id="sugerenciaArticuloDescripcion-1">ESMERILADORA ANGULAR 1/2" 600 W 1100 RPM </span> <span id="sugerenciaArticuloCodigo-1">[U1 EA404D]</span></h5> <br>
+                                <img class="imgSugerencia" id="sugerenciaArticuloImg-1" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/SURTEK.jpg" alt="">
+                                <div class="Stars" style="--rating: 5;"></div>
+                            </div> --}}
+                        </div>
+                    </div>
+                    <div class="cuadrante cuadrante2">
+                        <div class="tituloCuadrante">
+                            <h5>Sugerencia por Proveedor - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesProveedor"></span></h5>
+                        </div>
+                        <div class="listSugerencias" id="listSugerenciasProveedor">
+                            {{-- <div class="lineSugerencia sugerenciaProveedor">
+                                <h5 class="h5Sugerencia"> <span id="sugerenciaProveedorCodigo-1">A4 </span> <span id="sugerenciaProveedorNombre-1">[AUSTROMEX]</span></h5> <br>
+                                <img class="imgSugerencia" id="sugerenciaProveedorImg-1-1" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/AUSTRODIAM.jpg" alt="">
+                                <img class="imgSugerencia" id="sugerenciaProveedorImg-1-2" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/AUSTROMEX.jpg" alt="">
+                                <img class="imgSugerencia" id="sugerenciaProveedorImg-1-3" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/TENAZIT.jpg" alt="">
+                            </div> --}}
+                        </div>
+                    </div>
+                    <div class="cuadrante cuadrante3">
+                        <div class="tituloCuadrante">
+                            <h5>Sugerencia por Marca - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesMarca"></span></h5>
+                        </div>
+                        <div class="listSugerencias" id="listSugerenciasMarca">
+                            {{-- <div class="lineSugerencia sugerenciaMarca">
+                                <h5 class="h5Sugerencia"><span id="sugerenciaMarcaNombre-1">AUSTRODIAM</span></h5>
+                                <img class="imgSugerencia" id="sugerenciaMarcaImg-1" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/AUSTRODIAM.jpg" alt="">
+                            </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -245,10 +276,10 @@
                         @endfor
                     </ul>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item notDropdown">
                         <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Catálogo</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item notDropdown">
                         <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Ferreimpulsos</a>
                     </li>
                     <li class="nav-item dropdown">
@@ -262,10 +293,10 @@
                             <li><a class="dropdown-item" href="postventa"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item notDropdown">
                         <a class="nav-link" href="contacto">Contacto</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item notDropdown">
                         @if ($level == 'E')
                             <h5><a class="nav-link" href="/Intranet">Intranet</a></h5>
                         @endif
