@@ -130,24 +130,25 @@ class SaleOrdersController extends Controller
         $response = Http::withToken($token)->accept('application/zip')->post(config('global.api_url').'/SaleOrder/getItems', [
             "codCustomer" => $entity,
         ]);
-        Storage::put('/'.$entity.'/items.zip', $response->getBody()->getContents());
-        $zip = new ZipArchive;
-        $zipFile = '../storage/app/'.$entity.'/items.zip';
-        if ($zip->open($zipFile) === TRUE) {
+        // Storage::put('/'.$entity.'/items.zip', $response->getBody()->getContents());
+        // $zip = new ZipArchive;
+        // $zipFile = '../storage/app/'.$entity.'/items.zip';
+        // if ($zip->open($zipFile) === TRUE) {
 
-                // get the filename without extension.
-                $filename = pathinfo($zipFile,PATHINFO_FILENAME);
-                // extract.
-                $zip->extractTo('../storage/app/'.$entity);
-                $zip->close();
-        }
+        //         // get the filename without extension.
+        //         $filename = pathinfo($zipFile,PATHINFO_FILENAME);
+        //         // extract.
+        //         $zip->extractTo('../storage/app/'.$entity);
+        //         $zip->close();
+        // }
 
-        ob_start('ob_gzhandler');
+        // ob_start('ob_gzhandler');
 
-        $content = Storage::get('/'.$entity.'/items.txt');
+        // $content = Storage::get('/'.$entity.'/items.txt');
         
         // return gzcompress($content, 9);
-        return $content;
+        // return $content;
+        return $response->body();
         
     } 
 
