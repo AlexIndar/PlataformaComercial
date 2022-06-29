@@ -32,4 +32,9 @@ class AsignacionZonasController extends Controller{
         ]);
         return $response;
     }
+
+    public static function getExcelPrueba($token){
+        $fileTemplate = Http::withToken($token)->get(config('global.api_url').'/Exporta/GetExcelPrueba');
+        return $fileTemplate;        
+    }
 }
