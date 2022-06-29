@@ -1859,6 +1859,7 @@ function showReact(folio) {
     $('#reactiveClieModal').modal('show');
     document.getElementById("folReact").innerHTML = folio.split('-')[0];
     document.getElementById("rfcReact").innerHTML = folio.split('-')[1];
+    document.getElementById("reactiveClieValue").value = "";
 }
 
 function setReactCli() {
