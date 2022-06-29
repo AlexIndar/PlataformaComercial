@@ -11,6 +11,9 @@ var lastType = ''; //datetime de ultima tecla presionada. Si pasó más de 4 seg
 var timeToDisable = 4000; /* ms */
 
 $(document).ready(function () {
+
+    document.cookie.indexOf('_lt') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
+
     $("#buscador").keyup(function(e) {
         lastType = new Date();
         var cadena = document.getElementById('buscador').value;

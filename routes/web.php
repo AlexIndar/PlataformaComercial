@@ -427,6 +427,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama3 = RamasController::getRama3();
                                 $entity = $request->entity;
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                if($userData == null){
+                                    LoginController::logout();
+                                }
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
                                 $directores = ['rvelasco', 'alejandro.jimenez'];

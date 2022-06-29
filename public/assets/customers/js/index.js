@@ -149,7 +149,6 @@ $('document').ready(function () {
             title: '¡Bienvenido de nuevo!',
             icon: 'success'
           });
-          document.getElementById('buscador').removeAttribute('disabled');
         }
       }
       if (getCookie("_ep") && getCookie("_lte")) {
