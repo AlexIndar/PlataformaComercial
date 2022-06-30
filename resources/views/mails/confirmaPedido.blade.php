@@ -101,19 +101,22 @@
                 </tr>
             @endif
             @for ($y = 0; $y < count($pedido[$x]['items']); $y++)
-                <tr>
-                    <td style='padding: 2px; text-align: center;'>{{ $y + 1 }}</td>
-                    <td style='padding: 2px; text-align: center;'>{{ $pedido[$x]['items'][$y]['itemid'] }}</td>
-                    <td style='padding: 2px; text-align: center;'>{{ $pedido[$x]['items'][$y]['cantidad'] }}</td>
-                    <td style='padding: 2px; text-align: center;'>
-                        {{ $pedido[$x]['items'][$y]['purchasedescription'] }}
-                    </td>
-                    <td style='padding: 2px; text-align: center;'>${{ $pedido[$x]['items'][$y]['price'] }}</td>
-                    <td style='padding: 2px; text-align: center;'>{{ $pedido[$x]['items'][$y]['promo'] }}%</td>
-                    <td style='padding: 2px; text-align: center;'>${{ $pedido[$x]['items'][$y]['precioUnitario'] }}
-                    </td>
-                    <td style='padding: 2px; text-align: center;'>${{ $pedido[$x]['items'][$y]['importe'] }}</td>
-                </tr>
+                {{-- Si el pedido trae un regalo que se eliminó, no enviarlo en la cotización al correo --}}
+                @if (!($pedido[$x]['items'][$y]['regalo'] == 1 && $pedido[$x]['items'][$y]['addRegalo'] == 0)) 
+                    <tr>
+                        <td style='padding: 2px; text-align: center;'>{{ $y + 1 }}</td>
+                        <td style='padding: 2px; text-align: center;'>{{ $pedido[$x]['items'][$y]['itemid'] }}</td>
+                        <td style='padding: 2px; text-align: center;'>{{ $pedido[$x]['items'][$y]['cantidad'] }}</td>
+                        <td style='padding: 2px; text-align: center;'>
+                            {{ $pedido[$x]['items'][$y]['purchasedescription'] }}
+                        </td>
+                        <td style='padding: 2px; text-align: center;'>${{ $pedido[$x]['items'][$y]['price'] }}</td>
+                        <td style='padding: 2px; text-align: center;'>{{ $pedido[$x]['items'][$y]['promo'] }}%</td>
+                        <td style='padding: 2px; text-align: center;'>${{ $pedido[$x]['items'][$y]['precioUnitario'] }}
+                        </td>
+                        <td style='padding: 2px; text-align: center;'>${{ $pedido[$x]['items'][$y]['importe'] }}</td>
+                    </tr>
+                @endif
             @endfor
         @endfor
 

@@ -39,7 +39,7 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
-                            <button onclick="realoadTableView()">Ac</button>
+                            <!-- <button onclick="getDocumentoP()">P</button> -->
                             <!-- <button onclick="envioMail2()">B</button> -->
                             <!-- <button onclick="simularReferencia()">C</button> -->
                         </div>
@@ -106,64 +106,72 @@
                         <h4 style="color: gray;" id="moneySol"></h4>
                     </div>
                 </div>
-                <div class="row" id="datosGeneralesSection" style="display: none;">
+                <div class="row" id="datosGeneralesSection">
                     <div class="col-md-12">
                         <h3 class="text-center">Datos Generales</h3>
                         <hr class="hr-indarYellow">
-                        <div class="row mb-3">
-                            <div class="col-md-4">RFC</div>
-                            <div class="col-md-6"><input type="text" name="rfcEdit" id="rfcEdit" class="form-control" disabled onfocusout="changeFlag(2)" maxlength="13"></div>
-                            <div class="col-md-2">
-                                <label class="mr-3 text-green"><input type="radio" name="rfcData" value="Aceptado" id="rfcData">SI</label>
-                                <label class="mr-3 text-red"><input type="radio" name="rfcData" value="Rechazado" id="rfcData2">NO</label>
+                        <div class="row" id="sectionDGOne" style="display: none;">
+                            <div class="col-md-12">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">RFC</div>
+                                    <div class="col-md-6"><input type="text" name="rfcEdit" id="rfcEdit" class="form-control" disabled onfocusout="changeFlag(2)" maxlength="13"></div>
+                                    <div class="col-md-2">
+                                        <label class="mr-3 text-green"><input type="radio" name="rfcData" value="Aceptado" id="rfcData">SI</label>
+                                        <label class="mr-3 text-red"><input type="radio" name="rfcData" value="Rechazado" id="rfcData2">NO</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">Razon Social</div>
+                                    <div class="col-md-6"><input type="text" name="rzEdit" id="rzEdit" class="form-control" disabled onfocusout="changeFlag(2)" maxlength="99"></div>
+                                    <div class="col-sm-2">
+                                        <label class="mr-3 text-green"><input type="radio" name="razData" value="Aceptado" id="razData">SI</label>
+                                        <label class="mr-3 text-red"><input type="radio" name="razData" value="Rechazado" id="razData2">NO</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">Nombre Comercial</div>
+                                    <div class="col-md-6"><input type="text" name="nomComEdit" id="nomComEdit" disabled class="form-control" onfocusout="changeFlag(1)" maxlength="99"></div>
+                                    <div class="col-sm-2">
+                                        <label class="mr-3 text-green"><input type="radio" name="nomComData" value="Aceptado" id="nomComData">SI</label>
+                                        <label class="mr-3 text-red"><input type="radio" name="nomComData" value="Rechazado" id="nomComData2">NO</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">Email Facturacion</div>
+                                    <div class="col-md-6"><input type="text" name="emailFactE" id="emailFactE" disabled class="form-control"></div>
+                                    <div class="col-md-2">
+                                        <!-- <label class="mr-3 text-green"><input type="radio" name="emailFData" value="Aceptado" id="emailFData">SI</label> -->
+                                        <!-- <label class="mr-3 text-red"><input type="radio" name="emailFData" value="Rechazado" id="emailFData2">NO</label> -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Razon Social</div>
-                            <div class="col-md-6"><input type="text" name="rzEdit" id="rzEdit" class="form-control" disabled onfocusout="changeFlag(2)" maxlength="99"></div>
-                            <div class="col-sm-2">
-                                <label class="mr-3 text-green"><input type="radio" name="razData" value="Aceptado" id="razData">SI</label>
-                                <label class="mr-3 text-red"><input type="radio" name="razData" value="Rechazado" id="razData2">NO</label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Nombre Comercial</div>
-                            <div class="col-md-6"><input type="text" name="nomComEdit" id="nomComEdit" disabled class="form-control" onfocusout="changeFlag(1)" maxlength="99"></div>
-                            <div class="col-sm-2">
-                                <label class="mr-3 text-green"><input type="radio" name="nomComData" value="Aceptado" id="nomComData">SI</label>
-                                <label class="mr-3 text-red"><input type="radio" name="nomComData" value="Rechazado" id="nomComData2">NO</label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Email Facturacion</div>
-                            <div class="col-md-6"><input type="text" name="emailFactE" id="emailFactE" disabled class="form-control"></div>
-                            <div class="col-md-2">
-                                <!-- <label class="mr-3 text-green"><input type="radio" name="emailFData" value="Aceptado" id="emailFData">SI</label> -->
-                                <!-- <label class="mr-3 text-red"><input type="radio" name="emailFData" value="Rechazado" id="emailFData2">NO</label> -->
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Constancia de Situacion Fiscal</div>
-                            <div class="col-md-6" id="imgCSFButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
-                            <div class="col-sm-2">
-                                <label class="mr-3 text-green"><input type="radio" name="constData" value="Aceptado" id="constData">SI</label>
-                                <label class="mr-3 text-red"><input type="radio" name="constData" value="Rechazado" id="constData2">NO</label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
-                            <div class="col-md-6" id="imgCSF2Button"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
-                            <div class="col-sm-2">
-                                <label class="mr-3 text-green"><input type="radio" name="const2Data" value="Aceptado" id="const2Data">SI</label>
-                                <label class="mr-3 text-red"><input type="radio" name="const2Data" value="Rechazado" id="const2Data2">NO</label>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">Fotografia de Solicitud</div>
-                            <div class="col-md-6" id="imgFSButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
-                            <div class="col-sm-2">
-                                <label class="mr-3 text-green"><input type="radio" name="picSolData" value="Aceptado" id="picSolData">SI</label>
-                                <label class="mr-3 text-red"><input type="radio" name="picSolData" value="Rechazado" id="picSolData2">NO</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">Constancia de Situacion Fiscal</div>
+                                    <div class="col-md-6" id="imgCSFButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                                    <div class="col-sm-2">
+                                        <label class="mr-3 text-green"><input type="radio" name="constData" value="Aceptado" id="constData">SI</label>
+                                        <label class="mr-3 text-red"><input type="radio" name="constData" value="Rechazado" id="constData2">NO</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">Constancia de Situacion Fiscal (2da Pagina)</div>
+                                    <div class="col-md-6" id="imgCSF2Button"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                                    <div class="col-sm-2">
+                                        <label class="mr-3 text-green"><input type="radio" name="const2Data" value="Aceptado" id="const2Data">SI</label>
+                                        <label class="mr-3 text-red"><input type="radio" name="const2Data" value="Rechazado" id="const2Data2">NO</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">Fotografia de Solicitud</div>
+                                    <div class="col-md-6" id="imgFSButton"><button class="btn btn-warning"><i class="far fa-eye"></i>SIN ARCHIVO</button></div>
+                                    <div class="col-sm-2">
+                                        <label class="mr-3 text-green"><input type="radio" name="picSolData" value="Aceptado" id="picSolData">SI</label>
+                                        <label class="mr-3 text-red"><input type="radio" name="picSolData" value="Rechazado" id="picSolData2">NO</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -715,8 +723,8 @@
                 </button>
             </div>
             <div class="modal-body text-indarBlue" id="modal">
-            <input type="text" id="sameDir" value="" hidden>
-            <input type="text" id="typeSolCash" value="" hidden>
+                <input type="text" id="sameDir" value="" hidden>
+                <input type="text" id="typeSolCash" value="" hidden>
                 <div class="row mb-2">
                     <div class="col-md-4">
                         <div class="input-group mb-3">

@@ -31,6 +31,7 @@ class VerifyCsrfToken extends Middleware
         '/pedidosAnteriores/RegresaEstadoPedido',
         '/pedidosAnteriores/getDetalleFacturado',
         'pedidosAnteriores/descargarDocumento',
+        '/portal/busquedaGeneralItem/',
         '/promociones/storePromo',
         '/promociones/editar',
         '/promociones/eliminar',
@@ -81,6 +82,10 @@ class VerifyCsrfToken extends Middleware
         '/GetTableView',
         '/HeatMap/GetListCustomer',
         '/AsignacionZonas/UpdateZonesCyc',
-        '/SolicitudesConsulta/GetCYCTableShow'
+        '/SolicitudesConsulta/GetCYCTableShow',
+        '/MisSolicitudes/GetValidacionFacturas',
+        '/MisSolicitudes/getValidacionActConst',
+        '/MisSolicitudes/GetValidacionReferencias',
+        '/SolicitudesPendientes/getFile',
     ];
 }

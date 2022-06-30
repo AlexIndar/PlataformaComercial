@@ -2,7 +2,14 @@
  * GLOBAL VARS
  * -------------------------- */
 // The date you want to count down to
-var targetDate = new Date("2021/12/03 23:59:59");
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+today = yyyy + '/' + mm + '/' + dd;
+var targetDate = new Date(today + ' 19:59:59');
+
 
 // Other date related variables
 // var days;
@@ -171,7 +178,6 @@ $('document').ready(function () {
 
 
   $('#check').on('click', function (event) {
-    console.log('click');
     var icon = document.getElementsByClassName('navbar-mobile')[0];
     if (icon.classList.contains('active')) {
       icon.classList.remove('active');
@@ -187,7 +193,7 @@ $('document').ready(function () {
       [].forEach.call(active, function (el) {
         el.classList.remove("active-item-main");
       })
-      $(this).addClass('active-item-main')
+      $(this).addClass('active-item-main');
     }
   );
 
@@ -198,6 +204,36 @@ $('document').ready(function () {
         el.classList.remove("active-item-2");
       })
       $(this).addClass('active-item-2')
+    }
+  );
+
+  $('li.dropdown').hover(
+    function () {
+      $(".overlayDropdown").fadeIn();
+    }
+  );
+
+  $('a.dropdown-item').hover(
+    function () {
+      $(".overlayDropdown").fadeIn();
+    }
+  );
+
+  $('.overlayDropdown').hover(
+    function () {
+      $(".overlayDropdown").fadeOut();
+    }
+  );
+
+  $('li.notDropdown').hover(
+    function () {
+      $(".overlayDropdown").fadeOut();
+    }
+  );
+
+  $('.brand-logo').hover(
+    function () {
+      $(".overlayDropdown").fadeOut();
     }
   );
 
@@ -251,90 +287,6 @@ $('document').ready(function () {
     }
   });
 
-  const swiper2 = new Swiper(".swiper-2", {
-    slidesPerView: 2,
-    spaceBetween: 15,
-    slidesPerGroup: 2,
-    loop: true,
-    pagination: {
-      el: ".swiper-pagination-2",
-      clickable: true,
-    },
-    autoplay: false,
-    navigation: {
-      nextEl: ".swiper-button-next-2",
-      prevEl: ".swiper-button-prev-2",
-    },
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      400: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      600: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      850: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      1350: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      },
-      1400: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      }
-    }
-  });
-
-  const swiper3 = new Swiper(".swiper-3", {
-    slidesPerView: 2,
-    spaceBetween: 15,
-    slidesPerGroup: 2,
-    loop: true,
-    pagination: {
-      el: ".swiper-pagination-3",
-      clickable: true,
-    },
-    autoplay: false,
-    navigation: {
-      nextEl: ".swiper-button-next-3",
-      prevEl: ".swiper-button-prev-3",
-    },
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      400: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      600: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      850: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      1350: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      },
-      1400: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      }
-    }
-  });
-
   const suppliers = new Swiper(".swiper-suppliers", {
     slidesPerView: 10,
     spaceBetween: 0,
@@ -380,12 +332,9 @@ function conocerMas() {
   console.log("Conocer mas");
 }
 
-
-
 document.addEventListener("DOMContentLoaded", function () {
   // make it as accordion for smaller screens
   if (window.innerWidth < 992) {
-
     // close all inner dropdowns when parent is closed
     document.querySelectorAll('.navbar .dropdown').forEach(function (everydropdown) {
       everydropdown.addEventListener('hidden.bs.dropdown', function () {
@@ -448,7 +397,7 @@ function closeModal() {
 
 function navigate(blade, validateToken) { //validateToken => Boolean   true: vista protegida, únicamente usuarios logueados      false: vista pública
   if (validateToken) {
-    if (getCookie("_rfs")) {
+    if (getCookie("_lt")) {
       window.location.href = blade;
     }
     else {
@@ -483,24 +432,16 @@ function changeEstadoPostventa(estado, src) {
   document.getElementById('estadoPostventa').src = "/assets/customers/img/jpg/postventa/CSA" + src + ".jpg";
 }
 
-function changePagination(page) {
-  $('.active-page').delay(500).fadeToggle().css('display', 'flex');
-  $('.page-' + page).delay(500).fadeToggle().css('display', 'flex');
-  $('.active-page').toggleClass('active-page');
-  $('.page-' + page).toggleClass('active-page');
-}
-
-function showPdf(proveedor) {
-
-}
 
 function deleteTokenCookie() {
-  document.cookie = "_rfs= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+  document.cookie = "_lt= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
 }
 
 function showLoadImg(element) {
   element.src = "/assets/customers/img/jpg/imagen_no_disponible.jpg";
 }
+
+// FUNCIONES PARA ACTIVAR RAMAS EN VERSIÓN MÓVIL
 
 function activeRama1(categoria, ele) {
   if (ele.childNodes[3].classList.contains('fa-angle-down')) {

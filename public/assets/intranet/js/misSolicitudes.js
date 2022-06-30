@@ -1847,6 +1847,22 @@ function getButtonsFiles(dato, type) {
     return buttons;
 }
 
+function getButtonsTipoP(dato, id){
+    var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editTypeLP('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
+    if (dato == null) {
+        buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
+    } else if (dato == true) {
+        buttons += `<button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>`;
+    } else {
+        buttons += `<button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>`;
+    }
+    return buttons;
+}
+
+function editTypeLP(id){
+    alert("Editar tipo");
+}
+
 function showInfoModal(data, data2, valContac, filesList, factList) {
     document.getElementById("refSection").style.display = "none";
     document.getElementById("crediSection").style.display = "none";
@@ -2005,7 +2021,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
             document.getElementById("typeLButtons").innerHTML = getButtons(data2.tipoLocal, "typeLEdit");
 
             document.getElementById("typePEdit").value = data.cliente.tipoPersona == true ? "Moral" : "Fisica";
-            document.getElementById("typePButtons").innerHTML = getButtons(data2.tipoPersona, "typePEdit");
+            document.getElementById("typePButtons").innerHTML = getButtonsTipoP(data2.tipoPersona, "typePEdit");
             document.getElementById("picIFERButtons").innerHTML = getButtonsFiles(data2.ineRepresentante, 3);
             document.getElementById("picIFERRButtons").innerHTML = getButtonsFiles(data2.ineRepresentanteReverso, 31);
             getAlert("alertCredit", data.observations.credito);
@@ -2041,6 +2057,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
                         </div>`;
                     }
                     document.getElementById("acRow").innerHTML = fileActa;
+                    getAlert("alertAC", data.observations.actaConstitutiva);
                 }
 
                 var responsiveList = filesList.filter(x => x.type == 12 && x.subType != -1).length > 0 ? filesList.filter(x => x.type == 12 && x.subType != -1) : null;

@@ -3,11 +3,14 @@
 @section('title') Ventas - Editar Paquete @endsection 
 
 @section('styles')
-<link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
-<link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/addPedido.css')}}">
-<link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.1/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/customers/css/pedidos/addPedido.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.1/css/fixedHeader.dataTables.min.css">
+    <!-- DataTables  & Plugins -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script> <!-- LIBRERÍA NECESARIA PARA FILTRO POR COLUMNA -->
 @endsection
 
 @section('body')

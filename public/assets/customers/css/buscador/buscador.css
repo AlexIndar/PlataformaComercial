@@ -1,0 +1,108 @@
+.overlayBusqueda{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.508);
+    display: none;
+}
+
+.resultadoBusqueda{
+    position:absolute;
+    display: none;
+    width: 98%;
+    min-width: inherit !important;
+    height: auto;
+    margin-top: -16px;
+    background-color: rgb(245,248,248);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 1100;
+}
+
+.cuadrante{
+    height: auto;
+    overflow: auto;
+}
+
+.tituloCuadrante{
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.533);
+    border-top: 1px solid rgba(0, 0, 0, 0.533);
+    padding: 10px 0px 0px 10px;
+}
+
+.tituloCuadrante h5{
+    font-size: 14px !important;
+}
+
+.cantidadRecomendaciones{
+    color: gray;
+    font-weight: 300 !important;
+}
+
+/* SUGERENCIAS */
+
+.listSugerencias{
+    height: auto;
+    max-height: 180px !important;
+    overflow: auto;
+    background-color: rgb(255,255,255);
+}
+
+.lineSugerencia{
+    width: 100%;
+    height: auto;
+    padding: 10px 0px 15px 10px;
+}
+
+.lineSugerencia:hover{
+    background-color: rgb(225, 228, 228);
+    cursor: pointer;
+}
+
+
+.h5Sugerencia{
+    font-size: 13px !important;
+    display: inline;
+}
+
+.imgSugerencia{
+    display: inline;
+    width: 70px;
+    height: auto;
+    margin-right: 10px;
+}
+
+/* STARS */
+:root {
+    --star-size: 20px;
+    --star-color: rgb(201, 201, 201);
+    --star-background: #266ee2;
+  }
+  
+  .Stars {
+    --percent: calc(var(--rating) / 5 * 100%);
+    display: inline-block;
+    font-size: var(--star-size);
+    font-family: Times;
+    line-height: 1;
+  }
+  .Stars::before {
+    content: "★★★★★";
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+
+@media (max-width: 991px) {
+    .resultadoBusqueda{
+        width: 88% !important;
+        margin-left: 5% !important;
+    }
+}

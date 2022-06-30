@@ -19,6 +19,8 @@ html{
 
 
 
+
+
 /* FIRST GRAY BAR --------------------------------------------------------------------------------------------------------------------------------------- */
 .login-options{
     position: fixed;
@@ -126,13 +128,24 @@ button:focus {
     top: 90px !important;
 }
 
+.overlayDropdown{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    margin-top: 130px;
+    width: 100%;
+    z-index: 600;
+    background-color: rgba(0, 0, 0, 0.508);
+    display: none;
+}
+
 .nav-link{
     color: white !important;
     font-size: 13px !important;
     margin-left: 50px !important;
     font-weight: 500 !important;
     letter-spacing: 1px;
-    color: white !important;
     float: right !important;
     text-transform: uppercase;
     margin-top: 4px;
@@ -144,33 +157,23 @@ button:focus {
 
 .navbar-nav ul{
     position: fixed !important;
-    top: 133.5px !important;
+    top: 130px !important;
     background-color: #F5F8F8;
     padding: 0px !important;
     min-width: 300px;
     min-height: 500px;
-    border-left: 1px solid white !important;
-    border-bottom: 10px solid #F5F8F8 !important;
-    border-right: 10px solid #F5F8F8 !important;
     border-radius: 0px !important;
     margin-left: 18px;
+    border: none;
+    border-top: 2px solid #002868;
+    -moz-box-shadow:    0px 0px 0px 0px #fff;
+    -webkit-box-shadow: 0px 0px 0px 0px #fff;
+    box-shadow:         0px 0px 0px 0px #fff;
 }
 
 .dropdown-menu-empresa{
-    margin-left: 497px !important;
+    margin-left: 540px !important;
     min-height: auto !important;
-}
-
-.main-ul:first-child{
-    background-color: black !important;
-}
-
-.fa-main{
-    color: #002868 !important;
-}
-
-.dropdown-item-main{
-    background-color: #F5F8F8 !important;
 }
 
 .dropdown-item{
@@ -198,6 +201,7 @@ button:focus {
 
 .dropdown-menu-main{
     background-color: #F5F8F8 !important;
+    color: white !important;
 }
 
 .navbar-nav > li:hover > .dropdown-menu {
@@ -463,11 +467,6 @@ button:focus {
 }
 
 
-
-
-
-
-
 .left{
     float: left;
 }
@@ -487,19 +486,14 @@ button:focus {
     backdrop-filter: blur(5px);
 }
 
-
-
 .carousel-inner{
     min-width: 100% !important;
 }
 
-
-
-/* .ferreimpulsos-hero{
-    background-image: url("../img/jpg/ferreimpulsos.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-} */
+.carousel-control-prev-icon, 
+.carousel-control-next-icon{
+    height: 30px !important;
+}
 
 /* PRODUCT CATEGORIES -------------------------------------------------------------------------------------------------------------------- */
 
@@ -527,11 +521,31 @@ button:focus {
     color: rgb(255, 227, 142); 
 }
 
-.supplier-relampago img{
+.zoom{
+    position: relative;
+	overflow: hidden !important;
+	width: 100%;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.zoom img{
     max-width: 100%;
     width: 100%;
     height: auto;
     cursor: pointer;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    -ms-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.zoom:hover img {
+	-moz-transform: scale(1.05);
+	-webkit-transform: scale(1.05);
+	transform: scale(1.05);
 }
 
 
@@ -547,15 +561,13 @@ button{
 }
 
 .new-products-title{
-    width: 90%;
-    margin-left: 5%;
+    width: 100%;
     border-bottom: 5px solid rgb(251, 198, 33);
     padding: 10px;
 }
 
 .new-products-title h3{
     color: #002868 !important;
-    margin-left: 100px;
     font-weight: 700;
 }
 
@@ -580,10 +592,9 @@ button{
   
   ul#countdown {
     position: relative;
-    top: 50%;
+    top: 20%;
     transform: translateY(-50%);
-    width: 50%;
-    margin: 0 auto;
+    width: 100%;
     padding: 15px 0 20px 0;
     color: #000;
     border-width: 1px 0;
@@ -597,16 +608,14 @@ button{
     padding: 0;
     display: inline-block;
     width: 33%;
-    font-size: 72px;
-    font-size: 6vw;
+    font-size: 3vw;
     text-align: center;
   }
 
 
   ul#countdown li .label {
     color: #adafb2;
-    font-size: 18px;
-    font-size: 1.5vw;
+    font-size: .8vw;
     text-transform: uppercase;
   }
 
@@ -840,59 +849,6 @@ button{
     filter: brightness(0) invert(1);
     max-height: 70px;
 }
-
-/* RECLUTAMIENTO ------------------------------------------------------------------------------------------- */
-
-.anchor{
-    position: relative;
-    height: 500px;
-    padding: 200px 0px 0px 0px; 
-}
-
-.reclutamiento{
-    background-image: url("../img/jpg/reclutamiento.jpg");
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    width: 100%;
-    height: 300px;
-    position: relative;
-    z-index: 1;
-    padding: 50px;
-}
-
-.overlay{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: -1;
-}
-
-.reclutamiento h3, .reclutamiento p{
-    width: 100%;
-    text-align: center;
-    color: white;
-}
-
-.btn-reclutamiento{
-    background-color: transparent;
-    color: white;
-    padding: 5px 10px 5px 10px;
-    border-radius: 10px;
-    border: 1px solid white;
-    transition: all .5s ease;
-    z-index: 10;
-}
-
-.btn-reclutamiento:hover{
-    color: black;
-    background-color: white;
-}
-
 
 
 /* FOOTER -------------------------------------------------------------------------------------------------- */
@@ -1304,12 +1260,12 @@ button{
 	.nav-item .submenu{ 
 		display: none;
 		position: fixed !important;
-        margin-left: 305px;
+        margin-left: 317px;
 	}
     .nav-item .submenu-2{ 
 		display: none;
 		position: fixed !important;
-        margin-left: 590px;
+        margin-left: 616px;
 	}
     .navbar-nav .dropdown-menu{
         display: none;

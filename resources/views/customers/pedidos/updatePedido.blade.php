@@ -6,9 +6,13 @@
 
 @section('assets')
     <link rel="stylesheet" href="{{ asset('assets/customers/css/pedidos/addPedido.css') }}">
+    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/session/validaToken.js') }}"></script>
     <script src="{{ asset('assets/customers/js/pedidos/addPedido.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}">
+    <script src="{{ asset('assets/customers/js/pedidos/articulosBloqueadosCCIFletera.js') }}"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script> <!-- LIBRERÍA NECESARIA PARA FILTRO POR COLUMNA -->
 @endsection
 
 @section('body')
