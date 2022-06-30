@@ -231,7 +231,7 @@ $.ajax({
             }
             //console.log(groupBy(rawtData,'companyname'));
             var resultData = Object.values(groupBy(rawtData,'companyid'));
-            console.log(resultData);
+            //console.log(resultData);
             var comisionesbase = 0;
             for(i=0; i< resultData.length; i++){
             resultData[i].comision_base = resultData[i].comision_base - resultData[i].descneg - resultData[i].descuento_fuera_tiempo - resultData[i].incobrabilidad;
@@ -297,7 +297,7 @@ $.ajax({
                 var row = table.api().row(this).data();
                 //console.log(row['companyid']);
                 var id = row['companyid'];
-                console.log(date) ;
+                //console.log(date) ;
                 document.getElementById("headerMesDetalle").innerHTML = month.toUpperCase()+' '+año;
 
                $.ajax({
@@ -311,6 +311,7 @@ $.ajax({
                     'enctype': 'multipart/form-data',
                     'timeout': 4 * 60 * 60 * 1000,
                     success: function(data){
+                        console.log(data);
                         var html = '';
                         var i;
                         var sumaRMCI = 0;

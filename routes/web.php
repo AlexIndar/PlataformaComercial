@@ -2107,6 +2107,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $data = ClientesController::getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin);
                     $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
+                    //dd($notas);
                     return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
                 });
 
