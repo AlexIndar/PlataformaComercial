@@ -193,16 +193,16 @@ p{
 	text-align: center;
 }
 #progressbar li:nth-child(2):before {
-	content: "\f474";
+	content: "\f09d" !important;
 }
 #progressbar li:nth-child(3):before {
-	content: "\f570";
+	content: "\f543" !important;
 }
 #progressbar li:nth-child(4):before {
-	content: "\f0d1";
+	content: "\f058" !important;
 }
 #progressbar li:before {
-	content: "\f07a";
+	content: "\f571" !important;
 	font-family: "Font Awesome\ 5 Free";
 	font-weight: 900;
 	display: flex;

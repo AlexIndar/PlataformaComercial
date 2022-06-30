@@ -86,7 +86,9 @@
                         <tbody>
                         @foreach ( $data as $value )
                         <tr>
-                            <td><img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2"></td>
+                            <td> <div class="btn" style="display:block; width:50px !important " id="btnDownloadFact{{ $value->tranid }}" onclick='downloadFact("{{$value->tranid}}")'>
+                                <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2">
+                             </div></td>
                             <td>Factura</td>
                             <td>{{ $value->tranid }}</td>
                             <td>{{ substr($value->fechaFactura, 0, 10) }}</td>
@@ -98,7 +100,8 @@
                             <td class="text-center">{{ number_format($value->importe_factura_menos_descuento, 2)}}</td> --}}
                             <td> {{ number_format($value->saldo, 2) }}</td>
                             <td>
-                                <div class="btn btn-info btn-circle" id="btnDetalleFact" onclick='detalleFactura("{{$value->tranid}}")'>
+                                <div class="spinner-border text-secondary" style="display:none" id="btnSpinner{{ $value->tranid }}"></div>
+                                <div class="btn btn-info " style="display:block; width:50px !important " id="btnDetalleFact{{ $value->tranid }}" onclick='detalleFactura("{{$value->tranid}}")'>
                                     <i class="far fa-eye"></i>
                                 </div>
                             </td>
@@ -225,10 +228,11 @@
     </div>
 <!-- Modal Detalle Factura-->
 <div class="modal fade" id="detalleFactModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable">
        <div class="modal-content">
-          <div class="modal-header bg-indarBlue">
-            <h4 id="headerNC" class="text-center title ml-auto">Modal Detalle Factura</h4>
+          <div class="modal-header" style="background-color:#002868; color:whitesmoke">
+            <h4 id="headerNC" class="text-center title ml-auto">Detalle de Factura: <u><p id="numeroFact" style="color:#d8ad02"></p></u></h4>
+
              <input type="text" id="typeFormInf" value="" hidden>
              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
              <i class="fas fa-times"></i>
@@ -237,15 +241,14 @@
           <div class="modal-body text-indarBlue" id="modal2">
              <div class="row">
                 <div class="col-md-12">
-                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">DATOS</h6>
-                   {{--  <label for="">Selecciona la Factura a Asignar la N.C</label> --}}
-
+                    <h6 style="font-weight: bold">Monto Abonado : $ <span id="montoAbonado" style="font-size: 15px" class="badge badge-success"></span></h6>
+                    <h6 style="font-weight: bold">Fecha de Abono :<span id="fechaAbonado" style="font-size: 15px" class="badge badge-info"></span></h6>
+                    <h6 style="font-weight: bold">Folio de Transacción :<span id="folioAbonado" style="font-size: 15px" class="badge badge-info"></span></h6>
+                    <h6 style="font-weight: bold">Tipo de Transacción : <span id="tipoAbonado" style="font-size: 15px" class="badge badge-info"></span></h6>
                 </div>
              </div>
           </div>
-          <div class="modal-footer">
-             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
-          </div>
+
        </div>
     </div>
  </div>
@@ -263,7 +266,7 @@
           <div class="modal-body text-indarBlue" id="modal2">
              <div class="row">
                 <div class="col-md-12">
-                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">(Asigne a una Factura Su Nota de Crédito)</h6>
+                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)"> (Asigne a una Factura Su Nota de Crédito) </h6>
                    {{--  <label for="">Selecciona la Factura a Asignar la N.C</label> --}}
                    <select class="form-control" name="" id="selectFact"placeholder="Seleccione una Factura"></select>
                 </div>
@@ -312,41 +315,39 @@ var table = $('#example').DataTable({
 } );
 
 
-    $('#example tbody').on('click', 'tr', function () {
-        $(this).toggleClass('selected');
-        document.getElementById("showPaso1").style.display = "block";
-        var datos = table.rows('.selected').data()
-        var subTotal=0;
-        var descuento=0;
-        arregloFac=[];
-        for(i=0; i< datos.length; i++){
-            datos[i][6] = datos[i][6].replace(/,/g, "");
-            //datos[i][7] = datos[i][7].replace(/,/g, "");
-            arregloFac.push(datos[i]);
-            subTotal += parseFloat(datos[i][6]);
-            console.log(datos[i][6]);
-            //descuento += parseFloat(datos[i][7]);
-        }
+$('#example tbody').on('click', 'tr', function () {
+    $(this).toggleClass('selected');
+    document.getElementById("showPaso1").style.display = "block";
+    var datos = table.rows('.selected').data()
+    var subTotal=0;
+    var descuento=0;
+    arregloFac=[];
+    for(i=0; i< datos.length; i++){
+        datos[i][6] = datos[i][6].replace(/,/g, "");
+        //datos[i][7] = datos[i][7].replace(/,/g, "");
+        arregloFac.push(datos[i]);
+        subTotal += parseFloat(datos[i][6]);
+        console.log(datos[i][6]);
+        //descuento += parseFloat(datos[i][7]);
+    }
+    $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    //$('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    if(arregloFac.length == 0){
+        document.getElementById("showPaso1").style.display = "none";
+    }
+});
 
-        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        //$('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        if(arregloFac.length == 0){
-            document.getElementById("showPaso1").style.display = "none";
-        }
-
-    });
-
-    $('#btnMostrarNotas').click(function () {
-        $('#labelNC').addClass('active');
-        var data = table.rows('.selected').data();
-        arregloFact=[];
-        for(i=0; i< data.length; i++){
-            data[i][6] = data[i][6].replace(/,/g, "");
-            arregloFact.push(data[i]);
-        }
-        document.getElementById("notasDiv").style.display = "block";
-        document.getElementById("facturasDiv").style.display = "none";
-    });
+$('#btnMostrarNotas').click(function () {
+    $('#labelNC').addClass('active');
+    var data = table.rows('.selected').data();
+    arregloFact=[];
+    for(i=0; i< data.length; i++){
+        data[i][6] = data[i][6].replace(/,/g, "");
+        arregloFact.push(data[i]);
+    }
+    document.getElementById("notasDiv").style.display = "block";
+    document.getElementById("facturasDiv").style.display = "none";
+});
 
 var tableNotas = $('#tableNotas').DataTable({
     dom : 'Brt',
@@ -530,9 +531,40 @@ function mostrarFacturas() {
   document.getElementById("facturasDiv").style.display = "block";
 }
 
-function detalleFactura(data) {
-    $('#detalleFactModal').modal('show');
-    console.log(data);
+function detalleFactura(folio) {
+    document.getElementById('btnSpinner'+folio).style.display = "block";
+    document.getElementById("btnDetalleFact"+folio).style.display = "none";
+
+    const cte = {!! json_encode($value->companyid) !!}
+    //console.log(folio, cte);
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/clientes/getDetalleFactura",
+        'type': 'GET',
+        'dataType': 'json',
+        'data': {folio: folio, cte : cte},
+        'enctype': 'multipart/form-data',
+        'timeout': 4 * 60 * 60 * 1000,
+        success: function(data){
+         console.log(data);
+         document.getElementById("btnSpinner"+folio).style.display = "none";
+         document.getElementById("btnDetalleFact"+folio).style.display = "block";
+         var fechaAbono = data[0].fecha.slice(0, 10);
+         $('#numeroFact').text(folio);
+         $('#montoAbonado').text(data[0].amount);
+         $('#fechaAbonado').text(fechaAbono);
+         $('#folioAbonado').text(data[0].number);
+         $('#tipoAbonado').text(data[0].transaction_type);
+         $('#detalleFactModal').modal('show');
+         }
+        ,
+        error: function() {
+            console.log("Error");
+            alert('Error, Tiempo de espera agotado');
+        }
+    });
 }
 
 </script>
