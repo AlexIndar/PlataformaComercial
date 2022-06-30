@@ -273,20 +273,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return view('customers.catalogo', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
                                 });
 
-                                Route::get('/detallesProducto',function () {
-                                    $token = TokenController::getToken();
-                                    if($token == 'error' || $token == 'expired'){
-                                        LoginController::logout();
-                                    }
-                                    $rama1 = RamasController::getRama1();
-                                    $rama2 = RamasController::getRama2();
-                                    $rama3 = RamasController::getRama3();
-                                    $level = "C";
-                                    if(isset($_COOKIE['_lv'])){
-                                        $level = $_COOKIE['_lv'];
-                                    }
-                                    return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
-                                });
 
                 // PEDIDOS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1113,16 +1099,60 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $result;
                 });
 
-                Route::get('/portal/busqueda/{busqueda}', function ($busqueda){
+                Route::get('/portal/busqueda/{busqueda}/{from?}/{to?}', function ($busqueda, $from = 1, $to = 20){
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
-                    $result = PortalController::busquedaGeneralItem($token, $busqueda);
-                    dd($result);
-                    return $result;
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    $data = PortalController::busquedaItemFiltro($token, $busqueda, $codCliente, $from, $to);
+                    $data['filter'] = strtoupper(str_replace('~', '-', $busqueda));
+                    $numPages = ceil($data['resultados'] / ($to - $from));
+                    $activePage = $to / ($to - $from + 1);
+                    $to > $data['resultados'] ? $to = $data['resultados'] : $to = $to;
+                    $iniPagination = 0;
+                    $activePage - 2 > 0 ? $iniPagination = $activePage - 2 : $iniPagination = 1;
+                    $activePage + 2 < 5 ? $endPagination = 5 : $endPagination = $activePage + 2;
+                    return view('customers.portal.resultadosFiltro', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity, 'data' => $data, 'from' => $from, 'to' => $to, 'numPages' => $numPages, 'activePage' => $activePage, 'iniPagination' => $iniPagination, 'endPagination' => $endPagination ]);
                 });
 
+
+                Route::get('/portal/detallesProducto/{item}',function ($item) {
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    // $data = PortalController::busquedaItemFiltro($token, $item, $codCliente);
+                    // $data['filter'] = strtoupper(str_replace(' ', '-', $item));
+                    return view('customers.portal.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity]);
+                });
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 

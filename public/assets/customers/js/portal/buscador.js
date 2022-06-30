@@ -32,11 +32,6 @@ $(document).ready(function () {
         }
     });
 
-    $("#buscador").focusout(function(){
-        desactivaBuscador();
-        closeSugerencias();
-    });
-
     $("#buscador").focusin(function(){
         var cadena = document.getElementById('buscador').value;
         cadena != '' && !intervalActive ? activaBuscador() : console.log('vacio');
@@ -154,6 +149,7 @@ function addSugerenciasProveedor(proveedores){
         lineSugerencia.appendChild(h5Sugerencia);
         lineSugerencia.appendChild(br);
 
+
         var y = 0;
         while(y < proveedores[x]['marcas'].length){
             var srcImgLogotipo =  "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + proveedores[x]['marcas'][y].replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
@@ -165,10 +161,11 @@ function addSugerenciasProveedor(proveedores){
             y++;
         }
     
-    
         container.appendChild(lineSugerencia);
         x++;
     }
+
+    console.log(container);
 }
 
 
@@ -222,9 +219,22 @@ function highlight(cadena) {
 }
 
 function clearSugerencias(){
-    $('#listSugerenciasArticulo').empty();
-    $('#listSugerenciasProveedor').empty();
-    $('#listSugerenciasMarca').empty();
+
+    var containerArticulos = document.getElementById('listSugerenciasArticulo');
+    while (containerArticulos.firstChild) {
+        containerArticulos.removeChild(containerArticulos.firstChild);
+    }
+
+    var containerMarcas = document.getElementById('listSugerenciasMarca');
+    while (containerMarcas.firstChild) {
+        containerMarcas.removeChild(containerMarcas.firstChild);
+    }
+
+    var containerProveedor = document.getElementById('listSugerenciasProveedor');
+    while (containerProveedor.firstChild) {
+        containerProveedor.removeChild(containerProveedor.firstChild);
+    }
+
 }
 
 function closeSugerencias(){
@@ -294,6 +304,7 @@ function recargaSugerencias(data){
             x++;
         }
         addSugerenciasProveedor(proveedores);
+        console.log(proveedores);
         coincidenciasProveedor = proveedores.length;
             
 
@@ -320,6 +331,7 @@ function getFilterString(){
 }
 
 function buscarFiltro(filtro){
+    filtro = filtro.split(' ')[0];
     console.log('buscar '+filtro);
     var data = getFilterString();
     data != '' ? filtro = filtro + ' ~ '+ data : filtro = filtro;

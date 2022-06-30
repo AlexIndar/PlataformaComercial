@@ -44,7 +44,6 @@ class SaleOrdersController extends Controller
         $shippingWays = [];
         $packageDeliveries = [];
         $addresses = [];
-        $cont = 0;
         $insertShipmentInfo = 0;
         for($x = 0; $x < count($info); $x++){
             $insert = false;
