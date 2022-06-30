@@ -85,7 +85,8 @@
                         @else
                         Total : <span style="font-size: 15px" class="badge badge-primary">$ {{  number_format($general->saldo,2) }}</span><br>
                         @endif --}}
-                        Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->saldo,2) }}</span><br>
+                        Total Facturado : <span style="font-size: 15px" class="badge badge-info">$ {{ number_format($general->saldo,2) }}</span><br>
+                        Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->de0a30,2) + number_format($general->de31a60,2) + number_format($general->de61a90,2) + number_format($general->mayor90,2) }}</span><br>
                         Referencia Bancaria: {{ $general->referenciaBancaria }} <br>
 
                      </div>
