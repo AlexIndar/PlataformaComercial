@@ -1088,7 +1088,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
 
                 // PORTAL ------------------------------------------------------------------------------------------------------------------------------------------------
-                
+
                 Route::post('/portal/busquedaGeneralItem/', function (Request $request){
                     $data = $request->data;
                     $token = TokenController::getToken();
@@ -1672,7 +1672,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $user = MisSolicitudesController::getUserRol($token);
                     $auxUser = json_decode($user->body());
-                    $userRol = [$auxUser->typeUser, $auxUser->permissions];                
+                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "SUPERVISORCYC"){
                         return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
@@ -1767,7 +1767,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
-                    $user = json_decode(MisSolicitudesController::getUserRol($token));                    
+                    $user = json_decode(MisSolicitudesController::getUserRol($token));
                     $userRol = [$user->typeUser, $user->permissions];
                     if($userRol[1] == "ADMIN"){
                         return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
@@ -2178,6 +2178,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
                     //dd($notas);
                     return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
+                });
+
+                Route::get('clientes/getDetalleFactura', function(Request $request){
+                    $token = TokenController::getToken();
+
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $cte= $request->cte;
+                    $folio= $request->folio;
+                    $data = ClientesController::getDetalleFactura($token,$cte,$folio);
+                    return $data;
                 });
 
 
