@@ -404,7 +404,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::post('/pedido/nuevo', function (Request $request){
                                 ini_set('memory_limit', '-1');
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error' || $token == 'expired' || $token == ''){
                                     LoginController::logout();
                                 }
@@ -1099,7 +1099,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $result;
                 });
 
-                Route::get('/portal/busqueda/{busqueda}/{from?}/{to?}', function ($busqueda, $from = 1, $to = 20){
+                Route::get('/portal/busqueda/{busqueda}/{from?}/{to?}/{filter?}', function ($busqueda, $from = 1, $to = 50, $filter = 'none'){
+                    dd($filter);
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
@@ -1119,14 +1120,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $directores = ['rvelasco', 'alejandro.jimenez'];
                     in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
                     $data = PortalController::busquedaItemFiltro($token, $busqueda, $codCliente, $from, $to);
-                    $data['filter'] = strtoupper(str_replace('~', '-', $busqueda));
+                    $data['busqueda'] = strtoupper(str_replace('~', '-', $busqueda));
                     $numPages = ceil($data['resultados'] / ($to - $from));
                     $activePage = $to / ($to - $from + 1);
+                    $paginationCant = $to - $from + 1;
                     $to > $data['resultados'] ? $to = $data['resultados'] : $to = $to;
                     $iniPagination = 0;
                     $activePage - 2 > 0 ? $iniPagination = $activePage - 2 : $iniPagination = 1;
                     $activePage + 2 < 5 ? $endPagination = 5 : $endPagination = $activePage + 2;
-                    return view('customers.portal.resultadosFiltro', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity, 'data' => $data, 'from' => $from, 'to' => $to, 'numPages' => $numPages, 'activePage' => $activePage, 'iniPagination' => $iniPagination, 'endPagination' => $endPagination ]);
+                    $endPagination * $to > $data['resultados'] ? $endPagination = $numPages : $endPagination = $endPagination;
+                    return view('customers.portal.resultadosFiltro', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity, 'data' => $data, 'from' => $from, 'to' => $to, 'numPages' => $numPages, 'activePage' => $activePage, 'iniPagination' => $iniPagination, 'endPagination' => $endPagination, 'paginationCant' => $paginationCant ]);
                 });
 
 

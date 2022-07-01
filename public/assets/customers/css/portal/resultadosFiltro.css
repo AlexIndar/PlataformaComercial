@@ -65,7 +65,23 @@
 
 /* HEADER LIST ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-.headerList{
+.paginationLine{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+
+.headerPagination{
+    margin-bottom: 30px;
+}
+
+.footerPagination{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.footerPagination{
     display: flex;
     flex-direction: row;
     justify-content: end;
@@ -91,6 +107,10 @@
     background-color: #002868 !important;
     color: white !important;
     border-color: #002868 !important;
+}
+
+.page-item.disabled{
+    cursor: not-allowed;
 }
 
 
@@ -214,15 +234,20 @@
   /* RESPONSIVE ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 
     @media (max-width: 991px) {
-        .headerList{
+        .paginationLine{
             flex-direction: column;
             align-items: flex-end;
         }
     }
 
     @media (max-width: 768px) {
-        .headerList{
+        .headerPagination{
             margin-top: 50px;
+            margin-bottom: 10px;
+        }
+
+        .footerPagination{
+            margin-top: 10px;
             margin-bottom: 10px;
         }
     }

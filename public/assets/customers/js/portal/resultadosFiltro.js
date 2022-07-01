@@ -21,5 +21,13 @@ function detalleProducto(item){
 function pagination(from, to, index){
     var iniPagination = (to - from + 1) * (index - 1) + 1;
     var endPagination = (to - from + 1) * index;
-    window.location.href = window.location.href + '/' + iniPagination + '/' + endPagination;
+    var minPagination = document.getElementById('paginationCant').value;
+    endPagination < minPagination ? endPagination = minPagination : endPagination = endPagination; 
+    var location = window.location.href.split('/');
+    var route = location[0] + '//' + location[2] + '/' + location[3] + '/' + location[4] + '/' + location[5];  
+    window.location.href = route + '/' + iniPagination + '/' + endPagination;
+}
+
+function filter(key, value){
+    alert('Filtrar resultados por '+key+' = '+value);
 }

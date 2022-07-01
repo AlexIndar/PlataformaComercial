@@ -37,23 +37,27 @@ class PortalController extends Controller
         $items = $response->body();
         $items = json_decode($items);
         $marcas = [];
+        $categorias = [];
         for($x = 0; $x < count($items); $x++){
             if($x == 0){
                 array_push($marcas, $items[$x]->familia);
+                array_push($categorias, $items[$x]->categoriaItem);
             }
             else{
-                if(in_array($items[$x]->familia, $marcas)){
-                    
+                if(!in_array($items[$x]->familia, $marcas)){
+                    array_push($marcas, $items[$x]->familia);   
                 }
-                else{
-                    array_push($marcas, $items[$x]->familia);
+                if(!in_array($items[$x]->categoriaItem, $categorias)){
+                    array_push($categorias, $items[$x]->categoriaItem);   
                 }
             }
         }   
 
         $data['items'] = [];
         $data['marcas'] = [];
+        $data['categorias'] = [];
         $data['resultados'] = count($items);
+
         foreach($marcas as $marca){
             $count = 0;
             foreach($items as $item){
@@ -66,13 +70,27 @@ class PortalController extends Controller
             array_push($data['marcas'], $tmp);
         }
 
+        foreach($categorias as $categoria){
+            $count = 0;
+            foreach($items as $item){
+                if($item->categoriaItem == $categoria){
+                    $count ++;
+                }
+            }
+            $tmp['nombre'] = $categoria;
+            $tmp['resultados'] = $count;
+            array_push($data['categorias'], $tmp);
+        }
+
         // Si quiere llegar a una paginación más alta de los resultados disponibles, limitar a la cantidad de resultados
+        // no se puede hacer la división de paginación antes de contar marcas y categorías, porque los count de los filtros deben de ser basados en todos los resultados
         $to > count($items) ? $to = count($items) : $to = $to;
 
         for($x = $from - 1; $x < $to; $x++){
             array_push($data['items'], $items[$x]);
         }
 
+        // dd($data);
         // dd($items);
 
         return $data;
