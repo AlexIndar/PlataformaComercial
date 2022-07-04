@@ -31,6 +31,9 @@
 .filterElement{
     margin-bottom: 5px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 
 .filterLine{
@@ -62,6 +65,17 @@
     color: #999;
 }
 
+
+/* CHECKBOX ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+.filterCheck{
+    width: 25px !important;
+    height: 25px !important;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: black;
+}
 
 /* HEADER LIST ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -95,6 +109,41 @@
     margin-right: 20px;
 }
 
+/* APPLIED FILTERS ------------------------------------------------------------------------------------------------------------------------------------------------ */
+
+.appliedFilters{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+}
+
+.appliedFilterElement{
+    background-color: #000;
+    padding: 0px 10px 0px 10px;
+    border-radius: 20px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.appliedFilterElement h5{
+    font-size: 13px;
+    color: white;
+    margin-top: 5px;
+    text-transform: capitalize;
+}
+
+.crossFilter{
+    margin-left: 5px;
+    margin-top: 1px;
+}
+
 /* PAGINATION ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 .page-link{
@@ -112,6 +161,8 @@
 .page-item.disabled{
     cursor: not-allowed;
 }
+
+
 
 
 
@@ -236,13 +287,26 @@
     @media (max-width: 991px) {
         .paginationLine{
             flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .appliedFilters{
+            margin-bottom: 30px;
         }
     }
 
     @media (max-width: 768px) {
+
+        .filters{
+            margin-bottom: 40px;
+        }
+
+        .appliedFilters{
+            margin-bottom: 40px;
+        }
+        
         .headerPagination{
-            margin-top: 50px;
             margin-bottom: 10px;
         }
 

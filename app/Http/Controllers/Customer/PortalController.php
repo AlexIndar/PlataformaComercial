@@ -29,13 +29,34 @@ class PortalController extends Controller
         return json_decode($data);
     }
 
-    public static function busquedaItemFiltro($token, $filter, $codigo, $from, $to){
+    // Retorna filtrado de busqueda, si se indican límites from y to devuelve solo la info encontrada en ese rango de índices
+    public static function busquedaItemFiltro($token, $filter, $codigo, $from = null, $to = null){ 
+        $filter = str_replace('-', '~', $filter);
         $response = Http::withToken($token)->post(config('global.api_url').'/Portal/BusquedaItemFiltro', [
             "codCustomer" => $codigo,
             "busqueda" => $filter
         ]);
         $items = $response->body();
         $items = json_decode($items);
+        $data = PortalController::getFiltersBusqueda($items);
+        if($from == null){
+            $data['items'] = $items;
+        }
+        else{
+            $data['items'] = [];
+        
+            // Si quiere llegar a una paginación más alta de los resultados disponibles, limitar a la cantidad de resultados encontrados
+            $to > count($items) ? $to = count($items) : $to = $to;
+    
+            for($x = $from - 1; $x < $to; $x++){
+                array_push($data['items'], $items[$x]);
+            }
+        }
+        return $data;
+    }
+
+    // Acomoda información para los filtros de búsqueda del lateral izquierdo de la vista
+    public static function getFiltersBusqueda($items){
         $marcas = [];
         $categorias = [];
         for($x = 0; $x < count($items); $x++){
@@ -52,8 +73,6 @@ class PortalController extends Controller
                 }
             }
         }   
-
-        $data['items'] = [];
         $data['marcas'] = [];
         $data['categorias'] = [];
         $data['resultados'] = count($items);
@@ -82,18 +101,8 @@ class PortalController extends Controller
             array_push($data['categorias'], $tmp);
         }
 
-        // Si quiere llegar a una paginación más alta de los resultados disponibles, limitar a la cantidad de resultados
-        // no se puede hacer la división de paginación antes de contar marcas y categorías, porque los count de los filtros deben de ser basados en todos los resultados
-        $to > count($items) ? $to = count($items) : $to = $to;
-
-        for($x = $from - 1; $x < $to; $x++){
-            array_push($data['items'], $items[$x]);
-        }
-
-        // dd($data);
-        // dd($items);
-
         return $data;
+
     }
 
     

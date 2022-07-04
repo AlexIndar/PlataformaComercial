@@ -250,11 +250,18 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 Route::get('/validarToken', function () {
                                     $token = TokenController::getToken();
+                                    $response['success'] = false;
+                                    $response['message'] = '';
                                     if($token == 'error' || $token == 'expired'){
                                         LoginController::logout();
+                                        $response['success'] = false;
+                                        $response['message'] = 'Token invalido';
                                     }
-                                    $response['success'] = true;
-                                    $response['message'] = 'Token valido';
+                                    else{
+                                        $response['success'] = true;
+                                        $response['message'] = 'Token valido';
+                                    }
+                                    
                                     return Response::json( $response );
                                 });
 
@@ -1099,8 +1106,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $result;
                 });
 
-                Route::get('/portal/busqueda/{busqueda}/{from?}/{to?}/{filter?}', function ($busqueda, $from = 1, $to = 50, $filter = 'none'){
-                    dd($filter);
+                Route::get('/portal/busqueda/{filter}/{from?}/{to?}/{match?}', function ($filter, $from = 1, $to = 50){
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
@@ -1119,8 +1125,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
                     $directores = ['rvelasco', 'alejandro.jimenez'];
                     in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
-                    $data = PortalController::busquedaItemFiltro($token, $busqueda, $codCliente, $from, $to);
-                    $data['busqueda'] = strtoupper(str_replace('~', '-', $busqueda));
+
+                    $data = PortalController::busquedaItemFiltro($token, $filter, $codCliente, $from, $to);
+                    $data['filter'] = strtoupper(str_replace('~', '-', $filter));
                     $numPages = ceil($data['resultados'] / ($to - $from));
                     $activePage = $to / ($to - $from + 1);
                     $paginationCant = $to - $from + 1;
@@ -1129,8 +1136,27 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $activePage - 2 > 0 ? $iniPagination = $activePage - 2 : $iniPagination = 1;
                     $activePage + 2 < 5 ? $endPagination = 5 : $endPagination = $activePage + 2;
                     $endPagination * $to > $data['resultados'] ? $endPagination = $numPages : $endPagination = $endPagination;
+
                     return view('customers.portal.resultadosFiltro', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity, 'data' => $data, 'from' => $from, 'to' => $to, 'numPages' => $numPages, 'activePage' => $activePage, 'iniPagination' => $iniPagination, 'endPagination' => $endPagination, 'paginationCant' => $paginationCant ]);
                 });
+
+                Route::post('/portal/busqueda', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $filter = $request->filter;
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    $data = PortalController::busquedaItemFiltro($token, $filter, $codCliente);
+                    $data['filter'] = strtoupper(str_replace('~', '-', $filter));
+                    return $data;
+                });
+
 
 
                 Route::get('/portal/detallesProducto/{item}',function ($item) {
