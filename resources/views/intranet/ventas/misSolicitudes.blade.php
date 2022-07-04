@@ -649,10 +649,10 @@
                                                         <select class="custom-select" id="inputGroupSelect14">
                                                             <option value="-1" selected>SELECCIONAR</option>
                                                             <option value="2">FECHA DE CONSTITUCION</option>
-                                                            <option value="1">RAZON SOCIAL</option>
-                                                            <option value="3">GIRO DE LA EMPRESA</option>
-                                                            <option value="4">TRANSITORIOS</option>
-                                                            <option value="5">ACCIONISTAS</option>
+                                                            <option value="1">DENOMINACIÓN O RAZON SOCIAL</option>
+                                                            <option value="3">DURACIÓN DE LA SOCIEDAD Y OBJETO SOCIAL (GIRO DE LA EMPRESA)</option>
+                                                            <option value="4">TRANSITORIOS. ACCIONISTAS DE LA EMPRESA</option>
+                                                            <option value="5">ACCIONISTAS (REPRESENTANTE LEGAL)</option>
                                                         </select>
                                                     </div>
                                                     <div class="input-group input-group-sm mb-3" [formGroupName]="i">
@@ -1540,10 +1540,10 @@
                             <select class="custom-select" id="inputTypeActa">
                                 <option value="-1" selected>SELECCIONAR</option>
                                 <option value="2">FECHA DE CONSTITUCION</option>
-                                <option value="1">RAZON SOCIAL</option>
-                                <option value="3">GIRO DE LA EMPRESA</option>
-                                <option value="4">TRANSITORIOS</option>
-                                <option value="5">ACCIONISTAS</option>
+                                <option value="1">DENOMINACIÓN O RAZON SOCIAL</option>
+                                <option value="3">DURACIÓN DE LA SOCIEDAD Y OBJETO SOCIAL (GIRO DE LA EMPRESA)</option>
+                                <option value="4">TRANSITORIOS. ACCIONISTAS DE LA EMPRESA</option>
+                                <option value="5">ACCIONISTAS (REPRESENTANTE LEGAL)</option>
                             </select>
                         </div>
                         <div class="input-group input-group-sm mb-3">
