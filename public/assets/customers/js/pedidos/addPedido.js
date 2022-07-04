@@ -67,7 +67,6 @@ $(document).ready(function () {
 
     //Func Termina Ajax
     $(document).ajaxStop(function () {
-        //Esconde y muestra DIVISORES
         document.getElementById("btnSpinner").style.display = "none";
         var btnActions = document.getElementsByClassName('btn-group-buttons');
         for (var x = 0; x < btnActions.length; x++) {
@@ -1025,13 +1024,14 @@ function getItems(entity, async) {
         },
         'url': "nuevo/getItems/all",
         'type': 'POST',
-        'dataType': 'json',
         'data': data,
         'enctype': 'multipart/form-data',
         'async': async,
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            items = data;
+            console.log(data);
+            items = JSON.parse(data);
+            console.log(items);
             var empty = document.getElementById('empty').value;
             if (empty == 'no')
                 reloadInventario();
@@ -1092,7 +1092,6 @@ async function cargarInventario() {
                 }
                 else
                     precioCliente = items[x]['price'];
-
                 var precioLista = (items[x]['price']).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',

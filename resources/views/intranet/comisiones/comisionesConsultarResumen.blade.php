@@ -60,6 +60,7 @@
                                             <tr >
                                                <th>Zona</th>
                                                <th>Nombre  </th>
+                                               <th>No. Empleado</th>
                                                <th>Comisión Base</th>
                                                <th>DES - NEG</th>
                                                <th>DES - FT</th>
@@ -105,8 +106,6 @@
     //Collapse sideBar
     $("body").addClass("sidebar-collapse");
 
-
-
     //Inicia Ajax
     $(document).ajaxStart(function() {
         document.getElementById("btnSpinner").style.display = "block";
@@ -115,10 +114,9 @@
     //Func Termina Ajax
     $(document).ajaxStop(function() {
         $('#comisionesConsultarResumenTable').dataTable( {
-            dom : 'Brtip',
+            dom : 'Bfrtip',
             paging:false,
             fixedHeader:true,
-            ordering: false,
             scrollY:320,
             scrollX: true,
             scrollCollapse: true,
@@ -192,31 +190,9 @@ $.ajax({
     if(tipo == 'ADMIN'){
         for(i=0; i<data.length; i++){
             htmlllenaResumen += '<tr>'+
-        '<td>'+data[i].zona+'</td>'+
-        '<td>'+data[i].nombre+'</td>'+
-        '<td>'+data[i].numEmpleado+'</td>'+
-        '<td>'+data[i].comisionBase.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td style="color:red">'+data[i].diferenciaPrecio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td style="color:red">'+data[i].descuFueraTiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td style="color:red">'+data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].puntualidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].diasNoReportados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].comisionIntegrada.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].bonoCtesActivos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].bonoClientesNuevos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].bonoVentas.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].bonoEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '<td>'+data[i].comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-        '</tr>'
-        }
-    $('#llenaResumen').html(htmlllenaResumen);
-    }else{
-        for(i=0; i<data.length; i++){
-            if(arrzonas.includes(data[i].zona)){
-                htmlllenaResumen += '<tr>'+
                 '<td>'+data[i].zona+'</td>'+
                 '<td>'+data[i].nombre+'</td>'+
+                '<td>'+data[i].numEmpleado+'</td>'+
                 '<td>'+data[i].comisionBase.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td style="color:red">'+data[i].diferenciaPrecio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td style="color:red">'+data[i].descuFueraTiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
@@ -231,6 +207,29 @@ $.ajax({
                 '<td>'+data[i].bonoEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '<td>'+data[i].comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                 '</tr>';
+        }
+    $('#llenaResumen').html(htmlllenaResumen);
+    }else{
+        for(i=0; i<data.length; i++){
+            if(arrzonas.includes(data[i].zona)){
+                htmlllenaResumen += '<tr>'+
+                    '<td>'+data[i].zona+'</td>'+
+                    '<td>'+data[i].nombre+'</td>'+
+                    '<td>'+data[i].numEmpleado+'</td>'+
+                    '<td>'+data[i].comisionBase.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td style="color:red">'+data[i].diferenciaPrecio.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td style="color:red">'+data[i].descuFueraTiempo.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td style="color:red">'+data[i].incobrabilidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].despensa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].puntualidad.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].diasNoReportados.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].comisionIntegrada.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].bonoCtesActivos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].bonoClientesNuevos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].bonoVentas.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].bonoEspeciales.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '<td>'+data[i].comisionTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                    '</tr>';
             }
     }
     $('#llenaResumen').html(htmlllenaResumen);

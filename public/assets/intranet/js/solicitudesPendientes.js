@@ -208,7 +208,8 @@ const reloadCycTable = (data) => {
         let aux = [];
         aux.push(data[i].claveP);
         aux.push(data[i].razonSocial);
-        aux.push(getTimeOfDate(data[i].fechaAlta));
+        // aux.push(getDateF(data[i].fechaAlta) + " (" + getTimeOfDate(data[i].fechaAlta)+")");
+        aux.push(getDateF(data[i].fechaAlta) + "<span class='text-danger'> (" + getTimeOfDate(data[i].fechaAlta) + ")</span>");
         aux.push(data[i].zona.description);
         let folioRfc = "'" + data[i].folio + "-" + data[i].rfc + "'";
         let actions = ``;
@@ -255,6 +256,17 @@ const reloadCycTable = (data) => {
             "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
         },
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+}
+
+const getDateF = (date) => {
+    let auxD = date.split('T')[0].split('-');
+    let auxT = date.split('T')[1].split('.')[0].split(':');
+    return auxD[0] + "/" + auxD[1] + "/" + auxD[2] + " " + timeFilter(auxT);
+}
+
+const timeFilter = (time) => {
+    let ls = time[0] > 12 ? " pm" : " am";
+    return time[0] + ":" + time[1] + ls;
 }
 
 const getTimeOfDate = (date) => {
@@ -391,6 +403,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     caratulaCount = 0;
     facturasCount = 0;
     cartaResponsivaCount = 0;
+    actaConstCount = 0;
     referenciasCount = 0;
     clearTextArea();
     permiso = typeCyC;
@@ -408,7 +421,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
     document.getElementById("moneySolT").hidden = true;
     document.getElementById("moneySol").innerHTML = "";
 
-    document.getElementById("datosGeneralesSection").style.display = "none";
+    // document.getElementById("datosGeneralesSection").style.display = "none";
     document.getElementById("direccionFiscalSection").style.display = "none";
     document.getElementById("direccionEntregaSection").style.display = "none";
     document.getElementById("NegocioSection").style.display = "none";
@@ -424,9 +437,14 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
         document.getElementById("typeSol").innerHTML = getTypeSol(data.tipo);
         document.getElementById("typeSolAcceptCredit").innerHTML = getTypeSol(data.tipo);
         document.getElementById("zonaSol").innerHTML = data.zona.description;
+
+        getValidationRadio("constData", "constData2", data2.constanciaSituacion);
+        getValidationRadio("const2Data", "const2Data2", data2.constanciaSituacionReverso);
+        getValidationRadio("picSolData", "picSolData2", data2.firmaSolicitud);
+        setAlert("obsDatGen", data.observations.datosGenerales);
         if (typeCyC != "B") {
             //DATOS GENERALES
-            document.getElementById("datosGeneralesSection").style.display = "flex";
+            document.getElementById("sectionDGOne").style.display = "flex";
             document.getElementById("rfcEdit").value = data.cliente.datosF.rfc;
             getValidationRadio("rfcData", "rfcData2", data2.rfc);
 
@@ -439,10 +457,10 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
             document.getElementById("emailFactE").value = data.cliente.datosF.emailFacturacion;
             // getValidationRadio("emailFData", "emailFData2", data2.razonSocial);
 
-            getValidationRadio("constData", "constData2", data2.constanciaSituacion);
-            getValidationRadio("const2Data", "const2Data2", data2.constanciaSituacionReverso);
-            getValidationRadio("picSolData", "picSolData2", data2.firmaSolicitud);
-            setAlert("obsDatGen", data.observations.datosGenerales);
+            // getValidationRadio("constData", "constData2", data2.constanciaSituacion);
+            // getValidationRadio("const2Data", "const2Data2", data2.constanciaSituacionReverso);
+            // getValidationRadio("picSolData", "picSolData2", data2.firmaSolicitud);
+            // setAlert("obsDatGen", data.observations.datosGenerales);
 
             // //DIRECCION FISCAL
             document.getElementById("direccionFiscalSection").style.display = "flex";
@@ -622,6 +640,8 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
                     }
                 }
             }
+        } else {
+            document.getElementById("sectionDGOne").style.display = "none";
         }
         if (data.tipo != false && typeCyC != "A") {
             document.getElementById("moneySol").innerHTML = `$${data.credito}`;
@@ -754,6 +774,9 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
             document.getElementById("acceptOne").style.display = "none";
             document.getElementById("acceptTwo").style.display = "flex";
         }
+        if (data.tipo == 0) {
+            document.getElementById("acceptOne").style.display = "none";
+        }
         $('#infoModal').modal('show');
     }
 }
@@ -884,7 +907,7 @@ function showHistoryModal(data) {
         let historyList = "";
         for (let i = 0; i < data.length; i++) {
             historyList += `<div class="row mb-3">
-                                <div class="col-md-6 text-bold">` + data[i].fecha + `</div>
+                                <div class="col-md-6 text-bold">` + getDateF(data[i].fecha) + `</div>
                                 <div class="col-md-6">` + data[i].tipo + `</div>
                             </div>`;
         }
@@ -1161,15 +1184,15 @@ function convertToBool(item) {
 }
 
 function getJsonValidation(flag) {
+    valSolicitud.constanciaSituacion = convertToBool("constData");
+    valSolicitud.constanciaSituacionReverso = convertToBool("const2Data");
+    valSolicitud.firmaSolicitud = convertToBool("picSolData");
+    valObser.datosGenerales = document.getElementById("obsDatGen").value;
     if (permiso != "B") {
         //DATOS GENERALES
         valSolicitud.rfc = convertToBool("rfcData");
         valSolicitud.razonSocial = convertToBool("razData");
         valSolicitud.nombreComercial = convertToBool("nomComData");
-        valSolicitud.constanciaSituacion = convertToBool("constData");
-        valSolicitud.constanciaSituacionReverso = convertToBool("const2Data");
-        valSolicitud.firmaSolicitud = convertToBool("picSolData");
-        valObser.datosGenerales = document.getElementById("obsDatGen").value;
 
         //DIRECCION FISCAL
         valSolicitud.calle = convertToBool("dirCalleData");
@@ -1380,11 +1403,11 @@ function getReferencesFile(folio) {
         'timeout': 2 * 60 * 60 * 1000,
         success: function (result) {
             console.log(result);
-            const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });            
+            const blob = new Blob([s2ab(atob(result.fileStr))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             const url = URL.createObjectURL(blob);
             const enlace = document.createElement("a");
             enlace.href = url;
-            enlace.download = "ReferenciasNo_"+folio+".xlsx";
+            enlace.download = "ReferenciasNo_" + folio + ".xlsx";
             enlace.click();
         },
         error: function (error) {
@@ -1471,7 +1494,7 @@ function sendMail(objMail) {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (data) {
-            console.log(data);            
+            console.log(data);
             $('#infoModal').modal('hide');
             $('#cargaModal').modal('hide');
             realoadTableView();
@@ -1837,6 +1860,7 @@ function showReact(folio) {
     $('#reactiveClieModal').modal('show');
     document.getElementById("folReact").innerHTML = folio.split('-')[0];
     document.getElementById("rfcReact").innerHTML = folio.split('-')[1];
+    document.getElementById("reactiveClieValue").value = "";
 }
 
 function setReactCli() {
@@ -1994,4 +2018,32 @@ function simularReferencia() {
         let alertMsg = `<p>Parace que algo salio mal, intentelo mas tarde.</p>`
         document.getElementById("alertInfoModal").innerHTML = alertMsg;
     }
+}
+
+function getDocumentoP() {
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/GetExcelPrueba",
+        'type': 'GET',
+        'dataType': 'json',
+        'enctype': 'multipart/form-data',
+        'timeout': 2 * 60 * 60 * 1000,
+        success: function (result) {
+            console.log(result);
+            if (result != null) {
+                console.log(result);
+                const blob = new Blob([s2ab(atob(result.description))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = URL.createObjectURL(blob);
+                const enlace = document.createElement("a");
+                enlace.href = url;
+                enlace.download = "TemplateCyC.xlsx";
+                enlace.click();
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }

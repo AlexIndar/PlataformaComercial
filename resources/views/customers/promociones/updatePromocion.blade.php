@@ -3,9 +3,9 @@
 @section('title') Ventas - Editar Promoción @endsection 
 
 @section('styles')
-<link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
-<link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
-<script src="{{asset('assets/customers/js/promociones/addPromocion.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/addPromocion.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
+    <script src="{{asset('assets/customers/js/promociones/addPromocion.js')}}"></script>
 @endsection
 
 @section('body')

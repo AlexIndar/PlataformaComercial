@@ -10,7 +10,7 @@
 @section('body')
 
 <div class="content-wrapper">
-    <input type="text" id="userP" value="{{$user}}" hidden>
+    <input type="text" id="userP" value="{{$username}}" hidden>
     <input type="text" id="userR" value="{{$userRol}}" hidden>
     <section class="content-header">
         <div class="container-fluid text-indarBlue">

@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 body, html{
     background-color: #F5F8F8;
 }
@@ -22,37 +24,126 @@ body, html{
     cursor: pointer;
 }
 
+/* ZOOM */
 
-.smallImageProduct{
-    width: 80px;
-    height: 80px;
+.containerImgProduct {
+    width: 100%;
+    height: 100vh;
+    z-index: 100000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.76);
+    backdrop-filter: blur(5px);
+    transition: all ease .4s;
+  }
+  
+  .containerImgProduct h4 {
+    color: white;
+    text-align: center;
+  }
+  
+  .magnify {
+    height: auto;
+    width: auto;
+    max-width: 90%;
+    position: relative;
+  }
+
+  .smallImageProduct{
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     float: right;
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.165);
     margin-right: 20px;
 } 
-
-.bigImageProduct{
+  
+  .large {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85),
+      0 0 1px 1px rgba(0, 0, 0, 0.25),
+      inset 0 0 1px 1px rgba(0, 0, 0, 0.063);
+    display: none;
+  }
+  
+  .small {
+    display: block;
+  }
+  
+  .bigImageProduct {
     object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.165);
-    width: 90%;
-    margin-left: 5%;
-    height: 500px;
+    width: auto;
+    height: 50vh;
+  }
+
+/* TEXTO DETALLE PRODUCTO */
+
+.detalleProductoBlack{
+    font-weight: 700 !important;
 }
 
-.magnify {width: 480px; position: relative;}
-
-.large {
-	width: 300px; height: 300px;
-	position: absolute;
-	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85), 
-	0 0 1px 1px rgba(0, 0, 0, 0.25), 
-	inset 0 0 1px 1px rgba(0, 0, 0, 0.063);
-	background: url('https://www.officedepot.com.mx/medias/83878.jpg-1200ftw?context=bWFzdGVyfHJvb3R8MzcyMzkyfGltYWdlL2pwZWd8aGExL2g4OS85NjM5OTUzMzM0MzAyLmpwZ3xiYmE5NGEzMjg4MmNkNjQ5ZjI3MzY1Mjc1MDhmYzI0MTFjMzY0ODlmMDZjYmQ0N2VjYWNlZDVjNmZjNjRkMzAw') no-repeat;
-	display: none;
+.detalleProductoTiny{
+    font-size: 11px;
+    display: inline-block;
+    vertical-align: middle !important;
+    font-weight: 400 !important;
 }
 
-.small { display: block; }
+.detalleProductoGray{
+    color: rgb(183, 183, 183);
+}
 
+/* STARS */
+:root {
+  --star-size: 20px;
+  --star-color: rgb(201, 201, 201);
+  --star-background: #266ee2;
+}
+
+.Stars {
+  --percent: calc(var(--rating) / 5 * 100%);
+  display: inline-block;
+  font-size: var(--star-size);
+  font-family: Times;
+  line-height: 1;
+}
+.Stars::before {
+  content: "★★★★★";
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* BADGE SUGGEST */
+
+.badgeSuggest{
+    padding: 0px 5px 0px 5px;
+    margin: 0px;
+    background-color: black;
+    color: white;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.suggestIcon{
+    width: 20px;
+    height: auto;
+    display: inline-block;
+}
+
+.badgeSuggest h5{
+    font-size: 10px !important;
+    display: inline-block;
+}
 

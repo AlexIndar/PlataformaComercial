@@ -63,6 +63,7 @@ class TokenController extends Controller
                 setcookie("_lt", "expired", time() + 900, '/');
                 setcookie("_ep", time(), time() + 60 * 60 * 24 * 365, '/');
             } else {
+                dd($token);
                 $refresh = Http::withToken($token)->post(config('global.api_url') . '/login/RefreshToken'); //refresh token
                 if ($refresh->getStatusCode() == 200) {
                     $token = $refresh->body();

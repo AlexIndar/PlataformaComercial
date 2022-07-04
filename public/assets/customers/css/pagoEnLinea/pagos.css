@@ -1,0 +1,241 @@
+.box{
+    padding: 2px !important;
+}
+
+body{
+    background-color: #F7F5FF !important;
+}
+
+@keyframes slide{
+    0% {
+      width: 0%
+    }
+
+    100% {
+      width: 100%;
+    }
+  }
+
+.fa-refresh{
+    cursor: pointer;
+    margin-left: 10px;
+}
+.glyphicon-refresh-animate {
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration: 1.5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes rotate {
+ from {
+        -webkit-transform: rotate( 0deg );
+    }
+ to  {
+        -webkit-transform: rotate( 1080deg );
+    }
+}
+
+.row{
+    margin-bottom: 50px !important;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+    border: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #313761;
+    border-radius: 10px;
+}
+
+h5{
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 12px !important;
+    text-align: center;
+}
+
+p{
+    font-size: 20px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    font-weight: 500 !important;
+}
+
+
+/* PROCCESS FLOW */
+
+
+/*custom font*/
+@import url(https://fonts.googleapis.com/css?family=Merriweather+Sans);
+
+
+.process {
+	/*centering*/
+	display: inline-block;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.35);
+	overflow: hidden;
+	border-radius: 5px;
+	/*Lets add the numbers for each link using CSS counters. flag is the name of the counter. to be defined using counter-reset in the parent element of the links*/
+	counter-reset: flag;
+}
+
+.process a {
+	text-decoration: none;
+	outline: none;
+	display: block;
+	float: left;
+	font-size: 12px;
+	line-height: 36px;
+	color: white;
+	/*need more margin on the left of links to accomodate the numbers*/
+	padding: 0 10px 0 60px;
+	background: #666;
+	background: linear-gradient(#666, #333);
+	position: relative;
+}
+/*since the first link does not have a triangle before it we can reduce the left padding to make it look consistent with other links*/
+.process a:first-child {
+	padding-left: 46px;
+	border-radius: 5px 0 0 5px; /*to match with the parent's radius*/
+}
+.process a:first-child:before {
+	left: 14px;
+}
+.process a:last-child {
+	border-radius: 0 5px 5px 0; /*this was to prevent glitches on hover*/
+	padding-right: 20px;
+}
+
+/*hover/active styles*/
+.process a.active, .process a:hover{
+	background: #333;
+	background: linear-gradient(#333, #000);
+}
+.process a.active:after, .process a:hover:after {
+	background: #333;
+	background: linear-gradient(135deg, #333, #000);
+}
+
+
+/*we dont need an arrow after the last link*/
+.process a:last-child:after {
+	content: none;
+}
+/*we will use the :before element to show numbers*/
+.process a:before {
+	content: counter(flag);
+	counter-increment: flag;
+	/*some styles now*/
+	border-radius: 100%;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin: 8px 0;
+	position: absolute;
+	top: 0;
+	left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	background: #444;
+	background: linear-gradient(#444, #222);
+	font-weight: bold;
+}
+
+
+.flat a, .flat a:after {
+	background: white;
+	color: black;
+	transition: all 0.5s;
+}
+.flat a:before {
+	background: white;
+	box-shadow: 0 0 0 1px #ccc;
+}
+.flat a:hover, .flat a.active,
+.flat a:hover:after, .flat a.active:after{
+	background: #9EEB62;
+}
+
+.modal-dialog{
+    height:auto  !important;
+}
+
+
+
+.img-item{
+	width: 70px !important;
+	margin-right: 10px;
+	border: 1px solid #002868 !important;
+	cursor: pointer;
+}
+
+  /* NEW STEPPER */
+/*font Variables*/
+/*Color Variables*/
+
+
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+#progressbar li {
+	list-style-type: none;
+	color: #99a2a8;
+	font-size: 15px;
+	width: calc(100% / 4);
+	float: left;
+	position: relative;
+	text-align: center;
+}
+#progressbar li:nth-child(2):before {
+	content: "\f09d" !important;
+}
+#progressbar li:nth-child(3):before {
+	content: "\f543" !important;
+}
+#progressbar li:nth-child(4):before {
+	content: "\f058" !important;
+}
+#progressbar li:before {
+	content: "\f571" !important;
+	font-family: "Font Awesome\ 5 Free";
+	font-weight: 900;
+	display: flex;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	background: #eaf0f4;
+	border-radius: 50%;
+	margin: 0 auto 10px auto;
+	z-index: 12 !important;
+}
+#progressbar li:after {
+	content: "";
+	width: 100% !important;
+	height: 10px !important;
+	background: #eaf0f4;
+	position: absolute;
+	left: -7%;
+	top: 21px;
+	z-index: 10 !important;
+}
+#progressbar li:last-child:after {
+	width: 150%;
+}
+#progressbar li.active {
+	color: #5cb85c;
+}
+#progressbar li.active:before, #progressbar li.active:after {
+	background: #5cb85c;
+	color: white;
+}
+
+

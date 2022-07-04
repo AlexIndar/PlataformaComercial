@@ -28,6 +28,7 @@ class ItemsController extends Controller
             "values" => "34"
         ]);
 
+
         $bestSellers = json_decode($getProducts->body());
         
         if(isset($bestSellers['errors'])){

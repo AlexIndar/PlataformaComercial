@@ -26,5 +26,12 @@ class ClientesController extends Controller
         return json_decode($dato->body());
     }
 
+    public static function getDetalleFactura($token, $cte, $folio){
+        $data = Http::withToken($token)->get(config('global.api_url').'/EstadoCuentaCte/getDetalleFactura?folio='.$folio.'&cte='.$cte);
+        return json_decode($data->body());
+    }
+
+
+
 
 }

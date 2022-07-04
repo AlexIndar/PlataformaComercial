@@ -16,11 +16,6 @@
                     <input type="hidden" name="token" id="token" value="{{$token}}">
                     <div class="slider">
                         <div class="carousel slide carousel-fade h-100 w-100" id="carouselIndar" data-ride="carousel">
-                        <!-- <div class="carousel-indicators">
-                            <button type="button" data-target="#carouselIndar" data-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-target="#carouselIndar" data-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-target="#carouselIndar" data-slide-to="2" aria-label="Slide 3"></button>
-                        </div> -->
                             <div class="carousel-inner h-100">
                                 <div id="first-carousel-item" class="carousel-item h-100">
                                     <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-1.jpg')}}" alt="">
@@ -31,14 +26,12 @@
                                 <div class="carousel-item h-100">
                                     <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-3.jpg')}}" alt="">
                                 </div>
-                                <!-- <button class="carousel-control-prev" type="button" data-target="#carouselIndar" data-slide="prev">
+                                <button class="carousel-control-prev" type="button" data-target="#carouselIndar" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
                                 </button>
                                 <button class="carousel-control-next" type="button" data-target="#carouselIndar" data-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button> -->
+                                </button>
                             </div>
                         </div>
                     </div>

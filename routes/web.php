@@ -12,6 +12,7 @@ use App\Http\Controllers\Customer\RamasController;
 use App\Http\Controllers\Customer\TokenController;
 use App\Http\Controllers\Customer\InvoicesController;
 use App\Http\Controllers\Customer\SaleOrdersController;
+use App\Http\Controllers\Customer\PortalController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
 use App\Http\Controllers\Logistica\LogisticaController;
@@ -249,11 +250,18 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                                 Route::get('/validarToken', function () {
                                     $token = TokenController::getToken();
+                                    $response['success'] = false;
+                                    $response['message'] = '';
                                     if($token == 'error' || $token == 'expired'){
                                         LoginController::logout();
+                                        $response['success'] = false;
+                                        $response['message'] = 'Token invalido';
                                     }
-                                    $response['success'] = true;
-                                    $response['message'] = 'Token valido';
+                                    else{
+                                        $response['success'] = true;
+                                        $response['message'] = 'Token valido';
+                                    }
+                                    
                                     return Response::json( $response );
                                 });
 
@@ -272,20 +280,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     return view('customers.catalogo', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
                                 });
 
-                                Route::get('/detallesProducto',function () {
-                                    $token = TokenController::getToken();
-                                    if($token == 'error' || $token == 'expired'){
-                                        LoginController::logout();
-                                    }
-                                    $rama1 = RamasController::getRama1();
-                                    $rama2 = RamasController::getRama2();
-                                    $rama3 = RamasController::getRama3();
-                                    $level = "C";
-                                    if(isset($_COOKIE['_lv'])){
-                                        $level = $_COOKIE['_lv'];
-                                    }
-                                    return view('customers.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level]);
-                                });
 
                 // PEDIDOS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -417,7 +411,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                             Route::post('/pedido/nuevo', function (Request $request){
                                 ini_set('memory_limit', '-1');
-                                $token = TokenController::refreshToken();
+                                $token = TokenController::getToken();
                                 if($token == 'error' || $token == 'expired' || $token == ''){
                                     LoginController::logout();
                                 }
@@ -426,6 +420,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 $rama3 = RamasController::getRama3();
                                 $entity = $request->entity;
                                 $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                                if($userData == null){
+                                    LoginController::logout();
+                                }
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
                                 $directores = ['rvelasco', 'alejandro.jimenez'];
@@ -1097,6 +1094,95 @@ Route::middleware([ValidateSession::class])->group(function(){
                  });
 
 
+                // PORTAL ------------------------------------------------------------------------------------------------------------------------------------------------
+
+                Route::post('/portal/busquedaGeneralItem/', function (Request $request){
+                    $data = $request->data;
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $result = PortalController::busquedaGeneralItem($token, $data);
+                    return $result;
+                });
+
+                Route::get('/portal/busqueda/{filter}/{from?}/{to?}/{match?}', function ($filter, $from = 1, $to = 50){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+
+                    $data = PortalController::busquedaItemFiltro($token, $filter, $codCliente, $from, $to);
+                    $data['filter'] = strtoupper(str_replace('~', '-', $filter));
+                    $numPages = ceil($data['resultados'] / ($to - $from));
+                    $activePage = $to / ($to - $from + 1);
+                    $paginationCant = $to - $from + 1;
+                    $to > $data['resultados'] ? $to = $data['resultados'] : $to = $to;
+                    $iniPagination = 0;
+                    $activePage - 2 > 0 ? $iniPagination = $activePage - 2 : $iniPagination = 1;
+                    $activePage + 2 < 5 ? $endPagination = 5 : $endPagination = $activePage + 2;
+                    $endPagination * $to > $data['resultados'] ? $endPagination = $numPages : $endPagination = $endPagination;
+
+                    return view('customers.portal.resultadosFiltro', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity, 'data' => $data, 'from' => $from, 'to' => $to, 'numPages' => $numPages, 'activePage' => $activePage, 'iniPagination' => $iniPagination, 'endPagination' => $endPagination, 'paginationCant' => $paginationCant ]);
+                });
+
+                Route::post('/portal/busqueda', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $filter = $request->filter;
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    $data = PortalController::busquedaItemFiltro($token, $filter, $codCliente);
+                    $data['filter'] = strtoupper(str_replace('~', '-', $filter));
+                    return $data;
+                });
+
+
+
+                Route::get('/portal/detallesProducto/{item}',function ($item) {
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    // $data = PortalController::busquedaItemFiltro($token, $item, $codCliente);
+                    // $data['filter'] = strtoupper(str_replace(' ', '-', $item));
+                    return view('customers.portal.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity]);
+                });
+
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 /* ********************************************* INDARNET ************************************************ */
@@ -1133,7 +1219,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     function getStatus($id){
                         return MisSolicitudesController::getStatus($id);
                     }
-                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol]);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    return view('intranet.ventas.misSolicitudes',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol, 'username' => $username, 'userRol' => $userRol]);
                     /*return view('intranet.ventas.misSolicitudes');*/
                 });
 
@@ -1347,7 +1436,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                         LoginController::logout();
                     }
                     $user = MisSolicitudesController::getUser($token);
-                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    return view('intranet.ventas.estadisticaCliente',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'username' => $username, 'userRol' => $userRol]);
                 });
 
                 Route::post('/Indarnet/getMyZone', function(Request $request){
@@ -1434,18 +1526,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "SUPERVISORCYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                        return view('intranet.cyc.solicitudesPendientes',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
-                    //$userRol = [$auxUser->typeUser, $auxUser->permissions];
-                    //$testUSer = "bgaribay";
-                    //$listSol = SolicitudesPendientesController::getCycTableView($token, $testUSer);
-                    //function getTime($time){
-                    //    return $time;
-                    //}
-                    // dd($user->body());
-
                 });
 
                 Route::post('/SolicitudesPendientes/GetCycTableView', function (Request $request){
@@ -1551,7 +1635,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "SUPERVISORCYC" || $userRol[1] == "ADMIN"){
-                        return view('intranet.cyc.solicitudesConsulta',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                        return view('intranet.cyc.solicitudesConsulta',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1592,7 +1676,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                         return redirect('/Intranet');
                     }
                     // dd($listSol);
-                    return view('intranet.ventas.misSolicitudesAdmin',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol]);
+                    return view('intranet.ventas.misSolicitudesAdmin',['token' => $token, 'permissions' => $permissions, 'zone' => $zone, 'listSol' => $listSol, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                 });
 
                 Route::post('/GetTableView', function (Request $request){
@@ -1616,7 +1700,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "SUPERVISORCYC"){
-                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user]);
+                        return view('intranet.cyc.asignacionZonasCyc',['token' => $token, 'permissions' => $permissions, 'user' => $user, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1629,7 +1713,6 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $data = AsignacionZonasController::getTemplate($token);
                     return  $data;
-                    dd($data);
                 });
 
                 Route::post('/AsignacionZonas/UpdateZonesCyc', function (Request $request){
@@ -1639,6 +1722,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $response = AsignacionZonasController::updateZonesCyc($token, json_encode($request->all()));
                     return $response;
+                });
+
+                Route::get('/GetExcelPrueba', function (){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $data = AsignacionZonasController::getExcelPrueba($token);
+                    return  $data;
+                    dd($data);
                 });
 
                 //////// ESTADISTICA SOLICITUD TIEMPO /////
@@ -1652,7 +1745,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $auxUser = json_decode($user->body());
                     $userRol = [$auxUser->typeUser, $auxUser->permissions];
                     if($userRol[1] == "CYC" || $userRol[1] == "GERENTECYC" || $userRol[1] == "ADMIN" || $userRol[1] == "SUPERVISORCYC"){
-                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'user' => $userRol[0], 'userRol' => $userRol[1]]);
+                        return view('intranet.cyc.estadisticaSolicitudTiempo',['token' => $token, 'permissions' => $permissions, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -1700,11 +1793,10 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
-                    $user = MisSolicitudesController::getUserRol($token);
-                    $auxUser = json_decode($user->body());
-                    $userRol = [$auxUser->typeUser, $auxUser->permissions];
+                    $user = json_decode(MisSolicitudesController::getUserRol($token));
+                    $userRol = [$user->typeUser, $user->permissions];
                     if($userRol[1] == "ADMIN"){
-                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions]);
+                        return view('intranet.dirOperaciones.heatMap',['token' => $token, 'permissions' => $permissions, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
                     }else{
                         return redirect('/Intranet');
                     }
@@ -2110,7 +2202,20 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $data = ClientesController::getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin);
                     $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
+                    //dd($notas);
                     return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
+                });
+
+                Route::get('clientes/getDetalleFactura', function(Request $request){
+                    $token = TokenController::getToken();
+
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $cte= $request->cte;
+                    $folio= $request->folio;
+                    $data = ClientesController::getDetalleFactura($token,$cte,$folio);
+                    return $data;
                 });
 
 

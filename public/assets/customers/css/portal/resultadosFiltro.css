@@ -1,0 +1,317 @@
+
+
+/* FILTROS -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.filters{
+}
+
+.busqueda{
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.filterTitleContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+}
+
+.filterTitle{
+    color: #333;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.filterControl{
+    text-align: right;
+}
+
+.filterElement{
+    margin-bottom: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.filterLine{
+    display: inline;
+}
+
+.filterImg{
+    max-width: 80px;
+    height: auto;
+    display: inline; 
+    margin-right: 10px;
+}
+
+.filterNombre{
+    color: #666;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+.filterNombre:hover{
+    color: #000;
+    font-weight: 400;
+}
+
+.filterCantidad{
+    font-size: 14px;
+    font-weight: 400;
+    color: #999;
+}
+
+
+/* CHECKBOX ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+.filterCheck{
+    width: 25px !important;
+    height: 25px !important;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: black;
+}
+
+/* HEADER LIST ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.paginationLine{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+
+.headerPagination{
+    margin-bottom: 30px;
+}
+
+.footerPagination{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.footerPagination{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.filterResultados{
+    font-size: 14px;
+    font-weight: 400;
+    margin-right: 20px;
+}
+
+/* APPLIED FILTERS ------------------------------------------------------------------------------------------------------------------------------------------------ */
+
+.appliedFilters{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+}
+
+.appliedFilterElement{
+    background-color: #000;
+    padding: 0px 10px 0px 10px;
+    border-radius: 20px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.appliedFilterElement h5{
+    font-size: 13px;
+    color: white;
+    margin-top: 5px;
+    text-transform: capitalize;
+}
+
+.crossFilter{
+    margin-left: 5px;
+    margin-top: 1px;
+}
+
+/* PAGINATION ------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+.page-link{
+    text-decoration: none !important;
+    cursor: pointer;
+    color: black !important;
+}
+
+.page-item.active .page-link{
+    background-color: #002868 !important;
+    color: white !important;
+    border-color: #002868 !important;
+}
+
+.page-item.disabled{
+    cursor: not-allowed;
+}
+
+
+
+
+
+
+/* CARDS ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.item{
+    margin-bottom: 15px;
+    padding: 20px 30px 10px 30px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.item:hover{
+    -webkit-box-shadow: 0 0 15px 1px rgb(219 219 219 / 62%);
+    box-shadow: 0 0 15px 1px rgb(219 219 219 / 62%);
+}
+
+.item:hover .imgItem{
+    transform: scale(1.04);
+}
+
+.imgItem img{
+    max-width: 80%;
+    min-width: 80%;
+    margin-left: 10%;
+    margin-bottom: 20px;
+}
+
+.imgItem{
+    transition: all ease .5s;
+}
+
+.itemInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.itemDescriptionContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+}
+
+.itemDescription{
+    color: #666;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.itemManufacturer{
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.categoriaLine{
+    width: 100%;
+    text-align: center;
+    font-weight: 300;
+    font-size: 13px;
+}
+
+/* PLUS MINUS ANIMATION -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+  .plus-minus-toggle {
+    cursor: pointer;
+    position: relative;
+    width: 21px;
+    width: 0 !important;
+    margin-right: 20px;
+    margin-top: 10px;
+  }
+  .plus-minus-toggle:before,
+  .plus-minus-toggle:after {
+    background: #000;
+    content: '';
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 10px;
+    transition: transform 500ms ease;
+  }
+  .plus-minus-toggle:after {
+    transform-origin: center;
+  }
+  .plus-minus-toggle.collapsed:after {
+    transform: rotate(90deg);
+  }
+  .plus-minus-toggle.collapsed:before {
+    transform: rotate(180deg);
+  }
+  
+
+  /* ITEM ACTIONS ------------------------------------------------------------------------------------------------------------------------------------------------ */
+  
+  .btn-actions{
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    background-color: #111;
+    color: white;
+    min-height: 30px;
+    font-weight: 100;
+  }
+
+  .btn-actions:hover{
+    background-color: #002868;
+  }
+
+
+  /* RESPONSIVE ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    @media (max-width: 991px) {
+        .paginationLine{
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .appliedFilters{
+            margin-bottom: 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .filters{
+            margin-bottom: 40px;
+        }
+
+        .appliedFilters{
+            margin-bottom: 40px;
+        }
+        
+        .headerPagination{
+            margin-bottom: 10px;
+        }
+
+        .footerPagination{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }

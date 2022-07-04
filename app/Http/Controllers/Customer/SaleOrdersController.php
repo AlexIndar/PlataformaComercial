@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Config;
-
+use ZipArchive;
 class SaleOrdersController extends Controller
 {
     /**
@@ -43,7 +44,6 @@ class SaleOrdersController extends Controller
         $shippingWays = [];
         $packageDeliveries = [];
         $addresses = [];
-        $cont = 0;
         $insertShipmentInfo = 0;
         for($x = 0; $x < count($info); $x++){
             $insert = false;
@@ -126,11 +126,29 @@ class SaleOrdersController extends Controller
     }
 
     public static function getItems($token, $entity){
-        $response = Http::withToken($token)->post(config('global.api_url').'/SaleOrder/getItems', [
+        $response = Http::withToken($token)->accept('application/zip')->post(config('global.api_url').'/SaleOrder/getItems', [
             "codCustomer" => $entity,
         ]);
-        $info = json_decode($response->body());
-        return $info;
+        // Storage::put('/'.$entity.'/items.zip', $response->getBody()->getContents());
+        // $zip = new ZipArchive;
+        // $zipFile = '../storage/app/'.$entity.'/items.zip';
+        // if ($zip->open($zipFile) === TRUE) {
+
+        //         // get the filename without extension.
+        //         $filename = pathinfo($zipFile,PATHINFO_FILENAME);
+        //         // extract.
+        //         $zip->extractTo('../storage/app/'.$entity);
+        //         $zip->close();
+        // }
+
+        // ob_start('ob_gzhandler');
+
+        // $content = Storage::get('/'.$entity.'/items.txt');
+        
+        // return gzcompress($content, 9);
+        // return $content;
+        return $response->body();
+        
     } 
 
     public static function getListaEmailPedido($token, $cliente){

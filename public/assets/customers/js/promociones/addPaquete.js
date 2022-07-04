@@ -19,6 +19,7 @@ $('document').ready(function () {
             },
             'url': "/promociones/getCuotasPersonalizadas/" + idPaquete,
             'type': 'GET',
+            'async': true,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (data) {
@@ -52,6 +53,7 @@ $('document').ready(function () {
             },
             'url': "/promociones/getReglasPaquete/" + idPaquete,
             'type': 'GET',
+            'async': false,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
             success: function (data) {

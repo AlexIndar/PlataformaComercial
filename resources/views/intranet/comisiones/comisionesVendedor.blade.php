@@ -821,7 +821,7 @@
                    '</tr>';
 
                    htmlsubtotal += '<tr style ="background-color: rgba(231, 235, 11, 0.705)">' +
-                   '<td style="font-weight: bold" colspan="2"> Cobrado </td>' + 
+                   '<td style="font-weight: bold" colspan="2"> Cobrado </td>' +
                    '<td style="font-weight: bold">' +sumaTotal30.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal60.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                    '<td style="font-weight: bold">' +sumaTotal90.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
@@ -1160,7 +1160,15 @@
             if(vtasPorc > 10){
                 vtasPorc = 10;
             }
-            var vtasImporte = (vtasPorc/100) * comisionTot;
+            var vtasImporte;
+            if(data[2].real < data[2].le ){
+                vtasPorc =0;
+            }
+            var ventasVo;
+            if(data[2].vo < 350000){
+                ventasVo = 350000;
+            }else ventasVo = data[2].vo;
+            vtasImporte = (vtasPorc/100) * comisionTot;
             var totalBonos = vtasImporte + importCtesNvos + comisionInt + bonoImp;
 
 
@@ -1185,7 +1193,7 @@
             }else{
                 htmlVentas += '<tr>'+
                      '<td style="font-weight: bold" >Total de Ventas en la Zona</td>' +
-                     '<td style="font-weight: bold "> '+ data[2].vo.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) +' </td>' +
+                     '<td style="font-weight: bold "> '+ ventasVo.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) +' </td>' +
                      '<td style="font-weight: bold" > '+ data[2].le.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) + ' </td>' +
                      '<td style="font-weight: bold" > '+ data[2].real.toLocaleString('es-MX',{minimumFractionDigits: 0, maximumFractionDigits: 0}) +'</td>' +
                      '<td style="font-weight: bold" >'+ vtasPorc.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' %</td>' +
