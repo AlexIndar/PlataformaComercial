@@ -2509,7 +2509,33 @@ Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function 
     if($token == 'error' || $token == 'expired'){
         LoginController::logout();
     }
-    $response = LogisticaController::registerNet($token,$request->all());
+    $response = LogisticaController::registerNet($token,json_encode($request->all()));
+    return $response;
+});
+//****************************** AUTORIZAR GASTOS FLETERAS ********************\\
+Route::get('/logistica/distribucion/autorizarGastosFleteras', function(){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }else if(empty($token)){
+        LoginController::logout();
+    }
+    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+    $username = $userData->typeUser;
+    $userRol = $userData->permissions;
+
+    $permissions = LoginController::getPermissions($token);
+
+    
+    return view('intranet.logistica.distribucion.autorizarGastosFleteras',compact('token','permissions','username','userRol'));
+})->name('logistica.distribucion.autorizarGastosFleteras');
+Route::get('/logistica/distribucion/autorizarGastosFleteras/Folios', function(){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::getFolios($token);
+    return $response;
 });
 //****************************** REPORTES  ************************************\\
 Route::get('/logistica/reportes', function(){

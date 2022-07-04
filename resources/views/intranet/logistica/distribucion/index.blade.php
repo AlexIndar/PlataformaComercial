@@ -102,19 +102,26 @@
                   </div>
 
                   <div class="col-lg-2 col-md-4 col-sm-12">
-                    <a href="3" class="card-link">
+                    <a href="#" class="card-link">
                       <div class="dashboard-cards">
                         <i class="nav-icon fas fa-swatchbook fa-2x"></i><br>
                         <h6>Catálogo Proveedores</h6>
                       </div>
                     </a>
                   </div>
-
                   <div class="col-lg-2 col-md-4 col-sm-12">
                     <a href="#" class="card-link">
                       <div class="dashboard-cards">
                         <i class="nav-icon fas fa-award fa-2x"></i><br>
                         <h6>Servicio PostVenta</h6>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-lg-2 col-md-4 col-sm-12">
+                    <a href="{{ route('logistica.distribucion.autorizarGastosFleteras') }}" class="card-link">
+                      <div class="dashboard-cards">
+                        <i class="fa-solid fa-check-to-slot fa-2x"></i><br>
+                        <h6>Gastos Fleteras Por Autorizar</h6>
                       </div>
                     </a>
                   </div>
