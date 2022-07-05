@@ -12,7 +12,7 @@ var timeToDisable = 4000; /* ms */
 
 $(document).ready(function () {
 
-    // document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
+    document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
 
     
 
