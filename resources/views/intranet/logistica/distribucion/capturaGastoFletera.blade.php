@@ -6,18 +6,24 @@
 @endsection
 @section('css')
 <!-- Select2 -->
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/select2/css/select2.min.css">
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-<link rel="stylesheet" href="{{ env('APP_URL') }}assets/intranet/css/logistica.css">
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 <!-- SweetAlert2 -->
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+<link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+<!-- DataTables -->
+<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
 <!-- Toastr -->
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/toastr/toastr.min.css">
+<link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
 <!-- iCheck for checkboxes and radio inputs -->
-<link rel="stylesheet" href="{{ env('APP_URL') }}plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('body')
+<div id="cover-spin"><img src="{{ asset('assets/intranet/images/loading.gif') }}" alt="loading" style="margin-top: 13%;"></div>
 <input type="text" id="token" hidden value="{{ $token }}">
 <input type="text" id="usuario" hidden value="{{ $username }}">
 <div class="content-wrapper">
@@ -27,13 +33,18 @@
                 <div class="col-12">
                     <div class="card mt-2">
                         <div class="card-header title-table">
-                          <h3 class="card-title">Captura Gasto Fletera</h3>
+                          <h3 class="card-title mt-3 mr-2">Captura Gasto Fletera</h3>
+                          <a type="button" class="btn btn-outline-primary" href="{{asset('templates/Template_CapturaGastoFletera.xlsx')}}" download="Template_CapturaGastoFletera"><i class="fa-solid fa-file-arrow-down mr-2"></i>Descargar Template</a>
+                          <label type="button" class="btn btn-outline-primary mt-2" for="fileTempleteImport"><i class="fa-solid fa-file-arrow-down mr-2"></i>Importar Template</label>
+                          <form enctype="multipart/form-data">
+                            <input type="file" id="fileTempleteImport" onchange="logisticaController.ImportTemplateGastoFletera()" hidden>
+                          </form>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body ">
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-4" >
+                                    <div class="col-3" >
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -41,7 +52,7 @@
                                                     <select class="form-control select2" id="acreedor" onchange="logisticaController.showGuias();">
                                                         <option selected disabled>Seleccione un acreedor</option>
                                                         @foreach ($vendors as $vendor)
-                                                        <option value="{{ $vendor->paqueteriA_DISTRIBUCION_ID }}" data-esoficina={{$vendor->esOficina}}>{{ $vendor->name }}</option>
+                                                        <option value="{{ $vendor->entitY_ID }}" data-paqueteriaid="{{$vendor->paqueteriA_DISTRIBUCION_ID}}" data-esoficina={{$vendor->esOficina}}>{{ $vendor->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -79,6 +90,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row" hidden>
+                                            <input type="text" class="form-control" id="CantidadXML" disabled>
+                                        </div>
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -95,18 +109,10 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-6">
-                                                <div class="form-check">
+                                            <div class="col-12">
+                                                <div class="form-check" style="padding-left: 0rem !important;">
                                                     <div class="icheck-success d-inline">
-                                                        <input type="checkbox"  id="autorizado" disabled>
-                                                        <label class="form-check-label" for="autorizado">Autorizado</label>
-                                                      </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-check">
-                                                    <div class="icheck-success d-inline">
-                                                        <input type="checkbox"  id="retencionIva" onchange="logisticaController.retentionIVA(this)"disabled>
+                                                        <input type="checkbox"  id="retencionIva" onchange="logisticaController.retentionIVA(this)">
                                                         <label class="form-check-label" for="retencionIva">Retención IVA</label>
                                                     </div>
                                                 </div>
@@ -132,7 +138,7 @@
                                         </div>
                                         <div class="row mt-2">
                                             <div class="col-12">
-                                                <button type="button" class="btn btn-warning btn-block btn-aut" data-toggle="modal" data-target="#modal-autorizacion"><i class="fa fa-user"></i> Autorización </button>
+                                                <button type="button" class="btn btn-warning btn-block btn-aut" onclick="logisticaController.registerNet()"><i class="fa fa-user"></i> Solicitar Autorización </button>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
@@ -146,10 +152,10 @@
                                             </div>
                                         </div> --}}
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-9">
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="table-responsive" style="height: 320px;border: 1px solid black">
+                                                <div class="table-responsive" style="height: 388px;border: 1px solid black">
                                                     <table id="tableGastoFletera" class="table table-bordered table-hover table-sm">
                                                         <thead class="encabezado-table">
                                                             <tr class="text-center">
@@ -175,6 +181,7 @@
                                                                 <th><input type="checkbox"></th>
                                                                 <th>NumeroGuia</th>
                                                                 <th>Importe</th>
+                                                                <th>Motivo</th>
                                                                 <th>Comentario</th>
                                                                 <th>Importe Sin IVA</th>
                                                                 <th>Retención</th>
@@ -331,11 +338,29 @@
 {{-- <script src="{{ env('APP_URL')}}plugins/sweetalert2/sweetalert2.min.js"></script> --}}
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Toastr -->
-<script src="{{ env('APP_URL')}}plugins/toastr/toastr.min.js"></script>
+<script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 <!-- Select2 -->
-<script src="{{ env('APP_URL')}}plugins/select2/js/select2.full.min.js"></script>
-<script src="{{ env('APP_URL')}}assets/intranet/js/logisticaController.js"></script>
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+
+
+<script src="{{ asset('assets/intranet/js/logisticaController.js') }}"></script>
 <!-- jquery-validation -->
-<script src="{{ env('APP_URL')}}plugins/jquery-validation/jquery.validate.min.js"></script>
-<script src="{{ env('APP_URL')}}plugins/jquery-validation/additional-methods.min.js"></script>
+<script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>  
 @endsection

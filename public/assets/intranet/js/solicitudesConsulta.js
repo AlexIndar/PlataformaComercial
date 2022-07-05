@@ -81,13 +81,18 @@ $(document).ready(function () {
         toBase64Edit(e.target.files[0]);
         $('#label-inputGroupFile19').html(fileName);
     });
-
-    $('#ineValidationFile').change(function (e) {
-        var fileN = e.target.files[0].name;
-        toBase64IneValidation(e.target.files[0]);
-        $('#label-ineValidationFile').html(fileN);
-    });
 });
+
+const toBase64Edit = (file) => {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (subtype) {
+        fileEdit = reader.result.split(',')[1];
+    };
+    reader.onerror = function (error) {
+        return "Error"
+    };
+}
 
 
 const reloadCycTable = (data) => {
@@ -636,7 +641,6 @@ const openUpdateFile = (item) => {
     document.getElementById("titleModalEdit").innerHTML = "Agregar Referencias";
     document.getElementById("titlePictureEdit").innerHTML = "Agregar Referencias";
     document.getElementById("label-inputGroupFile19").innerHTML = "Archivo de Referencias";
-    // $('#label-inputGroupFile19').html("Archivo de Referencias");
     let buttons = `<button class="btn btn-success btn-circle" onclick="confirmUpdateFile('` + item + `')"><i class="fas fa-paper-plane"></i> Guardar Archivo</button>`;
     buttons += `<button class="btn btn-danger btn-circle" onclick="cancelEditForm()" style="margin-left: 10px;"><i class="fas fa-times"></i> Cancelar Archivo</button>`;
     document.getElementById("editConfirButtons").innerHTML = buttons;
@@ -678,7 +682,6 @@ const setFile = (json) => {
                 $('#cargaModal').modal('hide');
                 document.getElementById("editConfirButtons").innerHTML = "Archivo Actualizado";
                 $('#infoModal').modal('hide');
-                realoadTableView();
             } else {
                 console.log(data);
                 alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");

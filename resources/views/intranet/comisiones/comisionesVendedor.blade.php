@@ -435,7 +435,7 @@
                                     <a class="nav-link" id="custom-tabs-three-nuevostotal-tab" style="color: red"
                                         data-toggle="pill" href="#custom-tabs-three-nuevostotal" role="tab"
                                         aria-controls="custom-tabs-three-nuevostotal" aria-selected="false">
-                                        <p >Clientes Nuevos Total</p>
+                                        <p >Clientes Nuevos Otros Giros</p>
                                     </a>
                                 </li>
                             </ul>
@@ -452,6 +452,7 @@
                                                 <th>Código cliente</th>
                                                 <th style="width:320px">Nombre</th>
                                                 <th>Zona</th>
+                                                <th>Giro </th>
                                                 <th>Fecha</th>
                                             </tr>
                                         </thead>
@@ -470,6 +471,7 @@
                                             <th>Código cliente</th>
                                             <th style="width:320px">Nombre</th>
                                             <th>Zona</th>
+                                            <th>Giro</th>
                                             <th>Fecha</th>
                                         </tr>
                                     </thead>
@@ -1052,27 +1054,31 @@
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  ctesNoVisitados[i].companyId + '</td>' +
                             '</tr>';
             }
-
+            var clientesNvos =0;
             for (i = 0; i < bonoDetalle.length; i++) {
-                if(bonoDetalle[i].giro_id == 30 || bonoDetalle[i].giro_id == 45 ){
+                if(bonoDetalle[i].giro_id == 30 || bonoDetalle[i].giro_id == 45 || bonoDetalle[i].giro_id == 44|| bonoDetalle[i].giro_id == 35|| bonoDetalle[i].giro_id == 47|| bonoDetalle[i].giro_id == 10 ){
                     htmlModalnc += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].tipo_giro + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
-                }
-            }
-
-            for (i = 0; i < bonoDetalle.length; i++) {
-
+                    clientesNvos ++;
+                }else{
                     htmlModalnctotal += '<tr>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyid + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].companyname + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].zona + '</td>' +
+                            '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].tipo_giro + '</td>' +
                             '<td style="font-weight: bold; background-color:#f9ea45">' +  bonoDetalle[i].date_first_order.split("T", 1);+ '</td>' +
                             '</tr>';
+
+                }
             }
+            console.log(clientesNvos);
+
+
             var show ;
             if(data[0].diasLaborados == 0){
                 show =   '<td style="font-weight: bold">';
@@ -1095,7 +1101,7 @@
             //console.log(importdiasNoLaborados, comisionInt);
 
             comisionInt = comisionInt - importdiasNoLaborados;
-            console.log(data[0].diasNoLAborados);
+            //console.log(data[0].diasNoLAborados);
             htmlPuntualidad +=  '<tr>' +
                    '<td style="font-weight: bold" colspan="2" > Clientes Visitados / Llamados </td>' +
                    '<td style="font-weight: bold" >'+ data[0].totalClientes  +'</td>' +
@@ -1128,8 +1134,8 @@
             var le = data[1].le;
             //var le = data[1].real -  data[1].nuevosMesActualRoTP;
             if(data[1].nuevosMesActualRoTP == 0 && data[1].nuevosMesActual  == 0){
-                ctesnvos = '<td style="font-weight: bold"><u>' + data[1].nuevosMesActualRoTP+ '</u></td>';
-            } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + data[1].nuevosMesActualRoTP+ '</u></td>';
+                ctesnvos = '<td style="font-weight: bold"><u>' + clientesNvos+ '</u></td>';
+            } else ctesnvos =  '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#nvosclientesModal" ><u>' + clientesNvos+ '</u></td>';
             htmlBonos += '<tr>'+
                     '<td style="font-weight: bold" >Clientes Activos</td>' +
                     '<td style="font-weight: bold; cursor: pointer" data-toggle="modal" data-target="#editarVo""><u>' +  data[1].vo + '</u></td>' +
