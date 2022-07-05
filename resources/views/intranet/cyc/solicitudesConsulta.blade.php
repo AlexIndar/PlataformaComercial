@@ -503,7 +503,7 @@
                         <div class="custom-file">
                             <!-- <input type="file" class="custom-file-input" id="inputGroupFile19" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> -->
                             <input type="file" class="custom-file-input" id="inputGroupFile19">
-                            <label class="custom-file-label" for="inputGroupFile19" id="label-inputGroupFile19">Fotografia a editar</label>
+                            <label class="custom-file-label" for="inputGroupFile19" id="label-inputGroupFile19">Ingrese Archivo ...</label>
                         </div>
                     </div>
                 </div>

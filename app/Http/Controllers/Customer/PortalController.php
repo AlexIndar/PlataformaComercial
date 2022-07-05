@@ -29,31 +29,54 @@ class PortalController extends Controller
         return json_decode($data);
     }
 
-    public static function busquedaItemFiltro($token, $filter, $codigo, $from, $to){
+    // Retorna filtrado de busqueda, si se indican límites from y to devuelve solo la info encontrada en ese rango de índices
+    public static function busquedaItemFiltro($token, $filter, $codigo, $from = null, $to = null){ 
+        $filter = str_replace('-', '~', $filter);
         $response = Http::withToken($token)->post(config('global.api_url').'/Portal/BusquedaItemFiltro', [
             "codCustomer" => $codigo,
             "busqueda" => $filter
         ]);
         $items = $response->body();
         $items = json_decode($items);
+        $data = PortalController::getFiltersBusqueda($items);
+        if($from == null){
+            $data['items'] = $items;
+        }
+        else{
+            $data['items'] = [];
+        
+            // Si quiere llegar a una paginación más alta de los resultados disponibles, limitar a la cantidad de resultados encontrados
+            $to > count($items) ? $to = count($items) : $to = $to;
+    
+            for($x = $from - 1; $x < $to; $x++){
+                array_push($data['items'], $items[$x]);
+            }
+        }
+        return $data;
+    }
+
+    // Acomoda información para los filtros de búsqueda del lateral izquierdo de la vista
+    public static function getFiltersBusqueda($items){
         $marcas = [];
+        $categorias = [];
         for($x = 0; $x < count($items); $x++){
             if($x == 0){
                 array_push($marcas, $items[$x]->familia);
+                array_push($categorias, $items[$x]->categoriaItem);
             }
             else{
-                if(in_array($items[$x]->familia, $marcas)){
-                    
+                if(!in_array($items[$x]->familia, $marcas)){
+                    array_push($marcas, $items[$x]->familia);   
                 }
-                else{
-                    array_push($marcas, $items[$x]->familia);
+                if(!in_array($items[$x]->categoriaItem, $categorias)){
+                    array_push($categorias, $items[$x]->categoriaItem);   
                 }
             }
         }   
-
-        $data['items'] = [];
         $data['marcas'] = [];
+        $data['categorias'] = [];
         $data['resultados'] = count($items);
+
         foreach($marcas as $marca){
             $count = 0;
             foreach($items as $item){
@@ -66,16 +89,20 @@ class PortalController extends Controller
             array_push($data['marcas'], $tmp);
         }
 
-        // Si quiere llegar a una paginación más alta de los resultados disponibles, limitar a la cantidad de resultados
-        $to > count($items) ? $to = count($items) : $to = $to;
-
-        for($x = $from - 1; $x < $to; $x++){
-            array_push($data['items'], $items[$x]);
+        foreach($categorias as $categoria){
+            $count = 0;
+            foreach($items as $item){
+                if($item->categoriaItem == $categoria){
+                    $count ++;
+                }
+            }
+            $tmp['nombre'] = $categoria;
+            $tmp['resultados'] = $count;
+            array_push($data['categorias'], $tmp);
         }
 
-        // dd($items);
-
         return $data;
+
     }
 
     

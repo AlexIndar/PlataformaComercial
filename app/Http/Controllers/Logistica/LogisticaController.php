@@ -150,6 +150,7 @@ class LogisticaController extends Controller
             }
             public static function saveGuiaNumber($token,$data){
                 $dataJson = json_decode($data);
+                $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
                 $saveGuiaNumber = Http::withToken($token)->post(config('global.api_url').'/Logistica/SaveGuiaNumber',
                 [
                     "facturas" => $dataJson->facturasSelected,
@@ -158,7 +159,8 @@ class LogisticaController extends Controller
                     "importeSeguro" => $dataJson->importeSeguro,
                     "importeTotal" => $dataJson->importeTotal,
                     "numGuia" => $dataJson->numGuia,
-                    "chofer" => $dataJson->chofer
+                    "chofer" => $dataJson->chofer,
+                    "usuario" => '@'.$username
                 ]);
                 $save = json_decode($saveGuiaNumber);
                 return $save;
@@ -361,6 +363,7 @@ class LogisticaController extends Controller
             public static function registroGuia($token, $data)
             {
                 $dataJson = json_decode($data);
+                $username = decrypt($_COOKIE["_usn"], "7Ind4r7");
                 $registroGuia = Http::withToken($token)->post(config('global.api_url').'/Logistica/RegistroGuia',[
                     "numguia" => $dataJson->numguia,
                     "importe" => $dataJson->importe,
@@ -370,13 +373,15 @@ class LogisticaController extends Controller
                     "estado" => $dataJson->estado,
                     "clasificador" => $dataJson->clasificador,
                     "paqueteriaID" => $dataJson->paqueteriaID,
-                    "usuario" => $dataJson->usuario,
+                    "usuario" => $username,
                 ]);
                 $guia = json_decode($registroGuia->body());
                 return $guia;
             }
             public static function readFileXML($token, $pathXML)
             {
+                $xmlString = file_get_contents(storage_path('app/'.$pathXML));
+                $xmlString = str_replace("\r\n",'', $xmlString);
                 $xml = simplexml_load_file(storage_path('app/'.$pathXML));
                 $ns = $xml->getNamespaces(true);
                 $xml->registerXPathNamespace('c', $ns['cfdi']);
@@ -451,22 +456,41 @@ class LogisticaController extends Controller
                     $Tf_version = $tfd['version']; 
                     $Tf_selloSAT = $tfd['selloSAT']; 
                 } 
-                
+                foreach($xml->xpath('//cfdi:Comprobante//cfdi:Addenda//Flete//Concepto') as $cantidad){
+                    $FleteConcepto_cantidad = $cantidad['Cantidad'];
+                    $FleteConcepto_descripcion = $cantidad['Descripcion'];
+                }                
                 Storage::disk('local')->delete($pathXML);
                 $data = [
                     'uuid' => $Tf_UUID,
                     'numFactura' => $Cpt_Folio,
                     'subTotal' => $Cpt_subTotal,
-                    'total' => $Cpt_total 
+                    'total' => $Cpt_total,
+                    'cantidad' => $FleteConcepto_cantidad,
+                    'descripcionCantidad' => $FleteConcepto_descripcion,
+                    'xmlString' =>  $xmlString
                 ];
                 return $data; 
             }
             public static function registerNet($token, $data)
             {
-                // dd(json_encode($data));
-                dd($data);
-                $jsonData = json_decode($data);
-                dd($jsonData);
+                
+                $dataJson = json_decode($data);
+                // dd($dataJson);
+                
+                $capturaGastoFletera = Http::withToken($token)->post(config('global.api_url').'/Logistica/RegistroNet',[
+                    $dataJson
+                ]);
+                $gastoFletera= json_decode($capturaGastoFletera->body());
+                return $gastoFletera;
+            }
+            #endregion
+            #region AUTORIZAR GASTOS FLETERAS
+            public static function getFolios($token)
+            {
+                $getFolios = Http::withToken($token)->get(config('global.api_url').'/Logistica/AuthorizeFreightExpensesTable');
+                $folios = json_decode($getFolios->body());
+                return $folios;
             }
             #endregion
         #endregion
