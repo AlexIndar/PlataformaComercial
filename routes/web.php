@@ -2185,12 +2185,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
-                    $cliente= 'C002620';
+                    $cliente= 'C009431';
                     $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
+                    $exception=0;
                     //dd($general)
                     $general = $general[0];
                     //dd($general);
-                    return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general]);
+                    return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general,'exception'=>$exception]);
                 });
 
                 Route::get('/clientes/pagoEnLinea/{cte}/{fechaini}/{fechafin}', function($cliente, $fechaini, $fechafin){
@@ -2202,8 +2203,15 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $data = ClientesController::getFacturasCtesOpen($token, $cliente, $fechaini, $fechafin);
                     $notas = ClientesController::getNotasCreditoCtesOpen($token, $cliente);
-                    //dd($notas);
-                    return view('intranet.clientes.pagoEnLinea',['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas]);
+                    $general = ClientesController::getInfoEdoCtaWeb($token, $cliente);
+                    $general = $general[0];
+                    if($data ===[]){
+                        $exception = 1;
+                        return view('intranet.clientes.info',['token' => $token, 'permissions' => $permissions,'general' => $general, 'exception'=>$exception]);
+                    }else{
+                        //dd($notas);
+                        return view('intranet.clientes.pagoEnLinea', ['token' => $token, 'permissions' => $permissions,'data' => $data,'notas' => $notas, 'general' => $general]);
+                    }
                 });
 
                 Route::get('clientes/getDetalleFactura', function(Request $request){
@@ -2214,7 +2222,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $cte= $request->cte;
                     $folio= $request->folio;
+
                     $data = ClientesController::getDetalleFactura($token,$cte,$folio);
+                    return $data;
+                });
+
+                Route::get('clientes/getDocumentCFDI', function(Request $request){
+                    $token = TokenController::getToken();
+
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $folio= $request->folio;
+                    $type = $request->type;
+                    $formato = $request->formato;
+                    $data = ClientesController::getDocumentCFDI($token,$type,$folio,$formato);
+                    //dd($data);
                     return $data;
                 });
 

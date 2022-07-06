@@ -31,6 +31,12 @@ class ClientesController extends Controller
         return json_decode($data->body());
     }
 
+    public static function getDocumentCFDI($token, $type, $folio,$formato){
+        $data = Http::withToken($token)->get(config('global.api_url').'/EstadoCuentaCte/getDocumentCFDI?type='.$type.'&folio='.$folio.'&formato='.$formato);
+        $data= ($data->body());
+        return $data;
+    }
+
 
 
 

@@ -28,7 +28,7 @@
 
         {{-- FILTROS ------------------------------------------------------------------------------------------------------------------------------------------------}}
 
-        <div class="col-lg-3 col-md-4 col-sm-12 filters">
+        <div class="col-lg-2 col-md-4 col-sm-12 filters">
             <h5 class="busqueda" id="busqueda">{{ucwords(strtolower($data['filter']))}}</h5>
             <h5 class="mt-3">Filtrar por</h5>
             <hr>
@@ -61,22 +61,22 @@
         {{-- ARTÍCULOS ------------------------------------------------------------------------------------------------------------------------------------------------}}
 
 
-        <div class="col-lg-9 col-md-8 col-sm-12 productList">
+        <div class="col-lg-10 col-md-8 col-sm-12 productList">
 
             <div class="row">
                 <div class="col-lg-5 col-12">
                     <div class="appliedFilters" id="appliedFilters">
-                       
+                       {{-- ETIQUETAS DE FILTROS, SE GENERAN DESDE JS --}}
                     </div>
                 </div>
                 <div class="col-lg-7 col-12">
                     <div class="paginationLine headerPagination">
-                        <h5 class="filterResultados">Mostrando {{$from}} - {{$to}} de {{$data['resultados']}} resultados</h5>
+                        <h5 class="filterResultados">Mostrando <span id="paginationFrom">{{$from}}</span> - <span id="paginationTo">{{$to}}</span> de <span id="paginationTotal">{{$data['resultados']}}</span> resultados</h5>
                         {{-- PAGINACIÓN --}}
                         {{-- Sólo mostrar si los resultados disponibles son más de los mostrados en la página actual --}}
                         @if($data['resultados'] > ($to - $from) +1) 
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination" max-size="5">
+                            <nav id="paginationIndicators" aria-label="Page navigation example">
+                                <ul class="pagination" id="paginationUlSuperior" max-size="5">
                                     <li class="page-item @if($activePage == 1) disabled @endif"><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$activePage - 1}})">Anterior</a></li>
                                         @for($x=$iniPagination; $x <= $endPagination; $x++ )
                                             <li class="page-item @if($activePage == $x) active @endif "><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$x}})">{{$x}}</a></li>
@@ -93,12 +93,12 @@
 
             
 
-            <div class="row d-flex align-items-center flex-row">
+            <div class="row d-flex align-items-center flex-row" id="productListContainer">
                 @for($x=0; $x < count($data['items']); $x++)
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="item" onclick="detalleProducto('{{$data['items'][$x]->itemid}}')">
                             <div class="imgItem">
-                                <img src={{"http://www.indar.com.mx/imagenes/articulos/02_JPG_MD/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['items'][$x]->itemid)))."_MD.jpg"}} onerror='noDisponible(this)'>
+                                <img src={{"http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['items'][$x]->itemid)))."_MD.jpg"}} onerror='noDisponible(this)'>
                             </div>
                             <div class="itemInfo">
                                 <h5 class="itemManufacturer">{{$data['items'][$x]->itemid}}</h5>
@@ -118,6 +118,23 @@
                 @endFor
             </div>
 
+            <div class="row d-none" id="productList-skeleton">
+                @for($x=0; $x < count($data['items']); $x++)
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="item-skeleton">
+                            <div class="imgItem-skeleton skeleton"></div>
+                            <div class="itemInfo">
+                                <div class="itemManufacturer-skeleton skeleton"></div>
+                                <div class="itemDescription-skeleton skeleton"></div>
+                                <h5 class="itemManufacturer-skeleton skeleton"></h5>
+                                <h5 class="itemManufacturer-skeleton skeleton"></h5>
+                            </div>
+                            <div class="itemActions-skeleton skeleton"></div>
+                        </div>
+                    </div>
+                @endFor
+            </div>
+
 
             <div class="paginationLine footerPagination">
                 <h5 class="filterResultados">Mostrando {{$from}} - {{$to}} de {{$data['resultados']}} resultados</h5>
@@ -125,12 +142,12 @@
                 {{-- Sólo mostrar si los resultados disponibles son más de los mostrados en la página actual --}}
                 @if($data['resultados'] > ($to - $from)) 
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination" max-size="5">
-                            <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                                @for($x=$iniPagination; $x <= $endPagination; $x++ )
-                                    <li class="page-item @if($activePage == $x) active @endif "><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$x}})">{{$x}}</a></li>
-                                @endfor
-                            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                        <ul class="pagination" id="paginationUlInferior" max-size="5">
+                            <li class="page-item @if($activePage == 1) disabled @endif"><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$activePage - 1}})">Anterior</a></li>
+                                        @for($x=$iniPagination; $x <= $endPagination; $x++ )
+                                            <li class="page-item @if($activePage == $x) active @endif "><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$x}})">{{$x}}</a></li>
+                                        @endfor
+                                    <li class="page-item @if($activePage == $endPagination) disabled @endif"><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$activePage + 1}})">Siguiente</a></li>
                         </ul>
                     </nav>   
                 @endif         

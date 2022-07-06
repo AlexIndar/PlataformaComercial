@@ -32,6 +32,7 @@ class VerifyCsrfToken extends Middleware
         '/pedidosAnteriores/getDetalleFacturado',
         'pedidosAnteriores/descargarDocumento',
         '/portal/busquedaGeneralItem/',
+        '/portal/busqueda',
         '/promociones/storePromo',
         '/promociones/editar',
         '/promociones/eliminar',
