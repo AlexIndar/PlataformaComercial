@@ -3169,6 +3169,7 @@ const logisticaController = {
                 + '<td>'
                 + '<select class="form-control select2" id="inputMotivo'+idNumeroGuia+'" data-idnumeroguia="'+idNumeroGuia+'" onchange="logisticaController.onChangeGuiasCostoFleteras(this)">'
                 + '<option value="Ninguno">Niguno</option>'
+                + '<option value="Cortesia">Cortesia</option>'
                 + '<option value="Peso Excedente">Peso Excedente</option>'
                 + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
                 + '<option value="Reexpediciones">Reexpediciones</option>'
@@ -3253,6 +3254,13 @@ const logisticaController = {
     onChangeGuiasCostoFleteras: (e) => {
         let idNumeroGuia = $(e).data('idnumeroguia');
         let comentario = $('#inputComentario'+idNumeroGuia).val();
+        console.log(comentario.length);
+        if(comentario.length > 150) {
+            let caracteresEliminar = comentario.length - 150;
+            console.log(caracteresEliminar);
+            comentario = comentario.substring(0, comentario.length - caracteresEliminar);
+            $('#inputComentario'+idNumeroGuia).val(comentario);
+        }
         let importeSinIVA = $('#inputImporteGuia'+idNumeroGuia).val();
         let retencion = $('#inputRetencion'+idNumeroGuia).val();
         let motivo = $('#inputMotivo'+idNumeroGuia).val();
@@ -3260,7 +3268,6 @@ const logisticaController = {
         if(motivo == "Ninguno")
         {
             arraytable2.forEach(function (values, key) {
-                console.log(values);
                 if(values['idNumeroGuia'] == idNumeroGuia)
                 {
                     if(parseFloat(pp) > 1){
@@ -3276,6 +3283,7 @@ const logisticaController = {
                         $('#campoImporte'+idNumeroGuia).empty();
                         $('#campoImporte'+idNumeroGuia).append(importe.toFixed(2));
                         values['importe'] = parseFloat(importe.toFixed(2));
+                        
                     }
                     values['importeSinIva'] = parseFloat(importeSinIVA);
                     values['comentario'] = "";
@@ -3301,10 +3309,18 @@ const logisticaController = {
                         pp == "" || pp =="." ? pp=0 :pp = pp;
                         retencion == "" || retencion == "." ? retencion = 0 : retencion = retencion;
                         importeSinIVA == "" || importeSinIVA == "." ? importeSinIVA = 0 : importeSinIVA = importeSinIVA;
-                        let importe = parseFloat(pp) * parseFloat(retencion) * parseFloat(importeSinIVA);
-                        $('#campoImporte'+idNumeroGuia).empty();
-                        $('#campoImporte'+idNumeroGuia).append(importe.toFixed(2));
-                        values['importe'] = parseFloat(importe.toFixed(2));
+                        if(motivo == "Cortesia"){
+                            $('#campoImporte'+idNumeroGuia).empty();
+                            $('#campoImporte'+idNumeroGuia).append('0.00');
+                            $('#inputImporteGuia'+idNumeroGuia).val(0.00);
+                            importeSinIVA = 0;
+                            values['importe'] = 0.00;
+                        }else{
+                            let importe = parseFloat(pp) * parseFloat(retencion) * parseFloat(importeSinIVA);
+                            $('#campoImporte'+idNumeroGuia).empty();
+                            $('#campoImporte'+idNumeroGuia).append(importe.toFixed(2));
+                            values['importe'] = parseFloat(importe.toFixed(2));
+                        }
                     }
                     values['importeSinIva'] = parseFloat(importeSinIVA);
                     values['comentario'] = comentario;
@@ -3469,7 +3485,6 @@ const logisticaController = {
             estado: estado,
             clasificador: $('#agregarGuiaClasificador').val(),
             paqueteriaID: $('#agregarGuiaAcreedor').val(),
-            usuario: usuario
         };
         logisticaController.token();
         $.ajax({
@@ -3530,7 +3545,7 @@ const logisticaController = {
                 let fecha = data['fecha'];
                 contShowguia == 0 ? $('#dataTableGastoFletera').empty() : '';
                 $('#dataTableGastoFletera').append(
-                    '<tr class="text-center">'
+                    '<tr>'
                     + '<td><input type="checkbox" onchange="logisticaController.checkBoxSelectedListaGuias(this)" data-idnumeroguia="' + data['idNumeroGuia'] + '" data-numeroguia="' + data['numeroGuia'] + '" data-importetotal="' + data['importeTotal'] + '" checked></td>'
                     + '<td>' + data['numeroGuia'] + '</td>'
                     + '<td>' + logisticaController.replaceNumberWithCommas(importeTotal.toFixed(2)) + '</td>'
@@ -3646,7 +3661,7 @@ const logisticaController = {
                 'atados': element['atado'],
                 'bultos': element['bultos'],
                 'cajas': element['cajas'],
-                'comentario': element['comnetario'],
+                'comentario': element['comentario'],
                 'facturas': element['facturas'],
                 'idNumGuia': element['idNumeroGuia'],
                 'importeGuia': element['importe'],
@@ -3704,7 +3719,18 @@ const logisticaController = {
                       }).then((result) => {
                         location.reload();
                     });
-                }else{
+                }else if(data.codeStatus == 500)
+                {
+                    Swal.fire({
+                        title: 'INTERNAL ERROR SERVER',
+                        text: data.descriptcionStatus,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+                else{
                     Swal.fire({
                         title: 'Enviado exitosamente por autorizar',
                         text: data.descriptcionStatus,
@@ -3764,11 +3790,12 @@ const logisticaController = {
                     +'</div>'
                     +'</div>';  
                 }},
-                { data: 'idGastoFletera', render: function(data){
+                { data: 'idGastoFletera', render: function(data, type, row, meta){
+                    console.log(row);
                     return '<div class="row text-center">'
                             +'<div class="col-12">'
-                            +'<button class="btn btn-success mt-2" style="color:white" data-id="'+data+'" onclick="logisticaController.openModalFolioDetail(this)">'
-                            +'<i class="fa-solid fa-pen-to-square"></i>'
+                            +'<button class="btn btn-plataform mt-2" style="color:white" data-id="'+data+'" data-folio="'+row.numDoc+'" data-xml="'+row.xml+'" data-acreedor="'+row.vendor+'" data-status="'+row.status+'" data-idgastofletera="'+row.idGastoFletera+'" onclick="logisticaController.openModalFolioDetail(this)">'
+                            +'<i class="fa-solid fa-list-check"></i>'
                             +'</button>'
                             +'</div>'
                             +'</div>'; 
@@ -3794,6 +3821,9 @@ const logisticaController = {
                 }
             }
         });
+        logisticaController.requestFoliosAuthorice();
+    },
+    requestFoliosAuthorice: () => {
         $.ajax({
             url: '/logistica/distribucion/autorizarGastosFleteras/Folios',
             type: 'GET',
@@ -3802,7 +3832,6 @@ const logisticaController = {
                 $('#cover-spin').show(1);
             },
             success: function(data){
-                console.log(data);
                 $('#tableFolios').DataTable().clear().draw();
                 $('#tableFolios').DataTable().rows.add(data).draw();
             },
@@ -3814,8 +3843,208 @@ const logisticaController = {
             }
         })
     },
-    openModalFolioDetail: () => {
-        $('#modal-folio-detail').modal('show');
+    openModalFolioDetail: (e) => {
+        let idGastoFletera = $(e).data('id');
+        let folio = $(e).data('folio');
+        let acreedor = $(e).data('acreedor');
+        let status = $(e).data('status'); 
+        let xml = $(e).data('xml');
+        $('#idgastofletera').val($(e).data('idgastofletera'));
+        $('#folio').val(folio);
+        xml = atob(xml);
+        parser = new DOMParser();
+        xmlDoc = parser.parseFromString(xml,"text/xml");
+        let comprobante = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0].attributes;
+        let importeSinIvaFolio = comprobante["SubTotal"].nodeValue;
+        let importeIVAFolio = comprobante["Total"].nodeValue;
+        console.log();  
+        $.ajax({
+            type: 'GET',
+            url: '/logistica/distribucion/autorizarGastosFleteras/getGuiasByFolio',
+            data: {idGastoFletera:idGastoFletera},
+            datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(1);
+            },
+            success: function(data){
+                console.log(data);
+                $('#text-folio').empty();
+                $('#text-estado').empty();
+                $('#text-acreedor').empty();
+                $('#text-importesinIva').empty();
+                $('#text-importeIva').empty();
+                $('#text-importesinIva').append('$'+importeSinIvaFolio)
+                $('#text-importeIva').append('$'+importeIVAFolio);
+                $('#text-acreedor').append(acreedor);
+                $('#text-estado').append('<button type="button" class="btn btn-danger">'+status+'</button>');
+                $('#text-folio').append('#'+folio);
+                $('#accordion').empty();
+                for(let a=0; a< data.length; a++)
+                {
+                    data[a].comentario = data[a].comentario == null ? '' : data[a].comentario;
+                    data[a].atados     = data[a].atados     == null ? 0 : data[a].atados;
+                    data[a].bultos     = data[a].bultos     == null ? 0 : data[a].bultos;
+                    data[a].cajas      = data[a].cajas      == null ? 0 : data[a].cajas;
+                    data[a].cubetas    = data[a].cubetas    == null ? 0 : data[a].cubetas;
+                    data[a].tarimas    = data[a].tarimas    == null ? 0 : data[a].tarimas;
+                    let diferencia = data[a].importeGuia - data[a].importeReal;
+                    if(diferencia < 0){
+                        diferencia = '<span class=" badge bg-danger"><strong style="font-size: 16px;">'+diferencia.toFixed(2)+'</strong></span>';
+                    }else{
+                        diferencia = '<span class=" badge bg-success"><strong style="font-size: 16px;">'+diferencia.toFixed(2)+'</strong></span>';
+                    }
+                    console.log(diferencia);
+                    $('#accordion').append('<div class="card card-primary">'
+                                            +'<div class="card-header title-table">'
+                                                +'<h4 class="card-title w-100">'
+                                                    +'<a class="d-block w-100" data-toggle="collapse" href="#'+data[a].numGuia+'">'
+                                                        +data[a].numGuia
+                                                    +'</a>'
+                                                +'</h4>'
+                                            +'</div>'
+                                            +'<div id="'+data[a].numGuia+'" class="collapse">'
+                                                +'<div class="card-body">'
+                                                    +'<div class="invoice p-3 mb-3">'
+                                                        +'<div class="row">'
+                                                            +'<div class="col-12">'
+                                                                +'<h4>'
+                                                                    +'<i class="fa-solid fa-circle"></i>'+data[a].numGuia
+                                                                +'</h4>'
+                                                            +'</div>'
+                                                            +'<div class="col-12">'
+                                                                +'<div class="row invoice-info">'
+                                                                    +'<div class="col-12">'
+                                                                        +'<div class="row">'
+                                                                            +'<div class="col-sm-6 invoice-col">'
+                                                                                +'Motivo:'
+                                                                                +'<strong>'+data[a].motivo+'</strong><br>'
+                                                                            +'</div>'
+                                                                            +'<div class="col-sm-6 invoice-col">'
+                                                                                +'Facturas:'
+                                                                                +'<strong>'+data[a].facturas+'</strong><br>'
+                                                                            +'</div>'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                    +'<div class="col-12">'
+                                                                        +'<div class="row">'
+                                                                            +'<div class="col-sm-6 invoice-col">'
+                                                                                +'Importe Original:'
+                                                                                +'<strong>$'+data[a].importeReal+'</strong><br>'
+                                                                            +'</div>'
+                                                                            +'<div class="col-sm-6 invoice-col">'
+                                                                                +'Importe Final:'
+                                                                                +'<strong>$'+data[a].importeGuia+'</strong><br>'
+                                                                            +'</div>'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                    +'<div class="col-12">'
+                                                                        +'<div class="row">'
+                                                                            +'<div class="col-sm-12 invoice-col">'
+                                                                                +'Diferencia:'
+                                                                                +diferencia+'<br>'
+                                                                            +'</div>'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                    +'<div class="col-12">'
+                                                                        +'<div class="row">'
+                                                                            +'<div class="col-sm-12 invoice-col">'
+                                                                                +'Comentario:'
+                                                                                +'<strong>'+data[a].comentario+'</strong><br>'
+                                                                            +'</div>'
+                                                                        +'</div>'
+                                                                    +'</div>'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                            +'<div class="col-12">'
+                                                                +'<div class="row">'
+                                                                    +'<div class="col-12 table-responsive">'
+                                                                        +'<table class="table table-striped">'
+                                                                            +'<thead>'
+                                                                                +'<tr>'
+                                                                                    +'<th>Atados</th>'
+                                                                                    +'<th>Bultos</th>'
+                                                                                    +'<th>Cajas</th>'
+                                                                                    +'<th>Cubetas</th>'
+                                                                                    +'<th>Tarimas</th>'
+                                                                                +'</tr>'
+                                                                            +'</thead>'
+                                                                            +'<tbody>'
+                                                                                +'<tr>'
+                                                                                    +'<td>'+data[a].atados+'</td>'
+                                                                                    +'<td>'+data[a].bultos+'</td>'
+                                                                                    +'<td>'+data[a].cajas+'</td>'
+                                                                                    +'<td>'+data[a].cubetas+'</td>'
+                                                                                    +'<td>'+data[a].tarimas+'</td>'
+                                                                                +'</tr>'
+                                                                            +'</tbody>'
+                                                                        +'</table>'
+                                                                    +'</div>'
+                                                                +'</div>'
+                                                            +'</div>'
+                                                        +'</div>'
+                                                    +'</div>'
+                                                +'</div>'
+                                            +'</div>'
+                                            );
+                }
+                $('#modal-folio-detail').modal('show');
+            },
+            error: function(){
+
+            },
+            complete: function(){
+                $('#cover-spin').hide();
+            }
+        })
+    },
+    CancelFolio: () => {
+        let idGastoFletera = $('#idgastofletera').val();
+        let folio = $('#folio').val();
+        console.log(idGastoFletera);
+        Swal.fire({
+            title: '¿Esta seguro de eliminar el folio #'+folio+'?',
+            text: 'Se eliminara la relación que tiene con las guias que se relacionan con este folio',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'No',
+            confirmButtonText: 'Si'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                logisticaController.token();
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/logistica/distribucion/autorizarGastosFleteras/cancelFolio',
+                    data: {idGastoFletera: idGastoFletera},
+                    datatype: 'json',
+                    beforeSend: function(){
+                        $('#cover-spin').show(1);
+                    },
+                    success: function(data){
+                        console.log(data);
+                        if(data.codeStatus == 200)
+                        {
+                            Swal.fire({
+                                title: '¡Folio #'+folio+' cancelado exitosamente!',
+                                text: 'Se elimino cualquier relación existente con este folio',
+                                icon: 'success'
+                            }).then(() => {
+                                $('#modal-folio-detail').modal('toggle');
+                                logisticaController.requestFoliosAuthorice();
+                            });
+                        }
+                        
+                    },
+                    error: function(){
+        
+                    },
+                    complete: function(){
+                        $('#cover-spin').hide();
+                    }
+                })
+            }
+          })
     },
     //#endregion
     //#endregion

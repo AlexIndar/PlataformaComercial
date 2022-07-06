@@ -2642,6 +2642,22 @@ Route::get('/logistica/distribucion/autorizarGastosFleteras/Folios', function(){
     $response = LogisticaController::getFolios($token);
     return $response;
 });
+Route::get('/logistica/distribucion/autorizarGastosFleteras/getGuiasByFolio', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::getGuiasByFolio($token,json_encode($request->all()));
+    return $response;
+});
+Route::delete('/logistica/distribucion/autorizarGastosFleteras/cancelFolio', function(Request $request){
+    $token  = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::cancelFolio($token, json_encode($request->all()));
+    return $response;
+});
 //****************************** REPORTES  ************************************\\
 Route::get('/logistica/reportes', function(){
     $token = TokenController::getToken();

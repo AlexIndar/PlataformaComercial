@@ -71,35 +71,67 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header title-table">
-                <h4 class="modal-title ">Detalle Folio #</h4>
+                <h4 class="modal-title ">Detalle Folio</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                
-                <form id="formAddGuia">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="agregarGuiaAcreedor">Acreedor:</label>
-                                <input type="text" class="form-control" id="agregarGuiaNumeroGuia" name="agregarGuiaNumeroGuia">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="agregarGuiaDepartamento">Departamento:</label>
-                                
+                <input type="text" id="idgastofletera" hidden>
+                <input type="text" id="folio" hidden>
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Acreedor</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-acreedor"></span>
                             </div>
                         </div>
                     </div>
-                    
-                </form>
-                <div class="row" id="divMessageFormAddGuia" hidden></div>
+                    <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Folio</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-folio"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Importe Sin IVA</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-importesinIva"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Importe</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-importeIva"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Estatus</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-2" id="text-estado"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                   <div class="col-12">
+                        <h4 class="timeline-header">Detalles de guias</h3>
+                        <div id="accordion"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-plataform" onclick="logisticaController.validateFormAddGuia();">Autorizar</button>
+                <button type="button" class="btn btn-danger" onclick="logisticaController.CancelFolio()">Cancelar Folio</button>
+                <button type="submit" class="btn btn-plataform" onclick="logisticaController.AuthoriceFolio();">Autorizar</button>
             </div>
         </div>
         <!-- /.modal-content -->

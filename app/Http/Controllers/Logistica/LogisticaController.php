@@ -492,6 +492,20 @@ class LogisticaController extends Controller
                 $folios = json_decode($getFolios->body());
                 return $folios;
             }
+            public static function getGuiasByFolio($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $getGuias = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetGuiasByFolio?folio='.$jsonData->idGastoFletera);
+                $guias = json_decode($getGuias->body());
+                return $guias;
+            }
+            public static function cancelFolio($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $cancelFolio = Http::withToken($token)->delete(config('global.api_url').'/Logistica/CancelFolio?idGastoFletera='.$jsonData->idGastoFletera);
+                $cancel = json_decode($cancelFolio);
+                return $cancel;
+            }
             #endregion
         #endregion
         
