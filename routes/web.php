@@ -2680,6 +2680,23 @@ Route::delete('/logistica/distribucion/autorizarGastosFleteras/cancelFolio', fun
     }
     $response = LogisticaController::cancelFolio($token, json_encode($request->all()));
     return $response;
+    
+});
+Route::put('/logistica/distribucion/autorizarGastosFleteras/authorizeFolio', function(Request $request){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = LogisticaController::authorizeFolio($token, json_encode($request->all()));
+    return $response;
+});
+Route::get('/logistica/distribucion/autorizarGastosFleteras/getFoliosAuthorize', function(){
+    $token = TokenController::getToken();
+    if($token == 'error' || $token == 'expired'){
+        LoginController::logout();
+    }
+    $response = logisticaController::getFoliosAuthorize($token);
+    return $response;
 });
 //****************************** REPORTES  ************************************\\
 Route::get('/logistica/reportes', function(){

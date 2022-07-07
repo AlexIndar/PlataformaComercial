@@ -484,6 +484,12 @@ class LogisticaController extends Controller
                 $gastoFletera= json_decode($capturaGastoFletera->body());
                 return $gastoFletera;
             }
+            public static function getFoliosAuthorize($token)
+            {
+                $foliosAutorizados = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetFoliosAuthorize');
+                $folios = json_decode($foliosAutorizados->body());
+                return $folios;
+            }
             #endregion
             #region AUTORIZAR GASTOS FLETERAS
             public static function getFolios($token)

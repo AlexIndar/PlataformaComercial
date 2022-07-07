@@ -34,6 +34,7 @@
                     <div class="card mt-2">
                         <div class="card-header title-table">
                           <h3 class="card-title mt-3 mr-2">Autorizar Gastos Fleteras</h3>
+                          <a type="button" class="btn btn-outline-primary" onclick="logisticaController.getFoliosAuthorize()"><i class="fa-solid fa-book mr-2"></i>Folios Autorizados</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body ">
@@ -67,8 +68,46 @@
         </div>
     </section>
 </div>
+<div class="modal fade" id="modal-folio-autorizados">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header title-table">
+                <h4 class="modal-title">Folios Autorizados</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <div class="table-responsive">
+                            <table id="tableFoliosAutorizados" class="table table-bordered table-hover table-sm">
+                                <thead class="encabezado-table">
+                                    <tr class="text-center">
+                                        <th>Folio</th>
+                                        <th>Acreedor</th>
+                                        <th>Estado</th>
+                                        <th>Numero Factura</th>
+                                        <th>importe Factura</th>
+                                        <th>Fecha</th>
+                                        <th>¿Quien autorizo?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <div class="modal fade" id="modal-folio-detail">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header title-table">
                 <h4 class="modal-title ">Detalle Folio</h4>

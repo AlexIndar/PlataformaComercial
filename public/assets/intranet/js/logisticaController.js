@@ -3808,6 +3808,67 @@ const logisticaController = {
                 }
             }
         });
+        $('#tableFoliosAutorizados').DataTable({
+            // paging: true,
+            responsive: true,
+            // searching: true,
+            processing: true,
+            bSortClasses: false,
+            fixedHeader: true,
+            scrollY: 400,
+            deferRender: true,
+            scroller: true,
+            columns: [
+                { data: 'numDoc', render: function(data){
+                    return '<div class="row text-center">'
+                    +'<div class="col-12">'
+                    + data
+                    +'</div>'
+                    +'</div>';  
+                }},
+                { data: 'vendor' },
+                { data: 'status', render: function(data){
+                    return '<div class="row text-center">'
+                    +'<div class="col-12">'
+                    + '<button type="button" class="btn btn-success">'
+                    + data
+                    + '</button>'
+                    +'</div>'
+                    +'</div>';  
+                }},
+                { data: 'numFactura' },
+                { data: 'importeFactura', render: function(data){
+                    return '$'+data;
+                }},
+                { data: 'fecha', render: function(data){
+                    return '<div class="row text-center">'
+                    +'<div class="col-12">'
+                    + data.split('T')[0]
+                    +'</div>'
+                    +'</div>';  
+                }},
+                { data: 'usuario'}
+            ],
+            language: {
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Documentos",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
+        });
         logisticaController.requestFoliosAuthorice();
     },
     requestFoliosAuthorice: () => {
@@ -4101,6 +4162,30 @@ const logisticaController = {
                 })
             }
           })
+    },
+    getFoliosAuthorize: () => {
+        $('#modal-folio-autorizados').modal('show');
+        $.ajax({
+            type: 'GET',
+            url: '/logistica/distribucion/autorizarGastosFleteras/getFoliosAuthorize',
+            datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(1);
+            },
+            success: function(data){
+                console.log(data);
+                
+                $('#tableFoliosAutorizados').DataTable().clear().draw();
+                $('#tableFoliosAutorizados').DataTable().rows.add(data).draw();
+                
+            },
+            error: function(){
+
+            },
+            complete:  function(){
+                $('#cover-spin').hide();
+            }
+        })
     },
     //#endregion
     //#endregion
