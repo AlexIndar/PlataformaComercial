@@ -73,6 +73,7 @@
         <div class="modal-content">
             <div class="modal-header title-table">
                 <h4 class="modal-title">Folios Autorizados</h4>
+                <button type="button" class="btn btn-outline-primary  btn-excel ml-2" onclick="logisticaController.exportFoliosAuthorizeExcel()"><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                     <span aria-hidden="true">&times;</span>
                 </button>
