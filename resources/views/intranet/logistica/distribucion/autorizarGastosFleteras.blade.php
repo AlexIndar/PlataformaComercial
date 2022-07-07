@@ -131,7 +131,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-danger" onclick="logisticaController.CancelFolio()">Cancelar Folio</button>
-                <button type="submit" class="btn btn-plataform" onclick="logisticaController.AuthoriceFolio();">Autorizar</button>
+                <button type="submit" class="btn btn-plataform" onclick="logisticaController.AutoriceFolio();">Autorizar</button>
             </div>
         </div>
         <!-- /.modal-content -->

@@ -342,7 +342,7 @@ let mount = d.getMonth() + 1;
 mount = mount >= 10 ? mount : '0' + mount;
 let dNow = d.getFullYear() + '-' + mount + '-' + d.getDate();
 let base64XMLGastoFletera = '',porcentajeGlobal = 1,OficinaFacturaGuia = false,banderaDiferenciaGastoFletera = false;cantidadGastoFletera = 0, contShowguia = 1, autorizadoUsuario = '', fechaInicio = dNow, fechaFin = dNow, link = '';
-let arrayRowTableType = new Array(), arraytable2 = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
+let arrayRowTableType = new Array(), arraytable2 = new Array(),folioAutorizarGuias = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
 let contRowTypeTable = 0, contRowEmbarqueTable = 0, contRowFacturasSelected = 0, contTable = 0, contArea1 = 0, contArea2 = 0, contArea3 = 0, contArea4 = 0, contArea5 = 0, contArea6 = 0, contArea7 = 0, contArea8 = 0, contArea9 = 0, contArea10 = 0, contArea11 = 0, contArea12 = 0;
 //#endregion
 
@@ -3722,24 +3722,12 @@ const logisticaController = {
                 }else if(data.codeStatus == 500)
                 {
                     Swal.fire({
-                        title: 'INTERNAL ERROR SERVER',
+                        title: 'INTERNAL SERVER ERROR',
                         text: data.descriptcionStatus,
                         icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok'
-                    });
-                }
-                else{
-                    Swal.fire({
-                        title: 'Enviado exitosamente por autorizar',
-                        text: data.descriptcionStatus,
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                      }).then((result) => {
-                        location.reload();
                     });
                 }
                 
@@ -3791,7 +3779,6 @@ const logisticaController = {
                     +'</div>';  
                 }},
                 { data: 'idGastoFletera', render: function(data, type, row, meta){
-                    console.log(row);
                     return '<div class="row text-center">'
                             +'<div class="col-12">'
                             +'<button class="btn btn-plataform mt-2" style="color:white" data-id="'+data+'" data-folio="'+row.numDoc+'" data-xml="'+row.xml+'" data-acreedor="'+row.vendor+'" data-status="'+row.status+'" data-idgastofletera="'+row.idGastoFletera+'" onclick="logisticaController.openModalFolioDetail(this)">'
@@ -3857,7 +3844,6 @@ const logisticaController = {
         let comprobante = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0].attributes;
         let importeSinIvaFolio = comprobante["SubTotal"].nodeValue;
         let importeIVAFolio = comprobante["Total"].nodeValue;
-        console.log();  
         $.ajax({
             type: 'GET',
             url: '/logistica/distribucion/autorizarGastosFleteras/getGuiasByFolio',
@@ -3867,7 +3853,7 @@ const logisticaController = {
                 $('#cover-spin').show(1);
             },
             success: function(data){
-                console.log(data);
+                folioAutorizarGuias = data;
                 $('#text-folio').empty();
                 $('#text-estado').empty();
                 $('#text-acreedor').empty();
@@ -3888,12 +3874,24 @@ const logisticaController = {
                     data[a].cubetas    = data[a].cubetas    == null ? 0 : data[a].cubetas;
                     data[a].tarimas    = data[a].tarimas    == null ? 0 : data[a].tarimas;
                     let diferencia = data[a].importeGuia - data[a].importeReal;
+                    let iconGuia = '';
                     if(diferencia < 0){
-                        diferencia = '<span class=" badge bg-danger"><strong style="font-size: 16px;">'+diferencia.toFixed(2)+'</strong></span>';
+                        if(data[a].motivo == "Cortesia")
+                        {
+                            iconGuia = '<i class="fa-solid fa-circle icon-orange-guias"></i>'+data[a].numGuia;
+                        }else{
+                            iconGuia = '<i class="fa-solid fa-circle icon-red-guias"></i>'+data[a].numGuia;
+                        }
+                        diferencia = '<span class=" badge bg-danger"><strong style="font-size: 16px;"> $ '+diferencia.toFixed(2)+'</strong></span>';
                     }else{
-                        diferencia = '<span class=" badge bg-success"><strong style="font-size: 16px;">'+diferencia.toFixed(2)+'</strong></span>';
+                        if(data[a].motivo == "Cortesia")
+                        {
+                            iconGuia = '<i class="fa-solid fa-circle icon-orange-guias"></i>'+data[a].numGuia;
+                        }else{
+                            iconGuia = '<i class="fa-solid fa-circle icon-green-guias"></i>'+data[a].numGuia;
+                        }
+                        diferencia = '<span class=" badge bg-success"><strong style="font-size: 16px;"> $ +'+diferencia.toFixed(2)+'</strong></span>';
                     }
-                    console.log(diferencia);
                     $('#accordion').append('<div class="card card-primary">'
                                             +'<div class="card-header title-table">'
                                                 +'<h4 class="card-title w-100">'
@@ -3908,7 +3906,7 @@ const logisticaController = {
                                                         +'<div class="row">'
                                                             +'<div class="col-12">'
                                                                 +'<h4>'
-                                                                    +'<i class="fa-solid fa-circle"></i>'+data[a].numGuia
+                                                                    +iconGuia
                                                                 +'</h4>'
                                                             +'</div>'
                                                             +'<div class="col-12">'
@@ -4000,7 +3998,6 @@ const logisticaController = {
     CancelFolio: () => {
         let idGastoFletera = $('#idgastofletera').val();
         let folio = $('#folio').val();
-        console.log(idGastoFletera);
         Swal.fire({
             title: '¿Esta seguro de eliminar el folio #'+folio+'?',
             text: 'Se eliminara la relación que tiene con las guias que se relacionan con este folio',
@@ -4033,7 +4030,66 @@ const logisticaController = {
                                 $('#modal-folio-detail').modal('toggle');
                                 logisticaController.requestFoliosAuthorice();
                             });
+                        }else{
+                            Swal.fire({
+                                title: '¡Hubo un error en la cancelacion del Folio #'+folio+'!',
+                                icon: 'success'
+                            });
                         }
+                        
+                    },
+                    error: function(){
+        
+                    },
+                    complete: function(){
+                        $('#cover-spin').hide();
+                    }
+                })
+            }
+          })
+    },
+    AutoriceFolio: () => {
+        let folio = $('#folio').val();
+        folioAutorizarGuias.forEach(function(element){
+            element.usuario = $('#usuario').val();
+        });
+        Swal.fire({
+            title: '¿Esta seguro de autorizar el folio #'+folio+'?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'No',
+            confirmButtonText: 'Si'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                logisticaController.token();
+                $.ajax({
+                    type: 'PUT',
+                    url: '/logistica/distribucion/autorizarGastosFleteras/authorizeFolio',
+                    data: {guias : folioAutorizarGuias},
+                    datatype: 'json',
+                    beforeSend: function(){
+                        $('#cover-spin').show(1);
+                    },
+                    success: function(data){
+                        console.log(data);
+                        if(data.codeStatus == 200)
+                        {
+                            Swal.fire({
+                                title: '¡Folio #'+folio+' autorizado exitosamente!',
+                                icon: 'success'
+                            }).then(() => {
+                                $('#modal-folio-detail').modal('toggle');
+                                logisticaController.requestFoliosAuthorice();
+                            });
+                        }else{
+                            Swal.fire({
+                                title: '¡Hubo un error en la autorizacion del Folio #'+folio+'!',
+                                icon: 'error'
+                            });
+                        }
+                        
                         
                     },
                     error: function(){

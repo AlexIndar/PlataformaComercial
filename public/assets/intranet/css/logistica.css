@@ -118,3 +118,16 @@ body::-webkit-scrollbar-thumb {
 .info-box .info-box-number{
     margin-top: 0px!important;
 }
+.icon-green-guias {
+    color: green;
+}
+.icon-orange-guias {
+    color: orange;
+}
+.icon-red-guias {
+    color: red;
+}
+.page-item.active .page-link{
+    background-color: #002868!important;
+    border-color: #002868!important;
+}

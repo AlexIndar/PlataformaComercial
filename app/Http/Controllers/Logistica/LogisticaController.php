@@ -506,6 +506,13 @@ class LogisticaController extends Controller
                 $cancel = json_decode($cancelFolio);
                 return $cancel;
             }
+            public static function authorizeFolio($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $authorizeFolio = Http::withToken($token)->put(config('global.api_url').'/Logistica/AuthorizeFolio',$jsonData->guias,$token);
+                $authorize = json_decode($authorizeFolio->body());
+                return $authorize;
+            }
             #endregion
         #endregion
         
