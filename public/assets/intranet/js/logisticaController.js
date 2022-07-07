@@ -3683,6 +3683,7 @@ const logisticaController = {
         }
         let statusGastoFletera = '';
         banderaDiferenciaGastoFletera ? statusGastoFletera = 'POR AUTORIZAR' : statusGastoFletera= '';
+        statusGastoFletera == '' ? base64XMLGastoFletera = '' : '';
         let data = {
             'idVendor':$('#acreedor option:selected').val(),
             'vendor': $('#acreedor option:selected').text(),
