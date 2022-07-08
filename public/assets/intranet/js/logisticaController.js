@@ -2992,32 +2992,6 @@ const logisticaController = {
                 arrayTableGuiasGastosFletera = data;
                 $('#tableGastoFletera').DataTable().clear().draw();
                 $('#tableGastoFletera').DataTable().rows.add(data).draw();
-                // if (data != []) {
-                //     arrayTableGuiasGastosFletera = data;
-                //     contShowguia = 1;
-                //     $.each(data, function (key, value) {
-                //         let fecha = value['fecha'].split('T');
-                //         let idNumeroGuia = value['idNumeroGuia'];
-                //         let numeroGuia = value['numeroGuia'];
-                //         let importeTotal = 0;
-                //         value['costoTotal'] == 0 ? (importeTotal = 0) : (importeTotal = value['costoTotal']);
-                //         $('#dataTableGastoFletera').append(
-                //             '<tr class="text-center">'
-                //             + '<td><input type="checkbox" onchange="logisticaController.checkBoxSelectedListaGuias(this)" id="checkBox'+idNumeroGuia+'" data-idnumeroguia="' + idNumeroGuia + '" data-numeroguia="' + numeroGuia + '" data-importetotal="' + importeTotal + '"></td>'
-                //             + '<td>' + numeroGuia + '</td>'
-                //             + '<td>' + logisticaController.replaceNumberWithCommas(importeTotal.toFixed(2)) + '</td>'
-                //             + '<td>' + fecha[0] + '</td>'
-                //             + '</tr>'
-                //         );
-                //     });
-                // } else {
-                //     contShowguia = 0;
-                //     $('#dataTableGastoFletera').append(
-                //         '<tr class="text-center">'
-                //         + '<td colspan="4"><strong>No se encontrar resultados</strong></td>'
-                //         + '</tr>'
-                //     );
-                // }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -3153,6 +3127,7 @@ const logisticaController = {
             let numeroGuia = values['numeroGuia'];
             let paqueteria = values['paqueteria'];
             let pp = values['pp'];
+            let motivo = values['motivo'];
             let retencion = values['retencion'];
             let tarima = values['tarima'];
             let checkedBox = '';
@@ -3161,6 +3136,153 @@ const logisticaController = {
             } else {
                 checkedBox = '<input type="checkbox" onchange="logisticaController.checkBoxSelectedListaGuias2(this)" data-idnumeroguia="' + idNumeroGuia + '" false>';
             }
+            let optionMotivo = '';
+            switch(motivo)
+            {
+                case 'Ninguno': 
+                    optionMotivo = '<option value="Ninguno" selected>Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Cortesia':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia" selected>Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Peso Excedente':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente" selected>Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Metros Cúbicos Excedentes': 
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes" selected>Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Reexpediciones':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones" selected>Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Almacenajes':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes" selected>Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Maniobras':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras" selected>Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Error de Captura':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura" selected>Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Cobertura de Zona Extendida':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida" selected>Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Provisión Incorrecta':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta" selected>Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario">Otros, Con Comentario</option>';
+                break;
+                case 'Otros, con Comentario':
+                    optionMotivo =  '<option value="Ninguno">Niguno</option>'
+                    + '<option value="Cortesia">Cortesia</option>'
+                    + '<option value="Peso Excedente">Peso Excedente</option>'
+                    + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
+                    + '<option value="Reexpediciones">Reexpediciones</option>'
+                    + '<option value="Almacenajes">Almacenajes</option>'
+                    + '<option value="Maniobras">Maniobras</option>'
+                    + '<option value="Error de Captura">Error de Captura</option>'
+                    + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
+                    + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
+                    + '<option value="Otros, con Comentario" selected>Otros, Con Comentario</option>';
+                break;
+            }
             $('#dataTable2GastoFletera').append(
                 '<tr class="text-center" id="' + idNumeroGuia + '">'
                 + '<td>' + checkedBox + '</td>'
@@ -3168,17 +3290,7 @@ const logisticaController = {
                 + '<td id="campoImporte'+idNumeroGuia+'">'+logisticaController.replaceNumberWithCommas(importe)+'</td>'
                 + '<td>'
                 + '<select class="form-control select2" id="inputMotivo'+idNumeroGuia+'" data-idnumeroguia="'+idNumeroGuia+'" onchange="logisticaController.onChangeGuiasCostoFleteras(this)">'
-                + '<option value="Ninguno">Niguno</option>'
-                + '<option value="Cortesia">Cortesia</option>'
-                + '<option value="Peso Excedente">Peso Excedente</option>'
-                + '<option value="Metros Cúbicos Excedentes">Metros Cúbicos Excedentes</option>'
-                + '<option value="Reexpediciones">Reexpediciones</option>'
-                + '<option value="Almacenajes">Almacenajes</option>'
-                + '<option value="Maniobras">Maniobras</option>'
-                + '<option value="Error de Captura">Error de Captura</option>'
-                + '<option value="Cobertura de Zona Extendida">Cobertura de Zona Extendida</option>'
-                + '<option value="Provisión Incorrecta">Provisión Incorrecta</option>'
-                + '<option value="Otros, con Comentario">Otros, Con Comentario</option>'
+                + optionMotivo
                 + '</select>'
                 + '</td>'
                 + '<td><textarea name="comentario' + idNumeroGuia + '" id="inputComentario'+idNumeroGuia+'" data-idnumeroguia="'+idNumeroGuia+'" onkeyup="logisticaController.onChangeGuiasCostoFleteras(this)" rows="1" cols="50" style="width:270px">' + comentario + '</textarea></td>'
@@ -3651,90 +3763,156 @@ const logisticaController = {
         });
     },
     registerNet: () => {
-        let arrayFinalGuias = new Array();
-        arraytable2.forEach(element => {
-            let dataArray = {
-                'atados': element['atado'],
-                'bultos': element['bultos'],
-                'cajas': element['cajas'],
-                'comentario': element['comentario'],
-                'facturas': element['facturas'],
-                'idNumGuia': element['idNumeroGuia'],
-                'importeGuia': element['importe'],
-                'importeReal': element['importeReal'],
-                'motivo': element['motivo'],
-                'numGuia': element['numeroGuia'],
-                'retencion': element['retencion'],
-                'tarimas': element['tarima']
-            };
-            arrayFinalGuias.push(
-                dataArray
-            );
-        });
-        let retencion = false;
-        if($('#retencionIva').is('checked')){
-            retencion = true;
+        if($('#acreedor option:selected').text() == "Seleccione un acreedor")
+        {
+            Toast.fire({
+                animation: true,
+                icon: 'error',
+                title: 'Seleccione un acreedor'
+            });
+        }else if($('#uuid').val() == ''){
+            Toast.fire({
+                animation: true,
+                icon: 'error',
+                title: 'Cargue un archivo XML'
+            });
         }else{
-            retencion = false;
-        }
-        let statusGastoFletera = '';
-        banderaDiferenciaGastoFletera ? statusGastoFletera = 'POR AUTORIZAR' : statusGastoFletera= '';
-        statusGastoFletera == '' ? base64XMLGastoFletera = '' : '';
-        let data = {
-            'idVendor':$('#acreedor option:selected').val(),
-            'vendor': $('#acreedor option:selected').text(),
-            'numFactura':$('#numFactura').val(),
-            'importeFactura':$('#importeTotal').val(),
-            'checkRetencion': retencion,
-            'uuid':$('#uuid').val(),
-            'usuario':$('#usuario').val(),
-            'autorizado': null,
-            'autorizadoUsuario':null,
-            'status': statusGastoFletera,
-            'xml': base64XMLGastoFletera,
-            'gastosFleteraDModel':arrayFinalGuias
-        }
-        $.ajax({
-            url: '/logistica/distribucion/capturaGastoFletera/registerNet',
-            type: 'POST',
-            data: data,
-            datatype: 'json',
-            beforeSend: function(){
-                $('#cover-spin').show(1);
-            },
-            success: function (data) {
-                if(data.codeStatus == 201)
+            let banderaArrayEmpty = 1;
+            for(let a= 0; a < arraytable2.length; a++)
+            {
+                if(arraytable2[a] != undefined)
                 {
-                    Swal.fire({
-                        title: '¡Enviado Exitosamente!',
-                        text: data.descriptcionStatus,
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                      }).then((result) => {
-                        location.reload();
-                    });
-                }else if(data.codeStatus == 500)
-                {
-                    Swal.fire({
-                        title: 'INTERNAL SERVER ERROR',
-                        text: data.descriptcionStatus,
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok'
-                    });
+                    banderaArrayEmpty = 0;
                 }
-                
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);
-            },
-            complete: function(){
-                $('#cover-spin').hide();
             }
-        });
+            if(banderaArrayEmpty == 0)
+            {
+                let arrayFinalGuias = new Array();
+                arraytable2.forEach(element => {
+                    let dataArray = {
+                        'atados': element['atado'],
+                        'bultos': element['bultos'],
+                        'cajas': element['cajas'],
+                        'comentario': element['comentario'],
+                        'facturas': element['facturas'],
+                        'idNumGuia': element['idNumeroGuia'],
+                        'importeGuia': element['importe'],
+                        'importeReal': element['importeReal'],
+                        'motivo': element['motivo'],
+                        'numGuia': element['numeroGuia'],
+                        'retencion': element['retencion'],
+                        'tarimas': element['tarima']
+                    };
+                    arrayFinalGuias.push(
+                        dataArray
+                    );
+                });
+                let retencion = false;
+                if($('#retencionIva').is('checked')){
+                    retencion = true;
+                }else{
+                    retencion = false;
+                }
+                let statusGastoFletera = '';
+                banderaDiferenciaGastoFletera ? statusGastoFletera = 'POR AUTORIZAR' : statusGastoFletera= '';
+                let banderaMotivos = 0;
+                arrayFinalGuias.forEach(function(element) {
+                    if(element.motivo != 'Ninguno')
+                    {
+                        banderaMotivos = 1;
+                    }
+                });
+                let comentarioFolio = "";
+                if(banderaMotivos == 0)
+                {
+                    let importeGuiaF = $('#importeGuias').val();
+                    importeGuiaF = importeGuiaF.replace(/,/g, '');
+                    let importeSinIvaF = $('#importeSinIva').val();
+                    importeSinIvaF = importeSinIvaF.replace(/,/,'');
+                    if(parseFloat(importeGuiaF) > parseFloat(importeSinIvaF))
+                    {
+                        let diferenciaImportes = importeGuiaF - importeSinIvaF;
+                        if(diferenciaImportes > 0) {diferenciaImportes = '+'+diferenciaImportes.toFixed(2)};
+                        comentarioFolio = "Diferencia $"+diferenciaImportes;
+                        statusGastoFletera = 'POR AUTORIZAR'
+                    }
+                    if(parseFloat(importeGuiaF) < parseFloat(importeSinIvaF))
+                    {
+                        let diferenciaImportes = importeGuiaF - importeSinIvaF;
+                        comentarioFolio = "Diferencia $"+diferenciaImportes.toFixed(2);
+                        statusGastoFletera = 'POR AUTORIZAR'
+                    }
+                    if(parseFloat(importeGuiaF) == parseFloat(importeSinIvaF))
+                    {
+                        comentarioFolio = "Diferencia $0";
+                        statusGastoFletera = 'POR AUTORIZAR'
+                    }
+                }
+                statusGastoFletera != '' ? base64XMLGastoFletera = base64XMLGastoFletera : base64XMLGastoFletera='';
+                let data = {
+                    'idVendor':$('#acreedor option:selected').val(),
+                    'vendor': $('#acreedor option:selected').text(),
+                    'numFactura':$('#numFactura').val(),
+                    'importeFactura':$('#importeTotal').val(),
+                    'checkRetencion': retencion,
+                    'uuid':$('#uuid').val(),
+                    'usuario':$('#usuario').val(),
+                    'autorizado': null,
+                    'autorizadoUsuario':null,
+                    'status': statusGastoFletera,
+                    'xml': base64XMLGastoFletera,
+                    'comentario': comentarioFolio,
+                    'gastosFleteraDModel':arrayFinalGuias
+                }
+                $.ajax({
+                    url: '/logistica/distribucion/capturaGastoFletera/registerNet',
+                    type: 'POST',
+                    data: data,
+                    datatype: 'json',
+                    beforeSend: function(){
+                        $('#cover-spin').show(1);
+                    },
+                    success: function (data) {
+                        if(data.codeStatus == 201)
+                        {
+                            Swal.fire({
+                                title: '¡Enviado Exitosamente!',
+                                text: data.descriptcionStatus,
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                              }).then((result) => {
+                                location.reload();
+                            });
+                        }else if(data.codeStatus == 500)
+                        {
+                            Swal.fire({
+                                title: 'INTERNAL SERVER ERROR',
+                                text: data.descriptcionStatus,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Ok'
+                            });
+                        }
+                        
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus);
+                    },
+                    complete: function(){
+                        $('#cover-spin').hide();
+                    }
+                });   
+            }else{
+                Toast.fire({
+                    animation: true,
+                    icon: 'error',
+                    title: 'Seleccione una guia'
+                });
+            }
+        }
     },
     //#endregion
     //#region AUTORIZAR GASTOS FLETERAS
@@ -3777,7 +3955,7 @@ const logisticaController = {
                 { data: 'idGastoFletera', render: function(data, type, row, meta){
                     return '<div class="row text-center">'
                             +'<div class="col-12">'
-                            +'<button class="btn btn-plataform mt-2" style="color:white" data-id="'+data+'" data-folio="'+row.numDoc+'" data-xml="'+row.xml+'" data-acreedor="'+row.vendor+'" data-status="'+row.status+'" data-idgastofletera="'+row.idGastoFletera+'" onclick="logisticaController.openModalFolioDetail(this)">'
+                            +'<button class="btn btn-plataform mt-2" style="color:white" data-comentario="'+row.comentario+'" data-id="'+data+'" data-folio="'+row.numDoc+'" data-xml="'+row.xml+'" data-acreedor="'+row.vendor+'" data-status="'+row.status+'" data-idgastofletera="'+row.idGastoFletera+'" onclick="logisticaController.openModalFolioDetail(this)">'
                             +'<i class="fa-solid fa-list-check"></i>'
                             +'</button>'
                             +'</div>'
@@ -3893,6 +4071,7 @@ const logisticaController = {
         let acreedor = $(e).data('acreedor');
         let status = $(e).data('status'); 
         let xml = $(e).data('xml');
+        // let comentario = $(e).data('comentario');
         $('#idgastofletera').val($(e).data('idgastofletera'));
         $('#folio').val(folio);
         xml = atob(xml);
@@ -3916,6 +4095,8 @@ const logisticaController = {
                 $('#text-acreedor').empty();
                 $('#text-importesinIva').empty();
                 $('#text-importeIva').empty();
+                // $('#text-comentario').empty();
+                // $('#text-comentario').append(comentario);
                 $('#text-importesinIva').append('$'+importeSinIvaFolio)
                 $('#text-importeIva').append('$'+importeIVAFolio);
                 $('#text-acreedor').append(acreedor);
