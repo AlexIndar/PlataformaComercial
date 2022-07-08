@@ -23,6 +23,7 @@ class AutorizacionGastoFletera extends Mailable
         return $this->from('mailing@sndr.indar.com.mx', 'INDAR')
         ->replyTo('mailing@sndr.indar.com.mx', 'INDAR')
         ->subject('Autorización Folio')
+        ->cc('jose.perez@indar.com.mx','azuniga@indar.com.mx')
         ->view('mails.autorizarFolio');
     }
 }

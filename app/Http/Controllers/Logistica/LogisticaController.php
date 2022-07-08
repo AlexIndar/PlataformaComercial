@@ -503,7 +503,7 @@ class LogisticaController extends Controller
                 $detalles['status'] = $data->status;
                 $detalles['fecha'] = Carbon::now();
                 $emails = [];
-                array_push($emails,'manuel.cardenas@indar.com.mx');
+                array_push($emails,'alfonso.cadenas@indar.com.mx');
                 Mail::to($emails)->send(new AutorizacionGastoFletera($detalles));
             }
             public static function getFoliosAuthorize($token)
