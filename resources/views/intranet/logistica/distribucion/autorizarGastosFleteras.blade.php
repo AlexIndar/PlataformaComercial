@@ -160,6 +160,14 @@
                             </div>
                         </div>
                     </div>
+                    {{-- <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Comentario</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-2" id="text-comentario"></span>
+                            </div>
+                        </div>
+                    </div> --}}
                 </div>
                 <hr>
                 <div class="row">
