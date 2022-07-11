@@ -72,6 +72,7 @@
                             <th></th>
                             <th>Documento</th>
                             <th>No.</th>
+                            <th>% de Descuento</th>
                             <th>Fecha Facturación</th>
                             <th>Fecha Vencimiento</th>
                             <th>Imp. Factura con IVA</th>
@@ -86,14 +87,18 @@
                         <tbody>
                         @foreach ( $data as $value )
                         <tr>
-                            <td> <div class="btn" style="display:block; width:50px !important " id="btnDownloadFact{{ $value->tranid }}" onclick='downloadFact("{{$value->tranid}}")'>
+                            <td>
+                                <div class="spinner-border text-secondary" style="display:none" id="btnSpinnerDownload{{ $value->tranid }}"></div>
+                                <div class="btn" style="display:block; width:50px !important " id="btnDownloadFact{{ $value->tranid }}" onclick='downloadFact("{{$value->tranid}}")'>
                                 <img  src="{{asset('dist/img/pdf.png')}}" alt="Product 1" class="img-size-32 mr-2">
-                             </div></td>
+                             </div>
+                            </td>
                             <td>Factura</td>
                             <td>{{ $value->tranid }}</td>
+                            <td class="text-center">{{ number_format($value->porcentaje_Descuento_Aplicado, 2)}}%</td>
                             <td>{{ substr($value->fechaFactura, 0, 10) }}</td>
                             <td>{{ substr($value->dueDate, 0, 10)  }}</td>
-                            <td>{{ number_format($value->importe_factura_snDescontar, 2)}}</td>
+                            <td>{{ number_format($value->saldo, 2)}}</td>
                             {{-- <td class="text-center">{{ number_format($value->importe_factura, 2)}}</td>
                             <td class="text-center">{{ number_format($value->descuento_aplicado, 2)}}</td>
                             <td class="text-center">{{ number_format($value->porcentaje_Descuento_Aplicado, 2)}}%</td>
@@ -144,7 +149,12 @@
                         @foreach ( $notas as $nota )
                             @if($nota->status == 'Open')
                             <tr>
-                                <td> <img  src="{{asset('dist/img/nota.png')}}" alt="Nota" class="img-size-32 mr-2"></td>
+                                <td>
+                                    <div class="spinner-border text-secondary" style="display:none" id="btnSpinnerDownloadNC{{ $nota->transaction_id }}"></div>
+                                    <div class="btn" style="display:block; width:50px !important " id="btnDownloadNC{{ $nota->transaction_id }}" onclick='downloadNC("{{$nota->transaction_id}}")'>
+                                    <img  src="{{asset('dist/img/nota.png')}}" alt="Product 1" class="img-size-32 mr-2">
+                                 </div>
+                                </td>
                                 <td>Nota de Crédito</td>
                                   <td> <a href="#" class="text-muted">{{ $nota->transaction_id }}</a></td>
                                   <td class="text-center">{{ number_format($nota->amount, 2) }}</td>
@@ -199,11 +209,11 @@
                                   <th style="width:50%">Subtotal:</th>
                                   <td id="subtotal"></td>
                                </tr>
-                               <tr>
-                                  <th>Descuentos:  </th>
+                               <tr hidden>
+                                  <th>Descuentos: </th>
                                   <td id="descuento"></td>
                                </tr>
-                               <tr>
+                               <tr hidden>
                                   <th>Total:</th>
                                   <td id="total"></td>
                                </tr>
@@ -228,7 +238,7 @@
     </div>
 <!-- Modal Detalle Factura-->
 <div class="modal fade" id="detalleFactModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-scrollable">
+    <div class="modal-dialog modal-md modal-dialog-scrollable">
        <div class="modal-content">
           <div class="modal-header" style="background-color:#002868; color:whitesmoke">
             <h4 id="headerNC" class="text-center title ml-auto">Detalle de Factura: <u><p id="numeroFact" style="color:#d8ad02"></p></u></h4>
@@ -238,17 +248,24 @@
              <i class="fas fa-times"></i>
              </button>
           </div>
-          <div class="modal-body text-indarBlue" id="modal2">
-             <div class="row">
-                <div class="col-md-12">
-                    <h6 style="font-weight: bold">Monto Abonado : $ <span id="montoAbonado" style="font-size: 15px" class="badge badge-success"></span></h6>
-                    <h6 style="font-weight: bold">Fecha de Abono :<span id="fechaAbonado" style="font-size: 15px" class="badge badge-info"></span></h6>
-                    <h6 style="font-weight: bold">Folio de Transacción :<span id="folioAbonado" style="font-size: 15px" class="badge badge-info"></span></h6>
-                    <h6 style="font-weight: bold">Tipo de Transacción : <span id="tipoAbonado" style="font-size: 15px" class="badge badge-info"></span></h6>
-                </div>
-             </div>
-          </div>
-
+          <div class="card-body table-responsive p-0">
+            <table id="detalleFactTable" class="table table-striped table-bordered table-hover "
+                style="width:100% ; font-size:75% ;font-weight: bold ">
+                <thead style="background-color:#002868; color:white">
+                    <tr>
+                        <th>Tipo de Transacción</th>
+                        <th>Monto Abonado</th>
+                        <th>Fecha de Abono</th>
+                        <th>Folio de Abono</th>
+                    </tr>
+                </thead>
+                <tbody id="llenadetalleFactModal">
+                </tbody>
+            </table>
+           </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+         </div>
        </div>
     </div>
  </div>
@@ -277,6 +294,43 @@
 
           <div class="modal-footer">
              <button id="agregarNc" type="submit" class="btn btn-success float-right" data-dismiss="modal">Aplicar N.C</button>
+             <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+          </div>
+       </div>
+    </div>
+ </div>
+
+ </section>
+</div>
+<!-- Modal de Intención de Pago-->
+<div class="modal fade" id="intencionPagoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header bg-indarBlue">
+             <h4 id="headerNC" class="text-center title ml-auto">Intención de Pago</h4>
+             <input type="text" id="typeFormInf" value="" hidden>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <i class="fas fa-times"></i>
+             </button>
+          </div>
+          <div class="modal-body text-indarBlue" id="modal2">
+             <div class="row">
+                <div class="col-md-12">
+                    <h6 class="text-center title ml-auto" style="color: rgba(214, 157, 0, 0.815)">Esta Intención de Pago solo será valida hasta el  <?php echo date("d/m/Y") . "<br>"; ?> </h6>
+                   {{--  <label for="">Selecciona la Factura a Asignar la N.C</label> --}}
+                   <div class="col-md-6">
+                   <label for="">Referencia :</label>
+                   </div>
+                   <div class="col-md-6">
+                   <h6 class="title ml-auto" style="color: rgba(0, 68, 214, 0.988)">{{ $general->referenciaBancaria }}</h6>
+                </div>
+                </div>
+             </div>
+             <br>
+             <h6 style="font-weight: bold">$ <span id="montoNC" style="font-size: 15px" class="badge badge-success"></span></h6>
+          </div>
+          <div class="modal-footer">
+             <button id="agregarNc" type="submit" class="btn btn-success float-right" data-dismiss="modal">Imprimir</button>
              <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
           </div>
        </div>
@@ -347,6 +401,20 @@ $('#btnMostrarNotas').click(function () {
     }
     document.getElementById("notasDiv").style.display = "block";
     document.getElementById("facturasDiv").style.display = "none";
+});
+
+$('#btnPagar').click(function () {
+    $('#labelPago').addClass('active');
+    $('#labelNC').addClass('active');
+    $('#intencionPagoModal').modal('show');
+    //document.getElementById("notasDiv").style.display = "block";
+    //document.getElementById("facturasDiv").style.display = "none";
+});
+
+$("#intencionPagoModal").on("hidden.bs.modal", function () {
+    $('#labelNC').removeClass('active');
+    $('#labelPago').removeClass('active');
+
 });
 
 var tableNotas = $('#tableNotas').DataTable({
@@ -470,7 +538,7 @@ if(montosFac.includes(monto)){
         icon: 'info',
         title: 'Debe de Existir una Factura con Saldo Mayor a la N.C Seleccionada',
         showConfirmButton: false,
-        timer: 50000
+        timer: 5000
         })
 
     }
@@ -548,15 +616,31 @@ function detalleFactura(folio) {
         'enctype': 'multipart/form-data',
         'timeout': 4 * 60 * 60 * 1000,
         success: function(data){
-         console.log(data);
+         //console.log(data);
+         var detalleFactModal ='';
          document.getElementById("btnSpinner"+folio).style.display = "none";
          document.getElementById("btnDetalleFact"+folio).style.display = "block";
-         var fechaAbono = data[0].fecha.slice(0, 10);
+         var tipoAbonado;
+         var fechaAbono;
+         for(var i=0; i< data.length; i++){
+            if (data[i].transaction_type == 'Payment'){
+                tipoAbonado = 'Pago';
+            }
+            if(data[i].transaction_type == 'Credit Memo'){
+                tipoAbonado='Nota de Crédito';
+             }
+            fechaAbono = data[i].fecha.slice(0, 10);
+            detalleFactModal+= '<tr>' +
+                '<td>'+ tipoAbonado +'</td>' +
+                '<td style="color:green"> '+ data[i].amount.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                '<td>' + fechaAbono +'</td>' +
+                '<td>' + data[i].number +'</td>' +
+                '</tr>';
+         }
+
+
          $('#numeroFact').text(folio);
-         $('#montoAbonado').text(data[0].amount);
-         $('#fechaAbonado').text(fechaAbono);
-         $('#folioAbonado').text(data[0].number);
-         $('#tipoAbonado').text(data[0].transaction_type);
+         $('#llenadetalleFactModal').html(detalleFactModal);
          $('#detalleFactModal').modal('show');
          }
         ,
@@ -565,6 +649,85 @@ function detalleFactura(folio) {
             alert('Error, Tiempo de espera agotado');
         }
     });
+}
+
+function downloadFact (folio){
+document.getElementById('btnSpinnerDownload'+folio).style.display = "block";
+document.getElementById("btnDownloadFact"+folio).style.display = "none";
+var type = 'CustInvc';
+var formato = 'PDF';
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/clientes/getDocumentCFDI",
+        'type': 'GET',
+        'data': {folio: folio, type: type, formato: formato},
+        'enctype': 'multipart/form-data',
+        'timeout': 4 * 60 * 60 * 1000,
+        success: function(data){
+            console.log(data);
+            document.getElementById('btnSpinnerDownload'+folio).style.display = "none";
+            document.getElementById("btnDownloadFact"+folio).style.display = "block";
+            if(data == 'NOK'){
+                Swal.fire({
+                position: 'top',
+                icon: 'info',
+                title: 'Vista previa del Archivo No disponible',
+                showConfirmButton: false,
+                timer: 50000
+                });
+            }
+            window.open(data, '_blank');
+         }
+        ,
+        error: function() {
+            alert('Error, Intente nuevamente');
+        }
+
+    });
+
+}
+function downloadNC (folio){
+
+document.getElementById('btnSpinnerDownloadNC'+folio).style.display = "block";
+document.getElementById("btnDownloadNC"+folio).style.display = "none";
+var type = 'CustCred';
+var formato = 'PDF';
+    $.ajax({
+        'headers': {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'url': "/clientes/getDocumentCFDI",
+        'type': 'GET',
+        'data': {folio: folio, type: type, formato: formato},
+        'enctype': 'multipart/form-data',
+        'timeout': 4 * 60 * 60 * 1000,
+        success: function(data){
+            document.getElementById('btnSpinnerDownloadNC'+folio).style.display = "none";
+            document.getElementById("btnDownloadNC"+folio).style.display = "block";
+            if(data=='NOK'){
+                console.log(data);
+                Swal.fire({
+                position: 'top',
+                icon: 'info',
+                title: 'Vista Previa No disponible',
+                showConfirmButton: false,
+                timer: 5000
+                })
+            }else{
+                window.open(data, '_blank');
+            }
+
+
+         }
+        ,
+        error: function() {
+            alert('Error, Intente nuevamente');
+        }
+
+    });
+
 }
 
 </script>

@@ -86,7 +86,7 @@
                         Total : <span style="font-size: 15px" class="badge badge-primary">$ {{  number_format($general->saldo,2) }}</span><br>
                         @endif --}}
                         Total Facturado : <span style="font-size: 15px" class="badge badge-info">$ {{ number_format($general->saldo,2) }}</span><br>
-                        Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->de0a30,2) + number_format($general->de31a60,2) + number_format($general->de61a90,2) + number_format($general->mayor90,2) }}</span><br>
+                        {{-- Total Vencido : <span style="font-size: 15px" class="badge badge-danger">$ {{ number_format($general->de0a30,2) + number_format($general->de31a60,2) + number_format($general->de61a90,2) + number_format($general->mayor90,2) }}</span><br> --}}
                         Referencia Bancaria: {{ $general->referenciaBancaria }} <br>
 
                      </div>
@@ -333,13 +333,22 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-
+var exception = {!! json_encode($exception) !!};
+if(exception ==1){
+    Swal.fire({
+                position: 'top',
+                icon: 'warning',
+                title: 'No Hay Facturas Pendientes de Pago',
+                showConfirmButton: false,
+                timer: 5000
+                })
+}
 $('#edoCuenta').daterangepicker();
 var cliente =  document.getElementById("cliente").value;
 $("#btnPagar").click(function(){
    var fechaini =  $('#edoCuenta').data('daterangepicker').startDate.format('MM-DD-YYYY');
    var fechafin =  $('#edoCuenta').data('daterangepicker').endDate.format('MM-DD-YYYY');
-window.location.href = "pagoEnLinea/"+cliente+"/"+fechaini+"/"+fechafin;
+window.location.href = "/clientes/pagoEnLinea/"+cliente+"/"+fechaini+"/"+fechafin;
 });
 
 

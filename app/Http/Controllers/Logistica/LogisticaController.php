@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Logistica;
 
 use Config;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AutorizacionGastoFletera;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Customer\TokenController;
 
@@ -265,6 +268,24 @@ class LogisticaController extends Controller
                 $create = json_decode($createImportsOfFreighter->body());
                 return $create;
             }
+            public static function existNumGuia($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $existNumGuia = Http::withToken($token)->get(config('global.api_url').'/Logistica/ExistNumGuia?numGuia='.$dataJson->numGuia);
+                $exist = json_decode($existNumGuia->body());
+                return $exist;
+            }
+            public static function updateGuiaNumber ($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $updateGuiaNumber = Http::withToken($token)->put(config('global.api_url').'/Logistica/UpdateGuiaNumber',
+                [
+                    "facturas" => $dataJson->facturas,
+                    "idNumeroGuia" => $dataJson->idNumeroGuia
+                ]);
+                $update = json_decode($updateGuiaNumber);
+                return $update;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){
@@ -476,13 +497,38 @@ class LogisticaController extends Controller
             {
                 
                 $dataJson = json_decode($data);
-                // dd($dataJson);
+                
                 
                 $capturaGastoFletera = Http::withToken($token)->post(config('global.api_url').'/Logistica/RegistroNet',[
                     $dataJson
                 ]);
                 $gastoFletera= json_decode($capturaGastoFletera->body());
+                $folio = explode('#',$gastoFletera->descriptcionStatus);
+                if($dataJson->status == "POR AUTORIZAR")
+                {
+                    LogisticaController::sendMailAuthorizeFolio($dataJson,$folio[1]);
+                }
                 return $gastoFletera;
+            }
+            public static function sendMailAuthorizeFolio($data,$folio)
+            {
+                
+                $detalles['folio'] = $folio;
+                $detalles['acreedor'] = $data->vendor;
+                $detalles['numFactura'] = $data->numFactura;
+                $detalles['importeFactura'] = $data->importeFactura;
+                $detalles['usuario'] = $data->usuario;
+                $detalles['status'] = $data->status;
+                $detalles['fecha'] = Carbon::now();
+                $emails = [];
+                array_push($emails,'alfonso.cadenas@indar.com.mx');
+                Mail::to($emails)->send(new AutorizacionGastoFletera($detalles));
+            }
+            public static function getFoliosAuthorize($token)
+            {
+                $foliosAutorizados = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetFoliosAuthorize');
+                $folios = json_decode($foliosAutorizados->body());
+                return $folios;
             }
             #endregion
             #region AUTORIZAR GASTOS FLETERAS
@@ -491,6 +537,27 @@ class LogisticaController extends Controller
                 $getFolios = Http::withToken($token)->get(config('global.api_url').'/Logistica/AuthorizeFreightExpensesTable');
                 $folios = json_decode($getFolios->body());
                 return $folios;
+            }
+            public static function getGuiasByFolio($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $getGuias = Http::withToken($token)->get(config('global.api_url').'/Logistica/GetGuiasByFolio?folio='.$jsonData->idGastoFletera);
+                $guias = json_decode($getGuias->body());
+                return $guias;
+            }
+            public static function cancelFolio($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $cancelFolio = Http::withToken($token)->delete(config('global.api_url').'/Logistica/CancelFolio?idGastoFletera='.$jsonData->idGastoFletera);
+                $cancel = json_decode($cancelFolio);
+                return $cancel;
+            }
+            public static function authorizeFolio($token,$data)
+            {
+                $jsonData = json_decode($data);
+                $authorizeFolio = Http::withToken($token)->put(config('global.api_url').'/Logistica/AuthorizeFolio',$jsonData->guias,$token);
+                $authorize = json_decode($authorizeFolio->body());
+                return $authorize;
             }
             #endregion
         #endregion

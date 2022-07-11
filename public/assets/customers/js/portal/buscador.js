@@ -14,6 +14,8 @@ $(document).ready(function () {
 
     // document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
 
+    
+
     $("#buscador").keyup(function(e) {
         lastType = new Date();
         var cadena = document.getElementById('buscador').value;
@@ -174,6 +176,7 @@ function addSugerenciaMarca(marca){
     var container = document.getElementById('listSugerenciasMarca');
     var lineSugerencia = document.createElement('div');
     lineSugerencia.setAttribute('class', 'lineSugerencia sugerenciaMarca');
+    lineSugerencia.setAttribute('onclick', "buscarFiltro(\""+marca.split(' ')[0]+"\")");
     
     var h5Sugerencia = document.createElement('h5');
     h5Sugerencia.setAttribute('class', 'h5Sugerencia');
@@ -337,3 +340,4 @@ function buscarFiltro(filtro){
     data != '' ? filtro = filtro + ' ~ '+ data : filtro = filtro;
     window.location = "/portal/busqueda/" + filtro;
 }
+
