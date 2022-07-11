@@ -1825,6 +1825,16 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $customerList;
                 });
 
+                Route::post('/Soporte/RepairReferences', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $folio = $request->folio;
+                    $gerencia = HeatMapController::repairReferences($token,$folio);
+                    return $gerencia;
+                });
+
                 /* ********************************************* END INDARNET ************************************************ */
 
                 //CXC

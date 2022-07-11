@@ -39,7 +39,7 @@
                     <div class="card">
                         <div class="card-header bg-indarYellow">
                             <h3 class="card-title text-indarBlue">Solicitudes Pendientes</h3>
-                            <!-- <button onclick="getDocumentoP()">P</button> -->
+                            <button onclick="getDocumentoP()">P</button>
                             <!-- <button onclick="envioMail2()">B</button> -->
                             <!-- <button onclick="simularReferencia()">C</button> -->
                         </div>
