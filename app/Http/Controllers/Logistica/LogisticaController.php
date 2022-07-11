@@ -268,6 +268,24 @@ class LogisticaController extends Controller
                 $create = json_decode($createImportsOfFreighter->body());
                 return $create;
             }
+            public static function existNumGuia($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $existNumGuia = Http::withToken($token)->get(config('global.api_url').'/Logistica/ExistNumGuia?numGuia='.$dataJson->numGuia);
+                $exist = json_decode($existNumGuia->body());
+                return $exist;
+            }
+            public static function updateGuiaNumber ($token,$data)
+            {
+                $dataJson = json_decode($data);
+                $updateGuiaNumber = Http::withToken($token)->put(config('global.api_url').'/Logistica/UpdateGuiaNumber',
+                [
+                    "facturas" => $dataJson->facturas,
+                    "idNumeroGuia" => $dataJson->idNumeroGuia
+                ]);
+                $update = json_decode($updateGuiaNumber);
+                return $update;
+            }
             #endregion
             #region VALIDAR SAD
             public static function consultValidateSAD($token){

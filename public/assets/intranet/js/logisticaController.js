@@ -1506,14 +1506,15 @@ const logisticaController = {
                     } else {
                         Toast.fire({
                             icon: 'error',
-                            title: '¡Hubo un error al guard el numero de guia!'
+                            title: '¡Hubo un error al guardar el numero de guia!'
                         });
                     }
+                    $('#fletera').prop('disabled',true);
                 },
                 error: function () {
                     Toast.fire({
                         icon: 'error',
-                        title: '¡Hubo un error al guard el numero de guia!'
+                        title: '¡Hubo un error al guardar el numero de guia!'
                     });
                 },
                 complete: function () {
@@ -1522,6 +1523,49 @@ const logisticaController = {
             })
         }
 
+    },
+    updateNumGuia: () => {
+        let facturasSelected = arrayFacturasSelected;
+        let idNumeroGuia = $('#idNumeroGuiaUpdate').val(); 
+        let data = {
+            idNumeroGuia: idNumeroGuia,
+            facturas: facturasSelected
+        };
+        $.ajax({
+            type: 'PUT',
+            url: '/logistica/distribucion/numeroGuia/updateGuiaNumber',
+            data: data,
+            datatype: 'json',
+            beforeSend: function () {
+                $('#cover-spin').show(0);
+            },
+            success: function(data){
+                if (data.codeStatus == 200) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: '¡Se actualizo el numero de guia exitosamente!'
+                    });
+                    arrayRowTableType = new Array();
+                    arrayFacturasSelected = new Array();
+                    $('#table-content-guia-type').empty();
+                    $('#table-content-facturas-selected').empty();
+                    $('#importeTotal').val('0.00');
+                    $('#NumGuia').val('');
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: '¡Hubo un error al actualizar el numero de guia!'
+                    });
+                }
+                $('#fletera').prop('disabled',true);
+            },
+            error: function(){
+
+            },
+            complete: function(){
+                $('#cover-spin').hide();
+            }
+        })
     },
     addTypeRowTable: () => {
         contRowTypeTable++;
@@ -2570,6 +2614,9 @@ const logisticaController = {
             type: 'GET',
             data: data,
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function(data){
                 $('#table-importe').DataTable().clear().draw();
                 $('#table-importe').DataTable().rows.add(data).draw();
@@ -2578,7 +2625,7 @@ const logisticaController = {
 
             },
             complete: function(){
-
+                $('#cover-spin').hide();
             }
         });
     },
@@ -2586,6 +2633,34 @@ const logisticaController = {
         $('#modal-editar-importes').modal('toggle');
         $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
         $('#modal-importes-fleteras').modal('show');
+    },
+    searchExistNumGuia: () => {
+        let numGuia = $('#NumGuia').val();
+        $.ajax({
+            type: 'GET',
+            url: '/logistica/distribucion/numeroGuia/existNumGuia',
+            data: {numGuia: numGuia},
+            datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
+            success: function(data){
+                if(data != ""){
+                    $('#crear').prop('hidden',true);
+                    $('#actualizar').prop('hidden',false);
+                    $('#idNumeroGuiaUpdate').val(data.idNumeroGuia);
+                }else{
+                    $('#crear').prop('hidden',false);
+                    $('#actualizar').prop('hidden',true);
+                }
+            },
+            error: function(){
+
+            },
+            complete:  function(){
+                $('#cover-spin').hide();
+            }
+        })
     },
     //#endregion
     //#region VALIDAR SAD
@@ -2694,7 +2769,7 @@ const logisticaController = {
                 });
             },
             complete: function () {
-                console.log(textStatus);
+                
             }
         })
     },
@@ -2877,16 +2952,6 @@ const logisticaController = {
             }
         }
     });
-    // $('#dataTable2GastoFletera').append(
-    //     '<tr class="text-center" id="' + idNumeroGuia + '">'
-    //     + '<td>' + checkedBox + '</td>'
-    //     + '<td>' + numeroGuia + '</td>'
-    //     + '<td><input type="text" value="' + logisticaController.replaceNumberWithCommas(importe) + '"/></td>'
-    //     + '<td><textarea name="comentario' + idNumeroGuia + '" id="comentario' + idNumeroGuia + '" rows="1" cols="50">' + comentario + '</textarea></td>'
-    //     + '<td><input type="text" value="' + logisticaController.replaceNumberWithCommas(importeSinIva.toFixed(2)) + '"/></td>'
-    //     + '<td>' + retencion + '</td>'
-    //     + '<td>' + pp + '</td>'
-    //     + '</tr>');
     },
     ImportTemplateGastoFletera: () => {
         var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;  
@@ -4310,7 +4375,6 @@ const logisticaController = {
                         $('#cover-spin').show(1);
                     },
                     success: function(data){
-                        console.log(data);
                         if(data.codeStatus == 200)
                         {
                             Swal.fire({
@@ -4349,7 +4413,6 @@ const logisticaController = {
                 $('#cover-spin').show(1);
             },
             success: function(data){
-                console.log(data);
                 arrayFolioAutorizado = data;
                 $('#tableFoliosAutorizados').DataTable().clear().draw();
                 $('#tableFoliosAutorizados').DataTable().rows.add(data).draw();
@@ -4378,7 +4441,6 @@ const logisticaController = {
             'QUIEN AUTORIZO',
         ]);
         $.each(arrayFolioAutorizado, function (key, value) {
-            console.log(value);
             let fecha = value.fecha;
             let data = [
                 value.numDoc,
