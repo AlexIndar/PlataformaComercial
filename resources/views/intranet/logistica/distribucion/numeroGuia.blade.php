@@ -87,20 +87,25 @@
                                             </div>
                                             <div class="col-2">
                                                 <label for="">Num. de Guía:</label>
-                                                <input class="form-control" type="text" id="NumGuia">
+                                                <input class="form-control" type="text" id="NumGuia" onchange="logisticaController.searchExistNumGuia()">
                                             </div>
                                             <div class="col-2">
                                                 <label for="">Importe Total:</label>
                                                 <input class="form-control" type="text" id="importeTotal" value="0.00" disabled>
                                             </div>
-                                            <div class="col-1 mt-2">
+                                            <div class="col-1 mt-2" id="crear">
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-plataform btn" onclick="logisticaController.addNumGuia()" data-toggle="tooltip" data-placement="top" title="Guardar"><i class="fa-solid fa-floppy-disk"></i></button>
+                                            </div>
+                                            <div class="col-1 mt-2" id="actualizar" hidden>
+                                                <label for=""></label>
+                                                <button type="button" class="btn btn-block btn-plataform btn" onclick="logisticaController.updateNumGuia()" data-toggle="tooltip" data-placement="top" title="Actualizar"><i class="fa-solid fa-floppy-disk"></i></button>
                                             </div>
                                             <div class="col-1 mt-2">
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-plataform btn" onclick="location.reload();" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fa-solid fa-arrows-rotate"></i></button>
                                             </div>
+                                            <input type="text" id="idNumeroGuiaUpdate" hidden>
                                             {{-- <div style="border: 1px solid black;width: 0%;max-width: 0%;padding: 0px;">
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-secondary btn" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fa-solid fa-repeat"></i></button>

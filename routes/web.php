@@ -2268,587 +2268,636 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $data;
                 });
 
+                // ********************* LOGISTICA ******************** \\
+                // ********************* MESA CONTROL ******************* \\
+                Route::get('/logistica/mesaControl/planeador',function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
 
-});
-// ********************* LOGISTICA ******************** \\
-// ********************* MESA CONTROL ******************* \\
-Route::get('/logistica/mesaControl/planeador',function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
 
-    $level = "C";
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.mesaControl.planeador',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
+                })->name('logistica.mesaControl.planeador');
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.mesaControl.planeador',compact('token','rama1','rama2','rama3','level','permissions','username','userRol'));
-})->name('logistica.mesaControl.planeador');
+                Route::get('/logistica/mesaControl/planeador/getPlaneador', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $planeador = LogisticaController::getPlaneador($token);
+                    return $planeador;
+                });
 
-Route::get('/logistica/mesaControl/planeador/getPlaneador', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $planeador = LogisticaController::getPlaneador($token);
-    return $planeador;
-});
+                Route::get('/logistica/mesaControl/planeador/getArrayPlaneador',function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $arrayPlaneador = LogisticaController::getArrayPlaneador($token);
+                    return $arrayPlaneador;
+                });
+                Route::get('/logistica/mesaControl/planeador/getCajasPendientes', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $cajasPendientes = LogisticaController::getCajasPendientes($token);
+                    return $cajasPendientes;
+                });
+                // *************************** DISTRIBUCION ***************************** \\
+                Route::get('/logistica/distribucion',function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
 
-Route::get('/logistica/mesaControl/planeador/getArrayPlaneador',function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $arrayPlaneador = LogisticaController::getArrayPlaneador($token);
-    return $arrayPlaneador;
-});
-Route::get('/logistica/mesaControl/planeador/getCajasPendientes', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $cajasPendientes = LogisticaController::getCajasPendientes($token);
-    return $cajasPendientes;
-});
-// *************************** DISTRIBUCION ***************************** \\
-Route::get('/logistica/distribucion',function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
 
-    $level = "C";
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.distribucion.index',compact('token','permissions','username','userRol'));
+                })->name('logistica.distribucion');
+                // ************************* NUMERO GUIA ************************************** \\
+                Route::get('/logistica/distribucion/numeroGuia', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.index',compact('token','permissions','username','userRol'));
-})->name('logistica.distribucion');
-// ************************* NUMERO GUIA ************************************** \\
-Route::get('/logistica/distribucion/numeroGuia', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $freighters = LogisticaController::getFreighters($token);
+                    $drivers = LogisticaController::getDrivers($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $states = LogisticaController::getStates($token);
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers','states'));
+                })->name('logistica.distribucion.numeroGuia');
+                Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::existShipment($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/numeroGuia/captureInvoice', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::captureInvoice($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/numeroGuia/existAnyBillsInAnyShipment', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::existAnyBillsInAnyShipment($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/numeroGuia/saveGuiaNumber', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::saveGuiaNumber($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/numeroGuia/costFletera', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::costFletera($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::cuentaBultosWMSManager($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getCitiesByState($token, json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/numeroGuia/getFreightersImports', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getFreightersImports($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logisitica/distribucion/numeroGuia/getImportsByFreighter', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getImportsByFreighter($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
+                    return $response;
+                });
+                Route::delete('/logistica/distribucion/numeroGuia/deleteImportsOfFregihter', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::deleteImportsOfFregihter($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/numeroGuia/createImportsOfFreighter', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::createImportsOfFreighter($token, json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/numeroGuia/existNumGuia', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::existNumGuia($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::put('/logistica/distribucion/numeroGuia/updateGuiaNumber', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::updateGuiaNumber($token, json_encode($request->all()));
+                    return $response;
+                });
+                // ************************* VALIDAR SAD *************************************** \\
+                Route::get('/logistica/distribucion/validarSad', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
 
-    $level = "C";
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
-    $freighters = LogisticaController::getFreighters($token);
-    $drivers = LogisticaController::getDrivers($token);
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
-    $states = LogisticaController::getStates($token);
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.numeroGuia', compact('token','permissions','username','userRol','freighters','drivers','states'));
-})->name('logistica.distribucion.numeroGuia');
-Route::get('/logistica/distribucion/numeroGuia/existShipment', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::existShipment($token,json_encode($request->all()));
-    return $response;
-});
-Route::post('/logistica/distribucion/numeroGuia/captureInvoice', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::captureInvoice($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/numeroGuia/existAnyBillsInAnyShipment', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::existAnyBillsInAnyShipment($token,json_encode($request->all()));
-    return $response;
-});
-Route::post('/logistica/distribucion/numeroGuia/saveGuiaNumber', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::saveGuiaNumber($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/numeroGuia/costFletera', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::costFletera($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/numeroGuia/cuentaBultosWMSManager', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::cuentaBultosWMSManager($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/numeroGuia/getCitiesByState', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getCitiesByState($token, json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/numeroGuia/getFreightersImports', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getFreightersImports($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logisitica/distribucion/numeroGuia/getImportsByFreighter', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getImportsByFreighter($token,json_encode($request->all()));
-    return $response;
-});
-Route::put('/logistica/distribucion/numeroGuia/updateImportsByFreighter', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::updateImportsByFreighter($token,json_encode($request->all()));
-    return $response;
-});
-Route::post('/logistica/distribucion/numeroGuia/bulkLoadImports', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::bulkLoadImports($token, json_encode($request->all()));
-    return $response;
-});
-Route::delete('/logistica/distribucion/numeroGuia/deleteImportsOfFregihter', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::deleteImportsOfFregihter($token,json_encode($request->all()));
-    return $response;
-});
-Route::post('/logistica/distribucion/numeroGuia/createImportsOfFreighter', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::createImportsOfFreighter($token, json_encode($request->all()));
-    return $response;
-});
-// ************************* VALIDAR SAD *************************************** \\
-Route::get('/logistica/distribucion/validarSad', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $freighters = LogisticaController::getFreighters($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $level = "C";
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
-    $freighters = LogisticaController::getFreighters($token);
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.distribucion.validarSad', compact('token','permissions','username','userRol','freighters'));
+                })->name('logistica.distribucion.validarSad');
+                Route::get('/logistica/distribucion/validarSad/consultValidateSAD', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::consultValidateSAD($token);
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/validarSad/authoriceSad', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::authoriceSad($token,json_encode($request->all()));
+                    return $response;
+                });
+                // ************************* REPORTE SAD *************************************** \\
+                Route::get('/logistica/distribucion/reporteSad', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.validarSad', compact('token','permissions','username','userRol','freighters'));
-})->name('logistica.distribucion.validarSad');
-Route::get('/logistica/distribucion/validarSad/consultValidateSAD', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::consultValidateSAD($token);
-    return $response;
-});
-Route::post('/logistica/distribucion/validarSad/authoriceSad', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::authoriceSad($token,json_encode($request->all()));
-    return $response;
-});
-// ************************* REPORTE SAD *************************************** \\
-Route::get('/logistica/distribucion/reporteSad', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $freighters = LogisticaController::getFreighters($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $level = "C";
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
-    $freighters = LogisticaController::getFreighters($token);
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.distribucion.reporteSad', compact('token','permissions','username','userRol','freighters'));
+                })->name('logistica.distribucion.reporteSad');
+                Route::get('/logistica/distribucion/getReportSad', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getReportSad($token);
+                    return $response;
+                });
+                // ************************* REPORTE EMBARQUE ********************************** \\
+                Route::get('/logistica/distribucion/reporteEmbarque', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.reporteSad', compact('token','permissions','username','userRol','freighters'));
-})->name('logistica.distribucion.reporteSad');
-Route::get('/logistica/distribucion/getReportSad', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getReportSad($token);
-    return $response;
-});
-// ************************* REPORTE EMBARQUE ********************************** \\
-Route::get('/logistica/distribucion/reporteEmbarque', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $rama1 = RamasController::getRama1();
-    $rama2 = RamasController::getRama2();
-    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $freighters = LogisticaController::getFreighters($token);
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $level = "C";
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
-    $freighters = LogisticaController::getFreighters($token);
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.distribucion.reporteEmbarque', compact('token','permissions','username','userRol','freighters'));
+                })->name('logistica.distribucion.reporteEmbarque');
+                Route::get('/logistica/distribucion/reportShipment', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::reportShipment($token);
+                    return $response;
+                });
+                // ************************* CAPTURA GASTO FLETERA ***************************** \\
+                Route::get('/logistica/distribucion/capturaGastoFletera',function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.distribucion.reporteEmbarque', compact('token','permissions','username','userRol','freighters'));
-})->name('logistica.distribucion.reporteEmbarque');
-Route::get('/logistica/distribucion/reportShipment', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::reportShipment($token);
-    return $response;
-});
-// ************************* CAPTURA GASTO FLETERA ***************************** \\
-Route::get('/logistica/distribucion/capturaGastoFletera',function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
 
-    if(isset($_COOKIE['_lv'])){
-        $level = $_COOKIE['_lv'];
-    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    $vendors = LogisticaController::getVendors($token);
+                    $departments = LogisticaController::getDepartments($token);
+                    $municipios = LogisticaController::getMunicipios($token);
+                    $clasificadores = LogisticaController::getClasificadores($token);
+                    return view('intranet.logistica.distribucion.capturaGastoFletera',compact('token','permissions','username','userRol','vendors','departments','municipios','clasificadores'));
+                })->name('logistica.distribucion.capturaGastoFletera');
+                Route::get('/logistica/distribucion/capturaGastoFletera/getGuias', function (Request $request) {
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getGuias($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/capturaGastoFletera/getGuia', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getGuia($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/capturaGastoFletera/guiaSelected',function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::guiaSelected($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/capturaGastoFletera/getAutorizacion',function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getAutorizacion($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/capturaGastoFletera/registroGuia', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::registroGuia($token, json_encode($request->all()));
+                    return $response;
+                });
+                Route::post('/logistica/distribucion/capturaGastoFletera/readFileXML', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    if ($files = $request->file('file')) {
+                        $file = $request->file('file')->store('public/documents');
+                        $response = LogisticaController::readFileXML($token,$file);
+                        return $response;
+                    }
+                });
+                Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::registerNet($token,json_encode($request->all()));
+                    return $response;
+                });
+                //****************************** AUTORIZAR GASTOS FLETERAS ********************\\
+                Route::get('/logistica/distribucion/autorizarGastosFleteras', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $permissions = LoginController::getPermissions($token);
-    $vendors = LogisticaController::getVendors($token);
-    $departments = LogisticaController::getDepartments($token);
-    $municipios = LogisticaController::getMunicipios($token);
-    $clasificadores = LogisticaController::getClasificadores($token);
-    return view('intranet.logistica.distribucion.capturaGastoFletera',compact('token','permissions','username','userRol','vendors','departments','municipios','clasificadores'));
-})->name('logistica.distribucion.capturaGastoFletera');
-Route::get('/logistica/distribucion/capturaGastoFletera/getGuias', function (Request $request) {
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getGuias($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/capturaGastoFletera/getGuia', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getGuia($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/capturaGastoFletera/guiaSelected',function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::guiaSelected($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/distribucion/capturaGastoFletera/getAutorizacion',function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getAutorizacion($token,json_encode($request->all()));
-    return $response;
-});
-Route::post('/logistica/distribucion/capturaGastoFletera/registroGuia', function (Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::registroGuia($token, json_encode($request->all()));
-    return $response;
-});
-Route::post('/logistica/distribucion/capturaGastoFletera/readFileXML', function (Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    if ($files = $request->file('file')) {
-        $file = $request->file('file')->store('public/documents');
-        $response = LogisticaController::readFileXML($token,$file);
-        return $response;
-    }
-});
-Route::post('/logistica/distribucion/capturaGastoFletera/registerNet', function (Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::registerNet($token,json_encode($request->all()));
-    return $response;
-});
-//****************************** AUTORIZAR GASTOS FLETERAS ********************\\
-Route::get('/logistica/distribucion/autorizarGastosFleteras', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
 
-    $permissions = LoginController::getPermissions($token);
+                    
+                    return view('intranet.logistica.distribucion.autorizarGastosFleteras',compact('token','permissions','username','userRol'));
+                })->name('logistica.distribucion.autorizarGastosFleteras');
+                Route::get('/logistica/distribucion/autorizarGastosFleteras/Folios', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getFolios($token);
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/autorizarGastosFleteras/getGuiasByFolio', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::getGuiasByFolio($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::delete('/logistica/distribucion/autorizarGastosFleteras/cancelFolio', function(Request $request){
+                    $token  = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::cancelFolio($token, json_encode($request->all()));
+                    return $response;
+                    
+                });
+                Route::put('/logistica/distribucion/autorizarGastosFleteras/authorizeFolio', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::authorizeFolio($token, json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/distribucion/autorizarGastosFleteras/getFoliosAuthorize', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = logisticaController::getFoliosAuthorize($token);
+                    return $response;
+                });
+                //****************************** REPORTES  ************************************\\
+                Route::get('/logistica/reportes', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
 
-    
-    return view('intranet.logistica.distribucion.autorizarGastosFleteras',compact('token','permissions','username','userRol'));
-})->name('logistica.distribucion.autorizarGastosFleteras');
-Route::get('/logistica/distribucion/autorizarGastosFleteras/Folios', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::getFolios($token);
-    return $response;
-});
-//****************************** REPORTES  ************************************\\
-Route::get('/logistica/reportes', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.reportes.index',compact('token','permissions','username','userRol'));
+                })->name('logistica.reportes');
+                //***************************** FACTURAS X EMBARCAR **************************\\
+                Route::get('/logistica/reportes/facturasXEmbarque', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.reportes.index',compact('token','permissions','username','userRol'));
-})->name('logistica.reportes');
-//***************************** FACTURAS X EMBARCAR **************************\\
-Route::get('/logistica/reportes/facturasXEmbarque', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.reportes.facturasxEmbarcar',compact('token','permissions','username','userRol'));
+                })->name('logistica.reportes.facturasXEmbarcar');
+                Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', function (Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
+                    return $response;
+                });
+                Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::exportExcelBillsXShipments($token,json_encode($request->all()));
+                    return $response;
+                });
+                //**************************** GASTO FLETERAS ******************************\\
+                Route::get('/logistica/reportes/gastoFleteras', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.reportes.facturasxEmbarcar',compact('token','permissions','username','userRol'));
-})->name('logistica.reportes.facturasXEmbarcar');
-Route::get('/logistica/reportes/facturasXEmbarque/consultBillsXShipments', function (Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::consultBillsXShipments($token,json_encode($request->all()));
-    return $response;
-});
-Route::get('/logistica/reportes/facturasXEmbarque/exportExcelBillsXShipments', function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::exportExcelBillsXShipments($token,json_encode($request->all()));
-    return $response;
-});
-//**************************** GASTO FLETERAS ******************************\\
-Route::get('/logistica/reportes/gastoFleteras', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.reportes.gastoFleteras',compact('token','permissions','username','userRol'));
+                })->name('logistica.reportes.gastoFleteras');
+                Route::get('/logistica/reportes/gastoFleteras/consultFreightExpense', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::consultFreightExpense($token);
+                    return $response;
+                });
+                //******************************* INTERFAZ RECIBO ****************************\\
+                Route::get('/logistica/reportes/interfazRecibo', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
+                })->name('logistica.reportes.interfazRecibo');
+                //***************************** INTERFAZ FACTURACION *******************************\\
+                Route::get('/logistica/reportes/interfazFacturacion',function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.reportes.gastoFleteras',compact('token','permissions','username','userRol'));
-})->name('logistica.reportes.gastoFleteras');
-Route::get('/logistica/reportes/gastoFleteras/consultFreightExpense', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::consultFreightExpense($token);
-    return $response;
-});
-//******************************* INTERFAZ RECIBO ****************************\\
-Route::get('/logistica/reportes/interfazRecibo', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.reportes.interfazRecibo',compact('token','permissions','username','userRol'));
-})->name('logistica.reportes.interfazRecibo');
-//***************************** INTERFAZ FACTURACION *******************************\\
-Route::get('/logistica/reportes/interfazFacturacion',function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $userData = json_decode(MisSolicitudesController::getUserRol($token));
-    $username = $userData->typeUser;
-    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    return view('intranet.logistica.reportes.interfazFacturacion',compact('token','permissions','username','userRol'));
+                })->name('logistica.reportes.interfazFacturacion');
+                Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $response = LogisticaController::consultBillingInterface($token,json_encode($request->all()));
+                    return $response;
+                });
 
-    $permissions = LoginController::getPermissions($token);
-    return view('intranet.logistica.reportes.interfazFacturacion',compact('token','permissions','username','userRol'));
-})->name('logistica.reportes.interfazFacturacion');
-Route::get('/logistica/reportes/interfazFacturacion/consultBillingInterface',function(Request $request){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }
-    $response = LogisticaController::consultBillingInterface($token,json_encode($request->all()));
-    return $response;
-});
+                //******************************* EXPORTA  ************************************\\
+                Route::get('/exporta/pedidos',function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    return view('exporta.pedidos');
+                })->name('exporta.pedidos');
+                Route::get('/exporta/precios', function(){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }else if(empty($token)){
+                        LoginController::logout();
+                    }
+                    $precios = ExportaController::precios($token);
+                    return $precios;
+                });
+                //****************************** ALMACEN ***************************************\\
+                //****************************** CONSOLIDADO PANTALLA **************************\\
+                Route::get('/almacen/consolidadoPantalla', function(){
+                    $consolidado = AlmacenController::consolidadoPantalla();
+                    // dd($consolidado);
+                    return view('almacen.consolidadoPantalla',compact('consolidado'));
+                })->name('almacen.consolidadoPantalla');
+                Route::GET('/almacen/getConsolidado', function(){
+                    $consolidado = AlmacenController::consolidadoPantalla();
+                    return $consolidado;
+                });
+                //***************************** CAPTURA ERRORES **********************************\\
+                Route::get('/almacen/capturaErrores', function(){
+                    $errores = AlmacenController::capturaErrores();
+                    return view('almacen.capturaErrores', compact('errores'));
+                })->name('almacen.capturaErrores');
+                Route::get('/almacen/getErrores', function(){
+                    $errores = AlmacenController::capturaErrores();
+                    return $errores;
+                });
+                Route::get('/almacen/capturaErrores/consultaCaptura', function(){
+                    $consultaCaptura = AlmacenController::consultaCaptura();
+                    return $consultaCaptura;
+                });
+                Route::post('/almacen/capturaErrores/createError', function(Request $request){
+                    $createError = AlmacenController::createError(json_encode($request->all()));
+                    return $createError;
+                });
+                Route::post('/almacen/capturaErrores/updateError', function(Request $request){
+                    $updateError = AlmacenController::updateError(json_encode($request->all()));
+                    return $updateError;
+                });
 
-//******************************* EXPORTA  ************************************\\
-Route::get('/exporta/pedidos',function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    return view('exporta.pedidos');
-})->name('exporta.pedidos');
-Route::get('/exporta/precios', function(){
-    $token = TokenController::getToken();
-    if($token == 'error' || $token == 'expired'){
-        LoginController::logout();
-    }else if(empty($token)){
-        LoginController::logout();
-    }
-    $precios = ExportaController::precios($token);
-    return $precios;
-});
-//****************************** ALMACEN ***************************************\\
-//****************************** CONSOLIDADO PANTALLA **************************\\
-Route::get('/almacen/consolidadoPantalla', function(){
-    $consolidado = AlmacenController::consolidadoPantalla();
-    // dd($consolidado);
-    return view('almacen.consolidadoPantalla',compact('consolidado'));
-})->name('almacen.consolidadoPantalla');
-Route::GET('/almacen/getConsolidado', function(){
-    $consolidado = AlmacenController::consolidadoPantalla();
-    return $consolidado;
-});
-//***************************** CAPTURA ERRORES **********************************\\
-Route::get('/almacen/capturaErrores', function(){
-    $errores = AlmacenController::capturaErrores();
-    return view('almacen.capturaErrores', compact('errores'));
-})->name('almacen.capturaErrores');
-Route::get('/almacen/getErrores', function(){
-    $errores = AlmacenController::capturaErrores();
-    return $errores;
-});
-Route::get('/almacen/capturaErrores/consultaCaptura', function(){
-    $consultaCaptura = AlmacenController::consultaCaptura();
-    return $consultaCaptura;
-});
-Route::post('/almacen/capturaErrores/createError', function(Request $request){
-    $createError = AlmacenController::createError(json_encode($request->all()));
-    return $createError;
-});
-Route::post('/almacen/capturaErrores/updateError', function(Request $request){
-    $updateError = AlmacenController::updateError(json_encode($request->all()));
-    return $updateError;
 });
