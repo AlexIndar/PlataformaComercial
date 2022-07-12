@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\LoginController;
 // CUSTOMERS -------------------------------------------------------------------------------
 use App\Http\Controllers\Customer\ItemsController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Customer\SaleOrdersController;
 use App\Http\Controllers\Customer\PortalController;
 use App\Http\Controllers\Customer\PromoController;
 use App\Http\Controllers\Customer\CotizacionController;
+use App\Http\Controllers\Mercadotecnia\PortalController as PortalControllerMkt;
 use App\Http\Controllers\Logistica\LogisticaController;
 use App\Http\Controllers\Almacen\AlmacenController;
 use App\Http\Controllers\Exporta\ExportaController;
@@ -22,6 +24,7 @@ use App\Mail\ConfirmarPedido;
 use App\Mail\ConfirmarPedidoDesneg;
 use App\Mail\ErrorNetsuite;
 use Barryvdh\DomPDF\Facade as PDF;
+
 // -----------------------------------------------------------------------------------------
 
 // INTRANET --------------------------------------------------------------------------------
@@ -1126,7 +1129,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $directores = ['rvelasco', 'alejandro.jimenez'];
                     in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
 
-                    $data = PortalController::busquedaItemFiltro($token, $filter, $codCliente, $from, $to);
+                    $data = PortalController::busquedaItemFiltro($token, $filter, $codCliente, false, $from, $to);
                     $data['filter'] = strtoupper(str_replace('~', '-', $filter));
                     $numPages = ceil($data['resultados'] / ($to - $from));
                     $activePage = $to / ($to - $from + 1);
@@ -1178,9 +1181,33 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $codCliente = 'C002620'; //hardcodeado, hay que cambiar cuando se tenga del back
                     $directores = ['rvelasco', 'alejandro.jimenez'];
                     in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
-                    // $data = PortalController::busquedaItemFiltro($token, $item, $codCliente);
-                    // $data['filter'] = strtoupper(str_replace(' ', '-', $item));
-                    return view('customers.portal.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity]);
+                    $data = PortalController::busquedaItemFiltro($token, str_replace('_', ' ', $item), $codCliente, true);
+                    return view('customers.portal.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'codCliente' => $codCliente, 'entity' => $entity, 'item' => $item, 'itemInfo' => $data]);
+                });
+
+
+                // PORTAL MERCADOTECNIA ------------------------------------------------------------------------------------------------------------------------------------------
+
+                Route::get('/mercadotecnia/portal',function () {
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                    $username = $userData->typeUser;
+                    $userRol = $userData->permissions;
+                    $permissions = LoginController::getPermissions($token);
+                    $images = PortalControllerMkt::getHeroImages($token);
+                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                    in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
+                    return view('customers.portal.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity]);
                 });
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------

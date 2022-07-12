@@ -1,6 +1,6 @@
 .btn-blue{
-    background-color: #002868 !important;
-    color: white !important;
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
     width: 100%;
     text-align: center;
     padding: 10px;
@@ -9,8 +9,8 @@
 }
 
 .bg-blue{
-  background-color: #002868 !important;
-  color: white !important;
+  background-color: var(--indar-primary) !important;
+  color: var(--text-primary) !important;
   width: 100%;
   text-align: center;
   padding: 10px;
@@ -29,16 +29,15 @@
 }
 
 .btn-group-buttons{
-  background-color: #002868 !important;
-  color: white !important;
-  border-color: #007bff !important;
+  background-color: var(--indar-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--indar-primary) !important;
   width: 100% !important;
   text-align: center !important;
 }
   
 .btn-group-buttons:hover{
-  background-color: #011d49 !important;
-  color: white !important;
+  filter: brightness(95%);
 }
 
 /* PROMOS */
@@ -51,8 +50,8 @@
 }
 
 .promo-header{
-    background-color: #002868;
-    color: white;
+    background-color: var(--indar-primary);
+    color: var(--text-primary);
     height: 50px;
     display: flex;
     align-items: center;
@@ -242,8 +241,8 @@
 }
 
 .modal-header{
-  background-color: #002868 !important;
-  color: white !important;
+  background-color: var(--indar-primary) !important;
+  color: var(--text-primary) !important;
   padding-left: 50px !important;
   padding-right: 50px !important;
 }
@@ -272,7 +271,7 @@
   float: right;
   height: 40px;
   margin-left: auto;
-  background-color: #F5F8F8;
+  background-color: var(--light-purple);
   border-radius: 10px;
   border:none;
   text-indent: 10px;

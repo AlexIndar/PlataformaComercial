@@ -18,13 +18,13 @@
                         <div class="carousel slide carousel-fade h-100 w-100" id="carouselIndar" data-ride="carousel">
                             <div class="carousel-inner h-100">
                                 <div id="first-carousel-item" class="carousel-item h-100">
-                                    <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-1.jpg')}}" alt="">
+                                    <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/1.jpg')}}" alt="">
                                 </div>
                                 <div class="carousel-item h-100">
-                                    <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-2.jpg')}}" alt="">
+                                    <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/2.jpg')}}" alt="">
                                 </div>
                                 <div class="carousel-item h-100">
-                                    <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-3.jpg')}}" alt="">
+                                    <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/3.jpg')}}" alt="">
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-target="#carouselIndar" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

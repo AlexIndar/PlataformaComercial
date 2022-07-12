@@ -1,6 +1,6 @@
 .bg-blue {
-  background-color: #002868 !important;
-  color: white !important;
+  background-color: var(--indar-primary) !important;
+  color:var(--text-primary) !important;
   font-size: 20px;
   font-weight: 600;
   text-align: center;
@@ -8,13 +8,14 @@
 
 img.img-item {
   width: 70px !important;
-  border: 1px solid #002868 !important;
+  border: 1px solid var(--indar-primary) !important;
   cursor: pointer;
+  display: block;
 }
 
 .bg-bo {
-  background-color: #fcbf49 !important;
-  color: black !important;
+  background-color: var(--indar-secondary) !important;
+  color: var(--text-secondary) !important;
   font-size: 20px;
   font-weight: 600;
   text-align: center;
@@ -67,12 +68,12 @@ input {
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 30px;
   border-radius: 2px;
-  background-color: #F5F8F8;
+  background-color: var(--light-purple);
   display: inline-block;
 }
 
 input[type="text"]:disabled {
-  background-color: #F2F2F2;
+  background-color: var(--input-background);
   height: 30px;
   border-radius: 2px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -80,7 +81,7 @@ input[type="text"]:disabled {
 }
 
 #categoryCte {
-  color: #002868 !important;
+  color: var(--indar-primary) !important;
 }
 
 /* -------------------------------------------------------------------------------------- TAGS INPUT PROMOCIONES ------------------------------------------------------------------------------------------------------------ */
@@ -94,7 +95,7 @@ input[type="text"]:disabled {
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 30px;
   border-radius: 2px;
-  background-color: #F5F8F8;
+  background-color: var(--light-purple);
   min-height: 55px !important;
 }
 
@@ -104,8 +105,8 @@ input[type="text"]:disabled {
 
 .tags {
   margin-top: 5px;
-  background: #5C6BC0;
-  color: white;
+  background: var(--promo-tags-background);
+  color: var(--text-primary);
   padding: 5px 20px 5px 8px;
   border-radius: 3px;
   margin-right: 5px;
@@ -146,7 +147,7 @@ input[type="text"]:disabled {
   width: auto !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   border-radius: 2px;
-  background-color: #F5F8F8 !important;
+  background-color: var(--light-purple) !important;
 }
 
 
@@ -179,8 +180,8 @@ input[type="text"]:disabled {
 }
 
 .customHeader {
-  background-color: #002868 !important;
-  color: white !important;
+  background-color: var(--indar-primary) !important;
+  color: var(--text-primary) !important;
   width: auto !important;
 }
 
@@ -197,8 +198,8 @@ input[type="text"]:disabled {
 
 
 .tablaPedido th {
-  background-color: #002868;
-  color: white;
+  background-color: var(--indar-primary);
+  color: var(--text-primary);
   padding: 2px;
   text-align: center;
   position: sticky;
@@ -217,7 +218,7 @@ input[type="text"]:disabled {
 
 .tablaPedido tr {
   padding: 20px 0px 20px 0px !important;
-  background-color: #F5F8F8;
+  background-color: var(--light-purple);
 }
 
 .tablaPedido td {
@@ -353,7 +354,7 @@ input[type="text"]:disabled {
 
 
 .input-cantidad {
-  background-color: #F2F2F2 !important;
+  background-color: var(--input-background) !important;
   text-align: center !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -361,7 +362,7 @@ input[type="text"]:disabled {
 }
 
 .select-descuento {
-  background-color: #F2F2F2 !important;
+  background-color: var(--input-background) !important;
   height: 30px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
@@ -369,7 +370,7 @@ input[type="text"]:disabled {
 }
 
 .input-descuento {
-  background-color: #F2F2F2 !important;
+  background-color: var(--input-background) !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   height: 30px !important;
 }
@@ -433,14 +434,14 @@ input[type="text"]:disabled {
 
 .fa-gift {
   display: inline;
-  color: #f3aa17 !important;
+  color: var(--indar-secondary) !important;
   padding: 5px !important;
   margin-top: -20px !important;
   cursor: pointer;
 }
 
 .subpedido-desc td {
-  background-color: #FFC61E;
+  background-color: var(--indar-secondary);
   font-weight: 700;
 }
 
@@ -475,7 +476,7 @@ thead input {
 .loading {
   width: 100%;
   height: 100px;
-  background-color: #002868;
+  background-color: var(--indar-primary);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -507,8 +508,8 @@ legend.scheduler-border {
 
 .btnCargarPorCodigo,
 .btnAgregarPorCodigo {
-  background-color: #002868;
-  color: white;
+  background-color: var(--indar-primary);
+  color: var(--text-primary);
   text-align: center;
   width: 100%;
   padding: 10px;
@@ -519,19 +520,19 @@ legend.scheduler-border {
 
 .btnAgregarPorCodigo:hover,
 .btnCargarPorCodigo:hover {
-  background-color: #011a42;
-  color: white !important;
+  filter: brightness(95%);
+  color: var(--text-primary) !important;
 }
 
 .btn-group-buttons {
-  background-color: #002868 !important;
-  color: white !important;
-  border-color: #007bff !important;
+  background-color: var(--indar-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--indar-primary-light) !important;
 }
 
 .btn-group-buttons:hover {
-  background-color: #011d49 !important;
-  color: white !important;
+  background-color: var(--indar-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 
@@ -610,7 +611,7 @@ legend.scheduler-border {
 .skeleton-input {
   width: 100%;
   height: 30px;
-  background-color: #F5F8F8;
+  background-color: var(--light-purple);
   border-radius: 2px;
   background: #eee;
   background: linear-gradient(110deg, #f7f7f7 8%, #fafafa 18%, #f7f7f7 33%);

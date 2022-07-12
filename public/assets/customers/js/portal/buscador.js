@@ -4,22 +4,20 @@ var coincidenciasProveedor = 0;
 var coincidenciasMarca = 0;
 var timeoutBuscador;
 var intervalActive = false;
-var intervalBuscador = 2000;
+var intervalBuscador = 1000;
 var sugerencias;
 
 var lastType = ''; //datetime de ultima tecla presionada. Si pasó más de 4 segundos desactivar refresh
-var timeToDisable = 4000; /* ms */
+var timeToDisable = 4000; /* tiempo en ms para desactivar el refresh de buscador, después de haber presionado la última tecla */
 
 $(document).ready(function () {
 
-    // document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
-
-    
+    document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
 
     $("#buscador").keyup(function(e) {
         lastType = new Date();
         var cadena = document.getElementById('buscador').value;
-        if(e.keyCode == 8){
+        if(e.keyCode == 8){ //si está borrando
             desactivaBuscador();
             recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
             highlight(cadena);
@@ -93,6 +91,7 @@ function addSugerenciaArticulo(sugerencia){
     
     var lineSugerencia = document.createElement('div');
     lineSugerencia.setAttribute('class', 'lineSugerencia sugerenciaArticulo');
+    lineSugerencia.setAttribute('onclick', "detalleArticulo(\""+codigo+"\")");
 
     var h5Sugerencia = document.createElement('h5');
     h5Sugerencia.setAttribute('class', 'h5Sugerencia');
@@ -339,5 +338,9 @@ function buscarFiltro(filtro){
     var data = getFilterString();
     data != '' ? filtro = filtro + ' ~ '+ data : filtro = filtro;
     window.location = "/portal/busqueda/" + filtro;
+}
+
+function detalleArticulo(codigo){
+    window.location.href = '/portal/detallesProducto/'+codigo.replace(' ','_');
 }
 
