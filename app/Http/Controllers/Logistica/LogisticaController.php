@@ -476,19 +476,13 @@ class LogisticaController extends Controller
                     $Tf_noCertificadoSAT = $tfd['noCertificadoSAT']; 
                     $Tf_version = $tfd['version']; 
                     $Tf_selloSAT = $tfd['selloSAT']; 
-                } 
-                foreach($xml->xpath('//cfdi:Comprobante//cfdi:Addenda//Flete//Concepto') as $cantidad){
-                    $FleteConcepto_cantidad = $cantidad['Cantidad'];
-                    $FleteConcepto_descripcion = $cantidad['Descripcion'];
-                }                
+                }         
                 Storage::disk('local')->delete($pathXML);
                 $data = [
                     'uuid' => $Tf_UUID,
                     'numFactura' => $Cpt_Folio,
                     'subTotal' => $Cpt_subTotal,
                     'total' => $Cpt_total,
-                    'cantidad' => $FleteConcepto_cantidad,
-                    'descripcionCantidad' => $FleteConcepto_descripcion,
                     'xmlString' =>  $xmlString
                 ];
                 return $data; 

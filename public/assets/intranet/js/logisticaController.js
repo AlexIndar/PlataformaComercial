@@ -3817,7 +3817,7 @@ const logisticaController = {
                 $('#numFactura').val(data['numFactura'][0]);
                 $('#importeSinIva').val(data['subTotal'][0]);
                 $('#importeTotal').val(importeXML.toFixed(2));
-                $('#CantidadXML').val(data['cantidad'][0]);
+                // $('#CantidadXML').val(data['cantidad'][0]);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
@@ -4020,7 +4020,7 @@ const logisticaController = {
                 { data: 'idGastoFletera', render: function(data, type, row, meta){
                     return '<div class="row text-center">'
                             +'<div class="col-12">'
-                            +'<button class="btn btn-plataform mt-2" style="color:white" data-comentario="'+row.comentario+'" data-id="'+data+'" data-folio="'+row.numDoc+'" data-xml="'+row.xml+'" data-acreedor="'+row.vendor+'" data-status="'+row.status+'" data-idgastofletera="'+row.idGastoFletera+'" onclick="logisticaController.openModalFolioDetail(this)">'
+                            +'<button class="btn btn-plataform mt-2" style="color:white" data-comentario="'+row.comentario+'" data-id="'+data+'" data-folio="'+row.numDoc+'" data-xml="'+row.xml+'" data-acreedor="'+row.vendor+'" data-status="'+row.status+'" data-idgastofletera="'+row.idGastoFletera+'" data-retencion="'+row.checkRetencion+'"  onclick="logisticaController.openModalFolioDetail(this)">'
                             +'<i class="fa-solid fa-list-check"></i>'
                             +'</button>'
                             +'</div>'
@@ -4130,12 +4130,18 @@ const logisticaController = {
             }
         })
     },
+    onlyTwoDecimal: (num, dec) => {
+        var exp = Math.pow(10, dec || 2); // 2 decimales por defecto
+        return parseInt(num * exp, 10) / exp;
+    },
     openModalFolioDetail: (e) => {
         let idGastoFletera = $(e).data('id');
         let folio = $(e).data('folio');
         let acreedor = $(e).data('acreedor');
         let status = $(e).data('status'); 
         let xml = $(e).data('xml');
+        let retencion = $(e).data('retencion');
+        
         // let comentario = $(e).data('comentario');
         $('#idgastofletera').val($(e).data('idgastofletera'));
         $('#folio').val(folio);
@@ -4144,7 +4150,13 @@ const logisticaController = {
         xmlDoc = parser.parseFromString(xml,"text/xml");
         let comprobante = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0].attributes;
         let importeSinIvaFolio = comprobante["SubTotal"].nodeValue;
-        let importeIVAFolio = comprobante["Total"].nodeValue;
+        let importeIVAFolio = '';
+        if(retencion)
+        {
+            importeIVAFolio = importeSinIvaFolio * 1.12;
+        }else{
+            importeIVAFolio = importeSinIvaFolio * 1.16;
+        }
         $.ajax({
             type: 'GET',
             url: '/logistica/distribucion/autorizarGastosFleteras/getGuiasByFolio',
@@ -4163,7 +4175,7 @@ const logisticaController = {
                 // $('#text-comentario').empty();
                 // $('#text-comentario').append(comentario);
                 $('#text-importesinIva').append('$'+importeSinIvaFolio)
-                $('#text-importeIva').append('$'+importeIVAFolio);
+                $('#text-importeIva').append('$'+logisticaController.onlyTwoDecimal(importeIVAFolio));
                 $('#text-acreedor').append(acreedor);
                 $('#text-estado').append('<button type="button" class="btn btn-danger">'+status+'</button>');
                 $('#text-folio').append('#'+folio);
