@@ -5,9 +5,9 @@
 @endsection
 
 @section('styles')
+    <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/customers/css/promociones/promociones.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/customers/css/pedidos/addPedido.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/intranet/css/misSolicitudes.css') }}">
     <script src="{{ asset('assets/customers/js/pedidos/pedidos.js') }}"></script>
 @endsection
 

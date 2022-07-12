@@ -382,6 +382,29 @@
                                 </ul>
                             </li>
                         @endif
+                        @if (in_array('Promociones', $permissions))
+                            <li class="nav-item">
+                                @if ($active == 'Mercadotecnia')
+                                    <a href="#" class="nav-link active bg-indarPrimary">
+                                    @else
+                                        <a href="#" class="nav-link">
+                                @endif
+                                <i class="nav-icon fas fa-bullhorn"></i>
+                                <p>
+                                    Mercadotecnia
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/mercadotecnia/portal" class="nav-link">
+                                            <i class="fas fa-image nav-icon"></i>
+                                            <p>Portal Mkt</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                         @if (in_array('CXC', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'CXC')

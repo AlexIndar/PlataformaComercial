@@ -20,11 +20,11 @@
                                 @for($x=1; $x <= count($heroImages); $x++)
                                     @if($x == 1)
                                         <div id="first-carousel-item" class="carousel-item h-100">
-                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Temp/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
                                         </div>
                                     @else
                                         <div class="carousel-item h-100">
-                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Temp/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
                                         </div>
                                     @endif
                                 @endFor

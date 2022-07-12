@@ -89,8 +89,9 @@ Route::get('/', function () {
     if(isset($_COOKIE['_lv'])){
         $level = $_COOKIE['_lv'];
     }
+    $heroImages = PortalControllerMkt::getHeroImages($token);
 
-    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status]);
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages]);
 
 })->name('/');
 
@@ -1204,10 +1205,75 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $username = $userData->typeUser;
                     $userRol = $userData->permissions;
                     $permissions = LoginController::getPermissions($token);
-                    $images = PortalControllerMkt::getHeroImages($token);
+                    $heroImages = PortalControllerMkt::getHeroImages($token);
                     $directores = ['rvelasco', 'alejandro.jimenez'];
                     in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
-                    return view('customers.portal.detallesProducto', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity]);
+                    return view('mercadotecnia.portal.portal', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity, 'heroImages' => $heroImages]);
+                });
+
+                Route::get('/mercadotecnia/portal/getImages/{location}', function($location){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    if($location == 'Hero')
+                        $images = PortalControllerMkt::getHeroImages($token);
+                    dd($images);
+                    return $images;
+                });
+
+                Route::post('/mercadotecnia/portal/storeTempImages', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+
+                    $heroImages = $request->hero;
+                    $move = PortalControllerMkt::storeTempImagesHero($heroImages);
+                    
+                    return $move;
+                });
+
+                Route::get('/mercadotecnia/portal/preview', function () {
+                    $token = TokenController::getToken();
+                    $status = '';
+                    if($token && $token != 'error' && $token != 'expired'){
+                        $bestSellers = ItemsController::getBestSellers($token);
+                        $status = 'active';
+                    }
+                    else{
+                        $bestSellers = ItemsController::getBestSellers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM");
+                        $status = 'inactive';
+                    }
+                
+                    $rama1 = RamasController::getRama1();
+                    $rama2 = RamasController::getRama2();
+                    $rama3 = RamasController::getRama3();
+                
+                    $level = "C";
+                    if(isset($_COOKIE['_lv'])){
+                        $level = $_COOKIE['_lv'];
+                    }
+                    $heroImages = PortalControllerMkt::getHeroTempImages($token);
+                
+                    return view('mercadotecnia.portal.preview', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages]);
+                
+                });
+
+                Route::post('/mercadotecnia/portal/uploadImage', function(Request $request){
+                    $uploadFile = $request->file('file');
+                    dd($uploadFile->getClientOriginalName());
+
+                    dd($request->file('file'));
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+
+                    $heroImages = $request->hero;
+                    $move = PortalControllerMkt::storeTempImagesHero($heroImages);
+                    
+                    return $move;
                 });
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------

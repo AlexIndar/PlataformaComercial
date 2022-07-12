@@ -5,7 +5,7 @@
 
 @section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
-<link rel="stylesheet" href="{{asset('assets/customers/css//portal/resultadosFiltro.css')}}">
+<link rel="stylesheet" href="{{asset('assets/customers/css/portal/resultadosFiltro.css')}}">
 <!-- Theme style -->
 <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 <script src="{{asset('assets/customers/js/portal/resultadosFiltro.js')}}"></script>

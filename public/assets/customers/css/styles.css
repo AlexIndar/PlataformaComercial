@@ -41,6 +41,11 @@
 
 .bg-indarPrimary{
     background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.icon-indar {
+    color: var(--text-primary) !important;
 }
 
 

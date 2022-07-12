@@ -3,8 +3,8 @@
 @section('title') Ventas - Promociones @endsection
 
 @section('styles') 
+    <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
     <link rel="stylesheet" href="{{asset('assets/customers/css/promociones/promociones.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/intranet/css/misSolicitudes.css')}}">
     <script src="{{asset('assets/customers/js/promociones/promociones.js')}}"></script>
 @endsection
 
@@ -140,7 +140,7 @@
             </div>
         </div>
 
-         <!-- MODAL PARA DAR NOMBRE A PROMOCION DUPLICADA -->
+        <!-- MODAL PARA DAR NOMBRE A PROMOCION DUPLICADA -->
 
         <!-- Modal -->
         <div class="modal fade" id="confirmDuplicarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

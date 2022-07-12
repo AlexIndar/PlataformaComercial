@@ -404,7 +404,7 @@ function updateProductList(from = 1, to = parseInt(document.getElementById('pagi
         divImg.setAttribute('class', 'imgItem');
 
         var imgItem = document.createElement('img');
-        imgItem.setAttribute('src', "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemsToShow[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg");
+        imgItem.setAttribute('src', "http://indarweb.dyndns.org:8080/assets/articulos/img/02_WEBP_MD/" + itemsToShow[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_MD.webp");
         imgItem.setAttribute('loading', 'lazy');
         imgItem.setAttribute('onerror', 'noDisponible(this)');
 
