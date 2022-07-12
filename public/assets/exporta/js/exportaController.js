@@ -2,7 +2,6 @@ $(document).ready(function(){
     $('#cover-spin').show(0);
     exportaController.initAll();
     exportaController.pages();
-    console.log(window.navigator.onLine);
     var table = $('#table-precios').DataTable({
         paging: true,
         responsive: true,
@@ -222,9 +221,7 @@ let exportaController = {
                 unidad = element.unidad;
 
                 
-                let precioVenta = (precioLista*promocion) / 100;
-                let descuento = precioVenta;
-                precioVenta = precioLista - precioVenta;
+                let precioVenta = precioLista - promocion;
                 let cantidad = $('#inputCant'+row).val();
                 if(cantidad == ''){
                     cantidad = 0;
@@ -241,15 +238,13 @@ let exportaController = {
                         element.iva = iva;
                         element.observaciones = '';
                         element.pp = '';
-                        element.precioLista = precioLista;
-                        element.precioVenta = precioVenta;
-                        element.descuento = descuento;
+                        element.precioLista = precioVenta;
+                        element.precioVenta = precio2;
                         element.producto = articulo;
                         element.promo = promocion;
                         element.unidad = unidad;
                     }
                 });
-
                 $('#unidad'+row).empty();
                 $('#emp'+row).empty();
                 $('#existencia'+row).empty();
@@ -270,7 +265,7 @@ let exportaController = {
                 $('#promo'+row).append('<strong>'+promocion+'</strong>');
                 $('#precioventa'+row).append('<strong>'+precioVenta.toFixed(2)+'</strong>');
                 $('#importe'+row).append('<strong>'+importe+'</strong>');
-                $('#iva'+row).append('<strong>0</strong>');
+                $('#iva'+row).append('<strong>'+iva+'</strong>');
                 $('#pp'+row).append('<strong>0.00</strong>');
                 $('#observaciones'+row).append('<strong></strong>');
                 bandera = 1;
@@ -322,9 +317,6 @@ let exportaController = {
                         cantidad = cantidad == '' ? 0 : cantidad;
                         let importe = precioVenta * cantidad;
                         let updateExistencias = arrayPedidos[a].existencia - cantidad;
-                        let iva = arrayPedidos[a].iva;
-                        iva = (iva / 100)+1;
-                        let precioConIva = importe * iva;
                         $('#unidad'+row).append('<strong>'+arrayPedidos[a].unidad+'</strong>');
                         $('#emp'+row).append('<strong>'+arrayPedidos[a].emp+'</strong>');
                         $('#existencia'+row).append('<strong>'+updateExistencias+'</strong>');
@@ -333,7 +325,7 @@ let exportaController = {
                         $('#promo'+row).append('<strong>'+arrayPedidos[a].promo+'</strong>');
                         $('#precioventa'+row).append('<strong>'+precioVenta.toFixed(2)+'</strong>');
                         $('#importe'+row).append('<strong>'+exportaController.replaceNumberWithCommas(importe.toFixed(2))+'</strong>');
-                        $('#iva'+row).append('<strong>'+exportaController.onlyTwoDecimal(precioConIva)+'</strong>');
+                        $('#iva'+row).append('<strong>'+arrayPedidos[a].iva+'</strong>');
                         $('#pp'+row).append('<strong>0.00</strong>');
                         $('#observaciones'+row).append('<strong></strong>');
                         arrayPedidos[a].importe = importe;
@@ -351,10 +343,6 @@ let exportaController = {
             $('#textCant'+row).prop('hidden',false);
         }
         
-    },
-    onlyTwoDecimal: (num, dec) => {
-        var exp = Math.pow(10, dec || 2); // 2 decimales por defecto
-        return parseInt(num * exp, 10) / exp;
     },
     replaceNumberWithCommas: (numero) => {
         //Seperates the components of the number
@@ -384,7 +372,7 @@ let exportaController = {
             datatype: 'json',
             success: function(data){
                 arrayPrecios = data;
-                $('#table-content-pedidos').prop('hidden',false); //Se habilita la tabla de pedidos hasta que la tabla precios se cargue
+                $('#table-content-pedidos').prop('hidden',false); //Se habilita la tabla de pedidos hasta que los precios se hayan cargado
                 $('#table-precios').DataTable().clear().draw();
                 $('#table-content-precios').empty();
                 $('#table-precios').DataTable().rows.add(data).draw();

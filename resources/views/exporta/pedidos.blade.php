@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div id="cover-spin"><img src="{{asset('assets/intranet/images/loading.gif')}}" alt="loading" style="margin-top: 13%;"></div>
+    <div id="cover-spin"></div>
     <div class="col-12 mt-4">
         <div class="row mt-3  justify-content-center">
             <div class="col-12 text-center">
