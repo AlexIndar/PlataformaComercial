@@ -3817,7 +3817,7 @@ const logisticaController = {
                 $('#numFactura').val(data['numFactura'][0]);
                 $('#importeSinIva').val(data['subTotal'][0]);
                 $('#importeTotal').val(importeXML.toFixed(2));
-                $('#CantidadXML').val(data['cantidad'][0]);
+                // $('#CantidadXML').val(data['cantidad'][0]);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
