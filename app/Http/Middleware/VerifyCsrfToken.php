@@ -92,5 +92,6 @@ class VerifyCsrfToken extends Middleware
         '/MisSolicitudes/getValidacionActConst',
         '/MisSolicitudes/GetValidacionReferencias',
         '/SolicitudesPendientes/getFile',
+        '/SoporteIndarnet/RepairReferences'
     ];
 }

@@ -28,4 +28,9 @@ class HeatMapController extends Controller
         $customerList = Http::withToken($token)->get(config('global.api_url').'/Cyc/GetListCustomer?fechaIni='.$fechaIni.'&fechaFin='.$fechaEnd.'&descGerencia='.$gerencia.'&descZona='.$zona.'&IdShippingWay='.$idShippingWay);
         return $customerList;
     }
+
+    public static function repairReferences($token, $folioSol){
+        $response = Http::withToken($token)->get(config('global.api_url').'/Cyc/RepairReferences?folioSol='.$folioSol);
+        return $response;
+    }
 }
