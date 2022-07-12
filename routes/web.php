@@ -1825,14 +1825,30 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $customerList;
                 });
 
-                Route::post('/Soporte/RepairReferences', function(Request $request){
+                //SOPORTE
+                Route::get('/SoporteIndarnet', function(){
+                    $token = TokenController::getToken();
+                    $permissions = LoginController::getPermissions($token);
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+                    $user = json_decode(MisSolicitudesController::getUserRol($token));
+                    $userRol = [$user->typeUser, $user->permissions];
+                    if($userRol[1] == "ADMIN"){
+                        return view('intranet.dirOperaciones.soporte',['token' => $token, 'permissions' => $permissions, 'username' => $userRol[0], 'userRol' => $userRol[1]]);
+                    }else{
+                        return redirect('/Intranet');
+                    }
+                });
+
+                Route::post('/SoporteIndarnet/RepairReferences', function(Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
-                    $folio = $request->folio;
-                    $gerencia = HeatMapController::repairReferences($token,$folio);
-                    return $gerencia;
+                    $folio = $request->Folio;
+                    $response = HeatMapController::repairReferences($token,$folio);
+                    return $response;
                 });
 
                 /* ********************************************* END INDARNET ************************************************ */
