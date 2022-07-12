@@ -78,11 +78,6 @@
 }
 
 /* STARS */
-:root {
-    --star-size: 20px;
-    --star-color: rgb(201, 201, 201);
-    --star-background: #266ee2;
-  }
   
   .Stars {
     --percent: calc(var(--rating) / 5 * 100%);

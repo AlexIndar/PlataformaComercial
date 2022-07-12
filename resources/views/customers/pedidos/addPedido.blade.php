@@ -197,7 +197,7 @@
              <!---------------------------------------------------------------------------------------------------- PEDIDO  ---------------------------------------------------------------------------------------------->
 
              <div id="loading" class="d-flex flex-row justify-content-center align-items-center"
-                 style="width: 100%; height: 100px; background-color: #002868; color: white;">
+                 style="width: 100%; height: 100px; background-color: var(--indar-primary); color: var(--text-primary);">
                  <h5 id="loading-message">Cargando inventario ...</h5>
              </div>
 

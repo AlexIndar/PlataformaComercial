@@ -17,6 +17,7 @@
     <link rel="canonical" href="http://indarweb.dyndns.org:8080">
 
     <link rel="icon" type="image/png" href="/assets/customers/img/png/favicon.png">
+    <link rel="stylesheet" href="{{ asset('assets/customers/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/customers/css/index.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/customers/css/buscador/buscador.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
@@ -38,10 +39,6 @@
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- DATEPICKER -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -69,10 +66,10 @@
     <!-- LOGIN OPTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------->
     <div class="login-options">
         <h5>Síguenos en </h5>
-        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i style="color: #002868; margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>
-        <a style="margin-top: -2px !important;" target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a>
-        <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a>
-        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: #002868; margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a>
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.facebook.com/FerreteriaINDAR"><i style="color: var(--indar-primary); margin-left: 10px;" class="fab fa-facebook-square fa-md"></i></a>
+        <a style="margin-top: -2px !important;" target="blank" href="https://www.youtube.com/channel/UCCTX6IiPIZa9wuaU8pMbwmA" class=""><i style="color: var(--indar-primary); margin-left: 5px;" class="fab fa-youtube-square fa-md"></i> </a>
+        <a style="margin-top: -2px !important;" target="blank" href="https://api.whatsapp.com/send/?phone=5213312359629&text&app_absent=0" class=""><i style="color: var(--indar-primary); margin-left: 5px;" class="fab fa-whatsapp-square fa-md"></i> </a>
+        <a style="margin-top: -2px !important; margin-right: 10px;" target="blank" href="https://www.linkedin.com/company/indar-tu-bodega-ferretera?trk=company_logo" class=""><i style="color: var(--indar-primary); margin-left: 5px;" class="fab fa-linkedin fa-md"></i></a>
 
         @if ($token && $token != 'error' && $token != 'expired')
             <h5 onclick="navigate('/logout', false)">Cerrar sesión</h5>
@@ -172,7 +169,7 @@
                 <div class="col-12">
                     <div class="menu-item">
                         @if ($level == 'E')
-                            <h5><a href="/Intranet" style="color: #002868;">Intranet</a></h5>
+                            <h5><a href="/Intranet" style="color: var(--indar-primary);">Intranet</a></h5>
                         @endif
                     </div>
                 </div>
@@ -190,7 +187,7 @@
                     src="{{ asset('assets/customers/img/png/indar.png') }}" alt="Login image" width="150">
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="input-group mb-3 mt-3">
+                <div class="input-group mb-3 mt-3 group-buscador">
                     <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2" disabled>
                     <div class="input-group-append">
                         <button class="btn btn-indar" type="button"><i class="fas fa-search fa-lg"></i></button>
@@ -288,9 +285,9 @@
                             Empresa
                         </a>
                         <ul class="dropdown-menu dropdown-menu-empresa dropdown-menu-main" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="about"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
-                            <li><a class="dropdown-item" href="centros"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Centros de cruce </a></li>
-                            <li><a class="dropdown-item" href="postventa"><i style="color: #002868; margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
+                            <li><a class="dropdown-item" href="about"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
+                            <li><a class="dropdown-item" href="centros"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Centros de cruce </a></li>
+                            <li><a class="dropdown-item" href="postventa"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
                         </ul>
                     </li>
                     <li class="nav-item notDropdown">

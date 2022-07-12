@@ -16,7 +16,7 @@
 }
 .dashboard-cards:hover{
     transform: scale(1.03);
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
     color: white;
 }
 .dashboard-cards h6{
@@ -63,10 +63,10 @@
 
 ::-webkit-scrollbar{
     width: 10px;
-    background-color: #002868;
+    background-color: var(--indar-primary);
     border: none;
 }
 
 ::-webkit-scrollbar-thumb{
-    background-color: #ffc61e;
+    background-color: var(--indar-secondary);
 }

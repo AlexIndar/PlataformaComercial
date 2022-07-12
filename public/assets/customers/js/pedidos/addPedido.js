@@ -1082,6 +1082,9 @@ async function cargarInventario() {
                 if (items[x]['promoART'] != null) {
                     var y = 0;
                     while (y < items[x]['promoART'].length) {
+                        if(y == 0 && items[x]['promoART'][y]['cantidad'] != 1){
+                            console.log('PROMO VOLUMEN: '+items[x]['itemid']);
+                        }
                         if (items[x]['multiploVenta'] >= items[x]['promoART'][y]['cantidad']) {
                             precioCliente = ((100 - items[x]['promoART'][y]['descuento']) / 100) * items[x]['price'];
                         }

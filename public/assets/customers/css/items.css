@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 body, html{
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
 }
 
 .quantity-counter, .quantity{
@@ -100,13 +100,6 @@ body, html{
 
 .detalleProductoGray{
     color: rgb(183, 183, 183);
-}
-
-/* STARS */
-:root {
-  --star-size: 20px;
-  --star-color: rgb(201, 201, 201);
-  --star-background: #266ee2;
 }
 
 .Stars {
