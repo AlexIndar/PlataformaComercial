@@ -2570,22 +2570,22 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $response = LogisticaController::createImportsOfFreighter($token, json_encode($request->all()));
                     return $response;
                 });
-                Route::get('/logistica/distribucion/numeroGuia/existNumGuia', function(Request $request){
-                    $token = TokenController::getToken();
-                    if($token == 'error' || $token == 'expired'){
-                        LoginController::logout();
-                    }
-                    $response = LogisticaController::existNumGuia($token,json_encode($request->all()));
-                    return $response;
-                });
-                Route::put('/logistica/distribucion/numeroGuia/updateGuiaNumber', function(Request $request){
-                    $token = TokenController::getToken();
-                    if($token == 'error' || $token == 'expired'){
-                        LoginController::logout();
-                    }
-                    $response = LogisticaController::updateGuiaNumber($token, json_encode($request->all()));
-                    return $response;
-                });
+                // Route::get('/logistica/distribucion/numeroGuia/existNumGuia', function(Request $request){
+                //     $token = TokenController::getToken();
+                //     if($token == 'error' || $token == 'expired'){
+                //         LoginController::logout();
+                //     }
+                //     $response = LogisticaController::existNumGuia($token,json_encode($request->all()));
+                //     return $response;
+                // });
+                // Route::put('/logistica/distribucion/numeroGuia/updateGuiaNumber', function(Request $request){
+                //     $token = TokenController::getToken();
+                //     if($token == 'error' || $token == 'expired'){
+                //         LoginController::logout();
+                //     }
+                //     $response = LogisticaController::updateGuiaNumber($token, json_encode($request->all()));
+                //     return $response;
+                // });
                 // ************************* VALIDAR SAD *************************************** \\
                 Route::get('/logistica/distribucion/validarSad', function(){
                     $token = TokenController::getToken();
