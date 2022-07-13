@@ -267,18 +267,24 @@ function recargaSugerencias(data) {
     coincidenciasArticulo = 0;
     coincidenciasMarca = 0;
     coincidenciasProveedor = 0;
+    let buscarCoincidenciasArticulo = 50;
     while (x < data.length) {
         var y = 0;
         var add = true;
-        //validar que la descripción del artículo contenga todo lo que está en el input de búsqueda
-        while (y < arrCadena.length) {
-            if (!(arrCadena[y] != '' && (data[x]['purchasedescription'].includes(arrCadena[y].toUpperCase()) || data[x]['itemid'].includes(arrCadena[y].toUpperCase())))) {
-                add = false;
+        if (coincidenciasArticulo < buscarCoincidenciasArticulo) {
+            //validar que la descripción del artículo contenga todo lo que está en el input de búsqueda o que lo contenga en el itemid
+            while (y < arrCadena.length) {
+                if (!(arrCadena[y] != '' && (data[x]['purchasedescription'].includes(arrCadena[y].toUpperCase()) || data[x]['itemid'].includes(arrCadena[y].toUpperCase())))) {
+                    add = false;
+                }
+                if (arrCadena[y] == '') {
+                    add = true;
+                }
+                y++;
             }
-            if (arrCadena[y] == '') {
-                add = true;
-            }
-            y++;
+        }
+        else{
+            add = false;
         }
         //si add es false es porque algo no coincidió, no va a agregarlo como sugerencia
         if (add) {
@@ -313,10 +319,6 @@ function recargaSugerencias(data) {
                 proveedores.push(tmp);
             }
         }
-
-        if(coincidenciasArticulo == 50){
-            break;
-        }
         x++;
     }
     addSugerenciasProveedor(proveedores);
@@ -348,7 +350,7 @@ function getFilterString() {
 
 function buscarFiltro(filtro) {
     let data = getFilterString();
-    if(data != ""){
+    if (data != "") {
         if (filtro != "") {
             filtro = filtro.split(' ')[0];
             data != '' ? filtro = filtro + ' ~ ' + data : filtro = filtro;
