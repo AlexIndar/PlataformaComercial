@@ -90,7 +90,7 @@ Route::get('/', function () {
         $level = $_COOKIE['_lv'];
     }
     $heroImages = PortalControllerMkt::getImages($token, 'Hero');
-    $eventosImages = PortalControllerMkt::getPreviewImages($token, 'Eventos');
+    $eventosImages = PortalControllerMkt::getImages($token, 'Eventos');
 
     return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages]);
 
