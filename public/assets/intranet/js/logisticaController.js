@@ -1468,12 +1468,13 @@ const logisticaController = {
             }
         }
 
-        if (bandera == 0 || bandera2 == 0 || fletera == "" || numGuia == "" || importeTotal == "0.00") {
-            Toast.fire({
+        if (fletera == "" || numGuia == "") { //Se quitaron las demas validaciones para crear la guia solo con las cantidades y tipos de atados, fletera e importe Total
+            Toast.fire({ //EL CAMBIO FUE PEDIDO POR ALFONSO CADENAS LEMUS PARA GUIA POR COBRAR A DOMICILIO
                 icon: 'error',
                 title: '¡Falta datos por llenar!'
             });
         } else {
+            facturasSelected.length == 0 ? facturasSelected='' : facturasSelected=facturasSelected;
             let data = {
                 fletera: fletera,
                 numGuia: numGuia,
@@ -1519,54 +1520,54 @@ const logisticaController = {
                 },
                 complete: function () {
                     $('#cover-spin').hide();
-                }
+                } 
             })
         }
 
     },
-    updateNumGuia: () => {
-        let facturasSelected = arrayFacturasSelected;
-        let idNumeroGuia = $('#idNumeroGuiaUpdate').val(); 
-        let data = {
-            idNumeroGuia: idNumeroGuia,
-            facturas: facturasSelected
-        };
-        $.ajax({
-            type: 'PUT',
-            url: '/logistica/distribucion/numeroGuia/updateGuiaNumber',
-            data: data,
-            datatype: 'json',
-            beforeSend: function () {
-                $('#cover-spin').show(0);
-            },
-            success: function(data){
-                if (data.codeStatus == 200) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: '¡Se actualizo el numero de guia exitosamente!'
-                    });
-                    arrayRowTableType = new Array();
-                    arrayFacturasSelected = new Array();
-                    $('#table-content-guia-type').empty();
-                    $('#table-content-facturas-selected').empty();
-                    $('#importeTotal').val('0.00');
-                    $('#NumGuia').val('');
-                } else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: '¡Hubo un error al actualizar el numero de guia!'
-                    });
-                }
-                $('#fletera').prop('disabled',true);
-            },
-            error: function(){
+    // updateNumGuia: () => {
+    //     let facturasSelected = arrayFacturasSelected;
+    //     let idNumeroGuia = $('#idNumeroGuiaUpdate').val(); 
+    //     let data = {
+    //         idNumeroGuia: idNumeroGuia,
+    //         facturas: facturasSelected
+    //     };
+    //     $.ajax({
+    //         type: 'PUT',
+    //         url: '/logistica/distribucion/numeroGuia/updateGuiaNumber',
+    //         data: data,
+    //         datatype: 'json',
+    //         beforeSend: function () {
+    //             $('#cover-spin').show(0);
+    //         },
+    //         success: function(data){
+    //             if (data.codeStatus == 200) {
+    //                 Toast.fire({
+    //                     icon: 'success',
+    //                     title: '¡Se actualizo el numero de guia exitosamente!'
+    //                 });
+    //                 arrayRowTableType = new Array();
+    //                 arrayFacturasSelected = new Array();
+    //                 $('#table-content-guia-type').empty();
+    //                 $('#table-content-facturas-selected').empty();
+    //                 $('#importeTotal').val('0.00');
+    //                 $('#NumGuia').val('');
+    //             } else {
+    //                 Toast.fire({
+    //                     icon: 'error',
+    //                     title: '¡Hubo un error al actualizar el numero de guia!'
+    //                 });
+    //             }
+    //             $('#fletera').prop('disabled',true);
+    //         },
+    //         error: function(){
 
-            },
-            complete: function(){
-                $('#cover-spin').hide();
-            }
-        })
-    },
+    //         },
+    //         complete: function(){
+    //             $('#cover-spin').hide();
+    //         }
+    //     })
+    // },
     addTypeRowTable: () => {
         contRowTypeTable++;
         $('#table-content-guia-type').append(
@@ -2634,34 +2635,34 @@ const logisticaController = {
         $('#modal-importes-fleteras').modal({backdrop: 'static', keyboard: false});
         $('#modal-importes-fleteras').modal('show');
     },
-    searchExistNumGuia: () => {
-        let numGuia = $('#NumGuia').val();
-        $.ajax({
-            type: 'GET',
-            url: '/logistica/distribucion/numeroGuia/existNumGuia',
-            data: {numGuia: numGuia},
-            datatype: 'json',
-            beforeSend: function() {
-                $('#cover-spin').show(0);
-            },
-            success: function(data){
-                if(data != ""){
-                    $('#crear').prop('hidden',true);
-                    $('#actualizar').prop('hidden',false);
-                    $('#idNumeroGuiaUpdate').val(data.idNumeroGuia);
-                }else{
-                    $('#crear').prop('hidden',false);
-                    $('#actualizar').prop('hidden',true);
-                }
-            },
-            error: function(){
+    // searchExistNumGuia: () => {
+    //     let numGuia = $('#NumGuia').val();
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: '/logistica/distribucion/numeroGuia/existNumGuia',
+    //         data: {numGuia: numGuia},
+    //         datatype: 'json',
+    //         beforeSend: function() {
+    //             $('#cover-spin').show(0);
+    //         },
+    //         success: function(data){
+    //             if(data != ""){
+    //                 $('#crear').prop('hidden',true);
+    //                 $('#actualizar').prop('hidden',false);
+    //                 $('#idNumeroGuiaUpdate').val(data.idNumeroGuia);
+    //             }else{
+    //                 $('#crear').prop('hidden',false);
+    //                 $('#actualizar').prop('hidden',true);
+    //             }
+    //         },
+    //         error: function(){
 
-            },
-            complete:  function(){
-                $('#cover-spin').hide();
-            }
-        })
-    },
+    //         },
+    //         complete:  function(){
+    //             $('#cover-spin').hide();
+    //         }
+    //     })
+    // },
     //#endregion
     //#region VALIDAR SAD
     consultValidateSAD: () => {

@@ -91,16 +91,16 @@
                                             </div>
                                             <div class="col-2">
                                                 <label for="">Importe Total:</label>
-                                                <input class="form-control" type="text" id="importeTotal" value="0.00" disabled>
+                                                <input class="form-control" type="text" id="importeTotal" value="0.00">
                                             </div>
                                             <div class="col-1 mt-2" id="crear">
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-plataform btn" onclick="logisticaController.addNumGuia()" data-toggle="tooltip" data-placement="top" title="Guardar"><i class="fa-solid fa-floppy-disk"></i></button>
                                             </div>
-                                            <div class="col-1 mt-2" id="actualizar" hidden>
+                                            {{-- <div class="col-1 mt-2" id="actualizar" hidden>
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-plataform btn" onclick="logisticaController.updateNumGuia()" data-toggle="tooltip" data-placement="top" title="Actualizar"><i class="fa-solid fa-floppy-disk"></i></button>
-                                            </div>
+                                            </div> --}}
                                             <div class="col-1 mt-2">
                                                 <label for=""></label>
                                                 <button type="button" class="btn btn-block btn-plataform btn" onclick="location.reload();" data-toggle="tooltip" data-placement="top" title="Reiniciar"><i class="fa-solid fa-arrows-rotate"></i></button>
