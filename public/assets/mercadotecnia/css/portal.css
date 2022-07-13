@@ -29,7 +29,6 @@ h1 {
 .delete-icon{
     color: #ddd;
     cursor: pointer;
-    margin-right: 30px;
 }
 
 .delete-icon:hover{
@@ -37,8 +36,7 @@ h1 {
 }
 
 
-
-/* DRAG AND DROP */
+/* DRAG AND DROP --------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 .drag-sort-enable {
     margin: 0;
@@ -46,13 +44,13 @@ h1 {
 }
 
 .drag-sort-item {
-    margin: 5px 0;
     height: auto;
     border-radius: 5px;
     list-style: none;
     cursor: grab;
     border: 1px solid #ddd;
     padding: 10px;
+    display: inline-block;
 }
 
 .drag-sort-item:hover{
@@ -66,12 +64,13 @@ h1 {
     cursor: grabbing;
 }
 
+
 span.drag-sort-active {
     background: transparent;
     color: transparent;
 }
 
-/* ACTIONS */
+/* ACTIONS --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 .actions{
     width: 100%;
@@ -79,7 +78,6 @@ span.drag-sort-active {
     display: flex;
     justify-content: end;
     align-items: center;
-    margin-top: 50px;
 }
 
 .btn-save{
@@ -107,4 +105,10 @@ span.drag-sort-active {
 .btn-add:hover{
     background-color: rgb(171, 225, 154) !important;
     border-color: rgb(171, 225, 154) !important;
+}
+
+/* MODALES -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.image-edit{
+    width: 100%;
 }

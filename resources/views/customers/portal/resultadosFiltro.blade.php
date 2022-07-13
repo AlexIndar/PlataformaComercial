@@ -62,8 +62,8 @@
         <span>Ordenar: </span>
         <select name="selectOrderBy" class="orderBySelect" id="orderByModal">
             <option value="itemid" selected>ID Articulo</option>
-            <option value="pricemainor">Precio 1-10</option>
-            <option value="pricemayor">Precio 10-1</option>
+            <option value="pricemainor">Competitividad 1-10</option>
+            <option value="pricemayor">Competitividad 10-1</option>
           </select>
     </div>
     <br>
@@ -74,7 +74,7 @@
                 <div class="filterElement">
                     <input class="filterCheck" id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
                     <img loading="lazy" class="filterImg" src={{"http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['marcas'][$x]['nombre']))).".jpg"}}>
-                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['marcas'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-marca-{{$data['marcas'][$x]['nombre']}}">({{$data['marcas'][$x]['resultados']}})</span> </h5>
+                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['marcas'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-marca-modal-{{$data['marcas'][$x]['nombre']}}">({{$data['marcas'][$x]['resultados']}})</span> </h5>
                 </div>
             @endFor
         </div>
@@ -86,10 +86,23 @@
             @for($x=0; $x < count($data['categorias']); $x++)
                 <div class="filterElement">
                     <input class="filterCheck" id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
-                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['categorias'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-categoria-{{$data['categorias'][$x]['nombre']}}">({{$data['categorias'][$x]['resultados']}})</span> </h5>
+                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['categorias'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-categoria-modal-{{$data['categorias'][$x]['nombre']}}">({{$data['categorias'][$x]['resultados']}})</span> </h5>
                 </div>
             @endFor
         </div>
+
+         <hr>
+
+        <h5 class="filterTitleContainer" onclick="hideFilterModal('Competitividad')"> <span class="filterTitle">Competitividad</span><span class="filterControlIcon plus-minus-toggle" id="filterControlCompetitividadModal"></span> </h5>
+        <div class="filterCompetitividad" id="filterCompetitividadModal">
+            @for($x=0; $x < count($data['competitividad']); $x++)
+                <div class="filterElement">
+                    <input class="filterCheck" id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
+                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['competitividad'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-competitividad-modal-{{$data['competitividad'][$x]['nombre']}}">({{$data['competitividad'][$x]['resultados']}})</span> </h5>
+                </div>
+            @endFor
+        </div>
+
     </div>
 </div>
 
@@ -124,6 +137,18 @@
                             </div>
                         @endFor
                     </div>
+
+                    <hr>
+        
+                    <h5 class="filterTitleContainer" onclick="hideFilter('Competitividad')"> <span class="filterTitle">Competitividad</span><span class="filterControlIcon plus-minus-toggle" id="filterControlCompetitividad"></span> </h5>
+                    <div class="filterCompetitividad" id="filterCompetitividad">
+                        @for($x=0; $x < count($data['competitividad']); $x++)
+                            <div class="filterElement">
+                                <input class="filterCheck" id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
+                                <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['competitividad'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-competitividad-{{$data['competitividad'][$x]['nombre']}}">({{$data['competitividad'][$x]['resultados']}})</span> </h5>
+                            </div>
+                        @endFor
+                    </div>
                 </div>
                 <br><br>
             </div>
@@ -139,7 +164,7 @@
                     {{-- ETIQUETAS DE FILTROS, SE GENERAN DESDE JS --}}
                  </div>
                 <div class="row d-flex align-items-center flex-row" id="productList">
-                    
+                        {{-- LISTA DE PRODUCTOS SE GENERA DESDE JS --}}
                 </div>
             </div>
             
@@ -173,7 +198,7 @@
                                         @for($x=$iniPagination; $x <= $endPagination; $x++ )
                                             <li class="page-item @if($activePage == $x) active @endif "><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$x}})">{{$x}}</a></li>
                                         @endfor
-                                    <li class="page-item @if($activePage == $endPagination) disabled @endif"><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$activePage + 1}})">Siguiente</a></li>
+                            <li class="page-item @if($activePage == $endPagination) disabled @endif"><a class="page-link" onclick="pagination({{$from}}, {{$to}}, {{$activePage + 1}})">Siguiente</a></li>
                         </ul>
                     </nav>   
                 @endif         

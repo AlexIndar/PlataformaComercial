@@ -95,6 +95,7 @@ class PortalController extends Controller
         }   
         $data['marcas'] = [];
         $data['categorias'] = [];
+        $data['competitividad'] = [];
         $data['resultados'] = count($items);
 
         foreach($marcas as $marca){
@@ -120,6 +121,16 @@ class PortalController extends Controller
             $tmp['resultados'] = $count;
             array_push($data['categorias'], $tmp);
         }
+
+        $count = 0;
+        foreach($items as $item){
+            if($item->competitividad == "true"){
+                $count ++;
+            }
+        }
+        $tmp['nombre'] = "Mejor Precio Indar";
+        $tmp['resultados'] = $count;
+        array_push($data['competitividad'], $tmp);
 
         return $data;
 

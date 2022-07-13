@@ -20,11 +20,11 @@
                                 @for($x=1; $x <= count($heroImages); $x++)
                                     @if($x == 1)
                                         <div id="first-carousel-item" class="carousel-item h-100">
-                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Temp/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Preview/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
                                         </div>
                                     @else
                                         <div class="carousel-item h-100">
-                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Temp/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Preview/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
                                         </div>
                                     @endif
                                 @endFor
@@ -193,15 +193,11 @@
     
         <!-- ESPECIALES DEL MES --------------------------------------------------------------------------- -->
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/1.jpg')}}" alt="Especiales del Mes INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/2.jpg')}}" alt="Lanzamientos INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/3.jpg')}}" alt="Combos INDAR"></div>
-            </div>
+            @for($x=1; $x <= count($eventosImages); $x++)
+                <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
+                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Preview/Eventos/'.$eventosImages[$x-1]->getBasename())}}" alt="Eventos INDAR"></div>
+                </div>
+            @endFor
         </div>
     
         {{-- SUPER OFERTAS --}}

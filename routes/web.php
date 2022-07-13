@@ -89,9 +89,10 @@ Route::get('/', function () {
     if(isset($_COOKIE['_lv'])){
         $level = $_COOKIE['_lv'];
     }
-    $heroImages = PortalControllerMkt::getHeroImages($token);
+    $heroImages = PortalControllerMkt::getImages($token, 'Hero');
+    $eventosImages = PortalControllerMkt::getPreviewImages($token, 'Eventos');
 
-    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages]);
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages]);
 
 })->name('/');
 
@@ -1205,31 +1206,24 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $username = $userData->typeUser;
                     $userRol = $userData->permissions;
                     $permissions = LoginController::getPermissions($token);
-                    $heroImages = PortalControllerMkt::getHeroImages($token);
+                    PortalControllerMkt::deleteTemps();
+                    $heroImages = PortalControllerMkt::getImages($token, 'Hero');
+                    $eventosImages = PortalControllerMkt::getImages($token, 'Eventos');
                     $directores = ['rvelasco', 'alejandro.jimenez'];
                     in_array($username, $directores) ? $entity = 'ALL' : $entity = $username;
-                    return view('mercadotecnia.portal.portal', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity, 'heroImages' => $heroImages]);
+                    return view('mercadotecnia.portal.portal', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'permissions' => $permissions, 'username' => $username, 'userRol' => $userRol, 'entity' => $entity, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages]);
                 });
 
-                Route::get('/mercadotecnia/portal/getImages/{location}', function($location){
-                    $token = TokenController::getToken();
-                    if($token == 'error' || $token == 'expired'){
-                        LoginController::logout();
-                    }
-                    if($location == 'Hero')
-                        $images = PortalControllerMkt::getHeroImages($token);
-                    dd($images);
-                    return $images;
-                });
-
-                Route::post('/mercadotecnia/portal/storeTempImages', function(Request $request){
+                Route::post('/mercadotecnia/portal/orderPreview', function(Request $request){
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
 
                     $heroImages = $request->hero;
-                    $move = PortalControllerMkt::storeTempImagesHero($heroImages);
+                    $move = PortalControllerMkt::orderPreview($heroImages, 'Hero');
+                    $eventosImages = $request->eventos;
+                    $move = PortalControllerMkt::orderPreview($eventosImages, 'Eventos');
                     
                     return $move;
                 });
@@ -1254,26 +1248,36 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if(isset($_COOKIE['_lv'])){
                         $level = $_COOKIE['_lv'];
                     }
-                    $heroImages = PortalControllerMkt::getHeroTempImages($token);
+                    $heroImages = PortalControllerMkt::getPreviewImages($token, 'Hero');
+                    $eventosImages = PortalControllerMkt::getPreviewImages($token, 'Eventos');
                 
-                    return view('mercadotecnia.portal.preview', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages]);
+                    return view('mercadotecnia.portal.preview', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages]);
                 
                 });
 
                 Route::post('/mercadotecnia/portal/uploadImage', function(Request $request){
-                    $uploadFile = $request->file('file');
-                    dd($uploadFile->getClientOriginalName());
 
-                    dd($request->file('file'));
                     $token = TokenController::getToken();
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
 
-                    $heroImages = $request->hero;
-                    $move = PortalControllerMkt::storeTempImagesHero($heroImages);
-                    
-                    return $move;
+                    $uploadFile = $request->file('file');
+                    $section = $request->section;
+                    $upload = PortalControllerMkt::uploadImage($uploadFile, $section);
+                    return $upload;
+                });
+
+                Route::post('/mercadotecnia/portal/deleteImage', function(Request $request){
+
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+
+                    $image = $request->image;
+                    $deleted = PortalControllerMkt::deleteImage($image);
+                    return $deleted;
                 });
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------
