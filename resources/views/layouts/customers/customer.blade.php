@@ -187,13 +187,13 @@
                     src="{{ asset('assets/customers/img/png/indar.png') }}" alt="Login image" width="150">
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="input-group mb-3 mt-3 group-buscador">
+                <div class="input-group mb-3 mt-3 group-buscador" id="input-busqueda">
                     <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2" disabled>
                     <div class="input-group-append">
                         <button class="btn btn-indar" onclick='buscarFiltro("")' type="button"><i class="fas fa-search fa-lg"></i></button>
                     </div>
                 </div>
-                <div class="resultadoBusqueda">
+                <div class="resultadoBusqueda" id="resultado-busqueda">
                     <div class="cuadrante cuadrante1">
                         <div class="tituloCuadrante">
                             <h5>Sugerencia por Artículo - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesArticulo"></span></h5>

@@ -8,9 +8,21 @@ var intervalBuscador = 1000;
 var sugerencias;
 
 var lastType = ''; //datetime de ultima tecla presionada. Si pasó más de 4 segundos desactivar refresh
-var timeToDisable = 4000; /* tiempo en ms para desactivar el refresh de buscador, después de haber presionado la última tecla */
+var timeToDisable = 2000; /* tiempo en ms para desactivar el refresh de buscador, después de haber presionado la última tecla */
 
 $(document).ready(function () {
+
+    $(window).click(function() {
+        closeSugerencias();
+      });
+      
+      $('#resultado-busqueda').click(function(event){
+        event.stopPropagation();
+      });
+
+      $('#input-busqueda').click(function(event){
+        event.stopPropagation();
+      });
 
     document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
 

@@ -191,7 +191,7 @@
                 </div>
             </div>
 
-            <div class="paginationLine d-none">
+            <div class="paginationLine d-none" id="paginationLine">
                 {{-- PAGINACIÓN --}}
                 {{-- Sólo mostrar si los resultados disponibles son más de los mostrados en la página actual --}}
                 @if($data['resultados'] > ($to - $from)) 
