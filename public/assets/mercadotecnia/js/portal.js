@@ -8,7 +8,25 @@ $('document').ready(function () {
     $("#image-edit-file").on("change", () => {
         const imgInp = document.getElementById('image-edit-file');
         const [file] = imgInp.files;
-        document.getElementById('image-edit').src = URL.createObjectURL(file);
+        document.getElementById('image-edit-preview').src = URL.createObjectURL(file);
+    });
+
+    $("#image-add-file").on("change", () => {
+        const imgInp = document.getElementById('image-add-file');
+        const [file] = imgInp.files;
+        document.getElementById('image-add-preview').src = URL.createObjectURL(file);
+    });
+
+    $('#select-action').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue){
+        let action = $("#select-action").val();
+        if(action == 'Externo' || action == 'Interno'){
+            document.getElementById('action-link-container').classList.remove('d-none');
+            document.getElementById('action-file-container').classList.add('d-none');
+        }
+        if(action == 'Descarga'){
+            document.getElementById('action-file-container').classList.remove('d-none');
+            document.getElementById('action-link-container').classList.add('d-none');
+        }
     });
 });
 
@@ -156,7 +174,7 @@ function closeModal(id) {
 
 function storeNewAction() {
     let section = document.getElementById('sectionElement').getAttribute('value');
-    let file_data = $("#newFileImage").prop("files")[0];
+    let file_data = $("#image-add-file").prop("files")[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("section", section);
