@@ -164,11 +164,11 @@ var Magnifier = function (evt, options) {
                 textWrapper.className = 'magnifier-loader-text';
                 lens.className = 'magnifier-loader hidden';
 
-                textWrapper.appendChild(document.createTextNode('Loading...'));
+                // textWrapper.appendChild(document.createTextNode('Loading...'));
                 lens.appendChild(textWrapper);
             } else if (data[idx].status === 2) {
                 lens.className = 'magnifier-lens hidden';
-                lens.removeChild(lens.childNodes[0]);
+                // lens.removeChild(lens.childNodes[0]);
                 // lens.style.background = 'url(' + thumb.src + ') no-repeat 0 0 scroll';
 
                 large.id = idx + '-large';
@@ -293,6 +293,7 @@ var Magnifier = function (evt, options) {
             curLens = $('#' + curIdx + '-lens');
 
             if (curData.status === 2) {
+                
                 curLens.className = 'magnifier-lens';
 
                 if (curData.zoomAttached === false) {
@@ -310,7 +311,9 @@ var Magnifier = function (evt, options) {
                 }
 
                 curLarge = $('#' + curIdx + '-large');
-                curLarge.className = 'magnifier-large';
+                if(!curLarge.classList.contains('hide-important')){
+                    curLarge.className = 'magnifier-large';
+                }
             } else if (curData.status === 1) {
                 curLens.className = 'magnifier-loader';
             }
@@ -345,13 +348,15 @@ var Magnifier = function (evt, options) {
             }
 
             if (curData.status > 0) {
-                curThumb.className = curData.thumbCssClass + ' opaque';
+                // curThumb.className = curData.thumbCssClass + ' opaque';
 
                 if (curData.status === 1) {
                     curLens.className = 'magnifier-loader';
                 } else if (curData.status === 2) {
-                    curLens.className = 'magnifier-lens';
-                    curLarge.className = 'magnifier-large';
+                    if(!curLarge.classList.contains('hide-important')){
+                        curLens.className = 'magnifier-lens';
+                        curLarge.className = 'magnifier-large';
+                    }
                     curLarge.style.left = '-' + curData.largeL + 'px';
                     curLarge.style.top = '-' + curData.largeT + 'px';
                 }

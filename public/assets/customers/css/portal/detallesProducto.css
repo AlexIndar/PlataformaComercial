@@ -143,6 +143,69 @@ input[type=number] {
     border-radius: 5px;
 }
 
+.imgRibbon{
+    width: 150px;
+    height: auto;
+    cursor: pointer;
+}
+
+.imgRibbon:hover ~ .textRibbon{
+    display: inline-block;
+}
+
+.textRibbon{
+    display: none;
+    color: black;
+}
+
+/* COMPETITIVIDAD */
+
+  .ribbon-title {
+      position: relative;
+      width: 200px;
+      padding: 5px 0px 5px 10px;
+      font-size: 20px;
+      position: relative;
+      color: #FFF;
+      background: var(--indar-primary);
+  }
+  .ribbon-title:after {
+      content: " ";
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      background: var(--indar-primary);
+      transform-origin: bottom left;
+      -ms-transform: skew(-30deg, 0deg);
+      -webkit-transform: skew(-30deg, 0deg);
+      transform: skew(-30deg, 0deg);
+  }
+
+/* FICHA TÉCNICA */
+
+.imgFichaTecnica{
+    width: 100%;
+    height: auto;
+}
+
+#closeModalIcon {
+    cursor: pointer;
+    position: absolute;
+    margin-right: 15px;
+    top: 30px;
+    right: 0;
+    z-index: 1000;
+  }
+
+#errorFicha{
+    width: 100%;
+    text-align: center;
+}
+
 /* BTN ACTIONS */
 
 .btn-actions{
@@ -212,7 +275,6 @@ input[type=number] {
 .badgePromo:hover ~ .infoPromo{
     display: block;
 }
-
 
 .activePromo{
     background-color: var(--indar-primary);

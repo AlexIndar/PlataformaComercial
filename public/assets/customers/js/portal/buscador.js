@@ -22,6 +22,9 @@ $(document).ready(function () {
             recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
             highlight(cadena);
         }
+        else if(e.keyCode == 13){
+            buscarFiltro("");
+        }
         else{
             cadena != '' && !intervalActive ? activaBuscador() : console.log('vacio');
         }
@@ -40,6 +43,7 @@ $(document).ready(function () {
 });
 
 function activaBuscador(){
+    document.getElementById('bigImage-large').classList.add('hide-important');
     $(".resultadoBusqueda").slideDown();
     $(".overlayBusqueda").fadeIn();
     intervalActive = true;
@@ -56,7 +60,7 @@ function buscar(){
     if((new Date()) - lastType < timeToDisable){
         var data = "";
         data = getFilterString();
-        console.log(data);
+        console.log('Buscar '+data);
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -71,6 +75,7 @@ function buscar(){
                 if(data.length > 0){
                     sugerencias = data;
                 }
+                console.log(sugerencias);
                 recargaSugerencias(sugerencias); //cargar sugerencias con respuesta del back
             },
             error: function (error) {
@@ -242,6 +247,7 @@ function clearSugerencias(){
 function closeSugerencias(){
     $(".resultadoBusqueda").slideUp('100');
     $(".overlayBusqueda").fadeOut('100');
+    document.getElementById('bigImage-large').classList.remove('hide-important');
 }
 
 function isNumeric(n) { //validar si ingresó número en la búsqueda, para hacer el filtro desde js con lo que ya se tenga
@@ -262,7 +268,7 @@ function recargaSugerencias(data){
             var add = true;
             //validar que la descripción del artículo contenga todo lo que está en el input de búsqueda
             while(y < arrCadena.length){
-                if(!(arrCadena[y] != '' && data[x]['purchasedescription'].includes(arrCadena[y].toUpperCase()))){
+                if(!(arrCadena[y] != '' && (data[x]['purchasedescription'].includes(arrCadena[y].toUpperCase()) || data[x]['itemid'].includes(arrCadena[y].toUpperCase()) ))){
                     add = false;
                 }
                 if(arrCadena[y] == ''){
@@ -321,10 +327,10 @@ function getFilterString(){
         var arrCadena = cadena.split(' ');
         var data = '';
         for(var x = 0; x < arrCadena.length; x++){ //Quitar X y comilla doble " porque da problemas al mandarlo al sp 
-            if(arrCadena[x] != '' && arrCadena[x].toUpperCase() != 'X' && !isNumeric(arrCadena[x]) && !arrCadena[x].includes('"') && !arrCadena[x].includes('/')){ 
+            if(arrCadena[x] != '' && arrCadena[x].toUpperCase() != 'X' && !arrCadena[x].includes('"') && !arrCadena[x].includes('/')){ 
                 data = data + arrCadena[x].replaceAll('"', '') + ' ~ ';
             }
-            if(isNumeric(arrCadena[x]) || arrCadena[x].includes('"') || arrCadena[x].includes('/')){
+            if(arrCadena[x].includes('/')){
                 recargaSugerencias(sugerencias);
             }
         }
@@ -333,10 +339,14 @@ function getFilterString(){
 }
 
 function buscarFiltro(filtro){
-    filtro = filtro.split(' ')[0];
-    console.log('buscar '+filtro);
-    var data = getFilterString();
-    data != '' ? filtro = filtro + ' ~ '+ data : filtro = filtro;
+    let data = getFilterString();
+    if(filtro != ""){
+        filtro = filtro.split(' ')[0];
+        data != '' ? filtro = filtro + ' ~ '+ data : filtro = filtro;
+    }
+    else{
+        filtro = data;
+    }
     window.location = "/portal/busqueda/" + filtro;
 }
 

@@ -73,7 +73,7 @@
         <div class="filterCompetitividad" id="filterCompetitividadModal">
             @for($x=0; $x < count($data['competitividad']); $x++)
                 <div class="filterElement">
-                    <input class="filterCheck" id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
+                    <input class="filterCheck" autocomplete='off' id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
                     <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['competitividad'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-competitividad-modal-{{$data['competitividad'][$x]['nombre']}}">({{$data['competitividad'][$x]['resultados']}})</span> </h5>
                 </div>
             @endFor
@@ -85,7 +85,7 @@
         <div class="filterMarcas" id="filterMarcasModal">
             @for($x=0; $x < count($data['marcas']); $x++)
                 <div class="filterElement">
-                    <input class="filterCheck" id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
+                    <input class="filterCheck" autocomplete='off' id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
                     <img loading="lazy" class="filterImg" src={{"http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['marcas'][$x]['nombre']))).".jpg"}}>
                     <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['marcas'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-marca-modal-{{$data['marcas'][$x]['nombre']}}">({{$data['marcas'][$x]['resultados']}})</span> </h5>
                 </div>
@@ -98,7 +98,7 @@
         <div class="filterCategorias" id="filterCategoriasModal">
             @for($x=0; $x < count($data['categorias']); $x++)
                 <div class="filterElement">
-                    <input class="filterCheck" id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
+                    <input class="filterCheck" autocomplete='off' id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
                     <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['categorias'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-categoria-modal-{{$data['categorias'][$x]['nombre']}}">({{$data['categorias'][$x]['resultados']}})</span> </h5>
                 </div>
             @endFor
@@ -121,7 +121,7 @@
                     <div class="filterCompetitividad" id="filterCompetitividad">
                         @for($x=0; $x < count($data['competitividad']); $x++)
                             <div class="filterElement">
-                                <input class="filterCheck" id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
+                                <input class="filterCheck" autocomplete='off' id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
                                 <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['competitividad'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-competitividad-{{$data['competitividad'][$x]['nombre']}}">({{$data['competitividad'][$x]['resultados']}})</span> </h5>
                             </div>
                         @endFor
@@ -133,7 +133,7 @@
                     <div class="filterMarcas" id="filterMarcas">
                         @for($x=0; $x < count($data['marcas']); $x++)
                             <div class="filterElement">
-                                <input class="filterCheck" id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
+                                <input class="filterCheck" autocomplete='off' id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
                                 <img loading="lazy" class="filterImg" src={{"http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['marcas'][$x]['nombre']))).".jpg"}}>
                                 <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['marcas'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-marca-{{$data['marcas'][$x]['nombre']}}">({{$data['marcas'][$x]['resultados']}})</span> </h5>
                             </div>
@@ -146,7 +146,7 @@
                     <div class="filterCategorias" id="filterCategorias">
                         @for($x=0; $x < count($data['categorias']); $x++)
                             <div class="filterElement">
-                                <input class="filterCheck" id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
+                                <input class="filterCheck" autocomplete='off' id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
                                 <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['categorias'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-categoria-{{$data['categorias'][$x]['nombre']}}">({{$data['categorias'][$x]['resultados']}})</span> </h5>
                             </div>
                         @endFor
