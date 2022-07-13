@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="{{asset('assets/libraries/Magnify/css/Magnifier.css')}}">
 <link rel="stylesheet" href="{{asset('assets/customers/css/portal/detallesProducto.css')}}">
 <script src="{{asset('assets/libraries/Magnify/js/Event.js')}}"></script>
-        <script src="{{asset('assets/libraries/Magnify/js/Magnifier.js')}}"></script>
-        <script src="{{asset('assets/customers/js/portal/detallesProducto.js')}}"></script>
+<script src="{{asset('assets/libraries/Magnify/js/Magnifier.js')}}"></script>
+<script src="{{asset('assets/customers/js/portal/detallesProducto.js')}}"></script>
 @endsection
 
 @section('body')
@@ -62,6 +62,12 @@
                                 <div class="col-lg-6 col-md-6 col-12">
                                     <h4 class="itemid">{{$itemInfo['itemid']}}</h4>
                                     <h5 class="purchasedescription">{{ucwords(strtolower($itemInfo['purchasedescription']))}}</h5>
+                                    @if($itemInfo['competitividad'] == "true")
+                                        <img class="imgRibbon" src="/assets/customers/img/png/ribbon-mejor-precio.png" loading="lazy"/> <a class="textRibbon">En México</a>
+                                        {{-- <div class="ribbon-title">
+                                            <a href="#">Mejor Precio <span class="text-yellow">Indar</span></a>
+                                        </div> --}}
+                                    @endif
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-12">
                                     <img class="imgManufacturer" src="{{"http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $itemInfo['familia']))).".jpg"}}" alt="">   
@@ -121,11 +127,24 @@
                                         <h5 class="infoItem"><span>A partir de <span id="promoMinPzas"></span></span></h5>
                                         <div class="promosContainer">
                                         @for($x=0; $x < count($itemInfo['promoART']); $x++)
-                                                @if($itemInfo['promoART'][$x]['cantidad'] == 1)
+                                                {{-- @if($itemInfo['promoART'][$x]['cantidad'] == 1)
                                                     <h5 onclick="updateQuantityByPromo('{{$itemInfo['promoART'][$x]['cantidad']}}')" class="infoItem badgePromo activePromo" id='promoART-1-{{$itemInfo['promoART'][$x]['descuento']}}'><span>-{{$itemInfo['promoART'][$x]['descuento']}} %</span></h5>
                                                 @else
                                                     <h5 onclick="updateQuantityByPromo('{{$itemInfo['promoART'][$x]['cantidad']}}')" class="infoItem badgePromo" id='promoART-{{$itemInfo['promoART'][$x]['cantidad']}}-{{$itemInfo['promoART'][$x]['descuento']}}'><span>-{{$itemInfo['promoART'][$x]['descuento']}} %</span></h5>
-                                                @endif
+                                                @endif --}}
+
+                                                <div class="chip-group">
+                                                    @if($itemInfo['promoART'][$x]['cantidad'] == 1)
+                                                    <div class="chip active">
+                                                        <h5 onclick="updateQuantityByPromo('{{$itemInfo['promoART'][$x]['cantidad']}}')" class="infoItem" id='promoART-1-{{$itemInfo['promoART'][$x]['descuento']}}'><span>-{{$itemInfo['promoART'][$x]['descuento']}} %</span></h5>
+                                                    </div>
+                                                    @else
+                                                        <div class="chip">
+                                                            <h5 onclick="updateQuantityByPromo('{{$itemInfo['promoART'][$x]['cantidad']}}')" class="infoItem" id='promoART-{{$itemInfo['promoART'][$x]['cantidad']}}-{{$itemInfo['promoART'][$x]['descuento']}}'><span>-{{$itemInfo['promoART'][$x]['descuento']}} %</span></h5>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                
                                         @endFor
                                             </div>
 
@@ -147,7 +166,7 @@
                                     <div class="actions">
                                         <button class='btn-actions btn-actions-primary'>Agregar al carrito</button>
                                         <button class='btn-actions btn-actions-secondary mt-2'>Ver video</button>
-                                        <button class='btn-actions btn-actions-secondary mt-2'>Ver ficha técnica</button>
+                                        <button onclick="openModalFicha('{{$itemInfo['itemid']}}')" class='btn-actions btn-actions-secondary mt-2'>Ver ficha técnica</button>
                                     </div>  
                                 </div>
                             </div>
@@ -165,6 +184,24 @@
 
     </div>
     
+    {{-- MODAL FICHA TÉCNICA --}}
+
+
+    <!-- Modal -->
+<div class="modal fade" id="modalFichaTecnica" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+            <i class="fa-solid fa-lg fa-xmark" id="closeModalIcon" style="cursor: pointer; margin-top: -8px;" onclick="closeModal('modalFichaTecnica')"></i>
+            <img class="imgFichaTecnica" src="" onload="fichaDisponible()" onerror="fichaNoDisponible()" alt="">
+            <h5 id='errorFicha'></h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalFichaTecnica')">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 @endsection
 

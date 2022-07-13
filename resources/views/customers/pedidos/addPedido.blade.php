@@ -427,8 +427,7 @@
                      aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                      <div class="modal-dialog modal-xl">
                          <div class="modal-content modal-content-inventario" id="modal-netsuite-loading">
-                             <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario"
-                                 style="cursor: pointer; margin-top: -8px;" onclick="closeModalNetsuiteLoading()"></i>
+                             <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalNetsuiteLoading()"></i>
                              <div class="text-center">
                                  <h4>Levantando Pedido</h4>
                              </div>

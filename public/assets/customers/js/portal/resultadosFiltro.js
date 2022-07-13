@@ -350,6 +350,8 @@ function updatePagination(activePage = 1) {
             ${linkSiguiente}
         `;
     }
+
+    document.getElementById('paginationLine').classList.remove('d-none');
 }
 
 function updateProductList(from = 1, to = parseInt(document.getElementById('paginationCant').value), activePage = 1) {

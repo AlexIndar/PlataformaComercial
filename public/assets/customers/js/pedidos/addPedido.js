@@ -399,14 +399,13 @@ $(document).ready(function () {
 
 
     // FILTER INVENTARIO PRICE RANGE -------------------------------------------------------------------------------------------
-    $('#filterInventario').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
+    $('#filterInventario').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR FILTRO DE INVENTARIO
         var filterValue = $("#filterInventario").val();
         var table = $('#tablaInventario').DataTable();
         if (filterValue == 'precioDown')
             table.column('10').order('desc').draw();
         if (filterValue == 'precioUp')
             table.column('10').order('asc').draw();
-
     });
 });
 

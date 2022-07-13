@@ -5,11 +5,13 @@
     left: 0;
 }
 
+
+
 .magnifier-lens {
     position: absolute;
-    background-color: rgba(73, 73, 121, 0.585);
-    cursor: zoom-in;
-    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: crosshair;
+    z-index: 100;
     top: 0;
     left: 0;
     overflow: hidden
@@ -24,7 +26,7 @@
     text-align: center;
     background: transparent;
     background: rgba(50, 50, 50, 0.5);
-    z-index: 1000;
+    z-index: 100;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F323232,endColorstr=#7F323232)";
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F323232,endColorstr=#7F323232)
 }

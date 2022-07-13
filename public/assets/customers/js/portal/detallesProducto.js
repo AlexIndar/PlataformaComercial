@@ -125,6 +125,10 @@ function stepDown(){
     updatePrecioCliente();
 }
 
+function showRibbon(){
+    $('.imgRibbon').slideDown();
+}
+
 function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
 }
@@ -198,8 +202,8 @@ function validateActivePromo(){
     let badgesPromo = document.querySelectorAll('[id^="promoART"]');
     
     badgesPromo.forEach((promo) => {
-        if(promo.classList.contains('activePromo')){
-            promo.classList.remove('activePromo');
+        if(promo.parentNode.classList.contains('active')){
+            promo.parentNode.classList.remove('active');
         }
     })
  
@@ -207,7 +211,7 @@ function validateActivePromo(){
         let minPzas = parseInt(badgesPromo[x].id.split('-')[1]);
         if(parseInt(cant) >= minPzas){
             minPzas == 1 ? document.getElementById('promoMinPzas').innerText = minPzas + ' pieza' : document.getElementById('promoMinPzas').innerText = minPzas + ' piezas';
-            badgesPromo[x].classList.add('activePromo');
+            badgesPromo[x].parentNode.classList.add('active');
             break;
         }
     }    
@@ -243,4 +247,22 @@ function getPrecioClientePromo() {
     }
 
     return precioCliente;
+}
+
+function openModalFicha(item){
+    $('.imgFichaTecnica').attr('src', "http://indarweb.dyndns.org:8080/assets/articulos/img/04_JPG_FICHA/"+item.replaceAll(' ', '_').replaceAll('-','_')+"_FICHA.webp");
+    $('#modalFichaTecnica').modal('show');
+    // window.open ("http://indarweb.dyndns.org:8080/assets/articulos/img/04_JPG_FICHA/"+item.replaceAll(' ', '_').replaceAll('-','_')+"_FICHA.webp", '_blank');
+}
+
+function closeModal(id){
+    $('#'+id).modal('hide');
+}
+
+function fichaNoDisponible(){
+    document.getElementById('errorFicha').innerText = 'Ficha técnica no disponible';
+}
+
+function fichaDisponible(){
+    document.getElementById('errorFicha').innerText = '';
 }

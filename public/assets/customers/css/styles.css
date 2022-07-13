@@ -1,6 +1,3 @@
-.container, .container-fluid{
-    max-width: 1600px !important;
-}
 
 :root{
     --indar-primary: #002868;
@@ -38,6 +35,13 @@
     border-radius: 10px; 
 }
 
+.text-yellow{
+    color: var(--indar-secondary) !important;
+}
+
+.hide-important{
+    display: none !important;
+}
 
 .bg-indarPrimary{
     background-color: var(--indar-primary) !important;
@@ -57,6 +61,42 @@
 .btn-indar:hover{
     filter: brightness(140%);
 }
+
+/* INDAR CHIPS  */
+
+.chip-group{
+    display:flex;
+    flex-wrap: wrap;
+    
+}
+
+.chip{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px 0px 10px;
+    color: var(--indar-primary);
+    border: 1px solid var(--indar-primary-light);
+    margin-right: 10px;
+    border-radius: 30px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 250ms ease;
+}
+
+.chip.active{
+    background-color: var(--indar-primary);
+    border-color: var(--indar-primary);
+    color: var(--text-primary);
+}
+
+.fa-chip{
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 2px;
+    height: 2px;
+}
+
 
 /* COMMON ALL SECTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 

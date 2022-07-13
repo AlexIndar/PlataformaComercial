@@ -26,7 +26,7 @@
                     @endFor
                     </ul>
                     <div class="actions">
-                        <button class="btn-add" onclick="activeModal('modalAddElement', 'Hero')">Guardar</button>
+                        <button class="btn-add" onclick="activeModal('modalAddElement', 'Hero')">Agregar</button>
                     </div>
             </fieldset>
             
@@ -70,11 +70,31 @@
                 <div class="modal-content">
                     <input type="text" value="" name="sectionElement" id="sectionElement" hidden>
                 <div class="modal-header">
-                    <h4 id="h4-modalAddElement">Agregar Banner</h4>
+                    <h4 id="h4-modalAddElement">Agregar</h4>
                     <i style="cursor:pointer;" class="fas fa-times" onclick="closeModal('modalAddElement')"></i>
                 </div>
                 <div class="modal-body">
-                    <input type="file" name="newFileImage" id="newFileImage" accept=".jpg, .jpeg, .png, .webp">
+                    <img loading="lazy" class="image-add-preview" id='image-add-preview' src="" alt="">
+                    <input class="mt-2" type="file" name="image-add-file" id="image-add-file" accept=".jpg, .jpeg, .png, .webp">
+
+                    <select id="select-action" name="select-action" class="form-control selectpicker mt-3" data-live-search="true">
+                        <option selected value="none">Selecciona una acción</option>
+                        <option class="" style="height: 30px !important;" value="Externo">Link externo</option>
+                        <option class="" style="height: 30px !important;" value="Interno">Link interno</option>
+                        <option class="" style="height: 30px !important;" value="Descarga">Descarga</option>
+                        {{-- <option class="" style="height: 30px !important;" value="Filtro">Filtro</option> --}}
+                    </select>
+
+                    <div class="action-link-container mt-3 d-none" id="action-link-container">
+                        <p>Ingresa un enlace</p>
+                        <input type="text" class="w-100" id="action-link" name="action-link">
+                    </div>
+
+                    <div class="action-file-container mt-3 d-none" id="action-file-container">
+                        <p>Carga un documento</p>
+                        <input class="" type="file" name="action-file" id="action-file" accept=".jpg, .jpeg, .png, .webp">
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
@@ -93,11 +113,11 @@
                 <div class="modal-content">
                     <input type="text" value="" name="sectionElement" id="sectionElement" hidden>
                 <div class="modal-header">
-                    <h4 id="h4-modalEditElement">Editar Banner</h4>
+                    <h4 id="h4-modalEditElement">Editar</h4>
                     <i style="cursor:pointer;" class="fas fa-times" onclick="closeModal('modalEditElement')"></i>
                 </div>
                 <div class="modal-body">
-                    <img loading="lazy" class="image-edit" id='image-edit' src="" alt="">
+                    <img loading="lazy" class="image-edit-preview" id='image-edit-preview' src="" alt="">
                     <p class="mt-2">Cargar nueva imagen </p>
                     <input type="file" name="image-edit-file" id="image-edit-file" accept=".jpg, .jpeg, .png, .webp">
                 </div>
