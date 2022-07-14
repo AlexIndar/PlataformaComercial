@@ -161,13 +161,12 @@ function formatImporte(input){
 }
 
 function generateFile(){
-    console.log(fec_aplicacion);
     var encabezado = '';
     var fileText = '';
     if (validarCampos()){
         generaEncabezado(num_secuencia);
         // si todo está correcto, aquí !!! se debe de cambiar el número de lote por el que retornen del back
-        encabezado += tpo_registro+''+num_lote+''+num_secuencia.toString().padStart(5, "0")+''+fec_aplicacion+''+cve_bco_ord+''+ord_tpo_cta+''+ord_num_cta+''+ord_nombre+''+ord_curp_rfc+''+cve_proceso+''+cve_producto+''+cod_instruccion+''+cod_moneda+''+leyenda_cargo+''+num_movtos.toString().padStart(5, "0")+''+imp_total.toString().padStart(17, "0")+''+cve_canal+''+cod_rechazo+''+des_rechazo+''+tp_code+''+uso_futuro+'|';
+        encabezado += tpo_registro+''+num_lote+''+num_secuencia.toString().padStart(5, "0")+''+fec_aplicacion+''+cve_bco_ord+''+ord_tpo_cta+''+ord_num_cta+''+ord_nombre+''+ord_curp_rfc+''+cve_proceso+''+cve_producto+''+cod_instruccion+''+cod_moneda+''+leyenda_cargo+''+num_movtos.toString().padStart(5, "0")+''+imp_total.toString().padStart(17, "0")+''+cve_canal+''+cod_rechazo+''+des_rechazo+''+tp_code+''+uso_futuro;
         fileText += encabezado;
         num_secuencia ++;
         for(var x=0; x < num_movtos; x++){
@@ -180,8 +179,6 @@ function generateFile(){
             detalleLine += detalle[x]['tpo_registro'] + detalle[x]['num_lote'].toString().padStart(5, '0') + detalle[x]['num_secuencia'] + detalle[x]['fec_aplicacion'] + detalle[x]['cve_bco_ord'] + detalle[x]['ord_tpo_cta'] + detalle[x]['ord_num_cta'] + detalle[x]['ord_nombre'] + detalle[x]['ord_curp_rfc'] + detalle[x]['cve_bco_ben'] + detalle[x]['ben_tpo_cta'] + detalle[x]['ben_num_cta'] + detalle[x]['ben_nombre'] + detalle[x]['ben_curp_rfc'] + detalle[x]['vos_tpo_cta'] + detalle[x]['vos_num_cta'] + detalle[x]['vos_nombre'] + detalle[x]['vos_curp_rfc'] + detalle[x]['cod_movto'] + detalle[x]['tpo_pago'] + detalle[x]['leyenda_abono'] + detalle[x]['importe_orden'] + detalle[x]['importe_iva'] + detalle[x]['ref_numerica'] + detalle[x]['ref_cobranza'] + detalle[x]['cve_pago'] + detalle[x]['tpo_operacion'] + detalle[x]['ref_unica_cliente'] + detalle[x]['ref_servicio_emisor'] + detalle[x]['nom_titular_servicio'] + detalle[x]['fec_expiracion'] + detalle[x]['cod_status'] + detalle[x]['cod_usuario'] + detalle[x]['num_serial'] + detalle[x]['num_folio'] + detalle[x]['cod_servicio'] + detalle[x]['uso_futuro'] + detalle[x]['cve_rastreo'] + detalle[x]['cod_rechazo'] + detalle[x]['des_rechazo'] + detalle[x]['uso_futuro_resp'];
             fileText += "\n"+detalleLine;
         }
-
-        console.log(detalle);
 
         downloadFile('MXFERREINDARSIP-'+fec_aplicacion+'-'+num_lote+'.txt', fileText);
     }
@@ -402,8 +399,6 @@ function obtenerPago(num_secuencia){
 
 function downloadFile(filename, text) {
     var element = document.createElement('a');
-    console.log(filename);
-    console.log(text);
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
   

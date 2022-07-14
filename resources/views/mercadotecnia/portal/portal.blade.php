@@ -40,7 +40,7 @@
                 <legend>Eventos</legend>
                 <ul class="drag-sort-enable" id='ul-Eventos'>
                 @for($x=1; $x <= count($eventosImages); $x++)
-                    <li class="drag-sort-item divImg">
+                    <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', 'Eventos', this)">
                         <img loading="lazy" class="image-eventos imageOnServer" id='Eventos/{{$eventosImages[$x-1]->getBasename()}}' src="{{asset('assets/mercadotecnia/Temp/Eventos/'.$eventosImages[$x-1]->getBasename())}}" alt="">
                         <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
                     </li>
@@ -124,7 +124,7 @@
                 <div class="modal-footer">
                     <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
                     <button type="button" class="btn btn-secondary" onclick="closeModal('modalEditElement')">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="storeNewAction()">Agregar</button>
+                    <button type="button" class="btn btn-primary" onclick="storeNewAction()">Guardar</button>
                 </div>
                 </div>
             </div>

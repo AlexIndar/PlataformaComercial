@@ -28,10 +28,18 @@ $('document').ready(function () {
             document.getElementById('action-link-container').classList.add('d-none');
         }
     });
+
+    $('#modalEditElement').on('hidden.bs.modal', function () {
+        console.log('closed modal');
+        let editing = document.querySelectorAll('.editing');
+        console.log(editing);
+        [].forEach.call(editing, function(el) {
+            el.classList.remove("editing");
+        });
+      });
 });
 
-/* Made with love by @fitri
- This is a component of my ReactJS project
+
  https://codepen.io/fitri/full/oWovYj/ */
 
 function enableDragSort(listClass) {
@@ -164,13 +172,16 @@ function activeModal(id, section, row = null) {
 
     if(row != null){
         let src = row.children[0].src;
-        document.getElementById('image-edit').src = src;
+        row.children[0].classList.add('editing');
+        document.getElementById('image-edit-preview').src = src;
     }
 }
 
 function closeModal(id) {
     $('#' + id).modal('hide');
+    
 }
+
 
 function storeNewAction() {
     let section = document.getElementById('sectionElement').getAttribute('value');
