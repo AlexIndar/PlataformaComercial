@@ -6,27 +6,12 @@ html{
     overflow-x: hidden;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-    background-color: transparent;
-    border: none;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #313761;
-    border-radius: 10px; 
-}
-
-
-
-
-
 /* FIRST GRAY BAR --------------------------------------------------------------------------------------------------------------------------------------- */
 .login-options{
     position: fixed;
     width: 100%;
     height: 27px;
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
     display: flex;
     flex-direction: row;
     padding: 3px;
@@ -40,7 +25,7 @@ html{
     font-size: 14px;
     margin-left: 10px;
     font-weight: 500;
-    color: #002868;
+    color: var(--indar-primary);
     float: right;
     cursor: pointer;
     line-height: 20px;
@@ -48,7 +33,7 @@ html{
 
 .question{
     margin-left: 10px;
-    color: #002868;
+    color: var(--indar-primary);
     font-size: 17px;
     margin-top: 10px;
     cursor: pointer;
@@ -74,13 +59,13 @@ html{
 
 
 .btn-indar{
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
     color: white !important;
 }
 
 .input-indar{
-    background-color: #F5F8F8 !important;
-    border: 1px solid #F5F8F8 !important;
+    background-color: var(--light-purple) !important;
+    border: 1px solid var(--light-purple) !important;
     color: rgb(85, 85, 85) !important;
 }
 
@@ -94,12 +79,12 @@ button:focus {
 }
 
 .btn-group ul{
-    background-color: #F5F8F8 !important;
+    background-color: var(--light-purple) !important;
 }
 
 
 .iconos-cuenta{
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -117,8 +102,8 @@ button:focus {
 .navbar{
     width: 100%;
     height: 50px;
-    background-color: #002868 !important;
-    border-bottom: 5px solid rgb(251, 198, 33) !important;
+    background-color: var(--indar-primary) !important;
+    border-bottom: 5px solid var(--indar-secondary) !important;
     display: flex !important;
     flex-direction: row !important;
     color: white !important;
@@ -138,6 +123,7 @@ button:focus {
     z-index: 600;
     background-color: rgba(0, 0, 0, 0.508);
     display: none;
+    backdrop-filter: blur(1px);
 }
 
 .nav-link{
@@ -158,14 +144,14 @@ button:focus {
 .navbar-nav ul{
     position: fixed !important;
     top: 130px !important;
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
     padding: 0px !important;
     min-width: 300px;
     min-height: 500px;
     border-radius: 0px !important;
     margin-left: 18px;
     border: none;
-    border-top: 2px solid #002868;
+    border-top: 4px solid var(--indar-primary);
     -moz-box-shadow:    0px 0px 0px 0px #fff;
     -webkit-box-shadow: 0px 0px 0px 0px #fff;
     box-shadow:         0px 0px 0px 0px #fff;
@@ -185,12 +171,12 @@ button:focus {
 }
 
 .dropdown-item:hover{
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     background-color: white !important;
 }
 
 .active-item-main, .active-item-2{
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     background-color: white !important;
 }
 
@@ -200,7 +186,7 @@ button:focus {
 }
 
 .dropdown-menu-main{
-    background-color: #F5F8F8 !important;
+    background-color: var(--light-purple) !important;
     color: white !important;
 }
 
@@ -233,7 +219,7 @@ button:focus {
    }
    
    .hamburguer span{
-     background: #002868;
+     background: var(--indar-primary);
      border-radius:10px;
      height:3px;
      margin: 3px 0;
@@ -290,7 +276,7 @@ button:focus {
        z-index: 1100;
        width: 100%;
        height: 100vh;
-       background-color: #F5F8F8;
+       background-color: var(--light-purple);
        display: block;
        transform: translateX(-100%);
        transition: all .6s ease-in-out;
@@ -510,7 +496,7 @@ button:focus {
 /* OFERTA RELAMPAGO ------------------------------------------------------------------------------------------------------------------------ */
 
 .a-yellow{
-    color: rgb(251, 198, 33); 
+    color: var(--indar-secondary); 
     font-weight: 500; 
     font-size: 18px; 
     text-decoration: none;
@@ -562,12 +548,12 @@ button{
 
 .new-products-title{
     width: 100%;
-    border-bottom: 5px solid rgb(251, 198, 33);
+    border-bottom: 5px solid var(--indar-secondary);
     padding: 10px;
 }
 
 .new-products-title h3{
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     font-weight: 700;
 }
 
@@ -630,12 +616,12 @@ button{
 .outlet-products-title{
     width: 90%;
     margin-left: 5%;
-    border-bottom: 5px solid rgb(251, 198, 33);
+    border-bottom: 5px solid var(--indar-secondary);
     padding: 10px;
 }
 
 .outlet-products-title h3{
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     margin-left: 100px;
     font-weight: 700;
 }
@@ -646,7 +632,7 @@ button{
     float: right !important;
     margin-top: 5px;
     text-decoration: none !important; 
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     cursor: pointer;
 }
 
@@ -688,7 +674,7 @@ button{
 }
 
 .swiper-slide-products h5{
-    color:  #002868;
+    color:  var(--indar-primary);
     font-size: 15px;
     font-weight: 700;
     margin-top: 5px;
@@ -708,7 +694,7 @@ button{
 }
 
 .swiper-button-indar{
-    background-color: #002868;
+    background-color: var(--indar-primary);
     color: white !important;
     font-size: 10px !important;
     height: 60% !important;
@@ -763,10 +749,9 @@ button{
   }
 
   .ribbon-oferta span{
-    background-color: rgb(251, 198, 33);
-    color: #002868;
+    background-color: var(--indar-secondary);
+    color: var(--indar-primary);
   }
-  
 
   .ribbon-outlet span{
       background-color: #FF3E49;
@@ -790,7 +775,7 @@ button{
 .suppliers{
     width: 100%;
     height: auto;
-    background-color: #002868;
+    background-color: var(--indar-primary);
     margin-top: 30px;
     margin-bottom: 30px;
 }
@@ -798,7 +783,7 @@ button{
 .swiper-suppliers{
     width: 100% !important;
     height: auto !important;
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
     margin-top: 30px !important;
     margin-bottom: 0 !important;
 }
@@ -807,7 +792,7 @@ button{
     position: relative !important;
     height: 80px !important;
     padding: 10px !important;
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
     display: flex !important; 
     justify-content: center !important;
     flex-wrap: wrap !important;
@@ -855,7 +840,8 @@ button{
 
 .footer{
     padding: 80px !important;
-    background-color: #F5F8F8 !important;
+    background-color: var(--light-purple) !important;
+    z-index: 500 !important;
 }
 
 .contact-footer{
@@ -869,14 +855,14 @@ button{
     display: flex;
     flex-direction: row !important;
     justify-content: center;
-    color: #002868;
+    color: var(--indar-primary);
     margin-left: 20px !important;
 }
 
 
 .social-media-icons a{
     text-decoration: none;
-    color: #002868;
+    color: var(--indar-primary);
 }
 
 .social-media-icons i{
@@ -910,7 +896,7 @@ button{
     width: 100%;
     height: auto;
     padding: 50px;
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
     color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -958,7 +944,7 @@ button{
 }
 
 .modal-header{
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
     color: white !important;
     padding-left: 50px !important;
     padding-right: 50px !important;
@@ -988,7 +974,7 @@ button{
     float: right;
     height: 40px;
     margin-left: auto;
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
     border-radius: 10px;
     border:none;
     text-indent: 10px;
@@ -998,7 +984,7 @@ button{
     display: flex;
     flex-direction: row;
     align-items: center;
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     font-weight: 500;
 }
 
@@ -1020,7 +1006,7 @@ button{
 
 .login-btn{
     width: 40%;
-    background-color: rgb(251, 198, 33) !important;
+    background-color: var(--indar-secondary) !important;
     color: white !important;
     font-size: 20px !important;
     font-weight: 500 !important;
@@ -1029,7 +1015,7 @@ button{
 }
 
 .login-btn:hover{
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
 }
 
 .login-buttons a{
@@ -1041,30 +1027,30 @@ button{
 }
 
 .hr-indar{
-    border: 2px solid #002868 !important;
-    border-color: #002868 !important;
-    background-color: #002868 !important;
-    color: #002868 !important;
+    border: 2px solid var(--indar-primary) !important;
+    border-color: var(--indar-primary) !important;
+    background-color: var(--indar-primary) !important;
+    color: var(--indar-primary) !important;
 }
 
 
 .modal-body a{
     text-decoration: none;
     font-size: 18px;
-    color: #002868;
+    color: var(--indar-primary);
 }
 
 /* DISCONTINUED ---------------------------------------------------------------------------------------------- */
 .yellow-bar{
-    background-color: rgb(251, 198, 33);
+    background-color: var(--indar-secondary);
     width: 100%;
     min-height: 150px;
     height: auto;
 }
 
 .yellow-bar-content{
-    color: #002868;
-    border-bottom: 5px solid #002868;
+    color: var(--indar-primary);
+    border-bottom: 5px solid var(--indar-primary);
     display: flex;
     flex-direction: row;
 }
@@ -1095,7 +1081,7 @@ button{
 }
 
 .product-card h5{
-    color:  #002868;
+    color:  var(--indar-primary);
     font-size: 15px;
     font-weight: 700;
     margin-top: 5px;
@@ -1113,7 +1099,7 @@ button{
 }
 
 .gray-background{
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
 }
 
 
@@ -1156,7 +1142,7 @@ button{
         margin-top: 15px !important;
     }
 
-    .input-group{
+    .group-buscador{
         width: 90% !important;
         margin-left: 5% !important;
     }

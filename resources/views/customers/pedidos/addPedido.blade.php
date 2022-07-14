@@ -197,7 +197,7 @@
              <!---------------------------------------------------------------------------------------------------- PEDIDO  ---------------------------------------------------------------------------------------------->
 
              <div id="loading" class="d-flex flex-row justify-content-center align-items-center"
-                 style="width: 100%; height: 100px; background-color: #002868; color: white;">
+                 style="width: 100%; height: 100px; background-color: var(--indar-primary); color: var(--text-primary);">
                  <h5 id="loading-message">Cargando inventario ...</h5>
              </div>
 
@@ -427,8 +427,7 @@
                      aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                      <div class="modal-dialog modal-xl">
                          <div class="modal-content modal-content-inventario" id="modal-netsuite-loading">
-                             <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario"
-                                 style="cursor: pointer; margin-top: -8px;" onclick="closeModalNetsuiteLoading()"></i>
+                             <i class="fa-solid fa-lg fa-xmark" id="closeModalInventario" style="cursor: pointer; margin-top: -8px;" onclick="closeModalNetsuiteLoading()"></i>
                              <div class="text-center">
                                  <h4>Levantando Pedido</h4>
                              </div>

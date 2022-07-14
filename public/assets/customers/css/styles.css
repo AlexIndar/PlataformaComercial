@@ -1,10 +1,110 @@
+
+:root{
+    --indar-primary: #002868;
+    --indar-primary-rgb: rgb(0,40,140);
+    /* --indar-primary: black; */
+    --indar-secondary: #FBC621;
+    --light-purple: #F5F8F8;
+    --indar-primary-light-thin: #0057e332;
+    --indar-primary-light: #0057e35e;
+    --indar-secondary-light: #ffebae;
+
+
+    --text-primary: white;
+    --text-secondary: black;
+    --text-indar-primary-light-thin: #2c70de;
+
+    --promo-tags-background: #5C6BC0;
+
+    --input-background: #F2F2F2;
+
+    --star-size: 20px;
+    --star-color: rgb(201, 201, 201);
+    --star-background: #266ee2;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    background-color: transparent;
+    border: none;
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--indar-primary);
+    border-radius: 10px; 
+}
+
+.text-yellow{
+    color: var(--indar-secondary) !important;
+}
+
+.hide-important{
+    display: none !important;
+}
+
+.bg-indarPrimary{
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.icon-indar {
+    color: var(--text-primary) !important;
+}
+
+
+.btn-indar{
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-indar:hover{
+    filter: brightness(140%);
+}
+
+/* INDAR CHIPS  */
+
+.chip-group{
+    display:flex;
+    flex-wrap: wrap;
+    
+}
+
+.chip{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px 0px 10px;
+    color: var(--indar-primary);
+    border: 1px solid var(--indar-primary-light);
+    margin-right: 10px;
+    border-radius: 30px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 250ms ease;
+}
+
+.chip.active{
+    background-color: var(--indar-primary);
+    border-color: var(--indar-primary);
+    color: var(--text-primary);
+}
+
+.fa-chip{
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 2px;
+    height: 2px;
+}
+
+
 /* COMMON ALL SECTIONS ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 .section{
     width: 100%;
     height: auto;
     padding: 50px;
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
 }
 
 .section-body{
@@ -14,12 +114,12 @@
 .section-title{
     width: 90%;
     margin-left: 5%;
-    border-bottom: 5px solid #FFC61E;
+    border-bottom: 5px solid var(--indar-secondary);
     padding: 20px;
 }
 
 .section-title h3{
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
     margin-left: 100px;
     font-weight: 700;
 }
@@ -76,11 +176,11 @@
 }
 
 .cat-blue{
-    background-color: #002868;
+    background-color: var(--indar-primary);
 }
 
 .cat-yellow{
-    background-color: #FFC61E;
+    background-color: var(--indar-secondary);
 }
 
 .cat-gray{
@@ -116,7 +216,7 @@
 
 .sucursal-info h5{
     font-size: 18px !important;
-    color: #002868 !important;
+    color: var(--indar-primary) !important;
 }
 
 .sucursal-info h4{
@@ -132,7 +232,7 @@
 /* SERVICIO POSTVENTA ------------------------------------------------------------------------------------------ */
 
 .blue-h5, .blue-indar{
-    color: #002868;
+    color: var(--indar-primary);
 }
 
 .dropdown-menu li{

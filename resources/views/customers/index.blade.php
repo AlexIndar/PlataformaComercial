@@ -17,15 +17,17 @@
                     <div class="slider">
                         <div class="carousel slide carousel-fade h-100 w-100" id="carouselIndar" data-ride="carousel">
                             <div class="carousel-inner h-100">
-                                <div id="first-carousel-item" class="carousel-item h-100">
-                                    <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-1.jpg')}}" alt="">
-                                </div>
-                                <div class="carousel-item h-100">
-                                    <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-2.jpg')}}" alt="">
-                                </div>
-                                <div class="carousel-item h-100">
-                                    <img loading="lazy" src="{{asset('assets/customers/img/jpg/hero-3.jpg')}}" alt="">
-                                </div>
+                                @for($x=1; $x <= count($heroImages); $x++)
+                                    @if($x == 1)
+                                        <div id="first-carousel-item" class="carousel-item h-100">
+                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                        </div>
+                                    @else
+                                        <div class="carousel-item h-100">
+                                            <img loading="lazy" src="{{asset('assets/mercadotecnia/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                        </div>
+                                    @endif
+                                @endFor
                                 <button class="carousel-control-prev" type="button" data-target="#carouselIndar" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 </button>
@@ -191,15 +193,11 @@
     
         <!-- ESPECIALES DEL MES --------------------------------------------------------------------------- -->
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/1.jpg')}}" alt="Especiales del Mes INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/2.jpg')}}" alt="Lanzamientos INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/3.jpg')}}" alt="Combos INDAR"></div>
-            </div>
+            @for($x=1; $x <= count($eventosImages); $x++)
+                <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
+                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Eventos/'.$eventosImages[$x-1]->getBasename())}}" alt="Eventos INDAR"></div>
+                </div>
+            @endFor
         </div>
     
         {{-- SUPER OFERTAS --}}
@@ -234,7 +232,7 @@
                         <!-- Slides -->
                         @for ($x = 0; $x < 20; $x++)
                         <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
-                            <img loading="lazy" src="http://192.168.70.108:8080/public/assets/articulos/img/01_JPG_CH/{{$bestSellers[$x]->itemid}}_CH.jpg" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
+                            <img loading="lazy" src="http://192.168.70.108:8080/public/assets/articulos/img/02_WEBP_MD/{{$bestSellers[$x]->itemid}}_MD.webp" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
                             <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                             @if($status == 'active')
                                 <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>

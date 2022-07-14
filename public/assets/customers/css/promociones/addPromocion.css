@@ -1,6 +1,6 @@
 .bg-indar{
-    background-color: #002868 !important;
-    color: white !important;
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
     width: 100%;
     text-align: center;
     padding: 10px;
@@ -9,20 +9,9 @@
     border-top-right-radius: 5px;
 }
 
-::-webkit-scrollbar {
-    width: 10px !important;
-    background-color: transparent !important;
-    border: none !important;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #313761 !important;
-    border-radius: 10px !important; 
-}
-
 .bg-blue{
-    background-color: #002868 !important;
-    color: white !important;
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
     width: 100%;
     text-align: center;
     padding: 10px;
@@ -32,8 +21,8 @@
 }
 
 .bg-yellow {
-    background-color: #FFC61E !important;
-    color: #000 !important;
+    background-color: var(--indar-secondary) !important;
+    color: var(--text-secondary) !important;
     width: 100% !important;
     text-align: center !important;
     padding: 10px !important;
@@ -43,15 +32,14 @@
 }
 
 .btn-blue{
-    background-color: #002868 !important;
-    color: white !important;
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
     margin-right: 5px !important;
 
 }
 
 .btn-blue:hover{
-    background-color: #011941 !important;
-    color: white !important;
+    filter: brightness(95%);
 }
 
 .datos-generales{
@@ -113,8 +101,8 @@ h5{
 }
 
 .modal-header{
-    background-color: #002868 !important;
-    color: white !important;
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary) !important;
     padding-left: 50px !important;
     padding-right: 50px !important;
 }
@@ -177,7 +165,7 @@ h5{
     border: 1px solid rgba(0, 0, 0, 0.1);
     height: 30px;
     border-radius: 2px;
-    background-color: #F5F8F8;
+    background-color: var(--light-purple);
 }
 
 .tags-input li
@@ -188,7 +176,7 @@ h5{
 .tags
 {
     margin-top: 5px;
-  	background:#5C6BC0;
+  	background:var(--promo-tags-background);
     color: white;
   	padding:5px 20px 5px 8px;
   	border-radius:3px;
@@ -234,15 +222,15 @@ h5{
   width: auto !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   border-radius: 2px;
-  background-color: #F5F8F8 !important;
+  background-color: var(--light-purple) !important;
 }
 
 /* ---------------------------------------------------------------------------------------------- CHOSEN ----------------------------------------------------------- */
 
 
 .chosen-container-multi .chosen-choices li.search-choice{
-    background-color: #5C6BC0 !important;
-    color: white !important;
+    background-color: var(--promo-tags-background) !important;
+    color: var(--text-primary) !important;
     background-image: none !important;
     line-height: 20px !important;
     font-size: 13px !important;
@@ -255,8 +243,8 @@ h5{
 }
 
 .chosen-container .chosen-results li.highlighted{
-    background-color: #002868 !important;
-    color: white;
+    background-color: var(--indar-primary) !important;
+    color: var(--text-primary);
     background-image: none !important;
 
 }

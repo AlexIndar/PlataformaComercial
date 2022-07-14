@@ -34,6 +34,7 @@
                     <div class="card mt-2">
                         <div class="card-header title-table">
                           <h3 class="card-title mt-3 mr-2">Autorizar Gastos Fleteras</h3>
+                          <a type="button" class="btn btn-outline-primary" onclick="logisticaController.getFoliosAuthorize()"><i class="fa-solid fa-book mr-2"></i>Folios Autorizados</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body ">
@@ -67,39 +68,118 @@
         </div>
     </section>
 </div>
-<div class="modal fade" id="modal-folio-detail">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal-folio-autorizados">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header title-table">
-                <h4 class="modal-title ">Detalle Folio #</h4>
+                <h4 class="modal-title">Folios Autorizados</h4>
+                <button type="button" class="btn btn-outline-primary  btn-excel ml-2" onclick="logisticaController.exportFoliosAuthorizeExcel()"><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                
-                <form id="formAddGuia">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="agregarGuiaAcreedor">Acreedor:</label>
-                                <input type="text" class="form-control" id="agregarGuiaNumeroGuia" name="agregarGuiaNumeroGuia">
-                            </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <div class="table-responsive">
+                            <table id="tableFoliosAutorizados" class="table table-bordered table-hover table-sm">
+                                <thead class="encabezado-table">
+                                    <tr class="text-center">
+                                        <th>Folio</th>
+                                        <th>Acreedor</th>
+                                        <th>Estado</th>
+                                        <th>Numero Factura</th>
+                                        <th>importe Factura</th>
+                                        <th>Fecha</th>
+                                        <th>¿Quien autorizo?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="agregarGuiaDepartamento">Departamento:</label>
-                                
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-folio-detail">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header title-table">
+                <h4 class="modal-title ">Detalle Folio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="idgastofletera" hidden>
+                <input type="text" id="folio" hidden>
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Acreedor</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-acreedor"></span>
                             </div>
                         </div>
                     </div>
-                    
-                </form>
-                <div class="row" id="divMessageFormAddGuia" hidden></div>
+                    <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Folio</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-folio"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Importe Sin IVA</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-importesinIva"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Importe</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-0" id="text-importeIva"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Estatus</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-2" id="text-estado"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="col-12 col-sm-12">
+                        <div class="info-box bg-light">
+                            <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted"><Strong>Comentario</Strong></span>
+                            <span class="info-box-number text-center text-muted mb-2" id="text-comentario"></span>
+                            </div>
+                        </div>
+                    </div> --}}
+                </div>
+                <hr>
+                <div class="row">
+                   <div class="col-12">
+                        <h4 class="timeline-header">Detalles de guias</h3>
+                        <div id="accordion"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-plataform" onclick="logisticaController.validateFormAddGuia();">Autorizar</button>
+                <button type="button" class="btn btn-danger" onclick="logisticaController.CancelFolio()">Cancelar Folio</button>
+                <button type="submit" class="btn btn-plataform" onclick="logisticaController.AutoriceFolio();">Autorizar</button>
             </div>
         </div>
         <!-- /.modal-content -->

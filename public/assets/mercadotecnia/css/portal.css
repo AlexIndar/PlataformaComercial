@@ -1,0 +1,114 @@
+h1 {
+    font-size: 30px !important;
+    width: auto;
+}
+
+.imagesContainer {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+}
+
+.divImg {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 5px;
+}
+
+.divImg img {
+    width: 200px;
+    height: auto;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-icon{
+    color: #ddd;
+    cursor: pointer;
+}
+
+.delete-icon:hover{
+    color: var(--indar-primary) !important;
+}
+
+
+/* DRAG AND DROP --------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.drag-sort-enable {
+    margin: 0;
+    padding: 0;
+}
+
+.drag-sort-item {
+    height: auto;
+    border-radius: 5px;
+    list-style: none;
+    cursor: grab;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: inline-block;
+}
+
+.drag-sort-item:hover{
+    border: 1px solid var(--indar-primary);
+}
+
+.drag-sort-active {
+    background: transparent;
+    color: transparent;
+    border: 1px solid #4ca1af;
+    cursor: grabbing;
+}
+
+
+span.drag-sort-active {
+    background: transparent;
+    color: transparent;
+}
+
+/* ACTIONS --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.actions{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.btn-save{
+    background-color: var(--light-purple) !important;
+    color: var(--indar-primary) !important;
+    padding: 10px !important;
+    border-radius: 5px !important;
+    border: 1px solid #ddd;
+    margin-left: 5px;
+}
+
+.btn-save:hover{
+    filter: brightness(97%);
+}
+
+.btn-add{
+    background-color: var(--light-purple) !important;
+    color: var(--indar-primary) !important;
+    padding: 10px !important;
+    border-radius: 5px !important;
+    border: 1px solid #ddd;
+    margin-left: 5px;
+}
+
+.btn-add:hover{
+    background-color: rgb(171, 225, 154) !important;
+    border-color: rgb(171, 225, 154) !important;
+}
+
+/* MODALES -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+.image-edit-preview, .image-add-preview{
+    width: 100%;
+}

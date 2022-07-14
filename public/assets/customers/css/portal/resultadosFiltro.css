@@ -1,13 +1,71 @@
 
 
+.background-light-gray{
+    /* background-color: #F5F5F7 !important; */
+}
+
 /* FILTROS -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 .filters{
+    margin-top: 45px;
+    height: auto;
+    max-height: 70vh;
+    width: 22%;
+    overflow: hidden;
+    position: fixed;
+    display: block;
 }
 
+.filters:hover{
+    overflow: auto;
+}
+
+
+.headerFiltros{
+    width: 100%;
+    height: auto;
+    background-color: white;
+    z-index: 100;
+    padding: 20px 50px 0px 50px;
+    position: fixed;
+    top: 0;
+    margin-top: 140px;
+}
+
+
 .busqueda{
-    font-size: 25px;
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+    width: 100%;
+    text-align: start;
+}
+
+.filterHideShow{
+    font-size: 15px;
+    color: #333;
     font-weight: 600;
+    cursor: pointer;
+}
+
+.filterHideShowSquare{
+    padding: 10px 0px 5px 0px;
+    border-radius: 5px;
+    border: none;
+    color: var(--indar-primary);
+    background-color: var(--indar-primary-light-thin);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: none;
+}
+
+.lineResultadosDesktop{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
 }
 
 .filterTitleContainer{
@@ -18,13 +76,15 @@
     cursor: pointer;
 }
 
+
 .filterTitle{
     color: #333;
     font-size: 16px;
     font-weight: 700;
 }
 
-.filterControl{
+
+.filterControlIcon{
     text-align: right;
 }
 
@@ -41,7 +101,7 @@
 }
 
 .filterImg{
-    max-width: 80px;
+    max-width: 60px;
     height: auto;
     display: inline; 
     margin-right: 10px;
@@ -79,34 +139,46 @@
 
 /* HEADER LIST ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-.paginationLine{
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items: center;
-}
-
-.headerPagination{
-    margin-bottom: 30px;
-}
-
-.footerPagination{
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
-
-.footerPagination{
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
 .filterResultados{
     font-size: 14px;
     font-weight: 400;
     margin-right: 20px;
+}
+
+.selects{
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.orderBySelected{
+    color: var(--indar-primary);
+    font-weight: 500;
+}
+
+.orderBySelect{
+    background-color: transparent;
+    padding: 0px 10px 0px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--indar-primary-light-thin);
+    color: var(--indar-primary);
+    cursor: pointer;
+}
+
+/* MODAL FILTERS --------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+.modalFilters{
+    width: 90%;
+    margin-left: 5%;
+    max-height: 60vh;
+    top: 192px;
+    position: fixed;
+    background-color: #F5F8F8;
+    z-index: 100;
+    padding: 20px;
+    overflow: auto;
+    display: none;
+    border-radius: 10px;
 }
 
 /* APPLIED FILTERS ------------------------------------------------------------------------------------------------------------------------------------------------ */
@@ -120,21 +192,28 @@
 }
 
 .appliedFilterElement{
-    background-color: #000;
+    background-color: transparent;
     padding: 0px 10px 0px 10px;
-    border-radius: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--indar-primary-light-thin);
+    color: var(--indar-primary);
     width: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-right: 5px;
     cursor: pointer;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.appliedFilterElement:hover{
+    background-color: var(--indar-primary-light-thin);
+    border: 1px solid var(--indar-primary-light);
+    color: var(--text-indar-primary-light-thin);
 }
 
 .appliedFilterElement h5{
     font-size: 13px;
-    color: white;
     margin-top: 5px;
     text-transform: capitalize;
 }
@@ -153,30 +232,41 @@
 }
 
 .page-item.active .page-link{
-    background-color: #002868 !important;
+    background-color: var(--indar-primary) !important;
     color: white !important;
-    border-color: #002868 !important;
+    border-color: var(--indar-primary) !important;
 }
 
 .page-item.disabled{
     cursor: not-allowed;
 }
 
-
+.paginationLine{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
 
 
 
 
 /* CARDS ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+.cardItem{
+    height: 100% !important;
+}
+
 .item{
     margin-bottom: 15px;
     padding: 20px 30px 10px 30px !important;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    min-height: 400px;
+    height: 100% !important;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    background-color: white;
 }
 
 .item:hover{
@@ -188,11 +278,12 @@
     transform: scale(1.04);
 }
 
+
 .imgItem img{
-    max-width: 80%;
-    min-width: 80%;
-    margin-left: 10%;
-    margin-bottom: 20px;
+    max-width: 60%;
+    height: 180px;
+    margin-left: 20%;
+    margin-bottom: 10px;
 }
 
 .imgItem{
@@ -207,31 +298,98 @@
 
 .itemDescriptionContainer{
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-    min-height: 80px;
+    min-height: 50px;
 }
 
 .itemDescription{
     color: #666;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 400;
-    text-align: center;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+            line-clamp: 2; 
+    -webkit-box-orient: vertical;
 }
 
 .itemManufacturer{
     color: #333;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 600;
-    text-align: center;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .categoriaLine{
     width: 100%;
-    text-align: center;
+    text-align: left;
     font-weight: 300;
+    font-size: 12px;
+}
+
+#productListContainer, #productList-skeleton{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    min-height: 60vh;
+}
+
+/* PRECIOS */
+.precios{
+    margin-top: 10px;
+}
+
+.precio{
+    font-size: 14px;
+    font-weight: 400;
+    width: 100%;
+    line-height: 3px !important;
+    white-space: nowrap;
+}
+
+.precio-lista{
+    font-size: 28px;
+}
+
+.text-promo{
+    font-family: sans-serif;
+    padding: 1px 5px 1px 5px;
+    border-radius: 5px;
+    background-color: var(--indar-primary-light-thin);
+    border: 1px solid var(--indar-primary-light);
+    color: var(--text-indar-primary-light-thin);
+    font-weight: 600;
     font-size: 13px;
 }
+
+.precio-min{
+    font-weight: 100 !important;
+    top: -.7em;
+    position: relative;
+    font-family: monospace;
+}
+
+/* RIBBON INDAR */
+
+.ribbon-indar{
+    position: absolute;
+    top: 0px;
+    left: 7px;
+    cursor: pointer;
+}
+
+.ribbon-indar img {
+    width: 150px;
+    margin-left: -2px;
+}
+
+
+/* QUANTITY COUNTER */
 
 /* PLUS MINUS ANIMATION -------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -269,20 +427,91 @@
   
   .btn-actions{
     width: 100%;
-    background-color: transparent;
     border: none;
     background-color: #111;
     color: white;
     min-height: 30px;
     font-weight: 100;
+    cursor: pointer;
   }
 
   .btn-actions:hover{
-    background-color: #002868;
+    filter: brightness(150%);
+}
+
+
+
+/* SKELETON ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+#productList-skeleton{
+    display: none;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.item-skeleton{
+    margin-bottom: 15px;
+    padding: 20px 30px 10px 30px !important;
+    min-height: 400px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    position: relative;
+    width: 100%;
+}
+
+.imgItem-skeleton{
+    min-width: 100%;
+    height: 180px;
+    margin-bottom: 20px;
+    background-color: #bbb;
+}
+
+.itemDescription-skeleton{
+    background-color: #bbb;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.itemManufacturer-skeleton{
+    background-color: #bbb;
+    width: 80%;
+    margin-left: 10%;
+    height: 20px;
+    margin-bottom: 5px;
+}
+
+.itemActions-skeleton{
+    background-color: #bbb;
+    width: 80%;
+    margin-left: 10%;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.skeleton{
+    background: linear-gradient(110deg, #f5f5f5 8%, #fafafa 18%, #f5f5f5 33%);
+    background-size: 200% 100%;
+    -webkit-animation: 1.5s shine linear infinite;
+    animation: 1.5s shine linear infinite;
+    display: inline-block;
+    animation: 1.5s shine linear infinite;
+}
+
+@-webkit-keyframes shine {
+    to {
+      background-position-x: -200%;
+    }
+  }
+  
+  @keyframes shine {
+    to {
+      background-position-x: -200%;
+    }
   }
 
 
-  /* RESPONSIVE ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* RESPONSIVE ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+
 
     @media (max-width: 991px) {
         .paginationLine{
@@ -291,9 +520,37 @@
             justify-content: center;
         }
 
-        .appliedFilters{
-            margin-bottom: 30px;
+        .busqueda{
+            font-size: 11px;
         }
+        .appliedFilters{
+            margin-bottom: 10px;
+        }
+
+        .headerFiltros{
+            margin-top: 120px;
+        }
+        
+        .filters{
+            display: none !important;
+        }
+
+        #filterHideShow{
+            display: none;
+        }
+
+        .filterHideShowSquare{
+            display: block;
+        }
+
+        .lineResultadosDesktop{
+            display: none;
+        }
+
+        #productListContainer, #productList-skeleton{
+            margin-bottom: 10px;
+        }
+
     }
 
     @media (max-width: 768px) {
@@ -303,15 +560,11 @@
         }
 
         .appliedFilters{
-            margin-bottom: 40px;
+            margin-bottom: 10px;
         }
         
-        .headerPagination{
+        .paginationLine{
             margin-bottom: 10px;
         }
 
-        .footerPagination{
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
     }

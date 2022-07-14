@@ -3,7 +3,7 @@
 }
 
 body{
-    background-color: #F7F5FF !important;
+    background-color: var(--light-purple) !important;
 }
 
 @keyframes slide{
@@ -38,17 +38,6 @@ body{
 
 .row{
     margin-bottom: 50px !important;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-    background-color: transparent;
-    border: none;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #313761;
-    border-radius: 10px;
 }
 
 h5{
@@ -170,7 +159,7 @@ p{
 .img-item{
 	width: 70px !important;
 	margin-right: 10px;
-	border: 1px solid #002868 !important;
+	border: 1px solid var(--indar-primary) !important;
 	cursor: pointer;
 }
 

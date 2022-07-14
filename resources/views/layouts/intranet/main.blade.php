@@ -18,6 +18,7 @@
 
     <!-- Custom Styles -->
     @yield('styles')
+    <link rel="stylesheet" href="{{ asset('assets/customers/css/styles.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -61,7 +62,7 @@
         </div>
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand bg-indarBlue">
+        <nav class="main-header navbar navbar-expand bg-indarPrimary">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -159,7 +160,7 @@
                with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             @if ($active == 'Dashboard')
-                                <a href="/Intranet" class="nav-link active">
+                                <a href="/Intranet" class="nav-link active bg-indarPrimary">
                                 @else
                                     <a href="/Intranet" class="nav-link">
                             @endif
@@ -174,7 +175,7 @@
                         @if (in_array('MisSolicitudes', $permissions) || in_array('Estadistica Cliente', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Intranet')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -207,7 +208,7 @@
                         @if (in_array('SolicitudesPendientes', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'CyC')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -245,7 +246,7 @@
                         @if (in_array('HeatMap', $permissions) || in_array('AsignaZonasCyc', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Operaciones')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                     <a href="#" class="nav-link">
                                 @endif
@@ -277,7 +278,7 @@
                         @if (in_array('Promociones', $permissions) || in_array('Pedidos', $permissions) || in_array('ForzarPedidos', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Ventas')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -319,7 +320,7 @@
                         @if (in_array('Portal Viaticos', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Viaticos')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -343,7 +344,7 @@
                         @if(in_array('Logistica', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Logistica')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                     <a href="#" class="nav-link">
                                 @endif
@@ -381,10 +382,33 @@
                                 </ul>
                             </li>
                         @endif
+                        @if (in_array('Promociones', $permissions))
+                            <li class="nav-item">
+                                @if ($active == 'Mercadotecnia')
+                                    <a href="#" class="nav-link active bg-indarPrimary">
+                                    @else
+                                        <a href="#" class="nav-link">
+                                @endif
+                                <i class="nav-icon fas fa-bullhorn"></i>
+                                <p>
+                                    Mercadotecnia
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/mercadotecnia/portal" class="nav-link">
+                                            <i class="fas fa-image nav-icon"></i>
+                                            <p>Portal Mkt</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                         @if (in_array('CXC', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'CXC')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -417,7 +441,7 @@
                         @if (in_array('Comisiones', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Comisiones')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -464,7 +488,7 @@
                         @if (in_array('Clientes', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Clientes')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif
@@ -487,7 +511,7 @@
                         @if (in_array('HSBC', $permissions))
                             <li class="nav-item">
                                 @if ($active == 'Pagos')
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link active bg-indarPrimary">
                                     @else
                                         <a href="#" class="nav-link">
                                 @endif

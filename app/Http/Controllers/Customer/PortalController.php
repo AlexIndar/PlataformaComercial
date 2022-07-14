@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Config;
+use stdClass;
 
 class PortalController extends Controller
 {
@@ -30,15 +31,34 @@ class PortalController extends Controller
     }
 
     // Retorna filtrado de busqueda, si se indican límites from y to devuelve solo la info encontrada en ese rango de índices
-    public static function busquedaItemFiltro($token, $filter, $codigo, $from = null, $to = null){ 
-        $filter = str_replace('-', '~', $filter);
+    public static function busquedaItemFiltro($token, $filter, $codigo, $directo = false, $from = null, $to = null){ 
+        if($directo)
+            $filter = str_replace('_', '~', $filter);
+        else
+            $filter = str_replace('-', '~', $filter);
         $response = Http::withToken($token)->post(config('global.api_url').'/Portal/BusquedaItemFiltro', [
             "codCustomer" => $codigo,
-            "busqueda" => $filter
+            "busqueda" => $filter,
+            "directo" => $directo
         ]);
+
         $items = $response->body();
+
+        if($directo){
+            $items = json_decode($items, true);
+
+            if(count($items)>0){
+                return $items[0];
+            }
+            else{
+                $items = new stdClass();
+                $items->error = 'No se encontró el artículo buscado';
+                return $items;
+            }
+        }
         $items = json_decode($items);
         $data = PortalController::getFiltersBusqueda($items);
+
         if($from == null){
             $data['items'] = $items;
         }
@@ -75,6 +95,7 @@ class PortalController extends Controller
         }   
         $data['marcas'] = [];
         $data['categorias'] = [];
+        $data['competitividad'] = [];
         $data['resultados'] = count($items);
 
         foreach($marcas as $marca){
@@ -100,6 +121,16 @@ class PortalController extends Controller
             $tmp['resultados'] = $count;
             array_push($data['categorias'], $tmp);
         }
+
+        $count = 0;
+        foreach($items as $item){
+            if($item->competitividad == "true"){
+                $count ++;
+            }
+        }
+        $tmp['nombre'] = "Mejor Precio Indar";
+        $tmp['resultados'] = $count;
+        array_push($data['competitividad'], $tmp);
 
         return $data;
 

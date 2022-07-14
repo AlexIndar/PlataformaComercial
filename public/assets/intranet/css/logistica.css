@@ -1,9 +1,9 @@
 .buttons-collection{
-    background-color: #002868;
+    background-color: #002868!important;
 }
 .title-table{
-    background-color: #002868; 
-    color:white;
+    background-color: #002868!important; 
+    color:white!important;
 }
 .EnTiempo{
     background-color: #00bd00;
@@ -110,3 +110,24 @@ body::-webkit-scrollbar-thumb {
     color: white;
     background-color: #002868;
 } */
+.info-box{
+    min-height: 0px!important;
+    padding: 0px!important;
+    line-height: 0!important;
+}
+.info-box .info-box-number{
+    margin-top: 0px!important;
+}
+.icon-green-guias {
+    color: green;
+}
+.icon-orange-guias {
+    color: orange;
+}
+.icon-red-guias {
+    color: red;
+}
+.page-item.active .page-link{
+    background-color: #002868!important;
+    border-color: #002868!important;
+}

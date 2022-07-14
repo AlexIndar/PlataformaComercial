@@ -35,6 +35,21 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'mercadotecnia' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/assets/mercadotecnia',
+        ],
+
+        'mercadotecniaTemp' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/assets/mercadotecnia/Temp',
+        ],
+
+        'mercadotecniaPreview' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/assets/mercadotecnia/Preview',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -4,42 +4,60 @@ var coincidenciasProveedor = 0;
 var coincidenciasMarca = 0;
 var timeoutBuscador;
 var intervalActive = false;
-var intervalBuscador = 2000;
+var intervalBuscador = 1000;
 var sugerencias;
 
 var lastType = ''; //datetime de ultima tecla presionada. Si pasó más de 4 segundos desactivar refresh
-var timeToDisable = 4000; /* ms */
+var timeToDisable = 2000; /* tiempo en ms para desactivar el refresh de buscador, después de haber presionado la última tecla */
 
 $(document).ready(function () {
 
-    // document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
+    $(window).click(function() {
+        closeSugerencias();
+      });
+      
+      $('#resultado-busqueda').click(function(event){
+        event.stopPropagation();
+      });
 
-    $("#buscador").keyup(function(e) {
+      $('#input-busqueda').click(function(event){
+        event.stopPropagation();
+      });
+
+    document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
+
+    $("#buscador").keyup(function (e) {
         lastType = new Date();
         var cadena = document.getElementById('buscador').value;
-        if(e.keyCode == 8){
+        if (e.keyCode == 8) { //si está borrando
             desactivaBuscador();
             recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
             highlight(cadena);
         }
-        else{
+        else if (e.keyCode == 13) {
+            buscarFiltro("");
+        }
+        else {
             cadena != '' && !intervalActive ? activaBuscador() : console.log('vacio');
         }
         cadena == '' && intervalActive ? desactivaBuscador() : console.log('buscando');
 
-        if(cadena == ''){
+        if (cadena == '') {
             closeSugerencias();
         }
     });
 
-    $("#buscador").focusin(function(){
+    $("#buscador").focusin(function () {
         var cadena = document.getElementById('buscador').value;
         cadena != '' && !intervalActive ? activaBuscador() : console.log('vacio');
     });
 
 });
 
-function activaBuscador(){
+function activaBuscador() {
+    if (document.getElementById('bigImage-large')) {
+        document.getElementById('bigImage-large').classList.add('hide-important');
+    }
     $(".resultadoBusqueda").slideDown();
     $(".overlayBusqueda").fadeIn();
     intervalActive = true;
@@ -47,50 +65,52 @@ function activaBuscador(){
     timeoutBuscador = setInterval(buscar, intervalBuscador);
 }
 
-function desactivaBuscador(){
+function desactivaBuscador() {
     intervalActive = false;
     clearInterval(timeoutBuscador);
 }
 
-function buscar(){
-    if((new Date()) - lastType < timeToDisable){
+function buscar() {
+    if ((new Date()) - lastType < timeToDisable) {
         var data = "";
         data = getFilterString();
-        console.log(data);
+        console.log('Buscar ' + data);
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             'url': "/portal/busquedaGeneralItem",
-            'data': {"data": data},
+            'data': { "data": data },
             'type': 'POST',
             'enctype': 'multipart/form-data',
             'async': false,
             'timeout': 2 * 60 * 60 * 1000,
             success: function (data) {
-                if(data.length > 0){
+                if (data.length > 0) {
                     sugerencias = data;
                 }
+                console.log(sugerencias);
                 recargaSugerencias(sugerencias); //cargar sugerencias con respuesta del back
             },
             error: function (error) {
             }
-        });  
+        });
     }
-    else{
+    else {
         desactivaBuscador();
     }
 }
 
 
-function addSugerenciaArticulo(sugerencia){
+function addSugerenciaArticulo(sugerencia) {
     var descripcion = sugerencia['purchasedescription'] + " ";
     var codigo = sugerencia['itemid'];
-    var srcImgLogotipo =  "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + sugerencia['familia'].replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
+    var srcImgLogotipo = "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + sugerencia['familia'].replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
     var container = document.getElementById('listSugerenciasArticulo');
-    
+
     var lineSugerencia = document.createElement('div');
     lineSugerencia.setAttribute('class', 'lineSugerencia sugerenciaArticulo');
+    lineSugerencia.setAttribute('onclick', "detalleArticulo(\"" + codigo + "\")");
 
     var h5Sugerencia = document.createElement('h5');
     h5Sugerencia.setAttribute('class', 'h5Sugerencia');
@@ -124,35 +144,35 @@ function addSugerenciaArticulo(sugerencia){
     container.appendChild(lineSugerencia);
 }
 
-function addSugerenciasProveedor(proveedores){
+function addSugerenciasProveedor(proveedores) {
     var x = 0;
     var container = document.getElementById('listSugerenciasProveedor');
 
-    while(x < proveedores.length){
-        var proveedor = proveedores[x]['proveedor'] + ' [ '+proveedores[x]['marcas'][0]+' ]';
+    while (x < proveedores.length) {
+        var proveedor = proveedores[x]['proveedor'] + ' [ ' + proveedores[x]['marcas'][0] + ' ]';
 
         var lineSugerencia = document.createElement('div');
         lineSugerencia.setAttribute('class', 'lineSugerencia sugerenciaProveedor');
-        lineSugerencia.setAttribute('onclick', "buscarFiltro(\""+proveedores[x]['proveedor']+"\")");
+        lineSugerencia.setAttribute('onclick', "buscarFiltro(\"" + proveedores[x]['proveedor'] + "\")");
 
         var h5Sugerencia = document.createElement('h5');
         h5Sugerencia.setAttribute('class', 'h5Sugerencia');
-    
+
         var spanProveedor = document.createElement('span');
         spanProveedor.innerText = proveedor;
-    
+
         h5Sugerencia.appendChild(spanProveedor);
 
         var br = document.createElement('br');
 
-        
+
         lineSugerencia.appendChild(h5Sugerencia);
         lineSugerencia.appendChild(br);
 
 
         var y = 0;
-        while(y < proveedores[x]['marcas'].length){
-            var srcImgLogotipo =  "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + proveedores[x]['marcas'][y].replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
+        while (y < proveedores[x]['marcas'].length) {
+            var srcImgLogotipo = "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + proveedores[x]['marcas'][y].replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
             var imgSugerencia = document.createElement('img');
             imgSugerencia.setAttribute('class', 'imgSugerencia');
             imgSugerencia.setAttribute('src', srcImgLogotipo);
@@ -160,7 +180,7 @@ function addSugerenciasProveedor(proveedores){
             addSugerenciaMarca(proveedores[x]['marcas'][y]);
             y++;
         }
-    
+
         container.appendChild(lineSugerencia);
         x++;
     }
@@ -169,12 +189,13 @@ function addSugerenciasProveedor(proveedores){
 }
 
 
-function addSugerenciaMarca(marca){
-    coincidenciasMarca ++;
+function addSugerenciaMarca(marca) {
+    coincidenciasMarca++;
     var container = document.getElementById('listSugerenciasMarca');
     var lineSugerencia = document.createElement('div');
     lineSugerencia.setAttribute('class', 'lineSugerencia sugerenciaMarca');
-    
+    lineSugerencia.setAttribute('onclick', "buscarFiltro(\"" + marca.split(' ')[0] + "\")");
+
     var h5Sugerencia = document.createElement('h5');
     h5Sugerencia.setAttribute('class', 'h5Sugerencia');
 
@@ -183,7 +204,7 @@ function addSugerenciaMarca(marca){
 
     h5Sugerencia.appendChild(spanMarca);
 
-    var srcImgLogotipo =  "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + marca.replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
+    var srcImgLogotipo = "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + marca.replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
     var imgSugerencia = document.createElement('img');
     imgSugerencia.setAttribute('class', 'imgSugerencia ml-2');
     imgSugerencia.setAttribute('src', srcImgLogotipo);
@@ -198,19 +219,19 @@ function addSugerenciaMarca(marca){
 function highlight(cadena) {
     var arrCadena = cadena.split(' ');
     var descripciones = document.getElementsByClassName('descripcionArticulo');
-    var removeSpan = new RegExp("</?span[^>]*>","g");
+    var removeSpan = new RegExp("</?span[^>]*>", "g");
 
-    for(var z = 0; z < descripciones.length; z++){
+    for (var z = 0; z < descripciones.length; z++) {
         descripciones[z]['innerHTML'] = descripciones[z]['innerHTML'].replace(removeSpan, '');
     }
 
-    for(var x = 0; x < arrCadena.length; x++){
-        if(arrCadena[x] != ''){
-            for(var y = 0; y < descripciones.length; y++){
+    for (var x = 0; x < arrCadena.length; x++) {
+        if (arrCadena[x] != '') {
+            for (var y = 0; y < descripciones.length; y++) {
                 var innerHTML = descripciones[y]['innerHTML'];
                 var index = innerHTML.indexOf(arrCadena[x].toUpperCase());
-                if(index >= 0){
-                    innerHTML = innerHTML.substring(0,index) + "<span style='background-color: yellow;'>" + innerHTML.substring(index,index+arrCadena[x].length) + "</span>" + innerHTML.substring(index + arrCadena[x].length);
+                if (index >= 0) {
+                    innerHTML = innerHTML.substring(0, index) + "<span style='background-color: yellow;'>" + innerHTML.substring(index, index + arrCadena[x].length) + "</span>" + innerHTML.substring(index + arrCadena[x].length);
                     descripciones[y]['innerHTML'] = innerHTML;
                 }
             }
@@ -218,7 +239,7 @@ function highlight(cadena) {
     }
 }
 
-function clearSugerencias(){
+function clearSugerencias() {
 
     var containerArticulos = document.getElementById('listSugerenciasArticulo');
     while (containerArticulos.firstChild) {
@@ -237,16 +258,19 @@ function clearSugerencias(){
 
 }
 
-function closeSugerencias(){
+function closeSugerencias() {
     $(".resultadoBusqueda").slideUp('100');
     $(".overlayBusqueda").fadeOut('100');
+    if (document.getElementById('bigImage-large')) {
+        document.getElementById('bigImage-large').classList.remove('hide-important');
+    }
 }
 
 function isNumeric(n) { //validar si ingresó número en la búsqueda, para hacer el filtro desde js con lo que ya se tenga
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-function recargaSugerencias(data){
+function recargaSugerencias(data) {
     var cadena = document.getElementById('buscador').value;
     var arrCadena = cadena.split(' ');
     clearSugerencias();
@@ -255,85 +279,102 @@ function recargaSugerencias(data){
     coincidenciasArticulo = 0;
     coincidenciasMarca = 0;
     coincidenciasProveedor = 0;
-        while(x < data.length){
-            var y = 0;
-            var add = true;
-            //validar que la descripción del artículo contenga todo lo que está en el input de búsqueda
-            while(y < arrCadena.length){
-                if(!(arrCadena[y] != '' && data[x]['purchasedescription'].includes(arrCadena[y].toUpperCase()))){
+    let buscarCoincidenciasArticulo = 50;
+    while (x < data.length) {
+        var y = 0;
+        var add = true;
+        if (coincidenciasArticulo < buscarCoincidenciasArticulo) {
+            //validar que la descripción del artículo contenga todo lo que está en el input de búsqueda o que lo contenga en el itemid
+            while (y < arrCadena.length) {
+                if (!(arrCadena[y] != '' && (data[x]['purchasedescription'].includes(arrCadena[y].toUpperCase()) || data[x]['itemid'].includes(arrCadena[y].toUpperCase())))) {
                     add = false;
                 }
-                if(arrCadena[y] == ''){
+                if (arrCadena[y] == '') {
                     add = true;
                 }
                 y++;
             }
-            //si add es false es porque algo no coincidió, no va a agregarlo como sugerencia
-            if(add){
-                addSugerenciaArticulo(data[x]);
-                coincidenciasArticulo ++;
-                y = arrCadena.length;
-            }
+        }
+        else{
+            add = false;
+        }
+        //si add es false es porque algo no coincidió, no va a agregarlo como sugerencia
+        if (add) {
+            addSugerenciaArticulo(data[x]);
+            coincidenciasArticulo++;
+            y = arrCadena.length;
+        }
 
-            if(proveedores.length == 0){
+        if (proveedores.length == 0) {
+            var tmp = {
+                'proveedor': data[x]['fabricante'],
+                'marcas': []
+            };
+
+            tmp['marcas'].push(data[x]['familia']);
+            proveedores.push(tmp);
+        }
+
+        else {
+            var proveedor = proveedores.find(o => o.proveedor == data[x]['fabricante']);
+            if (proveedor != undefined) {
+                if (!proveedor['marcas'].includes(data[x]['familia'])) {
+                    proveedor['marcas'].push(data[x]['familia']);
+                }
+            }
+            else {
                 var tmp = {
                     'proveedor': data[x]['fabricante'],
                     'marcas': []
                 };
-
                 tmp['marcas'].push(data[x]['familia']);
                 proveedores.push(tmp);
             }
-
-            else{
-                var proveedor = proveedores.find(o => o.proveedor == data[x]['fabricante']);
-                if(proveedor != undefined){
-                    if(!proveedor['marcas'].includes(data[x]['familia'])){
-                        proveedor['marcas'].push(data[x]['familia']);
-                    }
-                }
-                else{
-                    var tmp = {
-                        'proveedor': data[x]['fabricante'],
-                        'marcas': []
-                    };
-                    tmp['marcas'].push(data[x]['familia']);
-                    proveedores.push(tmp);
-                }
-            }
-            x++;
         }
-        addSugerenciasProveedor(proveedores);
-        console.log(proveedores);
-        coincidenciasProveedor = proveedores.length;
-            
+        x++;
+    }
+    addSugerenciasProveedor(proveedores);
+    console.log(proveedores);
+    coincidenciasProveedor = proveedores.length;
 
-        document.getElementById('cantidadRecomendacionesArticulo').innerText = coincidenciasArticulo + " coincidencias";
-        document.getElementById('cantidadRecomendacionesProveedor').innerText = coincidenciasProveedor + " coincidencias";
-        document.getElementById('cantidadRecomendacionesMarca').innerText = coincidenciasMarca + " coincidencias";
-        highlight(cadena);
+
+    document.getElementById('cantidadRecomendacionesArticulo').innerText = coincidenciasArticulo + " coincidencias";
+    document.getElementById('cantidadRecomendacionesProveedor').innerText = coincidenciasProveedor + " coincidencias";
+    document.getElementById('cantidadRecomendacionesMarca').innerText = coincidenciasMarca + " coincidencias";
+    highlight(cadena);
 }
 
-function getFilterString(){
+function getFilterString() {
     var cadena = document.getElementById('buscador').value;
-        var arrCadena = cadena.split(' ');
-        var data = '';
-        for(var x = 0; x < arrCadena.length; x++){ //Quitar X y comilla doble " porque da problemas al mandarlo al sp 
-            if(arrCadena[x] != '' && arrCadena[x].toUpperCase() != 'X' && !isNumeric(arrCadena[x]) && !arrCadena[x].includes('"') && !arrCadena[x].includes('/')){ 
-                data = data + arrCadena[x].replaceAll('"', '') + ' ~ ';
-            }
-            if(isNumeric(arrCadena[x]) || arrCadena[x].includes('"') || arrCadena[x].includes('/')){
-                recargaSugerencias(sugerencias);
-            }
+    var arrCadena = cadena.split(' ');
+    var data = '';
+    for (var x = 0; x < arrCadena.length; x++) { //Quitar X y comilla doble " porque da problemas al mandarlo al sp 
+        if (arrCadena[x] != '' && arrCadena[x].toUpperCase() != 'X' && !arrCadena[x].includes('"') && !arrCadena[x].includes('/')) {
+            data = data + arrCadena[x].replaceAll('"', '') + ' ~ ';
         }
-        data = data.slice(0, -3);
-        return data;
+        if (arrCadena[x].includes('/')) {
+            recargaSugerencias(sugerencias);
+        }
+    }
+    data = data.slice(0, -3);
+    return data;
 }
 
-function buscarFiltro(filtro){
-    filtro = filtro.split(' ')[0];
-    console.log('buscar '+filtro);
-    var data = getFilterString();
-    data != '' ? filtro = filtro + ' ~ '+ data : filtro = filtro;
-    window.location = "/portal/busqueda/" + filtro;
+function buscarFiltro(filtro) {
+    let data = getFilterString();
+    if (data != "") {
+        if (filtro != "") {
+            filtro = filtro.split(' ')[0];
+            data != '' ? filtro = filtro + ' ~ ' + data : filtro = filtro;
+        }
+        else {
+            filtro = data;
+        }
+        window.location = "/portal/busqueda/" + filtro;
+    }
 }
+
+function detalleArticulo(codigo) {
+    window.location.href = '/portal/detallesProducto/' + codigo.replace(' ', '_');
+}
+

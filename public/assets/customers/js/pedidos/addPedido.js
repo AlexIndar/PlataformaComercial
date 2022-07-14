@@ -399,14 +399,13 @@ $(document).ready(function () {
 
 
     // FILTER INVENTARIO PRICE RANGE -------------------------------------------------------------------------------------------
-    $('#filterInventario').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
+    $('#filterInventario').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR FILTRO DE INVENTARIO
         var filterValue = $("#filterInventario").val();
         var table = $('#tablaInventario').DataTable();
         if (filterValue == 'precioDown')
             table.column('10').order('desc').draw();
         if (filterValue == 'precioUp')
             table.column('10').order('asc').draw();
-
     });
 });
 
@@ -1082,6 +1081,9 @@ async function cargarInventario() {
                 if (items[x]['promoART'] != null) {
                     var y = 0;
                     while (y < items[x]['promoART'].length) {
+                        if(y == 0 && items[x]['promoART'][y]['cantidad'] != 1){
+                            console.log('PROMO VOLUMEN: '+items[x]['itemid']);
+                        }
                         if (items[x]['multiploVenta'] >= items[x]['promoART'][y]['cantidad']) {
                             precioCliente = ((100 - items[x]['promoART'][y]['descuento']) / 100) * items[x]['price'];
                         }
@@ -1110,7 +1112,7 @@ async function cargarInventario() {
                 existenciaFormat = existenciaFormat.slice(1, -1);
                 existenciaFormat = existenciaFormat.split('.')[0];
 
-                arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/01_JPG_CH/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_CH.jpg' onerror='noDisponible(this)' height='auto' onclick='verImagenProducto(\"" + items[x]['itemid'] + "\")' class='img-item'/><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
+                arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/02_WEBP_MD/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_MD.webp' onerror='noDisponible(this)' height='auto' onclick='verImagenProducto(\"" + items[x]['itemid'] + "\")' class='img-item'/><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
                 arr.push("<p class='datos-item'>" + items[x]['categoriaItem'] + "</p>");
                 arr.push("<p class='datos-item'>" + items[x]['clavefabricante'] + "</p>");
                 arr.push("<p class='datos-item'>" + items[x]['familia'] + "</p>");
@@ -2551,7 +2553,7 @@ function verImagenProducto(itemid) {
     var art = items.find(o => o.itemid === itemid);
     document.getElementById('codigoArticuloMD').innerText = itemid;
     document.getElementById('descripcionArticuloMD').innerText = art['purchasedescription'];
-    var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_JPG_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.jpg";
+    var src = "http://indarweb.dyndns.org:8080/assets/articulos/img/02_WEBP_MD/" + itemid.replaceAll(" ", "_").replaceAll("-", "_") + "_MD.webp";
     document.getElementById('containerImgProduct').style.display = 'flex';
     document.getElementById('imgProductMD').src = src;
 }
