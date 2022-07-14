@@ -1159,7 +1159,7 @@
                      '<td style="font-weight: bold" > 1 </td>' +
                      ctesnvos +
                      '<td style="font-weight: bold" >' + porCtesNvos + ' % </td>' +
-                     '<td style="font-weight: bold" >' + importCtesNvos + '</td>' +
+                     '<td style="font-weight: bold" >' + importCtesNvos.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
                      '</tr>';
             var vtasPorc = data[2].real/data[2].vo;
             vtasPorc = vtasPorc *10;

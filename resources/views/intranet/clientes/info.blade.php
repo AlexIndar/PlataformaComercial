@@ -101,6 +101,7 @@
                         <a href="#" target="_blank"><button  class="btn btn-primary"  id="btnConsultar">Estado de Cuenta </button></a>
                     </div>
                     <br>
+
                     <button  class="btn btn-success form-control"  id="btnPagar"> Ir a Pagar &nbsp; &nbsp  <i class="fas fa-money-bill"></i></button>
                   </div>
                  </div>
