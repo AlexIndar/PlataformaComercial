@@ -761,12 +761,35 @@ const logisticaController = {
                             $('#cover-spin').show(0);
                         },
                         success: function(data){
-                            if(data){
+                            if(data.codeStatus){
                                 Toast.fire({
                                     icon: 'success',
                                     title: '¡Se importaron correctamente los importes de las fleteras!'
                                 });
-                                logisticaController.consultFreighterImport();
+                                if(data.importsFails != null)
+                                {
+                                    let importsFails = data.importsFails;
+                                    if(importsFails.length != 0)
+                                    {
+                                        let rowImports = '';
+                                        for(let a=0; a < importsFails.length; a++)
+                                        {
+                                            rowImports += 'Codigo Postal: '+importsFails[a].cp +' Fletera: '+importsFails[a].fletera+' Fecha Inicio: '+importsFails[a].fechaInicio+' Fecha Fin: '+importsFails[a].fechaFin+' <br><br>';
+                                        }
+                                        Swal.fire({
+                                            title: 'Registro de importes que no pudieron guardarse',
+                                            html: rowImports,
+                                            icon: 'info',
+                                            confirmButtonColor: '#3085d6',
+                                            confirmButtonText: 'OK'
+                                          }).then(() => {
+                                            logisticaController.consultFreighterImport();
+                                        });
+                                    }
+                                }else{
+                                    logisticaController.consultFreighterImport();
+                                }
+                                
                             }else{
                                 Toast.fire({
                                     icon: 'error',
@@ -779,6 +802,7 @@ const logisticaController = {
                         },
                         complete: function(){
                             $('#cover-spin').hide();
+                            $('#fileTempleteImportImportesFleteras').val('');
                         }
                     })
                 }  
