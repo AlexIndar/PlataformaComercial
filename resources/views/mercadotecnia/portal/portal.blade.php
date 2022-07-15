@@ -15,28 +15,44 @@
         <div class="container">
 
             {{-------------------------------------------------------------------- BANNER PRINCIPAL -----------------------------------------------------------------}}
-            <fieldset>
-                <legend>Banner Principal</legend>
-                    <ul class="drag-sort-enable" id='ul-Hero'>
-                    @for($x=1; $x <= count($heroImages); $x++)
-                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', 'Hero', this)">
-                            <img loading="lazy" class="image-hero imageOnServer" id='Hero/{{$eventosImages[$x-1]->getBasename()}}' src="{{asset('assets/mercadotecnia/Temp/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+            @for($x=0; $x < count($actions); $x++)
+                @if($x == 0)
+                <fieldset>
+                    <legend>{{$actions[$x]['portalMkt_']['seccion']}}</legend>
+                    <ul class="drag-sort-enable" id='ul-{{$actions[$x]['portalMkt_']['seccion']}}'>
+                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
+                            <img loading="lazy" class="image-{{$actions[$x]['portalMkt_']['seccion']}} imageOnServer" id="{{$actions[$x]['portalMkt_']['seccion']}}/{{$actions[$x]['portalMkt_']['filename']}}" src="{{asset($routeImages.'/'.$actions[$x]['portalMkt_']['seccion'].'/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
                             <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
                         </li>
-                    @endFor
+                        
+                @else
+                @if($actions[$x]['portalMkt_']['seccion'] == $actions[$x-1]['portalMkt_']['seccion'])
+                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
+                            <img loading="lazy" class="image-{{$actions[$x]['portalMkt_']['seccion']}} imageOnServer" id="{{$actions[$x]['portalMkt_']['seccion']}}/{{$actions[$x]['portalMkt_']['filename']}}" src="{{asset($routeImages.'/'.$actions[$x]['portalMkt_']['seccion'].'/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
+                            <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
+                        </li>
+                @else
+                        <div class="actions">
+                            <button class="btn-add" onclick="activeModal('modalAddElement', '{{$actions[$x-1]['portalMkt_']['seccion']}}')">Agregar</button>
+                        </div>
                     </ul>
-                    <div class="actions">
-                        <button class="btn-add" onclick="activeModal('modalAddElement', 'Hero')">Agregar</button>
-                    </div>
-            </fieldset>
+                </fieldset>
+                <fieldset>
+                    <legend>{{$actions[$x]['portalMkt_']['seccion']}}</legend>
+                    <ul class="drag-sort-enable" id='ul-{{$actions[$x]['portalMkt_']['seccion']}}'>
+                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
+                            <img loading="lazy" class="image-{{$actions[$x]['portalMkt_']['seccion']}} imageOnServer" id="{{$actions[$x]['portalMkt_']['seccion']}}/{{$actions[$x]['portalMkt_']['filename']}}" src="{{asset($routeImages.'/'.$actions[$x]['portalMkt_']['seccion'].'/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
+                            <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
+                        </li>
+                @endif
+                @endif
+                
+            @endFor
+
             
-
-
-
-
              {{------------------------------------------------------------------------- EVENTOS ---------------------------------------------------------------------}}
 
-             <fieldset>
+             {{-- <fieldset>
                 <legend>Eventos</legend>
                 <ul class="drag-sort-enable" id='ul-Eventos'>
                 @for($x=1; $x <= count($eventosImages); $x++)
@@ -49,7 +65,7 @@
                 <div class="actions">
                     <button class="btn-add" onclick="activeModal('modalAddElement', 'Eventos')">Agregar</button>
                 </div>
-            </fieldset>
+            </fieldset> --}}
 
 
             <br><br>

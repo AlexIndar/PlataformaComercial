@@ -17,15 +17,21 @@
                     <div class="slider">
                         <div class="carousel slide carousel-fade h-100 w-100" id="carouselIndar" data-ride="carousel">
                             <div class="carousel-inner h-100">
-                                @for($x=1; $x <= count($heroImages); $x++)
-                                    @if($x == 1)
-                                        <div id="first-carousel-item" class="carousel-item h-100">
-                                            <img loading="lazy" src="{{asset($routeImages.'/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
+                                @for($x=0; $x < count($actions); $x++)
+                                    @if($x == 0 && $actions[$x]['portalMkt_']['seccion'] == 'Hero')
+                                    <a href="{{$actions[$x]['portalMkt_']['valor']}}" id="first-carousel-item" class="carousel-item h-100">
+                                        <div>
+                                            <img loading="lazy" src="{{asset($routeImages.'/Hero/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
                                         </div>
+                                    </a>
                                     @else
-                                        <div class="carousel-item h-100">
-                                            <img loading="lazy" src="{{asset($routeImages.'/Hero/'.$heroImages[$x-1]->getBasename())}}" alt="">
-                                        </div>
+                                        @if($actions[$x]['portalMkt_']['seccion'] == 'Hero')
+                                            <a href="{{$actions[$x]['portalMkt_']['valor']}}" class="carousel-item h-100">
+                                                <div>
+                                                    <img loading="lazy" src="{{asset($routeImages.'/Hero/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
+                                                </div>
+                                            </a>
+                                        @endif
                                     @endif
                                 @endFor
                                 <button class="carousel-control-prev" type="button" data-target="#carouselIndar" data-slide="prev">
@@ -193,10 +199,14 @@
     
         <!-- ESPECIALES DEL MES --------------------------------------------------------------------------- -->
         <div class="row">
-            @for($x=1; $x <= count($eventosImages); $x++)
-                <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Eventos/'.$eventosImages[$x-1]->getBasename())}}" alt="Eventos INDAR"></div>
-                </div>
+            @for($x=0; $x < count($actions); $x++)
+                @if($actions[$x]['portalMkt_']['seccion'] == 'Eventos')
+                    <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
+                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Eventos/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Eventos INDAR"></div>
+                        </a>
+                    </div>
+                @endif
             @endFor
         </div>
     
@@ -206,15 +216,15 @@
             <div class="new-products-title" style='border: none !important;'>
                 <h3>Super Ofertas</h3>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Super Ofertas/1.jpg')}}" alt="Ofertas Únicas INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Super Ofertas/2.jpg')}}" alt="Ofertas de Oportunidad INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Super Ofertas/3.jpg')}}" alt="Outlet INDAR"></div>
-            </div>
+            @for($x=0; $x < count($actions); $x++)
+                @if($actions[$x]['portalMkt_']['seccion'] == 'Super Ofertas')
+                    <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
+                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Super Ofertas/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Ofertas Únicas INDAR"></div>
+                        </a>
+                    </div>
+                @endif
+            @endFor
         </div>
         <br><br>
 
@@ -257,15 +267,15 @@
             <div class="new-products-title" style='border: none !important;'>
                 <h3>Sigue nuestros contenidos digitales</h3>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Contenidos Digitales/1.jpg')}}" alt="Video Corporativo INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Contenidos Digitales/2.jpg')}}" alt="Proximos Eventos INDAR"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Contenidos Digitales/3.jpg')}}" alt="Webindar"></div>
-            </div>
+            @for($x=0; $x < count($actions); $x++)
+                @if($actions[$x]['portalMkt_']['seccion'] == 'Contenidos Digitales')
+                    <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
+                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Contenidos Digitales/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Ofertas Únicas INDAR"></div>
+                        </a>
+                    </div>
+                @endif
+            @endFor
         </div>
 
 
@@ -276,15 +286,15 @@
                 <h3>Forma parte de INDAR</h3>
             </div>
             <br><br>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Forma parte de INDAR/1.jpg')}}" alt="Forma parte de INDAR Cliente"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Forma parte de INDAR/2.jpg')}}" alt="Forma parte de INDAR Empleado"></div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Forma parte de INDAR/3.jpg')}}" alt="Forma parte de INDAR Proveedor"></div>
-            </div>
+            @for($x=0; $x < count($actions); $x++)
+                @if($actions[$x]['portalMkt_']['seccion'] == 'Forma Parte de INDAR')
+                    <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
+                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Forma Parte de INDAR/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Forma Parte de INDAR"></div>
+                        </a>
+                    </div>
+                @endif
+            @endFor
         </div>
 
 

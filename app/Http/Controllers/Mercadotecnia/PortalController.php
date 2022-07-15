@@ -42,13 +42,17 @@ class PortalController extends Controller
 
     }
 
-    public static function getImages($token, $section){
-        $path = public_path('assets/mercadotecnia/'.$section);
-        $images = File::allFiles($path);
-        // File::delete($path);
-        // $start = strpos($images[0]->getPathname(), 'assets');
-        // dd(substr($images[0]->getPathname(), $start, strlen($images[0]->getPathname()) - $start));
-        return $images;
+    public static function getActions($token){
+        $getActions = Http::withToken($token)->get(config('global.api_url').'/PortalMKT/GetPortalMKT');
+        $actions = json_decode($getActions->body(), true)['actions'];
+        $response = [];
+        for($x=0; $x < count($actions); $x++){
+            $tmp = explode('/',$actions[$x]['portalMkt_']['rutaImg']);
+            $filename = end($tmp);
+            $actions[$x]['portalMkt_']['filename'] = $filename;
+        }
+        // dd($actions);
+        return $actions;
     }
 
     public static function uploadImage($uploadFile, $section){ 
@@ -93,6 +97,9 @@ class PortalController extends Controller
     }
 
     
+        // File::delete($path);
+        // $start = strpos($images[0]->getPathname(), 'assets');
+        // dd(substr($images[0]->getPathname(), $start, strlen($images[0]->getPathname()) - $start));
 
     
 }

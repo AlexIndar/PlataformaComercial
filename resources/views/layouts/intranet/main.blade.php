@@ -161,13 +161,24 @@
                         <li class="nav-item">
                             @if ($active == 'Dashboard')
                                 <a href="/Intranet" class="nav-link active bg-indarPrimary">
-                                @else
-                                    <a href="/Intranet" class="nav-link">
+                            @else
+                                <a href="/Intranet" class="nav-link">
                             @endif
                             <i class="nav-icon fas fa-th"></i>
                             <p>
                                 Dashboard
-                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            @if ($active == 'SEPANKA')
+                                <a href="https://cci.soysepanka.com/" target="_blank" class="nav-link active bg-indarPrimary">
+                            @else
+                                <a href="https://cci.soysepanka.com/" target="_blank" class="nav-link">
+                            @endif
+                            <i class="fas fa-people-arrows" style="margin-left: 5px; margin-right: 6px;"></i>
+                            <p>
+                                Sepanka
                             </p>
                             </a>
                         </li>
