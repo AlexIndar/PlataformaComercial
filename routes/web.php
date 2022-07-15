@@ -92,7 +92,9 @@ Route::get('/', function () {
     $heroImages = PortalControllerMkt::getImages($token, 'Hero');
     $eventosImages = PortalControllerMkt::getImages($token, 'Eventos');
 
-    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages]);
+    $routeImages = 'assets/mercadotecnia';
+
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages, 'routeImages' => $routeImages]);
 
 })->name('/');
 
@@ -1250,8 +1252,9 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $heroImages = PortalControllerMkt::getPreviewImages($token, 'Hero');
                     $eventosImages = PortalControllerMkt::getPreviewImages($token, 'Eventos');
+                    $routeImages = 'assets/mercadotecnia/Preview';
                 
-                    return view('mercadotecnia.portal.preview', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages]);
+                    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'heroImages' => $heroImages, 'eventosImages' => $eventosImages, 'routeImages' => $routeImages]);
                 
                 });
 

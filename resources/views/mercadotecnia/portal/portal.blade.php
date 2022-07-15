@@ -99,7 +99,7 @@
                 <div class="modal-footer">
                     <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
                     <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddElement')">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="storeNewAction()">Agregar</button>
+                    <button type="button" class="btn btn-primary" onclick="addNewAction()">Agregar</button>
                 </div>
                 </div>
             </div>

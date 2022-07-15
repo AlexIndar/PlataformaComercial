@@ -1,5 +1,6 @@
 let imagesHero = [];
 let imagesEventos = [];
+let actions = [];
 
 $('document').ready(function () {
     $("body").addClass("sidebar-collapse");
@@ -30,13 +31,13 @@ $('document').ready(function () {
     });
 
     $('#modalEditElement').on('hidden.bs.modal', function () {
-        console.log('closed modal');
         let editing = document.querySelectorAll('.editing');
-        console.log(editing);
         [].forEach.call(editing, function(el) {
             el.classList.remove("editing");
         });
-      });
+    });
+
+    getImagesOnServer();
 });
 
 
@@ -144,7 +145,11 @@ function getImagesEventos() {
 }
 
 function deleteRow(row) {
+    event.stopPropagation();
+    console.log(row);
     let idImage = row.parentNode.children[0].id;
+    console.log(idImage);
+
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -183,12 +188,13 @@ function closeModal(id) {
 }
 
 
-function storeNewAction() {
+function addNewAction() {
     let section = document.getElementById('sectionElement').getAttribute('value');
     let file_data = $("#image-add-file").prop("files")[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("section", section);
+
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -218,5 +224,32 @@ function addRow(filename, section) {
     `;
     li.innerHTML = row;
     container.appendChild(li);
+
+    let link = "";
+    let action = $("#select-action").val();
+    let portalMktd = [];
+
+    if(action == "Externo" || action == "Interno"){
+        link = document.getElementById('action-link').value;
+    }
+
+    let tmp = {
+        portalMkt: {
+            idPortalMkt: 0,
+            seccion: section,
+            rutaImg: "assets/mercadotecnia/"+section+"/"+filename,
+            accion: action,
+            valor: link,
+            portalMktd: portalMktd
+        }
+    };
+
+    actions.push(tmp);
+    console.log(actions);
+
     closeModal('modalAddElement');
+}
+
+function getImagesOnServer(){
+    // hacer el get de lo que está actualmente en la bd
 }
