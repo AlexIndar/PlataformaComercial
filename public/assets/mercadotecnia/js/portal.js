@@ -374,6 +374,7 @@ function updateAction() {
 
 function saveChanges() {
     document.getElementById("btnSpinner").style.display = "block";
+    document.getElementById("btn-save-changes").style.display = "none !important";
     let actionsNewOrder = getActionsInNewOrder();
     $.ajax({
         'headers': {

@@ -59,7 +59,6 @@ $(document).ready(function () {
     //Inicia Ajax
     $(document).ajaxStart(function () {
         document.getElementById("btnSpinner").style.display = "block";
-        document.getElementById("btn-save-changes").style.display = "none !important";
         var btnActions = document.getElementsByClassName('btn-group-buttons');
         for (var x = 0; x < btnActions.length; x++) {
             btnActions[x].disabled = true;
