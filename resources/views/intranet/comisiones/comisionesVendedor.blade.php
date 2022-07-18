@@ -388,7 +388,7 @@
                                             <th>Pendiente Saldar mes anterior sin IVA</th>
                                             <th>Pendiente de saldar este mes sin IVA</th>
                                             <th>Sal dada en el mes sin IVA</th>
-                                            <th>Desc Neg</th>
+                                            <th>Participación del vendedor de DesNeg</th>
                                             <th>Desc. Fuera de Tiempo </th>
                                             <th>Nota de Credito por Incobra bilidad</th>
                                             <th>Incobra bilidad </th>
@@ -538,11 +538,10 @@
                 <div class="col-md-12">
                     <div class="card-body table-responsive p-0">
                         <table id="modalEspecialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
-                           <thead style="background-color:#002868; color:white">
+                            <thead style="background-color:#002868; color:white">
                               <tr>
                                  <th id="headerMes" class="text-center" style="font-size:15px " colspan =5  >ESPECIALES DEL MES (15%)</th>
                               </tr>
-                              <thead style="background-color:#002868; color:white">
                               <tr >
                                  <th>Especial No.</th>
                                  <th style="width:420px" >Especiales del Mes </th>
@@ -579,7 +578,7 @@
              <div class="row">
                 <div class="col-md-12">
                     <div class="card-body table-responsive p-0">
-                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                        <table id="detalleEspecialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
                               <tr >
                                  <th>Valor</th>
@@ -624,6 +623,7 @@
  $(document).ready(function() {
        //Collapse sideBar
        $("body").addClass("sidebar-collapse");
+
        //Recibe Json
        var zonavar = {!! json_encode($zona) !!};
        //console.log(zonavar);
@@ -1246,6 +1246,7 @@
                      '</tr>';
                      avanceEspeciales = avanceEspeciales + avance1;
                 }else{
+
                     if(resultDataEspeciales[i].conse == 2 && resultDataEspeciales[21].cuota != 0){
                         var avance2 ;
                     if(resultDataEspeciales[21].cuota > 4 ){
@@ -1257,11 +1258,18 @@
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
                      '<td style="font-weight: bold "> '+resultDataEspeciales[i].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
-                     '<td style="font-weight: bold" > '+resultDataEspeciales[21].cuota.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
+                     '<td style="font-weight: bold" > '+avance2.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                      '<td style="font-weight: bold" > '+avance2+' %</td>' +
                      '</tr>';
                      avanceEspeciales = avanceEspeciales + avance2;
-                }else{
+                }else{console.log('aqui3');
+                if(resultDataEspeciales[i].conse== 1){
+                    resultDataEspeciales[0].total = avanceEspeciales;
+                    if(resultDataEspeciales[0].cuota > resultDataEspeciales[0].total ){
+                        avanceEspeciales = 100;
+                    }
+
+                }
                     htmlModalEspeciales += '<tr>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales">'+resultDataEspeciales[i].conse+'</td>'+
                     '<td style="font-weight: bold; cursor: pointer"  data-toggle="modal" data-target="#modalDetalleEspeciales"> '+resultDataEspeciales[i].especialesDelMes+'</td>'+
@@ -1301,7 +1309,6 @@
                      '<td style="font-weight: bold" > '+resultDataEspeciales[i].avance.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>' +
                      '</tr>';
             } */
-
             $('#modalEspecialesTable tbody').on('click', 'tr', function () {
                 var htmlModalDetalleEspeciales = '';
                 var idEspecial = $(this).text();
@@ -1361,6 +1368,29 @@
             $('#clientesVis').text('Clientes Visitados : '+resultData.length);
             $('#clientesNoVis').text('Clientes NO Visitados : '+ ctesNoVisitados.length);
             $('#clientesNoAct').text('Clientes NO Activos Visitados: '+ resultNoAct.length);
+            $('#modalEspecialesTable').dataTable( {
+                                dom : 'Brtip',
+                                paging:false,
+                                fixedHeader:true,
+                                ordering: false,
+
+                                scrollCollapse: true,
+
+                                buttons: [
+                                    {
+                                        extend:    'excel',
+                                        text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
+                                        titleAttr: 'Descargar Excel'
+                                    }
+                                ],
+                                initComplete: function () {
+                                var btns = $('.dt-button');
+                                btns.addClass('btn btn-success ');
+                                btns.removeClass('dt-button');
+
+                                },
+
+                            });
 
            },
            error: function() {
