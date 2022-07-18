@@ -38,6 +38,7 @@ class VerifyCsrfToken extends Middleware
         '/mercadotecnia/portal/uploadImage',
         '/mercadotecnia/portal/deleteImage',
         '/mercadotecnia/portal/preview',
+        '/mercadotecnia/portal/saveChanges',
         '/promociones/storePromo',
         '/promociones/editar',
         '/promociones/eliminar',
