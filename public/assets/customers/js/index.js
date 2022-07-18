@@ -500,3 +500,6 @@ function activeRama3(categoria, ele) {
   }
 }
 
+function executeAction(action){
+    
+}

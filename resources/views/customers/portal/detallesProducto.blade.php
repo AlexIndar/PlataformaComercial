@@ -188,20 +188,20 @@
 
 
     <!-- Modal -->
-<div class="modal fade" id="modalFichaTecnica" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-body">
-            <i class="fa-solid fa-lg fa-xmark" id="closeModalIcon" style="cursor: pointer; margin-top: -8px;" onclick="closeModal('modalFichaTecnica')"></i>
-            <img class="imgFichaTecnica" src="" onload="fichaDisponible()" onerror="fichaNoDisponible()" alt="">
-            <h5 id='errorFicha'></h5>
+    <div class="modal fade" id="modalFichaTecnica" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <i class="fa-solid fa-lg fa-xmark" id="closeModalIcon" style="cursor: pointer; margin-top: -8px;" onclick="closeModal('modalFichaTecnica')"></i>
+                <img class="imgFichaTecnica" src="" onload="fichaDisponible()" onerror="fichaNoDisponible()" alt="">
+                <h5 id='errorFicha'></h5>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalFichaTecnica')">Cerrar</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal('modalFichaTecnica')">Cerrar</button>
         </div>
-      </div>
     </div>
-  </div>
 
 @endsection
 
