@@ -578,7 +578,7 @@
              <div class="row">
                 <div class="col-md-12">
                     <div class="card-body table-responsive p-0">
-                        <table id="bonosTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
+                        <table id="detalleEspecialesTable" class="table table-striped table-bordered table-hover " style="width:100% ; font-size:75% ;font-weight: bold">
                               <thead style="background-color:#002868; color:white">
                               <tr >
                                  <th>Valor</th>
@@ -1373,8 +1373,9 @@
                                 paging:false,
                                 fixedHeader:true,
                                 ordering: false,
+
                                 scrollCollapse: true,
-                                scrollY:320,
+
                                 buttons: [
                                     {
                                         extend:    'excel',
@@ -1388,27 +1389,6 @@
                                 btns.removeClass('dt-button');
 
                                 },
-
-                            });
-            $('#detalleEspecialesTable').dataTable( {
-                            dom : 'Brtip',
-                            paging:false,
-                            fixedHeader:true,
-                            ordering: false,
-                            scrollCollapse: true,
-                            scrollY:320,
-                            buttons: [
-                                {
-                                    extend:    'excel',
-                                    text:      'Descargar &nbsp <i class="fas fa-file-excel"></i>',
-                                    titleAttr: 'Descargar Excel'
-                                }
-                            ],
-                            initComplete: function () {
-                            var btns = $('.dt-button');
-                            btns.addClass('btn btn-success ');
-                            btns.removeClass('dt-button');
-                            },
 
                             });
 
