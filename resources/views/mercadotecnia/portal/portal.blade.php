@@ -99,7 +99,7 @@
 
                     <div class="action-file-container mt-3 d-none" id="action-file-container">
                         <p>Carga un documento</p>
-                        <input class="" type="file" name="action-file" id="action-file" accept=".jpg, .jpeg, .png, .webp">
+                        <input class="" type="file" name="action-file" id="action-file" accept=".pdf, .xlsx, .xls">
                     </div>
 
                 </div>

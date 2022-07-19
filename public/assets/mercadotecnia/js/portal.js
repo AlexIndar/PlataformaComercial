@@ -268,6 +268,27 @@ function addRow(filename, section) {
         link = document.getElementById('action-link').value;
     }
 
+    if(action == "Descarga"){
+        let file_download = $("#action-file").prop("files")[0];
+        var form_download = new FormData();
+        form_download.append("file", file_download);
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/mercadotecnia/portal/uploadFile",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: false,
+            data: form_download,       // Setting the data attribute of ajax with file_data                  
+            type: 'post',
+            success: function (result) {
+                link = "/mercadotecnia/portal/download/"+result;
+            },
+        });
+    }
+
     let tmp = {
         portalMkt_: {
             idPortalMkt: 0,

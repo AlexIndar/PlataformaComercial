@@ -1275,6 +1275,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                     return $upload;
                 });
 
+                Route::post('/mercadotecnia/portal/uploadFile', function(Request $request){
+
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+
+                    $uploadFile = $request->file('file');
+                    $upload = PortalControllerMkt::uploadFile($uploadFile);
+                    return $upload;
+                });
+
                 Route::post('/mercadotecnia/portal/deleteImage', function(Request $request){
 
                     $token = TokenController::getToken();
@@ -1300,6 +1312,11 @@ Route::middleware([ValidateSession::class])->group(function(){
                     else{
                         return response()->json(['error' => 'Error actualizando acciones'], $response->getStatusCode());
                     }
+                });
+
+                Route::get('/mercadotecnia/portal/download/{file}', function($file_name){
+                    $file_path = public_path('assets/mercadotecnia/Files/'.$file_name);
+                    return response()->download($file_path);
                 });
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------

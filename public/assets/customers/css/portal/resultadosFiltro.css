@@ -523,10 +523,10 @@
   [data-tooltip]:before {
     position: absolute;
     top: -21px;
-    left: -45px;
+    left: -90px;
     background: black;
     width: auto;
-    font-size: 14px;
+    font-size: 13px;
     padding: 8px;
     border-radius: 3px;
     content: attr(data-tooltip);

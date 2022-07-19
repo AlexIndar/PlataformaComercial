@@ -62,6 +62,11 @@ class PortalController extends Controller
         return $file;
     }
 
+    public static function uploadFile($uploadFile){ 
+        $file = Storage::disk('mercadotecniaFiles')->put('/', $uploadFile);
+        return $file;
+    }
+
     public static function deleteImage($image){ 
         $path = public_path('assets/mercadotecnia/Temp/'.$image);
         $deleted = File::delete($path);
@@ -201,9 +206,12 @@ class PortalController extends Controller
                 File::copyDirectory($tempPath.'/Super Ofertas', $basePath.'/Super Ofertas');
             }
             
-            return $response;
+            return $response;       
+    }
 
-            
+    public static function download($file_name){
+        $file_path = public_path('assets/mercadotecnia/Files/'.$file_name);
+        return response()->download($file_path);
     }
     
 }

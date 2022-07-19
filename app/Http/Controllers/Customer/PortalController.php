@@ -157,7 +157,7 @@ class PortalController extends Controller
         
         $tmpExistencias['filterKey'] = "existencias";
         $tmpExistencias['filterValue'] = $existenciasFilter;
-        $tmpExistencias['tooltip'] = 'Sin artículos S/PEDIDO';
+        $tmpExistencias['tooltip'] = 'Puede no mostrar S/PEDIDO';
         $data['filters']['existencias'] = $tmpExistencias;
 
         $tmpMarcas['filterKey'] = "marcas";
