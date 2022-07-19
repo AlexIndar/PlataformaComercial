@@ -30,6 +30,11 @@ class PortalController extends Controller
         return json_decode($data);
     }
 
+    public static function noPromocional($item){
+        // Retorna siempre que el número entero sea impar
+        dd($item);
+    }
+
     // Retorna filtrado de busqueda, si se indican límites from y to devuelve solo la info encontrada en ese rango de índices
     public static function busquedaItemFiltro($token, $filter, $codigo, $directo = false, $from = null, $to = null){ 
         if($directo)
@@ -56,7 +61,8 @@ class PortalController extends Controller
                 return $items;
             }
         }
-        $items = json_decode($items);
+        $items = json_decode($items, true);
+       
         $data = PortalController::getFiltersBusqueda($items);
 
         if($from == null){
@@ -81,15 +87,15 @@ class PortalController extends Controller
         $categorias = [];
         for($x = 0; $x < count($items); $x++){
             if($x == 0){
-                array_push($marcas, $items[$x]->familia);
-                array_push($categorias, $items[$x]->categoriaItem);
+                array_push($marcas, $items[$x]['familia']);
+                array_push($categorias, $items[$x]['categoriaItem']);
             }
             else{
-                if(!in_array($items[$x]->familia, $marcas)){
-                    array_push($marcas, $items[$x]->familia);   
+                if(!in_array($items[$x]['familia'], $marcas)){
+                    array_push($marcas, $items[$x]['familia']);   
                 }
-                if(!in_array($items[$x]->categoriaItem, $categorias)){
-                    array_push($categorias, $items[$x]->categoriaItem);   
+                if(!in_array($items[$x]['categoriaItem'], $categorias)){
+                    array_push($categorias, $items[$x]['categoriaItem']);   
                 }
             }
         }   
@@ -105,7 +111,7 @@ class PortalController extends Controller
         foreach($marcas as $marca){
             $count = 0;
             foreach($items as $item){
-                if($item->familia == $marca){
+                if($item['familia'] == $marca){
                     $count ++;
                 }
             }
@@ -117,7 +123,7 @@ class PortalController extends Controller
         foreach($categorias as $categoria){
             $count = 0;
             foreach($items as $item){
-                if($item->categoriaItem == $categoria){
+                if($item['categoriaItem'] == $categoria){
                     $count ++;
                 }
             }
@@ -129,10 +135,10 @@ class PortalController extends Controller
         $countCompetitividad = 0;
         $countExistencias = 0;
         foreach($items as $item){
-            if($item->competitividad == "true"){
+            if($item['competitividad'] == "true"){
                 $countCompetitividad ++;
             }
-            if($item->disponible > 0){
+            if($item['disponible'] > 0){
                 $countExistencias ++;
             }
         }

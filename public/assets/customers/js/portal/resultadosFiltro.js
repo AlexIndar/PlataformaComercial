@@ -256,7 +256,7 @@ function filterItems() { //busca artículos que coincidan con todos los filtros 
                     }
                 }
                 else if (value == 'Con existencias') {
-                    if (item['' + nameKey + ''] > 0) {
+                    if (item['' + nameKey + ''] == 0) {
                         insert = false;
                     }
                     else {
