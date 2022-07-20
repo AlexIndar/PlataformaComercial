@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main',['active' => 'Logistica'])
 
-@section('title') Indar @endsection
+@section('title') Indar | Distribución @endsection
 
 @section('styles')
 @endsection
@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 @endsection
 @section('body')
+<div id="cover-spin"><img src="{{asset('assets/intranet/images/loading.gif')}}" alt="loading" style="margin-top: 13%;"></div>
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">

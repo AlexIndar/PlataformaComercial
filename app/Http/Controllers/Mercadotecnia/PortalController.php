@@ -49,8 +49,10 @@ class PortalController extends Controller
             $tmp = explode('/',$actions[$x]['portalMkt_']['rutaImg']);
             $filename = end($tmp);
             $actions[$x]['portalMkt_']['filename'] = $filename;
+            if($actions[$x]['portalMkt_']['accion'] == 'Filtro'){
+                $actions[$x]['portalMkt_']['valor'] = "http://".$_SERVER['HTTP_HOST'].'/portal/busqueda/'.$actions[$x]['portalMkt_']['idPortalMkt'];
+            }
         }
-        // dd($actions);
         return $actions;
     }
 
@@ -59,6 +61,11 @@ class PortalController extends Controller
         if($delete != ''){
             PortalController::deleteImage($section.'/'.$delete);
         }
+        return $file;
+    }
+
+    public static function uploadFile($uploadFile){ 
+        $file = Storage::disk('mercadotecniaFiles')->put('/', $uploadFile);
         return $file;
     }
 
@@ -200,10 +207,16 @@ class PortalController extends Controller
                 File::copyDirectory($tempPath.'/Ofertas Relampago', $basePath.'/Ofertas Relampago');
                 File::copyDirectory($tempPath.'/Super Ofertas', $basePath.'/Super Ofertas');
             }
+            else{
+                dd($response);
+            }
             
-            return $response;
+            return $response;       
+    }
 
-            
+    public static function download($file_name){
+        $file_path = public_path('assets/mercadotecnia/Files/'.$file_name);
+        return response()->download($file_path);
     }
     
 }

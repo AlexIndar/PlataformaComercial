@@ -19,14 +19,14 @@
                             <div class="carousel-inner h-100">
                                 @for($x=0; $x < count($actions); $x++)
                                     @if($x == 0 && $actions[$x]['portalMkt_']['seccion'] == 'Hero')
-                                    <a href="{{$actions[$x]['portalMkt_']['valor']}}" id="first-carousel-item" class="carousel-item h-100" target="_blank">
+                                    <a href="{{$actions[$x]['portalMkt_']['valor']}}" id="first-carousel-item" class="carousel-item h-100">
                                         <div>
                                             <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="">
                                         </div>
                                     </a>
                                     @else
                                         @if($actions[$x]['portalMkt_']['seccion'] == 'Hero')
-                                            <a href="{{$actions[$x]['portalMkt_']['valor']}}" class="carousel-item h-100" target="_blank">
+                                            <a href="{{$actions[$x]['portalMkt_']['valor']}}" class="carousel-item h-100">
                                                 <div>
                                                     <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="">
                                                 </div>
@@ -111,51 +111,51 @@
                             <!-- Additional required wrapper -->
                             <div class="swiper-wrapper swiper-wrapper-suppliers">
                                 <!-- Slides -->
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                <a href="/portal/busqueda/A4" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/austromex.svg')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/B2%20~%20BLACK%20~%20AND%20~%20DECKER" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/black-decker.svg')}}" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a>
+                                <a href="/portal/busqueda/B3%20~%20BOSCH" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/bosch.png')}}" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a>
+                                <a href="/portal/busqueda/B2%20~%20DEWALT" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/de-walt.webp')}}" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a>
+                                <a href="/portal/busqueda/B3%20~%20DREMEL" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/dremel.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/F4" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/fandeli.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/G6" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/garlock.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/E6" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/grupo-elpro.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/K1" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/klein-tools.svg')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/M0" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/makita.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/PFERD" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/pferd.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/R3" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/resistol.webp')}}" alt="">
-                                </div>
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a>
+                                <a href="/portal/busqueda/R1" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/rugo.png')}}" alt="">
-                                </div> 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a> 
+                                <a href="/portal/busqueda/B3%20~%20SKIL" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/skil.png')}}" alt="">
-                                </div>                                 
-                                <div class="swiper-slide swiper-slide-suppliers">
+                                </a>                                 
+                                <a href="/portal/busqueda/W2" class="swiper-slide swiper-slide-suppliers">
                                     <img loading="lazy"  src="{{asset('assets/customers/img/png/proveedores/wd40.png')}}" alt="">
-                                </div> 
+                                </a> 
                                 
                                 
                             </div>
@@ -172,7 +172,7 @@
                 <div class="d-flex flex-row justify-content-center align-items-center">
                     @for($x=0; $x < count($actions); $x++)
                         @if($actions[$x]['portalMkt_']['seccion'] == 'Ofertas Relampago' && str_contains($actions[$x]['portalMkt_']['filename'], 'png'))
-                                <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                                <a href="{{$actions[$x]['portalMkt_']['valor']}}">
                                     <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" style="margin-left: 5%;" width="90%" alt="Logo Ofertas Relámpago INDAR">    
                                 </a>
                         @endif
@@ -200,7 +200,7 @@
             <div class="col-lg-8 col-md-8 col-sm-12 col-12 supplier-relampago">
                     @for($x=0; $x < count($actions); $x++)
                         @if($actions[$x]['portalMkt_']['seccion'] == 'Ofertas Relampago' && str_contains($actions[$x]['portalMkt_']['filename'], 'jpg'))
-                                <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                                <a href="{{$actions[$x]['portalMkt_']['valor']}}">
                                     <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" height="auto" alt="Banner Ofertas Relámpago INDAR"></div>
                                 </a>
                         @endif
@@ -214,7 +214,7 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Eventos')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
                             <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Eventos INDAR"></div>
                         </a>
                     </div>
@@ -231,7 +231,7 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Super Ofertas')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
                             <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Ofertas Únicas INDAR"></div>
                         </a>
                     </div>
@@ -282,7 +282,7 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Contenidos Digitales')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
                             <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Ofertas Únicas INDAR"></div>
                         </a>
                     </div>
@@ -301,7 +301,7 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Forma Parte de INDAR')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
                             <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Forma Parte de INDAR"></div>
                         </a>
                     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main',['active' => 'Logistica'])
 
-@section('title') Indar @endsection
+@section('title') Indar | Distribución @endsection
 
 @section('styles')
 @endsection
@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 @endsection
 @section('body')
+<div id="cover-spin"><img src="{{asset('assets/intranet/images/loading.gif')}}" alt="loading" style="margin-top: 13%;"></div>
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
@@ -19,9 +20,9 @@
                 <div class="col-12">
                     <div class="card mt-2">
                         <div class="card-header title-table">
-                            <h3 class="card-title mt-2 mr-3">Reporte SAD</h3>
-                            <button type="button" class="btn btn-outline-primary btn-consultar-reporte-sad" disabled onclick="logisticaController.reportSad()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Consultando</button>
-                            <button type="button" class="btn btn-outline-primary  btn-excel ml-2" onclick="logisticaController.exportExcelreportSad()" disabled><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
+                            <h3 class="card-title mt-2 mr-3">Reporte embarque</h3>
+                            <button type="button" class="btn btn-outline-primary btn-consultar-reporte-embarque" disabled onclick="logisticaController.reportShipment()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Consultando</button>
+                            <button type="button" class="btn btn-outline-primary  btn-excel ml-2" onclick="logisticaController.exportExcelreportShipment()" disabled><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -35,17 +36,17 @@
                                             <th data-priority="4">PAQUETERIA</th>
                                             <th data-priority="5">COMENTARIOS</th>
                                             <th data-priority="6">ESTATUS</th>
-                                            <th data-priority="7">ASIGNADO</th>
-                                            <th data-priority="8">FACTURA</th>
-                                            <th data-priority="9">ESTADO</th>
-                                            <th data-priority="10">PERSONA</th>
-                                            <th data-priority="11">FECHA HORA</th>
-                                            <th data-priority="12">COMENTARIO FACTURA</th>
-                                            <th data-priority="13">USUARIO CONFIRMA</th>
-                                            <th data-priority="14">FECHA CONFIRMA POSTVENTA</th>
+                                            <th data-priority="7">USUARIO</th>
+                                            <th data-priority="9">FACTURA</th>
+                                            <th data-priority="10">ESTADO</th>
+                                            <th data-priority="11">PERSONA</th>
+                                            <th data-priority="12">FECHA HORA</th>
+                                            <th data-priority="13">COMENTARIO FACTURA</th>
+                                            <th data-priority="14">USUARIO CONFIRMA</th>
+                                            <th data-priority="15">FECHA CONFIRMA POSTVENTA</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="content-table-reporte-embarque">
+                                    <tbody>
                                     </tbody>
                                 </table>
                             </div>

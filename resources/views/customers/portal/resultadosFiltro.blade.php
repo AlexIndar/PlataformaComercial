@@ -69,40 +69,19 @@
     <br>
     <div class="filterFull" id="filterFull">
 
-        <h5 class="filterTitleContainer" onclick="hideFilterModal('Competitividad')"> <span class="filterTitle">Competitividad</span><span class="filterControlIcon plus-minus-toggle" id="filterControlCompetitividadModal"></span> </h5>
-        <div class="filterCompetitividad" id="filterCompetitividadModal">
-            @for($x=0; $x < count($data['competitividad']); $x++)
-                <div class="filterElement">
-                    <input class="filterCheck" autocomplete='off' id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
-                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['competitividad'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-competitividad-modal-{{$data['competitividad'][$x]['nombre']}}">({{$data['competitividad'][$x]['resultados']}})</span> </h5>
-                </div>
-            @endFor
-        </div>
+        @foreach ($data['filters'] as $filter)
+                        <h5 class="filterTitleContainer" onclick="hideFilterModal('{{strtoupper($filter['filterKey'])}}')"> <span class="filterTitle">{{strtoupper($filter['filterKey'])}}</span>@if($filter['tooltip'] != '') <span data-tooltip="{{$filter['tooltip']}}"><img style="width: 12px; margin-left: 10px" src="{{ asset('assets/customers/img/png/tooltip.png') }}"></span> @endif<span class="filterControlIcon plus-minus-toggle" id="filterControl{{strtoupper($filter['filterKey'])}}Modal"></span> </h5>
+                        <div class="filter{{strtoupper($filter['filterKey'])}}" id="filter{{strtoupper($filter['filterKey'])}}Modal">
+                            @for($x=0; $x < count($filter['filterValue']); $x++)
+                                <div class="filterElement">
+                                    <input class="filterCheck" autocomplete='off' id="checkbox-{{$filter['filterKey']}}-{{$filter['filterValue'][$x]['nombre']}}" type="checkbox" value="{{$filter['filterKey']}}={{$filter['filterValue'][$x]['nombre']}}">
+                                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($filter['filterValue'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-{{$filter['filterKey']}}-modal-{{$filter['filterValue'][$x]['nombre']}}">({{$filter['filterValue'][$x]['resultados']}})</span> </h5>
+                                </div>
+                            @endFor
+                        </div>
 
-        <hr>
-
-        <h5 class="filterTitleContainer" onclick="hideFilterModal('Marcas')"> <span class="filterTitle">Marca</span><span class="filterControlIcon plus-minus-toggle" id="filterControlMarcasModal"></span> </h5>
-        <div class="filterMarcas" id="filterMarcasModal">
-            @for($x=0; $x < count($data['marcas']); $x++)
-                <div class="filterElement">
-                    <input class="filterCheck" autocomplete='off' id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
-                    <img loading="lazy" class="filterImg" src={{"http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['marcas'][$x]['nombre']))).".jpg"}}>
-                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['marcas'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-marca-modal-{{$data['marcas'][$x]['nombre']}}">({{$data['marcas'][$x]['resultados']}})</span> </h5>
-                </div>
-            @endFor
-        </div>
-
-        <hr>
-
-        <h5 class="filterTitleContainer" onclick="hideFilterModal('Categorias')"> <span class="filterTitle">Categoria</span><span class="filterControlIcon plus-minus-toggle" id="filterControlCategoriasModal"></span> </h5>
-        <div class="filterCategorias" id="filterCategoriasModal">
-            @for($x=0; $x < count($data['categorias']); $x++)
-                <div class="filterElement">
-                    <input class="filterCheck" autocomplete='off' id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
-                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['categorias'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-categoria-modal-{{$data['categorias'][$x]['nombre']}}">({{$data['categorias'][$x]['resultados']}})</span> </h5>
-                </div>
-            @endFor
-        </div>
+                        <hr>
+                    @endforeach
 
     </div>
 </div>
@@ -116,41 +95,20 @@
         <div class="col-lg-3 col-md-4">
             <div class="filters" id="filtersDiv">
                 <div class="filterFull" id="filterFull">
-
-                    <h5 class="filterTitleContainer" onclick="hideFilter('Competitividad')"> <span class="filterTitle">Competitividad</span><span class="filterControlIcon plus-minus-toggle" id="filterControlCompetitividad"></span> </h5>
-                    <div class="filterCompetitividad" id="filterCompetitividad">
-                        @for($x=0; $x < count($data['competitividad']); $x++)
-                            <div class="filterElement">
-                                <input class="filterCheck" autocomplete='off' id="checkbox-competitividad-{{$data['competitividad'][$x]['nombre']}}" type="checkbox" value="competitividad={{$data['competitividad'][$x]['nombre']}}">
-                                <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['competitividad'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-competitividad-{{$data['competitividad'][$x]['nombre']}}">({{$data['competitividad'][$x]['resultados']}})</span> </h5>
-                            </div>
-                        @endFor
-                    </div>
-
-                    <hr>
                     
-                    <h5 class="filterTitleContainer" onclick="hideFilter('Marcas')"> <span class="filterTitle">Marca</span><span class="filterControlIcon plus-minus-toggle" id="filterControlMarcas"></span> </h5>
-                    <div class="filterMarcas" id="filterMarcas">
-                        @for($x=0; $x < count($data['marcas']); $x++)
-                            <div class="filterElement">
-                                <input class="filterCheck" autocomplete='off' id="checkbox-marca-{{$data['marcas'][$x]['nombre']}}" type="checkbox" value="marca={{$data['marcas'][$x]['nombre']}}">
-                                <img loading="lazy" class="filterImg" src={{"http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/".str_replace("-", "_", str_replace(".", "_", str_replace(" ", "_", $data['marcas'][$x]['nombre']))).".jpg"}}>
-                                <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['marcas'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-marca-{{$data['marcas'][$x]['nombre']}}">({{$data['marcas'][$x]['resultados']}})</span> </h5>
-                            </div>
-                        @endFor
-                    </div>
-        
-                    <hr>
-        
-                    <h5 class="filterTitleContainer" onclick="hideFilter('Categorias')"> <span class="filterTitle">Categoria</span><span class="filterControlIcon plus-minus-toggle" id="filterControlCategorias"></span> </h5>
-                    <div class="filterCategorias" id="filterCategorias">
-                        @for($x=0; $x < count($data['categorias']); $x++)
-                            <div class="filterElement">
-                                <input class="filterCheck" autocomplete='off' id="checkbox-categoria-{{$data['categorias'][$x]['nombre']}}" type="checkbox" value="categoria={{$data['categorias'][$x]['nombre']}}">
-                                <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($data['categorias'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-categoria-{{$data['categorias'][$x]['nombre']}}">({{$data['categorias'][$x]['resultados']}})</span> </h5>
-                            </div>
-                        @endFor
-                    </div>
+                    @foreach ($data['filters'] as $filter)
+                        <h5 class="filterTitleContainer" onclick="hideFilter('{{strtoupper($filter['filterKey'])}}')"> <span class="filterTitle">{{strtoupper($filter['filterKey'])}} </span> @if($filter['tooltip'] != '') <span data-tooltip="{{$filter['tooltip']}}"><img style="width: 12px; margin-left: 10px" src="{{ asset('assets/customers/img/png/tooltip.png') }}"></span> @endif<span class="filterControlIcon plus-minus-toggle" id="filterControl{{strtoupper($filter['filterKey'])}}"></span> </h5>
+                        <div class="filter{{strtoupper($filter['filterKey'])}}" id="filter{{strtoupper($filter['filterKey'])}}">
+                            @for($x=0; $x < count($filter['filterValue']); $x++)
+                                <div class="filterElement">
+                                    <input class="filterCheck" autocomplete='off' id="checkbox-{{$filter['filterKey']}}-{{$filter['filterValue'][$x]['nombre']}}" type="checkbox" value="{{$filter['filterKey']}}={{$filter['filterValue'][$x]['nombre']}}">
+                                    <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($filter['filterValue'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-{{$filter['filterKey']}}-{{$filter['filterValue'][$x]['nombre']}}">({{$filter['filterValue'][$x]['resultados']}})</span> </h5>
+                                </div>
+                            @endFor
+                        </div>
+
+                        <hr>
+                    @endforeach
 
                 </div>
                 <br><br>
