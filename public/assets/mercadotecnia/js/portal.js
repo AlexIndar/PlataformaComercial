@@ -69,10 +69,26 @@ $('document').ready(function () {
         if (action == 'Externo' || action == 'Interno') {
             document.getElementById('action-link-container').classList.remove('d-none');
             document.getElementById('action-file-container').classList.add('d-none');
+            document.getElementById('edit-action-file-preview').classList.add('d-none');
+            document.getElementById('edit-action-file-preview').innerHTML = "";
         }
         if (action == 'Descarga') {
             document.getElementById('action-file-container').classList.remove('d-none');
             document.getElementById('action-link-container').classList.add('d-none');
+        }
+    });
+
+     $('#select-edit-action').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        let action = $("#select-edit-action").val();
+        if (action == 'Externo' || action == 'Interno') {
+            document.getElementById('edit-action-link-container').classList.remove('d-none');
+            document.getElementById('edit-action-file-container').classList.add('d-none');
+            document.getElementById('edit-action-file-preview').classList.add('d-none');
+            document.getElementById('edit-action-file-preview').innerHTML = "";
+        }
+        if (action == 'Descarga') {
+            document.getElementById('edit-action-file-container').classList.remove('d-none');
+            document.getElementById('edit-action-link-container').classList.add('d-none');
         }
     });
 
@@ -81,6 +97,7 @@ $('document').ready(function () {
         [].forEach.call(editing, function (el) {
             el.classList.remove("editing");
         });
+        clearModalEditAction();
     });
 
     $('#modalAddElement').on('hidden.bs.modal', function () {
@@ -208,10 +225,28 @@ function activeModal(id, section, row = null) {
             document.getElementById('edit-action-link-container').classList.remove('d-none');
             document.getElementById('edit-action-link').value = action.portalMkt_.valor;
             document.getElementById('edit-action-file-container').classList.add('d-none');
+            document.getElementById('edit-action-file-preview').classList.add('d-none');
+            document.getElementById('edit-action-file-preview').innerHTML = "";
         }
         if (action.portalMkt_.accion == 'Descarga') {
             document.getElementById('edit-action-file-container').classList.remove('d-none');
             document.getElementById('edit-action-link-container').classList.add('d-none');
+            let preview = document.getElementById('edit-action-file-preview');
+            let filename = (action.portalMkt_.valor.split('/')).pop();
+            if (filename.includes('.xl')){
+                preview.innerHTML = `
+                    <p>Este tipo de archivos no pueden visualizarse automáticamente en el navegador.</p>
+                    <a href="${action.portalMkt_.valor}">Descargar archivo</a>
+                `;
+            }
+            else{
+                preview.innerHTML = `
+                <embed src="../../../../assets/mercadotecnia/Files/${filename}" width="100%" height="auto" />
+            `;
+            }
+
+           
+            preview.classList.remove('d-none');
             //mostrar el documento que está cargado actualmente
         }
         document.getElementById('image-edit-preview').src = src;
@@ -252,6 +287,7 @@ function addRow(filename, section) {
     let container = document.getElementById('ul-' + section);
     let li = document.createElement('li');
     li.setAttribute('class', 'drag-sort-item divImg');
+    li.setAttribute('onclick', "activeModal('modalEditElement', 'Hero', this)");
     enableDragItem(li);
     let row = `
         <img loading="lazy" class="image-${section.toLowerCase()} imageOnServer" id="${section}/${filename}" src="../../../../assets/mercadotecnia/Temp/${section}/${filename}" alt="">
@@ -330,6 +366,10 @@ function clearModalAddAction() {
     $('#select-action').val("none").trigger('change');
     $('#action-link').val("");
     $('#action-link-container').addClass('d-none');
+    $('#action-file').val("");
+    $('#action-file-container').addClass('d-none');
+    $('#action-file-preview').addClass('d-none');
+    $('#action-file-preview').innerHTML = "";
     $('#image-add-preview').attr('src', '');
 }
 
@@ -338,6 +378,10 @@ function clearModalEditAction() {
     $('#select-edit-action').val("none").trigger('change');
     $('#edit-action-link').val("");
     $('#edit-action-link-container').addClass('d-none');
+    $('#edit-action-file').val("");
+    $('#edit-action-file-container').addClass('d-none');
+    $('#edit-action-file-preview').addClass('d-none');
+    $('#edit-action-file-preview').innerHTML = "";
     $('#image-edit-preview').attr('src', '');
 }
 
@@ -383,6 +427,27 @@ function updateAction() {
 
     if (actionSelected == "Externo" || actionSelected == "Interno") {
         link = document.getElementById('edit-action-link').value;
+    }
+
+    if(actionSelected == "Descarga"){
+        let file_download = $("#edit-action-file").prop("files")[0];
+        var form_download = new FormData();
+        form_download.append("file", file_download);
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "/mercadotecnia/portal/uploadFile",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: false,
+            data: form_download,       // Setting the data attribute of ajax with file_data                  
+            type: 'post',
+            success: function (result) {
+                link = "/mercadotecnia/portal/download/"+result;
+            },
+        });
     }
 
     action.portalMkt_.accion = actionSelected;
@@ -435,3 +500,4 @@ function getCookie(name) { //saber si una cookie existe
     }
     return decodeURI(dc.substring(begin + prefix.length, end));
   }
+
