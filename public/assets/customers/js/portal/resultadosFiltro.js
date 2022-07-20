@@ -4,7 +4,7 @@ var filters = [];
 
 
 $(document).ready(function () {
-
+    $('[data-toggle="tooltip"]').tooltip()
     $(window).scroll(() => {
         adjustFixedFilters();
     });
@@ -51,6 +51,7 @@ $(document).ready(function () {
                 return item.categoriaItem != 'PROMOCIONAL';
             })
             itemsFullList = data;
+            console.log(itemsFullList);
             itemsCurrentFilter = itemsFullList['items'];
             showSkeleton();
             updateProductList();
@@ -229,24 +230,38 @@ function addTagFilter(key, value) {
 
 function filterItems() { //busca artículos que coincidan con todos los filtros agregados
 
+    itemsFullList.items.forEach(item => {
+        console.log('item');
+    })
+    
+
     let itemsFiltered = [];
     itemsCurrentFilter = [];
-
     itemsFullList.items.forEach(item => {
         let insert = true;
         for (let x = 0; x < filters.length; x++) {
             let key = filters[x]['key'];
             var nameKey = '';
             switch (key) {
-                case 'marca': nameKey = 'familia'; break;
-                case 'categoria': nameKey = 'categoriaItem'; break;
+                case 'marcas': nameKey = 'familia'; break;
+                case 'categorias': nameKey = 'categoriaItem'; break;
                 case 'competitividad': nameKey = 'competitividad'; break;
+                case 'existencias': nameKey = 'disponible'; break;
                 default: break;
             }
             for (y = 0; y < filters[x]['values'].length; y++) {
                 let value = filters[x]['values'][y];
-                if (value != 'Mejor Precio Indar') {
-                    if (item['' + nameKey + ''] != value.toUpperCase()) {
+                if (value == 'Mejor Precio Indar') {
+                    if (item['' + nameKey + ''] != "true") {
+                        insert = false;
+                    }
+                    else {
+                        insert = true;
+                        break;
+                    }
+                }
+                else if (value == 'Con existencias') {
+                    if (item['' + nameKey + ''] == 0) {
                         insert = false;
                     }
                     else {
@@ -255,7 +270,7 @@ function filterItems() { //busca artículos que coincidan con todos los filtros 
                     }
                 }
                 else {
-                    if (item['' + nameKey + ''] != "true") {
+                    if (item['' + nameKey + ''] != value.toUpperCase()) {
                         insert = false;
                     }
                     else {
@@ -281,22 +296,29 @@ function filterItems() { //busca artículos que coincidan con todos los filtros 
 
 function updateCantidadesFiltros() {
 
-    for (let x = 0; x < itemsFullList.marcas.length; x++) {
-        const count = itemsCurrentFilter.filter((obj) => obj.familia === itemsFullList.marcas[x].nombre).length;
-        document.getElementById('filterCantidad-marca-' + itemsFullList.marcas[x].nombre).innerText = '(' + count + ')';
-        document.getElementById('filterCantidad-marca-modal-' + itemsFullList.marcas[x].nombre).innerText = '(' + count + ')';
+    for (let x = 0; x < itemsFullList.filters.marcas.filterValue.length; x++) {
+        const count = itemsCurrentFilter.filter((obj) => obj.familia === itemsFullList.filters.marcas.filterValue[x].nombre).length;
+        console.log('filterCantidad-marcas-modal-' + itemsFullList.filters.marcas.filterValue[x].nombre);
+        document.getElementById('filterCantidad-marcas-' + itemsFullList.filters.marcas.filterValue[x].nombre).innerText = '(' + count + ')';
+        document.getElementById('filterCantidad-marcas-modal-' + itemsFullList.filters.marcas.filterValue[x].nombre).innerText = '(' + count + ')';
     }
 
-    for (let x = 0; x < itemsFullList.categorias.length; x++) {
-        const count = itemsCurrentFilter.filter((obj) => obj.categoriaItem === itemsFullList.categorias[x].nombre).length;
-        document.getElementById('filterCantidad-categoria-' + itemsFullList.categorias[x].nombre).innerText = '(' + count + ')';
-        document.getElementById('filterCantidad-categoria-modal-' + itemsFullList.categorias[x].nombre).innerText = '(' + count + ')';
+    for (let x = 0; x < itemsFullList.filters.categorias.filterValue.length; x++) {
+        const count = itemsCurrentFilter.filter((obj) => obj.categoriaItem === itemsFullList.filters.categorias.filterValue[x].nombre).length;
+        document.getElementById('filterCantidad-categorias-' + itemsFullList.filters.categorias.filterValue[x].nombre).innerText = '(' + count + ')';
+        document.getElementById('filterCantidad-categorias-modal-' + itemsFullList.filters.categorias.filterValue[x].nombre).innerText = '(' + count + ')';
     }
 
-    for (let x = 0; x < itemsFullList.competitividad.length; x++) {
+    for (let x = 0; x < itemsFullList.filters.competitividad.filterValue.length; x++) {
         const count = itemsCurrentFilter.filter((obj) => obj.competitividad === "true").length;
-        document.getElementById('filterCantidad-competitividad-' + itemsFullList.competitividad[x].nombre).innerText = '(' + count + ')';
-        document.getElementById('filterCantidad-competitividad-modal-' + itemsFullList.competitividad[x].nombre).innerText = '(' + count + ')';
+        document.getElementById('filterCantidad-competitividad-' + itemsFullList.filters.competitividad.filterValue[x].nombre).innerText = '(' + count + ')';
+        document.getElementById('filterCantidad-competitividad-modal-' + itemsFullList.filters.competitividad.filterValue[x].nombre).innerText = '(' + count + ')';
+    }
+
+    for (let x = 0; x < itemsFullList.filters.existencias.filterValue.length; x++) {
+        const count = itemsCurrentFilter.filter((obj) => obj.disponible > 0).length;
+        document.getElementById('filterCantidad-existencias-' + itemsFullList.filters.existencias.filterValue[x].nombre).innerText = '(' + count + ')';
+        document.getElementById('filterCantidad-existencias-modal-' + itemsFullList.filters.existencias.filterValue[x].nombre).innerText = '(' + count + ')';
     }
 }
 

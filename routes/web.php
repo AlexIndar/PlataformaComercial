@@ -92,9 +92,7 @@ Route::get('/', function () {
         $level = $_COOKIE['_lv'];
     }
 
-    $routeImages = 'assets/mercadotecnia';
-
-    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions, 'routeImages' => $routeImages]);
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions]);
 
 })->name('/');
 
@@ -1232,15 +1230,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                         LoginController::logout();
                     }
 
-                    $heroImages = $request->hero;
-                    $move = PortalControllerMkt::orderPreview($heroImages, 'Hero');
-                    $eventosImages = $request->eventos;
-                    $move = PortalControllerMkt::orderPreview($eventosImages, 'Eventos');
+                    $actions = $request->actions;
+                    $move = PortalControllerMkt::orderPreview($actions);
                     
                     return $move;
                 });
 
-                Route::post('/mercadotecnia/portal/preview', function (Request $request) {
+                Route::get('/mercadotecnia/portal/preview', function (Request $request) {
                     $token = TokenController::getToken();
                     $status = '';
                     if($token && $token != 'error' && $token != 'expired'){
@@ -1260,10 +1256,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if(isset($_COOKIE['_lv'])){
                         $level = $_COOKIE['_lv'];
                     }
-                    $actions = $request->actions;
-                    $routeImages = 'assets/mercadotecnia/Preview';
-                
-                    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions, 'routeImages' => $routeImages]);
+                    $actions = PortalControllerMkt::getActionsPreview($token);
+                    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions]);
                 
                 });
 
@@ -1276,7 +1270,20 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $uploadFile = $request->file('file');
                     $section = $request->section;
-                    $upload = PortalControllerMkt::uploadImage($uploadFile, $section);
+                    isset($request->delete) ? $delete = $request->delete : $delete = '';
+                    $upload = PortalControllerMkt::uploadImage($uploadFile, $section, $delete);
+                    return $upload;
+                });
+
+                Route::post('/mercadotecnia/portal/uploadFile', function(Request $request){
+
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+
+                    $uploadFile = $request->file('file');
+                    $upload = PortalControllerMkt::uploadFile($uploadFile);
                     return $upload;
                 });
 
@@ -1289,6 +1296,27 @@ Route::middleware([ValidateSession::class])->group(function(){
                     $image = $request->image;
                     $deleted = PortalControllerMkt::deleteImage($image);
                     return $deleted;
+                });
+
+                Route::post('/mercadotecnia/portal/saveChanges', function(Request $request){
+                    $token = TokenController::getToken();
+                    if($token == 'error' || $token == 'expired'){
+                        LoginController::logout();
+                    }
+
+                    $actions = $request->actions;
+                    $response = PortalControllerMkt::saveChanges($token, $actions);
+                    if($response->getStatusCode() == 200){
+                        return response()->json(['success' => 'Acciones actualizadas'], 200);
+                    }
+                    else{
+                        return response()->json(['error' => 'Error actualizando acciones'], $response->getStatusCode());
+                    }
+                });
+
+                Route::get('/mercadotecnia/portal/download/{file}', function($file_name){
+                    $file_path = public_path('assets/mercadotecnia/Files/'.$file_name);
+                    return response()->download($file_path);
                 });
 
 // FIN ALEJANDRO JIMÉNEZ ----------------------------------------------------------------------------------------------------------------------------------------------------------

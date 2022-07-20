@@ -50,6 +50,11 @@ return [
             'root'   => public_path() . '/assets/mercadotecnia/Preview',
         ],
 
+        'mercadotecniaFiles' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/assets/mercadotecnia/Files',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

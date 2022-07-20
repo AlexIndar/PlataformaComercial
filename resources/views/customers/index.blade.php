@@ -19,16 +19,16 @@
                             <div class="carousel-inner h-100">
                                 @for($x=0; $x < count($actions); $x++)
                                     @if($x == 0 && $actions[$x]['portalMkt_']['seccion'] == 'Hero')
-                                    <a href="{{$actions[$x]['portalMkt_']['valor']}}" id="first-carousel-item" class="carousel-item h-100">
+                                    <a href="{{$actions[$x]['portalMkt_']['valor']}}" id="first-carousel-item" class="carousel-item h-100" target="_blank">
                                         <div>
-                                            <img loading="lazy" src="{{asset($routeImages.'/Hero/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
+                                            <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="">
                                         </div>
                                     </a>
                                     @else
                                         @if($actions[$x]['portalMkt_']['seccion'] == 'Hero')
-                                            <a href="{{$actions[$x]['portalMkt_']['valor']}}" class="carousel-item h-100">
+                                            <a href="{{$actions[$x]['portalMkt_']['valor']}}" class="carousel-item h-100" target="_blank">
                                                 <div>
-                                                    <img loading="lazy" src="{{asset($routeImages.'/Hero/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
+                                                    <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="">
                                                 </div>
                                             </a>
                                         @endif
@@ -170,7 +170,13 @@
         <div class="row mt-5">
             <div class="col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-center align-items-center flex-column">
                 <div class="d-flex flex-row justify-content-center align-items-center">
-                    <img loading="lazy" src="{{asset('assets/mercadotecnia/Ofertas Relampago/logo.png')}}" style="margin-left: 5%;" width="90%" alt="Logo Ofertas Relámpago INDAR">    
+                    @for($x=0; $x < count($actions); $x++)
+                        @if($actions[$x]['portalMkt_']['seccion'] == 'Ofertas Relampago' && str_contains($actions[$x]['portalMkt_']['filename'], 'png'))
+                                <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                                    <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" style="margin-left: 5%;" width="90%" alt="Logo Ofertas Relámpago INDAR">    
+                                </a>
+                        @endif
+                    @endFor
                 </div>
                 <ul id="countdown">
                     <!-- <li id="days">
@@ -192,7 +198,13 @@
                 </ul>
             </div>
             <div class="col-lg-8 col-md-8 col-sm-12 col-12 supplier-relampago">
-                    <div class="zoom"><img loading="lazy" src="{{asset('assets/mercadotecnia/Ofertas Relampago/banner.jpg')}}" height="auto" alt="Banner Ofertas Relámpago INDAR"></div>
+                    @for($x=0; $x < count($actions); $x++)
+                        @if($actions[$x]['portalMkt_']['seccion'] == 'Ofertas Relampago' && str_contains($actions[$x]['portalMkt_']['filename'], 'jpg'))
+                                <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                                    <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" height="auto" alt="Banner Ofertas Relámpago INDAR"></div>
+                                </a>
+                        @endif
+                    @endFor
             </div>
         </div>
         <br><br>
@@ -202,8 +214,8 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Eventos')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
-                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Eventos/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Eventos INDAR"></div>
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                            <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Eventos INDAR"></div>
                         </a>
                     </div>
                 @endif
@@ -219,8 +231,8 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Super Ofertas')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
-                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Super Ofertas/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Ofertas Únicas INDAR"></div>
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                            <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Ofertas Únicas INDAR"></div>
                         </a>
                     </div>
                 @endif
@@ -270,8 +282,8 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Contenidos Digitales')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
-                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Contenidos Digitales/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Ofertas Únicas INDAR"></div>
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                            <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Ofertas Únicas INDAR"></div>
                         </a>
                     </div>
                 @endif
@@ -289,8 +301,8 @@
             @for($x=0; $x < count($actions); $x++)
                 @if($actions[$x]['portalMkt_']['seccion'] == 'Forma Parte de INDAR')
                     <div class="col-lg-4 col-md-4 col-sm-12 p-3 supplier-relampago d-flex flex-column align-items-center justify-content-center">
-                        <a href="{{$actions[$x]['portalMkt_']['valor']}}">
-                            <div class="zoom"><img loading="lazy" src="{{asset($routeImages.'/Forma Parte de INDAR/'.$actions[$x]['portalMkt_']['filename'])}}" alt="Forma Parte de INDAR"></div>
+                        <a href="{{$actions[$x]['portalMkt_']['valor']}}" target="_blank">
+                            <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" alt="Forma Parte de INDAR"></div>
                         </a>
                     </div>
                 @endif

@@ -3,12 +3,7 @@
 @section('title') Indar - CXC | Pago en Línea @endsection
 
 @section('styles')
-<style>@media print {
-    .modal-dialog {
-      max-width: 100%;
-      width: 100%;
-    }
-  }</style>
+
 <link rel="stylesheet" href="{{ asset('assets/customers/css/pagoEnLinea/pagos.css') }}">
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 
@@ -191,7 +186,7 @@
                          Nota : solo se puede pagar ......
                       </p>
                    </div> --}}
-                   <div class="col-6">
+                   <div class="col-6 ">
                       <div class="table-responsive">
                          <table class="table">
                             <tbody>
@@ -203,7 +198,7 @@
                                   <th>Descuentos: </th>
                                   <td id="descuento"></td>
                                </tr>
-                               <tr hidden>
+                               <tr id="trTotal" >
                                   <th>Total:</th>
                                   <td id="total"></td>
                                </tr>
@@ -506,14 +501,16 @@ $('#example tbody').on('click', 'tr', function () {
     document.getElementById("showPaso1").style.display = "block";
     var datos = table.rows('.selected').data()
     var subTotal=0;
+    var primerTotal=0;
     var descuento=0;
     htmlResumenNC='';
     arregloFac=[];
 
     for(i=0; i< datos.length; i++){
-        datos[i][6] = datos[i][6].replace(/,/g, "");
-        var descFa = parseFloat(datos[i][6])*(parseFloat(datos[i][3])/100);
-        var impFa = parseFloat(datos[i][6])-parseFloat(descFa);
+        datos[i][7] = datos[i][7].replace(/,/g, "");
+        var descFa = parseFloat(datos[i][7])*(parseFloat(datos[i][3])/100);
+        var impFa = parseFloat(datos[i][7])-parseFloat(descFa);
+        primerTotal += impFa;
         htmlResumenNC += '<table id="example'+i+'" class="table table-hover" style="font-size:90% ;font-weight: bold">'+
                         '<thead style="background-color:#002868; color:white">'+
                            '<tr>'+
@@ -530,16 +527,16 @@ $('#example tbody').on('click', 'tr', function () {
                             '<tr>'+
                               '<td>Factura</td>'+
                               '<td>'+datos[i][2]+'</td>'+
-                              '<td>'+parseFloat(datos[i][6]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                              '<td>'+parseFloat(datos[i][7]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
                               '<td> --- </td>'+
                               '<td> --- </td>'+
                               '<td>'+datos[i][5]+'</td>'+
-                              '<td id="importeACobrar">'+parseFloat(datos[i][6]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'  </td>'+
+                              '<td id="importeACobrar">'+parseFloat(datos[i][7]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'  </td>'+
                            '</tr>'+
                         '</tbody>'+
                         '<tbody id="'+datos[i][2]+'">'+
                         '</tbody>'+
-                        '<tfoot id="total'+datos[i][2]+'">'+
+                        '<tfoot style="background-color:#3de65fb5" id="total'+datos[i][2]+'">'+
                             '<td>Total</td>'+
                               '<td>---</td>'+
                               '<td>---</td>'+
@@ -547,11 +544,11 @@ $('#example tbody').on('click', 'tr', function () {
                               '<td> '+ descFa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
                               '<td>---</td>'+
                               '<td id="importeACobrar">'+impFa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'  </td>'+
-                        '</tfoot>';
+                        '</tfoot>'+
                      '</table>';
         //datos[i][7] = datos[i][7].replace(/,/g, "");
         arregloFac.push(datos[i]);
-        subTotal += parseFloat(datos[i][6]);
+        subTotal += parseFloat(datos[i][7]);
 
     }
     $('#resumenPago').html(htmlResumenNC);
@@ -578,7 +575,9 @@ $('#example tbody').on('click', 'tr', function () {
             '<td style="color:green">'+impPagar.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
             '</tr>';
         fechaPago.push(element[5]);
+
     });
+
     if(arregloFac.length != 0){
     var  fechaLimPago=fechaPago.sort();
    var añoLimPago = fechaLimPago[0].slice(0,4);
@@ -595,18 +594,23 @@ $('#example tbody').on('click', 'tr', function () {
 
     $('#impTotal').text(impTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
     $('#llenaResumenPagoFactTable').html(htmlResumenPagoFact);
+
     $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $('#total').text('$' + primerTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
     }
 
 
     //$('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
     if(arregloFac.length == 0){
         document.getElementById("showPaso1").style.display = "none";
+        $('#subtotal').text('$0.00');
+        $('#total').text('$0.00');
     }
 
 });
 
 $('#btnMostrarNotas').click(function () {
+
     document.getElementById("resumenPago").style.display = "block";
     $('#labelNC').addClass('active');
     var data = table.rows('.selected').data();
@@ -645,59 +649,17 @@ var descuento = 0;
 var total = 0;
 htmlSelectFact='';
 montosFac=[];
-/*  $('#example tbody').on('click', 'tr', function () {
 
-    jQuery(this).toggle("scale");
-     var data = table.row( this ).data();
-    // Mostrar Boton de NC
-    document.getElementById("btnMostrarNotas").style.display = "block";
-
-if(data[1]=='Factura'){
-    data[6] = data[6].replace(/,/g, "");
-    subTotal += parseFloat(data[6]);
-    $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-}
-else{
-    descuento += parseFloat(data[6]);
-    $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-}
-
-total = subTotal - descuento;
-$('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-var monto = parseFloat(data[6]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-if(montosFac.includes(monto)){
-
-}else{
-    montosFac.push(parseFloat(data[6]));
-}
-    t.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        monto,
-        data[4],
-        data[5]
-
-    ] ).draw();
-
-    htmlSelectFact += '<tr>'+
-        '<td>' + data[0]+ '</td>'+
-        '<td>' + data[1]+ '</td>'+
-        '<td>' + data[2]+ '</td>'+
-        '<td>$' + monto+ '</td>'+
-        '<td><input type="number" class="form-control" placeholder ="Ingrese el Monto a Descontar"></td>'+
-
-        '</tr>';
-    $('#selectFacTable').html(htmlSelectFact);
- } ); */
  $('#tableNotas tbody').on('click', 'tr', function (event) {
    $('#selectFact').empty();
     var facturamayor = 0;
     for (i=0; i< arregloFact.length; i++){
-        if(parseFloat(arregloFact[i][6]) > facturamayor){
-            facturamayor = parseFloat(arregloFact[i][6]);
+        if(parseFloat(arregloFact[i][7]) > facturamayor){
+            facturamayor = parseFloat(arregloFact[i][7]);
         }
+
     }
+
     var data = tableNotas.row( this ).data();
     var montoNC = data[3].replace(/,/g, "");
     var numeroNC = data[2];
@@ -707,13 +669,13 @@ if(montosFac.includes(monto)){
     $('#montoNC').text(montoNC);
     $('#numeroNC').text(numeroNC);
     $('#headerNC').html('Abonar Nota de Crédito No . '+headerNC);
-    //$('#notasModal').modal({backdrop: 'static', keyboard: false});
+
     $('#notasModal').modal('show');
     for(i=0; i<arregloFact.length; i++){
 
         montoNC = parseFloat(montoNC);
-       if(montoNC < parseFloat(arregloFact[i][6])){
-        $('#selectFact').append('<option value='+arregloFact[i][2]+'>Factura No. : '+arregloFact[i][2]+' Monto:  $'+parseFloat(arregloFact[i][6]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' Desc: '+ arregloFact[i][3] +'</option>');
+       if(montoNC < parseFloat(arregloFact[i][7])){
+        $('#selectFact').append('<option value='+arregloFact[i][2]+'>Factura No. : '+arregloFact[i][2]+' Monto:  $'+parseFloat(arregloFact[i][7]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+' Desc: '+ arregloFact[i][3] +'</option>');
         }
     }
     hide = jQuery(this);
@@ -734,7 +696,9 @@ if(montosFac.includes(monto)){
  var y='nada';
 
  $('#agregarNc').on('click', function(e) {
+
     document.getElementById("btnMostrarFacturas").style.display = "none";
+    var primerTotal = $('#total').text();
     htmlappendTotal='';
     htmlappendNC='';
 
@@ -747,7 +711,7 @@ if(montosFac.includes(monto)){
     var selectedFact= $("#selectFact option:selected" ).text();
     selectedFact = selectedFact.slice(14,20);
     var porcSelectedFact= $("#selectFact option:selected" ).text();
-    porcSelectedFact =porcSelectedFact.slice(-5,-1);
+    porcSelectedFact =porcSelectedFact.slice(-6,-1);
     var id = selectedFact;
     var saldoTotal = parseFloat(saldoSelectedFact)-parseFloat(montoNC);
     hide.toggle();
@@ -755,15 +719,16 @@ if(montosFac.includes(monto)){
     hide = jQuery(this);
     var descuentoPP = saldoTotal * (parseFloat(porcSelectedFact)/100);
     var saldoFinal = saldoTotal - descuentoPP;
+
     for (i=0; i< arregloFact.length; i++){
         if(arregloFact[i][2]== selectedFact){
             var lugar = i;
-            console.log(i);
+           // console.log(i);
         }
     }
-    console.log(arregloFact);
-    arregloFact[lugar][6]= parseFloat(arregloFact[lugar][6])-parseFloat(montoNC);
-    console.log(arregloFact[lugar][6]);
+
+    arregloFact[lugar][7]= parseFloat(arregloFact[lugar][7])-parseFloat(montoNC);
+    //console.log(arregloFact[lugar][6]);
     htmlappendNC +='<tr style="font-size:13px; font-style:italic; background-color:rgba(253, 244, 66, 0.944)">'+
                       '<td><i class="fa-solid fa-right-long"></i>Nota de Credito</td>'+
                       '<td>'+numeroNC+'</td>'+
@@ -781,7 +746,7 @@ if(montosFac.includes(monto)){
                       '<td> %'+porcSelectedFact+' </td>'+
                       '<td> '+ descuentoPP.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>'+
                       '<td> --- </td>'+
-                      '<td>  '+ saldoFinal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
+                      '<td id="importeACobrar">  '+ saldoFinal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
                     '</tr>';
 
     appendNC = $('#'+selectedFact+'');
@@ -790,117 +755,13 @@ if(montosFac.includes(monto)){
     appendTotal.html(htmlappendTotal);
     //agregarNC (data,montoNC);
     });
-/*
- $('#example2 tbody').on('click', 'tr', function () {
-    jQuery(this).hide( "blind", {direction: "horizontal"}, 500 );
-     var data = t.row( this ).data();
-    if(data[1]=='Factura'){
-        data[6] = data[6] = data[6].replace(/,/g, "");
-        subTotal -=  parseFloat(data[6]);
-        $('#subtotal').text('$' + subTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    }else{
-        descuento -= parseFloat(data[6]);
-        $('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    }
-
-    total = subTotal - descuento;
-    $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    var monto = parseFloat(data[6]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-    if(data[1]=='Factura'){
-        table.row.add( [
-       data[0],
-       data[1],
-        data[2],
-        monto,
-        data[4],
-        data[5]
-
-    ], ).draw();
-
-    }else{
-        tableNotas.row.add( [
-        data[0],
-        data[1],
-        data[2],
-        monto,
-        data[4],
-        data[5]
-
-    ], ).draw();
-    }
-
-
- } ); */
 
 });
-
-function agregarNC(data,montoNC){
-    console.log( document.getElementById("selectFact").value);
-    /* var sumaFinal=0;
-    document.getElementById("btnMostrarFacturas").style.display = "none";
-    var htmlappendNC='';
-
-        arregloAgregarNC = [];
-        var saldoSelectedFact = $("#selectFact option:selected" ).text();
-        saldoSelectedFact = saldoSelectedFact.slice(30);
-        var selectedFact= $("#selectFact option:selected" ).text();
-        selectedFact = selectedFact.slice(14,20);
-        var porcSelectedFact= $("#selectFact option:selected" ).text();
-        porcSelectedFact =porcSelectedFact.slice(-5,-1);
-        var id = selectedFact;
-        var saldoNC = data[3].replace(/,/g, "");
-        var saldoTotal = parseFloat(saldoSelectedFact)-parseFloat(saldoNC);
-        var descuentoPP = saldoTotal * (parseFloat(porcSelectedFact)/100);
-        var saldoFinal = saldoTotal - descuentoPP;
-        arregloAgregarNC.push({factura: selectedFact, nc: data[2], saldo: saldoNC });
-
-        htmlappendNC +='<tr style="font-size:13px; font-style:italic; background-color:rgba(253, 244, 66, 0.944)">'+
-                        '<td><i class="fa-solid fa-right-long"></i>Nota de Credito</td>'+
-                        '<td>'+data[2]+'</td>'+
-                        '<td style="color:red">-'+saldoNC.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
-                        '<td> --- </td>'+
-                        '<td> --- </td>'+
-                        '<td> --- </td>'+
-                        '<td>  '+ saldoTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
-                      '</tr>'+
-                      '<tr style="background-color:#3de65fb5">'+
-                        '<td >Total</td>'+
-                        '<td>---</td>'+
-                        '<td>---</td>'+
-                        '<td> %'+porcSelectedFact+' </td>'+
-                        '<td> '+ descuentoPP.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>'+
-                        '<td> --- </td>'+
-                        '<td>  '+ saldoFinal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
-                      '</tr>';
-
-        appendNC = $('#'+selectedFact+'');
-        appendNC.html(htmlappendNC);
-        */
-        //console.log('NC:'+saldoNC,'FactSelect:'+selectedFact,'SaldoFact:'+saldoSelectedFact,'Total:'+saldoTotal);
-
-        //data[6] = data[6].replace(/,/g, "");
-        //descuento += parseFloat(data[6]);
-        //$('#descuento').text('$' + descuento.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        /* total = subTotal - descuento;
-        $('#total').text('$' + total.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
-        var monto = parseFloat(data[6]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2});
-        t.row.add( [
-           data[0],
-           data[1],
-            data[2],
-            monto,
-            data[4],
-            data[5]
-
-        ], ).draw(); */
-
-}
-
 
 function mostrarFacturas() {
   //$("#comisionesTable").dataTable().fnDestroy();
   document.getElementById("resumenPago").style.display = "none";
+
   $('#labelNC').removeClass('active');
   document.getElementById("notasDiv").style.display = "none";
   document.getElementById("facturasDiv").style.display = "block";
