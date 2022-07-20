@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 @endsection
 @section('body')
+<div id="cover-spin"><img src="{{asset('assets/intranet/images/loading.gif')}}" alt="loading" style="margin-top: 13%;"></div>
 
 <div class="content-wrapper">
     <section class="content">
@@ -25,7 +26,7 @@
                                 <h3 class="card-title mt-2 mr-3">Interfaz Recibo</h3>
                             </div>
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3">
                                     <label for="">Fechas:</label>
                                     <div class="input-group date" >
                                         <input type="text" class="form-control datetime" id="fechas" autocomplete="false"/>
@@ -34,7 +35,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2 mt-1">
+                                <div class="col-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1">
                                     <label for=""></label>
                                     <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-consultar-factura" onclick="logisticaController.consultReceiptInterface()" ><i class="fa-solid fa-cog mr-1"></i>Consultar</button>
                                 </div>

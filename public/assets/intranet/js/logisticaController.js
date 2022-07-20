@@ -2702,6 +2702,9 @@ const logisticaController = {
             url: '/logistica/distribucion/validarSad/consultValidateSAD',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 let rows = '';
                 $('.btn-consultar-validar-sad').prop('disabled', false);
@@ -2773,7 +2776,7 @@ const logisticaController = {
                 console.log(textStatus);
             },
             complete: function () {
-
+                $('#cover-spin').hide();
             }
         })
     },
@@ -2817,6 +2820,9 @@ const logisticaController = {
             url: '/logistica/distribucion/getReportSad',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 console.time();
                 ReporteSad = data;
@@ -2830,6 +2836,7 @@ const logisticaController = {
             },
             complete: () => {
                 console.timeEnd();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -4652,6 +4659,9 @@ const logisticaController = {
             type: 'GET',
             data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 console.time();
                 ReporteFacturasPorEmbarcar = data;
@@ -4666,6 +4676,7 @@ const logisticaController = {
                 $('.card-body').attr('hidden', false);
                 $('.btn-excel').prop('disabled', false);
                 console.timeEnd();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -4784,6 +4795,9 @@ const logisticaController = {
             url: '/logistica/reportes/gastoFleteras/consultFreightExpense',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 console.time();
                 ReporteGastoFleteras = data;
@@ -4796,6 +4810,7 @@ const logisticaController = {
             complete: () => {
                 console.timeEnd();
                 $('.btn-excel').prop('disabled', false);
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);

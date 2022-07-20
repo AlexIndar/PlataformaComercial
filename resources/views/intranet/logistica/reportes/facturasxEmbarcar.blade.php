@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 @endsection
 @section('body')
-
+<div id="cover-spin"><img src="{{asset('assets/intranet/images/loading.gif')}}" alt="loading" style="margin-top: 13%;"></div>
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
@@ -25,7 +25,7 @@
                                 <h3 class="card-title mt-2 mr-3">Facturas por embarcar</h3>
                             </div>
                             <div class="row">
-                                <div class="col-3 p-0">
+                                <div class="col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3 p-0">
                                     <label for="">Fechas:</label>
                                     <div class="input-group date" >
                                         <input type="text" class="form-control" id="fechas"/>
@@ -34,11 +34,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-3 mt-1">
+                                <div class="col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3 mt-1">
                                     <label for=""></label>
                                     <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-consultar-factura" onclick="logisticaController.consultBillsXShipments()" ><i class="fa-solid fa-cog mr-1"></i>Consultar</button>
                                 </div>
-                                <div class="col-3 mt-1">
+                                <div class="col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3 mt-1">
                                     <label for=""></label>
                                     <button type="button" class="btn btn-block btn-outline-primary btn-lg  btn-excel" onclick="logisticaController.exportExcelBillsXShipments()" disabled><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                                 </div>
