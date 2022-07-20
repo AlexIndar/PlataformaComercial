@@ -92,123 +92,123 @@ var flagDatosF = false;
 var flagDomF = false;
 var flagDomE = false;
 
-$(document).ready(function() {
+$(document).ready(function () {
     // editarContactos();
-    $('#inputGroupFile01').change(function(e) {
+    $('#inputGroupFile01').change(function (e) {
         var fileName = e.target.files[0].name;
         constanciaSituacionFiscal = toBase64(e.target.files[0], 1, null);
         $('#label-inputGroupFile01').html(fileName);
     });
 
-    $('#inputGroupFile02').change(function(e) {
+    $('#inputGroupFile02').change(function (e) {
         var fileName = e.target.files[0].name;
         constanciaSituacionFiscalBack = toBase64(e.target.files[0], 11, null);
         $('#label-inputGroupFile02').html(fileName);
     });
 
-    $('#inputGroupFile03').change(function(e) {
+    $('#inputGroupFile03').change(function (e) {
         var fileName = e.target.files[0].name;
         fotoSolicitud = toBase64(e.target.files[0], 13, null);
         $('#label-inputGroupFile03').html(fileName);
     });
 
-    $('#inputGroupFile04').change(function(e) {
+    $('#inputGroupFile04').change(function (e) {
         var fileName = e.target.files[0].name;
         comprobanteDomicilio = toBase64(e.target.files[0], 2, null);
         $('#label-inputGroupFile04').html(fileName);
     });
 
-    $('#inputGroupFile05').change(function(e) {
+    $('#inputGroupFile05').change(function (e) {
         var fileName = e.target.files[0].name;
         comprobanteDomicilioBack = toBase64(e.target.files[0], 21, null);
         $('#label-inputGroupFile05').html(fileName);
     });
 
-    $('#inputGroupFile06').change(function(e) {
+    $('#inputGroupFile06').change(function (e) {
         var fileName = e.target.files[0].name;
         negocioFrente = toBase64(e.target.files[0], 4, null);
         $('#label-inputGroupFile06').html(fileName);
     });
 
-    $('#inputGroupFile07').change(function(e) {
+    $('#inputGroupFile07').change(function (e) {
         var fileName = e.target.files[0].name;
         negocioLeft = toBase64(e.target.files[0], 5, null);
         $('#label-inputGroupFile07').html(fileName);
     });
 
-    $('#inputGroupFile08').change(function(e) {
+    $('#inputGroupFile08').change(function (e) {
         var fileName = e.target.files[0].name;
         negocioRight = toBase64(e.target.files[0], 6, null);
         $('#label-inputGroupFile08').html(fileName);
     });
 
-    $('#inputGroupFile09').change(function(e) {
+    $('#inputGroupFile09').change(function (e) {
         var fileName = e.target.files[0].name;
         pagare = toBase64(e.target.files[0], 7, null);
         $('#label-inputGroupFile09').html(fileName);
     });
 
-    $('#inputGroupFile10').change(function(e) {
+    $('#inputGroupFile10').change(function (e) {
         var fileName = e.target.files[0].name;
         ineRep = toBase64(e.target.files[0], 3, null);
         $('#label-inputGroupFile10').html(fileName);
     });
 
-    $('#inputGroupFile11').change(function(e) {
+    $('#inputGroupFile11').change(function (e) {
         var fileName = e.target.files[0].name;
         ineRepBack = toBase64(e.target.files[0], 31, null);
         $('#label-inputGroupFile11').html(fileName);
     });
 
-    $('#inputGroupFile12').change(function(e) {
+    $('#inputGroupFile12').change(function (e) {
         var fileName = e.target.files[0].name;
         ineAval = toBase64(e.target.files[0], 8, null);
         $('#label-inputGroupFile12').html(fileName);
     });
 
-    $('#inputGroupFile13').change(function(e) {
+    $('#inputGroupFile13').change(function (e) {
         var fileName = e.target.files[0].name;
         ineAvalBack = toBase64(e.target.files[0], 81, null);
         $('#label-inputGroupFile13').html(fileName);
     });
 
-    $('#inputGroupFile14').change(function(e) {
+    $('#inputGroupFile14').change(function (e) {
         var fileName = e.target.files[0].name;
         actaConstitutiva = e.target.files[0];
         $('#label-inputGroupFile14').html(fileName);
     });
 
-    $('#inputGroupFile15').change(function(e) {
+    $('#inputGroupFile15').change(function (e) {
         var fileName = e.target.files[0].name;
         caratula = toBase64(e.target.files[0], 10, null);
         $('#label-inputGroupFile15').html(fileName);
     });
 
-    $('#inputGroupFile16').change(function(e) {
+    $('#inputGroupFile16').change(function (e) {
         var fileName = e.target.files[0].name;
         facturaToBase64(e.target.files[0], 1);
         $('#label-inputGroupFile16').html(fileName);
     });
 
-    $('#inputGroupFile17').change(function(e) {
+    $('#inputGroupFile17').change(function (e) {
         var fileName = e.target.files[0].name;
         facturaToBase64(e.target.files[0], 2);
         $('#label-inputGroupFile17').html(fileName);
     });
 
-    $('#inputGroupFile18').change(function(e) {
+    $('#inputGroupFile18').change(function (e) {
         var fileName = e.target.files[0].name;
         cartaResponsiva = toBase64(e.target.files[0], 12, null);
         $('#label-inputGroupFile18').html(fileName);
     });
 
-    $('#inputGroupFile19').change(function(e) {
+    $('#inputGroupFile19').change(function (e) {
         var fileName = e.target.files[0].name;
         fileEdit = toBase64Edit(e.target.files[0]);
         $('#label-inputGroupFile19').html(fileName);
     });
 
-    $('#colDF').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+    $('#colDF').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
         if (colonias[selected] == undefined) {
             document.getElementById('rowOtraColonia').classList.remove('d-none');
@@ -218,7 +218,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#colDFShipping').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+    $('#colDFShipping').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
 
         if (auxColonias[selected] == undefined) {
@@ -230,7 +230,7 @@ $(document).ready(function() {
     });
 
 
-    $('#inputGroupSelect01').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+    $('#inputGroupSelect01').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex + 1;
         if (businessLines.length < selected) {
             tipoNegocio = -1;
@@ -241,7 +241,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#antiguedad').change(function() {
+    $('#antiguedad').change(function () {
         changeAntiguedad();
     });
 
@@ -254,14 +254,41 @@ $(document).ready(function() {
         'dataType': 'json',
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
-            businessLines = data;
+        success: function (data) {
+            // businessLines = data;
+            businessLines.push({ id: 23, description: "ABARROTERA" });
+            businessLines.push({ id: 24, description: "ACEROS Y PERFILES" });
+            businessLines.push({ id: 3, description: "AGROQUIMICA" });
+            businessLines.push({ id: 16, description: "ALUMINERO" });
+            businessLines.push({ id: 19, description: "CENTRO DE SERVICIO" });
+            businessLines.push({ id: 26, description: "CHAPAS Y HERRAJES" });
+            businessLines.push({ id: 41, description: "COMERCIALIZADORA" });
+            businessLines.push({ id: 32, description: "COMERCIO ELECTRONICO" });
+            businessLines.push({ id: 21, description: "ELECTRICA Y ELECTRONICA" });
+            businessLines.push({ id: 20, description: "FERRETERIA INDUSTRIAL" });
+            businessLines.push({ id: 29, description: "FERRETERIA Y TLAPALERIA" });
+            businessLines.push({ id: 5, description: "JARCIERIA" });
+            businessLines.push({ id: 31, description: "MADERERIA" });
+            businessLines.push({ id: 14, description: "MATERIALES PARA CONSTRUCCION" });
+            businessLines.push({ id: 27, description: "MAYORISTA" });
+            businessLines.push({ id: 18, description: "PAPELERIA" });
+            businessLines.push({ id: 25, description: "PLOMERIA Y ACABADOS" });
+            businessLines.push({ id: 30, description: "REFACCIONARIA" });
+            businessLines.push({ id: 7, description: "REVENDEDOR SIN STOCK" });
+            businessLines.push({ id: 6, description: "SEGURIDAD INDUSTRIAL" });
+            businessLines.push({ id: 10, description: "TIENDA DE PINTURA" });
+            businessLines.push({ id: 13, description: "TORNILLERIA" });
+            // console.log(businessLines);
+            // console.log(data);
             var itemSelectorOption = $('#inputGroupSelect01 option');
             itemSelectorOption.remove();
             let itemSelectE = $('#giroEdit option');
             itemSelectE.remove();
             $('#inputGroupSelect01').selectpicker('refresh');
             $('#giroEdit').selectpicker('refresh');
+
+            $('#inputGroupSelect01').append('<option value="-1">Selecciona un opcion</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+            $('#giroEdit').append('<option value="-1">Selecciona un opcion</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
 
             for (var x = 0; x < businessLines.length; x++) {
                 $('#inputGroupSelect01').append('<option value="' + businessLines[x]['id'] + '">' + businessLines[x]['description'] + '</option>');
@@ -272,44 +299,42 @@ $(document).ready(function() {
                 $('#giroEdit').val(businessLines[x]['id']);
                 $('#giroEdit').selectpicker("refresh");
             }
-
-            $('#inputGroupSelect01').append('<option value="-1">Selecciona un opcion</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+        
             $('#inputGroupSelect01').val('-1');
             $('#inputGroupSelect01').selectpicker("refresh");
-
-            $('#giroEdit').append('<option value="-1">Selecciona un opcion</option>'); //Agregar Primera opción de inputGroupSelect01 en Blanco
+            
             $('#giroEdit').val('-1');
             $('#giroEdit').selectpicker("refresh");
 
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error + "Error");
         }
     });
 
-    $('#respuestaForm').on('hidden.bs.modal', function() {
+    $('#respuestaForm').on('hidden.bs.modal', function () {
         location.reload();
     })
 
-    $('#editCaratulaInput').change(function(e) {
+    $('#editCaratulaInput').change(function (e) {
         var fileName = e.target.files[0].name;
         toBase64Caratula(e.target.files[0], 10, null);
         $('#label-editCaratulaInput').html(fileName);
     });
 
-    $('#editFacturaInput').change(function(e) {
+    $('#editFacturaInput').change(function (e) {
         var fileName = e.target.files[0].name;
         facturaToBase64E(e.target.files[0], 1);
         $('#label-editFacturaInput').html(fileName);
     });
 
-    $('#editFacturaInputImp').change(function(e) {
+    $('#editFacturaInputImp').change(function (e) {
         var fileName = e.target.files[0].name;
         facturaToBase64E(e.target.files[0], 2);
         $('#label-editFacturaInputImp').html(fileName);
     });
 
-    $('#inputFileActaEdit').change(function(e) {
+    $('#inputFileActaEdit').change(function (e) {
         var fileName = e.target.files[0].name;
         actaConstitutivaEdit = e.target.files[0];
         $('#label-inputFileActaEdit').html(fileName);
@@ -328,20 +353,20 @@ $(document).ready(function() {
         'data': jsonZona,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(emailsL) {
+        success: function (emailsL) {
             if (emailsL != null) {
                 emailList = emailsL;
             } else {
                 alert("Error");
             }
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
             alert("Error de Emails, enviar correo a adan.perez@indar.com.mx");
         }
     });
 
-    $('#giroEdit').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+    $('#giroEdit').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex + 1;
         if (businessLines.length < selected) {
             tipoNegocio = -1;
@@ -355,12 +380,12 @@ $(document).ready(function() {
 function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARAMETRO Y LA RETORNA EN BASE 64
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         var result = reader.result.split(',')[1];
         base64 = result;
         archivosBase64.push(base64);
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 
@@ -382,13 +407,13 @@ function toBase64(file, type, subtype) { //FUNCION QUE TOMA UNA IMAGEN COMO PARA
 function facturaToBase64(file, opc) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         if (opc == 1)
             fileF = reader.result.split(',')[1];
         else
             fileFI = reader.result.split(',')[1];
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -396,11 +421,11 @@ function facturaToBase64(file, opc) {
 function toBase64Edit(file) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         fileEdit = reader.result.split(',')[1];
         // fileEdit = result;
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -408,7 +433,7 @@ function toBase64Edit(file) {
 function toBase64Caratula(file, type, subtype) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         var result = reader.result.split(',')[1];
         base64 = result;
         let FileModel = {
@@ -419,7 +444,7 @@ function toBase64Caratula(file, type, subtype) {
         }
         caratulaE = FileModel;
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -427,13 +452,13 @@ function toBase64Caratula(file, type, subtype) {
 function facturaToBase64E(file, opc) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(subtype) {
+    reader.onload = function (subtype) {
         if (opc == 1)
             fileFE = reader.result.split(',')[1];
         else
             fileFIE = reader.result.split(',')[1];
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -442,7 +467,7 @@ function toBase64ActaConst(file, type, auxSubtype) {
     console.log(auxSubtype);
     var reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(s) {
+    reader.onload = function (s) {
         var result = reader.result.split(',')[1];
         let FileModel = {
             Id: 0,
@@ -452,7 +477,7 @@ function toBase64ActaConst(file, type, auxSubtype) {
         }
         actaConstList.push(FileModel);
     };
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
         return "Error"
     };
 }
@@ -650,7 +675,7 @@ function getCpCol(data) {
         'data': data,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             if (data.state != undefined) {
                 document.getElementById('colDFRow1').classList.remove('d-none');
                 document.getElementById('colDFRow2').classList.add('d-none');
@@ -676,7 +701,7 @@ function getCpCol(data) {
                 $('#cpInput').addClass("warningText");
             }
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error + "Error");
         }
     });
@@ -1408,7 +1433,7 @@ function SendForm(zone) {
             'data': json,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
                     sendMail(data, tp, cliente, 1);
@@ -1421,7 +1446,7 @@ function SendForm(zone) {
                     $('#cargaModal').modal('hide');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
@@ -1433,14 +1458,14 @@ function saveForm(zone) {
     if (validateSaveForm()) {
         $('#cargaModal').modal('show');
         var json = createJsonSolicitud(zone);
-        let tp = getTipoForm();
-        let cliente = {
-            clave: document.getElementById('prospecto').value,
-            datosF: {
-                rfc: document.getElementById('rfcInput').value,
-                razonSocial: document.getElementById('rzInput').value,
-            }
-        }
+        // let tp = getTipoForm();
+        // let cliente = {
+        //     clave: document.getElementById('prospecto').value,
+        //     datosF: {
+        //         rfc: document.getElementById('rfcInput').value,
+        //         razonSocial: document.getElementById('rzInput').value,
+        //     }
+        // }
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1451,7 +1476,7 @@ function saveForm(zone) {
             'data': json,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
                     // sendMail(data, tp, cliente, 3);
@@ -1464,7 +1489,7 @@ function saveForm(zone) {
                     $('#cargaModal').modal('hide');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             }
@@ -1492,7 +1517,7 @@ function createJsonSolicitud(zone) {
         "Email": "",
         "Celular": "",
         "Phone": "0"
-    }, ];
+    },];
 
     for (var x = 0; x < contactos.length; x++) {
         var temp = {
@@ -1635,7 +1660,7 @@ function getInfoDetalleSol(item) {
         'data': info,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1646,7 +1671,7 @@ function getInfoDetalleSol(item) {
                 'data': info,
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
-                success: function(data2) {
+                success: function (data2) {
                     $.ajax({
                         'headers': {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1657,7 +1682,7 @@ function getInfoDetalleSol(item) {
                         'data': info,
                         'enctype': 'multipart/form-data',
                         'timeout': 2 * 60 * 60 * 1000,
-                        success: function(valContac) {
+                        success: function (valContac) {
                             $.ajax({
                                 'headers': {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1668,7 +1693,7 @@ function getInfoDetalleSol(item) {
                                 'data': info,
                                 'enctype': 'multipart/form-data',
                                 'timeout': 2 * 60 * 60 * 1000,
-                                success: function(filesList) {
+                                success: function (filesList) {
                                     $.ajax({
                                         'headers': {
                                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1679,30 +1704,30 @@ function getInfoDetalleSol(item) {
                                         'data': info,
                                         'enctype': 'multipart/form-data',
                                         'timeout': 2 * 60 * 60 * 1000,
-                                        success: function(factList) {
+                                        success: function (factList) {
                                             showInfoModal(data, data2, valContac, filesList, factList);
                                         },
-                                        error: function(error) {
+                                        error: function (error) {
                                             console.log(error + "Error");
                                         }
                                     });
                                 },
-                                error: function(error) {
+                                error: function (error) {
                                     console.log(error + "Error");
                                 }
                             });
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.log(error + "Error");
                         }
                     });
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error + "Error");
                 }
             });
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error + "Error");
         }
     });
@@ -1772,7 +1797,7 @@ function confirmEditImage(type) {
             'data': json,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
                     document.getElementById("editConfirButtons").innerHTML = "IMAGEN ACTUALIZADA";
@@ -1784,7 +1809,7 @@ function confirmEditImage(type) {
                     $('#cargaModal').modal('hide');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
                 $('#cargaModal').modal('hide');
@@ -1847,7 +1872,7 @@ function getButtonsFiles(dato, type) {
     return buttons;
 }
 
-function getButtonsTipoP(dato, id){
+function getButtonsTipoP(dato, id) {
     var buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editTypeLP('` + id + `')"><i class="fas fa-edit"></i></button>` : ``;
     if (dato == null) {
         buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
@@ -1859,7 +1884,7 @@ function getButtonsTipoP(dato, id){
     return buttons;
 }
 
-function editTypeLP(id){
+function editTypeLP(id) {
     alert("Editar tipo");
 }
 
@@ -2212,7 +2237,7 @@ function saveEdit() {
                 'data': jsonEdit,
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
-                success: function(data) {
+                success: function (data) {
                     if (Number.isInteger(data)) {
                         $('#cargaModal').modal('hide');
                         $('#infoModal').modal('hide');
@@ -2223,7 +2248,7 @@ function saveEdit() {
                         $('#cargaModal').modal('hide');
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error);
                     alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
                     $('#cargaModal').modal('hide');
@@ -2341,10 +2366,10 @@ function getTransactionHistory(item) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 showHistoryModal(data);
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error + "Error");
             }
         });
@@ -2479,7 +2504,7 @@ function validarCPS() {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 document.getElementById('colDFRow3').classList.remove('d-none');
                 document.getElementById('colDFRow4').classList.add('d-none');
                 console.log(data['suburbs']);
@@ -2499,7 +2524,7 @@ function validarCPS() {
                 }
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error + "Error");
             }
         });
@@ -2541,7 +2566,7 @@ function confirmReSend(item) {
             'data': data,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(response) {
+            success: function (response) {
                 if (response) {
                     alert("Enviado Correctamente");
                     location.reload();
@@ -2550,7 +2575,7 @@ function confirmReSend(item) {
                 }
 
             },
-            error: function(error) {
+            error: function (error) {
                 alert(error + "Error");
             }
         });
@@ -2579,7 +2604,7 @@ function continueForm(item) {
         'data': info,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(facturas) {
+        success: function (facturas) {
             $.ajax({
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2590,7 +2615,7 @@ function continueForm(item) {
                 'data': info,
                 'enctype': 'multipart/form-data',
                 'timeout': 2 * 60 * 60 * 1000,
-                success: function(archivos) {
+                success: function (archivos) {
                     $.ajax({
                         'headers': {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -2601,20 +2626,20 @@ function continueForm(item) {
                         'data': info,
                         'enctype': 'multipart/form-data',
                         'timeout': 2 * 60 * 60 * 1000,
-                        success: function(data) {
+                        success: function (data) {
                             continueModal(facturas, archivos, data);
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.log(error);
                         }
                     });
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error);
                 }
             });
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -3189,7 +3214,7 @@ const saveReferences = () => {
         'data': referencesJson,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             if (Number.isInteger(data)) {
                 $('#cargaModal').modal('hide');
                 $('#editReferences').modal('hide');
@@ -3201,7 +3226,7 @@ const saveReferences = () => {
                 $('#cargaModal').modal('hide');
             }
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
             alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
             $('#cargaModal').modal('hide');
@@ -3306,7 +3331,7 @@ const saveActaConst = () => {
             'data': actaConstJson,
             'enctype': 'multipart/form-data',
             'timeout': 2 * 60 * 60 * 1000,
-            success: function(data) {
+            success: function (data) {
                 if (Number.isInteger(data)) {
                     $('#cargaModal').modal('hide');
                     $('#actaConstEditModal').modal('hide');
@@ -3318,7 +3343,7 @@ const saveActaConst = () => {
                     $('#cargaModal').modal('hide');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
                 $('#cargaModal').modal('hide');
@@ -3428,11 +3453,11 @@ const sendMail = (fol, tps, cli, status) => {
         'data': mailJson,
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
-        success: function(data) {
+        success: function (data) {
             console.log(data);
             alert(data.success);
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
             alert("Solicitud Guardada, pero no se enviaron los correos...");
             $('#cargaModal').modal('hide');
