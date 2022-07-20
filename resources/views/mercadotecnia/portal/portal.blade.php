@@ -101,6 +101,7 @@
                         <p>Carga un documento</p>
                         <input class="" type="file" name="action-file" id="action-file" accept=".pdf, .xlsx, .xls">
                     </div>
+                    <div class="d-none mt-2" id="action-file-preview"></div>
 
                 </div>
                 <div class="modal-footer">
@@ -142,8 +143,9 @@
 
                     <div class="edit-action-file-container mt-3 d-none" id="edit-action-file-container">
                         <p>Carga un documento</p>
-                        <input class="" type="file" name="edit-action-file" id="edit-action-file" accept=".jpg, .jpeg, .png, .webp">
+                        <input class="" type="file" name="edit-action-file" id="edit-action-file" accept=".pdf, .xlsx, .xls">
                     </div>
+                    <div class="d-none mt-2" id="edit-action-file-preview"></div>
                 </div>
                 <div class="modal-footer">
                     <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>

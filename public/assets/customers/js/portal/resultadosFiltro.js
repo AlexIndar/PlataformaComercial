@@ -230,11 +230,6 @@ function addTagFilter(key, value) {
 
 function filterItems() { //busca artículos que coincidan con todos los filtros agregados
 
-    itemsFullList.items.forEach(item => {
-        console.log('item');
-    })
-    
-
     let itemsFiltered = [];
     itemsCurrentFilter = [];
     itemsFullList.items.forEach(item => {
