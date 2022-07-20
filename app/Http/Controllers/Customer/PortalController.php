@@ -37,15 +37,23 @@ class PortalController extends Controller
 
     // Retorna filtrado de busqueda, si se indican límites from y to devuelve solo la info encontrada en ese rango de índices
     public static function busquedaItemFiltro($token, $filter, $codigo, $directo = false, $from = null, $to = null){ 
-        if($directo)
-            $filter = str_replace('_', '~', $filter);
-        else
-            $filter = str_replace('-', '~', $filter);
+        $directo ? $filter = str_replace('_', '~', $filter) : $filter = str_replace('-', '~', $filter);
+        if(intval($filter) > 0){
+            $busqueda = "";
+        }
+        else{
+            $busqueda = $filter;
+            $filter = 0;
+        }
+
+
         $response = Http::withToken($token)->post(config('global.api_url').'/Portal/BusquedaItemFiltro', [
             "codCustomer" => $codigo,
-            "busqueda" => $filter,
-            "directo" => $directo
+            "busqueda" => $busqueda,
+            "directo" => $directo,
+            "filtro" => $filter
         ]);
+
 
         $items = $response->body();
 
