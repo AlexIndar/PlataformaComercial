@@ -58,52 +58,7 @@ $(document).ready(function () {
             logisticaController.reportSad();
             break;
         case '/logistica/distribucion/reporteEmbarque':
-            $('#table-reporte-embarque').DataTable({
-                paging: true,
-                responsive: true,
-                searching: true,
-                processing: true,
-                bSortClasses: false,
-                fixedHeader: true,
-                // scrollY:        400,
-                deferRender: true,
-                scroller: true,
-                columns: [
-                    { data: 'idEmbarque', visible: true },
-                    { data: 'fecha', visible: true },
-                    { data: 'fechaConcluido', visible: true},
-                    { data: 'listItemName', visible: true },
-                    { data: 'comentarios', visible: true },
-                    { data: 'estatus', visible: true },
-                    { data: 'usuario', visible: true },
-                    { data: 'factura', visible: true },
-                    { data: 'estado', visible: true },
-                    { data: 'persona', visible: true },
-                    { data: 'fechaConcluido', visible: true },
-                    { data: 'comentariosFactura', visible: true },
-                    { data: 'usuarioConfirma', visible: true },
-                    { data: 'fechaConfirmaPostVenta', visible: true }
-                ],
-                language: {
-                    "emptyTable": "No hay información",
-                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
-                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ Documentos",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "zeroRecords": "Sin resultados encontrados",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    }
-                }
-            });
+            logisticaController.initShipment();
             logisticaController.reportShipment();
             break;
         case '/logistica/distribucion/capturaGastoFletera':
@@ -244,11 +199,7 @@ $(document).ready(function () {
             break;
         case '/logistica/reportes/interfazRecibo':
             //#region Interfaz recibo
-            $('#fechas').daterangepicker({
-                singleDatePicker: true,
-            }, function (start, end, label) {
-                fechaInicio = start.format('YYYY-MM-DD');
-            });
+            logisticaController.initInterfazRecibo();
             //#endregion
             break;
         case '/logistica/reportes/interfazFacturacion':
@@ -2958,6 +2909,54 @@ const logisticaController = {
     },
     //#endregion
     //#region REPORTE EMBARQUE
+    initShipment: () => {
+        $('#table-reporte-embarque').DataTable({
+            paging: true,
+            responsive: true,
+            searching: true,
+            processing: true,
+            bSortClasses: false,
+            fixedHeader: true,
+            // scrollY:        400,
+            deferRender: true,
+            scroller: true,
+            columns: [
+                { data: 'idEmbarque', visible: true },
+                { data: 'fecha', visible: true },
+                { data: 'fechaConcluido', visible: true},
+                { data: 'listItemName', visible: true },
+                { data: 'comentarios', visible: true },
+                { data: 'estatus', visible: true },
+                { data: 'usuario', visible: true },
+                { data: 'factura', visible: true },
+                { data: 'estado', visible: true },
+                { data: 'persona', visible: true },
+                { data: 'fechaConcluido', visible: true },
+                { data: 'comentariosFactura', visible: true },
+                { data: 'usuarioConfirma', visible: true },
+                { data: 'fechaConfirmaPostVenta', visible: true }
+            ],
+            language: {
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Documentos",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
+        });
+    },
     reportShipment: () => {
         $('.btn-consultar-reporte-embarque').prop('disabled', true);
         $('.btn-consultar-reporte-embarque').empty();
@@ -4872,9 +4871,16 @@ const logisticaController = {
         }, 5000);
     },
     //#endregion
-    //#region INTERFAZ RECIBO 
+    //#region INTERFAZ RECIBO
+    initInterfazRecibo: () => {
+        $('#fechas').daterangepicker({
+            singleDatePicker: true,
+        }, function (start, end, label) {
+            fechaInicio = start.format('YYYY-MM-DD');
+        });
+    },
     consultReceiptInterface: () => {
-        // console.log(fechaInicio);
+        console.log(fechaInicio);
     },
     //#endregion
     //#region INTERFAZ FACTURACION
@@ -5022,6 +5028,9 @@ const logisticaController = {
             url: '/logistica/mesaControl/planeador/getPlaneador',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 let rows = '';
                 let area1 = '', area2 = '', area3 = '', area4 = '', area5 = '', area6 = '', area7 = '', area8 = '', area9 = '', area10 = '', area11 = '', area12 = '';
@@ -5118,6 +5127,14 @@ const logisticaController = {
                 $('#content-table-planeador').prepend(rows);
                 $('.fa-cog').removeClass('fa-spin');
                 logisticaController.getArrayPlaneador();
+            },
+            complete: function() {
+                var dateAndTime = document.getElementById('date');
+
+                var currentTime = new Date();
+          
+                dateAndTime.innerHTML = 'Ultima Actualización: '+currentTime.toLocaleTimeString();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
