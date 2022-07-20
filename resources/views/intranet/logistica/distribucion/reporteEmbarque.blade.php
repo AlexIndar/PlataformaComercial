@@ -19,7 +19,7 @@
                 <div class="col-12">
                     <div class="card mt-2">
                         <div class="card-header title-table">
-                            <h3 class="card-title mt-2 mr-3">Reporte SAD</h3>
+                            <h3 class="card-title mt-2 mr-3">Reporte embarque</h3>
                             <button type="button" class="btn btn-outline-primary btn-consultar-reporte-sad" disabled onclick="logisticaController.reportSad()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Consultando</button>
                             <button type="button" class="btn btn-outline-primary  btn-excel ml-2" onclick="logisticaController.exportExcelreportSad()" disabled><i class="fa-solid fa-file-excel mr-1"></i>Exportar</button>
                         </div>
