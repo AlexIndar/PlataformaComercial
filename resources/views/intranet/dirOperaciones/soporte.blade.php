@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main', ['active' => 'Operaciones', 'permissions' => $permissions])
 
-@section('title') Indar - HeatMap @endsection
+@section('title') Indar - Soporte @endsection
 
 @section('styles')
 <!-- <link rel="stylesheet" href="{{asset('assets/intranet/css/heatmap.css')}}"> -->

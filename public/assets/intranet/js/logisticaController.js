@@ -342,7 +342,7 @@ let mount = d.getMonth() + 1;
 mount = mount >= 10 ? mount : '0' + mount;
 let dNow = d.getFullYear() + '-' + mount + '-' + d.getDate();
 let base64XMLGastoFletera = '',porcentajeGlobal = 1,OficinaFacturaGuia = false,banderaDiferenciaGastoFletera = false;cantidadGastoFletera = 0, contShowguia = 1, autorizadoUsuario = '', fechaInicio = dNow, fechaFin = dNow, link = '';
-let arrayRowTableType = new Array(), arraytable2 = new Array(),folioAutorizarGuias = new Array(),arrayFolioAutorizado = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
+let arrayRowTableType = new Array(),arrayTableImportsExport = new Array(); arraytable2 = new Array(),folioAutorizarGuias = new Array(),arrayFolioAutorizado = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
 let contRowTypeTable = 0, contRowEmbarqueTable = 0, contRowFacturasSelected = 0, contTable = 0, contArea1 = 0, contArea2 = 0, contArea3 = 0, contArea4 = 0, contArea5 = 0, contArea6 = 0, contArea7 = 0, contArea8 = 0, contArea9 = 0, contArea10 = 0, contArea11 = 0, contArea12 = 0;
 //#endregion
 
@@ -555,7 +555,7 @@ const logisticaController = {
             dom: 'Bfrtip',
             buttons: [
                 {
-                    text: 'Exportar Template',
+                    text: 'Descargar Template',
                     action: function ( e, dt, node, config ) {
                         let url = '/Templates/Template_Importes_Fleteras.xlsx';
                         const a = document.createElement('a');
@@ -578,6 +578,58 @@ const logisticaController = {
                         $('#modal-importes-fleteras').modal('toggle');
                         $('#modal-agregar-importes').modal({backdrop: 'static', keyboard: false});
                         $('#modal-agregar-importes').modal('show');
+                    }
+                },
+                {
+                    text: 'Exportar tabla importes',
+                    action: function(){
+                        let arrayRows = new Array();
+                        arrayRows.push([
+                            'CP',
+                            'FLETERA',
+                            'ESTADO',
+                            'MUNICIPIO',
+                            'ZONA',
+                            'CAJA',
+                            'ATADO',
+                            'BULTO',
+                            'CUBETA',
+                            'TARIMA',
+                            'FECHA INICIO',
+                            'FECHA FIN'
+                        ]);
+                        console.log(arrayTableImportsExport);
+                        $.each(arrayTableImportsExport, function (key, value) {
+                            let data = [
+                                value.cp,
+                                value.fletera,
+                                value.estado,
+                                value.municipio,
+                                value.zona,
+                                value.caja,
+                                value.atado,
+                                value.bulto,
+                                value.cubeta,
+                                value.tarima,
+                                value.fechaInicio,
+                                value.fechaFin
+                            ];
+                            arrayRows.push(data);
+                        });
+                        csvContent = "data:text/csv;charset=utf-8,";
+                        /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+                        arrayRows.forEach(function (rowArray) {
+                            row = rowArray.join(",");
+                            csvContent += row + "\r\n";
+                        });
+                
+                        /* create a hidden <a> DOM node and set its download attribute */
+                        var encodedUri = encodeURI(csvContent);
+                        link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", "Tabla_Importes.csv");
+                        document.getElementById('table-importe').appendChild(link);
+                        link.click();
                     }
                 }
             ]
@@ -2643,6 +2695,7 @@ const logisticaController = {
                 $('#cover-spin').show(0);
             },
             success: function(data){
+                arrayTableImportsExport = data;
                 $('#table-importe').DataTable().clear().draw();
                 $('#table-importe').DataTable().rows.add(data).draw();
             },
@@ -2910,6 +2963,7 @@ const logisticaController = {
             type: 'GET',
             datatype: 'json',
             success: function (data) {
+                console.log(data);
             },
             error: function () {
 
