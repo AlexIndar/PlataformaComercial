@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main',['active' => 'Logistica'])
 
-@section('title') Indar @endsection
+@section('title') Indar | Mesa Control @endsection
 
 @section('styles')
 {{-- <link rel="stylesheet" href="{{asset('assets/intranet/css/')}}"> --}}
