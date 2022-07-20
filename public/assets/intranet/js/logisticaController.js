@@ -69,16 +69,17 @@ $(document).ready(function () {
                 deferRender: true,
                 scroller: true,
                 columns: [
-                    { data: 'diEmbarque', visible: true },
+                    { data: 'idEmbarque', visible: true },
                     { data: 'fecha', visible: true },
-                    { data: 'paqueteria', visible: true },
+                    { data: 'fechaConcluido', visible: true},
+                    { data: 'listItemName', visible: true },
                     { data: 'comentarios', visible: true },
                     { data: 'estatus', visible: true },
-                    { data: 'asignado', visible: true },
+                    { data: 'usuario', visible: true },
                     { data: 'factura', visible: true },
                     { data: 'estado', visible: true },
                     { data: 'persona', visible: true },
-                    { data: 'fechaHora', visible: true },
+                    { data: 'fechaConcluido', visible: true },
                     { data: 'comentariosFactura', visible: true },
                     { data: 'usuarioConfirma', visible: true },
                     { data: 'fechaConfirmaPostVenta', visible: true }
@@ -342,7 +343,7 @@ let mount = d.getMonth() + 1;
 mount = mount >= 10 ? mount : '0' + mount;
 let dNow = d.getFullYear() + '-' + mount + '-' + d.getDate();
 let base64XMLGastoFletera = '',porcentajeGlobal = 1,OficinaFacturaGuia = false,banderaDiferenciaGastoFletera = false;cantidadGastoFletera = 0, contShowguia = 1, autorizadoUsuario = '', fechaInicio = dNow, fechaFin = dNow, link = '';
-let arrayRowTableType = new Array(),arrayTableImportsExport = new Array(); arraytable2 = new Array(),folioAutorizarGuias = new Array(),arrayFolioAutorizado = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
+let arrayRowTableType = new Array(),arrayTableImportsExport = new Array();arrayReporteEmbarques = new Array(); arraytable2 = new Array(),folioAutorizarGuias = new Array(),arrayFolioAutorizado = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
 let contRowTypeTable = 0, contRowEmbarqueTable = 0, contRowFacturasSelected = 0, contTable = 0, contArea1 = 0, contArea2 = 0, contArea3 = 0, contArea4 = 0, contArea5 = 0, contArea6 = 0, contArea7 = 0, contArea8 = 0, contArea9 = 0, contArea10 = 0, contArea11 = 0, contArea12 = 0;
 //#endregion
 
@@ -2958,20 +2959,90 @@ const logisticaController = {
     //#endregion
     //#region REPORTE EMBARQUE
     reportShipment: () => {
+        $('.btn-consultar-reporte-embarque').prop('disabled', true);
+        $('.btn-consultar-reporte-embarque').empty();
+        $('.btn-consultar-reporte-embarque').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
         $.ajax({
             url: '/logistica/distribucion/reportShipment',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
-                console.log(data);
+                arrayReporteEmbarques = data;
+                $('.btn-consultar-reporte-embarque').prop('disabled', false);
+                $('.btn-consultar-reporte-embarque').empty();
+                $('.btn-consultar-reporte-embarque').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                $('.btn-excel').prop('disabled',false);
+                $('#table-reporte-embarque').DataTable().clear().draw();
+                $('#table-reporte-embarque').DataTable().rows.add(data).draw();
             },
             error: function () {
 
             },
             complete: function () {
-
+                $('#cover-spin').hide();
             }
         });
+    },
+    exportExcelreportShipment: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled', true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'EMBARQUE',
+            'FECHA',
+            'FECHA CONCLUIDO',
+            'PAQUETERIA',
+            'COMENTARIOS',
+            'ESTATUS',
+            'USUARIO',
+            'FACTURA',
+            'ESTADO',
+            'PERSONA',
+            'FECHA HORA',
+            'COMENTARIO FACTURA',
+            'USUARIO CONFIRMA',
+            'FECHA CONFIRMA POSTVENTA'
+        ]);
+        $.each(arrayReporteEmbarques, function (key, value) {
+            let data = [
+                value.idEmbarque,
+                value.fecha,
+                value.fechaConcluido,
+                value.listItemName,
+                value.comentarios,
+                value.estatus,
+                value.usuario,
+                value.factura,
+                value.estado,
+                value.persona,
+                value.fechaHora,
+                value.comentarioFactura,
+                value.usuarioConfirma,
+                value.fechaConfirmaPostVenta
+            ];
+            arrayRows.push(data);
+        });
+        csvContent = "data:text/csv;charset=utf-8,";
+        /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+        arrayRows.forEach(function (rowArray) {
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_Embarques.csv");
+        document.getElementById('table-reporte-embarque').appendChild(link);
+        link.click();
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled', false);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
     },
     //#endregion
     //#region CAPTURA GASTO FLETERA
