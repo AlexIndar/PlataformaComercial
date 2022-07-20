@@ -22,14 +22,14 @@
                 <fieldset>
                     <legend>{{$actions[$x]['portalMkt_']['seccion']}}</legend>
                     <ul class="drag-sort-enable" id='ul-{{$actions[$x]['portalMkt_']['seccion']}}'>
-                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
+                        <li class="drag-sort-item divImg mb-2" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
                             <img loading="lazy" class="image-{{$actions[$x]['portalMkt_']['seccion']}} imageOnServer" id="{{$actions[$x]['portalMkt_']['seccion']}}/{{$actions[$x]['portalMkt_']['filename']}}" src="{{asset($routeImages.'/'.$actions[$x]['portalMkt_']['seccion'].'/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
                             <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
                         </li>
                         
                 @else
                 @if($actions[$x]['portalMkt_']['seccion'] == $actions[$x-1]['portalMkt_']['seccion'])
-                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
+                        <li class="drag-sort-item divImg mb-2" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
                             <img loading="lazy" class="image-{{$actions[$x]['portalMkt_']['seccion']}} imageOnServer" id="{{$actions[$x]['portalMkt_']['seccion']}}/{{$actions[$x]['portalMkt_']['filename']}}" src="{{asset($routeImages.'/'.$actions[$x]['portalMkt_']['seccion'].'/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
                             <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
                         </li>
@@ -49,7 +49,7 @@
                     <fieldset>
                     <legend>{{$actions[$x]['portalMkt_']['seccion']}}</legend>
                     <ul class="drag-sort-enable" id='ul-{{$actions[$x]['portalMkt_']['seccion']}}'>
-                        <li class="drag-sort-item divImg" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
+                        <li class="drag-sort-item divImg mb-2" onclick="activeModal('modalEditElement', '{{$actions[$x]['portalMkt_']['seccion']}}', this)">
                             <img loading="lazy" class="image-{{$actions[$x]['portalMkt_']['seccion']}} imageOnServer" id="{{$actions[$x]['portalMkt_']['seccion']}}/{{$actions[$x]['portalMkt_']['filename']}}" src="{{asset($routeImages.'/'.$actions[$x]['portalMkt_']['seccion'].'/'.$actions[$x]['portalMkt_']['filename'])}}" alt="">
                             <i onclick='deleteRow(this)' class="fas fa-times delete-icon fa-xl"></i>
                         </li>
@@ -73,7 +73,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="modalAddElement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <input type="text" value="" name="sectionElement" id="sectionElement" hidden>
                 <div class="modal-header">
@@ -89,20 +89,115 @@
                         <option class="" style="height: 30px !important;" value="Externo">Link externo</option>
                         <option class="" style="height: 30px !important;" value="Interno">Link interno</option>
                         <option class="" style="height: 30px !important;" value="Descarga">Descarga</option>
-                        {{-- <option class="" style="height: 30px !important;" value="Filtro">Filtro</option> --}}
+                        <option class="" style="height: 30px !important;" value="Filtro">Filtro</option>
                     </select>
 
-                    <div class="action-link-container mt-3 d-none" id="action-link-container">
-                        <p>Ingresa un enlace</p>
-                        <input type="text" class="w-100" id="action-link" name="action-link">
-                    </div>
+                    {{-- SWITCH SELECTED OPTION ------------------------------------------------------------}}
 
-                    <div class="action-file-container mt-3 d-none" id="action-file-container">
-                        <p>Carga un documento</p>
-                        <input class="" type="file" name="action-file" id="action-file" accept=".pdf, .xlsx, .xls">
-                    </div>
-                    <div class="d-none mt-2" id="action-file-preview"></div>
+                        {{-- INTERNO / EXTERNO  ------------------------------------------------------------}}
+                            <div class="action-link-container mt-3 d-none" id="action-link-container">
+                                <p>Ingresa un enlace</p>
+                                <input type="text" class="w-100" id="action-link" name="action-link">
+                            </div>
 
+                        {{-- DESCARGA ----------------------------------------------------------------------}}
+                            <div class="action-file-container mt-3 d-none" id="action-file-container">
+                                <p>Carga un documento</p>
+                                <input class="" type="file" name="action-file" id="action-file" accept=".pdf, .xlsx, .xls">
+                            </div>
+                            <div class="d-none mt-2" id="action-file-preview"></div>
+                        
+                        {{-- FILTRO ------------------------------------------------------------------------}}
+                            <div class="d-none" id="action-filter-container">
+                                <br><br>
+                                <!-- proveedores -------------------------------------------------------------------------------------------------------------------------->
+
+                                    <div class="row reglas-row">
+                                        <div class="col-12 text-center"><h4>Proveedores:</h4></div>
+                                    </div>
+                                    <br>
+                                    <div class="row text-center">
+                                        <div class="col-12">
+                                            <h5 id="mensaje-proveedores" class="mensaje-proveedores mensaje green"> <strong>Sólo estos proveedores</strong> aparecerán en el filtro</h5>
+                                        </div>
+                                    </div>
+
+                                    <br>
+                                    <div class="col-12">
+                                                <select id="proveedores" name="proveedores[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
+                                                </select>  
+                                                <h5 id="proveedoresLoading" class="mensaje loading">Cargando proveedores ...</h5>
+                                    </div>
+                                    <br>
+                                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                                        <button class="btn btn-blue" onclick="triggerInputFile('proveedores')"><i class="fas fa-file-upload"></i> Desde archivo</button>
+                                        <input type="file" name="proveedoresFile" id="proveedoresFile" accept=".csv, .xls, .xlsx" hidden>
+                                        <button class="btn btn-blue" onclick="downloadTemplate('Proveedores')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
+                                        <button class="btn btn-danger" onclick="clearSelection('Proveedores')"><i class="fas fa-trash"></i> Eliminar todos</button>
+                                    </div>
+
+
+                                    <br><br>
+
+                                <!-- marcas -------------------------------------------------------------------------------------------------------------------------->
+
+                                    <div class="row reglas-row">
+                                    <div class="col-12 text-center"><h4>Marcas:</h4></div>
+                                    </div>
+
+                                    <br>
+                                    <div class="row text-center">
+                                    <div class="col-12">
+                                        <h5 id="mensaje-marcas" class="mensaje-marcas mensaje green"> <strong>Sólo estas marcas</strong> aparecerán en el filtro</h5>
+                                    </div>
+                                    </div>
+
+                                    <br>
+                                    <div class="col-12">
+                                            <select id="marcas" name="marcas[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
+                                            </select>  
+                                            <h5 id="marcasLoading" class="mensaje loading">Cargando marcas ...</h5>
+                                    </div>
+                                    <br>
+                                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                                    <button class="btn btn-blue" onclick="triggerInputFile('marcas')"><i class="fas fa-file-upload"></i> Desde archivo</button>
+                                    <input type="file" name="marcasFile" id="marcasFile" accept=".csv, .xls, .xlsx" hidden>
+                                    <button class="btn btn-blue" onclick="downloadTemplate('Marcas')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
+                                    <button class="btn btn-danger" onclick="clearSelection('Marcas')"><i class="fas fa-trash"></i> Eliminar todos</button>
+                                    </div>
+
+
+                                    <br><br>
+
+                                <!-- artículos -------------------------------------------------------------------------------------------------------------------------->
+
+                                    <div class="row reglas-row">
+                                    <div class="col-12 text-center"><h4>Artículos:</h4></div>
+                                    </div> 
+
+                                    <br>
+                                    <div class="row text-center">
+                                    <div class="col-12">
+                                        <h5 id="mensaje-articulos" class="mensaje-articulos mensaje green"> <strong>Sólo estos artículos</strong> aparecerán en el filtro</h5>
+                                    </div>
+                                    </div>
+
+                                    <br>
+                                    <div class="col-12">
+                                            <select id="articulos" name="articulos[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
+                                            </select>
+                                            <h5 id="articulosLoading" class="mensaje loading">Cargando artículos ...</h5>
+                                    </div>
+                                    <br>
+                                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                                    <button class="btn btn-blue" id="excelArticulos" onclick="triggerInputFile('articulos')"><i class="fas fa-file-upload"></i> Desde archivo</button>
+                                    <input type="file" name="articulosFile" id="articulosFile" accept=".csv, .xls, .xlsx" hidden>
+                                    <button class="btn btn-blue" onclick="downloadTemplate('Articulos')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
+                                    <button class="btn btn-danger" onclick="clearSelection('Articulos')"><i class="fas fa-trash"></i> Eliminar todos</button>
+                                    </div>
+
+                            </div>
+                            
                 </div>
                 <div class="modal-footer">
                     <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>
@@ -133,19 +228,109 @@
                         <option class="" style="height: 30px !important;" value="Externo">Link externo</option>
                         <option class="" style="height: 30px !important;" value="Interno">Link interno</option>
                         <option class="" style="height: 30px !important;" value="Descarga">Descarga</option>
-                        {{-- <option class="" style="height: 30px !important;" value="Filtro">Filtro</option> --}}
+                        <option class="" style="height: 30px !important;" value="Filtro">Filtro</option>
                     </select>
+                    {{-- INTERNO / EXTERNO -----------------------------------------------------------------}}
+                        <div class="edit-action-link-container mt-3 d-none" id="edit-action-link-container">
+                            <p>Ingresa un enlace</p>
+                            <input type="text" class="w-100" id="edit-action-link" name="edit-action-link">
+                        </div>
+                    {{-- DESCARGA ---------------------------------------------------------------------------}}
+                        <div class="edit-action-file-container mt-3 d-none" id="edit-action-file-container">
+                            <p>Carga un documento</p>
+                            <input class="" type="file" name="edit-action-file" id="edit-action-file" accept=".pdf, .xlsx, .xls">
+                        </div>
+                        <div class="d-none mt-2" id="edit-action-file-preview"></div>
+                    
+                        {{-- FILTRO ------------------------------------------------------------------------}}
+                            <div class="d-none" id="edit-action-filter-container">
+                                <br><br>
+                                <!-- proveedores -------------------------------------------------------------------------------------------------------------------------->
 
-                    <div class="edit-action-link-container mt-3 d-none" id="edit-action-link-container">
-                        <p>Ingresa un enlace</p>
-                        <input type="text" class="w-100" id="edit-action-link" name="edit-action-link">
-                    </div>
+                                    <div class="row reglas-row">
+                                        <div class="col-12 text-center"><h4>Proveedores:</h4></div>
+                                    </div>
+                                    <br>
+                                    <div class="row text-center">
+                                        <div class="col-12">
+                                            <h5 id="editmensaje-proveedores" class="mensaje-proveedores mensaje green"> <strong>Sólo estos proveedores</strong> aparecerán en el filtro</h5>
+                                        </div>
+                                    </div>
 
-                    <div class="edit-action-file-container mt-3 d-none" id="edit-action-file-container">
-                        <p>Carga un documento</p>
-                        <input class="" type="file" name="edit-action-file" id="edit-action-file" accept=".pdf, .xlsx, .xls">
-                    </div>
-                    <div class="d-none mt-2" id="edit-action-file-preview"></div>
+                                    <br>
+                                    <div class="col-12">
+                                                <select id="editproveedores" name="editproveedores[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
+                                                </select>  
+                                                <h5 id="editproveedoresLoading" class="mensaje loading">Cargando proveedores ...</h5>
+                                    </div>
+                                    <br>
+                                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                                        <button class="btn btn-blue" onclick="triggerInputFile('editproveedores')"><i class="fas fa-file-upload"></i> Desde archivo</button>
+                                        <input type="file" name="editproveedoresFile" id="editproveedoresFile" accept=".csv, .xls, .xlsx" hidden>
+                                        <button class="btn btn-blue" onclick="downloadTemplate('Proveedores')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
+                                        <button class="btn btn-danger" onclick="clearSelection('editProveedores')"><i class="fas fa-trash"></i> Eliminar todos</button>
+                                    </div>
+
+
+                                    <br><br>
+
+                                <!-- marcas -------------------------------------------------------------------------------------------------------------------------->
+
+                                    <div class="row reglas-row">
+                                    <div class="col-12 text-center"><h4>Marcas:</h4></div>
+                                    </div>
+
+                                    <br>
+                                    <div class="row text-center">
+                                    <div class="col-12">
+                                        <h5 id="editmensaje-marcas" class="mensaje-marcas mensaje green"> <strong>Sólo estas marcas</strong> aparecerán en el filtro</h5>
+                                    </div>
+                                    </div>
+
+                                    <br>
+                                    <div class="col-12">
+                                            <select id="editmarcas" name="editmarcas[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
+                                            </select>  
+                                            <h5 id="editmarcasLoading" class="mensaje loading">Cargando marcas ...</h5>
+                                    </div>
+                                    <br>
+                                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                                    <button class="btn btn-blue" onclick="triggerInputFile('editmarcas')"><i class="fas fa-file-upload"></i> Desde archivo</button>
+                                    <input type="file" name="editmarcasFile" id="editmarcasFile" accept=".csv, .xls, .xlsx" hidden>
+                                    <button class="btn btn-blue" onclick="downloadTemplate('Marcas')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
+                                    <button class="btn btn-danger" onclick="clearSelection('editMarcas')"><i class="fas fa-trash"></i> Eliminar todos</button>
+                                    </div>
+
+
+                                    <br><br>
+
+                                <!-- artículos -------------------------------------------------------------------------------------------------------------------------->
+
+                                    <div class="row reglas-row">
+                                    <div class="col-12 text-center"><h4>Artículos:</h4></div>
+                                    </div> 
+
+                                    <br>
+                                    <div class="row text-center">
+                                    <div class="col-12">
+                                        <h5 id="editmensaje-articulos" class="mensaje-articulos mensaje green"> <strong>Sólo estos artículos</strong> aparecerán en el filtro</h5>
+                                    </div>
+                                    </div>
+
+                                    <br>
+                                    <div class="col-12">
+                                            <select id="editarticulos" name="editarticulos[]" class="form-control chosen" data-placeholder="Buscar" multiple style="display:none;">
+                                            </select>
+                                            <h5 id="editarticulosLoading" class="mensaje loading">Cargando artículos ...</h5>
+                                    </div>
+                                    <br>
+                                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                                    <button class="btn btn-blue" id="editexcelArticulos" onclick="triggerInputFile('editarticulos')"><i class="fas fa-file-upload"></i> Desde archivo</button>
+                                    <input type="file" name="editarticulosFile" id="editarticulosFile" accept=".csv, .xls, .xlsx" hidden>
+                                    <button class="btn btn-blue" onclick="downloadTemplate('Articulos')"><i class="fas fa-file-download"></i> Descargar Plantilla</button>
+                                    <button class="btn btn-danger" onclick="clearSelection('editArticulos')"><i class="fas fa-trash"></i> Eliminar todos</button>
+                                    </div>
+                            </div>
                 </div>
                 <div class="modal-footer">
                     <div class="spinner-border text-secondary" style="display:none; margin-right: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner" ></div>

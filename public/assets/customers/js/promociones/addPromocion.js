@@ -180,10 +180,6 @@ $('document').ready(function () {
         reader.readAsBinaryString(input.files[0]);
     });
 
-
-
-
-
     $('#fechas').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         if (clickedIndex == 1) {
             document.getElementById('mensaje-fechas').innerHTML = "Estas fechas <strong>no participan</strong> en la promoción";

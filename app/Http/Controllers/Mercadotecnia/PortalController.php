@@ -49,8 +49,10 @@ class PortalController extends Controller
             $tmp = explode('/',$actions[$x]['portalMkt_']['rutaImg']);
             $filename = end($tmp);
             $actions[$x]['portalMkt_']['filename'] = $filename;
+            if($actions[$x]['portalMkt_']['accion'] == 'Filtro'){
+                $actions[$x]['portalMkt_']['valor'] = "http://".$_SERVER['HTTP_HOST'].'/portal/busqueda/'.$actions[$x]['portalMkt_']['idPortalMkt'];
+            }
         }
-        // dd($actions);
         return $actions;
     }
 
@@ -204,6 +206,9 @@ class PortalController extends Controller
                 File::copyDirectory($tempPath.'/Forma Parte de INDAR', $basePath.'/Forma Parte de INDAR');
                 File::copyDirectory($tempPath.'/Ofertas Relampago', $basePath.'/Ofertas Relampago');
                 File::copyDirectory($tempPath.'/Super Ofertas', $basePath.'/Super Ofertas');
+            }
+            else{
+                dd($response);
             }
             
             return $response;       
