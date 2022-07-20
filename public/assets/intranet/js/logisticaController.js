@@ -58,51 +58,7 @@ $(document).ready(function () {
             logisticaController.reportSad();
             break;
         case '/logistica/distribucion/reporteEmbarque':
-            $('#table-reporte-embarque').DataTable({
-                paging: true,
-                responsive: true,
-                searching: true,
-                processing: true,
-                bSortClasses: false,
-                fixedHeader: true,
-                // scrollY:        400,
-                deferRender: true,
-                scroller: true,
-                columns: [
-                    { data: 'diEmbarque', visible: true },
-                    { data: 'fecha', visible: true },
-                    { data: 'paqueteria', visible: true },
-                    { data: 'comentarios', visible: true },
-                    { data: 'estatus', visible: true },
-                    { data: 'asignado', visible: true },
-                    { data: 'factura', visible: true },
-                    { data: 'estado', visible: true },
-                    { data: 'persona', visible: true },
-                    { data: 'fechaHora', visible: true },
-                    { data: 'comentariosFactura', visible: true },
-                    { data: 'usuarioConfirma', visible: true },
-                    { data: 'fechaConfirmaPostVenta', visible: true }
-                ],
-                language: {
-                    "emptyTable": "No hay información",
-                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
-                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ Documentos",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "zeroRecords": "Sin resultados encontrados",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    }
-                }
-            });
+            logisticaController.initShipment();
             logisticaController.reportShipment();
             break;
         case '/logistica/distribucion/capturaGastoFletera':
@@ -243,11 +199,7 @@ $(document).ready(function () {
             break;
         case '/logistica/reportes/interfazRecibo':
             //#region Interfaz recibo
-            $('#fechas').daterangepicker({
-                singleDatePicker: true,
-            }, function (start, end, label) {
-                fechaInicio = start.format('YYYY-MM-DD');
-            });
+            logisticaController.initInterfazRecibo();
             //#endregion
             break;
         case '/logistica/reportes/interfazFacturacion':
@@ -342,7 +294,7 @@ let mount = d.getMonth() + 1;
 mount = mount >= 10 ? mount : '0' + mount;
 let dNow = d.getFullYear() + '-' + mount + '-' + d.getDate();
 let base64XMLGastoFletera = '',porcentajeGlobal = 1,OficinaFacturaGuia = false,banderaDiferenciaGastoFletera = false;cantidadGastoFletera = 0, contShowguia = 1, autorizadoUsuario = '', fechaInicio = dNow, fechaFin = dNow, link = '';
-let arrayRowTableType = new Array(),arrayTableImportsExport = new Array(); arraytable2 = new Array(),folioAutorizarGuias = new Array(),arrayFolioAutorizado = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
+let arrayRowTableType = new Array(),arrayTableImportsExport = new Array();arrayReporteEmbarques = new Array(); arraytable2 = new Array(),folioAutorizarGuias = new Array(),arrayFolioAutorizado = new Array(), arrayTableGuiasGastosFletera = new Array(), arrayResultFacturas = new Array(), arrayFacturasSelected = new Array(), arrayRowsEmbarques = new Array(), arrayPlaneador = new Array(), ReporteFacturasPorEmbarcar = new Array(), ReporteGastoFleteras = new Array(), ReporteSad = new Array(),dataImportsFreghter = new Array();
 let contRowTypeTable = 0, contRowEmbarqueTable = 0, contRowFacturasSelected = 0, contTable = 0, contArea1 = 0, contArea2 = 0, contArea3 = 0, contArea4 = 0, contArea5 = 0, contArea6 = 0, contArea7 = 0, contArea8 = 0, contArea9 = 0, contArea10 = 0, contArea11 = 0, contArea12 = 0;
 //#endregion
 
@@ -2750,6 +2702,9 @@ const logisticaController = {
             url: '/logistica/distribucion/validarSad/consultValidateSAD',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 let rows = '';
                 $('.btn-consultar-validar-sad').prop('disabled', false);
@@ -2821,7 +2776,7 @@ const logisticaController = {
                 console.log(textStatus);
             },
             complete: function () {
-
+                $('#cover-spin').hide();
             }
         })
     },
@@ -2865,6 +2820,9 @@ const logisticaController = {
             url: '/logistica/distribucion/getReportSad',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 console.time();
                 ReporteSad = data;
@@ -2878,6 +2836,7 @@ const logisticaController = {
             },
             complete: () => {
                 console.timeEnd();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -2957,21 +2916,139 @@ const logisticaController = {
     },
     //#endregion
     //#region REPORTE EMBARQUE
+    initShipment: () => {
+        $('#table-reporte-embarque').DataTable({
+            paging: true,
+            responsive: true,
+            searching: true,
+            processing: true,
+            bSortClasses: false,
+            fixedHeader: true,
+            // scrollY:        400,
+            deferRender: true,
+            scroller: true,
+            columns: [
+                { data: 'idEmbarque', visible: true },
+                { data: 'fecha', visible: true },
+                { data: 'fechaConcluido', visible: true},
+                { data: 'listItemName', visible: true },
+                { data: 'comentarios', visible: true },
+                { data: 'estatus', visible: true },
+                { data: 'usuario', visible: true },
+                { data: 'factura', visible: true },
+                { data: 'estado', visible: true },
+                { data: 'persona', visible: true },
+                { data: 'fechaConcluido', visible: true },
+                { data: 'comentariosFactura', visible: true },
+                { data: 'usuarioConfirma', visible: true },
+                { data: 'fechaConfirmaPostVenta', visible: true }
+            ],
+            language: {
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Documentos",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Documentos",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Documentos",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
+        });
+    },
     reportShipment: () => {
+        $('.btn-consultar-reporte-embarque').prop('disabled', true);
+        $('.btn-consultar-reporte-embarque').empty();
+        $('.btn-consultar-reporte-embarque').append('<i class="fa-solid fa-spin fa-cog mr-1"></i> Consultando');
         $.ajax({
             url: '/logistica/distribucion/reportShipment',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function() {
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
-                console.log(data);
+                arrayReporteEmbarques = data;
+                $('.btn-consultar-reporte-embarque').prop('disabled', false);
+                $('.btn-consultar-reporte-embarque').empty();
+                $('.btn-consultar-reporte-embarque').append('<i class="fa-solid fa-cog mr-1"></i> Consultar');
+                $('.btn-excel').prop('disabled',false);
+                $('#table-reporte-embarque').DataTable().clear().draw();
+                $('#table-reporte-embarque').DataTable().rows.add(data).draw();
             },
             error: function () {
 
             },
             complete: function () {
-
+                $('#cover-spin').hide();
             }
         });
+    },
+    exportExcelreportShipment: () => {
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled', true);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportando<i class="fa-solid fa-download fa-bounce ml-2"></i>');
+        var arrayRows = [];
+        arrayRows.push([
+            'EMBARQUE',
+            'FECHA',
+            'FECHA CONCLUIDO',
+            'PAQUETERIA',
+            'COMENTARIOS',
+            'ESTATUS',
+            'USUARIO',
+            'FACTURA',
+            'ESTADO',
+            'PERSONA',
+            'FECHA HORA',
+            'COMENTARIO FACTURA',
+            'USUARIO CONFIRMA',
+            'FECHA CONFIRMA POSTVENTA'
+        ]);
+        $.each(arrayReporteEmbarques, function (key, value) {
+            let data = [
+                value.idEmbarque,
+                value.fecha,
+                value.fechaConcluido,
+                value.listItemName,
+                value.comentarios,
+                value.estatus,
+                value.usuario,
+                value.factura,
+                value.estado,
+                value.persona,
+                value.fechaHora,
+                value.comentarioFactura,
+                value.usuarioConfirma,
+                value.fechaConfirmaPostVenta
+            ];
+            arrayRows.push(data);
+        });
+        csvContent = "data:text/csv;charset=utf-8,";
+        /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+        arrayRows.forEach(function (rowArray) {
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+
+        /* create a hidden <a> DOM node and set its download attribute */
+        var encodedUri = encodeURI(csvContent);
+        link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Reporte_Embarques.csv");
+        document.getElementById('table-reporte-embarque').appendChild(link);
+        link.click();
+        $('.btn-excel').empty();
+        $('.btn-excel').prop('disabled', false);
+        $('.btn-excel').append('<i class="fa-solid fa-file-excel mr-1"></i>Exportar');
     },
     //#endregion
     //#region CAPTURA GASTO FLETERA
@@ -4582,6 +4659,9 @@ const logisticaController = {
             type: 'GET',
             data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 console.time();
                 ReporteFacturasPorEmbarcar = data;
@@ -4596,6 +4676,7 @@ const logisticaController = {
                 $('.card-body').attr('hidden', false);
                 $('.btn-excel').prop('disabled', false);
                 console.timeEnd();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -4714,6 +4795,9 @@ const logisticaController = {
             url: '/logistica/reportes/gastoFleteras/consultFreightExpense',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 console.time();
                 ReporteGastoFleteras = data;
@@ -4726,6 +4810,7 @@ const logisticaController = {
             complete: () => {
                 console.timeEnd();
                 $('.btn-excel').prop('disabled', false);
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -4801,9 +4886,16 @@ const logisticaController = {
         }, 5000);
     },
     //#endregion
-    //#region INTERFAZ RECIBO 
+    //#region INTERFAZ RECIBO
+    initInterfazRecibo: () => {
+        $('#fechas').daterangepicker({
+            singleDatePicker: true,
+        }, function (start, end, label) {
+            fechaInicio = start.format('YYYY-MM-DD');
+        });
+    },
     consultReceiptInterface: () => {
-        // console.log(fechaInicio);
+        console.log(fechaInicio);
     },
     //#endregion
     //#region INTERFAZ FACTURACION
@@ -4951,6 +5043,9 @@ const logisticaController = {
             url: '/logistica/mesaControl/planeador/getPlaneador',
             type: 'GET',
             datatype: 'json',
+            beforeSend: function(){
+                $('#cover-spin').show(0);
+            },
             success: function (data) {
                 let rows = '';
                 let area1 = '', area2 = '', area3 = '', area4 = '', area5 = '', area6 = '', area7 = '', area8 = '', area9 = '', area10 = '', area11 = '', area12 = '';
@@ -5047,6 +5142,14 @@ const logisticaController = {
                 $('#content-table-planeador').prepend(rows);
                 $('.fa-cog').removeClass('fa-spin');
                 logisticaController.getArrayPlaneador();
+            },
+            complete: function() {
+                var dateAndTime = document.getElementById('date');
+
+                var currentTime = new Date();
+          
+                dateAndTime.innerHTML = 'Ultima Actualización: '+currentTime.toLocaleTimeString();
+                $('#cover-spin').hide();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);

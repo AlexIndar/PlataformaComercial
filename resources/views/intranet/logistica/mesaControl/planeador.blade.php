@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="{{ asset('assets/intranet/css/logistica.css') }}">
 @endsection
 @section('body')
-
+<div id="cover-spin"><img src="{{asset('assets/intranet/images/loading.gif')}}" alt="loading" style="margin-top: 13%;"></div>
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
@@ -22,7 +22,12 @@
                     <div class="card mt-2">
                         <div class="card-header title-table">
                           <h3 class="card-title mt-2 mr-3">Planeador</h3>
-                          <button type="button" class="btn btn-outline-primary" onclick="logisticaController.reloadTable()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Actualizar</button>
+                          <button type="button" class="btn btn-outline-primary mr-2" onclick="logisticaController.reloadTable()"><i class="fa-solid fa-cog fa-spin mr-1"></i> Actualizar</button>
+                          <label for="" id="date"><script> var dateAndTime = document.getElementById('date');
+
+                            var currentTime = new Date();
+                      
+                            dateAndTime.innerHTML = 'Ultima Actualización: '+currentTime.toLocaleTimeString();</script></label>
                           <button type="button" class="btn btn-outline-primary float-right" onclick="logisticaController.slopesBoxes()"><i class="fas fa-solid fa-dolly"></i> Cajas Pendientes</button>
                         </div>
                         <!-- /.card-header -->
