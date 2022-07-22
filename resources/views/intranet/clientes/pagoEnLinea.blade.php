@@ -82,6 +82,7 @@
                             {{-- <th>Imp. Fact. con IVA menos Descuento</th> --}}
                             <th>Saldo</th>
                             <th>Acciones</th>
+                            <th hidden>Internalid</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -110,6 +111,7 @@
                                     <i class="far fa-eye"></i>
                                 </div>
                             </td>
+                            <td hidden>s</td>
                         </tr>
                         @endforeach
                         </tbody>
@@ -173,6 +175,18 @@
 
                    <div id="resumenPago" style="display:none"class="col-md-12 table-responsive">
                  </div>
+                 <div class="col-md-12 text-center" id="pagoConNC" style="display: none">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-info " style="display:none" id="refresh" ><i class="fa fa-arrow-left  "></i>&nbsp; Volver a Calcular  </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-success " style="display:none" id="btnPagarConNC" >Continuar con el Pago &nbsp; <i class="fa fa-arrow-right  "></i></button>
+                        </div>
+
+                    </div>
+                </div>
+
                 </div>
                 <br>
                 <div class="row">
@@ -430,6 +444,131 @@
     </div>
 
 </div>
+<!-- Modal de Intención de Pago-->
+<div id="printThis1">
+    <div id="intencionPagoConNCModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal Content: begins -->
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header bg-indarBlue">
+                    <h4 id="headerNC" class="text-center title ml-auto">Intención de Pago</h4>
+                    <input type="text" id="typeFormInf" value="" hidden>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                    </button>
+                 </div>
+                <!-- Modal Body -->
+                <div class="modal-body text-indarBlue" id="modal2">
+                    <div class="row">
+                       <div class="col-md-12">
+                        <h5 id="headerNC" class="text-center title ml-auto">REFERENCIA : {{  $general->referenciaBancaria }}</h5>
+                           <h6 class="text-center title ml-auto" style="color: rgba(214, 21, 0, 0.815)"><strong> Favor de Pagar de Inmediato </h6>
+                           <div id="resumenPagoConNC"class="col-md-12 table-responsive">
+                           </div>
+                           <h5 id="headerNC" class="text-center title ml-auto" style="background-color: #05b684">TOTAL A PAGAR : <p id="intencionPagar"></p></h5>
+
+                          <div class="col-md-12">
+                           <table id="" class="table table-striped table-bordered table-hover comisionesDeta" style="width:100% ; font-size:76%">
+
+                               <tbody id="">
+                                <tr>
+                                    <td>CUENTA</td>
+                                    <td>CONVENIO</td>
+                                    <td>CLABE</td>
+                                </tr>
+                                <tr>
+                                    <td>BBVA</td>
+                                    <td>Convenio CIE: 806161</td>
+                                    <td>012 320 00133687449 9</td>
+                                </tr>
+                                <tr>
+                                    <td>BANORTE</td>
+                                    <td>Convenio CEP: 51928</td>
+                                    <td>072 320 00020039981 8</td>
+                                </tr>
+                                <tr>
+                                    <td>Santander</td>
+                                    <td>65-500776517</td>
+                                    <td>014 320 65500776517 1</td>
+                                </tr>
+                                <tr>
+                                    <td>HSBC</td>
+                                    <td>Cuenta RAP: 2290</td>
+                                    <td>021 320 04050561075 3</td>
+                                </tr>
+                                <tr>
+                                    <td>BANAMEX</td>
+                                    <td>110-1613905</td>
+                                    <td>002 320 01101613905 6</td>
+                                </tr>
+                               </tbody>
+                            </table>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <h3 id="fechaIntencionPago" style="background-color:rgb(199, 23, 4);color:white; font-size:18px "></h3>
+                    <h6 style="font-weight: bold">Total a Pagar : $ <span id="impTotalconNC" style="font-size: 15px" class="badge badge-success"></span></h6>
+                     <button id="btnPrint1" type="submit" class="btn btn-success float-right" data-dismiss="modal">Imprimir</button>
+                     <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Cerrar</button>
+                  </div>
+                <style>
+
+                    @media screen {
+
+                        #printSection {
+
+                            display: none;
+
+                        }
+
+                    }
+
+                    @media print {
+                        .modal-dialog {
+                        max-width: 100%;
+                        width: 100%;
+                        }
+                        body * {
+
+                            visibility: hidden;
+
+                        }
+
+                        #printSection,
+
+                        #printSection * {
+
+                            visibility: visible;
+
+                        }
+
+                        #printSection {
+
+                            position: absolute;
+
+                            left: 0;
+
+                            top: 0;
+
+                        }
+
+                    }
+
+                </style>
+
+            </div>
+
+        </div>
+
+        <!-- Modal Content: ends -->
+
+    </div>
+
+</div>
  </section>
 </div>
 </div>
@@ -447,13 +586,49 @@
 
 <script>
 $(document).ready(function() {
-    document.getElementById("btnPrint").onclick = function () {
+const cte = {!! json_encode($value->companyid) !!}
+document.getElementById("btnPrint").onclick = function () {
 
 printElement(document.getElementById("printThis"));
 
 };
+document.getElementById("btnPrint1").onclick = function () {
+
+printElemento(document.getElementById("printThis1"));
+
+};
 
 function printElement(elem) {
+
+var domClone = elem.cloneNode(true);
+
+
+
+var $printSection = document.getElementById("printSection");
+
+
+
+if (!$printSection) {
+
+    var $printSection = document.createElement("div");
+
+    $printSection.id = "printSection";
+
+    document.body.appendChild($printSection);
+
+}
+
+
+
+$printSection.innerHTML = "";
+
+$printSection.appendChild(domClone);
+
+window.print();
+
+}
+
+function printElemento(elem) {
 
 var domClone = elem.cloneNode(true);
 
@@ -499,12 +674,14 @@ var table = $('#example').DataTable({
 $('#example tbody').on('click', 'tr', function () {
     $(this).toggleClass('selected');
     document.getElementById("showPaso1").style.display = "block";
-    var datos = table.rows('.selected').data()
+    var datos = table.rows('.selected').data();
     var subTotal=0;
     var primerTotal=0;
     var descuento=0;
     htmlResumenNC='';
+    htmlResumenConNC='';
     arregloFac=[];
+    jsonFact =[];
 
     for(i=0; i< datos.length; i++){
         datos[i][7] = datos[i][7].replace(/,/g, "");
@@ -546,12 +723,56 @@ $('#example tbody').on('click', 'tr', function () {
                               '<td id="importeACobrar">'+impFa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'  </td>'+
                         '</tfoot>'+
                      '</table>';
+
+        htmlResumenConNC += '<table id="example'+i+'" class="table table-hover" style="font-size:90% ;font-weight: bold">'+
+                        '<thead style="background-color:#002868; color:white">'+
+                           '<tr>'+
+                              '<th>Tipo</th>'+
+                              '<th>Número</th>'+
+                              '<th>Saldo</th>'+
+                              '<th>% Descuento</th>'+
+                              '<th>Imp Descuento PP</th>'+
+                              '<th style="background-color:#e6d53db5">Vencimiento</th>'+
+                              '<th style="background-color:#3de65fb5">Importe a Cobrar </th>'+
+                           '</tr>'+
+                       ' </thead>'+
+                        '<tbody>'+
+                            '<tr>'+
+                              '<td>Factura</td>'+
+                              '<td>'+datos[i][2]+'</td>'+
+                              '<td>'+parseFloat(datos[i][7]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+                              '<td> --- </td>'+
+                              '<td> --- </td>'+
+                              '<td>'+datos[i][5]+'</td>'+
+                              '<td id="importeACobrarConNC">'+parseFloat(datos[i][7]).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'  </td>'+
+                           '</tr>'+
+                        '</tbody>'+
+                        '<tbody id="conNC'+datos[i][2]+'">'+
+                        '</tbody>'+
+                        '<tfoot style="background-color:#3de65fb5" id="totalConNC'+datos[i][2]+'">'+
+                            '<td>Total</td>'+
+                              '<td>---</td>'+
+                              '<td>---</td>'+
+                              '<td>'+ datos[i][3] +'</td>'+
+                              '<td> '+ descFa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
+                              '<td>---</td>'+
+                              '<td id="importeACobrarConNC">'+impFa.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'  </td>'+
+                        '</tfoot>'+
+                     '</table>';
         //datos[i][7] = datos[i][7].replace(/,/g, "");
         arregloFac.push(datos[i]);
-        subTotal += parseFloat(datos[i][7]);
+        jsonFact.push({TranId:datos[i][2],
+		InternalId: 0,
+		Saldo:datos[i][7],
+		Vencimiento: datos[i][5],
+		Descuento: parseFloat(datos[i][3]),
+		ImpDescuento: descFa,
+		ImporteFinal: impFa});
 
+        subTotal += parseFloat(datos[i][7]);
     }
     $('#resumenPago').html(htmlResumenNC);
+    $('#resumenPagoConNC').html(htmlResumenConNC);
     htmlResumenPagoFact='';
     var impPagar=0;
     var porcDesc=0;
@@ -606,22 +827,29 @@ $('#example tbody').on('click', 'tr', function () {
         $('#subtotal').text('$0.00');
         $('#total').text('$0.00');
     }
-
+//console.log(arregloFac);
 });
 
 $('#btnMostrarNotas').click(function () {
-
+    jsonPago = [];
     document.getElementById("resumenPago").style.display = "block";
+    document.getElementById("pagoConNC").style.display = "block";
     $('#labelNC').addClass('active');
     var data = table.rows('.selected').data();
     arregloFact=[];
     for(i=0; i< data.length; i++){
         data[i][6] = data[i][6].replace(/,/g, "");
         arregloFact.push(data[i]);
+        desc = parseFloat(data[i][7]) * (parseFloat(data[i][3])/100);
+        totalizador = parseFloat(data[i][7])-desc;
+        jsonPago.push({id: data[i][2], descPorciento: data[i][3], saldo:data[i][7], desc: desc, totaFinal: totalizador});
     }
     document.getElementById("notasDiv").style.display = "block";
     document.getElementById("facturasDiv").style.display = "none";
+
+    //console.log(jsonPago);
 });
+
 
 $('#btnPagar').click(function () {
     $('#labelPago').addClass('active');
@@ -653,6 +881,7 @@ montosFac=[];
  $('#tableNotas tbody').on('click', 'tr', function (event) {
    $('#selectFact').empty();
     var facturamayor = 0;
+
     for (i=0; i< arregloFact.length; i++){
         if(parseFloat(arregloFact[i][7]) > facturamayor){
             facturamayor = parseFloat(arregloFact[i][7]);
@@ -694,13 +923,18 @@ montosFac=[];
  var saldo=0;
  var x = 0;
  var y='nada';
-
+ jsonNC=[];
  $('#agregarNc').on('click', function(e) {
-
+    //console.log(jsonFact);
     document.getElementById("btnMostrarFacturas").style.display = "none";
+    document.getElementById("btnPagarConNC").style.display = "block";
+    document.getElementById("refresh").style.display = "block";
     var primerTotal = $('#total').text();
     htmlappendTotal='';
+    htmlappendTotalConNC='';
     htmlappendNC='';
+    htmlappendNCConNC='';
+
 
     var montoNC = $('#montoNC').text();
     var numeroNC = $('#numeroNC').text();
@@ -738,6 +972,15 @@ montosFac=[];
                       '<td> --- </td>'+
                       '<td id="saldoTotal">  '+ saldoTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
                     '</tr>';
+    htmlappendNCConNC +='<tr style="font-size:13px; font-style:italic; background-color:rgba(253, 244, 66, 0.944)">'+
+      '<td><i class="fa-solid fa-right-long"></i>Nota de Credito</td>'+
+      '<td>'+numeroNC+'</td>'+
+      '<td style="color:red">-'+parseFloat(montoNC).toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})+'</td>'+
+      '<td> --- </td>'+
+      '<td> --- </td>'+
+      '<td> --- </td>'+
+      '<td id="saldoTotal">  '+ saldoTotal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
+    '</tr>';
 
     htmlappendTotal +='<tr style="background-color:#3de65fb5">'+
                       '<td >Total</td>'+
@@ -748,19 +991,84 @@ montosFac=[];
                       '<td> --- </td>'+
                       '<td id="importeACobrar">  '+ saldoFinal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
                     '</tr>';
+    htmlappendTotalConNC +='<tr style="background-color:#3de65fb5">'+
+                      '<td >Total</td>'+
+                      '<td>---</td>'+
+                      '<td>---</td>'+
+                      '<td> %'+porcSelectedFact+' </td>'+
+                      '<td> '+ descuentoPP.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2})  +'</td>'+
+                      '<td> --- </td>'+
+                      '<td id="importeACobrarConNC">  '+ saldoFinal.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}) +' </td>'+
+                    '</tr>';
+    var totalPag=0;
+
+    for(i=0; i<jsonPago.length;i++){
+        if(jsonPago[i].id == numeroFact ){
+            jsonPago[i].totaFinal = saldoFinal;
+        }
+    totalPag +=jsonPago[i].totaFinal;
+    }
+    jsonNC.push({TranId: numeroNC,
+			InternalId: 0,
+			ImporteAplicar: montoNC,
+			Factura: numeroFact});
+    //console.log(jsonFact);
+    //console.log(jsonNC);
 
     appendNC = $('#'+selectedFact+'');
+    appendNCconNC = $('#conNC'+selectedFact+'');
     appendTotal = $('#total'+selectedFact+'');
+    appendTotalConNC = $('#totalConNC'+selectedFact+'');
     appendNC.append(htmlappendNC);
+    appendNCconNC.append(htmlappendNCConNC);
     appendTotal.html(htmlappendTotal);
+    appendTotalConNC.html(htmlappendTotalConNC);
+    $('#subtotal').text('$' + totalPag.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $('#total').text('$' + totalPag.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $('#impTotalconNC').text('$' + totalPag.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $('#intencionPagar').text('$' + totalPag.toLocaleString('es-MX',{minimumFractionDigits: 2, maximumFractionDigits: 2}));
+
     //agregarNC (data,montoNC);
-    });
+});
+
+$('#refresh').click(function () {
+    location.reload();
+});
+
+$('#btnPagarConNC').click(function () {
+    var totalPago=0;
+    for(i=0; i<jsonPago.length;i++){
+    totalPago +=jsonPago[i].totaFinal;
+    }
+    var fechahoy = new Date();
+    jsonPrincipal=[];
+    jsonPrincipal.push({
+	CompanyId: cte,
+	Fecha:fechahoy ,
+	Usuario: "antonio.aguilar",
+	Referencia: "00262022",
+	TotalImporte: totalPago,
+	Facturas: jsonFact,
+    NotasCredito: jsonNC });
+    jsonPrincipal = JSON.stringify(jsonPrincipal);
+    jsonPrincipal = jsonPrincipal.slice(1,-1);
+    console.log(jsonPrincipal);
+    $('#labelPago').addClass('active');
+    $('#labelNC').addClass('active');
+    document.getElementById("resumenPagoConNC").style.display = "block";
+    $('#intencionPagoConNCModal').modal('show');
+    //console.log(jsonPago);
+
+    //document.getElementById("notasDiv").style.display = "block";
+    //document.getElementById("facturasDiv").style.display = "none";
+});
 
 });
 
 function mostrarFacturas() {
   //$("#comisionesTable").dataTable().fnDestroy();
   document.getElementById("resumenPago").style.display = "none";
+  document.getElementById("pagoConNC").style.display = "none";
 
   $('#labelNC').removeClass('active');
   document.getElementById("notasDiv").style.display = "none";

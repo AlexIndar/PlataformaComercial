@@ -266,7 +266,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                         $response['success'] = true;
                                         $response['message'] = 'Token valido';
                                     }
-                                    
+
                                     return Response::json( $response );
                                 });
 
@@ -1233,7 +1233,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $actions = $request->actions;
                     $move = PortalControllerMkt::orderPreview($actions);
-                    
+
                     return $move;
                 });
 
@@ -1248,18 +1248,18 @@ Route::middleware([ValidateSession::class])->group(function(){
                         $bestSellers = ItemsController::getBestSellers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM");
                         $status = 'inactive';
                     }
-                
+
                     $rama1 = RamasController::getRama1();
                     $rama2 = RamasController::getRama2();
                     $rama3 = RamasController::getRama3();
-                
+
                     $level = "C";
                     if(isset($_COOKIE['_lv'])){
                         $level = $_COOKIE['_lv'];
                     }
                     $actions = PortalControllerMkt::getActionsPreview($token);
                     return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions]);
-                
+
                 });
 
                 Route::post('/mercadotecnia/portal/uploadImage', function(Request $request){
@@ -2143,15 +2143,13 @@ Route::middleware([ValidateSession::class])->group(function(){
                     if($token == 'error' || $token == 'expired'){
                         LoginController::logout();
                     }
+
                    $fecha = $request->fecha;
                    //dd($fecha);
                    $data = ComisionesController::getConsultaComisionesResumenRH($token,$fecha);
 
                     return $data;
-
                 });
-
-
                 //Get primera informacion detalle
                 Route::get('/comisiones/getInfoCobranzaZonaWeb', function (Request $request){
                     $token = TokenController::getToken();
@@ -2222,11 +2220,9 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                    $data=ComisionesController::postParametroCtesZona($token,$referencia,$parametroCte);
 
-
                     return $data;
 
                 });
-
 
                 Route::get('/comisiones/getDetalle', function (Request $request){
                     $token = TokenController::getToken();
@@ -2831,7 +2827,7 @@ Route::middleware([ValidateSession::class])->group(function(){
 
                     $permissions = LoginController::getPermissions($token);
 
-                    
+
                     return view('intranet.logistica.distribucion.autorizarGastosFleteras',compact('token','permissions','username','userRol'));
                 })->name('logistica.distribucion.autorizarGastosFleteras');
                 Route::get('/logistica/distribucion/autorizarGastosFleteras/Folios', function(){
@@ -2857,7 +2853,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $response = LogisticaController::cancelFolio($token, json_encode($request->all()));
                     return $response;
-                    
+
                 });
                 Route::put('/logistica/distribucion/autorizarGastosFleteras/authorizeFolio', function(Request $request){
                     $token = TokenController::getToken();

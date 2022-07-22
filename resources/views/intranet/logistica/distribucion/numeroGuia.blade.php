@@ -1,6 +1,6 @@
 @extends('layouts.intranet.main',['active' => 'Logistica'])
 
-@section('title') Indar @endsection
+@section('title') Indar | Distribución @endsection
 
 @section('styles')
 @endsection

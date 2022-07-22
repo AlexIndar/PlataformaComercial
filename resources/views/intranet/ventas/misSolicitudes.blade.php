@@ -994,10 +994,20 @@
                             <div class="col-md-2" id="estadoFEButtons">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="colEdit1">
                             <div class="col-md-4">Colonia</div>
-                            <div class="col-md-6" id="col1E"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled class="form-control" onfocusout="changeFlag(3)"></div>
+                            <div class="col-md-6"><input type="text" name="coloniaFEdit" id="coloniaFEdit" disabled class="form-control" onfocusout="changeFlag(3)"></div>
                             <div class="col-md-2" id="coloniaFEButtons">
+                            </div>
+                        </div>
+                        <div class="row mb-3" id="colEdit2">
+                            <div class="col-md-4">Colonia</div>
+                            <div class="col-md-6">
+                                <select id="coloniaSelectF" name="coloniaSelectF" class="form-control selectpicker" data-live-search="true"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary btn-circle" onclick="getColEdit(true)"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>
                             </div>
                         </div>
                         <div class="row mb-3">

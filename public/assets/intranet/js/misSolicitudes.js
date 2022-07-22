@@ -299,10 +299,10 @@ $(document).ready(function () {
                 $('#giroEdit').val(businessLines[x]['id']);
                 $('#giroEdit').selectpicker("refresh");
             }
-        
+
             $('#inputGroupSelect01').val('-1');
             $('#inputGroupSelect01').selectpicker("refresh");
-            
+
             $('#giroEdit').val('-1');
             $('#giroEdit').selectpicker("refresh");
 
@@ -367,6 +367,16 @@ $(document).ready(function () {
     });
 
     $('#giroEdit').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        var selected = clickedIndex + 1;
+        if (businessLines.length < selected) {
+            tipoNegocio = -1;
+        } else {
+            tipoNegocio = businessLines[clickedIndex]['id'];
+            flagCliente = true;
+        }
+    });
+
+    $('#coloniaSelectF').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex + 1;
         if (businessLines.length < selected) {
             tipoNegocio = -1;
@@ -1832,6 +1842,64 @@ const editList = () => {
     document.getElementById('giroEdit1').classList.add('d-none');
 }
 
+const getColEdit = (item) => {
+    numbers = /^[0-9]+$/;
+    let cp = document.getElementById("cpFEdit").value;
+    changeFlag(3);
+    let id = item ? "#coloniaSelectF" : "#coloniaSelectE";
+    let itemSelectorOption = $(id + ' option');
+    itemSelectorOption.remove();
+    if (cp.match(numbers) && cp.length > 3) {
+        let data = { cp: cp };
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "/MisSolicitudes/getCPData",
+            'type': 'GET',
+            'dataType': 'json',
+            'data': data,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function (data) {
+                console.log(data);
+                if (item) {
+                    document.getElementById('colEdit2').classList.remove('d-none');
+                    document.getElementById('colEdit1').classList.add('d-none');
+                    auxColoniasF = data['suburbs'];
+                } else {
+                    console.log("funciona");
+                    document.getElementById('colEditE2').classList.remove('d-none');
+                    document.getElementById('colEditE1').classList.add('d-none');
+                }
+
+                if (data['suburbs'] != undefined) {
+                    for (var x = 0; x < data['suburbs'].length; x++) { //Agregar todas las colonias del CP ingresado
+                        $(id).append('<option value="' + x + '">' + data['suburbs'][x].toUpperCase() + '</option>');
+                        $(id).val(x);
+                        $(id).selectpicker("refresh");
+                    }
+                }
+                else {                    
+                    $(id).val(-1);
+                    $(id).selectpicker("refresh");
+                }
+
+            },
+            error: function (error) {
+                console.log(error);
+                $(id).val(-1);
+                $(id).selectpicker("refresh");
+                alert("No se encontraron resultados");
+            }
+        });
+    } else {
+        $(id).val(-1);
+        $(id).selectpicker("refresh");
+        $('#cpFEdit').addClass("warningText");
+    }
+}
+
 function editText(item) {
     document.getElementById(item).disabled = false;
 }
@@ -1850,6 +1918,18 @@ function getButtons(dato, id) {
 
 const getButtonsGiro = (dato) => {
     let buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="editList()"><i class="fas fa-edit"></i></button>` : ``;
+    if (dato == null) {
+        buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
+    } else if (dato == true) {
+        buttons += `<button class="btn btn-success btn-circle float-right"><i class="fas fa-check"></i></button>`;
+    } else {
+        buttons += `<button class="btn btn-danger btn-circle float-right"><i class="fas fa-times"></i></button>`;
+    }
+    return buttons;
+}
+
+const getButtonsColonia = (dato, tipo) => {
+    let buttons = dato == false ? `<button class="btn btn-primary btn-circle" onclick="getColEdit(${tipo})"><i class="fas fa-edit"></i></button>` : ``;
     if (dato == null) {
         buttons += `<button class="btn btn-secondary btn-circle float-right"><i class="fas fa-minus"></i></button>`;
     } else if (dato == true) {
@@ -1942,7 +2022,10 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
         document.getElementById("estadoFEButtons").innerHTML = getButtons(data2.estado, "estadoFEdit");
 
         document.getElementById("coloniaFEdit").value = data.cliente.datosF.domicilio.colonia;
-        document.getElementById("coloniaFEButtons").innerHTML = getButtons(data2.colonia, "coloniaFEdit");
+        document.getElementById("coloniaFEButtons").innerHTML = getButtonsColonia(data2.colonia, true);
+        $('#giroEdit').val(data.cliente.tipoNegocio);
+        $('#giroEdit').selectpicker("refresh");
+
 
         document.getElementById("cpFEdit").value = data.cliente.datosF.domicilio.cp;
         document.getElementById("cpFEButtons").innerHTML = getButtons(data2.cp, "cpFEdit");
@@ -2226,34 +2309,34 @@ function saveEdit() {
             let folioSend = parseInt(document.getElementById("folioInf").innerHTML);
             console.log(jsonEdit);
             console.log(JSON.stringify(jsonEdit));
-            $('#cargaModal').modal('show');
-            $.ajax({
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                'url': "MisSolicitudes/Update",
-                'type': 'POST',
-                'dataType': 'json',
-                'data': jsonEdit,
-                'enctype': 'multipart/form-data',
-                'timeout': 2 * 60 * 60 * 1000,
-                success: function (data) {
-                    if (Number.isInteger(data)) {
-                        $('#cargaModal').modal('hide');
-                        $('#infoModal').modal('hide');
-                        detalleSol(folioSend);
-                    } else {
-                        console.log(data);
-                        alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-                        $('#cargaModal').modal('hide');
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-                    $('#cargaModal').modal('hide');
-                }
-            });
+            // $('#cargaModal').modal('show');
+            // $.ajax({
+            //     'headers': {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     },
+            //     'url': "MisSolicitudes/Update",
+            //     'type': 'POST',
+            //     'dataType': 'json',
+            //     'data': jsonEdit,
+            //     'enctype': 'multipart/form-data',
+            //     'timeout': 2 * 60 * 60 * 1000,
+            //     success: function (data) {
+            //         if (Number.isInteger(data)) {
+            //             $('#cargaModal').modal('hide');
+            //             $('#infoModal').modal('hide');
+            //             detalleSol(folioSend);
+            //         } else {
+            //             console.log(data);
+            //             alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+            //             $('#cargaModal').modal('hide');
+            //         }
+            //     },
+            //     error: function (error) {
+            //         console.log(error);
+            //         alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+            //         $('#cargaModal').modal('hide');
+            //     }
+            // });
 
         } else {
             alert("Verifica todos los datos de la solicitud");
@@ -2283,12 +2366,14 @@ const changeFlag = (item) => {
 }
 
 const getJsonEdit = () => {
-    // let typeL = null;
-    // let typeP = null;
-    // if (document.getElementById("typeLEdit").value != "")
-    //     typeL = document.getElementById("typeLEdit").value == "Propio" ? true : false;
-    // if (document.getElementById("typePEdit").value != "")
-    //     typeP = document.getElementById("typePEdit").value == "Moral" ? true : false;
+    let coloniaF = "";
+    let indiceCol = document.getElementById("coloniaSelectF").value;
+    if(indiceCol != ""){
+        let colSelect = document.getElementById("coloniaSelectF")[indiceCol].innerHTML.toUpperCase();
+        coloniaF = document.getElementById("coloniaFEdit").value.toUpperCase() != colSelect ? colSelect : document.getElementById("coloniaFEdit").value.toUpperCase();
+    }else{
+        coloniaF =  document.getElementById("coloniaFEdit").value.toUpperCase();
+    }
 
     let jsonEdit = {
         Folio: parseInt(document.getElementById("folioInf").innerHTML),
@@ -2309,7 +2394,7 @@ const getJsonEdit = () => {
         DomF: {
             Calle: document.getElementById("calleFEdit").value.toUpperCase(),
             NoInt: document.getElementById("noIntFEdit").value == "" ? null : document.getElementById("noIntFEdit").value.toUpperCase(),
-            Colonia: document.getElementById("coloniaFEdit").value.toUpperCase(),
+            Colonia: coloniaF,
             Ciudad: document.getElementById("cityFEdit").value.toUpperCase(),
             Estado: document.getElementById("estadoFEdit").value.toUpperCase(),
             CP: document.getElementById("cpFEdit").value.toUpperCase(),
@@ -2884,6 +2969,8 @@ const cleanInfoSol = () => {
     document.getElementById("estadoFEdit").disabled = true;
     document.getElementById("coloniaFEdit").disabled = true;
     document.getElementById("cpFEdit").disabled = true;
+    document.getElementById('colEdit2').classList.add('d-none');
+    document.getElementById('colEdit1').classList.remove('d-none');
     //Direccion de entrega
     document.getElementById("calleEEdit").disabled = true;
     document.getElementById("noEEdit").disabled = true;
@@ -2896,6 +2983,7 @@ const cleanInfoSol = () => {
     document.getElementById("metPagoEdit").disabled = true;
     document.getElementById('giroEdit2').classList.add('d-none');
     document.getElementById('giroEdit1').classList.remove('d-none');
+
 
     document.getElementById("antiguedadEdit").disabled = true;
     document.getElementById("typeLEdit").disabled = true;
@@ -3484,3 +3572,4 @@ const validaCPEdit = () => {
 const editarContactos = () => {
     $('#contactosEdit').modal('show');
 }
+
