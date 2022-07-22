@@ -19,8 +19,6 @@ html{
     z-index: 1000;
 }
 
-
-
 .login-options h5{
     font-size: 14px;
     margin-left: 10px;
@@ -405,7 +403,7 @@ button:focus {
 }
 
 .carousel-item img{
-    max-width: 100%;
+    width: 100%;
     height: auto;
     background-position: center center;
 	background-size: cover;

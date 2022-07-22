@@ -29,7 +29,6 @@
 
 
          <div class="content">
-             <input type="text" id="entity" value="{{ $entity }}" hidden>
              <input type="text" id="idCotizacion" value="X" hidden>
              <!---------------------------------------------------------------------------------------------------- ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
              <div class="header">
@@ -92,9 +91,8 @@
                              </div>
                              <div class="col-lg-10 col-md-10 col-12 rowPedido">
                                  <div class="skeleton-input"></div>
-                                 <select id="sucursal" name="sucursal" class="form-control selectpicker d-none"
-                                     data-live-search="true">
-                                     <option selected value="none">Selecciona una sucursal</option>
+                                 <select id="sucursal" name="sucursal" class="form-control selectpicker d-none" data-live-search="true">
+                                        <option selected value="none">Selecciona una sucursal</option>
                                  </select>
                              </div>
                          </div>
@@ -105,15 +103,9 @@
                                  <h5 class="d-none" id="envioLabel">Form. Envío</h5>
                              </div>
                              <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                 @if (count($data) == 1)
-                                     <input type="text" class="inputPedido" id="envio" name="envio"
-                                         value="{{ $data[0]['shippingWayF'] }}" disabled>
-                                 @else
-                                     <div class="skeleton-input"></div>
-                                     <input type="text" class="inputPedido d-none" id="envio" name="envio" value=""
-                                         disabled>
-                                 @endif
-                                 <div id="containerSelectEnvio" class="d-none">
+                                <div class="skeleton-input"></div>
+                                <input type="text" class="inputPedido d-none" id="envio" name="envio" value="" disabled>
+                                <div id="containerSelectEnvio" class="d-none">
                                      <select id="selectEnvio" name="selectEnvio" class="form-control selectpicker"
                                          data-live-search="true">
                                          @if (count($data) == 1)
@@ -198,7 +190,7 @@
 
              <div id="loading" class="d-flex flex-row justify-content-center align-items-center"
                  style="width: 100%; height: 100px; background-color: var(--indar-primary); color: var(--text-primary);">
-                 <h5 id="loading-message">Cargando inventario ...</h5>
+                 <h5 id="loading-message">Cargando información ...</h5>
              </div>
 
 
@@ -315,7 +307,7 @@
                          <input type="file" name="excelCodes" id="excelCodes" accept=".csv, .xls, .xlsx" hidden>
                          <button type="button" id="guardarCotizacion" class="btn btn-group-buttons" onclick="save(1)"><i class="fas fa-save"></i> Guardar</button>
                          <button type="button" id="separarPedido" class="btn btn-group-buttons" onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
-                         <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinner"></div>
+                         <div class="spinner-border text-secondary" style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;" id="btnSpinnerPedido"></div>
                      </div>
                      <br><br>
                      <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">

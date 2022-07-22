@@ -50,7 +50,9 @@ $('document').ready(function () {
         }
         document.cookie = '_mkt =; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
+
     $("body").addClass("sidebar-collapse");
+
     (() => { enableDragSort('drag-sort-enable') })();
 
     $("#image-edit-file").on("change", () => {
@@ -109,7 +111,7 @@ $('document').ready(function () {
         }
     });
 
-    $('#modalEditElement').on('hidden.bs.modal', function () {
+    $('#modalEditElement').on('hidden.bs.modal', function () { //Al cerrar la modal de editar
         let editing = document.querySelectorAll('.editing');
         [].forEach.call(editing, function (el) {
             el.classList.remove("editing");
@@ -117,11 +119,11 @@ $('document').ready(function () {
         clearModalEditAction();
     });
 
-    $('#modalAddElement').on('hidden.bs.modal', function () {
+    $('#modalAddElement').on('hidden.bs.modal', function () { //Al cerrar la modal de agregar
         clearModalAddAction();
     });
 
-    $(".chosen").chosen({
+    $(".chosen").chosen({ //inicializar select múltiples
         no_results_text: "Sin resultados para",
         placeholder_text_single: "Buscar",
         placeholder_text_multiple: "Seleccione una o más opciones",
@@ -226,7 +228,6 @@ $('document').ready(function () {
         reader.readAsBinaryString(input.files[0]);
     });
 
-
     getImagesOnServer();
     loadFilterData();
 
@@ -290,7 +291,7 @@ function preview() {
     });
 }
 
-function getActionsInNewOrder() {
+function getActionsInNewOrder() { //obtener arreglo de acciones en el orden en el que estén en el dom
     actionsNewOrder = [];
     let imagesOnServer = document.querySelectorAll('.imageOnServer'); //obtener las imágenes que ya están en el servidor
     imagesOnServer.forEach((image) => {
@@ -303,7 +304,7 @@ function getActionsInNewOrder() {
     return actionsNewOrder;
 }
 
-function deleteRow(row) {
+function deleteRow(row) { //eliminar banner, quitarlo del dom y del array de acciones
     event.stopPropagation();
     let idImage = row.parentNode.children[0].id;
 
@@ -333,10 +334,10 @@ function deleteRow(row) {
     });
 }
 
-function activeModal(id, section, row = null) {
+function activeModal(id, section, row = null) { //abrir modal, puede abrir modal agregar y editar
     document.getElementById('sectionElement').setAttribute('value', section);
     $('#' + id).modal('show');
-    if (row != null) { //modal editar 
+    if (row != null) { //Si la modal es editar, pre cargar la información de la acción
         let src = row.children[0].src;
         let id = row.children[0].id;
         row.children[0].classList.add('editing');
@@ -421,7 +422,7 @@ function closeModal(id) {
 }
 
 
-function addNewAction() {
+function addNewAction() { //Agregar nueva acción, guardar imagen en /mercadotecnia/Temp
     let section = document.getElementById('sectionElement').getAttribute('value');
     let file_data = $("#image-add-file").prop("files")[0];
     var form_data = new FormData();
@@ -446,7 +447,7 @@ function addNewAction() {
 
 }
 
-function addRow(filename, section) {
+function addRow(filename, section) { //Agregar acción al array y al dom
     let container = document.getElementById('ul-' + section);
     let li = document.createElement('li');
     li.setAttribute('class', 'drag-sort-item divImg');
@@ -541,13 +542,12 @@ function addRow(filename, section) {
         }
     };
 
-
     actions.push(tmp);
 
     closeModal('modalAddElement');
 }
 
-function getImagesOnServer() {
+function getImagesOnServer() { //Obtener acciones del back (PortalMKT/GetPortalMKT)
     $.ajax({
         type: "GET",
         enctype: 'multipart/form-data',
@@ -605,7 +605,7 @@ function updateAction() {
     let action = actions.find((e) => {
         return e.portalMkt_.rutaImg.includes(row.id);
     });
-    if (file_data != undefined) { //cambiar la imagen
+    if (file_data != undefined) { //Si cargó una nueva imagen
         var form_data = new FormData();
         let src = row.src;
         let filenameDelete = src.split('/').pop();
@@ -620,9 +620,9 @@ function updateAction() {
             cache: false,
             contentType: false,
             processData: false,
-            data: form_data,       // Setting the data attribute of ajax with file_data                  
+            data: form_data,                 
             type: 'post',
-            success: function (result) {
+            success: function (result) { //Mostrar la nueva imagen cargada en el dom y actualizar acción en el array
                 row.src = "../../../../assets/mercadotecnia/Temp/" + section + "/" + result.split('/')[1];
                 row.id = section + "/" + result.split('/')[1];
                 action.portalMkt_.rutaImg = "assets/mercadotecnia/Temp/" + section + "/" + result.split('/')[1];
@@ -630,7 +630,6 @@ function updateAction() {
             },
         });
     }
-
 
     let link = "";
     let actionSelected = $("#select-edit-action").val();
@@ -713,7 +712,6 @@ function saveChanges() {
     document.getElementById("btnSpinner").style.display = "block";
     document.getElementById("btn-save-changes").style.display = "none !important";
     let actionsNewOrder = getActionsInNewOrder();
-    console.log(actionsNewOrder);
     $.ajax({
         'headers': {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -735,7 +733,7 @@ function saveChanges() {
     });
 }
 
-function getCookie(name) { //saber si una cookie existe 
+function getCookie(name) { //Saber si una cookie existe 
     var dc = document.cookie;
     var prefix = name + "=";
     var begin = dc.indexOf("; " + prefix);
@@ -763,7 +761,7 @@ function clearSelection(id) {
     $('#' + id + "File").val('');
 }
 
-function triggerInputFile(input) {
+function triggerInputFile(input) { //Abrir ventana para seleccionar un documento
     document.getElementById(input + 'File').click();
 }
 

@@ -4,26 +4,27 @@ var coincidenciasProveedor = 0;
 var coincidenciasMarca = 0;
 var timeoutBuscador;
 var intervalActive = false;
-var intervalBuscador = 1000;
+var intervalBuscador = 1000; //buscar cada segundo, no cada tecla presionada
 var sugerencias;
 
-var lastType = ''; //datetime de ultima tecla presionada. Si pasó más de 4 segundos desactivar refresh
-var timeToDisable = 2000; /* tiempo en ms para desactivar el refresh de buscador, después de haber presionado la última tecla */
+var lastType = ''; //datetime de ultima tecla presionada
+var timeToDisable = 1000; // desactivar búsqueda si pasan 2 segundos sin presionar tecla
 
 $(document).ready(function () {
 
-    $(window).click(function() {
+    $(window).click(function () {
         closeSugerencias();
-      });
-      
-      $('#resultado-busqueda').click(function(event){
-        event.stopPropagation();
-      });
+    });
 
-      $('#input-busqueda').click(function(event){
+    $('#resultado-busqueda').click(function (event) {
         event.stopPropagation();
-      });
+    });
 
+    $('#input-busqueda').click(function (event) {
+        event.stopPropagation();
+    });
+
+    // Si el usuario está loggueado, activar buscador
     document.cookie.indexOf('_usn') >= 0 ? document.getElementById('buscador').removeAttribute('disabled') : document.getElementById('buscador').setAttribute('disabled');
 
     $("#buscador").keyup(function (e) {
@@ -38,9 +39,9 @@ $(document).ready(function () {
             buscarFiltro("");
         }
         else {
-            cadena != '' && !intervalActive ? activaBuscador() : console.log('vacio');
+            (cadena != '' && !intervalActive) && activaBuscador();
         }
-        cadena == '' && intervalActive ? desactivaBuscador() : console.log('buscando');
+        (cadena == '' && intervalActive) && desactivaBuscador();
 
         if (cadena == '') {
             closeSugerencias();
@@ -49,12 +50,14 @@ $(document).ready(function () {
 
     $("#buscador").focusin(function () {
         var cadena = document.getElementById('buscador').value;
-        cadena != '' && !intervalActive ? activaBuscador() : console.log('vacio');
+        (cadena != '' && !intervalActive) && activaBuscador();
     });
 
 });
 
 function activaBuscador() {
+    document.getElementById('btnBuscar').style.display = "none";
+    document.getElementById('btnSpinner').style.display = "block";
     if (document.getElementById('bigImage-large')) {
         document.getElementById('bigImage-large').classList.add('hide-important');
     }
@@ -74,7 +77,20 @@ function buscar() {
     if ((new Date()) - lastType < timeToDisable) {
         var data = "";
         data = getFilterString();
-        console.log('Buscar ' + data);
+        busquedaGeneralItem(data)
+            .then((resp) => {
+                if (resp.length > 0) { sugerencias = resp }
+                recargaSugerencias(sugerencias); //cargar sugerencias con respuesta del back
+            })
+            .catch(console.warn);
+    }
+    else {
+        desactivaBuscador();
+    }
+}
+
+const busquedaGeneralItem = (data) => {
+    return new Promise((resolve, reject) => {
         $.ajax({
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -83,24 +99,16 @@ function buscar() {
             'data': { "data": data },
             'type': 'POST',
             'enctype': 'multipart/form-data',
-            'async': false,
-            'timeout': 2 * 60 * 60 * 1000,
+            'async': true,
             success: function (data) {
-                if (data.length > 0) {
-                    sugerencias = data;
-                }
-                console.log(sugerencias);
-                recargaSugerencias(sugerencias); //cargar sugerencias con respuesta del back
+                resolve(data);
             },
             error: function (error) {
+                reject(error);
             }
         });
-    }
-    else {
-        desactivaBuscador();
-    }
+    });
 }
-
 
 function addSugerenciaArticulo(sugerencia) {
     var descripcion = sugerencia['purchasedescription'] + " ";
@@ -184,8 +192,6 @@ function addSugerenciasProveedor(proveedores) {
         container.appendChild(lineSugerencia);
         x++;
     }
-
-    console.log(container);
 }
 
 
@@ -259,8 +265,8 @@ function clearSugerencias() {
 }
 
 function closeSugerencias() {
-    $(".resultadoBusqueda").slideUp('100');
-    $(".overlayBusqueda").fadeOut('100');
+    $(".resultadoBusqueda").slideUp();
+    $(".overlayBusqueda").fadeOut();
     if (document.getElementById('bigImage-large')) {
         document.getElementById('bigImage-large').classList.remove('hide-important');
     }
@@ -295,7 +301,7 @@ function recargaSugerencias(data) {
                 y++;
             }
         }
-        else{
+        else {
             add = false;
         }
         //si add es false es porque algo no coincidió, no va a agregarlo como sugerencia
@@ -334,17 +340,16 @@ function recargaSugerencias(data) {
         x++;
     }
     addSugerenciasProveedor(proveedores);
-    console.log(proveedores);
     coincidenciasProveedor = proveedores.length;
-
-
     document.getElementById('cantidadRecomendacionesArticulo').innerText = coincidenciasArticulo + " coincidencias";
     document.getElementById('cantidadRecomendacionesProveedor').innerText = coincidenciasProveedor + " coincidencias";
     document.getElementById('cantidadRecomendacionesMarca').innerText = coincidenciasMarca + " coincidencias";
     highlight(cadena);
+    document.getElementById('btnBuscar').style.display = "block";
+    document.getElementById('btnSpinner').style.display = "none";
 }
 
-function getFilterString() {
+const getFilterString = () => {
     var cadena = document.getElementById('buscador').value;
     var arrCadena = cadena.split(' ');
     var data = '';
@@ -352,12 +357,11 @@ function getFilterString() {
         if (arrCadena[x] != '' && arrCadena[x].toUpperCase() != 'X' && !arrCadena[x].includes('"') && !arrCadena[x].includes('/')) {
             data = data + arrCadena[x].replaceAll('"', '') + ' ~ ';
         }
-        if (arrCadena[x].includes('/')) {
+        if (arrCadena[x].includes('/') || arrCadena[x].includes('"') || arrCadena[x].toUpperCase == 'X') {
             recargaSugerencias(sugerencias);
         }
     }
-    data = data.slice(0, -3);
-    return data;
+    return data.slice(0, -3);
 }
 
 function buscarFiltro(filtro) {

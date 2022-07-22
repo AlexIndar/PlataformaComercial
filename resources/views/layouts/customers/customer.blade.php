@@ -183,14 +183,16 @@
     <div class="brand-logo">
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12 row-logo">
-                <img onclick="navigate('/', false)" class="logo appear-500"
-                    src="{{ asset('assets/customers/img/png/indar.png') }}" alt="Login image" width="150">
+                <img onclick="navigate('/', false)" class="logo appear-500" src="{{ asset('assets/customers/img/png/indar.png') }}" alt="Login image" width="150">
             </div>
-            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="input-group mb-3 mt-3 group-buscador" id="input-busqueda">
+            <div class="offset-lg-0 col-lg-6 offset-md-1 col-md-10 offset-sm-1 col-sm-10 offset-xs-1 col-xs-10 col-10 offset-1 p-0">
+                <div class="mb-3 mt-3 d-flex justify-space-between flex-row w-100">
                     <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2" disabled>
                     <div class="input-group-append">
-                        <button class="btn btn-indar" onclick='buscarFiltro("")' type="button"><i class="fas fa-search fa-lg"></i></button>
+                        <button class="btn btn-indar" onclick='buscarFiltro("")' type="button">
+                            <i id="btnBuscar" class="fas fa-search fa-lg"></i>
+                            <div class="spinner-border" style="display:none; width: 20px; height: 20px;" id="btnSpinner"></div>
+                        </button>
                     </div>
                 </div>
                 <div class="resultadoBusqueda" id="resultado-busqueda">

@@ -26,10 +26,7 @@
         </div>
         <br><br>
 
-
         <div class="content">
-            <input type="text" id="entity" value="{{ $entity }}" hidden>
-            <input type="text" id="idCotizacion" value="{{ $cotizacion->idCotizacion }}" hidden>
             <!---------------------------------------------------------------------------------------------------- ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
             <div class="header">
                 <div class="row  text-start">
@@ -105,13 +102,8 @@
                                 <h5 class="d-none" id="envioLabel">Form. Envío</h5>
                             </div>
                             <div class="col-lg-10 col-md-10 col-12 rowPedido">
-                                @if (count($data) == 1)
-                                    <input type="text" class="inputPedido" id="envio" name="envio"
-                                        value="{{ $data[0]['shippingWayF'] }}" disabled>
-                                @else
-                                    <div class="skeleton-input"></div>
-                                    <input type="text" class="inputPedido d-none" id="envio" name="envio" value="" disabled>
-                                @endif
+                                <div class="skeleton-input"></div>
+                                <input type="text" class="inputPedido d-none" id="envio" name="envio" value="" disabled>
                                 <div id="containerSelectEnvio" class="d-none">
                                     <select id="selectEnvio" name="selectEnvio" class="form-control selectpicker"
                                         data-live-search="true">
@@ -321,7 +313,7 @@
                         onclick="separarPedidosPromo(null,true)"><i class="fas fa-layer-group"></i> Separar Pedido</button>
                     <div class="spinner-border text-secondary"
                         style="display:none; margin-left: 15px; width: 25px; height: 25px; margin-top: 2px;"
-                        id="btnSpinner"></div>
+                        id="btnSpinnerPedido"></div>
                 </div>
                 <br><br>
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">

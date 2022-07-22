@@ -37,7 +37,7 @@
                         <div class="col-lg-10 col-md-12 col-sm-12 col-12 img-magnifier-container" id="img-magnifier-container">
                             <div>
                                 <div class="numberSelectedControl">
-                                    <h5><span class="numberSelected" id="numberSelected">1 </span>/<span class="totalImages"> 9</span></h5>
+                                    <h5><span class="numberSelected" id="numberSelected">1 </span>/<span class="totalImages"> 8</span></h5>
                                 </div>
                                 <div class="control leftControl" onclick="slide(-1)">
                                     <h5><i class="fas fa-angle-left"></i></h5>

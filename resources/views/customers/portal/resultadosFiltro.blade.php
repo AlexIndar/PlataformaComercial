@@ -6,19 +6,10 @@
 @section('assets')
 <link rel="stylesheet" href="{{asset('assets/customers/css/styles.css')}}">
 <link rel="stylesheet" href="{{asset('assets/customers/css/portal/resultadosFiltro.css')}}">
-<!-- Theme style -->
-<link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 <script src="{{asset('assets/customers/js/portal/resultadosFiltro.js')}}"></script>
- <!-- AdminLTE App -->
- <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 @endsection
 
 @section('body')
-
- <!-- Preloader -->
- <div class="preloader flex-column justify-content-center align-items-center">
-    <img loading="lazy" class="logo" id="logo" src="{{ asset('assets/customers/img/png/indar.png') }}" alt="Login image" width="250">
-</div>
 
 <div class="headerFiltros  background-light-gray">
     <div class="row">

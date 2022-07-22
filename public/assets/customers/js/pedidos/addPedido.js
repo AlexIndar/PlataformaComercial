@@ -1,52 +1,52 @@
-var info = []; //result getInfoHeatWeb
-var addresses = []; //Sucursales del cliente seleccionado
-var shippingWays = [];
-var shippingWaysList = [];
-var packageDeliveries = [];
-var items = []; //result inventario getItems/All
-var pendingSaleOrders = []; //result PedidosPendientesCTE
-var promocionesCliente = []; //result getEventosCliente para cargar codigos de promociones activas para el cliente
-var checkPromocionesCliente = true;
-var jsonItemsSeparar = "";
-var ignorarRegalos = [];
-var noCotizacionNS = 0;
-var ofertasVolumen = "";
+let info = []; //resultado getInfoHeatWeb (información de encabezado del pedido)
+let addresses = []; //Direcciones de las sucursales del cliente
+let shippingWays = []; //Formas de envío del cliente
+let shippingWaysList = []; //resultado FormaEnvioFletera (relación predeterminada de formas de envío y fleteras)
+let packageDeliveries = [];
+let items = []; //result inventario getItems/All
+let pendingSaleOrders = []; //result PedidosPendientesCTE
+let promocionesCliente = []; //result getEventosCliente para cargar codigos de promociones activas para el cliente
+let checkPromocionesCliente = true;
+let jsonItemsSeparar = "";
+let ignorarRegalos = [];
+let noCotizacionNS = 0;
+let ofertasVolumen = "";
 
-var indexFocus = []; //guardar el index de las filas editadas para que parpadeen después de crear nuevamente la tabla
-var intervalVar; //variable para asignar intervalo y hacer clear al intervalo después de x segundos+
-var itemToFocus; //saber qué artículo debe resaltarse después de crear nuevamente la tabla
+let indexFocus = []; //guardar el index de las filas editadas para que parpadeen después de crear nuevamente la tabla
+let intervalVar; //variable para asignar intervalo y hacer clear al intervalo después de x segundos+
+let itemToFocus; //saber qué artículo debe resaltarse después de crear nuevamente la tabla
 
-var selectedItemsFromInventory = [];
-var cantItemsPorCargar = 0;
-var cantItemsCargados = 0;
+let selectedItemsFromInventory = [];
+let cantItemsPorCargar = 0;
+let cantItemsCargados = 0;
 
-var pedido = [];
-var pedidoSeparado = []; //result separaPedidosPromo
-var tranIds = []; //arreglo con transids que retorna netsuite para indicarlos en correo
-var dataset = []; //arreglo cargado en datatable de inventario 
-var currentDataset = []; //variable para guardar actual dataset de inventario cuando filtran existencias
+let pedido = [];
+let pedidoSeparado = []; //result separaPedidosPromo
+let tranIds = []; //arreglo con transids que retorna netsuite para indicarlos en correo
+let dataset = []; //arreglo cargado en datatable de inventario 
+let currentDataset = []; //variable para guardar actual dataset de inventario cuando filtran existencias
 
 
-var tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
+let tipoDesc; //variable para cuando se aplique desneg o desgar identificar cuál de los dos es
 
 // VARIABLES GLOBALES PARA CAMBIAR DE FLETERA Y FORMA DE ENVÍO CUANDO CAMBIA CLIENTE O SUCURSAL
-var indexCustomer = 0;
-var indexAddress = 0;
-var priceList = ''; //guardar lista de precio para no refrescar el invenrario al cambiar cliente, si la lista es la misma al cliente anterior
-var lastRefreshInventory = ''; //datetime de ultimo refresh de inventario. Si pasó más de 1 hora refrescar aunque la lista sea la misma. 
-var oneHour = 60 * 60 * 1000; /* ms */
+let indexCustomer = 0;
+let indexAddress = 0;
+let priceList = ''; //guardar lista de precio para no refrescar el invenrario al cambiar cliente, si la lista es la misma al cliente anterior
+let lastRefreshInventory = ''; //datetime de ultimo refresh de inventario. Si pasó más de 1 hora refrescar aunque la lista sea la misma. 
+let oneHour = 60 * 60 * 1000; /* ms */
 
 // VARIABLE PARA DETECTAR CUANDO EL INVENTARIO ESTÁ CARGADO
-var intervalInventario;
+let intervalInventario;
 // CODIGO DE CLIENTE
-var entity;
-var entityCte;
+let entity;
+let entityCte;
 
 //TIPO PEDIDO. 1 = PEDIDO CREADO POR CLIENTE;  0 = PEDIDO CREADO POR VENDEDOR
-var tipoPedido = 0;
+let tipoPedido = 0;
 //TIPO GET ITEM BY ID. 0 = CON AJAX, EJECUTAR REQUEST DE API GETITEMBYID; 1 = DEL INVENTARIO, SIRVE PARA CARGAR PEDIDOS CREADOS POR CLIENTES Y CUANDO SON MUY LARGOS (MUCHAS PARTIDAS) NO DE PROBLEMAS PARA CARGARLOS
-var tipoGetItemById = 0;
-var pedidoCargadoCte = 0;
+let tipoGetItemById = 0;
+let pedidoCargadoCte = 0;
 
 $(document).ready(function () {
 
@@ -58,7 +58,7 @@ $(document).ready(function () {
 
     //Inicia Ajax
     $(document).ajaxStart(function () {
-        document.getElementById("btnSpinner").style.display = "block";
+        document.getElementById("btnSpinnerPedido").style.display = "block";
         var btnActions = document.getElementsByClassName('btn-group-buttons');
         for (var x = 0; x < btnActions.length; x++) {
             btnActions[x].disabled = true;
@@ -67,7 +67,7 @@ $(document).ready(function () {
 
     //Func Termina Ajax
     $(document).ajaxStop(function () {
-        document.getElementById("btnSpinner").style.display = "none";
+        document.getElementById("btnSpinnerPedido").style.display = "none";
         var btnActions = document.getElementsByClassName('btn-group-buttons');
         for (var x = 0; x < btnActions.length; x++) {
             btnActions[x].disabled = false;
@@ -76,12 +76,7 @@ $(document).ready(function () {
 
     entity = document.getElementById('entity').value;
     entity = entity.toUpperCase();
-    if (entity.startsWith("C") || entity.startsWith("E")) { //si es codigo de cliente o empleado
-        getEventosCliente(entity);
-        intervalInventario = window.setInterval(checkItems, 1000);
-        getItems(entity, true);
-    }
-    else { //si es zona o all (vendedor o apoyo)
+    if (!entity.startsWith("C") && !entity.startsWith("E")) { //Si tiene lista de clientes
         document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
     }
 
@@ -99,126 +94,15 @@ $(document).ready(function () {
         reader.readAsBinaryString(input.files[0]);
     });
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $.ajax({
-        type: "GET",
-        enctype: 'multipart/form-data',
-        url: "nuevo/getInfoHeatWeb/" + entity,
-        data: FormData,
-        'async': false,
-        headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-        success: function (data) {
-            info = data;
-            var skeleton = document.getElementsByClassName('skeleton-input');
-            for (var x = 0; x < skeleton.length; x++) {
-                skeleton[x].classList.add('d-none');
-            }
-
-            var dropdown = document.getElementsByClassName('dropdown');
-            for (var x = 0; x < dropdown.length; x++) {
-                dropdown[x].classList.remove('d-none');
-            }
-
-            document.getElementById('cliente_recogeSkeleton').classList.add('d-none');
-            document.getElementById('cliente_recogeLabel').classList.remove('d-none');
-            document.getElementById('separar2000Label').classList.remove('d-none');
-            document.getElementById('customerID').classList.remove('d-none');
-            document.getElementById('customerIDLabel').classList.remove('d-none');
-            document.getElementById('ordenCompra').classList.remove('d-none');
-            document.getElementById('ordenCompraLabel').classList.remove('d-none');
-            document.getElementById('correo').classList.remove('d-none');
-            document.getElementById('correoLabel').classList.remove('d-none');
-            document.getElementById('sucursal').classList.remove('d-none');
-            document.getElementById('sucursalLabel').classList.remove('d-none');
-            document.getElementById('containerSelectEnvio').classList.remove('d-none');
-            document.getElementById('envioLabel').classList.remove('d-none');
-            document.getElementById('fletera').classList.remove('d-none');
-            document.getElementById('fleteraLabel').classList.remove('d-none');
-            document.getElementById('tags-promo').classList.remove('d-none');
-            document.getElementById('tags-promoLabel').classList.remove('d-none');
-            document.getElementById('cupon').classList.remove('d-none');
-            document.getElementById('cuponLabel').classList.remove('d-none');
-
-        },
-        error: function (error) {
-
-        }
-    });
-
-    if (window.location.href.includes('pedido/editar')) { //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
-        var addresses = info[0]['addresses'];
-        for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-            // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
-            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
-            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
-            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
-            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
-        }
-        $('#sucursal').selectpicker('refresh');
-
-        fillShippingWaysList();
-
-        document.getElementById('loading-message').innerHTML = 'Cargando pedido ...';
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            type: "GET",
-            enctype: 'multipart/form-data',
-            url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
-            data: FormData,
-            'async': false,
-            headers: {
-                'X-CSRF-Token': '{{ csrf_token() }}',
-            },
-            success: function (data) {
-                $('#sucursal').val(data['addressId']); //Seleccionar la sucursal que se guardó en la cotizacion
-                $('#sucursal').selectpicker('refresh');
-                var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === data['shippingWay']);
-                $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera que corresponde a la sucursal guardada
-                $('#selectEnvio').selectpicker('refresh');
-                $('#fletera').val(data['packageDelivery']);
-                $('#correo').val(data['email']);
-
-                if (data['pickUp'] == 1) {
-                    $('#cliente_recoge').prop("checked", true);
-                }
-
-                if (data['divide'] == 1) {
-                    $('#dividir').prop("checked", true);
-                }
-
-                for (var x = 0; x < data['order'].length; x++) {
-                    for (var y = 0; y < data['order'][x]['items'].length; y++) {
-                        var art = selectedItemsFromInventory.find(o => o.item === data['order'][x]['items'][y]['itemid'].trim());
-                        if (art != undefined)
-                            art['cant'] = (parseInt(art['cant']) + parseInt(data['order'][x]['items'][y]['cantidad'])).toString();
-                        else
-                            selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
-                        cantItemsPorCargar++;
-                    }
-                }
-
-            },
-            error: function (error) {
-                alert('Error cargando pedido');
-            }
-        });
-    }
+    getInfoHeatWeb(entity)
+        .then((resp) => {
+            info = resp;
+            info.length == 1 && updateCustomerInfo(0, 'Cargando inventario...');
+            removeSkeleton();
+        })
+        .catch(
+            console.warn
+        );
 
     $('#modalInventario').on('hidden.bs.modal', function () {
         prepareJsonSeparaPedidos(false);
@@ -238,93 +122,15 @@ $(document).ready(function () {
     })
 
 
-    // UPDATE ADDRESSES AND DEFAULT SHIPPING WAT / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
-
+    // UPDATE ADDRESSES AND DEFAULT SHIPPING WAY / PACKAGING WHEN CUSTOMER IS SELECTED ----------------------------------------------------------------
     $('#customerID').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR DE CLIENTE
-        var selected = clickedIndex - 1;
-        indexCustomer = selected;
-        var refrescaInventario = false;
+        indexCustomer = clickedIndex - 1;
         tipoPedido = 0; // esta variable controla el campo CapturadoXCte, si cambia el cliente poner en 0 nuevamente 
         tipoGetItemById = 0;
-        //INFO es la lista de todos los clientes con su información correspondiente
-        addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
-        shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
-        packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
-        document.getElementById('entity').value = info[selected]["companyId"];
-        entityCte = info[selected]["companyId"];
-
-        if (priceList != '' && priceList != info[selected]['priceList']) { refrescaInventario = true; } //si ya existe una lista de precio cargada y es diferente a a del nuevo cliente seleccionado
-        if (priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
-        if (((new Date) - lastRefreshInventory) > oneHour) { refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
-
-        document.getElementById('loading-message').innerHTML = 'Cargando inventario ...';
-
-        document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: ' + info[selected]['category'];
-
-        document.getElementById('categoryCte').classList.remove('d-none');
-
-        selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
-        pedido = []; //vaciar pedido
-        ignorarRegalos = [];
-        document.getElementById('cupon').value = ''; //limpiar campo cupon
-        createTablePedido(); //limpiar tabla pedido
-        clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
-
-        checkPromocionesCliente = true;
-        intervalInventario = window.setInterval(checkItems, 1000);
-        getEventosCliente(entityCte);
-
-        if (refrescaInventario) {
-            lastRefreshInventory = new Date;
-            priceList = info[selected]['priceList'];
-            items = [];
-            getItems(entityCte, true);
-        }
-
-        var selectSucursales = $('#sucursal option');
-        selectSucursales.remove();
-        $('#sucursal').selectpicker('refresh');
-
-        var defaultShippingSelected = false;
-        var indexDefaultShipping = 0;
-        for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-
-            // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
-            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
-            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
-            if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
-            if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
-                $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
-
-
-            if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
-                defaultShippingSelected = true;
-                indexDefaultShipping = x;
-                indexAddress = x;
-                $('#sucursal').val(addresses[x]['addressID']);
-            }
-        }
-
-        if (!defaultShippingSelected) { //si ninguna dirección es defaultshipping, seleccionar la primera
-            $('#sucursal').val(addresses[0]['addressID']);
-        }
-
-        $('#sucursal').selectpicker('refresh'); //el refresh debe ir después de todos los cambios
-
-        fillShippingWaysList();
-
-        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
-        $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default shipping
-        $('#selectEnvio').selectpicker('refresh');
-        $('#fletera').val(packageDeliveries[indexDefaultShipping]);
-        $('#correo').val(info[selected]['email']);
+        updateCustomerInfo(indexCustomer, 'Cargando inventario...');
     });
 
     // UPDATE DEFAULT SHIPPING WAT / PACKAGING WHEN ADDRESS IS CHANGED -------------------------------------------------------------------------------------
-
     $('#sucursal').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
         if (info.length == 1) {
@@ -347,7 +153,6 @@ $(document).ready(function () {
     });
 
     // UPDATE PACKAGING WHEN SHIPPING WAY IS SELECTED ----------------------------------------------------------------
-
     $('#selectEnvio').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         var selected = clickedIndex;
         $('#fletera').val(shippingWaysList[selected]['paqueteria']);
@@ -355,10 +160,8 @@ $(document).ready(function () {
     });
 
     // ZOOM EFFECT
-
     var native_width = 0;
     var native_height = 0;
-
     $(".magnify").mousemove(function (e) {
         if (!native_width && !native_height) {
 
@@ -370,12 +173,9 @@ $(document).ready(function () {
         else {
             var src = $(".small").attr("src");
             document.getElementById('zoom').style.background = "url('" + src + "') no-repeat";
-
             var magnify_offset = $(this).offset();
-
             var mx = e.pageX - magnify_offset.left;
             var my = e.pageY - magnify_offset.top;
-
             if (mx < $(this).width() && my < $(this).height() && mx > 0 && my > 0) {
                 $(".large").fadeIn(100);
             }
@@ -396,8 +196,6 @@ $(document).ready(function () {
         }
     });
 
-
-
     // FILTER INVENTARIO PRICE RANGE -------------------------------------------------------------------------------------------
     $('#filterInventario').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { //AQUI DECLARAR TODO LO QUE PASE AL CAMBIAR FILTRO DE INVENTARIO
         var filterValue = $("#filterInventario").val();
@@ -408,6 +206,130 @@ $(document).ready(function () {
             table.column('10').order('asc').draw();
     });
 });
+
+const getInfoHeatWeb = function (entity) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "nuevo/getInfoHeatWeb/" + entity,
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function (resp) {
+                resolve(resp);
+            },
+            error: function (error) {
+                reject(error);
+            }
+        });
+    })
+}
+
+const removeSkeleton = () => {
+    var skeleton = document.getElementsByClassName('skeleton-input');
+    for (var x = 0; x < skeleton.length; x++) {
+        skeleton[x].classList.add('d-none');
+    }
+    var dropdown = document.getElementsByClassName('dropdown');
+    for (var x = 0; x < dropdown.length; x++) {
+        dropdown[x].classList.remove('d-none');
+    }
+    document.getElementById('cliente_recogeLabel').classList.remove('d-none');
+    document.getElementById('separar2000Label').classList.remove('d-none');
+    document.getElementById('customerID').classList.remove('d-none');
+    document.getElementById('customerIDLabel').classList.remove('d-none');
+    document.getElementById('ordenCompra').classList.remove('d-none');
+    document.getElementById('ordenCompraLabel').classList.remove('d-none');
+    document.getElementById('correo').classList.remove('d-none');
+    document.getElementById('correoLabel').classList.remove('d-none');
+    document.getElementById('sucursal').classList.remove('d-none');
+    document.getElementById('sucursalLabel').classList.remove('d-none');
+    document.getElementById('containerSelectEnvio').classList.remove('d-none');
+    document.getElementById('envioLabel').classList.remove('d-none');
+    document.getElementById('fletera').classList.remove('d-none');
+    document.getElementById('fleteraLabel').classList.remove('d-none');
+    document.getElementById('tags-promo').classList.remove('d-none');
+    document.getElementById('tags-promoLabel').classList.remove('d-none');
+    document.getElementById('cupon').classList.remove('d-none');
+    document.getElementById('cuponLabel').classList.remove('d-none');
+}
+
+
+const validateUpdate = () => {
+    if (window.location.href.includes('pedido/editar')) { //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+        let addresses = info[0]['addresses'];
+
+        addresses.forEach((address) => {
+            (address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
+            (address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + address.address + '"</option>');
+            (!address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
+            (!address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="' + address.address + '"</option>');
+        });
+
+        $('#sucursal').selectpicker('refresh');
+
+        fillShippingWaysList().then((resp) => {
+            shippingWaysList = resp;
+        }).catch(console.warn);
+
+        document.getElementById('loading-message').innerHTML = 'Cargando pedido...';
+
+        loadSaleOrder().then(data => {
+            console.log(data);
+            $('#sucursal').val(data['addressId']); //Seleccionar la sucursal que se guardó en la cotizacion
+            $('#sucursal').selectpicker('refresh');
+            var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === data['shippingWay']);
+            $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera que corresponde a la sucursal guardada
+            $('#selectEnvio').selectpicker('refresh');
+            $('#fletera').val(data['packageDelivery']);
+            $('#correo').val(data['email']);
+            if (data['pickUp'] == 1) {
+                $('#cliente_recoge').prop("checked", true);
+            }
+            if (data['divide'] == 1) {
+                $('#dividir').prop("checked", true);
+            }
+            for (var x = 0; x < data['order'].length; x++) {
+                for (var y = 0; y < data['order'][x]['items'].length; y++) {
+                    var art = selectedItemsFromInventory.find(o => o.item === data['order'][x]['items'][y]['itemid'].trim());
+                    if (art != undefined)
+                        art['cant'] = (parseInt(art['cant']) + parseInt(data['order'][x]['items'][y]['cantidad'])).toString();
+                    else
+                        selectedItemsFromInventory.push({ item: data['order'][x]['items'][y]['itemid'].trim(), cant: data['order'][x]['items'][y]['cantidad'] });
+                    cantItemsPorCargar++;
+                }
+            }
+            prepareJsonSeparaPedidos(false);
+        })
+        .catch(err => {
+            console.warn(err);
+            alert('Error cargando pedido');
+        })
+    }
+
+}
+
+
+const loadSaleOrder = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "/pedido/getCotizacionIdWeb/" + document.getElementById('idCotizacion').value,
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function (data) {
+                data.idCotizacion ? resolve(data) : reject (data);
+            },
+            error: function (error) {
+                reject(error);
+                alert('Error cargando pedido');
+            }
+        });
+    })
+}
 
 
 function checkItems() {
@@ -437,68 +359,6 @@ function checkItems() {
     }
 }
 
-
-function existingTag(text) {
-    text = text.toLowerCase();
-    $(".tags").each(function () {
-        if ($(this).text().toLowerCase() == text) {
-            return true;
-        }
-    });
-    return false;
-}
-
-
-
-$(function () {
-    $(".tags-new input").focus();
-
-    $(".tags-new input").keyup(function (e) {
-
-        var tag = $(this).val().trim(),
-            length = tag.length;
-
-        if (e.key === "Enter" || e.keyCode === 13) {
-            tag = tag.substring(0, length);
-
-            if (!existingTag(tag)) {
-                var last = document.querySelector('.last');
-                if (last != null) {
-                    document.querySelector('.last').classList.remove('last');
-                }
-                $('<li class="tags last"><span>' + tag + '</span><i class="fa fa-times"></i></i></li>').insertBefore($(".tags-new"));
-                $(this).val("");
-            } else {
-                $(this).val(tag);
-            }
-        }
-
-
-        if (e.key === "Backspace" || e.keyCode === 46) {
-            var tag = document.querySelector('.last');
-            if (tag != null) {
-                if (tag.style.background == "rgb(250, 91, 91)") {
-                    tag.remove();
-                } else {
-                    tag.style.background = "rgb(250, 91, 91)";
-                }
-            }
-
-            var lastTag = document.querySelectorAll(".tags");
-            if (lastTag.length != 0) {
-                lastTag[lastTag.length - 1].classList.add('last');
-            }
-        }
-
-
-    });
-
-    $(document).on("click", ".tags i", function () {
-        $(this).parent("li").remove();
-    });
-
-});
-
 //ELIMINAR ARTICULO DE LA TABLA 
 function deleteRowPedido(t, item, index, cantidad, tipo) {
     if (tipo == 'regalo') {
@@ -523,14 +383,11 @@ function deleteRowPedido(t, item, index, cantidad, tipo) {
         jsonObj[indexjsonObj]['quantity'] = (parseInt(jsonObj[indexjsonObj]['quantity']) - cantidad).toString();
         jsonItemsSeparar = JSON.stringify(jsonObj);
     }
-
     if (pedido[index]['items'].length == 0) {
 
         pedido.splice(index, 1);
     }
-
     separarPedidosPromo(jsonItemsSeparar, false);
-
 }
 
 //ELIMINAR FILA DE LA TABLA CARGAR POR CODIGO
@@ -546,7 +403,6 @@ function deleteRowCodigo(t) {
     }
 }
 
-
 function addRowCargarPorCodigo() {
     var table = document.getElementById('tableCargarPorCodigo');
     if (table.classList.contains('inactive')) {
@@ -561,15 +417,12 @@ function addRowCargarPorCodigo() {
 
 function addInputsCodigo(table) {
     var row = table.insertRow(table.rows.length);
-
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-
     cell1.innerHTML = "<input class='input-codigo' id='input-codigo-" + (table.rows.length - 1) + "' type='text'>";
     cell2.innerHTML = "<input id='input-cantidad-" + (table.rows.length - 1) + "' type='text' onkeyup ='validateEnter(event)' onkeydown ='validateTab(event)'>";
     cell3.innerHTML = "<i class='fas fa-minus-square fa-xl fa-delete' onclick='deleteRowCodigo(this)'></i>";
-
     document.getElementById('btnCargarPorCodigo').classList.remove('d-none');
 }
 
@@ -589,14 +442,12 @@ function cargarProductosPorCodigo() {
             else if (inputCantidad.value == '') { alert('Agrega cantidad para el artículo ' + (inputCodigo.value).trim().toUpperCase()); }
         }
     }
-
     var table = document.getElementById('tableCargarPorCodigo');
     var filas = table.rows.length - 1;
     while (filas > 0) {
         table.deleteRow(filas);
         filas--;
     }
-
     document.getElementById('tableCargarPorCodigo').style.display = 'none';
     table.classList.remove('active');
     table.classList.add('inactive');
@@ -616,7 +467,7 @@ function cargarProductosExcel(json) {
             selectedItemsFromInventory.push({ item: jsonObj[x]['Codigos'].trim(), cant: jsonObj[x]['Cantidad'] });
     }
 
-    document.getElementById("btnSpinner").style.display = "block";
+    document.getElementById("btnSpinnerPedido").style.display = "block";
     var btnActions = document.getElementsByClassName('btn-group-buttons');
     for (var x = 0; x < btnActions.length; x++) {
         btnActions[x].disabled = true;
@@ -647,25 +498,25 @@ function prepareJsonSeparaPedidos(separa) { //Convierte arreglo con todos los it
         tipoGetItemById = 1;
     }
     var formaEnvío = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() : $("#envio").val();
-    if(formaEnvío == 'CCI FLETERA'){ //si la forma de envío es CCI FLETERA validar que no tenga artículos que NO pueden venderse por esta fletera
-        for(var x = 0; x < selectedItemsFromInventory.length; x++){
+    if (formaEnvío == 'CCI FLETERA') { //si la forma de envío es CCI FLETERA validar que no tenga artículos que NO pueden venderse por esta fletera
+        for (var x = 0; x < selectedItemsFromInventory.length; x++) {
             console.log(selectedItemsFromInventory[x]['item']);
-            if(articulosBloqueadosCCIFletera.includes(selectedItemsFromInventory[x]['item'])){
-                alert('No se puede vender el articulo '+selectedItemsFromInventory[x]['item']);
+            if (articulosBloqueadosCCIFletera.includes(selectedItemsFromInventory[x]['item'])) {
+                alert('No se puede vender el articulo ' + selectedItemsFromInventory[x]['item']);
                 selectedItemsFromInventory.splice(x, 1); //quitar el artículo que no puede venderse
                 x--; //restar a variable de loop para que termine de recorrer items seleccionados
             }
         }
     }
     cantItemsPorCargar = selectedItemsFromInventory.length;
-    if(selectedItemsFromInventory.length > 0){
+    if (selectedItemsFromInventory.length > 0) {
         jsonItemsSeparar = "[";
         for (var x = 0; x < selectedItemsFromInventory.length; x++) {
             var item = { "articulo": selectedItemsFromInventory[x]['item'], "cantidad": selectedItemsFromInventory[x]['cant'] };
             getItemById(item, separa);
         }
     }
- 
+
 }
 
 
@@ -1015,28 +866,25 @@ function getItemById(item, separa) {
 }
 
 
-function getItems(entity, async) {
+const getItems = (entity) => {
     let data = { entity: entity };
-    $.ajax({
-        'headers': {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        'url': "nuevo/getItems/all",
-        'type': 'POST',
-        'data': data,
-        'enctype': 'multipart/form-data',
-        'async': async,
-        'timeout': 2 * 60 * 60 * 1000,
-        success: function (data) {
-            console.log(data);
-            items = JSON.parse(data);
-            console.log(items);
-            var empty = document.getElementById('empty').value;
-            if (empty == 'no')
-                reloadInventario();
-        },
-        error: function (error) {
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'headers': {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'url': "nuevo/getItems/all",
+            'type': 'POST',
+            'data': data,
+            'enctype': 'multipart/form-data',
+            'timeout': 2 * 60 * 60 * 1000,
+            success: function (data) {
+                resolve(data);
+            },
+            error: function (error) {
+                reject(error);
+            }
+        });
     });
 }
 
@@ -1064,8 +912,8 @@ function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
 }
 
-async function cargarInventario() {
-    console.log('creando datatable');
+function cargarInventario() {
+    console.log('Acomodando info');
     var empty = document.getElementById('empty').value;
     document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
     $('#mostrar_existencias').prop("checked", false);
@@ -1073,44 +921,18 @@ async function cargarInventario() {
         document.getElementById('empty').value = 'no';
         document.getElementById('mostrarInventario').removeAttribute('onclick');
         dataset = [];
-        var x = 0;
+        let x = 0;
+        let arr = [];
         while (x < items.length) {
-            var arr = [];
+            arr = [];
             if (items[x]['categoriaItem'] != 'PROMOCIONAL') {
-                var precioCliente = 0;
-                if (items[x]['promoART'] != null) {
-                    var y = 0;
-                    while (y < items[x]['promoART'].length) {
-                        if(y == 0 && items[x]['promoART'][y]['cantidad'] != 1){
-                            console.log('PROMO VOLUMEN: '+items[x]['itemid']);
-                        }
-                        if (items[x]['multiploVenta'] >= items[x]['promoART'][y]['cantidad']) {
-                            precioCliente = ((100 - items[x]['promoART'][y]['descuento']) / 100) * items[x]['price'];
-                        }
-                        y++;
-                    }
-                    if (precioCliente == 0)
-                        precioCliente = ((100 - items[x]['promoART'][0]['descuento']) / 100) * items[x]['price'];
-                }
-                else
-                    precioCliente = items[x]['price'];
-                var precioLista = (items[x]['price']).toLocaleString('en-US', {
+
+                let existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',
                 });
 
-                var precioIVA = ((precioCliente * ((100 - 4) / 100) * 1.16)).toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                });
-
-                var existenciaFormat = (parseFloat(items[x]['disponible'])).toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                });
-
-                existenciaFormat = existenciaFormat.slice(1, -1);
-                existenciaFormat = existenciaFormat.split('.')[0];
+                existenciaFormat = existenciaFormat.slice(1, -1).split('.')[0];
 
                 arr.push("<img src='http://indarweb.dyndns.org:8080/assets/articulos/img/02_WEBP_MD/" + items[x]['itemid'].replaceAll(" ", "_").replaceAll("-", "_") + "_MD.webp' onerror='noDisponible(this)' height='auto' onclick='verImagenProducto(\"" + items[x]['itemid'] + "\")' class='img-item'/><img src='http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + items[x]['familia'].replaceAll(" ", "_").replaceAll("-", "_") + ".jpg' height='auto' class='img-item'/>");
                 arr.push("<p class='datos-item'>" + items[x]['categoriaItem'] + "</p>");
@@ -1119,21 +941,62 @@ async function cargarInventario() {
                 arr.push("<p class='datos-item'>" + items[x]['itemid'] + "</p>");
                 arr.push("<p class='datos-item'>" + items[x]['purchasedescription'] + "</p>");
 
-                var detalles = "";
-                detalles = detalles + "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>" + existenciaFormat + "</span></p>";
-                detalles = detalles + "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>" + items[x]['minVenta'] + "</span></p>";
-                detalles = detalles + "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>" + items[x]['inner'] + "</span></p>";
-                detalles = detalles + "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>" + items[x]['master'] + "</span></p>";
-                detalles = detalles + "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>" + items[x]['multiploVenta'] + "</span></p>";
-                detalles = detalles + "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>" + items[x]['unidad'] + "</span></p>";
-                detalles = detalles + "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>" + items[x]['clasificacionArt'] + "</span></p>";
+                let detalles = "";
+                detalles += "<p class='detalles-item detalles-green'>Existencia: <span class='detalles-item-right'>" + existenciaFormat + "</span></p>";
+                detalles += "<p class='detalles-item'>Min. compra: <span class='detalles-item-right'>" + items[x]['minVenta'] + "</span></p>";
+                detalles += "<p class='detalles-item'>Cant. en empaque: <span class='detalles-item-right'>" + items[x]['inner'] + "</span></p>";
+                detalles += "<p class='detalles-item'>Cant. master: <span class='detalles-item-right'>" + items[x]['master'] + "</span></p>";
+                detalles += "<p class='detalles-item'>Múltiplo: <span class='detalles-item-right'>" + items[x]['multiploVenta'] + "</span></p>";
+                detalles += "<p class='detalles-item'>Unidad: <span class='detalles-item-right'>" + items[x]['unidad'] + "</span></p>";
+                detalles += "<p class='detalles-item'>Clasificación: <span class='detalles-item-right'>" + items[x]['clasificacionArt'] + "</span></p>";
 
                 arr.push(detalles);
 
-                var precioSugerido;
-                var descuentos = "<p class='detalles-item detalles-item-descuentos'>Precio lista: <span class='detalles-item-right'>" + precioLista + " + IVA</span></p>";
-                var promociones = "";
-                if (items[x]['promoART'] == null) {
+                let precioLista = (items[x]['price']).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+
+                let precioCliente = 0;
+                let promociones = "";
+                let precioSugerido;
+                let descuentos = "<p class='detalles-item detalles-item-descuentos'>Precio lista: <span class='detalles-item-right'>" + precioLista + " + IVA</span></p>";
+
+                if (items[x]['promoART'] != null) {
+                    let y = 0;
+                    while (y < items[x]['promoART'].length) {
+                        if (items[x]['multiploVenta'] >= items[x]['promoART'][y]['cantidad'])
+                            precioCliente = ((100 - items[x]['promoART'][y]['descuento']) / 100) * items[x]['price'];
+
+                        if (items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] == 1)
+                            tmp = "<p class='text-promo'>Compra " + items[x]['promoART'][y]['cantidad'] + " pieza y obtén el <span class='text-red'> " + items[x]['promoART'][y]['descuento'] + "% de descuento</span></p>";
+                        else if (items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] > 1)
+                            tmp = "<p class='text-promo'>Compra " + items[x]['multiploVenta'] + " piezas y obtén el <span class='text-red'> " + items[x]['promoART'][y]['descuento'] + "% de descuento</span></p>";
+                        else
+                            tmp = "<p class='text-promo'>Compra " + items[x]['promoART'][y]['cantidad'] + " piezas y obtén el <span class='text-red'> " + items[x]['promoART'][y]['descuento'] + "% de descuento</span></p>";
+
+                        promociones += tmp;
+                        let precioClienteDescuento = ((100 - items[x]['promoART'][y]['descuento']) * items[x]['price']) / 100;
+                        precioClienteDescuento = (precioClienteDescuento).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                        });
+                        descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Precio cliente: <span class='text-red'> (-" + items[x]['promoART'][y]['descuento'] + "%) </span> <span class='detalles-item-right' style='width: auto !important'> <span class='text-blue'>" + precioClienteDescuento + "</span> + IVA</span></p>"
+                        y++;
+                        y++;
+                    }
+                    if (precioCliente == 0) {
+                        precioCliente = ((100 - items[x]['promoART'][0]['descuento']) / 100) * items[x]['price'];
+                    }
+                    precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
+                    precioSugerido = (precioSugerido).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                    });
+                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sug. de venta: <span class='detalles-item-right' style='width: auto !important'>" + precioSugerido + " con IVA</span></p>";
+                }
+                else {
+                    precioCliente = items[x]['price'];
                     precioSugerido = items[x]['price'] / 0.65;
                     precioSugerido = (precioSugerido).toLocaleString('en-US', {
                         style: 'currency',
@@ -1143,37 +1006,18 @@ async function cargarInventario() {
                     descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sug. de venta: <span class='detalles-item-right' style='width: auto !important'>" + precioSugerido + " con IVA</span></p>"
                     promociones = "<p>Sin promoción</p>";
                 }
-                else {
-                    precioSugerido = (((100 - items[x]['promoART'][0]['descuento']) * items[x]['price']) / 100) / 0.65;
-                    var y = 0;
-                    while (y < items[x]['promoART'].length) {
-                        if (items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] == 1)
-                            var temp = "<p class='text-promo'>Compra " + items[x]['promoART'][y]['cantidad'] + " pieza y obtén el <span class='text-red'> " + items[x]['promoART'][y]['descuento'] + "% de descuento</span></p>";
-                        else if (items[x]['promoART'][y]['cantidad'] == 1 && items[x]['multiploVenta'] > 1)
-                            var temp = "<p class='text-promo'>Compra " + items[x]['multiploVenta'] + " piezas y obtén el <span class='text-red'> " + items[x]['promoART'][y]['descuento'] + "% de descuento</span></p>";
-                        else
-                            var temp = "<p class='text-promo'>Compra " + items[x]['promoART'][y]['cantidad'] + " piezas y obtén el <span class='text-red'> " + items[x]['promoART'][y]['descuento'] + "% de descuento</span></p>";
-                        promociones = promociones + temp;
-                        var precioClienteDescuento = ((100 - items[x]['promoART'][y]['descuento']) * items[x]['price']) / 100;
-                        precioClienteDescuento = (precioClienteDescuento).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'USD',
-                        });
-                        descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Precio cliente: <span class='text-red'> (-" + items[x]['promoART'][y]['descuento'] + "%) </span> <span class='detalles-item-right' style='width: auto !important'> <span class='text-blue'>" + precioClienteDescuento + "</span> + IVA</span></p>"
-                        y++;
-                    }
-                    precioSugerido = (precioSugerido).toLocaleString('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                    });
-                    descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>Prec. sug. de venta: <span class='detalles-item-right' style='width: auto !important'>" + precioSugerido + " con IVA</span></p>";
-                }
+
+                let precioIVA = ((precioCliente * ((100 - 4) / 100) * 1.16)).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+
                 descuentos = descuentos + "<p class='detalles-item detalles-item-descuentos'>P. Pago IVA incluído: <span class='detalles-item-right' id='precioIVA-" + items[x]['itemid'] + "' style='width: auto !important'>" + precioIVA + "</span></p>"
                 descuentos = descuentos + "<div class='input-group mt-2'><input type='text' class='form-control input-descuento' id='inputDescuentoInventario-" + items[x]['itemid'] + "' value='4' onkeyup='updatePrecioIVA(\"" + items[x]['itemid'] + "\")'><div class='input-group-append append-inventario text-center'><button id='percent-desneg' class='input-group-text' name='percent-desneg'>%</button></div></div>";
                 arr.push(descuentos);
                 arr.push(promociones);
                 arr.push("<div class='table-actions'><input type='number' value=" + items[x]['multiploVenta'] + " min=" + items[x]['multiploVenta'] + " step=" + items[x]['multiploVenta'] + " onkeyup='updatePrecioCliente(\"" + items[x]['itemid'] + "\")' id='inputPrecioCliente-" + items[x]['itemid'] + "'><i class='fas fa-plus-square btn-add-product fa-2x mt-2' onclick='addItemInventory(\"" + items[x]['itemid'] + "\")'></i></div>");
-                arr.push(precioIVA); //CAMPO PARA ORDENAR POR PRECIO
+                arr.push(precioIVA); //Oculto en la tabla, sirve para ordenar por precio
                 dataset.push(arr);
             }
             x++;
@@ -1184,10 +1028,10 @@ async function cargarInventario() {
         $('#tablaInventario thead tr:eq(1) th').each(function () {
             var title = $(this).text();
             var id = $(this).attr('id');
-            if(id == 'search'){
+            if (id == 'search') {
                 $(this).html('<input type="text" placeholder="' + title + '" class="column_search" />');
             }
-            else{
+            else {
                 $(this).html('');
             }
         });
@@ -1217,10 +1061,10 @@ async function cargarInventario() {
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
             table.column($(this).parent().index()).search(this.value).draw();
         });
-        $('.dataTables_filter input').off().on('keyup', function() {
+        $('.dataTables_filter input').off().on('keyup', function () {
             table.column('4').order('asc').draw();
             $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
-       });   
+        });
     }
 }
 
@@ -1235,12 +1079,22 @@ function activeSwitch(type) { //remove scrollable class to tablePedido when cons
         }
     }
 }
-function reloadInventario() {
-    document.getElementById('empty').value = 'yes';
+
+function loadInventario() {
+    document.getElementById('pedido').style.display = "block";
+    document.getElementById('loading').style.display = "none";
+    document.getElementById('loading').classList.remove('d-flex');
+    if (window.location.href.includes('pedido/editar')) { //SI EL PEDIDO VA A SER ACTUALIZADO, CARGAR INFORMACIÓN PREVIA
+        prepareJsonSeparaPedidos(false);
+    }
+    cargarInventario();
+}
+
+function destroyInventario() {
     $("#tablaInventario").dataTable().fnClearTable();
     $("#tablaInventario").dataTable().fnDraw();
     $("#tablaInventario").dataTable().fnDestroy();
-    document.getElementById('mostrarInventario').setAttribute('onclick', 'cargarInventario()');
+    document.getElementById('empty').value = 'yes';
 }
 
 function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEPARADO, ENCABEZADOS, FILAS DE ARTICULOS Y REGALOS
@@ -1338,7 +1192,7 @@ function createTablePedido() { //CREAR TABLA QUE VE EL USUARIO CON EL PEDIDO SEP
         document.getElementById('messageAddProducts').classList.remove('d-none');
     }
 
-    document.getElementById("btnSpinner").style.display = "none";
+    document.getElementById("btnSpinnerPedido").style.display = "none";
     var btnActions = document.getElementsByClassName('btn-group-buttons');
     for (var x = 0; x < btnActions.length; x++) {
         btnActions[x].disabled = false;
@@ -1916,7 +1770,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                     console.log(data);
                     console.log('Num Cotizacion: ' + data['idCotizacion']);
                     if (data['idCotizacion'] != undefined) { //Si es undefined significa que hubo algún error
-                        alert('Enviando pedido a Netsuite. Guarda el siguiente número de cotización para cualquier aclaración con tu pedido.\nCotización #'+data['idCotizacion']);
+                        alert('Enviando pedido a Netsuite. Guarda el siguiente número de cotización para cualquier aclaración con tu pedido.\nCotización #' + data['idCotizacion']);
                         if (type == 3) { //el pedido se acaba de ingresar, necesito el número de cotización que me retorna
                             noCotizacionNS = data['idCotizacion'];
                             setTimeout(saveNS(), 2000);
@@ -2051,8 +1905,8 @@ function saveNS() {
         }
         else {
             idCustomer = entityCte;
-            console.log('Index Customer: '+indexCustomer);
-            console.log('Index Address: '+indexAddress);
+            console.log('Index Customer: ' + indexCustomer);
+            console.log('Index Address: ' + indexAddress);
             idSucursal = info[indexCustomer]['addresses'][indexAddress]["addressID"];
             shippingWay = document.getElementById('envio').classList.contains('d-none') ? $('#selectEnvio option:selected').text() : $("#envio").val();
             packageDelivery = $("#fletera").val();
@@ -2590,34 +2444,27 @@ function addItemInventory(item) {
     });
 }
 
-function fillShippingWaysList() {
+const fillShippingWaysList = () => {
+    console.log('Llenando formas de envío');
     $('#fletera').val('');
-    $.ajax({
-        type: "GET",
-        enctype: 'multipart/form-data',
-        url: "/pedido/getformaEnvioFletera/",
-        data: FormData,
-        'async': false,
-        headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-        success: function (data) {
-            shippingWaysList = data;
-        },
-        error: function (error) {
-            alert('Error obteniendo formas de envio');
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            enctype: 'multipart/form-data',
+            url: "/pedido/getformaEnvioFletera/",
+            data: FormData,
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            success: function (data) {
+                resolve(data);
+            },
+            error: function (error) {
+                alert('Error obteniendo formas de envio');
+                reject(error);
+            }
+        });
     });
-
-    document.getElementById('envio').classList.add('d-none');
-    document.getElementById('containerSelectEnvio').classList.remove('d-none');
-    var itemSelectorOption = $('#selectEnvio option');
-    itemSelectorOption.remove();
-    for (var x = 0; x < shippingWaysList.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-        $('#selectEnvio').append('<option value="' + x + '">' + shippingWaysList[x]['fletera'] + '</option>');
-    }
-    $('#selectEnvio').val(0); //Seleccionar la primera opcion
-    $('#selectEnvio').selectpicker('refresh');
 }
 
 function mostrarSoloExistencias() {
@@ -2666,10 +2513,10 @@ function mostrarSoloExistencias() {
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
             newTable.column($(this).parent().index()).search(this.value).draw();
         });
-        $('.dataTables_filter input').off().on('keyup', function() {
+        $('.dataTables_filter input').off().on('keyup', function () {
             newTable.column('4').order('asc').draw();
             $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
-        });  
+        });
     } else {
         document.getElementById('mostrar_existenciasLabel').innerText = 'Mostrar solo existencias';
         let currentTable = $('#tablaInventario').DataTable();
@@ -2704,10 +2551,10 @@ function mostrarSoloExistencias() {
         $('#tablaInventario thead').on('keyup', ".column_search", function () {
             newTable.column($(this).parent().index()).search(this.value).draw();
         });
-        $('.dataTables_filter input').off().on('keyup', function() {
+        $('.dataTables_filter input').off().on('keyup', function () {
             newTable.column('4').order('asc').draw();
             $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
-        });  
+        });
     }
 }
 
@@ -2863,11 +2710,13 @@ function loadPendingCustomerSaleOrder(id) { //Cargar orden capturada por el clie
     tipoPedido = 1;
     tipoGetItemById = 1;
     $('#modalPedidosClientes').modal('hide');
+    console.log(order);
+    console.log(selectedItemsFromInventory);
     prepareJsonSeparaPedidos(false);
 }
 
 
-function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO (SUCURSALES, FORMAS DE ENVIO, FLETERAS, CATEGORÍA, CLIENTE, EMAIL ... )
+function updateCustomerInfo(selected, loadingMessage = 'Cargando cotización...') { //RECARGA TODO EL ENCABEZADO DEL PEDIDO (SUCURSALES, FORMAS DE ENVIO, FLETERAS, CATEGORÍA, CLIENTE, EMAIL ... )
     indexCustomer = selected;
     var refrescaInventario = false;
     //INFO es la lista de todos los clientes con su información correspondiente
@@ -2880,10 +2729,8 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
     if (priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
     if (((new Date) - lastRefreshInventory) > oneHour) { refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
 
-    document.getElementById('loading-message').innerHTML = 'Cargando cotización ...';
-
+    document.getElementById('loading-message').innerHTML = loadingMessage;
     document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: ' + info[selected]['category'];
-
     document.getElementById('categoryCte').classList.remove('d-none');
 
     selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
@@ -2896,58 +2743,70 @@ function updateCustomerInfo(selected) { //RECARGA TODO EL ENCABEZADO DEL PEDIDO 
     clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
 
     checkPromocionesCliente = true;
-    intervalInventario = window.setInterval(checkItems, 1000);
     getEventosCliente(entityCte);
 
     if (refrescaInventario) {
         lastRefreshInventory = new Date;
         priceList = info[selected]['priceList'];
         items = [];
-        getItems(entityCte, false);
+        getItems(entityCte)
+            .then((resp) => {
+                items = JSON.parse(resp);
+                var empty = document.getElementById('empty').value;
+                empty == "no" && destroyInventario();
+                loadInventario();
+                validateUpdate();
+            })
+            .catch(err => console.warn);
     }
 
     var selectSucursales = $('#sucursal option');
     selectSucursales.remove();
     $('#sucursal').selectpicker('refresh');
 
-    var defaultShippingSelected = false;
-    var indexDefaultShipping = 0;
+    let defaultShippingSelected = false;
+    let indexDefaultShipping = 0;
 
-    for (var x = 0; x < addresses.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
-        // AGREGAR ICONO DE BILLING O SHIPPING PARA IDENTIFICAR LAS DIRECCIONES DEL CLIENTE
-        if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == true) //SI ES BILLING Y SHIPPING AGREGAR LOS 2 ICONOS
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
-        if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == true) //SI ES BILLING PERO NO ES SHIPPING
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + addresses[x]['address'] + '"</option>');
-        if (addresses[x]['defaultShipping'] == true && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + addresses[x]['address'] + '"</option>');
-        if (addresses[x]['defaultShipping'] == false && addresses[x]['defaultBilling'] == false) //SI ES SHIPPING PERO NO BILLING
-            $('#sucursal').append('<option value="' + addresses[x]['addressID'] + '"data-content="' + addresses[x]['address'] + '"</option>');
-
-
-        if (addresses[x]['defaultShipping'] == true && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
+    addresses.forEach((address, index) => {
+        (address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
+        (address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + address.address + '"</option>');
+        (!address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
+        (!address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="' + address.address + '"</option>');
+        if (address.defaultShipping && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
             defaultShippingSelected = true;
-            indexDefaultShipping = x;
-            indexAddress = x;
-            $('#sucursal').val(addresses[x]['addressID']);
+            indexDefaultShipping = index;
+            indexAddress = index;
+            $('#sucursal').val(address.addressID);
         }
-    }
+    });
 
-    if (!defaultShippingSelected) { //si ninguna dirección es defaultshipping, seleccionar la primera
-        $('#sucursal').val(addresses[0]['addressID']);
-    }
-
+    //si ninguna dirección es defaultshipping, seleccionar la primera
+    (!defaultShippingSelected) && $('#sucursal').val(addreses[0]['addressID']);
     $('#sucursal').selectpicker('refresh');
 
-    fillShippingWaysList();
+    fillShippingWaysList().then((resp) => {
+        shippingWaysList = resp;
+        updateShippingWays(selected, indexDefaultShipping);
+    }).catch(console.warn);
+}
 
-    var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
+const updateShippingWays = (selected, indexDefaultShipping) => {
+    document.getElementById('envio').classList.add('d-none');
+    document.getElementById('containerSelectEnvio').classList.remove('d-none');
+    var itemSelectorOption = $('#selectEnvio option');
+    itemSelectorOption.remove();
+    for (var x = 0; x < shippingWaysList.length; x++) { //Agregar todas las sucursales del cliente seleccionado al select Sucursal
+        $('#selectEnvio').append('<option value="' + x + '">' + shippingWaysList[x]['fletera'] + '</option>');
+    }
+    $('#selectEnvio').val(0); //Seleccionar la primera opcion
+    $('#selectEnvio').selectpicker('refresh');
+    let indexShippingWay = shippingWaysList.findIndex(o => o.fletera === shippingWays[indexDefaultShipping]);
     $('#selectEnvio').val(indexShippingWay); //Seleccionar fletera según el index de default shipping
     $('#selectEnvio').selectpicker('refresh');
     $('#fletera').val(packageDeliveries[indexDefaultShipping]);
     $('#correo').val(info[selected]['email']);
+    console.log('Formas de envío llenas');
 }
-
 
 function getPUnitario(item) {
     var art = items.find(o => o.itemid === item['itemID']);

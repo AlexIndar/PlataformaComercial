@@ -446,7 +446,8 @@ Route::middleware([ValidateSession::class])->group(function(){
                                     $entity = 'ALL';
                                     $zona = 'ALL';
                                 }
-                                $data = SaleOrdersController::getInfoHeatWeb($token, $zona);
+                                // $entity = 'C002620';
+                                $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             });
 
