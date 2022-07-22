@@ -196,40 +196,18 @@
                     </div>
                 </div>
                 <div class="resultadoBusqueda" id="resultado-busqueda">
-                    <div class="cuadrante cuadrante1">
+                    <div class="cuadrante">
                         <div class="tituloCuadrante">
                             <h5>Sugerencia por Artículo - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesArticulo"></span></h5>
                         </div>
                         <div class="listSugerencias" id="listSugerenciasArticulo">
-                            {{-- <div class="lineSugerencia sugerenciaArticulo">
-                                <h5 class="h5Sugerencia"> <span id="sugerenciaArticuloDescripcion-1">ESMERILADORA ANGULAR 1/2" 600 W 1100 RPM </span> <span id="sugerenciaArticuloCodigo-1">[U1 EA404D]</span></h5> <br>
-                                <img class="imgSugerencia" id="sugerenciaArticuloImg-1" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/SURTEK.jpg" alt="">
-                                <div class="Stars" style="--rating: 5;"></div>
-                            </div> --}}
                         </div>
                     </div>
-                    <div class="cuadrante cuadrante2">
-                        <div class="tituloCuadrante">
-                            <h5>Sugerencia por Proveedor - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesProveedor"></span></h5>
-                        </div>
-                        <div class="listSugerencias" id="listSugerenciasProveedor">
-                            {{-- <div class="lineSugerencia sugerenciaProveedor">
-                                <h5 class="h5Sugerencia"> <span id="sugerenciaProveedorCodigo-1">A4 </span> <span id="sugerenciaProveedorNombre-1">[AUSTROMEX]</span></h5> <br>
-                                <img class="imgSugerencia" id="sugerenciaProveedorImg-1-1" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/AUSTRODIAM.jpg" alt="">
-                                <img class="imgSugerencia" id="sugerenciaProveedorImg-1-2" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/AUSTROMEX.jpg" alt="">
-                                <img class="imgSugerencia" id="sugerenciaProveedorImg-1-3" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/TENAZIT.jpg" alt="">
-                            </div> --}}
-                        </div>
-                    </div>
-                    <div class="cuadrante cuadrante3">
+                    <div class="cuadrante">
                         <div class="tituloCuadrante">
                             <h5>Sugerencia por Marca - <span class="cantidadRecomendaciones" id="cantidadRecomendacionesMarca"></span></h5>
                         </div>
                         <div class="listSugerencias" id="listSugerenciasMarca">
-                            {{-- <div class="lineSugerencia sugerenciaMarca">
-                                <h5 class="h5Sugerencia"><span id="sugerenciaMarcaNombre-1">AUSTRODIAM</span></h5>
-                                <img class="imgSugerencia" id="sugerenciaMarcaImg-1" src="http://www.indar.com.mx/imagenes/LOGOTIPOS/AUSTRODIAM.jpg" alt="">
-                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -252,7 +230,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+                        {{-- <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                         <ul class="dropdown-menu dropdown-menu-main" aria-labelledby="navbarDropdownMenuLink">
                         @for ($i = 0; $i < count($rama1); $i++)
                                     <li><a class="dropdown-item dropdown-item-main" href="#">{{ $rama1[$i] }} <i class="fas fa-chevron-right fa-xs fa-menu"></i></a>
@@ -273,33 +251,34 @@
                         </ul>
                         </li>
                         @endfor
-                    </ul>
-                    </li>
-                    <li class="nav-item notDropdown">
-                        <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Catálogo</a>
-                    </li>
-                    <li class="nav-item notDropdown">
-                        <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Ferreimpulsos</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Empresa
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-empresa dropdown-menu-main" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="about"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
-                            <li><a class="dropdown-item" href="centros"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Centros de cruce </a></li>
-                            <li><a class="dropdown-item" href="postventa"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
                         </ul>
-                    </li>
-                    <li class="nav-item notDropdown">
-                        <a class="nav-link" href="contacto">Contacto</a>
-                    </li>
-                    <li class="nav-item notDropdown">
-                        @if ($level == 'E')
-                            <h5><a class="nav-link" href="/Intranet">Intranet</a></h5>
-                        @endif
-                    </li>
+                        </li> --}}
+                        <li class="nav-item notDropdown">
+                            <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Catálogo</a>
+                        </li>
+                        <li class="nav-item notDropdown">
+                            <a class="nav-link" href="#" onclick="navigate('/catalogo', true)">Ferreimpulsos</a>
+                        </li>
+                        <li class="nav-item notDropdown">
+                            <a class="nav-link" href="contacto">Contacto</a>
+                        </li>
+                        {{-- si se activa rama de productos cambiar margin-left de rama de empresa y poner entre ferreimpulsos y contacto --}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Empresa
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-empresa dropdown-menu-main" style="height: auto !important;" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="about"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Nosotros </a></li>
+                                <li><a class="dropdown-item" href="centros"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Centros de cruce </a></li>
+                                <li><a class="dropdown-item" href="postventa"><i style="color: var(--indar-primary); margin-right: 5px;" class="fas fa-caret-right fa-xs"></i> Servicio postventa </a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item notDropdown">
+                            @if ($level == 'E')
+                                <h5><a class="nav-link" href="/Intranet">Intranet</a></h5>
+                            @endif
+                        </li>
                     </ul>
                 </div>
             </div>

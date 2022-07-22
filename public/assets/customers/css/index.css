@@ -156,7 +156,8 @@ button:focus {
 }
 
 .dropdown-menu-empresa{
-    margin-left: 540px !important;
+    margin-left: 490px !important;
+    /* margin-left: 540px !important; si se activa rama de productos este es el margin para la rama de empresa */
     min-height: auto !important;
 }
 

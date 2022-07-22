@@ -24,9 +24,10 @@
                           </select>
                         <span>Ordenar: </span>
                         <select name="selectOrderBy" class="orderBySelect" id="orderBy">
-                            <option value="itemid" selected>ID Articulo</option>
-                            <option value="pricemainor">Precio 1-10</option>
+                            <option value="pricemainor" selected>Precio 1-10</option>
                             <option value="pricemayor">Precio 10-1</option>
+                            <option value="itemid">ID Articulo</option>
+                            <option value="purchasedescription">Descripción</option>
                           </select>
             </div>
         </div>
@@ -52,9 +53,10 @@
           </select>
         <span>Ordenar: </span>
         <select name="selectOrderBy" class="orderBySelect" id="orderByModal">
-            <option value="itemid" selected>ID Articulo</option>
-            <option value="pricemainor">Precio 1-10</option>
+            <option value="pricemainor" selected>Precio 1-10</option>
             <option value="pricemayor">Precio 10-1</option>
+            <option value="itemid">ID Articulo</option>
+            <option value="purchasedescription">Descripción</option>
           </select>
     </div>
     <br>
@@ -65,7 +67,7 @@
                         <div class="filter{{strtoupper($filter['filterKey'])}}" id="filter{{strtoupper($filter['filterKey'])}}Modal">
                             @for($x=0; $x < count($filter['filterValue']); $x++)
                                 <div class="filterElement">
-                                    <input class="filterCheck" autocomplete='off' id="checkbox-{{$filter['filterKey']}}-{{$filter['filterValue'][$x]['nombre']}}" type="checkbox" value="{{$filter['filterKey']}}={{$filter['filterValue'][$x]['nombre']}}">
+                                    <input class="filterCheck" id="checkbox-{{$filter['filterKey']}}-{{$filter['filterValue'][$x]['nombre']}}" type="checkbox" value="{{$filter['filterKey']}}={{$filter['filterValue'][$x]['nombre']}}">
                                     <h5 class="filterLine"><span class="filterNombre">{{ucwords(strtolower($filter['filterValue'][$x]['nombre']))}}</span> <span class="filterCantidad" id="filterCantidad-{{$filter['filterKey']}}-modal-{{$filter['filterValue'][$x]['nombre']}}">({{$filter['filterValue'][$x]['resultados']}})</span> </h5>
                                 </div>
                             @endFor

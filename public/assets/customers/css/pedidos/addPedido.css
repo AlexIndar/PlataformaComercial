@@ -336,6 +336,8 @@ input[type="text"]:disabled {
 .table-actions {
   width: 100%;
   text-align: center !important;
+  display: flex;
+  justify-content: center;
 }
 
 .detalles-green {

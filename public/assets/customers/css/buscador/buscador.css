@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 .overlayBusqueda{
     position: fixed;
     top: 0;
@@ -19,6 +21,8 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     z-index: 1500;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600 !important;
 }
 
 .cuadrante{
@@ -58,6 +62,22 @@
     padding: 10px 0px 15px 10px;
 }
 
+.lineSugerencia.activeSugerencia{
+    background-color: rgb(225, 228, 228);
+}
+
+.sugerenciaMarca{
+    width: auto !important;
+    height: auto;
+    padding: 5px 15px 7px 10px !important;
+}
+
+#listSugerenciasMarca{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .lineSugerencia:hover{
     background-color: rgb(225, 228, 228);
     cursor: pointer;
@@ -67,6 +87,7 @@
 .h5Sugerencia{
     font-size: 13px !important;
     display: inline;
+    font-weight: 500;
 }
 
 .imgSugerencia{
@@ -89,6 +110,7 @@
     content: "★★★★★";
     letter-spacing: 3px;
     background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

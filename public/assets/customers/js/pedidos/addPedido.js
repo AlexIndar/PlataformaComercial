@@ -97,8 +97,8 @@ $(document).ready(function () {
     getInfoHeatWeb(entity)
         .then((resp) => {
             info = resp;
-            info.length == 1 && updateCustomerInfo(0, 'Cargando inventario...');
-            removeSkeleton();
+            console.log(info);
+            info.length == 1 ? updateCustomerInfo(0, 'Cargando inventario...').then(removeSkeleton()).catch(console.warn) : removeSkeleton();
         })
         .catch(
             console.warn
@@ -1062,7 +1062,7 @@ function cargarInventario() {
             table.column($(this).parent().index()).search(this.value).draw();
         });
         $('.dataTables_filter input').off().on('keyup', function () {
-            table.column('4').order('asc').draw();
+            // table.column('4').order('asc').draw();
             $('#tablaInventario').DataTable().search(this.value.trim(), true, true).draw();
         });
     }
@@ -2664,6 +2664,8 @@ function loadDatasetPedidosClientes() {
 }
 
 function loadPendingCustomerSaleOrder(id) { //Cargar orden capturada por el cliente
+    document.getElementById('btnAddPedidosClientes-'+id).style.display = 'none';
+    document.getElementById('btnSpinnerPedidosClientes-'+id).style.display = 'block';
     var order = [];
     var x = 0;
     while (x < pendingSaleOrders.length) {
@@ -2673,121 +2675,128 @@ function loadPendingCustomerSaleOrder(id) { //Cargar orden capturada por el clie
     var indexCustomerInfo = info.findIndex(o => o.companyId.toUpperCase() === order[0]['cliente'].toUpperCase());
     $('#customerID').val(indexCustomerInfo); //Seleccionar la primera opcion
     $('#customerID').selectpicker('refresh');
-    updateCustomerInfo(indexCustomerInfo);
-    cantItemsPorCargar = order.length;
-    for (var x = 0; x < order.length; x++) {
-        var art = selectedItemsFromInventory.find(o => o.item === order[x]['articulo'].trim());
-        if (art != undefined)
-            art['cant'] = (parseInt(art['cant']) + parseInt(order[x]['cantidad'])).toString();
-        else
-            selectedItemsFromInventory.push({ item: order[x]['articulo'].trim(), cant: order[x]['cantidad'] });
-    }
-    document.getElementById('comments').value = order[0]['comentario'];
-    document.getElementById('ordenCompra').value = order[0]['ordenCompra'];
-    var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === order[0]['formaEnvio']);
-    if (indexShippingWay == -1) { //si no se encuentra la forma de envío
-        if (order[0]['formaEnvio'] == 'GDL-07 CLIENTE RECOGE') { //esta forma de envío no existe en netsuite, hay que cambiarla por la que sí existe
-            indexShippingWay = shippingWaysList.findIndex(o => o.fletera === "GDL07 CLIENTE RECOGE");
+    updateCustomerInfo(indexCustomerInfo).then(() => {
+        cantItemsPorCargar = order.length;
+        for (var x = 0; x < order.length; x++) {
+            var art = selectedItemsFromInventory.find(o => o.item === order[x]['articulo'].trim());
+            if (art != undefined)
+                art['cant'] = (parseInt(art['cant']) + parseInt(order[x]['cantidad'])).toString();
+            else
+                selectedItemsFromInventory.push({ item: order[x]['articulo'].trim(), cant: order[x]['cantidad'] });
         }
-        else {
-            var message = "";
-            if (order[0]['formaEnvio'] == "") { //si la forma de envío viene vacía
-                message = 'El pedido no cuenta con forma de envío';
+        document.getElementById('comments').value = order[0]['comentario'];
+        document.getElementById('ordenCompra').value = order[0]['ordenCompra'];
+        var indexShippingWay = shippingWaysList.findIndex(o => o.fletera === order[0]['formaEnvio']);
+        if (indexShippingWay == -1) { //si no se encuentra la forma de envío
+            if (order[0]['formaEnvio'] == 'GDL-07 CLIENTE RECOGE') { //esta forma de envío no existe en netsuite, hay que cambiarla por la que sí existe
+                indexShippingWay = shippingWaysList.findIndex(o => o.fletera === "GDL07 CLIENTE RECOGE");
             }
-            else { //no se encuentra esa forma de envío
-                message = 'Forma envio: ' + order[0]['formaEnvio'] + ' no encontrada';
+            else {
+                var message = "";
+                if (order[0]['formaEnvio'] == "") { //si la forma de envío viene vacía
+                    message = 'El pedido no cuenta con forma de envío';
+                }
+                else { //no se encuentra esa forma de envío
+                    message = 'Forma envio: ' + order[0]['formaEnvio'] + ' no encontrada';
+                }
+                Swal.fire('Alerta', message, 'info');
             }
-            Swal.fire('Alerta', message, 'info');
         }
-    }
-    pedidoCargadoCte = order[0]['id'];
-    $('#selectEnvio').val(indexShippingWay); //Seleccionar Forma Envío según el index de la forma envío que seleccionó el cliente
-    $('#selectEnvio').selectpicker('refresh');
-    $('#fletera').val(order[0]['fletera']); //Poner Fletera que seleccionó el cliente
-    if (order[0]['fletera'] == "") { //si la fletera viene vacía
-        Swal.fire('Alerta', 'El pedido no cuenta con fletera', 'info');
-    }
-    tipoPedido = 1;
-    tipoGetItemById = 1;
-    $('#modalPedidosClientes').modal('hide');
-    console.log(order);
-    console.log(selectedItemsFromInventory);
-    prepareJsonSeparaPedidos(false);
+        pedidoCargadoCte = order[0]['id'];
+        $('#selectEnvio').val(indexShippingWay); //Seleccionar Forma Envío según el index de la forma envío que seleccionó el cliente
+        $('#selectEnvio').selectpicker('refresh');
+        $('#fletera').val(order[0]['fletera']); //Poner Fletera que seleccionó el cliente
+        if (order[0]['fletera'] == "") { //si la fletera viene vacía
+            Swal.fire('Alerta', 'El pedido no cuenta con fletera', 'info');
+        }
+        tipoPedido = 1;
+        tipoGetItemById = 1;
+        $('#modalPedidosClientes').modal('hide');
+        prepareJsonSeparaPedidos(false);
+        document.getElementById('btnAddPedidosClientes-'+id).style.display = 'block';
+        document.getElementById('btnSpinnerPedidosClientes-'+id).style.display = 'none'
+    });
 }
 
 
-function updateCustomerInfo(selected, loadingMessage = 'Cargando cotización...') { //RECARGA TODO EL ENCABEZADO DEL PEDIDO (SUCURSALES, FORMAS DE ENVIO, FLETERAS, CATEGORÍA, CLIENTE, EMAIL ... )
-    indexCustomer = selected;
-    var refrescaInventario = false;
-    //INFO es la lista de todos los clientes con su información correspondiente
-    addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
-    shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
-    packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
-    document.getElementById('entity').value = info[selected]["companyId"];
-    entityCte = info[selected]["companyId"];
-    if (priceList != '' && priceList != info[selected]['priceList']) { refrescaInventario = true; } //si ya existe una lista de precio cargada y es diferente a a del nuevo cliente seleccionado
-    if (priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
-    if (((new Date) - lastRefreshInventory) > oneHour) { refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
-
-    document.getElementById('loading-message').innerHTML = loadingMessage;
-    document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: ' + info[selected]['category'];
-    document.getElementById('categoryCte').classList.remove('d-none');
-
-    selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
-    pedido = []; //vaciar pedido
-    ignorarRegalos = [];
-    document.getElementById('cupon').value = ''; //limpiar campo cupon
-    document.getElementById('comments').value = ''; //limpiar campo comentarios
-    document.getElementById('ordenCompra').value = ''; //limpiar campo orden compra
-    createTablePedido(); //limpiar tabla pedido
-    clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
-
-    checkPromocionesCliente = true;
-    getEventosCliente(entityCte);
-
-    if (refrescaInventario) {
-        lastRefreshInventory = new Date;
-        priceList = info[selected]['priceList'];
-        items = [];
-        getItems(entityCte)
-            .then((resp) => {
-                items = JSON.parse(resp);
-                var empty = document.getElementById('empty').value;
-                empty == "no" && destroyInventario();
-                loadInventario();
-                validateUpdate();
-            })
-            .catch(err => console.warn);
-    }
-
-    var selectSucursales = $('#sucursal option');
-    selectSucursales.remove();
-    $('#sucursal').selectpicker('refresh');
-
-    let defaultShippingSelected = false;
-    let indexDefaultShipping = 0;
-
-    addresses.forEach((address, index) => {
-        (address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
-        (address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + address.address + '"</option>');
-        (!address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
-        (!address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="' + address.address + '"</option>');
-        if (address.defaultShipping && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
-            defaultShippingSelected = true;
-            indexDefaultShipping = index;
-            indexAddress = index;
-            $('#sucursal').val(address.addressID);
-        }
+const updateCustomerInfo = (selected, loadingMessage = 'Cargando cotización...') => { //RECARGA TODO EL ENCABEZADO DEL PEDIDO (SUCURSALES, FORMAS DE ENVIO, FLETERAS, CATEGORÍA, CLIENTE, EMAIL ... )
+    return new Promise((resolve, reject) => {
+        indexCustomer = selected;
+        var refrescaInventario = false;
+        //INFO es la lista de todos los clientes con su información correspondiente
+        addresses = info[selected]['addresses']; //obtener lista de domicilios del cliente seleccionado
+        shippingWays = info[selected]['shippingWays']; //obtener formas de envío del cliente seleccionado
+        packageDeliveries = info[selected]['packageDeliveries']; //obtener paqueterías del cliente seleccionado
+        document.getElementById('entity').value = info[selected]["companyId"];
+        entityCte = info[selected]["companyId"];
+        if (priceList != '' && priceList != info[selected]['priceList']) { refrescaInventario = true; } //si ya existe una lista de precio cargada y es diferente a a del nuevo cliente seleccionado
+        if (priceList == '') { refrescaInventario = true; } //si aún no se ha cargado ninguna lista
+        if (((new Date) - lastRefreshInventory) > oneHour) { refrescaInventario = true; } //si ha pasado más de 1 hora desde la última recarga
+    
+        document.getElementById('loading-message').innerHTML = loadingMessage;
+        document.getElementById('categoryCte').innerHTML = 'Categoría Cliente: ' + info[selected]['category'];
+        document.getElementById('categoryCte').classList.remove('d-none');
+    
+        selectedItemsFromInventory = []; //vaciar arreglo de articulos seleccionados
+        pedido = []; //vaciar pedido
+        ignorarRegalos = [];
+        document.getElementById('cupon').value = ''; //limpiar campo cupon
+        document.getElementById('comments').value = ''; //limpiar campo comentarios
+        document.getElementById('ordenCompra').value = ''; //limpiar campo orden compra
+        createTablePedido(); //limpiar tabla pedido
+        clearNetsuiteModal(); //limpiar modal de pedidos enviados a netsuite
+    
+        checkPromocionesCliente = true;
+        getEventosCliente(entityCte);
+    
+        var selectSucursales = $('#sucursal option');
+        selectSucursales.remove();
+        $('#sucursal').selectpicker('refresh');
+    
+        let defaultShippingSelected = false;
+        let indexDefaultShipping = 0;
+    
+        addresses.forEach((address, index) => {
+            (address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> <i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
+            (address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-shipping-fast\'></i> ' + address.address + '"</option>');
+            (!address.defaultShipping && address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="<i class=\'fas fa-file-invoice\'></i> ' + address.address + '"</option>');
+            (!address.defaultShipping && !address.defaultBilling) && $('#sucursal').append('<option value="' + address.addressID + '"data-content="' + address.address + '"</option>');
+            if (address.defaultShipping && !defaultShippingSelected) {//Seleccionar la primera opcion que tenga defaultshipping
+                defaultShippingSelected = true;
+                indexDefaultShipping = index;
+                indexAddress = index;
+                $('#sucursal').val(address.addressID);
+            }
+        });
+    
+        //si ninguna dirección es defaultshipping, seleccionar la primera
+        (!defaultShippingSelected) && $('#sucursal').val(addreses[0]['addressID']);
+        $('#sucursal').selectpicker('refresh');
+    
+        fillShippingWaysList().then((resp) => {
+            shippingWaysList = resp;
+            updateShippingWays(selected, indexDefaultShipping);
+            if (refrescaInventario) {
+                console.log('refresca inventario');
+                lastRefreshInventory = new Date;
+                priceList = info[selected]['priceList'];
+                items = [];
+                getItems(entityCte)
+                    .then((resp) => {
+                        items = JSON.parse(resp);
+                        var empty = document.getElementById('empty').value;
+                        empty == "no" && destroyInventario();
+                        loadInventario();
+                        validateUpdate();
+                        resolve();
+                    })
+                    .catch((err) => {console.warn; reject(err)});
+            }
+            else{
+                resolve();
+            }
+        }).catch((err) => {console.warn; reject(err)});
     });
-
-    //si ninguna dirección es defaultshipping, seleccionar la primera
-    (!defaultShippingSelected) && $('#sucursal').val(addreses[0]['addressID']);
-    $('#sucursal').selectpicker('refresh');
-
-    fillShippingWaysList().then((resp) => {
-        shippingWaysList = resp;
-        updateShippingWays(selected, indexDefaultShipping);
-    }).catch(console.warn);
 }
 
 const updateShippingWays = (selected, indexDefaultShipping) => {

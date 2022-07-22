@@ -4,6 +4,7 @@ var filters = [];
 
 
 $(document).ready(function () {
+
     $('[data-toggle="tooltip"]').tooltip()
     $(window).scroll(() => {
         adjustFixedFilters();
@@ -51,16 +52,15 @@ $(document).ready(function () {
                 return item.categoriaItem != 'PROMOCIONAL';
             })
             itemsFullList = data;
-            console.log(itemsFullList);
             itemsCurrentFilter = itemsFullList['items'];
             showSkeleton();
-            updateProductList();
-            setTimeout(() => {
-                hideSkeleton();
-            }, 1500);
+
+            orderByKey('price', 'asc', 'number');
+            let checkLinea = document.getElementById('checkbox-categorias-LINEA');
+            checkLinea != undefined && checkLinea.click();
         },
         error: function (error) {
-            console.log(error);
+            console.warn(error);
         }
     });
 
@@ -100,29 +100,13 @@ $(document).ready(function () {
 
 
     $('#orderBy').change(function () {
-        var value = $(this).find(":selected").val();
-        var key;
-        var order;
-        switch (value) {
-            case 'pricemainor': key = 'price'; order = 'asc'; break;
-            case 'pricemayor': key = 'price'; order = 'desc'; break;
-            case 'itemid': key = 'id'; order = 'asc'; break;
-            default: break;
-        }
-        orderByKey(key, order);
+        let value = $(this).find(":selected").val();
+        changeOrder(value);
     });
 
     $('#orderByModal').change(function () {
-        var value = $(this).find(":selected").val();
-        var key;
-        var order;
-        switch (value) {
-            case 'pricemainor': key = 'price'; order = 'asc'; break;
-            case 'pricemayor': key = 'price'; order = 'desc'; break;
-            case 'itemid': key = 'id'; order = 'asc'; break;
-            default: break;
-        }
-        orderByKey(key, order);
+        let value = $(this).find(":selected").val();
+        changeOrder(value);
         activeModalFilters();
     });
 
@@ -130,11 +114,26 @@ $(document).ready(function () {
 });
 
 
+function changeOrder(value) {
+    let key;
+    let order;
+    let type;
+    switch (value) {
+        case 'pricemainor': key = 'price'; order = 'asc'; type = 'number'; break;
+        case 'pricemayor': key = 'price'; order = 'desc'; type = 'number'; break;
+        case 'itemid': key = 'id'; order = 'asc'; type = 'number'; break;
+        case 'purchasedescription': key = 'purchasedescription'; order = 'asc'; type = 'string'; break;
+        default: break;
+    }
+    orderByKey(key, order, type);
+}
+
+
 function noDisponible(img) {
     img.src = '/assets/customers/img/jpg/imagen_no_disponible.jpg';
 }
 
-function imgLoaded(img){
+function imgLoaded(img) {
     img.style.height = 'auto';
 }
 
@@ -293,7 +292,6 @@ function updateCantidadesFiltros() {
 
     for (let x = 0; x < itemsFullList.filters.marcas.filterValue.length; x++) {
         const count = itemsCurrentFilter.filter((obj) => obj.familia === itemsFullList.filters.marcas.filterValue[x].nombre).length;
-        console.log('filterCantidad-marcas-modal-' + itemsFullList.filters.marcas.filterValue[x].nombre);
         document.getElementById('filterCantidad-marcas-' + itemsFullList.filters.marcas.filterValue[x].nombre).innerText = '(' + count + ')';
         document.getElementById('filterCantidad-marcas-modal-' + itemsFullList.filters.marcas.filterValue[x].nombre).innerText = '(' + count + ')';
     }
@@ -386,7 +384,6 @@ function updateProductList(from = 1, to = parseInt(document.getElementById('pagi
     var itemsToShow = [];
     to > total ? to = total : to = to;
     console.table(from, to, total);
-    console.log(itemsCurrentFilter);
     for (let x = from - 1; x < to; x++) {
         itemsToShow.push(itemsCurrentFilter[x]);
     }
@@ -527,7 +524,7 @@ function getPreciosItem(item) {
                 currency: 'USD',
             });
             if (item['promoART'][y]['cantidad'] == 1 || item['promoART'][y]['cantidad'] <= item['multiploVenta']) {
-                descuentos = "<p class='precio'><span class='precio-min'>$</span><span class='precio-lista'>" + precioClienteDescuento.split('.')[0].substring(1) + "</span><span class='precio-min'>" + precioClienteDescuento.split('.')[1] + "</span> + IVA</span> <span class='text-promo'>" + item['promoART'][y]['descuento'] + "% OFF</span></p>";
+                descuentos = "<p class='precio'><span class='precio-min'>$</span><span class='precio-lista'>" + precioClienteDescuento.split('.')[0].substring(1) + "</span><span class='precio-min'>" + precioClienteDescuento.split('.')[1] + "</span> + IVA</span></p>";
             }
             else if (y == 0) {
                 descuentos = "<p class='precio'><span class='precio-min'>$</span><span class='precio-lista'>" + precioLista.split('.')[0].substring(1) + "</span><span class='precio-min'>" + precioLista.split('.')[1] + "</span> + IVA</span></p>";
@@ -556,7 +553,7 @@ function adjustFixedFilters() {
     }
 }
 
-function orderByKey(key, order) {
+function orderByKey(key, order, type) {
 
     if (key == 'price') {
         itemsCurrentFilter.sort((a, b) => {
@@ -575,10 +572,19 @@ function orderByKey(key, order) {
     }
     else {
         itemsCurrentFilter.sort((a, b) => {
-            if (order == 'asc') {
+            if (order == 'asc' && type == 'number') {
                 return a[key] - b[key];
             }
-            else {
+            else if(order == 'asc' && type == 'string'){
+                if (a[key] > b[key]) {
+                    return 1;
+                }
+                if (b[key] > a[key]) {
+                    return -1;
+                }
+                return 0;
+            }
+            else if(order == 'desc' && type == 'number'){
                 return b[key] - a[key];
             }
         });

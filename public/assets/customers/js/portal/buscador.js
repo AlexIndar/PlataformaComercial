@@ -1,14 +1,14 @@
 
-var coincidenciasArticulo = 0;
-var coincidenciasProveedor = 0;
-var coincidenciasMarca = 0;
-var timeoutBuscador;
-var intervalActive = false;
-var intervalBuscador = 1000; //buscar cada segundo, no cada tecla presionada
-var sugerencias;
+let coincidenciasArticulo = 0;
+let coincidenciasMarca = 0;
+let timeoutBuscador;
+let intervalActive = false;
+let intervalBuscador = 1000; //buscar cada segundo, no cada tecla presionada
+let sugerencias;
 
-var lastType = ''; //datetime de ultima tecla presionada
-var timeToDisable = 1000; // desactivar búsqueda si pasan 2 segundos sin presionar tecla
+let lastType = ''; //datetime de ultima tecla presionada
+let timeToDisable = 1000; // desactivar búsqueda si pasan 2 segundos sin presionar tecla
+let downArrowIndexActive = -1;
 
 $(document).ready(function () {
 
@@ -30,22 +30,38 @@ $(document).ready(function () {
     $("#buscador").keyup(function (e) {
         lastType = new Date();
         var cadena = document.getElementById('buscador').value;
-        if (e.keyCode == 8) { //si está borrando
-            desactivaBuscador();
-            recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
-            highlight(cadena);
+        if(e.keyCode == 40){ //si baja con la flecha
+            const sugerenciasArticulos = document.querySelectorAll('.sugerenciaArticulo');
+            const active = document.querySelector('.activeSugerencia');
+            active && active.classList.remove('activeSugerencia');
+            downArrowIndexActive++;
+            sugerenciasArticulos.forEach((sugerencia, index) => {
+                if(downArrowIndexActive == index){
+                    sugerencia.classList.add('activeSugerencia');
+                    var topPos = sugerencia.offsetTop;
+                    document.getElementById('listSugerenciasArticulo').scrollTop = topPos - 120;
+                }
+            });
         }
-        else if (e.keyCode == 13) {
-            buscarFiltro("");
+        else{
+            if (e.keyCode == 8) { //si está borrando
+                desactivaBuscador();
+                recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
+                highlight(cadena);
+            }
+            else if (e.keyCode == 13) { //si da enter
+                buscarFiltro("");
+            }
+            else {
+                (cadena != '' && !intervalActive) && activaBuscador();
+            }
+            (cadena == '' && intervalActive) && desactivaBuscador();
+    
+            if (cadena == '') {
+                closeSugerencias();
+            }
         }
-        else {
-            (cadena != '' && !intervalActive) && activaBuscador();
-        }
-        (cadena == '' && intervalActive) && desactivaBuscador();
-
-        if (cadena == '') {
-            closeSugerencias();
-        }
+        
     });
 
     $("#buscador").focusin(function () {
@@ -152,49 +168,6 @@ function addSugerenciaArticulo(sugerencia) {
     container.appendChild(lineSugerencia);
 }
 
-function addSugerenciasProveedor(proveedores) {
-    var x = 0;
-    var container = document.getElementById('listSugerenciasProveedor');
-
-    while (x < proveedores.length) {
-        var proveedor = proveedores[x]['proveedor'] + ' [ ' + proveedores[x]['marcas'][0] + ' ]';
-
-        var lineSugerencia = document.createElement('div');
-        lineSugerencia.setAttribute('class', 'lineSugerencia sugerenciaProveedor');
-        lineSugerencia.setAttribute('onclick', "buscarFiltro(\"" + proveedores[x]['proveedor'] + "\")");
-
-        var h5Sugerencia = document.createElement('h5');
-        h5Sugerencia.setAttribute('class', 'h5Sugerencia');
-
-        var spanProveedor = document.createElement('span');
-        spanProveedor.innerText = proveedor;
-
-        h5Sugerencia.appendChild(spanProveedor);
-
-        var br = document.createElement('br');
-
-
-        lineSugerencia.appendChild(h5Sugerencia);
-        lineSugerencia.appendChild(br);
-
-
-        var y = 0;
-        while (y < proveedores[x]['marcas'].length) {
-            var srcImgLogotipo = "http://indarweb.dyndns.org:8080/assets/articulos/img/LOGOTIPOS/" + proveedores[x]['marcas'][y].replaceAll(" ", "_").replaceAll("-", "_").replaceAll(".", "_") + ".jpg";
-            var imgSugerencia = document.createElement('img');
-            imgSugerencia.setAttribute('class', 'imgSugerencia');
-            imgSugerencia.setAttribute('src', srcImgLogotipo);
-            lineSugerencia.appendChild(imgSugerencia);
-            addSugerenciaMarca(proveedores[x]['marcas'][y]);
-            y++;
-        }
-
-        container.appendChild(lineSugerencia);
-        x++;
-    }
-}
-
-
 function addSugerenciaMarca(marca) {
     coincidenciasMarca++;
     var container = document.getElementById('listSugerenciasMarca');
@@ -215,8 +188,8 @@ function addSugerenciaMarca(marca) {
     imgSugerencia.setAttribute('class', 'imgSugerencia ml-2');
     imgSugerencia.setAttribute('src', srcImgLogotipo);
 
-    lineSugerencia.appendChild(h5Sugerencia);
     lineSugerencia.appendChild(imgSugerencia);
+    lineSugerencia.appendChild(h5Sugerencia);
     container.appendChild(lineSugerencia);
 
 }
@@ -256,12 +229,6 @@ function clearSugerencias() {
     while (containerMarcas.firstChild) {
         containerMarcas.removeChild(containerMarcas.firstChild);
     }
-
-    var containerProveedor = document.getElementById('listSugerenciasProveedor');
-    while (containerProveedor.firstChild) {
-        containerProveedor.removeChild(containerProveedor.firstChild);
-    }
-
 }
 
 function closeSugerencias() {
@@ -277,18 +244,18 @@ function isNumeric(n) { //validar si ingresó número en la búsqueda, para hace
 }
 
 function recargaSugerencias(data) {
-    var cadena = document.getElementById('buscador').value;
-    var arrCadena = cadena.split(' ');
+    let cadena = document.getElementById('buscador').value;
+    let arrCadena = cadena.split(' ');
     clearSugerencias();
-    var x = 0;
-    var proveedores = [];
+    let x = 0;
+    let marcas = [];
     coincidenciasArticulo = 0;
     coincidenciasMarca = 0;
     coincidenciasProveedor = 0;
     let buscarCoincidenciasArticulo = 50;
     while (x < data.length) {
-        var y = 0;
-        var add = true;
+        let y = 0;
+        let add = true;
         if (coincidenciasArticulo < buscarCoincidenciasArticulo) {
             //validar que la descripción del artículo contenga todo lo que está en el input de búsqueda o que lo contenga en el itemid
             while (y < arrCadena.length) {
@@ -311,38 +278,33 @@ function recargaSugerencias(data) {
             y = arrCadena.length;
         }
 
-        if (proveedores.length == 0) {
-            var tmp = {
-                'proveedor': data[x]['fabricante'],
-                'marcas': []
-            };
-
-            tmp['marcas'].push(data[x]['familia']);
-            proveedores.push(tmp);
+        if (marcas.length == 0) {
+            marcas.push(data[x]['familia']);
         }
 
         else {
-            var proveedor = proveedores.find(o => o.proveedor == data[x]['fabricante']);
-            if (proveedor != undefined) {
-                if (!proveedor['marcas'].includes(data[x]['familia'])) {
-                    proveedor['marcas'].push(data[x]['familia']);
+                if (!marcas.includes(data[x]['familia'])) {
+                    marcas.push(data[x]['familia']);
                 }
-            }
-            else {
-                var tmp = {
-                    'proveedor': data[x]['fabricante'],
-                    'marcas': []
-                };
-                tmp['marcas'].push(data[x]['familia']);
-                proveedores.push(tmp);
-            }
         }
         x++;
     }
-    addSugerenciasProveedor(proveedores);
-    coincidenciasProveedor = proveedores.length;
+
+    marcas = marcas.sort(( a , b ) => {
+        if (a > b) {
+            return 1;
+        }
+        if (b > a) {
+            return -1;
+        }
+        return 0;
+    })
+
+    marcas.forEach((marca) => {
+        addSugerenciaMarca(marca);
+    })
+
     document.getElementById('cantidadRecomendacionesArticulo').innerText = coincidenciasArticulo + " coincidencias";
-    document.getElementById('cantidadRecomendacionesProveedor').innerText = coincidenciasProveedor + " coincidencias";
     document.getElementById('cantidadRecomendacionesMarca').innerText = coincidenciasMarca + " coincidencias";
     highlight(cadena);
     document.getElementById('btnBuscar').style.display = "block";
