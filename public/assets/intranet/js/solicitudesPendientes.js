@@ -2031,14 +2031,12 @@ function getDocumentoP() {
         'enctype': 'multipart/form-data',
         'timeout': 2 * 60 * 60 * 1000,
         success: function (result) {
-            console.log(result);
             if (result != null) {
-                console.log(result);
                 const blob = new Blob([s2ab(atob(result.description))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 const url = URL.createObjectURL(blob);
                 const enlace = document.createElement("a");
                 enlace.href = url;
-                enlace.download = "TemplateCyC.xlsx";
+                enlace.download = "Reporte.xlsx";
                 enlace.click();
             }
         },

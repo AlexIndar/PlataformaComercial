@@ -2309,34 +2309,34 @@ function saveEdit() {
             let folioSend = parseInt(document.getElementById("folioInf").innerHTML);
             console.log(jsonEdit);
             console.log(JSON.stringify(jsonEdit));
-            // $('#cargaModal').modal('show');
-            // $.ajax({
-            //     'headers': {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     },
-            //     'url': "MisSolicitudes/Update",
-            //     'type': 'POST',
-            //     'dataType': 'json',
-            //     'data': jsonEdit,
-            //     'enctype': 'multipart/form-data',
-            //     'timeout': 2 * 60 * 60 * 1000,
-            //     success: function (data) {
-            //         if (Number.isInteger(data)) {
-            //             $('#cargaModal').modal('hide');
-            //             $('#infoModal').modal('hide');
-            //             detalleSol(folioSend);
-            //         } else {
-            //             console.log(data);
-            //             alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
-            //             $('#cargaModal').modal('hide');
-            //         }
-            //     },
-            //     error: function (error) {
-            //         console.log(error);
-            //         alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
-            //         $('#cargaModal').modal('hide');
-            //     }
-            // });
+            $('#cargaModal').modal('show');
+            $.ajax({
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                'url': "MisSolicitudes/Update",
+                'type': 'POST',
+                'dataType': 'json',
+                'data': jsonEdit,
+                'enctype': 'multipart/form-data',
+                'timeout': 2 * 60 * 60 * 1000,
+                success: function (data) {
+                    if (Number.isInteger(data)) {
+                        $('#cargaModal').modal('hide');
+                        $('#infoModal').modal('hide');
+                        detalleSol(folioSend);
+                    } else {
+                        console.log(data);
+                        alert("Ocurrió un problema en el servidor, informar a adan.perez@indar.com.mx");
+                        $('#cargaModal').modal('hide');
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert("Error de solicitud, enviar correo a adan.perez@indar.com.mx");
+                    $('#cargaModal').modal('hide');
+                }
+            });
 
         } else {
             alert("Verifica todos los datos de la solicitud");
