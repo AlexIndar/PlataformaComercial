@@ -8,7 +8,10 @@ let sugerencias;
 
 let lastType = ''; //datetime de ultima tecla presionada
 let timeToDisable = 1000; // desactivar búsqueda si pasan 2 segundos sin presionar tecla
+
+
 let downArrowIndexActive = -1;
+let savedBusqueda = '';
 
 $(document).ready(function () {
 
@@ -30,38 +33,66 @@ $(document).ready(function () {
     $("#buscador").keyup(function (e) {
         lastType = new Date();
         var cadena = document.getElementById('buscador').value;
-        if(e.keyCode == 40){ //si baja con la flecha
+        if (e.keyCode == 40) { //si baja con la flecha
             const sugerenciasArticulos = document.querySelectorAll('.sugerenciaArticulo');
             const active = document.querySelector('.activeSugerencia');
             active && active.classList.remove('activeSugerencia');
             downArrowIndexActive++;
             sugerenciasArticulos.forEach((sugerencia, index) => {
-                if(downArrowIndexActive == index){
+                if (downArrowIndexActive == index) {
                     sugerencia.classList.add('activeSugerencia');
                     var topPos = sugerencia.offsetTop;
+                    savedBusqueda == '' ? savedBusqueda = document.getElementById('buscador').value : null;
+                    document.getElementById('buscador').value = sugerencia.firstChild.firstChild.innerText
                     document.getElementById('listSugerenciasArticulo').scrollTop = topPos - 120;
                 }
             });
         }
-        else{
+        else if (e.keyCode == 38) { //si sube con la flecha
+            const sugerenciasArticulos = document.querySelectorAll('.sugerenciaArticulo');
+            const active = document.querySelector('.activeSugerencia');
+            active && active.classList.remove('activeSugerencia');
+            downArrowIndexActive--;
+            if (downArrowIndexActive == -1) {
+                document.getElementById('buscador').value = savedBusqueda;
+                savedBusqueda = '';
+                document.getElementById('buscador').focus();
+            }
+            sugerenciasArticulos.forEach((sugerencia, index) => {
+                if (downArrowIndexActive == index) {
+                    sugerencia.classList.add('activeSugerencia');
+                    var topPos = sugerencia.offsetTop;
+                    document.getElementById('buscador').value = sugerencia.firstChild.firstChild.innerText
+                    document.getElementById('listSugerenciasArticulo').scrollTop = topPos - 90;
+                }
+            });
+        }
+        else {
             if (e.keyCode == 8) { //si está borrando
                 desactivaBuscador();
                 recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
                 highlight(cadena);
             }
             else if (e.keyCode == 13) { //si da enter
-                buscarFiltro("");
+                const sugerencia = document.querySelector('.activeSugerencia');
+                if (sugerencia != undefined) {
+                    const itemid = sugerencia.firstChild.lastChild.innerText;
+                    detalleArticulo(itemid);
+                }
+                else {
+                    buscarFiltro('');
+                }
             }
             else {
                 (cadena != '' && !intervalActive) && activaBuscador();
             }
             (cadena == '' && intervalActive) && desactivaBuscador();
-    
+
             if (cadena == '') {
                 closeSugerencias();
             }
         }
-        
+
     });
 
     $("#buscador").focusin(function () {
@@ -232,6 +263,9 @@ function clearSugerencias() {
 }
 
 function closeSugerencias() {
+    document.getElementById('buscador').value = '';
+    savedBusqueda = '';
+    downArrowIndexActive = -1;
     $(".resultadoBusqueda").slideUp();
     $(".overlayBusqueda").fadeOut();
     if (document.getElementById('bigImage-large')) {
@@ -283,14 +317,14 @@ function recargaSugerencias(data) {
         }
 
         else {
-                if (!marcas.includes(data[x]['familia'])) {
-                    marcas.push(data[x]['familia']);
-                }
+            if (!marcas.includes(data[x]['familia'])) {
+                marcas.push(data[x]['familia']);
+            }
         }
         x++;
     }
 
-    marcas = marcas.sort(( a , b ) => {
+    marcas = marcas.sort((a, b) => {
         if (a > b) {
             return 1;
         }
