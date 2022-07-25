@@ -187,12 +187,17 @@
             </div>
             <div class="offset-lg-0 col-lg-6 offset-md-1 col-md-10 offset-sm-1 col-sm-10 offset-xs-1 col-xs-10 col-10 offset-1 p-0">
                 <div class="mb-3 mt-3 d-flex justify-space-between flex-row w-100">
+                    <div class="input-group-prepend">
+                        <span class="d-flex justify-content-center align-items-center" style="cursor: pointer; width: 40px; background-color: #F5F8F8; color: #bbb " onclick='buscarFiltro("")'>
+                            <i id="btnBuscar" class="fas fa-search btnBuscar"></i>
+                            <div class="spinner-border" style="display: none; border: .10em solid currentColor; border-right-color: transparent; color: #333; width: 14px; height: 14px;" id="btnSpinner"></div>
+                        </span>
+                    </div>
                     <input type="text" class="form-control input-indar" id="buscador" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2" disabled>
                     <div class="input-group-append">
-                        <button class="btn btn-indar" onclick='buscarFiltro("")' type="button">
-                            <i id="btnBuscar" class="fas fa-search fa-lg"></i>
-                            <div class="spinner-border" style="display:none; width: 20px; height: 20px;" id="btnSpinner"></div>
-                        </button>
+                        <span class="d-flex justify-content-center align-items-center" style="cursor: pointer; width: 40px; background-color: #F5F8F8; color: #bbb " onclick='clearFiltro()'>
+                            <i id="btnEliminarBusqueda" class="fa-solid fa-xmark fa-lg btnBuscar"></i>
+                        </span>
                     </div>
                 </div>
                 <div class="resultadoBusqueda" id="resultado-busqueda">

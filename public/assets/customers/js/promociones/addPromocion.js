@@ -729,6 +729,7 @@ function validarPromo() {
             clientesId: clientes.toString(),
             clientesIncluye: document.getElementById('listaClientes').value == 'blanca' ? true : false,
             plazo: '',
+            ofertaRelampago: document.getElementById('tipo_promocion').value == "relampago" ? true : false,
             montoMinCash: document.getElementById('preciomin').value == "" ? 0 : parseFloat(document.getElementById('preciomin').value),
             montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
             fechaInicio: startTime,
@@ -763,9 +764,8 @@ function validarPromo() {
                 }
             },
             error: function (error) {
-                console.log(error);
+                console.warn(error);
                 alert('Error guardando promoción');
-                // window.location.href = '/promociones';
             }
         });
     }
@@ -811,7 +811,6 @@ function clearSelectionAccept() {
 }
 
 function addPromoRules(rules) {
-
     startDate = rules['fechaInicio'].split('T')[0];
     endDate = rules['fechaFin'].split('T')[0];
     document.getElementById('rangoFechas').style.display = "block";

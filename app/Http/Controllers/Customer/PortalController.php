@@ -181,5 +181,10 @@ class PortalController extends Controller
 
     }
 
+    public static function getOfertaRelampago($token){
+        $response = Http::withToken($token)->get(config('global.api_url').'/Portal/GetOfertaRelampago');
+        return json_decode($response->body(), true);
+    }
+
     
 }

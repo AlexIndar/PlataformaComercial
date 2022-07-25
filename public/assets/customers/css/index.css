@@ -94,6 +94,16 @@ button:focus {
     margin-top: 3px !important;
 }
 
+.btnBuscar{
+    -webkit-text-stroke: 1px #F5F8F8; 
+    color: #333 !important;
+    transition: all 250ms ease;
+}
+
+.btnBuscar:hover{ 
+    -webkit-text-stroke: 0 #F5F8F8; 
+}
+
 
 /* NAVBAR ------------------------------------------------------------------------------------------------------------------------------------------------ */
 

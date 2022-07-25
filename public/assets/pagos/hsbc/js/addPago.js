@@ -31,8 +31,8 @@ var detalle = [];
 
 
 
-function addRowNewPago(){
-    num_movtos ++;
+function addRowNewPago() {
+    num_movtos++;
     var container = document.getElementById('pagos');
 
     var hr = document.createElement('hr');
@@ -42,7 +42,7 @@ function addRowNewPago(){
 
     var h2LeyendaPago = document.createElement('h2');
     h2LeyendaPago.setAttribute('class', 'w-100 text-center');
-    h2LeyendaPago.innerText = 'Pago '+ num_movtos;
+    h2LeyendaPago.innerText = 'Pago ' + num_movtos;
 
     // ------------------------------------------------------------------------------------- ROW 1 (CONCEPTO) ----------------------------------------------------------
 
@@ -65,8 +65,8 @@ function addRowNewPago(){
     var inputConcepto = document.createElement('input');
     inputConcepto.setAttribute('class', 'input-promociones');
     inputConcepto.setAttribute('type', 'text');
-    inputConcepto.setAttribute('id', 'leyenda_abono'+num_movtos);
-    inputConcepto.setAttribute('name', 'leyenda_abono'+num_movtos);
+    inputConcepto.setAttribute('id', 'leyenda_abono' + num_movtos);
+    inputConcepto.setAttribute('name', 'leyenda_abono' + num_movtos);
     inputConcepto.setAttribute('maxlength', '30');
     inputConcepto.setAttribute('placeholder', 'Alfanumérico. Máximo 30 caracteres.');
     inputConcepto.setAttribute('required', '');
@@ -97,8 +97,8 @@ function addRowNewPago(){
     var inputReferencia = document.createElement('input');
     inputReferencia.setAttribute('class', 'input-promociones');
     inputReferencia.setAttribute('type', 'text');
-    inputReferencia.setAttribute('id', 'ref_numerica'+num_movtos);
-    inputReferencia.setAttribute('name', 'ref_numerica'+num_movtos);
+    inputReferencia.setAttribute('id', 'ref_numerica' + num_movtos);
+    inputReferencia.setAttribute('name', 'ref_numerica' + num_movtos);
     inputReferencia.setAttribute('maxlength', '7');
     inputReferencia.setAttribute('placeholder', '0000000');
     inputReferencia.setAttribute('required', '');
@@ -120,8 +120,8 @@ function addRowNewPago(){
     var inputImporte = document.createElement('input');
     inputImporte.setAttribute('class', 'input-promociones');
     inputImporte.setAttribute('type', 'text');
-    inputImporte.setAttribute('id', 'importe_orden'+num_movtos);
-    inputImporte.setAttribute('name', 'importe_orden'+num_movtos);
+    inputImporte.setAttribute('id', 'importe_orden' + num_movtos);
+    inputImporte.setAttribute('name', 'importe_orden' + num_movtos);
     inputImporte.setAttribute('maxlength', '15');
     inputImporte.setAttribute('required', '');
     inputImporte.setAttribute('onfocusout', 'formatImporte(this)');
@@ -146,45 +146,45 @@ function addRowNewPago(){
 
 }
 
-function formatImporte(input){
-    if(input.value == '' || input.value == null || input.value == undefined){
+function formatImporte(input) {
+    if (input.value == '' || input.value == null || input.value == undefined) {
         input.value = parseFloat('0.00');
     }
-    else{
+    else {
         const value = input.value.replace(/,/g, '');
         input.value = parseFloat(value).toLocaleString('en-US', {
-          style: 'decimal',
-          maximumFractionDigits: 2,
-          minimumFractionDigits: 2
+            style: 'decimal',
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
         });
-    }   
+    }
 }
 
-function generateFile(){
+function generateFile() {
     var encabezado = '';
     var fileText = '';
-    if (validarCampos()){
+    if (validarCampos()) {
         generaEncabezado(num_secuencia);
         // si todo está correcto, aquí !!! se debe de cambiar el número de lote por el que retornen del back
-        encabezado += tpo_registro+''+num_lote+''+num_secuencia.toString().padStart(5, "0")+''+fec_aplicacion+''+cve_bco_ord+''+ord_tpo_cta+''+ord_num_cta+''+ord_nombre+''+ord_curp_rfc+''+cve_proceso+''+cve_producto+''+cod_instruccion+''+cod_moneda+''+leyenda_cargo+''+num_movtos.toString().padStart(5, "0")+''+imp_total.toString().padStart(17, "0")+''+cve_canal+''+cod_rechazo+''+des_rechazo+''+tp_code+''+uso_futuro;
+        encabezado += tpo_registro + '' + num_lote + '' + num_secuencia.toString().padStart(5, "0") + '' + fec_aplicacion + '' + cve_bco_ord + '' + ord_tpo_cta + '' + ord_num_cta + '' + ord_nombre + '' + ord_curp_rfc + '' + cve_proceso + '' + cve_producto + '' + cod_instruccion + '' + cod_moneda + '' + leyenda_cargo + '' + num_movtos.toString().padStart(5, "0") + '' + imp_total.toString().padStart(17, "0") + '' + cve_canal + '' + cod_rechazo + '' + des_rechazo + '' + tp_code + '' + uso_futuro;
         fileText += encabezado;
-        num_secuencia ++;
-        for(var x=0; x < num_movtos; x++){
+        num_secuencia++;
+        for (var x = 0; x < num_movtos; x++) {
             obtenerPago(num_secuencia);
-            num_secuencia ++ ;
+            num_secuencia++;
         }
-        for(var x=0; x < detalle.length; x++){
+        for (var x = 0; x < detalle.length; x++) {
             var detalleLine = '';
             // si todo está correcto, aquí !!! se debe de cambiar el número de lote por el que retornen del back
             detalleLine += detalle[x]['tpo_registro'] + detalle[x]['num_lote'].toString().padStart(5, '0') + detalle[x]['num_secuencia'] + detalle[x]['fec_aplicacion'] + detalle[x]['cve_bco_ord'] + detalle[x]['ord_tpo_cta'] + detalle[x]['ord_num_cta'] + detalle[x]['ord_nombre'] + detalle[x]['ord_curp_rfc'] + detalle[x]['cve_bco_ben'] + detalle[x]['ben_tpo_cta'] + detalle[x]['ben_num_cta'] + detalle[x]['ben_nombre'] + detalle[x]['ben_curp_rfc'] + detalle[x]['vos_tpo_cta'] + detalle[x]['vos_num_cta'] + detalle[x]['vos_nombre'] + detalle[x]['vos_curp_rfc'] + detalle[x]['cod_movto'] + detalle[x]['tpo_pago'] + detalle[x]['leyenda_abono'] + detalle[x]['importe_orden'] + detalle[x]['importe_iva'] + detalle[x]['ref_numerica'] + detalle[x]['ref_cobranza'] + detalle[x]['cve_pago'] + detalle[x]['tpo_operacion'] + detalle[x]['ref_unica_cliente'] + detalle[x]['ref_servicio_emisor'] + detalle[x]['nom_titular_servicio'] + detalle[x]['fec_expiracion'] + detalle[x]['cod_status'] + detalle[x]['cod_usuario'] + detalle[x]['num_serial'] + detalle[x]['num_folio'] + detalle[x]['cod_servicio'] + detalle[x]['uso_futuro'] + detalle[x]['cve_rastreo'] + detalle[x]['cod_rechazo'] + detalle[x]['des_rechazo'] + detalle[x]['uso_futuro_resp'];
-            fileText += "\n"+detalleLine;
+            fileText += "\n" + detalleLine;
         }
 
-        downloadFile('MXFERREINDARSIP-'+fec_aplicacion+'-'+num_lote+'.txt', fileText);
+        downloadFile('MXFERREINDARSIP-' + fec_aplicacion + '-' + num_lote + '.txt', fileText);
     }
 }
 
-function validarCampos(){
+function validarCampos() {
     var bodyValidations = '';
     var save = true;
 
@@ -243,35 +243,35 @@ function validarCampos(){
         document.getElementById('ben_num_cta').classList.add('valid-input');
     }
 
-    for(var x = 1; x <= num_movtos; x++){
-        if (document.getElementById('leyenda_abono'+x).value == '') {
+    for (var x = 1; x <= num_movtos; x++) {
+        if (document.getElementById('leyenda_abono' + x).value == '') {
             save = false;
-            document.getElementById('leyenda_abono'+x).classList.add('invalid-input');
-            bodyValidations += '<h5>Pago '+x+': Ingresa Concepto</h5>';
+            document.getElementById('leyenda_abono' + x).classList.add('invalid-input');
+            bodyValidations += '<h5>Pago ' + x + ': Ingresa Concepto</h5>';
         }
         else {
-            document.getElementById('leyenda_abono'+x).classList.remove('invalid-input');
-            document.getElementById('leyenda_abono'+x).classList.add('valid-input');
+            document.getElementById('leyenda_abono' + x).classList.remove('invalid-input');
+            document.getElementById('leyenda_abono' + x).classList.add('valid-input');
         }
 
-        if (document.getElementById('ref_numerica'+x).value == '') {
+        if (document.getElementById('ref_numerica' + x).value == '') {
             save = false;
-            document.getElementById('ref_numerica'+x).classList.add('invalid-input');
-            bodyValidations += '<h5>Pago '+x+': Ingresa Referencia Numérica</h5>';
+            document.getElementById('ref_numerica' + x).classList.add('invalid-input');
+            bodyValidations += '<h5>Pago ' + x + ': Ingresa Referencia Numérica</h5>';
         }
         else {
-            document.getElementById('ref_numerica'+x).classList.remove('invalid-input');
-            document.getElementById('ref_numerica'+x).classList.add('valid-input');
+            document.getElementById('ref_numerica' + x).classList.remove('invalid-input');
+            document.getElementById('ref_numerica' + x).classList.add('valid-input');
         }
 
-        if (document.getElementById('importe_orden'+x).value == '') {
+        if (document.getElementById('importe_orden' + x).value == '') {
             save = false;
-            document.getElementById('importe_orden'+x).classList.add('invalid-input');
-            bodyValidations += '<h5>Pago '+x+': Ingresa Referencia Numérica</h5>';
+            document.getElementById('importe_orden' + x).classList.add('invalid-input');
+            bodyValidations += '<h5>Pago ' + x + ': Ingresa Referencia Numérica</h5>';
         }
         else {
-            document.getElementById('importe_orden'+x).classList.remove('invalid-input');
-            document.getElementById('importe_orden'+x).classList.add('valid-input');
+            document.getElementById('importe_orden' + x).classList.remove('invalid-input');
+            document.getElementById('importe_orden' + x).classList.add('valid-input');
         }
     }
 
@@ -288,7 +288,7 @@ function validarCampos(){
     return true;
 }
 
-function closeModal(){
+function closeModal() {
     var activeModal = document.getElementsByClassName("active-modal");
     if (activeModal.length > 1)
         activeModal = activeModal[1];
@@ -300,12 +300,12 @@ function closeModal(){
 }
 
 
-function generaEncabezado(num_secuencia){
+function generaEncabezado(num_secuencia) {
 
     var importeTotal = 0;
 
-    for(var x=1; x <= num_movtos; x++){
-        var importe = document.getElementById('importe_orden'+x).value;
+    for (var x = 1; x <= num_movtos; x++) {
+        var importe = document.getElementById('importe_orden' + x).value;
         importe = importe.replace(',', ''); //quitar coma del importe
         importe = importe.replace('.', ''); //quitar punto del importe
         importeTotal += parseInt(importe);
@@ -339,12 +339,12 @@ function generaEncabezado(num_secuencia){
     console.log(jsonEncabezado);
 }
 
-function obtenerPago(num_secuencia){
+function obtenerPago(num_secuencia) {
 
-    console.log('Generar linea de pago '+num_secuencia);
+    console.log('Generar linea de pago ' + num_secuencia);
 
     var num_abono = num_secuencia - 1;
-    var importe = document.getElementById('importe_orden'+num_abono).value;
+    var importe = document.getElementById('importe_orden' + num_abono).value;
     importe = importe.replace(',', ''); //quitar coma del importe
     importe = importe.replace('.', ''); //quitar punto del importe
 
@@ -369,16 +369,16 @@ function obtenerPago(num_secuencia){
         vos_curp_rfc: "".padEnd(18, ' '),
         cod_movto: "01",
         tpo_pago: $('#cve_bco_ben option:selected').text() == 'HSBC' ? "00" : "01", //00 CUENTAS HSBC 01 OTROS BANCOS
-        leyenda_abono: document.getElementById('leyenda_abono'+num_abono).value.padEnd(40, ' '),
+        leyenda_abono: document.getElementById('leyenda_abono' + num_abono).value.padEnd(40, ' '),
         importe_orden: importe.padStart(15, '0'),
         importe_iva: "".padStart(15, '0'),
-        ref_numerica: document.getElementById('ref_numerica'+num_abono).value.padStart(7, '0'),
-        ref_cobranza: "".padEnd(40, ' '), 
+        ref_numerica: document.getElementById('ref_numerica' + num_abono).value.padStart(7, '0'),
+        ref_cobranza: "".padEnd(40, ' '),
         cve_pago: "".padEnd(10, ' '),
         tpo_operacion: "00",
-        ref_unica_cliente: document.getElementById('leyenda_abono'+num_abono).value.padEnd(30, ' '),
-        ref_servicio_emisor: document.getElementById('leyenda_abono'+num_abono).value.padEnd(40, ' '),
-        nom_titular_servicio:  "".padEnd(40, ' '),
+        ref_unica_cliente: document.getElementById('leyenda_abono' + num_abono).value.padEnd(30, ' '),
+        ref_servicio_emisor: document.getElementById('leyenda_abono' + num_abono).value.padEnd(40, ' '),
+        nom_titular_servicio: "".padEnd(40, ' '),
         fec_expiracion: "00000000",
         cod_status: "00",
         cod_usuario: "".padEnd(8, ' '),
@@ -401,12 +401,12 @@ function downloadFile(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
-  
+
     element.style.display = 'none';
     document.body.appendChild(element);
-  
+
     element.click();
-  
+
     document.body.removeChild(element);
-  }
-  
+}
+

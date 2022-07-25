@@ -38,12 +38,20 @@ $(document).ready(function () {
             const active = document.querySelector('.activeSugerencia');
             active && active.classList.remove('activeSugerencia');
             downArrowIndexActive++;
+            if (downArrowIndexActive == sugerenciasArticulos.length) {
+                document.getElementById('buscador').value = savedBusqueda;
+                savedBusqueda = '';
+                document.getElementById('buscador').focus();
+                let topPos = sugerenciasArticulos[0].offsetTop;
+                document.getElementById('listSugerenciasArticulo').scrollTop = topPos + 100;
+                downArrowIndexActive = -1;
+            }
             sugerenciasArticulos.forEach((sugerencia, index) => {
                 if (downArrowIndexActive == index) {
                     sugerencia.classList.add('activeSugerencia');
-                    var topPos = sugerencia.offsetTop;
                     savedBusqueda == '' ? savedBusqueda = document.getElementById('buscador').value : null;
                     document.getElementById('buscador').value = sugerencia.firstChild.firstChild.innerText
+                    let topPos = sugerencia.offsetTop;
                     document.getElementById('listSugerenciasArticulo').scrollTop = topPos - 120;
                 }
             });
@@ -61,13 +69,15 @@ $(document).ready(function () {
             sugerenciasArticulos.forEach((sugerencia, index) => {
                 if (downArrowIndexActive == index) {
                     sugerencia.classList.add('activeSugerencia');
-                    var topPos = sugerencia.offsetTop;
                     document.getElementById('buscador').value = sugerencia.firstChild.firstChild.innerText
+                    let topPos = sugerencia.offsetTop;
                     document.getElementById('listSugerenciasArticulo').scrollTop = topPos - 90;
                 }
             });
         }
         else {
+            savedBusqueda = '';
+            downArrowIndexActive = -1;
             if (e.keyCode == 8) { //si está borrando
                 desactivaBuscador();
                 recargaSugerencias(sugerencias); //volver a recargar recuadro de sugerencias pero con las que ya tengo del back, no es necesario volverlas a pedir
@@ -372,6 +382,13 @@ function buscarFiltro(filtro) {
         }
         window.location = "/portal/busqueda/" + filtro;
     }
+}
+
+const clearFiltro = () => {
+    document.getElementById('buscador').value = '';
+    savedBusqueda = '';
+    document.getElementById('buscador').focus();
+    downArrowIndexActive = -1;
 }
 
 function detalleArticulo(codigo) {
