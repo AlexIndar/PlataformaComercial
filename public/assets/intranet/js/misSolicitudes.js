@@ -2013,7 +2013,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
         document.getElementById("noFEButtons").innerHTML = getButtons(data2.numeroExterior, "noFEdit");
 
         document.getElementById("noIntFEdit").value = data.cliente.datosF.domicilio.noInt;
-        document.getElementById("noIntFEButtons").innerHTML = getButtons(data2.numeroExterior, "noIntFEdit");
+        document.getElementById("noIntFEButtons").innerHTML = getButtons(data2.numeroInterior, "noIntFEdit");
 
         document.getElementById("cityFEdit").value = data.cliente.datosF.domicilio.ciudad;
         document.getElementById("cityFEButtons").innerHTML = getButtons(data2.ciudad, "cityFEdit");
@@ -2046,7 +2046,7 @@ function showInfoModal(data, data2, valContac, filesList, factList) {
         document.getElementById("noEEButtons").innerHTML = getButtons(data2.numeroExteriorEntrega, "noEEdit");
 
         document.getElementById("noIntEEdit").value = data.cliente.datosE.domicilio.noInt;
-        document.getElementById("noIntEButtons").innerHTML = getButtons(data2.numeroExteriorEntrega, "noIntEEdit");
+        document.getElementById("noIntEButtons").innerHTML = getButtons(data2.numeroInteriorEntrega, "noIntEEdit");
 
         document.getElementById("cityEEdit").value = data.cliente.datosE.domicilio.ciudad;
         document.getElementById("cityEEButtons").innerHTML = getButtons(data2.ciudadEntrega, "cityEEdit");
