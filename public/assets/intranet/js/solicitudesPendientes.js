@@ -709,7 +709,7 @@ function showInfoModal(data, data2, valContac, filesList, factList, typeCyC) {
             }
             // getAlert("alertRef", data.observations.referencias);
         }
-        // //CARGAR BOTONES CON IMAGENES
+        // //CARGAR BOTONES CON IMAGENES        
         for (let i = 0; i < filesList.length; i++) {
             switch (filesList[i].type) {
                 case 1:
