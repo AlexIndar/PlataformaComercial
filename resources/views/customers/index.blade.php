@@ -163,18 +163,16 @@
     
 
 
-    <!-- RELAMPAGO ----------------------------------------------------------------------------------------------------------------------------------------------------- -->
     @if($token && $token != 'error')
     <br>
     <div class="container-fluid" style="width: 90% !important; margin-left: 5% !important;">
-        <div class="row mt-5">
+        <!-- RELAMPAGO ----------------------------------------------------------------------------------------------------------------------------------------------------- -->
+        <div class="row mt-5" onclick="addPedidoRelampago()">
             <div class="col-lg-4 col-md-4 col-sm-12 col-12 d-flex justify-content-center align-items-center flex-column">
                 <div class="d-flex flex-row justify-content-center align-items-center">
                     @for($x=0; $x < count($actions); $x++)
                         @if($actions[$x]['portalMkt_']['seccion'] == 'Ofertas Relampago' && str_contains($actions[$x]['portalMkt_']['filename'], 'png'))
-                                <a href="{{$actions[$x]['portalMkt_']['valor']}}">
-                                    <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" style="margin-left: 5%;" width="90%" alt="Logo Ofertas Relámpago INDAR">    
-                                </a>
+                                <img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" style="margin-left: 5%;" width="90%" alt="Logo Ofertas Relámpago INDAR">    
                         @endif
                     @endFor
                 </div>
@@ -200,9 +198,7 @@
             <div class="col-lg-8 col-md-8 col-sm-12 col-12 supplier-relampago">
                     @for($x=0; $x < count($actions); $x++)
                         @if($actions[$x]['portalMkt_']['seccion'] == 'Ofertas Relampago' && str_contains($actions[$x]['portalMkt_']['filename'], 'jpg'))
-                                <a href="{{$actions[$x]['portalMkt_']['valor']}}">
-                                    <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" height="auto" alt="Banner Ofertas Relámpago INDAR"></div>
-                                </a>
+                                <div class="zoom"><img loading="lazy" src="{{asset($actions[$x]['portalMkt_']['rutaImg'])}}" height="auto" alt="Banner Ofertas Relámpago INDAR"></div>
                         @endif
                     @endFor
             </div>
@@ -254,7 +250,7 @@
                         <!-- Slides -->
                         @for ($x = 0; $x < 20; $x++)
                         <div class="swiper-slide swiper-slide-products" onclick="detailsProduct('{{$bestSellers[$x]->itemid}}')">
-                            <img loading="lazy" src="http://192.168.70.108:8080/public/assets/articulos/img/02_WEBP_MD/{{$bestSellers[$x]->itemid}}_MD.webp" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
+                            <img loading="lazy" src="http://indarweb.dyndns.org:8080/assets/articulos/img/02_WEBP_MD/{{$bestSellers[$x]->itemid}}_MD.webp" onerror="this.onerror=null; this.src ='/assets/customers/img/jpg/imagen_no_disponible.jpg'" alt="">
                             <h5>{{$bestSellers[$x]->purchasedescription}}</h5>
                             @if($status == 'active')
                                 <h5> <span class="original-price">${{$bestSellers[$x]->priceList}}</span>  <br> <span class="price"></span>${{$bestSellers[$x]->nsoIndrSalesMinPrice}}</h5>
@@ -308,6 +304,15 @@
                 @endif
             @endFor
         </div>
+
+
+        {{-- FORM RELAMPAGO --}}
+
+        <form style="display: none" action="/pedido/nuevo" method="POST" id="formRelampago">
+            @csrf
+            <input type="hidden" id="entity" name="entity" value="{{ $entity }}" />
+            <input type="hidden" id="typeOrder" name="typeOrder" value="relampago" />
+        </form>
 
 
     </div>

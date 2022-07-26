@@ -40,6 +40,17 @@
                 </div>
                 <br>
 
+                <div class="row text-center">
+                    <div class="col-lg-2 col-md-3 d-md-block d-lg-block d-sm-none d-none"></div>
+                    <div class="col-lg-2 col-md-3 col-sm-12 col-12"><h5>Tipo de Promoción</h5></div>
+                    <div class="col-lg-8 col-md-6 col-sm-12 col-12">
+                        <select id="tipo_promocion" name="tipo_promocion" class="form-control selectpicker" data-live-search="true">
+                            <option selected value="normal">Solo para tus ojos</option>
+                            <option value="relampago">Oferta Relámpago</option>
+                        </select>
+                    </div>
+                </div>
+
                 <br>
                 <div class="row text-center">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">

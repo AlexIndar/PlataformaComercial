@@ -1,3 +1,4 @@
+
 let info = []; //resultado getInfoHeatWeb (información de encabezado del pedido)
 let addresses = []; //Direcciones de las sucursales del cliente
 let shippingWays = []; //Formas de envío del cliente
@@ -42,6 +43,8 @@ let intervalInventario;
 let entity;
 let entityCte;
 
+let typeOrder; //saber si es pedido relampago o normal
+
 //TIPO PEDIDO. 1 = PEDIDO CREADO POR CLIENTE;  0 = PEDIDO CREADO POR VENDEDOR
 let tipoPedido = 0;
 //TIPO GET ITEM BY ID. 0 = CON AJAX, EJECUTAR REQUEST DE API GETITEMBYID; 1 = DEL INVENTARIO, SIRVE PARA CARGAR PEDIDOS CREADOS POR CLIENTES Y CUANDO SON MUY LARGOS (MUCHAS PARTIDAS) NO DE PROBLEMAS PARA CARGARLOS
@@ -75,6 +78,7 @@ $(document).ready(function () {
     });
 
     entity = document.getElementById('entity').value;
+    typeOrder = document.getElementById('typeOrder').value;
     entity = entity.toUpperCase();
     if (!entity.startsWith("C") && !entity.startsWith("E")) { //Si tiene lista de clientes
         document.getElementById('loading-message').innerHTML = 'Selecciona un cliente para cargar inventario';
@@ -212,7 +216,7 @@ const getInfoHeatWeb = function (entity) {
         $.ajax({
             type: "GET",
             enctype: 'multipart/form-data',
-            url: "nuevo/getInfoHeatWeb/" + entity,
+            url: "/pedido/nuevo/getInfoHeatWeb/" + entity,
             headers: {
                 'X-CSRF-Token': '{{ csrf_token() }}',
             },
@@ -253,6 +257,32 @@ const removeSkeleton = () => {
     document.getElementById('tags-promoLabel').classList.remove('d-none');
     document.getElementById('cupon').classList.remove('d-none');
     document.getElementById('cuponLabel').classList.remove('d-none');
+}
+
+const validateRelampago = () => {
+    if(typeOrder == 'relampago'){
+        return new Promise((resolve, reject) => {
+            $.ajax({
+              type: "GET",
+              enctype: 'multipart/form-data',
+              url: "/getOfertasRelampago",
+              headers: {
+                  'X-CSRF-Token': '{{ csrf_token() }}',
+              },
+              success: function (resp) {
+                  resolve(resp);
+              },
+              error: function (error) {
+                  reject(error);
+              }
+          });
+        })
+    }
+    else{
+        return new Promise((resolve, reject) => {
+           resolve(null);
+        })
+    }
 }
 
 
@@ -544,7 +574,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: "nuevo/SepararPedidosPaquete",
+                url: "/pedido/nuevo/SepararPedidosPaquete",
                 timeout: 2 * 60 * 60 * 1000,
                 contentType: "application/json",
                 data: JSON.stringify({ key: json }),
@@ -580,7 +610,7 @@ function separarPedidosPromo(json, separar) {  //envía json a back y recibe ped
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: "nuevo/SepararPedidosPromo",
+                url: "/pedido/nuevo/SepararPedidosPromo",
                 timeout: 2 * 60 * 60 * 1000,
                 contentType: "application/json",
                 data: JSON.stringify({ key: json }),
@@ -777,7 +807,7 @@ function getItemById(item, separa) {
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url: "nuevo/getItemByID",
+            url: "/pedido/nuevo/getItemByID",
             timeout: 2 * 60 * 60 * 1000,
             async: true,
             data: data,
@@ -873,7 +903,7 @@ const getItems = (entity) => {
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            'url': "nuevo/getItems/all",
+            'url': "/pedido/nuevo/getItems/all",
             'type': 'POST',
             'data': data,
             'enctype': 'multipart/form-data',
@@ -1759,7 +1789,7 @@ function save(type) { //TYPE: 1 = GUARDAR PEDIDO NUEVO, 2 = GUARDAR EDITADO (UPD
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                'url': "storePedido",
+                'url': "/pedido/storePedido",
                 'type': 'POST',
                 'dataType': 'json',
                 'async': false,
@@ -2042,7 +2072,7 @@ function saveNS() {
             'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            'url': "storePedidoNS",
+            'url': "/pedido/storePedidoNS",
             'type': 'POST',
             'data': { json: listNS },
             'enctype': 'multipart/form-data',
@@ -2788,6 +2818,7 @@ const updateCustomerInfo = (selected, loadingMessage = 'Cargando cotización...'
                         empty == "no" && destroyInventario();
                         loadInventario();
                         validateUpdate();
+                        validateRelampago().then(resp => resp != null && cargaPedidoRelampago(resp));
                         resolve();
                     })
                     .catch((err) => {console.warn; reject(err)});
@@ -2842,4 +2873,25 @@ function getPUnitario(item) {
 
 
     return parseFloat(precioCliente.toFixed(2));
+}
+
+function cargaPedidoRelampago(resp){
+    let items = resp.articulos;
+    cantItemsPorCargar = items.length;
+
+    items.forEach(item => {
+        var art = selectedItemsFromInventory.find(o => o.item === item.articulo.trim());
+        if (art != undefined)
+            art['cant'] = (parseInt(art['cant']) + parseInt(item.multiplo)).toString();
+        else
+            selectedItemsFromInventory.push({ item: item.articulo.trim(), cant: item.multiplo });
+    });
+
+    document.getElementById("btnSpinnerPedido").style.display = "block";
+    var btnActions = document.getElementsByClassName('btn-group-buttons');
+    for (var x = 0; x < btnActions.length; x++) {
+        btnActions[x].disabled = true;
+    }
+
+    prepareJsonSeparaPedidos(false);
 }

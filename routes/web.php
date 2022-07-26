@@ -90,13 +90,14 @@ Route::get('/', function () {
     $rama1 = RamasController::getRama1();
     $rama2 = RamasController::getRama2();
     $rama3 = RamasController::getRama3();
+    $entity = 'E1731'; //Cambiar cuaando se tenga la info de los clientes
 
     $level = "C";
     if(isset($_COOKIE['_lv'])){
         $level = $_COOKIE['_lv'];
     }
 
-    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions]);
+    return view('customers.index', ['token' => $token, 'bestSellers' => $bestSellers, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'level' => $level, 'status' => $status, 'actions' => $actions, 'entity' => $entity]);
 
 })->name('/');
 
@@ -400,22 +401,24 @@ Route::middleware([ValidateSession::class])->group(function(){
                             });
 
                             // Route::get('/pedido/nuevo/{entity}', function ($entity){
+                            //     ini_set('memory_limit', '-1');
                             //     $token = TokenController::getToken();
-                            //     if($token == 'error' || $token == 'expired'){
+                            //     if($token == 'error' || $token == 'expired' || $token == ''){
                             //         LoginController::logout();
                             //     }
                             //     $rama1 = RamasController::getRama1();
                             //     $rama2 = RamasController::getRama2();
                             //     $rama3 = RamasController::getRama3();
+                            //     $entity = $entity;
                             //     $level = $entity[0];
-                            //     if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
-                            //     if(str_starts_with($entity, 'Z1')){
-                            //         $entity = 'ALL';
+                            //     $userData = json_decode(MisSolicitudesController::getUserRol($token));
+                            //     if($userData == null){
+                            //         LoginController::logout();
                             //     }
+                            //     $username = $userData->typeUser;
+                            //     $userRol = $userData->permissions;
                             //     $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
-                            //     // dd($data);
-                            //     return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data]);
-
+                            //     return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
                             // });
 
                             Route::post('/pedido/nuevo', function (Request $request){
@@ -434,25 +437,30 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 }
                                 $username = $userData->typeUser;
                                 $userRol = $userData->permissions;
-                                $directores = ['rvelasco', 'alejandro.jimenez'];
-                                $zonaInfo = MisSolicitudesController::getZone($token,$username);
-                                if(isset(json_decode($zonaInfo->body())->status) || $userRol == 'APOYOVENTA' || in_array($username, $directores) ){
-                                    $entity = 'ALL';
-                                    $zona = 'ALL';
+                                $typeOrder = $request->typeOrder;
+                                if($typeOrder == 'normal'){
+                                    $directores = ['rvelasco', 'alejandro.jimenez'];
+                                    $zonaInfo = MisSolicitudesController::getZone($token,$username);
+                                    if(isset(json_decode($zonaInfo->body())->status) || $userRol == 'APOYOVENTA' || in_array($username, $directores) ){
+                                        $entity = 'ALL';
+                                        $zona = 'ALL';
+                                    }
+                                    else{
+                                        $entity = json_decode($zonaInfo->body())->description;
+                                        $zona = json_decode($zonaInfo->body())->description;
+                                    }
+                                    $level = $entity[0];
+                                    if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
+                                    if(str_starts_with($entity, 'Z1')){
+                                        $entity = 'ALL';
+                                        $zona = 'ALL';
+                                    }
                                 }
                                 else{
-                                    $entity = json_decode($zonaInfo->body())->description;
-                                    $zona = json_decode($zonaInfo->body())->description;
+                                    $level = $entity[0];
                                 }
-                                $level = $entity[0];
-                                if($level == 'A'){ $level = "E"; } // si entity inicia con A = All es apoyo de ventas = empleado = E
-                                if(str_starts_with($entity, 'Z1')){
-                                    $entity = 'ALL';
-                                    $zona = 'ALL';
-                                }
-                                // $entity = 'C002620';
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
-                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol]);
+                                return view('customers.pedidos.addPedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'data' => $data, 'username' => $username, 'userRol' => $userRol, 'typeOrder' => $typeOrder]);
                             });
 
                             Route::post('/pedido/eliminar', function (Request $request){
@@ -478,6 +486,7 @@ Route::middleware([ValidateSession::class])->group(function(){
                                 if(str_starts_with($entity, 'Z1')){
                                     $entity = 'ALL';
                                 }
+                                $typeOrder = 'normal';
                                 $data = SaleOrdersController::getInfoHeatWeb($token, $entity);
                                 $cotizacion = CotizacionController::getCotizacionIdWeb($token, $request->id);
                                 return view('customers.pedidos.updatePedido', ['token' => $token, 'rama1' => $rama1, 'rama2' => $rama2, 'rama3' => $rama3, 'entity' => $entity, 'level' => $level, 'cotizacion' => $cotizacion, 'data' => $data]);
@@ -1114,6 +1123,29 @@ Route::middleware([ValidateSession::class])->group(function(){
                     }
                     $result = PortalController::busquedaGeneralItem($token, $data);
                     return $result;
+                });
+
+                Route::get('/getOfertasRelampago', function() {
+                    $token = TokenController::getToken();
+                    if($token && $token != 'error' && $token != 'expired'){
+                        $ofertaRelampago = PortalController::getOfertaRelampago($token);
+                    }
+                    else{
+                        $ofertaRelampago = PortalController::getOfertaRelampago('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM');
+                    }
+                    return $ofertaRelampago;
+                });
+
+                Route::get('/addPedidoRelampago', function() {
+                    $token = TokenController::getToken();
+                    if($token && $token != 'error' && $token != 'expired'){
+                        $ofertaRelampago = PortalController::getOfertaRelampago($token);
+                    }
+                    else{
+                        $ofertaRelampago = PortalController::getOfertaRelampago('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFsZWphbmRyby5qaW1lbmV6IiwiUm9sZSI6IkFETUlOIiwianRpIjoiYTg5NmEzYTUtMDI3ZC00N2M5LWEwNWEtNmI1YTBmOGFhMGFjIiwiZXhwIjoxOTUyOTA5NjY4LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMzNi8ifQ.aqSmiV9BjVZAPl7QYLYihLuI_unW0DTT3ucTE5DBwfM');
+                    }
+
+                    
                 });
 
                 Route::get('/portal/busqueda/{filter}/{from?}/{to?}/{match?}', function ($filter, $from = 1, $to = 50){

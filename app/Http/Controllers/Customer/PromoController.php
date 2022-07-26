@@ -189,4 +189,6 @@ class PromoController extends Controller
         $response = Http::withToken($token)->get(config('global.api_url').'/Eventos/getIdPaquete?IdPaquete='.$id);
         return json_decode($response->body());
     }
+
+    
 }

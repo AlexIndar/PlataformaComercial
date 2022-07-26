@@ -8,8 +8,33 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 
 today = yyyy + '/' + mm + '/' + dd;
-var targetDate = new Date(today + ' 19:59:59');
+let targetDate;
 
+const getOfertasRelampago = () => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      enctype: 'multipart/form-data',
+      url: "/getOfertasRelampago",
+      headers: {
+          'X-CSRF-Token': '{{ csrf_token() }}',
+      },
+      success: function (resp) {
+          resolve(resp);
+      },
+      error: function (error) {
+          reject(error);
+      }
+  });
+  })
+}
+
+getOfertasRelampago().then(resp => changeDateOferta(resp)).catch(console.warn);
+
+function changeDateOferta(oferta){
+  console.log(oferta);
+  targetDate = new Date(oferta.ofertaRelampago.fechaFin.replaceAll('-', '/').replaceAll('T', ' '));
+}
 
 // Other date related variables
 // var days;
@@ -39,19 +64,15 @@ $(function () {
 function timeToLaunch() {
   // Get the current date
   var currentDate = new Date();
-
   // Find the difference between dates
   var diff = (currentDate - targetDate) / 1000;
   var diff = Math.abs(Math.floor(diff));
-
   // Check number of days until target
   days = Math.floor(diff / (24 * 60 * 60));
   sec = diff - days * 24 * 60 * 60;
-
   // Check number of hours until target
   hrs = Math.floor(sec / (60 * 60));
   sec = sec - hrs * 60 * 60;
-
   // Check number of minutes until target
   min = Math.floor(sec / (60));
   sec = sec - min * 60;
@@ -62,16 +83,13 @@ function timeToLaunch() {
    COUNT TO LAUNCH
  * -------------------------- */
 function countDownTimer() {
-
   // Figure out the time to launch
   timeToLaunch();
-
   // Write to countdown component
   $("#days .number").text(days);
   $("#hours .number").text(hrs);
   $("#minutes .number").text(min);
   $("#seconds .number").text(sec);
-
   // Repeat the check every second
   setTimeout(countDownTimer, 1000);
 }
@@ -500,6 +518,6 @@ function activeRama3(categoria, ele) {
   }
 }
 
-function executeAction(action){
-    
+function addPedidoRelampago(){
+  $("#formRelampago").submit();
 }

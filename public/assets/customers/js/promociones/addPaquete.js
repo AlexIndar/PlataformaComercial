@@ -378,6 +378,7 @@ function validarPaquete() {
             clientesId: clientes.toString(),
             clientesIncluye: true,
             plazo: '',
+            ofertaRelampago: document.getElementById('tipo_promocion').value == "relampago" ? true : false,
             montoMinCash: document.getElementById('tipoCuota').value == 'General' ? parseInt(document.getElementById('preciomin').value) : 0,
             montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
             fechaInicio: startTime,
@@ -969,6 +970,7 @@ function storeSubreglas() {
                 clientesId: packageHeader['clientesId'],
                 clientesIncluye: packageHeader['clientesIncluye'],
                 plazo: packageHeader['plazo'],
+                ofertaRelampago: document.getElementById('tipo_promocion').value == "relampago" ? true : false,
                 montoMinCash: parseFloat(subreglas[y]['montoMinCash']),
                 montoMinQty: parseInt(subreglas[y]['montoMinQty']),
                 fechaInicio: packageHeader['fechaInicio'],
@@ -1001,7 +1003,6 @@ function storeSubreglas() {
         }
     }
     setTimeout(redirectPromociones, 500);
-
 }
 
 function redirectPromociones() {
@@ -1088,6 +1089,7 @@ function storeHeader() {
         clientesId: clientes.toString(),
         clientesIncluye: document.getElementById('listaClientes').value == 'blanca' ? true : false,
         plazo: '',
+        ofertaRelampago: document.getElementById('tipo_promocion').value == "relampago" ? true : false,
         montoMinCash: document.getElementById('tipoCuota').value == 'General' ? parseInt(document.getElementById('preciomin').value) : 0,
         montoMinQty: document.getElementById('cantidadmin').value == "" ? 0 : parseInt(document.getElementById('cantidadmin').value),
         fechaInicio: startTime,

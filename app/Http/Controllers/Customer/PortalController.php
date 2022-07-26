@@ -185,6 +185,7 @@ class PortalController extends Controller
         $response = Http::withToken($token)->get(config('global.api_url').'/Portal/GetOfertaRelampago');
         return json_decode($response->body(), true);
     }
+    
 
     
 }

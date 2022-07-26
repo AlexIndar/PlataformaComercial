@@ -30,6 +30,7 @@
 
          <div class="content">
              <input type="text" id="idCotizacion" value="X" hidden>
+             <input type="text" id="typeOrder" value="{{$typeOrder}}" hidden>
              <!---------------------------------------------------------------------------------------------------- ENCABEZADO PEDIDO ---------------------------------------------------------------------------------------------->
              <div class="header">
                  <div class="row  text-start">
